@@ -1,0 +1,17 @@
+plugins {
+    id 'java'
+}
+
+group 'team.floracore'
+version '1.0.0'
+
+repositories {
+    mavenCentral()
+    maven {
+        url 'https://hub.spigotmc.org/nexus/content/groups/public/'
+    }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT'
+}

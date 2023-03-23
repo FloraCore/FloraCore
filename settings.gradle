@@ -1,0 +1,4 @@
+rootProject.name = 'FloraCore'
+include 'FloraCore-API'
+include 'FloraCore-Plugin'
+
