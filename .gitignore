@@ -7,3 +7,6 @@
 .gradle/
 build/
 *.iml
+
+# 项目设置
+/FloraCore-Builds/

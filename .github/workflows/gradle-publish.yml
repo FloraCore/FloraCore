@@ -1,0 +1,59 @@
+name: Gradle Package
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+          settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: build
+
+      # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
+      # the publishing section of your build.gradle
+      - name: Publish to GitHub Packages
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: publish
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload build result
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-result
+          path: FloraCore-Builds
+
+  release:
+    name: Download back the built plugins and release them
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download back the built plugins
+        uses: actions/download-artifact@v3
+        with:
+          name: build-result
+      - name: Release software
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "*.jar"
+          token: ${{ secrets.GITHUB_TOKEN }}

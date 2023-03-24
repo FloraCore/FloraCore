@@ -3,7 +3,7 @@ plugins {
 }
 
 group 'team.floracore'
-version '1.0.0'
+version '1.0.1'
 
 repositories {
     mavenCentral()
@@ -12,6 +12,12 @@ repositories {
 dependencies {
 }
 
-test {
-    useJUnitPlatform()
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
 }
+
+tasks.register('copyBuildItems', Copy) {
+    from 'build/libs' into '../FloraCore-Builds'
+}
+
+build.finalizedBy(copyBuildItems)
