@@ -1,6 +1,23 @@
 plugins {
-    id 'java'
+    id("java")
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group 'team.floracore'
 version '1.0.0'
+
+subprojects {
+    group = project.group
+    version = project.version
+
+    sourceCompatibility = '1.8'
+    targetCompatibility = '1.8'
+
+    repositories {
+        mavenCentral()
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}

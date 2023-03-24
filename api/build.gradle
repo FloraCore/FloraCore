@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id("java")
 }
 
 group 'team.floracore'
@@ -10,5 +10,8 @@ repositories {
 }
 
 dependencies {
-    implementation(project(':FloraCore-API'))
+}
+
+test {
+    useJUnitPlatform()
 }
