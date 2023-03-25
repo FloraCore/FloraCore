@@ -1,0 +1,5 @@
+name: FloraCore
+version: ${version}
+description: A basic plugin with rich functions
+website: https://github.com/FloraCore/FloraCore
+main: me.lucko.luckperms.bukkit.loader.BukkitLoaderPlugin
