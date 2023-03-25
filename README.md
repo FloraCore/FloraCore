@@ -7,6 +7,8 @@ FloraCore (下称FC)是一个基于Minecraft/Bukkit的开源基础插件
 取名为FloraCore的原因是，它可以准确地表达该插件的主要功能和核心特点，同时也能与两个主要开发者（[@冬花ice](https://github.com/flowerinsnowdh)
 和[@花花](https://github.com/xLikeWATCHDOG/)）的网名“花”相呼应。此外，该名字简单易记，同时也具有一定的高级感和专业感，适合作为一个基础插件的名称。
 
+本插件只支持Bukkit，不支持其它任何版本（包括但不限于BungeeCord、Bukkit-Legacy）。
+
 # 框架
 
 FC的框架是基于[LuckPerms](https://luckperms.net/)的，进行了少数修改。
