@@ -6,7 +6,7 @@ on:
       - '*'
 
 jobs:
-  build:
+  Build project:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -38,12 +38,16 @@ jobs:
           USERNAME: ${{ github.actor }}
           TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Upload build result
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.2
         with:
           name: build-result
-          path: FloraCore-Builds
-
-  release:
+          path: |
+            api/build/libs
+            common/build/libs
+            common/loader-utils/build/libs
+            plugin/build/libs
+            plugin/loader/build/libs
+  Create Release:
     name: Download back the built plugins and release them
     needs: build
     runs-on: ubuntu-latest

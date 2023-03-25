@@ -11,19 +11,9 @@ repositories {
 }
 
 dependencies {
-    implementation project(':common')
-    compileOnly project(':common:loader-utils')
+    implementation project(':api')
+    implementation project(':common:loader-utils')
 }
-
-
-shadowJar {
-    archiveFileName = 'floracore-plugin.jarinjar'
-}
-
-artifacts {
-    archives shadowJar
-}
-
 processResources {
     def props = [version: project.parent.version]
     inputs.properties props
@@ -33,6 +23,14 @@ processResources {
     }
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
+shadowJar {
+    archiveFileName = "FloraCore-${project.parent.version}.jar"
+
+    from {
+        project(':plugin').tasks.shadowJar.archiveFile
+    }
+}
+
+artifacts {
+    archives shadowJar
 }

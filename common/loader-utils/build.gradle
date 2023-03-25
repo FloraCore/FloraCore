@@ -1,0 +1,6 @@
+plugins {
+    id "java"
+}
+
+group 'team.floracore.common.loader'
+version '1.0.0'

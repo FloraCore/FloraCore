@@ -1,11 +1,11 @@
 plugins {
-    id("java")
-    id("com.github.johnrengelman.shadow") version "8.1.1"
-    id("maven-publish")
+    id "java"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+    id "maven-publish"
 }
 
 group 'team.floracore'
-version '1.0.1'
+version '1.0.0'
 
 subprojects {
     group = project.group

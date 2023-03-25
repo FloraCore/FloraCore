@@ -1,5 +1,5 @@
 plugins {
-    id("java")
+    id "java"
 }
 
 group 'team.floracore'
@@ -10,14 +10,10 @@ repositories {
 }
 
 dependencies {
+    compileOnly 'org.checkerframework:checker-qual:3.21.2'
+    compileOnly 'org.jetbrains:annotations:23.1.0'
 }
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
 }
-
-tasks.register('copyBuildItems', Copy) {
-    from 'build/libs' into '../FloraCore-Builds'
-}
-
-build.finalizedBy(copyBuildItems)
