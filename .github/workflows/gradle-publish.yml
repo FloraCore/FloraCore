@@ -11,7 +11,6 @@ jobs:
     permissions:
       contents: read
       packages: write
-
     steps:
       - uses: actions/checkout@v3
       - name: Grant execute permission to gradlew script
@@ -48,14 +47,15 @@ jobs:
     name: Download back the built plugins and release them
     needs: build
     runs-on: ubuntu-latest
-
+    permissions:
+      contents: write
     steps:
       - name: Download back the built plugins
         uses: actions/download-artifact@v3
         with:
           name: build-result
-      - name: Release software
-        uses: ncipollo/release-action@v1
+      - name: Create Release
+        uses: ncipollo/release-action@v1.12.0
         with:
           artifacts: "*.jar"
           token: ${{ secrets.GITHUB_TOKEN }}
