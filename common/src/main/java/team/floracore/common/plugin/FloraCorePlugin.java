@@ -1,5 +1,6 @@
 package team.floracore.common.plugin;
 
+import team.floracore.common.dependencies.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
 
@@ -17,4 +18,11 @@ public interface FloraCorePlugin {
      * @return the plugin's logger
      */
     PluginLogger getLogger();
+
+    /**
+     * Gets the dependency manager for the plugin
+     *
+     * @return the dependency manager
+     */
+    DependencyManager getDependencyManager();
 }

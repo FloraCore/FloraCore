@@ -3,7 +3,9 @@ package team.floracore.common.plugin.bootstrap;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.plugin.classpath.*;
 import team.floracore.common.plugin.logging.*;
+import team.floracore.common.plugin.scheduler.*;
 
+import java.nio.file.*;
 import java.time.*;
 import java.util.concurrent.*;
 
@@ -14,6 +16,13 @@ public interface FloraCoreBootstrap {
      * @return the logger
      */
     PluginLogger getPluginLogger();
+
+    /**
+     * Gets an adapter for the platforms scheduler
+     *
+     * @return the scheduler
+     */
+    SchedulerAdapter getScheduler();
 
     /**
      * Gets a {@link ClassPathAppender} for this bootstrap plugin
@@ -51,6 +60,25 @@ public interface FloraCoreBootstrap {
      * @return the enable time
      */
     Instant getStartupTime();
+
+
+    /**
+     * Gets the plugins main data storage directory
+     *
+     * <p>Bukkit: ./plugins/FloraCore</p>
+     *
+     * @return the platforms data folder
+     */
+    Path getDataDirectory();
+
+    /**
+     * Gets the plugins configuration directory
+     *
+     * @return the config directory
+     */
+    default Path getConfigDirectory() {
+        return getDataDirectory();
+    }
 
     /**
      * Attempts to identify the plugin behind the given classloader.
