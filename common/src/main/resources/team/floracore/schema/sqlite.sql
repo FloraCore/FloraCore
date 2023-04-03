@@ -1,0 +1,1 @@
+-- FloraCore SQLite Schema

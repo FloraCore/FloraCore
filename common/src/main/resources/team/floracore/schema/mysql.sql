@@ -1,0 +1,1 @@
+-- FloraCore MySQL Schema

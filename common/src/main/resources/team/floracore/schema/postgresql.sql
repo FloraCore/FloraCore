@@ -1,0 +1,1 @@
+-- FloraCore PostgreSQL Schema

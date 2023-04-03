@@ -103,6 +103,7 @@ public abstract class URLClassLoaderAccess {
 
         private final Collection<URL> unopenedURLs;
         private final Collection<URL> pathURLs;
+
         @SuppressWarnings("unchecked")
         Unsafe(URLClassLoader classLoader) {
             super(classLoader);
