@@ -1,6 +1,6 @@
-# FloraCore
-
 <div align=center> 
+
+![Header](https://capsule-render.vercel.app/api?type=Waving&color=timeGradient&height=200&animation=fadeIn&section=header&text=FloraCore&fontSize=100)
 
 ![Code-Size](https://img.shields.io/github/languages/code-size/FloraCore/FloraCore?style=flat-square)
 ![Release](https://img.shields.io/github/v/release/FloraCore/FloraCore?style=flat-square)
