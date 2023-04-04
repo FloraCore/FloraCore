@@ -32,6 +32,7 @@ public class DependencyRegistry {
             case ASM:
             case ASM_COMMONS:
             case JAR_RELOCATOR:
+            case H2_DRIVER:
             case SQLITE_DRIVER:
                 return false;
             default:

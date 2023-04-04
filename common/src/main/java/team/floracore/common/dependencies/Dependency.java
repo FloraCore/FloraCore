@@ -17,6 +17,10 @@ public enum Dependency {
     MYSQL_DRIVER("mysql", "mysql-connector-java", "8.0.30", "tb8vCYcZfDCt90qeQZuJzaTCV9otEUKHH1CEFtXyIno=", Relocation.of("mysql", "com{}mysql")),
     POSTGRESQL_DRIVER("org{}postgresql", "postgresql", "42.6.0", "uBfGekDJQkn9WdTmhuMyftDT0/rkJrINoPHnVlLPxGE=", Relocation.of("postgresql", "org{}postgresql")),
     /**
+     * we don't apply relocations to h2 - it gets loaded via an isolated classloader
+     */
+    H2_DRIVER("com.h2database", "h2", "2.1.214", "1iPNwPYdIYz1SajQnxw5H/kQlhFrIuJHVHX85PvnK9A="),
+    /**
      * we don't apply relocations to sqlite - it gets loaded via an isolated classloader
      */
     SQLITE_DRIVER("org.xerial", "sqlite-jdbc", "3.41.2.1", "sxQQV7+2heqfmrIAwhWLwotHxKLULIj8sKGgCVT60m0="),

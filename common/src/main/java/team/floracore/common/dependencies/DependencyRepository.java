@@ -30,7 +30,7 @@ public enum DependencyRepository {
      * @return the connection
      * @throws java.io.IOException if unable to open a connection
      */
-    protected URLConnection openConnection(Dependency dependency) throws IOException {
+    private URLConnection openConnection(Dependency dependency) throws IOException {
         URL dependencyUrl = new URL(this.url + dependency.getMavenRepoPath());
         return dependencyUrl.openConnection();
     }

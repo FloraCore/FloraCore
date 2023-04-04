@@ -1,0 +1,61 @@
+package team.floracore.common.config;
+
+import com.google.common.collect.*;
+import team.floracore.common.config.generic.*;
+import team.floracore.common.config.generic.key.*;
+import team.floracore.common.storage.*;
+
+import java.util.*;
+
+import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
+
+/**
+ * All of the {@link ConfigKey}s used by LuckPerms.
+ *
+ * <p>The {@link #getKeys()} method and associated behaviour allows this class
+ * to function a bit like an enum, but with generics.</p>
+ */
+public class ConfigKeys {
+    /**
+     * The database settings, username, password, etc for use by any database
+     */
+    public static final ConfigKey<StorageCredentials> DATABASE_VALUES = notReloadable(key(c -> {
+        int maxPoolSize = c.getInteger("data.pool-settings.maximum-pool-size", c.getInteger("data.pool-size", 10));
+        int minIdle = c.getInteger("data.pool-settings.minimum-idle", maxPoolSize);
+        int maxLifetime = c.getInteger("data.pool-settings.maximum-lifetime", 1800000);
+        int keepAliveTime = c.getInteger("data.pool-settings.keepalive-time", 0);
+        int connectionTimeout = c.getInteger("data.pool-settings.connection-timeout", 5000);
+        Map<String, String> props = ImmutableMap.copyOf(c.getStringMap("data.pool-settings.properties", ImmutableMap.of()));
+
+        return new StorageCredentials(
+                c.getString("data.address", null),
+                c.getString("data.database", null),
+                c.getString("data.username", null),
+                c.getString("data.password", null),
+                maxPoolSize, minIdle, maxLifetime, keepAliveTime, connectionTimeout, props
+        );
+    }));
+    /**
+     * The prefix for any SQL tables
+     */
+    public static final ConfigKey<String> SQL_TABLE_PREFIX = notReloadable(key(c -> {
+        return c.getString("data.table-prefix", c.getString("data.table_prefix", "floracore_"));
+    }));
+    /**
+     * The name of the storage method being used
+     */
+    public static final ConfigKey<StorageType> STORAGE_METHOD = notReloadable(key(c -> {
+        return StorageType.parse(c.getString("storage-method", "h2"), StorageType.H2);
+    }));
+    /**
+     * A list of the keys defined in this class.
+     */
+    private static final List<SimpleConfigKey<?>> KEYS = KeyedConfiguration.initialise(ConfigKeys.class);
+
+    private ConfigKeys() {
+    }
+
+    public static List<? extends ConfigKey<?>> getKeys() {
+        return KEYS;
+    }
+}

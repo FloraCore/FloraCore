@@ -1,5 +1,13 @@
 # FloraCore
 
+<div align=center> 
+
+![Code-Size](https://img.shields.io/github/languages/code-size/FloraCore/FloraCore?style=flat-square)
+![Release](https://img.shields.io/github/v/release/FloraCore/FloraCore?style=flat-square)
+![Actions](https://img.shields.io/github/actions/workflow/status/FloraCore/FloraCore/gradle-publish.yml?style=flat-square)
+
+</div>
+
 FloraCore (下称FC)是一个基于Minecraft/Bukkit的开源基础插件
 
 该插件的名字来自两个主要元素。首先，“Flora”一词源于拉丁文，意为“植物”，因此可以体现插件与自然环境相关的功能。其次，“Core”意为“核心”，这代表了该插件的核心功能，即增强Minecraft服务器的自然环境，提供更多与自然元素相关的功能。
