@@ -17,6 +17,13 @@ public enum Dependency {
     MYSQL_DRIVER("mysql", "mysql-connector-java", "8.0.30", "tb8vCYcZfDCt90qeQZuJzaTCV9otEUKHH1CEFtXyIno=", Relocation.of("mysql", "com{}mysql")),
     POSTGRESQL_DRIVER("org{}postgresql", "postgresql", "42.6.0", "uBfGekDJQkn9WdTmhuMyftDT0/rkJrINoPHnVlLPxGE=", Relocation.of("postgresql", "org{}postgresql")),
     /**
+     * seems to be a compat bug in 1.4.200 with older dbs
+     * see: <a href="https://github.com/h2database/h2database/issues/2078"/>
+     * <p>
+     * we don't apply relocations to h2 - it gets loaded via an isolated classloader
+     */
+    H2_DRIVER_LEGACY("com.h2database", "h2", "1.4.199", "MSWhZ0O8a0z7thq7p4MgPx+2gjCqD9yXiY95b5ml1C4="),
+    /**
      * we don't apply relocations to h2 - it gets loaded via an isolated classloader
      */
     H2_DRIVER("com.h2database", "h2", "2.1.214", "1iPNwPYdIYz1SajQnxw5H/kQlhFrIuJHVHX85PvnK9A="),

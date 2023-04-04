@@ -12,8 +12,7 @@ public enum StorageType {
 
     // Local databases
     SQLITE("SQLite", "sqlite"),
-    H2("H2", "h2"),
-    ;
+    H2("H2", "h2");
 
     private final String name;
 

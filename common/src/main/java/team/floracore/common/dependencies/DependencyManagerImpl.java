@@ -6,6 +6,7 @@ import team.floracore.common.dependencies.classloader.*;
 import team.floracore.common.dependencies.relocation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.plugin.classpath.*;
+import team.floracore.common.storage.*;
 import team.floracore.common.util.*;
 
 import java.io.*;
@@ -142,6 +143,11 @@ public class DependencyManagerImpl implements DependencyManager {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+    }
+
+    @Override
+    public void loadStorageDependencies(Set<StorageType> storageTypes, boolean redis) {
+        loadDependencies(this.registry.resolveStorageDependencies(storageTypes, redis));
     }
 
     private void loadDependency(Dependency dependency) throws Exception {

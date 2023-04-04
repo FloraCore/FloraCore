@@ -5,6 +5,7 @@ import team.floracore.common.plugin.classpath.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.plugin.scheduler.*;
 
+import java.io.*;
 import java.nio.file.*;
 import java.time.*;
 import java.util.concurrent.*;
@@ -78,6 +79,16 @@ public interface FloraCoreBootstrap {
      */
     default Path getConfigDirectory() {
         return getDataDirectory();
+    }
+
+    /**
+     * Gets a bundled resource file from the jar
+     *
+     * @param path the path of the file
+     * @return the file as an input stream
+     */
+    default InputStream getResourceStream(String path) {
+        return getClass().getClassLoader().getResourceAsStream(path);
     }
 
     /**

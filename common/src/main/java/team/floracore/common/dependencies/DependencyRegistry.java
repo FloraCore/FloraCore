@@ -1,11 +1,24 @@
 package team.floracore.common.dependencies;
 
+import com.google.common.collect.*;
 import com.google.gson.*;
+import team.floracore.common.storage.*;
+
+import java.util.*;
 
 /**
  * Applies FloraCore specific behaviour for {@link Dependency}s.
  */
 public class DependencyRegistry {
+    // @formatter:off
+    private static final SetMultimap<StorageType, Dependency> STORAGE_DEPENDENCIES = ImmutableSetMultimap.<StorageType, Dependency>builder()
+            .putAll(StorageType.MARIADB,        Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.MARIADB_DRIVER)
+            .putAll(StorageType.MYSQL,          Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.MYSQL_DRIVER)
+            .putAll(StorageType.POSTGRESQL,     Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.POSTGRESQL_DRIVER)
+            .putAll(StorageType.SQLITE,         Dependency.SQLITE_DRIVER)
+            .putAll(StorageType.H2,             Dependency.H2_DRIVER)
+            .build();
+
 
     @SuppressWarnings("ConstantConditions")
     public static boolean isGsonRelocated() {
@@ -25,19 +38,33 @@ public class DependencyRegistry {
         return classExists("org.slf4j.Logger") && classExists("org.slf4j.LoggerFactory");
     }
 
+    public Set<Dependency> resolveStorageDependencies(Set<StorageType> storageTypes, boolean redis) {
+        Set<Dependency> dependencies = new LinkedHashSet<>();
+        for (StorageType storageType : storageTypes) {
+            dependencies.addAll(STORAGE_DEPENDENCIES.get(storageType));
+        }
+
+        if (redis) {
+            dependencies.add(Dependency.SLF4J_API);
+            dependencies.add(Dependency.SLF4J_SIMPLE);
+        }
+
+        // don't load slf4j if it's already present
+        if ((dependencies.contains(Dependency.SLF4J_API) || dependencies.contains(Dependency.SLF4J_SIMPLE)) && slf4jPresent()) {
+            dependencies.remove(Dependency.SLF4J_API);
+            dependencies.remove(Dependency.SLF4J_SIMPLE);
+        }
+
+        return dependencies;
+    }
+
     public boolean shouldAutoLoad(Dependency dependency) {
-        switch (dependency) {
+        return switch (dependency) {
             // all used within 'isolated' classloaders, and are therefore not
             // relocated.
-            case ASM:
-            case ASM_COMMONS:
-            case JAR_RELOCATOR:
-            case H2_DRIVER:
-            case SQLITE_DRIVER:
-                return false;
-            default:
-                return true;
-        }
+            case ASM, ASM_COMMONS, JAR_RELOCATOR, H2_DRIVER, H2_DRIVER_LEGACY, SQLITE_DRIVER -> false;
+            default -> true;
+        };
     }
 
 }

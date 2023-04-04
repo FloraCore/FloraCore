@@ -4,6 +4,7 @@ import com.google.common.collect.*;
 import team.floracore.common.config.generic.*;
 import team.floracore.common.config.generic.key.*;
 import team.floracore.common.storage.*;
+import team.floracore.common.storage.misc.*;
 
 import java.util.*;
 
@@ -17,7 +18,7 @@ import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
  */
 public class ConfigKeys {
     /**
-     * The database settings, username, password, etc for use by any database
+     * The database settings, username, password, etc. for use by any database
      */
     public static final ConfigKey<StorageCredentials> DATABASE_VALUES = notReloadable(key(c -> {
         int maxPoolSize = c.getInteger("data.pool-settings.maximum-pool-size", c.getInteger("data.pool-size", 10));
@@ -27,13 +28,7 @@ public class ConfigKeys {
         int connectionTimeout = c.getInteger("data.pool-settings.connection-timeout", 5000);
         Map<String, String> props = ImmutableMap.copyOf(c.getStringMap("data.pool-settings.properties", ImmutableMap.of()));
 
-        return new StorageCredentials(
-                c.getString("data.address", null),
-                c.getString("data.database", null),
-                c.getString("data.username", null),
-                c.getString("data.password", null),
-                maxPoolSize, minIdle, maxLifetime, keepAliveTime, connectionTimeout, props
-        );
+        return new StorageCredentials(c.getString("data.address", null), c.getString("data.database", null), c.getString("data.username", null), c.getString("data.password", null), maxPoolSize, minIdle, maxLifetime, keepAliveTime, connectionTimeout, props);
     }));
     /**
      * The prefix for any SQL tables
@@ -47,6 +42,33 @@ public class ConfigKeys {
     public static final ConfigKey<StorageType> STORAGE_METHOD = notReloadable(key(c -> {
         return StorageType.parse(c.getString("storage-method", "h2"), StorageType.H2);
     }));
+
+
+    /**
+     * If redis messaging is enabled
+     */
+    public static final ConfigKey<Boolean> REDIS_ENABLED = notReloadable(booleanKey("redis.enabled", false));
+
+    /**
+     * The address of the redis server
+     */
+    public static final ConfigKey<String> REDIS_ADDRESS = notReloadable(stringKey("redis.address", null));
+
+    /**
+     * The username to connect with, or an empty string if it should use default
+     */
+    public static final ConfigKey<String> REDIS_USERNAME = notReloadable(stringKey("redis.username", ""));
+
+    /**
+     * The password in use by the redis server, or an empty string if there is no password
+     */
+    public static final ConfigKey<String> REDIS_PASSWORD = notReloadable(stringKey("redis.password", ""));
+
+    /**
+     * If the redis connection should use SSL
+     */
+    public static final ConfigKey<Boolean> REDIS_SSL = notReloadable(booleanKey("redis.ssl", false));
+
     /**
      * A list of the keys defined in this class.
      */

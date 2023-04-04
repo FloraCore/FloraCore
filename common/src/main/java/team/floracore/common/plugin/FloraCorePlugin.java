@@ -1,8 +1,10 @@
 package team.floracore.common.plugin;
 
+import team.floracore.common.config.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
+import team.floracore.common.storage.*;
 
 public interface FloraCorePlugin {
     /**
@@ -25,4 +27,18 @@ public interface FloraCorePlugin {
      * @return the dependency manager
      */
     DependencyManager getDependencyManager();
+
+    /**
+     * Gets the plugin's configuration
+     *
+     * @return the plugin config
+     */
+    FloraCoreConfiguration getConfiguration();
+
+    /**
+     * Gets the primary data storage instance. This is likely to be wrapped with extra layers for caching, etc.
+     *
+     * @return the storage handler instance
+     */
+    Storage getStorage();
 }
