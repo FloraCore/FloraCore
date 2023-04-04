@@ -18,6 +18,16 @@ dependencies {
 
 shadowJar {
     archiveFileName = 'floracore-plugin.jarinjar'
+
+    dependencies {
+        include(dependency('team.floracore:.*'))
+    }
+
+    relocate 'org.mariadb.jdbc', 'team.floracore.lib.mariadb'
+    relocate 'com.mysql', 'team.floracore.lib.mysql'
+    relocate 'org.postgresql', 'team.floracore.lib.postgresql'
+    relocate 'com.zaxxer.hikari', 'team.floracore.lib.hikari'
+    relocate 'io.lettuce.core', 'team.floracore.lib.lettuce'
 }
 
 artifacts {
