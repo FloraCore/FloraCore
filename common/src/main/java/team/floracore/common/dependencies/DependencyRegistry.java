@@ -59,12 +59,19 @@ public class DependencyRegistry {
     }
 
     public boolean shouldAutoLoad(Dependency dependency) {
-        return switch (dependency) {
+        switch (dependency) {
             // all used within 'isolated' classloaders, and are therefore not
             // relocated.
-            case ASM, ASM_COMMONS, JAR_RELOCATOR, H2_DRIVER, H2_DRIVER_LEGACY, SQLITE_DRIVER -> false;
-            default -> true;
-        };
+            case ASM:
+            case ASM_COMMONS:
+            case JAR_RELOCATOR:
+            case H2_DRIVER:
+            case H2_DRIVER_LEGACY:
+            case SQLITE_DRIVER:
+                return false;
+            default:
+                return true;
+        }
     }
 
 }
