@@ -1,5 +1,6 @@
 package team.floracore.common.plugin;
 
+import team.floracore.common.api.*;
 import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
@@ -16,6 +17,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
     // init during enable
     private FloraCoreConfiguration configuration;
+    private FloraCoreApiProvider apiProvider;
     private Storage storage;
 
     /**
@@ -42,6 +44,11 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // initialise storage
         this.storage = storageFactory.getInstance();
+
+        // register with the FC API
+        this.apiProvider = new FloraCoreApiProvider(this);
+        this.apiProvider.ensureApiWasLoadedByPlugin();
+        ApiRegistrationUtil.registerProvider(this.apiProvider);
 
         Duration timeTaken = Duration.between(getBootstrap().getStartupTime(), Instant.now());
         getLogger().info("Successfully enabled. (took " + timeTaken.toMillis() + "ms)");

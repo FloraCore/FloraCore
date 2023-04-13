@@ -22,6 +22,7 @@ FloraCore (下称FC)是一个基于Minecraft/Bukkit的开源基础插件
 FC的框架是基于[LuckPerms](https://luckperms.net/)的，进行了少数修改。
 
 # Visitors
+
 ![](https://count.getloli.com/get/@FloraCore?theme=rule34)
 
 # TODO
