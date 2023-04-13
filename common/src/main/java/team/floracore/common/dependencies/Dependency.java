@@ -13,6 +13,7 @@ public enum Dependency {
     ASM("org.ow2.asm", "asm", "9.1", "zaTeRV+rSP8Ly3xItGOUR9TehZp6/DCglKmG8JNr66I="),
     ASM_COMMONS("org.ow2.asm", "asm-commons", "9.1", "r8sm3B/BLAxKma2mcJCN2C4Y38SIyvXuklRplrRwwAw="),
     JAR_RELOCATOR("me.lucko", "jar-relocator", "1.4", "1RsiF3BiVztjlfTA+svDCuoDSGFuSpTZYHvUK8yBx8I="),
+    ADVENTURE("net.kyori", "adventure-api", "4.13.0", "VCFKCCgtuXUzFsU7fSX9eoEtCcURWfVpDWYvypqh7vo=", Relocation.of("net.kyori", "net{}kyori")),
     MARIADB_DRIVER("org{}mariadb{}jdbc", "mariadb-java-client", "3.1.3", "ESl+5lYkJsScgTh8hgFTy8ExxMPQQkktT20tl6s6HKU=", Relocation.of("mariadb", "org{}mariadb{}jdbc")),
     MYSQL_DRIVER("mysql", "mysql-connector-java", "8.0.30", "tb8vCYcZfDCt90qeQZuJzaTCV9otEUKHH1CEFtXyIno=", Relocation.of("mysql", "com{}mysql")),
     POSTGRESQL_DRIVER("org{}postgresql", "postgresql", "42.6.0", "uBfGekDJQkn9WdTmhuMyftDT0/rkJrINoPHnVlLPxGE=", Relocation.of("postgresql", "org{}postgresql")),

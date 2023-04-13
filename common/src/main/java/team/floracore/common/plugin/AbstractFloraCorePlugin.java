@@ -11,6 +11,7 @@ import team.floracore.common.storage.*;
 import java.io.*;
 import java.nio.file.*;
 import java.time.*;
+import java.util.*;
 
 public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     // init during load
@@ -28,6 +29,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     public final void onLoad() {
         // load dependencies
         this.dependencyManager = createDependencyManager();
+        this.dependencyManager.loadDependencies(getGlobalDependencies());
     }
 
     public final void onEnable() {
@@ -98,6 +100,12 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         }
 
         return configFile;
+    }
+
+    protected Set<Dependency> getGlobalDependencies() {
+        return EnumSet.of(
+                Dependency.ADVENTURE
+        );
     }
 
     @Override

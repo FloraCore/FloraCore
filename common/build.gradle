@@ -11,6 +11,7 @@ test {
 
 repositories {
     mavenCentral()
+    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
 }
 
 dependencies {
@@ -25,8 +26,11 @@ dependencies {
 
     compileOnly project(':common:loader-utils')
 
+    compileOnly 'org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT'
     compileOnly 'org.slf4j:slf4j-api:2.0.5'
     compileOnly 'org.apache.logging.log4j:log4j-api:2.20.0'
+
+    api('net.kyori:adventure-api:4.13.0')
 
     api 'com.google.code.gson:gson:2.10.1'
     api 'com.google.guava:guava:31.1-jre'
