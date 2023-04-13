@@ -49,7 +49,7 @@ public class JarInJarClassLoader extends URLClassLoader {
         // on posix systems by default this is only read/writable by the process owner
         Path path;
         try {
-            path = Files.createTempFile("luckperms-jarinjar", ".jar.tmp");
+            path = Files.createTempFile("floracore-jarinjar", ".jar.tmp");
         } catch (IOException e) {
             throw new LoadingException("Unable to create a temporary file", e);
         }

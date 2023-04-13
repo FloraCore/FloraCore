@@ -15,8 +15,8 @@ public class SystemPropertyConfigAdapter extends StringBasedConfigurationAdapter
     @Override
     protected @Nullable String resolveValue(String path) {
         // e.g.
-        // 'server'            -> luckperms.server
-        // 'data.table_prefix' -> luckperms.data.table-prefix
+        // 'server'            -> floracore.server
+        // 'data.table_prefix' -> floracore.data.table-prefix
         String key = PREFIX + path;
 
         String value = System.getProperty(key);

@@ -36,7 +36,7 @@ public class H2ConnectionFactory extends FlatfileConnectionFactory {
         try {
             new MigrateH2ToVersion2(plugin, super.getWriteFile().getParent()).run(this);
         } catch (Exception e) {
-            plugin.getLogger().warn("Something went wrong whilst upgrading the LuckPerms database. Please report this on GitHub.", e);
+            plugin.getLogger().warn("Something went wrong whilst upgrading the FloraCore database. Please report this on GitHub.", e);
         }
     }
 

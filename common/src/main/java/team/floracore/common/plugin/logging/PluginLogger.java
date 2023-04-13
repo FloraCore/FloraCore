@@ -1,7 +1,7 @@
 package team.floracore.common.plugin.logging;
 
 /**
- * Represents the logger instance being used by LuckPerms on the platform.
+ * Represents the logger instance being used by FloraCore on the platform.
  *
  * <p>Messages sent using the logger are sent prefixed with the FloraCore tag,
  * and on some implementations will be colored depending on the message type.</p>

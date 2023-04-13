@@ -11,7 +11,7 @@ import java.util.*;
 import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
 
 /**
- * All of the {@link ConfigKey}s used by LuckPerms.
+ * All of the {@link ConfigKey}s used by FloraCore.
  *
  * <p>The {@link #getKeys()} method and associated behaviour allows this class
  * to function a bit like an enum, but with generics.</p>

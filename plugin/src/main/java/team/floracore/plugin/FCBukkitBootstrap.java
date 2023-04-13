@@ -15,7 +15,7 @@ import java.util.concurrent.*;
 import java.util.logging.*;
 
 /**
- * Bootstrap plugin for LuckPerms running on Bukkit.
+ * Bootstrap plugin for FloraCore running on Bukkit.
  */
 public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, BootstrappedWithLoader {
     private final JavaPlugin loader;
@@ -116,11 +116,7 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         if (this.incompatibleVersion) {
             Logger logger = this.loader.getLogger();
             logger.severe("----------------------------------------------------------------------");
-            logger.severe("Your server version is not compatible with this build of LuckPerms. :(");
-            logger.severe("");
-            logger.severe("If your server is running 1.8, please update to 1.8.8 or higher.");
-            logger.severe("If your server is running 1.7.10, please download the Bukkit-Legacy version of LuckPerms from here:");
-            logger.severe("==> https://luckperms.net/download");
+            logger.severe("Your server version is not compatible with this build of FloraCore. :(");
             logger.severe("----------------------------------------------------------------------");
             getServer().getPluginManager().disablePlugin(this.loader);
             return;

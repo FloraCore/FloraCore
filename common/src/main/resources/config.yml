@@ -2,14 +2,9 @@
 # |                                                                                              | #
 # |                                       STORAGE SETTINGS                                       | #
 # |                                                                                              | #
-# |                Controls which storage method LuckPerms will use to store data.               | #
+# |                Controls which storage method FloraCore will use to store data.               | #
 # |                                                                                              | #
 # +----------------------------------------------------------------------------------------------+ #
-
-# How the plugin should store data
-#
-# - The various options are explained in more detail on the wiki:
-#   https://luckperms.net/wiki/Storage-types
 #
 # - Possible options:
 #
@@ -18,7 +13,7 @@
 #   |=> MariaDB (preferred over MySQL)
 #   |=> PostgreSQL
 #
-#   |  Flatfile/local database - don't require any extra configuration
+#   |  Flat file/local database - don't require any extra configuration
 #   |=> H2 (preferred over SQLite)
 #   |=> SQLite
 #
@@ -37,7 +32,7 @@ data:
   # - Specify as "host:port" if differs
   address: localhost
 
-  # The name of the database to store LuckPerms data in.
+  # The name of the database to store FloraCore data in.
   # - This must be created already. Don't worry about this setting if you're using MongoDB.
   database: minecraft
 
@@ -93,7 +88,7 @@ data:
       #useSSL: false
       #verifyServerCertificate: false
 
-  # The prefix for all LuckPerms SQL tables.
+  # The prefix for all FloraCore SQL tables.
   #
   # - This only applies for remote SQL storage types (MySQL, MariaDB, etc).
   # - Change this if you want to use different tables for different servers.

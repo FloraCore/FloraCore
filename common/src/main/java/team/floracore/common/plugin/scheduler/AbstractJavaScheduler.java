@@ -25,7 +25,7 @@ public abstract class AbstractJavaScheduler implements SchedulerAdapter {
 
         this.scheduler = new ScheduledThreadPoolExecutor(1, r -> {
             Thread thread = Executors.defaultThreadFactory().newThread(r);
-            thread.setName("luckperms-scheduler");
+            thread.setName("floracore-scheduler");
             return thread;
         });
         this.scheduler.setRemoveOnCancelPolicy(true);
@@ -55,8 +55,8 @@ public abstract class AbstractJavaScheduler implements SchedulerAdapter {
         this.scheduler.shutdown();
         try {
             if (!this.scheduler.awaitTermination(1, TimeUnit.MINUTES)) {
-                this.bootstrap.getPluginLogger().severe("Timed out waiting for the LuckPerms scheduler to terminate");
-                reportRunningTasks(thread -> thread.getName().equals("luckperms-scheduler"));
+                this.bootstrap.getPluginLogger().severe("Timed out waiting for the FloraCore scheduler to terminate");
+                reportRunningTasks(thread -> thread.getName().equals("floracore-scheduler"));
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -68,8 +68,8 @@ public abstract class AbstractJavaScheduler implements SchedulerAdapter {
         this.worker.shutdown();
         try {
             if (!this.worker.awaitTermination(1, TimeUnit.MINUTES)) {
-                this.bootstrap.getPluginLogger().severe("Timed out waiting for the LuckPerms worker thread pool to terminate");
-                reportRunningTasks(thread -> thread.getName().startsWith("luckperms-worker-"));
+                this.bootstrap.getPluginLogger().severe("Timed out waiting for the FloraCore worker thread pool to terminate");
+                reportRunningTasks(thread -> thread.getName().startsWith("floracore-worker-"));
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -93,7 +93,7 @@ public abstract class AbstractJavaScheduler implements SchedulerAdapter {
         public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
             ForkJoinWorkerThread thread = ForkJoinPool.defaultForkJoinWorkerThreadFactory.newThread(pool);
             thread.setDaemon(true);
-            thread.setName("luckperms-worker-" + COUNT.getAndIncrement());
+            thread.setName("floracore-worker-" + COUNT.getAndIncrement());
             return thread;
         }
     }

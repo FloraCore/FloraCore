@@ -7,7 +7,7 @@ import java.security.*;
 import java.util.*;
 
 /**
- * The dependencies used by LuckPerms.
+ * The dependencies used by FloraCore.
  */
 public enum Dependency {
     ASM("org.ow2.asm", "asm", "9.1", "zaTeRV+rSP8Ly3xItGOUR9TehZp6/DCglKmG8JNr66I="),
