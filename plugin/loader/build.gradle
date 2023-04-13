@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'team.floracore'
-version '1.0.1'
+version rootProject.version
 
 repositories {
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
@@ -17,7 +17,7 @@ dependencies {
     implementation project(':common:loader-utils')
 }
 processResources {
-    def props = [version: project.parent.version]
+    def props = [version: rootProject.version]
     inputs.properties props
     filteringCharset 'UTF-8'
     filesMatching('plugin.yml') {
@@ -26,7 +26,7 @@ processResources {
 }
 
 shadowJar {
-    archiveFileName = "FloraCore-${project.parent.version}.jar"
+    archiveFileName = "FloraCore-${rootProject.version}.jar"
 
     from {
         project(':plugin').tasks.shadowJar.archiveFile
