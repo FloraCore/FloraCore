@@ -4,6 +4,7 @@ import team.floracore.common.api.*;
 import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
+import team.floracore.common.extension.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.storage.*;
 
@@ -19,6 +20,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private FloraCoreConfiguration configuration;
     private FloraCoreApiProvider apiProvider;
     private Storage storage;
+    private SimpleExtensionManager extensionManager;
 
     /**
      * Performs the initial actions to load the plugin
@@ -49,6 +51,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.apiProvider = new FloraCoreApiProvider(this);
         this.apiProvider.ensureApiWasLoadedByPlugin();
         ApiRegistrationUtil.registerProvider(this.apiProvider);
+
+        // setup extension manager
+        this.extensionManager = new SimpleExtensionManager(this);
+        this.extensionManager.loadExtensions(getBootstrap().getConfigDirectory().resolve("extensions"));
 
         Duration timeTaken = Duration.between(getBootstrap().getStartupTime(), Instant.now());
         getLogger().info("Successfully enabled. (took " + timeTaken.toMillis() + "ms)");
@@ -116,5 +122,15 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public PluginLogger getLogger() {
         return getBootstrap().getPluginLogger();
+    }
+
+    @Override
+    public FloraCoreApiProvider getApiProvider() {
+        return this.apiProvider;
+    }
+
+    @Override
+    public SimpleExtensionManager getExtensionManager() {
+        return this.extensionManager;
     }
 }

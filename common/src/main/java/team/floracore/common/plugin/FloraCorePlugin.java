@@ -1,7 +1,9 @@
 package team.floracore.common.plugin;
 
+import team.floracore.common.api.*;
 import team.floracore.common.config.*;
 import team.floracore.common.dependencies.*;
+import team.floracore.common.extension.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.storage.*;
@@ -41,4 +43,18 @@ public interface FloraCorePlugin {
      * @return the storage handler instance
      */
     Storage getStorage();
+
+    /**
+     * Returns the class implementing the FloraCoreAPI on this platform.
+     *
+     * @return the api
+     */
+    FloraCoreApiProvider getApiProvider();
+
+    /**
+     * Gets the extension manager.
+     *
+     * @return the extension manager
+     */
+    SimpleExtensionManager getExtensionManager();
 }
