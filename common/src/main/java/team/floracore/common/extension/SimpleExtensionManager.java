@@ -5,6 +5,7 @@ import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.api.extension.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.plugin.classpath.*;
+import team.floracore.common.util.*;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -61,7 +62,9 @@ public class SimpleExtensionManager implements ExtensionManager, AutoCloseable {
     }
 
     public void loadExtensions(Path directory) {
-        if (!Files.exists(directory) || !Files.isDirectory(directory)) {
+        try {
+            MoreFiles.createDirectoriesIfNotExists(directory);
+        } catch (IOException e) {
             return;
         }
 
