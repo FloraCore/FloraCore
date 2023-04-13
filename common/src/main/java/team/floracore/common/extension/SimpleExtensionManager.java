@@ -29,7 +29,6 @@ public class SimpleExtensionManager implements ExtensionManager, AutoCloseable {
         return thisClassLoaderName.equals("team.floracore.common.loader.JarInJarClassLoader");
     }
 
-    @Deprecated
     private static void addJarToParentClasspath(Path path) throws Exception {
         ClassLoader parentClassLoader = SimpleExtensionManager.class.getClassLoader().getParent();
         if (!(parentClassLoader instanceof URLClassLoader)) {
@@ -141,7 +140,7 @@ public class SimpleExtensionManager implements ExtensionManager, AutoCloseable {
 
         try {
             Constructor<? extends Extension> constructor = extensionClass.getConstructor(FloraCorePlugin.class);
-            extension = constructor.newInstance(this.plugin.getApiProvider());
+            extension = constructor.newInstance(this.plugin);
         } catch (NoSuchMethodException e) {
             // ignore
         } catch (IllegalAccessException | InstantiationException | InvocationTargetException e) {
