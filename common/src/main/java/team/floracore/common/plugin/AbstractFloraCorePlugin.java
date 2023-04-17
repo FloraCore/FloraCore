@@ -115,9 +115,12 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
                 Dependency.ADVENTURE_KEY,
                 Dependency.ADVENTURE_PLATFORM_API,
                 Dependency.ADVENTURE_PLATFORM_FACET,
-                Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY_TEXT_3,
                 Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY,
-                Dependency.EXAMINATION_API
+                Dependency.ADVENTURE_TEXT_SERIALIZER_GSON,
+                Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN,
+                Dependency.EXAMINATION_API,
+                Dependency.CLOUD_CORE,
+                Dependency.CLOUD_ANNOTATIONS
         );
     }
 
