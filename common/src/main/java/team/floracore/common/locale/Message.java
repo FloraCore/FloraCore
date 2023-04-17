@@ -22,14 +22,13 @@ public interface Message {
             .build();
     Args1<FloraCoreBootstrap> STARTUP_BANNER = bootstrap -> {
         Component infoLine1 = text()
-                .append(text("FloraCore", DARK_GREEN))
+                .append(text("Fl", AQUA))
+                .append(text("ora", DARK_GREEN))
+                .append(text("Core", GREEN))
                 .append(space())
                 .append(text("v" + bootstrap.getVersion(), AQUA))
-                .build();
-
-        Component infoLine2 = text()
-                .color(DARK_GRAY)
-                .append(text("Running"))
+                .append(space())
+                .append(text("is Running",DARK_GRAY))
                 .build();
 
         JoinConfiguration joinConfig = JoinConfiguration.builder()
@@ -37,21 +36,7 @@ public interface Message {
                 .build();
 
         return join(joinConfig,
-                text()
-                        .append(text("       ", AQUA))
-                        .append(text(" __    ", DARK_AQUA))
-                        .build(),
-                text()
-                        .append(text("  |    ", AQUA))
-                        .append(text("|__)   ", DARK_AQUA))
-                        .append(infoLine1)
-                        .build(),
-                text()
-                        .append(text("  |___ ", AQUA))
-                        .append(text("|      ", DARK_AQUA))
-                        .append(infoLine2)
-                        .build(),
-                empty()
+                text().append(infoLine1).build()
         );
     };
 

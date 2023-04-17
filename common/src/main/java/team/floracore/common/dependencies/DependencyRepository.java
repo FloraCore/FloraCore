@@ -13,11 +13,11 @@ import java.util.concurrent.*;
  * Represents a repository which contains {@link Dependency}s.
  */
 public enum DependencyRepository {
-    MAVEN_CENTRAL_MIRROR("https://libraries.luckperms.net/") {
+    MAVEN_CENTRAL_MIRROR("https://repo.huaweicloud.com/repository/maven/") {
         @Override
         protected URLConnection openConnection(Dependency dependency) throws IOException {
             URLConnection connection = super.openConnection(dependency);
-            connection.setRequestProperty("User-Agent", "floracore");
+            connection.setRequestProperty("User-Agent", "FloraCore");
 
             // Set a connect/read timeout, so if the mirror goes offline we can fallback
             // to Maven Central within a reasonable time.
@@ -89,9 +89,7 @@ public enum DependencyRepository {
 
         // ensure the hash matches the expected checksum
         if (!dependency.checksumMatches(hash)) {
-            throw new DependencyDownloadException("Downloaded file had an invalid hash. " +
-                    "Expected: " + Base64.getEncoder().encodeToString(dependency.getChecksum()) + " " +
-                    "Actual: " + Base64.getEncoder().encodeToString(hash));
+            throw new DependencyDownloadException("Downloaded file had an invalid hash. " + "Expected: " + Base64.getEncoder().encodeToString(dependency.getChecksum()) + " " + "Actual: " + Base64.getEncoder().encodeToString(hash));
         }
 
         return bytes;

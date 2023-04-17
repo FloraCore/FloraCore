@@ -1,5 +1,6 @@
 package team.floracore.common.dependencies;
 
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.*;
 import org.junit.jupiter.params.provider.*;
 
@@ -36,7 +37,7 @@ public class DependencyChecksumTest {
     /**
      * 之所以注释了，是因为编译的时候太慢了。
      */
-    //@Test
+    @Test
     public void getChecksumMatches() {
         for (Dependency dependency : Dependency.values()) {
             try {
