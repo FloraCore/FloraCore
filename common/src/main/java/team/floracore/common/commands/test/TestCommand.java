@@ -43,30 +43,30 @@ public class TestCommand {
      */
     @CommandMethod("test")
     @CommandDescription("测试根命令")
-    public void testCommand(final @NonNull CommandSender sender) {
+    public void test(final @NonNull CommandSender sender) {
         sender.sendMessage("这是一个测试命令。");
     }
 
     @CommandMethod("test c1")
     @CommandDescription("测试c1命令")
-    public void testWithChild1Command(final @NonNull CommandSender sender) {
+    public void test_c1(final @NonNull CommandSender sender) {
         sender.sendMessage("我是c1命令。");
     }
 
     @CommandMethod("test c1 b1")
     @CommandDescription("测试c1命令")
-    public void testWithChild11Command(final @NonNull CommandSender sender) {
+    public void test_c1_b1(final @NonNull CommandSender sender) {
         sender.sendMessage("我是c1中的b1命令。");
     }
 
     @CommandMethod("test c2")
     @CommandDescription("测试c2命令")
-    public void testWithChild2Command(final @NonNull CommandSender sender) {
+    public void test_c2(final @NonNull CommandSender sender) {
         sender.sendMessage("我是c2命令。");
     }
 
-    @Suggestions("test")
-    public @NonNull List<String> testSuggestions(final @NonNull CommandContext<CommandSender> ctx, final @NonNull String input) {
+    @Suggestions("test_c2_a1_sug")
+    public @NonNull List<String> test_c2_a1_sug(final @NonNull CommandContext<CommandSender> ctx, final @NonNull String input) {
         List<String> ret = new ArrayList<>();
         ret.add("测试命令1");
         ret.add("测试命令2");
@@ -80,7 +80,7 @@ public class TestCommand {
      */
     @CommandMethod("test c2 a1 [query]")
     @CommandDescription("测试c2命令")
-    public void testWithChild21Command(final @NonNull CommandSender sender, final @Argument(value = "query", suggestions = "test") @Greedy String query) {
+    public void test_c2_a1_qu(final @NonNull CommandSender sender, final @Argument(value = "query", suggestions = "test_c2_a1_sug") @Greedy String query) {
         sender.sendMessage("我是c2中的a1命令，你选择的query是" + query);
     }
 }
