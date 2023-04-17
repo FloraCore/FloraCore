@@ -10,6 +10,9 @@ import team.floracore.common.storage.implementation.sql.connection.hikari.*;
 
 import java.util.*;
 
+/**
+ * 数据库操作的主工厂类。
+ */
 public class StorageFactory {
     private final FloraCorePlugin plugin;
 

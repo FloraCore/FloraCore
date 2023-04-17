@@ -13,6 +13,9 @@ import team.floracore.common.plugin.*;
 
 import java.util.function.*;
 
+/**
+ * 命令管理器。
+ */
 public class CommandManager {
     private final FloraCorePlugin plugin;
     private final AnnotationParser<CommandSender> annotationParser;

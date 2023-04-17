@@ -4,6 +4,9 @@ import team.floracore.api.*;
 
 import java.lang.reflect.*;
 
+/**
+ * FC API的注册类。
+ */
 public class ApiRegistrationUtil {
     private static final Method REGISTER;
     private static final Method UNREGISTER;

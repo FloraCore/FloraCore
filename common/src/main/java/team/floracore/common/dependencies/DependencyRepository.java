@@ -13,6 +13,9 @@ import java.util.concurrent.*;
  * Represents a repository which contains {@link Dependency}s.
  */
 public enum DependencyRepository {
+    /**
+     * 华为云的Maven镜像。
+     */
     MAVEN_CENTRAL_MIRROR("https://repo.huaweicloud.com/repository/maven/") {
         @Override
         protected URLConnection openConnection(Dependency dependency) throws IOException {

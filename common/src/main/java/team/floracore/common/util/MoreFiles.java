@@ -1,3 +1,6 @@
+/**
+ * 文件操作类。
+ */
 package team.floracore.common.util;
 
 import java.io.*;

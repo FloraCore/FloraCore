@@ -1,3 +1,6 @@
+/**
+ * 数据库操作的接口
+ */
 package team.floracore.common.storage.implementation;
 
 import team.floracore.common.plugin.*;

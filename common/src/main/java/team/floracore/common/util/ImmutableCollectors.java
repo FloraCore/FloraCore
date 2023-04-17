@@ -1,3 +1,6 @@
+/**
+ * 不可变的收集器。
+ */
 package team.floracore.common.util;
 
 import com.google.common.collect.*;

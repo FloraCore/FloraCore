@@ -4,6 +4,9 @@ import com.google.common.collect.*;
 
 import java.util.*;
 
+/**
+ * 数据库链接类型。
+ */
 public enum StorageType {
     // Remote databases
     MARIADB("MariaDB", "mariadb"),
