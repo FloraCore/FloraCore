@@ -5,9 +5,11 @@ plugins {
 group 'team.floracore'
 version rootProject.version
 
-test {
+/**
+ * 测试的时候把下面注释去掉，因为这会影响到编译速度。*/
+/*test {
     useJUnitPlatform {}
-}
+}*/
 
 repositories {
     mavenCentral()
