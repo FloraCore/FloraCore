@@ -31,6 +31,7 @@ dependencies {
     compileOnly 'org.apache.logging.log4j:log4j-api:2.20.0'
 
     api 'net.kyori:adventure-api:4.13.0'
+    api 'net.kyori:adventure-nbt:4.13.0'
     api 'net.kyori:adventure-key:4.13.0'
     api 'net.kyori:adventure-platform-api:4.3.0'
     api 'net.kyori:adventure-platform-facet:4.3.0'

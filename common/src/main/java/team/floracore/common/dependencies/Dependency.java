@@ -14,6 +14,7 @@ public enum Dependency {
     ASM_COMMONS("org.ow2.asm", "asm-commons", "9.1", "r8sm3B/BLAxKma2mcJCN2C4Y38SIyvXuklRplrRwwAw="),
     JAR_RELOCATOR("me.lucko", "jar-relocator", "1.4", "1RsiF3BiVztjlfTA+svDCuoDSGFuSpTZYHvUK8yBx8I="),
     ADVENTURE("net.kyori", "adventure-api", "4.13.0", "VCFKCCgtuXUzFsU7fSX9eoEtCcURWfVpDWYvypqh7vo="),
+    ADVENTURE_NBT("net.kyori", "adventure-nbt", "4.13.0", "2lzIfksbZKstejPOBAfuBiqNPzzUPXY0fMLYa6rra8o="),
     ADVENTURE_KEY("net.kyori", "adventure-key", "4.13.0", "Bgwbt02uKMvfyeATK/Bc+H19PVQB2detcX6oRUDYRGg="),
     ADVENTURE_PLATFORM_API("net.kyori", "adventure-platform-api", "4.3.0", "7GBGKMK3wWXqdMH8s6LQ8DNZwsd6FJYOOgvC43lnCsI="),
     ADVENTURE_PLATFORM_FACET("net.kyori", "adventure-platform-facet", "4.3.0", "IPjm2zTXIqSszL7cybbALo7ms8q5NQsGqz0cCwuLRU8="),

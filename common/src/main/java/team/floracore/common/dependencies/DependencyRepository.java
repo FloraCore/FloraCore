@@ -7,11 +7,27 @@ import java.net.*;
 import java.nio.file.Files;
 import java.nio.file.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * Represents a repository which contains {@link Dependency}s.
  */
 public enum DependencyRepository {
+    MAVEN_CENTRAL_MIRROR("https://libraries.luckperms.net/") {
+        @Override
+        protected URLConnection openConnection(Dependency dependency) throws IOException {
+            URLConnection connection = super.openConnection(dependency);
+            connection.setRequestProperty("User-Agent", "floracore");
+
+            // Set a connect/read timeout, so if the mirror goes offline we can fallback
+            // to Maven Central within a reasonable time.
+            connection.setConnectTimeout((int) TimeUnit.SECONDS.toMillis(5));
+            connection.setReadTimeout((int) TimeUnit.SECONDS.toMillis(10));
+
+            return connection;
+        }
+    },
+
     /**
      * Maven Central.
      */
@@ -30,7 +46,7 @@ public enum DependencyRepository {
      * @return the connection
      * @throws java.io.IOException if unable to open a connection
      */
-    private URLConnection openConnection(Dependency dependency) throws IOException {
+    protected URLConnection openConnection(Dependency dependency) throws IOException {
         URL dependencyUrl = new URL(this.url + dependency.getMavenRepoPath());
         return dependencyUrl.openConnection();
     }

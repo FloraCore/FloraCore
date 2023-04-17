@@ -112,11 +112,13 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     protected Set<Dependency> getGlobalDependencies() {
         return EnumSet.of(
                 Dependency.ADVENTURE,
+                Dependency.ADVENTURE_NBT,
                 Dependency.ADVENTURE_KEY,
                 Dependency.ADVENTURE_PLATFORM_API,
                 Dependency.ADVENTURE_PLATFORM_FACET,
                 Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY,
                 Dependency.ADVENTURE_TEXT_SERIALIZER_GSON,
+                Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL,
                 Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN,
                 Dependency.EXAMINATION_API,
                 Dependency.CLOUD_CORE,
