@@ -58,6 +58,9 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // initialise storage
         this.storage = storageFactory.getInstance();
 
+        getLogger().info("Loading cloud command framework...");
+        this.commandManager = new CommandManager(this);
+
         // register with the FC API
         this.apiProvider = new FloraCoreApiProvider(this);
         this.apiProvider.ensureApiWasLoadedByPlugin();
@@ -66,9 +69,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // setup extension manager
         this.extensionManager = new SimpleExtensionManager(this);
         this.extensionManager.loadExtensions(getBootstrap().getConfigDirectory().resolve("extensions"));
-
-        getLogger().info("Loading cloud command framework...");
-        this.commandManager = new CommandManager(this);
 
         Duration timeTaken = Duration.between(getBootstrap().getStartupTime(), Instant.now());
         getLogger().info("Successfully enabled. (took " + timeTaken.toMillis() + "ms)");

@@ -53,6 +53,13 @@ public class CommandManager {
                 /* Manager */ this.manager,
                 /* Command sender type */ CommandSender.class,
                 /* Mapper for command meta instances */ commandMetaFunction);
+
+        // 命令语法错误自定义
+        /*this.manager.registerExceptionHandler(
+                InvalidSyntaxException.class,
+                (context, exception) -> context.sendMessage("你可能: " + exception.getCorrectSyntax())
+        );*/
+
         // Create the commands
         this.constructCommands();
     }
