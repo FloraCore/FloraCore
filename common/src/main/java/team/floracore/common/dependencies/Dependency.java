@@ -29,6 +29,9 @@ public enum Dependency {
     CLOUD_PAPER("cloud.commandframework", "cloud-paper", "1.8.3", "iVYGvszDPm0Zlytga0teNQJ7Ekojn72HI6/RqK3boYU="),
     CLOUD_BUKKIT("cloud.commandframework", "cloud-bukkit", "1.8.3", "FV96thssXMaB8bOzkNb7GyqQYyyvcFuJ2g8xafclTa8="),
     CLOUD_MINECRAFT_EXTRAS("cloud.commandframework", "cloud-minecraft-extras", "1.8.3", "wMClzyqbxpQkH7NZFNZH0QzkBZRCjOmMIcR+aoW9CNQ="),
+    CLOUD_BRIGADIER("cloud.commandframework", "cloud-brigadier", "1.8.3", "/T19TrFV+afTyk9fS4ke584XK149ImNuXfvRmRGUgrU="),
+    CLOUD_SERVICES("cloud.commandframework", "cloud-services", "1.8.3", "fjceKOp9boNjZmD4bRwVfh2nvrEFtcQcMj8xd+FbSk0="),
+    CLOUD_TASKS("cloud.commandframework", "cloud-tasks", "1.8.3", "0wnkKoCA/ZtiwvWgrS6PheJZfvVhP0LObX3duUMEJlg="),
     MARIADB_DRIVER("org{}mariadb{}jdbc", "mariadb-java-client", "3.1.3", "ESl+5lYkJsScgTh8hgFTy8ExxMPQQkktT20tl6s6HKU=", Relocation.of("mariadb", "org{}mariadb{}jdbc")),
     MYSQL_DRIVER("mysql", "mysql-connector-java", "8.0.30", "tb8vCYcZfDCt90qeQZuJzaTCV9otEUKHH1CEFtXyIno=", Relocation.of("mysql", "com{}mysql")),
     POSTGRESQL_DRIVER("org{}postgresql", "postgresql", "42.6.0", "uBfGekDJQkn9WdTmhuMyftDT0/rkJrINoPHnVlLPxGE=", Relocation.of("postgresql", "org{}postgresql")),
@@ -50,7 +53,7 @@ public enum Dependency {
     HIKARI("com{}zaxxer", "HikariCP", "4.0.3", "fAJK7/HBBjV210RTUT+d5kR9jmJNF/jifzCi6XaIxsk=", Relocation.of("hikari", "com{}zaxxer{}hikari")),
     SLF4J_SIMPLE("org.slf4j", "slf4j-simple", "2.0.7", "UOrj8cyaeKlwlwUY4AXT9D1c0yYtI09H6988o/i8Aac="),
     SLF4J_API("org.slf4j", "slf4j-api", "2.0.7", "XWKYuToZBcMs2mR4gIrBTC1KR+kVNeU8Qff+64XZRvQ="),
-    ;
+    GEANTYREF("io.leangen.geantyref", "geantyref", "1.3.14", "Yrci0TJFRQOQSl97CkeiTw/FgYIeyNNoffHg8UbG1h4=");
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";
     private final String mavenRepoPath;

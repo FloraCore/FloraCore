@@ -2,6 +2,7 @@ package team.floracore.common.plugin;
 
 import net.kyori.adventure.platform.bukkit.*;
 import team.floracore.common.api.*;
+import team.floracore.common.command.*;
 import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
@@ -25,6 +26,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private Storage storage;
     private SimpleExtensionManager extensionManager;
     private BukkitAudiences bukkitAudiences;
+    private CommandManager commandManager;
 
     /**
      * Performs the initial actions to load the plugin
@@ -64,6 +66,9 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // setup extension manager
         this.extensionManager = new SimpleExtensionManager(this);
         this.extensionManager.loadExtensions(getBootstrap().getConfigDirectory().resolve("extensions"));
+
+        getLogger().info("Loading cloud command framework...");
+        this.commandManager = new CommandManager(this);
 
         Duration timeTaken = Duration.between(getBootstrap().getStartupTime(), Instant.now());
         getLogger().info("Successfully enabled. (took " + timeTaken.toMillis() + "ms)");
@@ -110,7 +115,28 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     protected Set<Dependency> getGlobalDependencies() {
-        return EnumSet.of(Dependency.ADVENTURE, Dependency.ADVENTURE_NBT, Dependency.ADVENTURE_KEY, Dependency.ADVENTURE_PLATFORM_API, Dependency.ADVENTURE_PLATFORM_FACET, Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY, Dependency.ADVENTURE_TEXT_SERIALIZER_GSON, Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL, Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN, Dependency.EXAMINATION_API, Dependency.CLOUD_CORE, Dependency.CLOUD_ANNOTATIONS, Dependency.CLOUD_MINECRAFT_EXTRAS);
+        // @formatter:off
+        return EnumSet.of(Dependency.ADVENTURE,
+                Dependency.ADVENTURE_NBT,
+                Dependency.ADVENTURE_KEY,
+                Dependency.ADVENTURE_PLATFORM_API,
+                Dependency.ADVENTURE_PLATFORM_FACET,
+                Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY,
+                Dependency.ADVENTURE_TEXT_SERIALIZER_GSON,
+                Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL,
+                Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN,
+                Dependency.EXAMINATION_API,
+                Dependency.CLOUD_CORE,
+                Dependency.CLOUD_ANNOTATIONS,
+                Dependency.CLOUD_BRIGADIER,
+                Dependency.CLOUD_SERVICES,
+                Dependency.CLOUD_TASKS,
+                Dependency.GEANTYREF);
+    }
+
+    @Override
+    public CommandManager getCommandManager() {
+        return this.commandManager;
     }
 
     @Override
