@@ -28,6 +28,10 @@ FC的框架是基于[LuckPerms](https://luckperms.net/)(下称LP)
 - 数据库的加载及其用法 ([GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/storage))
 - 拓展的加载及其用法 ([GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/extension))
 
+# 开发
+
+- [JavaDoc](https://floracore.github.io/index.html)
+
 # Visitors
 
 ![](https://count.getloli.com/get/@FloraCore?theme=rule34)

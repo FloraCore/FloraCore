@@ -37,7 +37,7 @@ public enum Dependency {
     POSTGRESQL_DRIVER("org{}postgresql", "postgresql", "42.6.0", "uBfGekDJQkn9WdTmhuMyftDT0/rkJrINoPHnVlLPxGE=", Relocation.of("postgresql", "org{}postgresql")),
     /**
      * seems to be a compat bug in 1.4.200 with older dbs
-     * see: <a href="https://github.com/h2database/h2database/issues/2078"/>
+     * {@see <a href="https://github.com/h2database/h2database/issues/2078">H2</a>}
      * <p>
      * we don't apply relocations to h2 - it gets loaded via an isolated classloader
      */

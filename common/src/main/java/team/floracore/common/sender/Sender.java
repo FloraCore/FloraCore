@@ -72,7 +72,7 @@ public interface Sender {
     boolean isConsole();
 
     /**
-     * Gets whether this sender is still valid & receiving messages.
+     * Gets whether this sender is still valid and receiving messages.
      *
      * @return if this sender is valid
      */

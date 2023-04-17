@@ -14,9 +14,6 @@ public class NonClosableConnection implements Connection {
         this.delegate = delegate;
     }
 
-    /**
-     * Actually {@link #close() closes} the underlying connection.
-     */
     public final void shutdown() throws SQLException {
         this.delegate.close();
     }
