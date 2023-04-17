@@ -6,7 +6,10 @@ import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
+import team.floracore.common.sender.*;
 import team.floracore.common.storage.*;
+
+import java.util.stream.*;
 
 public interface FloraCorePlugin {
     /**
@@ -43,6 +46,22 @@ public interface FloraCorePlugin {
      * @return the storage handler instance
      */
     Storage getStorage();
+
+    /**
+     * Gets a list of online Senders on the platform
+     *
+     * @return a {@link java.util.List} of senders online on the platform
+     */
+    Stream<Sender> getOnlineSenders();
+
+
+    /**
+     * Gets the console.
+     *
+     * @return the console sender of the instance
+     */
+    Sender getConsoleSender();
+
 
     /**
      * Returns the class implementing the FloraCoreAPI on this platform.

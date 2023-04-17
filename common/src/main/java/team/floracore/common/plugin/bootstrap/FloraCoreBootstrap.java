@@ -8,6 +8,7 @@ import team.floracore.common.plugin.scheduler.*;
 import java.io.*;
 import java.nio.file.*;
 import java.time.*;
+import java.util.*;
 import java.util.concurrent.*;
 
 public interface FloraCoreBootstrap {
@@ -80,6 +81,15 @@ public interface FloraCoreBootstrap {
     default Path getConfigDirectory() {
         return getDataDirectory();
     }
+
+
+    /**
+     * Checks if a user is online
+     *
+     * @param uniqueId the users external uuid
+     * @return true if the user is online
+     */
+    boolean isPlayerOnline(UUID uniqueId);
 
     /**
      * Gets a bundled resource file from the jar

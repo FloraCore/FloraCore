@@ -5,6 +5,7 @@ import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
+import team.floracore.common.locale.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.storage.*;
 
@@ -33,6 +34,12 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     public final void onEnable() {
+        // load the sender factory instance
+        setupSenderFactory();
+
+        // send the startup banner
+        Message.STARTUP_BANNER.send(getConsoleSender(), getBootstrap());
+
         // load configuration
         getLogger().info("Loading configuration...");
         ConfigurationAdapter configFileAdapter = provideConfigurationAdapter();
@@ -104,7 +111,13 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
     protected Set<Dependency> getGlobalDependencies() {
         return EnumSet.of(
-                Dependency.ADVENTURE
+                Dependency.ADVENTURE,
+                Dependency.ADVENTURE_KEY,
+                Dependency.ADVENTURE_PLATFORM_API,
+                Dependency.ADVENTURE_PLATFORM_FACET,
+                Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY_TEXT_3,
+                Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY,
+                Dependency.EXAMINATION_API
         );
     }
 
@@ -121,6 +134,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     protected DependencyManager createDependencyManager() {
         return new DependencyManagerImpl(this);
     }
+    protected abstract void setupSenderFactory();
 
     @Override
     public DependencyManager getDependencyManager() {

@@ -1,6 +1,8 @@
 package team.floracore.plugin;
 
 import org.bukkit.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
 import org.bukkit.plugin.java.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.loader.*;
@@ -11,6 +13,7 @@ import team.floracore.common.plugin.logging.*;
 import java.lang.reflect.*;
 import java.nio.file.*;
 import java.time.*;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.logging.*;
 
@@ -29,6 +32,11 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
      * A scheduler adapter for the platform
      */
     private final BukkitSchedulerAdapter schedulerAdapter;
+    /**
+     * A null-safe console instance which delegates to the server logger
+     * if {@link Server#getConsoleSender()} returns null.
+     */
+    private final ConsoleCommandSender console;
 
     /**
      * The plugin class path appender
@@ -58,6 +66,7 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         this.logger = new JavaPluginLogger(loader.getLogger());
         this.schedulerAdapter = new BukkitSchedulerAdapter(this);
         this.classPathAppender = new JarInJarClassPathAppender(getClass().getClassLoader());
+        this.console = getServer().getConsoleSender();
         this.plugin = new FCBukkitPlugin(this);
     }
 
@@ -178,6 +187,16 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
     @Override
     public Path getDataDirectory() {
         return this.loader.getDataFolder().toPath().toAbsolutePath();
+    }
+
+    @Override
+    public boolean isPlayerOnline(UUID uniqueId) {
+        Player player = getServer().getPlayer(uniqueId);
+        return player != null && player.isOnline();
+    }
+
+    public ConsoleCommandSender getConsole() {
+        return this.console;
     }
 
     @Override
