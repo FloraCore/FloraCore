@@ -1,5 +1,6 @@
 package team.floracore.common.plugin;
 
+import net.kyori.adventure.platform.bukkit.*;
 import team.floracore.common.api.*;
 import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
@@ -23,6 +24,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private FloraCoreApiProvider apiProvider;
     private Storage storage;
     private SimpleExtensionManager extensionManager;
+    private BukkitAudiences bukkitAudiences;
 
     /**
      * Performs the initial actions to load the plugin
@@ -34,6 +36,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     public final void onEnable() {
+        this.bukkitAudiences = BukkitAudiences.create(getBootstrap().getPlugin());
+
         // load the sender factory instance
         setupSenderFactory();
 
@@ -47,11 +51,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // now the configuration is loaded, we can create a storage factory and load initial dependencies
         StorageFactory storageFactory = new StorageFactory(this);
-        // @formatter:off
-        this.dependencyManager.loadStorageDependencies(
-                storageFactory.getRequiredTypes(),
-                getConfiguration().get(ConfigKeys.REDIS_ENABLED)
-        );
+        this.dependencyManager.loadStorageDependencies(storageFactory.getRequiredTypes(), getConfiguration().get(ConfigKeys.REDIS_ENABLED));
 
         // initialise storage
         this.storage = storageFactory.getInstance();
@@ -110,20 +110,12 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     protected Set<Dependency> getGlobalDependencies() {
-        return EnumSet.of(
-                Dependency.ADVENTURE,
-                Dependency.ADVENTURE_NBT,
-                Dependency.ADVENTURE_KEY,
-                Dependency.ADVENTURE_PLATFORM_API,
-                Dependency.ADVENTURE_PLATFORM_FACET,
-                Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY,
-                Dependency.ADVENTURE_TEXT_SERIALIZER_GSON,
-                Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL,
-                Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN,
-                Dependency.EXAMINATION_API,
-                Dependency.CLOUD_CORE,
-                Dependency.CLOUD_ANNOTATIONS
-        );
+        return EnumSet.of(Dependency.ADVENTURE, Dependency.ADVENTURE_NBT, Dependency.ADVENTURE_KEY, Dependency.ADVENTURE_PLATFORM_API, Dependency.ADVENTURE_PLATFORM_FACET, Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY, Dependency.ADVENTURE_TEXT_SERIALIZER_GSON, Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL, Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN, Dependency.EXAMINATION_API, Dependency.CLOUD_CORE, Dependency.CLOUD_ANNOTATIONS, Dependency.CLOUD_MINECRAFT_EXTRAS);
+    }
+
+    @Override
+    public BukkitAudiences getBukkitAudiences() {
+        return this.bukkitAudiences;
     }
 
     @Override
@@ -139,6 +131,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     protected DependencyManager createDependencyManager() {
         return new DependencyManagerImpl(this);
     }
+
     protected abstract void setupSenderFactory();
 
     @Override

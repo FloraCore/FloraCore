@@ -48,6 +48,7 @@ dependencies {
     api 'cloud.commandframework:cloud-core:1.8.3'
     api 'cloud.commandframework:cloud-annotations:1.8.3'
     api 'cloud.commandframework:cloud-paper:1.8.3'
+    api 'cloud.commandframework:cloud-minecraft-extras:1.8.3'
 
     api 'com.google.code.gson:gson:2.10.1'
     api 'com.google.guava:guava:31.1-jre'

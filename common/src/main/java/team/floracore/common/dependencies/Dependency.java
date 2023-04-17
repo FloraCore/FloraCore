@@ -27,6 +27,8 @@ public enum Dependency {
     CLOUD_CORE("cloud.commandframework", "cloud-core", "1.8.3", "FhrRDVk/aT0nFyWOicF30WIXc0FEEdgkU6UqL/dXsEg="),
     CLOUD_ANNOTATIONS("cloud.commandframework", "cloud-annotations", "1.8.3", "oy6LaeFidBbRW6GgZ5Kmo3900bKsfaqGJlFEMcjXQ8w="),
     CLOUD_PAPER("cloud.commandframework", "cloud-paper", "1.8.3", "iVYGvszDPm0Zlytga0teNQJ7Ekojn72HI6/RqK3boYU="),
+    CLOUD_BUKKIT("cloud.commandframework", "cloud-bukkit", "1.8.3", "FV96thssXMaB8bOzkNb7GyqQYyyvcFuJ2g8xafclTa8="),
+    CLOUD_MINECRAFT_EXTRAS("cloud.commandframework", "cloud-minecraft-extras", "1.8.3", "wMClzyqbxpQkH7NZFNZH0QzkBZRCjOmMIcR+aoW9CNQ="),
     MARIADB_DRIVER("org{}mariadb{}jdbc", "mariadb-java-client", "3.1.3", "ESl+5lYkJsScgTh8hgFTy8ExxMPQQkktT20tl6s6HKU=", Relocation.of("mariadb", "org{}mariadb{}jdbc")),
     MYSQL_DRIVER("mysql", "mysql-connector-java", "8.0.30", "tb8vCYcZfDCt90qeQZuJzaTCV9otEUKHH1CEFtXyIno=", Relocation.of("mysql", "com{}mysql")),
     POSTGRESQL_DRIVER("org{}postgresql", "postgresql", "42.6.0", "uBfGekDJQkn9WdTmhuMyftDT0/rkJrINoPHnVlLPxGE=", Relocation.of("postgresql", "org{}postgresql")),

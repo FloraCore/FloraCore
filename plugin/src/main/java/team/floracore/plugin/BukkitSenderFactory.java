@@ -13,7 +13,7 @@ public class BukkitSenderFactory extends SenderFactory<FCBukkitPlugin, CommandSe
 
     public BukkitSenderFactory(FCBukkitPlugin plugin) {
         super(plugin);
-        this.audiences = BukkitAudiences.create(plugin.getLoader());
+        this.audiences = plugin.getBukkitAudiences();
     }
 
     @Override

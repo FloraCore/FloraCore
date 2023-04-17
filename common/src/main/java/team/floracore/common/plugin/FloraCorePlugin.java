@@ -1,5 +1,6 @@
 package team.floracore.common.plugin;
 
+import net.kyori.adventure.platform.bukkit.*;
 import team.floracore.common.api.*;
 import team.floracore.common.config.*;
 import team.floracore.common.dependencies.*;
@@ -32,6 +33,8 @@ public interface FloraCorePlugin {
      * @return the dependency manager
      */
     DependencyManager getDependencyManager();
+
+    BukkitAudiences getBukkitAudiences();
 
     /**
      * Gets the plugin's configuration
