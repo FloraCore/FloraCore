@@ -7,6 +7,7 @@ import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
 import org.bukkit.command.*;
 import org.checkerframework.checker.nullness.qual.*;
+import team.floracore.common.command.*;
 import team.floracore.common.plugin.*;
 
 import java.util.*;
@@ -18,11 +19,9 @@ import java.util.*;
  */
 @CommandContainer
 @CommandPermission("admin.test")
-public class TestCommand {
-    private final FloraCorePlugin plugin;
-
+public class TestCommand extends AbstractFloraCoreCommand {
     public TestCommand(FloraCorePlugin plugin) {
-        this.plugin = plugin;
+        super(plugin);
     }
 
     /**
