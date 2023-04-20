@@ -31,4 +31,9 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     public @NonNull List<String> getWorlds(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
         return plugin.getBootstrap().getServer().getWorlds().stream().sorted(Comparator.comparing(World::getName)).map(World::getName).collect(Collectors.toList());
     }
+
+    @Suggestions("booleans")
+    public @NonNull List<String> getBooleans(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+        return new ArrayList<>(Arrays.asList("true", "false"));
+    }
 }
