@@ -14,6 +14,8 @@ public class DependencyRegistry {
     private static final SetMultimap<StorageType, Dependency> STORAGE_DEPENDENCIES = ImmutableSetMultimap.<StorageType, Dependency>builder()
             .putAll(StorageType.MARIADB,        Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.MARIADB_DRIVER)
             .putAll(StorageType.MYSQL,          Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.MYSQL_DRIVER)
+            .putAll(StorageType.POSTGRESQL,     Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.POSTGRESQL_DRIVER)
+            .putAll(StorageType.SQLITE,         Dependency.SQLITE_DRIVER)
             .putAll(StorageType.H2,             Dependency.H2_DRIVER)
             .build();
 
@@ -65,6 +67,7 @@ public class DependencyRegistry {
             case JAR_RELOCATOR:
             case H2_DRIVER:
             case H2_DRIVER_LEGACY:
+            case SQLITE_DRIVER:
                 return false;
             default:
                 return true;

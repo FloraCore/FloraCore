@@ -35,6 +35,7 @@ public enum Dependency {
     INVENTORY_FRAMEWORK("com{}github{}stefvanschie{}inventoryframework", "IF", "0.10.9", "G9nMQ9oE1Mv87KAbbmyvuN/twihUOKz6H12x4/1D04g=", Relocation.of("inventoryframework", "com{}github{}stefvanschie{}inventoryframework")),
     MARIADB_DRIVER("org{}mariadb{}jdbc", "mariadb-java-client", "3.1.3", "ESl+5lYkJsScgTh8hgFTy8ExxMPQQkktT20tl6s6HKU=", Relocation.of("mariadb", "org{}mariadb{}jdbc")),
     MYSQL_DRIVER("mysql", "mysql-connector-java", "8.0.30", "tb8vCYcZfDCt90qeQZuJzaTCV9otEUKHH1CEFtXyIno=", Relocation.of("mysql", "com{}mysql")),
+    POSTGRESQL_DRIVER("org{}postgresql", "postgresql", "42.6.0", "uBfGekDJQkn9WdTmhuMyftDT0/rkJrINoPHnVlLPxGE=", Relocation.of("postgresql", "org{}postgresql")),
     /**
      * seems to be a compat bug in 1.4.200 with older dbs
      * {@see <a href="https://github.com/h2database/h2database/issues/2078">H2</a>}
@@ -46,6 +47,10 @@ public enum Dependency {
      * we don't apply relocations to h2 - it gets loaded via an isolated classloader
      */
     H2_DRIVER("com.h2database", "h2", "2.1.214", "1iPNwPYdIYz1SajQnxw5H/kQlhFrIuJHVHX85PvnK9A="),
+    /**
+     * we don't apply relocations to sqlite - it gets loaded via an isolated classloader
+     */
+    SQLITE_DRIVER("org.xerial", "sqlite-jdbc", "3.41.2.1", "sxQQV7+2heqfmrIAwhWLwotHxKLULIj8sKGgCVT60m0="),
     HIKARI("com{}zaxxer", "HikariCP", "4.0.3", "fAJK7/HBBjV210RTUT+d5kR9jmJNF/jifzCi6XaIxsk=", Relocation.of("hikari", "com{}zaxxer{}hikari")),
     SLF4J_SIMPLE("org.slf4j", "slf4j-simple", "2.0.7", "UOrj8cyaeKlwlwUY4AXT9D1c0yYtI09H6988o/i8Aac="),
     SLF4J_API("org.slf4j", "slf4j-api", "2.0.7", "XWKYuToZBcMs2mR4gIrBTC1KR+kVNeU8Qff+64XZRvQ="),
