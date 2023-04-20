@@ -7,9 +7,9 @@ version rootProject.version
 
 /**
  * 测试的时候把下面注释去掉，因为这会影响到编译速度。*/
-/*test {
+test {
     useJUnitPlatform {}
-}*/
+}
 
 repositories {
     mavenCentral()
@@ -40,6 +40,8 @@ dependencies {
 
     api 'cloud.commandframework:cloud-annotations:1.8.3'
     api 'cloud.commandframework:cloud-paper:1.8.3'
+
+    api 'com.github.stefvanschie.inventoryframework:IF:0.10.9'
 
     api 'com.google.code.gson:gson:2.10.1'
     api 'com.google.guava:guava:31.1-jre'

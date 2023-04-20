@@ -32,6 +32,7 @@ public enum Dependency {
     CLOUD_BRIGADIER("cloud.commandframework", "cloud-brigadier", "1.8.3", "/T19TrFV+afTyk9fS4ke584XK149ImNuXfvRmRGUgrU="),
     CLOUD_SERVICES("cloud.commandframework", "cloud-services", "1.8.3", "fjceKOp9boNjZmD4bRwVfh2nvrEFtcQcMj8xd+FbSk0="),
     CLOUD_TASKS("cloud.commandframework", "cloud-tasks", "1.8.3", "0wnkKoCA/ZtiwvWgrS6PheJZfvVhP0LObX3duUMEJlg="),
+    INVENTORY_FRAMEWORK("com{}github{}stefvanschie{}inventoryframework", "IF", "0.10.9", "G9nMQ9oE1Mv87KAbbmyvuN/twihUOKz6H12x4/1D04g=", Relocation.of("inventoryframework", "com{}github{}stefvanschie{}inventoryframework")),
     MARIADB_DRIVER("org{}mariadb{}jdbc", "mariadb-java-client", "3.1.3", "ESl+5lYkJsScgTh8hgFTy8ExxMPQQkktT20tl6s6HKU=", Relocation.of("mariadb", "org{}mariadb{}jdbc")),
     MYSQL_DRIVER("mysql", "mysql-connector-java", "8.0.30", "tb8vCYcZfDCt90qeQZuJzaTCV9otEUKHH1CEFtXyIno=", Relocation.of("mysql", "com{}mysql")),
     POSTGRESQL_DRIVER("org{}postgresql", "postgresql", "42.6.0", "uBfGekDJQkn9WdTmhuMyftDT0/rkJrINoPHnVlLPxGE=", Relocation.of("postgresql", "org{}postgresql")),

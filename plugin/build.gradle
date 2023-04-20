@@ -30,6 +30,7 @@ shadowJar {
     relocate 'org.postgresql', 'team.floracore.lib.postgresql'
     relocate 'com.zaxxer.hikari', 'team.floracore.lib.hikari'
     relocate 'io.lettuce.core', 'team.floracore.lib.lettuce'
+    relocate 'com.github.stefvanschie.inventoryframework', 'team.floracore.lib.inventoryframework'
 }
 
 artifacts {

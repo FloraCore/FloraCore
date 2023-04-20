@@ -131,7 +131,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
                 Dependency.CLOUD_BRIGADIER,
                 Dependency.CLOUD_SERVICES,
                 Dependency.CLOUD_TASKS,
-                Dependency.GEANTYREF);
+                Dependency.GEANTYREF,
+                Dependency.INVENTORY_FRAMEWORK);
     }
 
     @Override
