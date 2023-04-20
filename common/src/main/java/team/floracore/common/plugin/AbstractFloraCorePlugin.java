@@ -1,6 +1,7 @@
 package team.floracore.common.plugin;
 
 import net.kyori.adventure.platform.bukkit.*;
+import okhttp3.*;
 import team.floracore.common.api.*;
 import team.floracore.common.command.*;
 import team.floracore.common.config.*;
@@ -15,10 +16,12 @@ import java.io.*;
 import java.nio.file.*;
 import java.time.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     // init during load
     private DependencyManager dependencyManager;
+    private TranslationManager translationManager;
 
     // init during enable
     private FloraCoreConfiguration configuration;
@@ -27,6 +30,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private SimpleExtensionManager extensionManager;
     private BukkitAudiences bukkitAudiences;
     private CommandManager commandManager;
+    private OkHttpClient httpClient;
+    private TranslationRepository translationRepository;
 
     /**
      * Performs the initial actions to load the plugin
@@ -35,6 +40,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // load dependencies
         this.dependencyManager = createDependencyManager();
         this.dependencyManager.loadDependencies(getGlobalDependencies());
+
+        // load translations
+        this.translationManager = new TranslationManager(this);
+        this.translationManager.reload();
     }
 
     public final void onEnable() {
@@ -50,6 +59,14 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         getLogger().info("Loading configuration...");
         ConfigurationAdapter configFileAdapter = provideConfigurationAdapter();
         this.configuration = new FloraCoreConfiguration(this, new MultiConfigurationAdapter(this, new SystemPropertyConfigAdapter(this), new EnvironmentVariableConfigAdapter(this), configFileAdapter));
+
+
+        // setup a bytebin instance
+        this.httpClient = new OkHttpClient.Builder().callTimeout(15, TimeUnit.SECONDS).build();
+
+        // init translation repo and update bundle files
+        this.translationRepository = new TranslationRepository(this);
+        this.translationRepository.scheduleRefresh();
 
         // now the configuration is loaded, we can create a storage factory and load initial dependencies
         StorageFactory storageFactory = new StorageFactory(this);
@@ -139,7 +156,14 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
                 Dependency.CLOUD_SERVICES,
                 Dependency.CLOUD_TASKS,
                 Dependency.GEANTYREF,
-                Dependency.INVENTORY_FRAMEWORK);
+                Dependency.INVENTORY_FRAMEWORK,
+                Dependency.OKHTTP,
+                Dependency.OKIO);
+    }
+
+    @Override
+    public TranslationManager getTranslationManager() {
+        return this.translationManager;
     }
 
     @Override
@@ -156,7 +180,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     public FloraCoreConfiguration getConfiguration() {
         return this.configuration;
     }
-
+    @Override
+    public TranslationRepository getTranslationRepository() {
+        return this.translationRepository;
+    }
     @Override
     public Storage getStorage() {
         return this.storage;
@@ -171,6 +198,11 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public DependencyManager getDependencyManager() {
         return this.dependencyManager;
+    }
+
+    @Override
+    public OkHttpClient getHttpClient() {
+        return this.httpClient;
     }
 
     @Override

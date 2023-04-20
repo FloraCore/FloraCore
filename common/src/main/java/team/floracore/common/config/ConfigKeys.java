@@ -18,6 +18,11 @@ import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
  */
 public class ConfigKeys {
     /**
+     * If FloraCore should automatically install translation bundles and periodically update them.
+     */
+    public static final ConfigKey<Boolean> AUTO_INSTALL_TRANSLATIONS = notReloadable(booleanKey("auto-install-translations", true));
+
+    /**
      * The database settings, username, password, etc. for use by any database
      */
     public static final ConfigKey<StorageCredentials> DATABASE_VALUES = notReloadable(key(c -> {

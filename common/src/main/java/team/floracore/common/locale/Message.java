@@ -10,6 +10,10 @@ import static net.kyori.adventure.text.format.TextDecoration.*;
 
 // @formatter:off
 public interface Message {
+    TextComponent OPEN_BRACKET = Component.text('(');
+    TextComponent CLOSE_BRACKET = Component.text(')');
+    TextComponent FULL_STOP = Component.text('.');
+
     Component PREFIX_COMPONENT = text()
             .color(GRAY)
             .append(text('['))
@@ -39,6 +43,21 @@ public interface Message {
                 text().append(infoLine1).build()
         );
     };
+    Args1<String> TRANSLATIONS_INSTALLING_SPECIFIC = name -> prefixed(translatable()
+            // "&aInstalling language {}..."
+            .key("floracore.command.translations.installing-specific")
+            .color(GREEN)
+            .args(text(name))
+    );
+    Args1<String> TRANSLATIONS_DOWNLOAD_ERROR = name -> prefixed(text()
+            // "&cUnable download translation for {}. Check the console for errors."
+            .color(RED)
+            .append(translatable("floracore.command.translations.download-error", text(name, DARK_RED)))
+            .append(FULL_STOP)
+            .append(space())
+            .append(translatable("floracore.command.misc.check-console-for-errors"))
+            .append(FULL_STOP)
+    );
 
     static TextComponent prefixed(ComponentLike component) {
         return text()

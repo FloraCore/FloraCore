@@ -1,11 +1,13 @@
 package team.floracore.common.plugin;
 
 import net.kyori.adventure.platform.bukkit.*;
+import okhttp3.*;
 import team.floracore.common.api.*;
 import team.floracore.common.command.*;
 import team.floracore.common.config.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
+import team.floracore.common.locale.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.sender.*;
@@ -20,6 +22,8 @@ public interface FloraCorePlugin {
      * @return the bootstrap plugin
      */
     FloraCoreBootstrap getBootstrap();
+
+    OkHttpClient getHttpClient();
 
     /**
      * Gets a wrapped logger instance for the platform.
@@ -87,4 +91,18 @@ public interface FloraCorePlugin {
      * @return the extension manager
      */
     SimpleExtensionManager getExtensionManager();
+
+    /**
+     * Gets the instance providing locale translations for the plugin
+     *
+     * @return the translation manager
+     */
+    TranslationManager getTranslationManager();
+
+    /**
+     * Gets the translation repository
+     *
+     * @return the translation repository
+     */
+    TranslationRepository getTranslationRepository();
 }

@@ -54,7 +54,16 @@ public enum Dependency {
     HIKARI("com{}zaxxer", "HikariCP", "4.0.3", "fAJK7/HBBjV210RTUT+d5kR9jmJNF/jifzCi6XaIxsk=", Relocation.of("hikari", "com{}zaxxer{}hikari")),
     SLF4J_SIMPLE("org.slf4j", "slf4j-simple", "2.0.7", "UOrj8cyaeKlwlwUY4AXT9D1c0yYtI09H6988o/i8Aac="),
     SLF4J_API("org.slf4j", "slf4j-api", "2.0.7", "XWKYuToZBcMs2mR4gIrBTC1KR+kVNeU8Qff+64XZRvQ="),
-    GEANTYREF("io.leangen.geantyref", "geantyref", "1.3.14", "Yrci0TJFRQOQSl97CkeiTw/FgYIeyNNoffHg8UbG1h4=");
+    GEANTYREF("io.leangen.geantyref", "geantyref", "1.3.14", "Yrci0TJFRQOQSl97CkeiTw/FgYIeyNNoffHg8UbG1h4="),
+    OKHTTP("com{}squareup{}" + RelocationHelper.OKHTTP3_STRING, "okhttp", "3.14.9", "JXD6tVUVy/iB16TO70n8UVSQvAJwV+Zmd2ooMkZa7KA=", Relocation.of(RelocationHelper.OKHTTP3_STRING, RelocationHelper.OKHTTP3_STRING), Relocation.of(RelocationHelper.OKIO_STRING, RelocationHelper.OKIO_STRING)),
+    OKIO(
+            "com{}squareup{}" + RelocationHelper.OKIO_STRING,
+            RelocationHelper.OKIO_STRING,
+            "1.17.5",
+            "Gaf/SNhtPPRJf38lD78pX0MME6Uo3Vt7ID+CGAK4hq0=",
+            Relocation.of(RelocationHelper.OKIO_STRING, RelocationHelper.OKIO_STRING)
+    ),
+    ;
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";
     private final String mavenRepoPath;

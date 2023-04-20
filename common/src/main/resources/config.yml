@@ -99,3 +99,6 @@ redis:
   address: localhost
   username: ''
   password: ''
+
+# If FloraCore should automatically install translation bundles and periodically update them.
+auto-install-translations: true

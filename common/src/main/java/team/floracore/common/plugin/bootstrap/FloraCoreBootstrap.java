@@ -84,7 +84,6 @@ public interface FloraCoreBootstrap {
         return getDataDirectory();
     }
 
-
     /**
      * Checks if a user is online
      *
