@@ -9,6 +9,7 @@ import cloud.commandframework.execution.*;
 import cloud.commandframework.meta.*;
 import cloud.commandframework.paper.*;
 import org.bukkit.command.*;
+import team.floracore.common.commands.admin.player.FlyCommand;
 import team.floracore.common.commands.misc.FloraCoreCommand;
 import team.floracore.common.commands.test.*;
 import team.floracore.common.locale.*;
@@ -92,5 +93,6 @@ public class CommandManager {
     public void constructCommands() {
         this.annotationParser.parse(new TestCommand(plugin));
         this.annotationParser.parse(new FloraCoreCommand(plugin));
+        this.annotationParser.parse(new FlyCommand(plugin));
     }
 }
