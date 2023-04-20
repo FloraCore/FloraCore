@@ -12,7 +12,7 @@ import java.util.*;
 public enum Dependency {
     ASM("org.ow2.asm", "asm", "9.1", "zaTeRV+rSP8Ly3xItGOUR9TehZp6/DCglKmG8JNr66I="),
     ASM_COMMONS("org.ow2.asm", "asm-commons", "9.1", "r8sm3B/BLAxKma2mcJCN2C4Y38SIyvXuklRplrRwwAw="),
-    JAR_RELOCATOR("me.lucko", "jar-relocator", "1.4", "1RsiF3BiVztjlfTA+svDCuoDSGFuSpTZYHvUK8yBx8I="),
+    JAR_RELOCATOR("me{}lucko", "jar-relocator", "1.4", "1RsiF3BiVztjlfTA+svDCuoDSGFuSpTZYHvUK8yBx8I="),
     ADVENTURE("net.kyori", "adventure-api", "4.13.0", "VCFKCCgtuXUzFsU7fSX9eoEtCcURWfVpDWYvypqh7vo="),
     ADVENTURE_NBT("net.kyori", "adventure-nbt", "4.13.0", "2lzIfksbZKstejPOBAfuBiqNPzzUPXY0fMLYa6rra8o="),
     ADVENTURE_KEY("net.kyori", "adventure-key", "4.13.0", "Bgwbt02uKMvfyeATK/Bc+H19PVQB2detcX6oRUDYRGg="),

@@ -80,6 +80,13 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // cancel delayed/repeating tasks
         getBootstrap().getScheduler().shutdownScheduler();
 
+        // close storage
+        getLogger().info("Closing storage...");
+        this.storage.shutdown();
+
+        // unregister api
+        ApiRegistrationUtil.unregisterProvider();
+
         // shutdown async executor pool
         getBootstrap().getScheduler().shutdownExecutor();
 
