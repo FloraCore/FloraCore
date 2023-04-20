@@ -22,7 +22,7 @@ public interface Message {
             .append(text()
                     .decoration(BOLD, true)
                     .append(text('F', AQUA))
-                    .append(text('C', DARK_AQUA))
+                    .append(text('C', YELLOW))
             )
             .append(text(']'))
             .build();
@@ -30,7 +30,7 @@ public interface Message {
         Component infoLine1 = text()
                 .append(text("Fl", AQUA))
                 .append(text("ora", DARK_GREEN))
-                .append(text("Core", GREEN))
+                .append(text("Core", YELLOW))
                 .append(space())
                 .append(text("v" + bootstrap.getVersion(), AQUA))
                 .append(space())

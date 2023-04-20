@@ -59,6 +59,7 @@ public class TestCommand extends AbstractFloraCoreCommand {
     }
 
     @CommandMethod("test c2")
+    @CommandPermission("admin.test1")
     @CommandDescription("测试c2命令")
     public void test_c2(final @NonNull CommandSender sender) {
         sender.sendMessage("我是c2命令。");
@@ -86,6 +87,6 @@ public class TestCommand extends AbstractFloraCoreCommand {
     @CommandMethod("test c2 a2 [query]")
     @CommandDescription("测试c2 a2命令")
     public void test_c2_a2_qu(final @NonNull CommandSender sender, final @Argument(value = "query", suggestions = "onlinePlayers") @Greedy String query) {
-        sender.sendMessage("我是c2中的a1命令，你选择的query是" + query);
+        sender.sendMessage("我是c2中的a2命令，你选择的query是" + query);
     }
 }

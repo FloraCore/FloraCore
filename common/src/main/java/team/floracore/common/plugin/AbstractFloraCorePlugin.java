@@ -109,6 +109,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // shutdown async executor pool
         getBootstrap().getScheduler().shutdownExecutor();
 
+        // shutdown okhttp
+        this.httpClient.dispatcher().executorService().shutdown();
+        this.httpClient.connectionPool().evictAll();
+
         // close isolated loaders for non-relocated dependencies
         getDependencyManager().close();
         // close classpath appender
@@ -160,7 +164,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
                 Dependency.GEANTYREF,
                 Dependency.INVENTORY_FRAMEWORK,
                 Dependency.OKHTTP,
-                Dependency.OKIO);
+                Dependency.OKIO,
+                Dependency.CAFFEINE);
     }
 
     @Override

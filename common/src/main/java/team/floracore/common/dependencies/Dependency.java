@@ -56,14 +56,8 @@ public enum Dependency {
     SLF4J_API("org.slf4j", "slf4j-api", "2.0.7", "XWKYuToZBcMs2mR4gIrBTC1KR+kVNeU8Qff+64XZRvQ="),
     GEANTYREF("io.leangen.geantyref", "geantyref", "1.3.14", "Yrci0TJFRQOQSl97CkeiTw/FgYIeyNNoffHg8UbG1h4="),
     OKHTTP("com{}squareup{}" + RelocationHelper.OKHTTP3_STRING, "okhttp", "3.14.9", "JXD6tVUVy/iB16TO70n8UVSQvAJwV+Zmd2ooMkZa7KA=", Relocation.of(RelocationHelper.OKHTTP3_STRING, RelocationHelper.OKHTTP3_STRING), Relocation.of(RelocationHelper.OKIO_STRING, RelocationHelper.OKIO_STRING)),
-    OKIO(
-            "com{}squareup{}" + RelocationHelper.OKIO_STRING,
-            RelocationHelper.OKIO_STRING,
-            "1.17.5",
-            "Gaf/SNhtPPRJf38lD78pX0MME6Uo3Vt7ID+CGAK4hq0=",
-            Relocation.of(RelocationHelper.OKIO_STRING, RelocationHelper.OKIO_STRING)
-    ),
-    ;
+    OKIO("com{}squareup{}" + RelocationHelper.OKIO_STRING, RelocationHelper.OKIO_STRING, "1.17.5", "Gaf/SNhtPPRJf38lD78pX0MME6Uo3Vt7ID+CGAK4hq0=", Relocation.of(RelocationHelper.OKIO_STRING, RelocationHelper.OKIO_STRING)),
+    CAFFEINE("com.github.ben-manes.caffeine", "caffeine", "2.8.2", "U60wqcyKOJZbqkmGQoDP5zyINxyvZoDFGd5CqqNvd64=");
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";
     private final String mavenRepoPath;

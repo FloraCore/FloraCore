@@ -22,11 +22,13 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
         return plugin;
     }
 
+    @Override
     @Suggestions("onlinePlayers")
     public @NonNull List<String> getOnlinePlayers(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
         return plugin.getBootstrap().getServer().getOnlinePlayers().stream().sorted(Comparator.comparing(Player::getDisplayName)).map(Player::getDisplayName).collect(Collectors.toList());
     }
 
+    @Override
     @Suggestions("worlds")
     public @NonNull List<String> getWorlds(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
         return plugin.getBootstrap().getServer().getWorlds().stream().sorted(Comparator.comparing(World::getName)).map(World::getName).collect(Collectors.toList());

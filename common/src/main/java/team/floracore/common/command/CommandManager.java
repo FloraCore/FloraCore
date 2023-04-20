@@ -13,6 +13,7 @@ import team.floracore.common.commands.misc.FloraCoreCommand;
 import team.floracore.common.commands.test.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
 
 import java.util.function.*;
 
@@ -61,10 +62,16 @@ public class CommandManager {
                 /* Mapper for command meta instances */ commandMetaFunction);
 
         // 命令语法错误自定义
-        this.manager.registerExceptionHandler(InvalidSyntaxException.class, (context, exception) -> Message.COMMAND_INVALID_COMMAND_SYNTAX.send(plugin.getSenderFactory().wrap(context), "/" + exception.getCorrectSyntax()));
+        this.manager.registerExceptionHandler(InvalidSyntaxException.class, (context, exception) -> {
+            Sender sender = plugin.getSenderFactory().wrap(context);
+            Message.COMMAND_INVALID_COMMAND_SYNTAX.send(sender, "/" + exception.getCorrectSyntax());
+        });
 
         // 无权限
-        this.manager.registerExceptionHandler(NoPermissionException.class, (context, exception) -> Message.COMMAND_NO_PERMISSION.send(plugin.getSenderFactory().wrap(context)));
+        this.manager.registerExceptionHandler(NoPermissionException.class, (context, exception) -> {
+            Sender sender = plugin.getSenderFactory().wrap(context);
+            Message.COMMAND_NO_PERMISSION.send(sender);
+        });
 
         // Create the commands
         this.constructCommands();
