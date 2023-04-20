@@ -11,11 +11,9 @@
 #   |  Remote databases - require connection information to be configured below
 #   |=> MySQL
 #   |=> MariaDB (preferred over MySQL)
-#   |=> PostgreSQL
 #
 #   |  Flat file/local database - don't require any extra configuration
-#   |=> H2 (preferred over SQLite)
-#   |=> SQLite
+#   |=> H2
 #
 # - A H2 database is the default option.
 storage-method: h2

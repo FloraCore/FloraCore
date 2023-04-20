@@ -11,10 +11,8 @@ public enum StorageType {
     // Remote databases
     MARIADB("MariaDB", "mariadb"),
     MYSQL("MySQL", "mysql"),
-    POSTGRESQL("PostgreSQL", "postgresql"),
 
     // Local databases
-    SQLITE("SQLite", "sqlite"),
     H2("H2", "h2");
 
     private final String name;
