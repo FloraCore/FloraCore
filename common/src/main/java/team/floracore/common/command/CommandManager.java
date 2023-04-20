@@ -4,11 +4,14 @@ import cloud.commandframework.*;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.arguments.parser.*;
 import cloud.commandframework.bukkit.*;
+import cloud.commandframework.exceptions.*;
 import cloud.commandframework.execution.*;
 import cloud.commandframework.meta.*;
 import cloud.commandframework.paper.*;
 import org.bukkit.command.*;
+import team.floracore.common.commands.misc.FloraCoreCommand;
 import team.floracore.common.commands.test.*;
+import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 
 import java.util.function.*;
@@ -58,10 +61,10 @@ public class CommandManager {
                 /* Mapper for command meta instances */ commandMetaFunction);
 
         // 命令语法错误自定义
-        /*this.manager.registerExceptionHandler(
-                InvalidSyntaxException.class,
-                (context, exception) -> context.sendMessage("你可能: " + exception.getCorrectSyntax())
-        );*/
+        this.manager.registerExceptionHandler(InvalidSyntaxException.class, (context, exception) -> Message.COMMAND_INVALID_COMMAND_SYNTAX.send(plugin.getSenderFactory().wrap(context), "/" + exception.getCorrectSyntax()));
+
+        // 无权限
+        this.manager.registerExceptionHandler(NoPermissionException.class, (context, exception) -> Message.COMMAND_NO_PERMISSION.send(plugin.getSenderFactory().wrap(context)));
 
         // Create the commands
         this.constructCommands();
@@ -81,5 +84,6 @@ public class CommandManager {
 
     public void constructCommands() {
         this.annotationParser.parse(new TestCommand(plugin));
+        this.annotationParser.parse(new FloraCoreCommand(plugin));
     }
 }

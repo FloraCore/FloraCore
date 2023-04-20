@@ -1,17 +1,17 @@
-package team.floracore.plugin;
+package team.floracore.common.sender;
 
 import net.kyori.adventure.platform.bukkit.*;
 import net.kyori.adventure.text.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
-import team.floracore.common.sender.*;
+import team.floracore.common.plugin.*;
 
 import java.util.*;
 
-public class BukkitSenderFactory extends SenderFactory<FCBukkitPlugin, CommandSender> {
+public class BukkitSenderFactory extends SenderFactory<FloraCorePlugin, CommandSender> {
     private final BukkitAudiences audiences;
 
-    public BukkitSenderFactory(FCBukkitPlugin plugin) {
+    public BukkitSenderFactory(FloraCorePlugin plugin) {
         super(plugin);
         this.audiences = plugin.getBukkitAudiences();
     }

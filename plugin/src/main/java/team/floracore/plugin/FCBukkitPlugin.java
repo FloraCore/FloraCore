@@ -15,7 +15,6 @@ import java.util.stream.*;
  */
 public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private final FCBukkitBootstrap bootstrap;
-    private BukkitSenderFactory senderFactory;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -63,10 +62,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         return getSenderFactory().wrap(this.bootstrap.getConsole());
     }
 
-    public BukkitSenderFactory getSenderFactory() {
-        return this.senderFactory;
-    }
-
     public JavaPlugin getLoader() {
         return this.bootstrap.getLoader();
     }
@@ -74,10 +69,5 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     @Override
     protected ConfigurationAdapter provideConfigurationAdapter() {
         return new BukkitConfigAdapter(this, resolveConfig("config.yml").toFile());
-    }
-
-    @Override
-    protected void setupSenderFactory() {
-        this.senderFactory = new BukkitSenderFactory(this);
     }
 }

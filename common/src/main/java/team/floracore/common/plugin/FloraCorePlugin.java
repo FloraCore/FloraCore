@@ -48,6 +48,8 @@ public interface FloraCorePlugin {
 
     BukkitAudiences getBukkitAudiences();
 
+    BukkitSenderFactory getSenderFactory();
+
     /**
      * Gets the plugin's configuration
      *

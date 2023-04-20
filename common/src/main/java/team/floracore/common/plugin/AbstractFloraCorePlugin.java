@@ -10,6 +10,7 @@ import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.logging.*;
+import team.floracore.common.sender.*;
 import team.floracore.common.storage.*;
 
 import java.io.*;
@@ -32,6 +33,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private CommandManager commandManager;
     private OkHttpClient httpClient;
     private TranslationRepository translationRepository;
+    private BukkitSenderFactory senderFactory;
 
     /**
      * Performs the initial actions to load the plugin
@@ -50,7 +52,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.bukkitAudiences = BukkitAudiences.create(getBootstrap().getPlugin());
 
         // load the sender factory instance
-        setupSenderFactory();
+        this.senderFactory = new BukkitSenderFactory(this);
 
         // send the startup banner
         Message.STARTUP_BANNER.send(getConsoleSender(), getBootstrap());
@@ -175,8 +177,11 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     public BukkitAudiences getBukkitAudiences() {
         return this.bukkitAudiences;
     }
-
     @Override
+    public BukkitSenderFactory getSenderFactory() {
+        return senderFactory;
+    }
+@Override
     public FloraCoreConfiguration getConfiguration() {
         return this.configuration;
     }
@@ -192,8 +197,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     protected DependencyManager createDependencyManager() {
         return new DependencyManagerImpl(this);
     }
-
-    protected abstract void setupSenderFactory();
 
     @Override
     public DependencyManager getDependencyManager() {
