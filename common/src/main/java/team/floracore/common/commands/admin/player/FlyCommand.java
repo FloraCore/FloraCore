@@ -1,14 +1,12 @@
 package team.floracore.common.commands.admin.player;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import team.floracore.common.command.AbstractFloraCoreCommand;
-import team.floracore.common.locale.Message;
-import team.floracore.common.plugin.FloraCorePlugin;
-import team.floracore.common.sender.Sender;
+import cloud.commandframework.annotations.*;
+import org.bukkit.entity.*;
+import org.jetbrains.annotations.*;
+import team.floracore.common.command.*;
+import team.floracore.common.locale.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
 
 public class FlyCommand extends AbstractFloraCoreCommand {
     public FlyCommand(FloraCorePlugin plugin) {
@@ -30,7 +28,7 @@ public class FlyCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("fly <target> [silent]")
     @CommandPermission("floracore.fly.other")
-    public void other(@NotNull Player s, @Argument("target") Player target, @Argument(value = "silent", suggestions = "booleans") boolean silent) {
+    public void other(@NotNull Player s, @Argument("target") Player target, @Argument("silent") boolean silent) {
         boolean old = target.getAllowFlight();
         target.setAllowFlight(!old);
         Sender sender = getPlugin().getSenderFactory().wrap(s);

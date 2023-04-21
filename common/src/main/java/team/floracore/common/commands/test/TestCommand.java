@@ -5,7 +5,9 @@ import cloud.commandframework.annotations.processing.*;
 import cloud.commandframework.annotations.specifier.*;
 import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
+import org.bukkit.*;
 import org.bukkit.command.*;
+import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.command.*;
 import team.floracore.common.plugin.*;
@@ -84,9 +86,15 @@ public class TestCommand extends AbstractFloraCoreCommand {
         sender.sendMessage("我是c2中的a1命令，你选择的query是" + query);
     }
 
-    @CommandMethod("test c2 a2 [query]")
-    @CommandDescription("测试c2 a2命令")
-    public void test_c2_a2_qu(final @NonNull CommandSender sender, final @Argument(value = "query", suggestions = "onlinePlayers") @Greedy String query) {
+    @CommandMethod("test c3 a1 [query]")
+    @CommandDescription("测试c3 a1命令")
+    public void test_c3_a1_qu(final @NonNull CommandSender sender, final @Argument("query") @Greedy World query) {
+        sender.sendMessage("我是c2中的a2命令，你选择的query是" + query);
+    }
+
+    @CommandMethod("test c3 a2 [query]")
+    @CommandDescription("测试c3 a2命令")
+    public void test_c3_a2_qu(final @NonNull CommandSender sender, final @Argument("query") @Greedy Player query) {
         sender.sendMessage("我是c2中的a2命令，你选择的query是" + query);
     }
 }

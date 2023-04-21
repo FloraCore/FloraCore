@@ -179,7 +179,7 @@ public interface Message {
     Args0 COMMAND_FLY_DISABLE_SELF = () -> prefixed(translatable()
             .key("floracore.command.fly.self")
             .color(AQUA)
-            .args(translatable("floracore.command.misc.on").color(RED))
+            .args(translatable("floracore.command.misc.off").color(RED))
     );
 
     Args1<String> COMMAND_FLY_ENABLE_OTHER = target -> prefixed(translatable()

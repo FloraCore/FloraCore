@@ -9,7 +9,7 @@ import cloud.commandframework.execution.*;
 import cloud.commandframework.meta.*;
 import cloud.commandframework.paper.*;
 import org.bukkit.command.*;
-import team.floracore.common.commands.admin.player.FlyCommand;
+import team.floracore.common.commands.admin.player.*;
 import team.floracore.common.commands.misc.FloraCoreCommand;
 import team.floracore.common.commands.test.*;
 import team.floracore.common.locale.*;
@@ -28,7 +28,9 @@ public class CommandManager {
 
     public CommandManager(FloraCorePlugin plugin) {
         this.plugin = plugin;
-        final Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> executionCoordinatorFunction = AsynchronousCommandExecutionCoordinator.<CommandSender>builder().build();
+        // 异步
+        // final Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> executionCoordinatorFunction = AsynchronousCommandExecutionCoordinator.<CommandSender>builder().build();
+        final Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> executionCoordinatorFunction = CommandExecutionCoordinator.simpleCoordinator();
         final Function<CommandSender, CommandSender> mapperFunction = Function.identity();
         try {
             this.manager = new PaperCommandManager<>(
