@@ -6,7 +6,6 @@ package team.floracore.common.storage.implementation;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
-import java.sql.*;
 import java.util.*;
 
 public interface StorageImplementation {
@@ -19,9 +18,23 @@ public interface StorageImplementation {
     void shutdown();
 
 
-    Players selectPlayerBaseInfo(UUID uuid);
+    Players selectPlayers(UUID uuid);
 
-    Players selectPlayerBaseInfo(UUID uuid, String n, String loginIp);
+    Players selectPlayers(UUID uuid, String n, String loginIp);
 
-    void deletePlayers(UUID u) throws SQLException;
+    void deletePlayers(UUID u);
+
+    Data insertData(UUID uuid, String type, String key, String value, long expiry);
+
+    List<Data> selectData(UUID uuid);
+
+    Data getSpecifiedData(UUID uuid, String type, String key);
+
+    void deleteDataAll(UUID uuid);
+
+    void deleteDataExpired(UUID uuid);
+
+    void deleteDataType(UUID uuid, String type);
+
+    void deleteDataKey(UUID uuid, String type, String key);
 }

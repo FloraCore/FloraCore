@@ -5,7 +5,6 @@ import team.floracore.common.storage.implementation.sql.*;
 import team.floracore.common.storage.misc.floracore.*;
 
 import java.sql.*;
-import java.util.Date;
 import java.util.*;
 
 public class Players extends AbstractFloraCoreTable {
@@ -15,14 +14,14 @@ public class Players extends AbstractFloraCoreTable {
     private static final String UPDATE_LAST_LOGIN_IP = "UPDATE '{prefix}players' SET lastLoginIp=? WHERE uuid=?";
     private static final String UPDATE_LAST_LOGIN_TIME = "UPDATE '{prefix}players' SET lastLoginTime=? WHERE uuid=?";
     private static final String UPDATE_PLAY_TIME = "UPDATE '{prefix}players' SET playTime=? WHERE uuid=?";
-    private static final String INSERT = "INSERT INTO '{prefix}players' (uuid, name, firstLoginIp, lastLoginIp, playTime) VALUES(?, ?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO '{prefix}players' (uuid, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
     private final UUID uuid;
-    private final Date firstLoginTime;
+    private final long firstLoginTime;
     private final String firstLoginIp;
     private String name;
     private String lastLoginIp;
-    private Date lastLoginTime;
+    private long lastLoginTime;
     private long playTime;
 
     public Players(FloraCorePlugin plugin, SqlStorage sqlStorage, UUID uuid, String name, String loginIp) {
@@ -31,13 +30,13 @@ public class Players extends AbstractFloraCoreTable {
         this.name = name;
         this.firstLoginIp = loginIp;
         this.lastLoginIp = loginIp;
-        Date date = new Date();
-        this.firstLoginTime = date;
-        this.lastLoginTime = date;
+        long currentTime = System.currentTimeMillis();
+        this.firstLoginTime = currentTime;
+        this.lastLoginTime = currentTime;
         this.playTime = 0;
     }
 
-    public Players(FloraCorePlugin plugin, SqlStorage sqlStorage, UUID uuid, String name, String firstLoginIp, String lastLoginIp, Date firstLoginTime, Date lastLoginTime, long playTime) {
+    public Players(FloraCorePlugin plugin, SqlStorage sqlStorage, UUID uuid, String name, String firstLoginIp, String lastLoginIp, long firstLoginTime, long lastLoginTime, long playTime) {
         super(plugin, sqlStorage);
         this.uuid = uuid;
         this.name = name;
@@ -56,7 +55,7 @@ public class Players extends AbstractFloraCoreTable {
         return name;
     }
 
-    public void setName(String name) throws SQLException {
+    public void setName(String name) {
         this.name = name;
         try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(UPDATE_NAME))) {
@@ -64,6 +63,8 @@ public class Players extends AbstractFloraCoreTable {
                 ps.setString(2, uuid.toString());
                 ps.execute();
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -75,7 +76,7 @@ public class Players extends AbstractFloraCoreTable {
         return lastLoginIp;
     }
 
-    public void setLastLoginIp(String lastLoginIp) throws SQLException {
+    public void setLastLoginIp(String lastLoginIp) {
         this.lastLoginIp = lastLoginIp;
         try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(UPDATE_LAST_LOGIN_IP))) {
@@ -83,25 +84,29 @@ public class Players extends AbstractFloraCoreTable {
                 ps.setString(2, uuid.toString());
                 ps.execute();
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    public Date getFirstLoginTime() {
+    public long getFirstLoginTime() {
         return firstLoginTime;
     }
 
-    public Date getLastLoginTime() {
+    public long getLastLoginTime() {
         return lastLoginTime;
     }
 
-    public void setLastLoginTime(Date lastLoginTime) throws SQLException {
+    public void setLastLoginTime(long lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
         try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(UPDATE_LAST_LOGIN_TIME))) {
-                ps.setDate(1, (java.sql.Date) lastLoginTime);
+                ps.setLong(1, lastLoginTime);
                 ps.setString(2, uuid.toString());
                 ps.execute();
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -128,7 +133,9 @@ public class Players extends AbstractFloraCoreTable {
                 ps.setString(2, name);
                 ps.setString(3, firstLoginIp);
                 ps.setString(4, lastLoginIp);
-                ps.setLong(5, playTime);
+                ps.setLong(5, firstLoginTime);
+                ps.setLong(6, lastLoginTime);
+                ps.setLong(7, playTime);
                 ps.execute();
             }
         }

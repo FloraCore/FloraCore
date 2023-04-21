@@ -7,7 +7,7 @@ public abstract class AbstractFloraCoreTable implements FloraCoreTable {
     private final FloraCorePlugin plugin;
     private final SqlStorage sqlStorage;
 
-    protected AbstractFloraCoreTable(FloraCorePlugin plugin, SqlStorage sqlStorage) {
+    public AbstractFloraCoreTable(FloraCorePlugin plugin, SqlStorage sqlStorage) {
         this.plugin = plugin;
         this.sqlStorage = sqlStorage;
     }
