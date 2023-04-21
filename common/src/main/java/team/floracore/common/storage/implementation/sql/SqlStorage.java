@@ -22,7 +22,6 @@ public class SqlStorage implements StorageImplementation {
     private final ConnectionFactory connectionFactory;
     private final Function<String, String> statementProcessor;
     AsyncCache<UUID, Players> playersCache = Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).maximumSize(10000).executor(Executors.newSingleThreadExecutor()).buildAsync();
-    AsyncCache<UUID, List<Data>> dataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).executor(Executors.newSingleThreadExecutor()).buildAsync();
 
     public SqlStorage(FloraCorePlugin plugin, ConnectionFactory connectionFactory, String tablePrefix) {
         this.plugin = plugin;
@@ -158,38 +157,42 @@ public class SqlStorage implements StorageImplementation {
 
     @Override
     public Data insertData(UUID uuid, String type, String key, String value, long expiry) {
-        Data data = new Data(plugin, this, uuid, type, key, value, expiry);
-        try {
-            data.init();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+        Data data = getSpecifiedData(uuid, type, key);
+        if (data == null) {
+            data = new Data(plugin, this, -1, uuid, type, key, value, expiry);
+            try {
+                data.init();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            data.setValue(value);
+            data.setExpiry(expiry);
         }
         return data;
     }
 
     @Override
     public List<Data> selectData(UUID uuid) {
-        CompletableFuture<List<Data>> d = dataCache.get(uuid, u -> {
-            List<Data> ret = new ArrayList<>();
-            try (Connection c = this.connectionFactory.getConnection()) {
-                try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.SELECT))) {
-                    ps.setString(1, uuid.toString());
-                    try (ResultSet rs = ps.executeQuery()) {
-                        while (rs.next()) {
-                            String type = rs.getString("type");
-                            String key = rs.getString("key");
-                            String value = rs.getString("value");
-                            long expiry = rs.getLong("expiry");
-                            ret.add(new Data(plugin, this, u, type, key, value, expiry));
-                        }
+        List<Data> ret = new ArrayList<>();
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.SELECT))) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        String type = rs.getString("type");
+                        String key = rs.getString("key");
+                        String value = rs.getString("value");
+                        long expiry = rs.getLong("expiry");
+                        ret.add(new Data(plugin, this, id, uuid, type, key, value, expiry));
                     }
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
             }
-            return ret;
-        });
-        return d.join();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ret;
     }
 
     @Override
@@ -197,7 +200,7 @@ public class SqlStorage implements StorageImplementation {
         List<Data> ret = selectData(uuid);
         for (Data data : ret) {
             if (data.getType().equalsIgnoreCase(type) && data.getKey().equalsIgnoreCase(key)) {
-                long currentTime = System.currentTimeMillis(); // 获取当前时间戳
+                long currentTime = System.currentTimeMillis();
                 if (data.getExpiry() <= 0 || data.getExpiry() > currentTime) {
                     return data;
                 }
@@ -220,36 +223,20 @@ public class SqlStorage implements StorageImplementation {
 
     @Override
     public void deleteDataExpired(UUID uuid) {
-        try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_EXPIRED))) {
-                ps.setString(1, uuid.toString());
-                ps.execute();
+        List<Data> ret = selectData(uuid);
+        for (Data data : ret) {
+            long currentTime = System.currentTimeMillis();
+            if (!(data.getExpiry() <= 0 || data.getExpiry() > currentTime)) {
+                deleteDataID(data.getId());
             }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
         }
     }
 
     @Override
-    public void deleteDataType(UUID uuid, String type) {
+    public void deleteDataID(int id) {
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_TYPE))) {
-                ps.setString(1, uuid.toString());
-                ps.setString(2, type);
-                ps.execute();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @Override
-    public void deleteDataKey(UUID uuid, String type, String key) {
-        try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_KEY))) {
-                ps.setString(1, uuid.toString());
-                ps.setString(2, type);
-                ps.setString(3, key);
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_ID))) {
+                ps.setInt(1, id);
                 ps.execute();
             }
         } catch (SQLException e) {

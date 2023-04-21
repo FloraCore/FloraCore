@@ -20,8 +20,10 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
         super(plugin);
     }
 
-    @CommandMethod("gm|gamemode <mode>")
-    public void self(@NotNull Player s, @NotNull @Argument(value = "mode", suggestions = "gamemodes") String mode) {
+    @CommandMethod("gm|gamemode <mode> [target]")
+    @CommandPermission("floracore.command.gamemode")
+    @CommandDescription("设置游戏模式")
+    public void self(final @NotNull CommandSender s, final @NotNull @Argument(value = "mode", suggestions = "gamemodes") String mode, final @Nullable @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         GameMode gameMode;
         try {
@@ -30,78 +32,74 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
             Message.COMMAND_GAMEMODE_NOSUCH.send(sender, mode);
             return;
         }
-        switch (gameMode) {
-            case SURVIVAL:
-                if (setGameModeIfPermissionOrSenMessage(sender, GameMode.SURVIVAL, s, "floracore.command.gamemode.creative")) {
-                    Message.COMMAND_GAMEMODE_SELF.send(sender, Message.COMMAND_MISC_GAMEMODE_SURVIVAL.build());
-                }
-                break;
-            case CREATIVE:
-                if (setGameModeIfPermissionOrSenMessage(sender, GameMode.CREATIVE, s, "floracore.command.gamemode.creative")) {
-                    Message.COMMAND_GAMEMODE_SELF.send(sender, Message.COMMAND_MISC_GAMEMODE_CREATIVE.build());
-                }
-                break;
-            case ADVENTURE:
-                if (setGameModeIfPermissionOrSenMessage(sender, GameMode.ADVENTURE, s, "floracore.command.gamemode.adventure")) {
-                    Message.COMMAND_GAMEMODE_SELF.send(sender, Message.COMMAND_MISC_GAMEMODE_ADVENTURE.build());
-                }
-                break;
-            case SPECTATOR:
-                if (setGameModeIfPermissionOrSenMessage(sender, GameMode.SPECTATOR, s, "floracore.command.gamemode.spectator")) {
-                    Message.COMMAND_GAMEMODE_SELF.send(sender, Message.COMMAND_MISC_GAMEMODE_SPECTATOR.build());
-                }
-                break;
+        boolean own = target == null;
+        boolean execute = true;
+        Player t = null;
+        if (own) {
+            // 判断是不是玩家
+            if (!sender.isConsole()) {
+                t = (Player) s;
+            } else {
+                // 控制台时，将只允许设置别人的游戏模式。
+                execute = false;
+            }
+        } else {
+            t = target;
         }
-    }
-
-    @CommandMethod("gm|gamemode <target> <mode> [silent]")
-    public void other(
-            @NotNull Player s,
-            @NotNull @Argument("target") Player target,
-            @NotNull @Argument(value = "mode", suggestions = "gamemodes") String mode,
-            @Nullable @Argument("silent") Boolean silent
-    ) {
-        Sender sender = getPlugin().getSenderFactory().wrap(s);
-        GameMode gameMode;
-        try {
-            gameMode = parseGamemode(mode); // 解析游戏模式
-        } catch (NoSuchGameModeException ex) {
-            Message.COMMAND_GAMEMODE_NOSUCH.send(sender, mode);
-            return;
-        }
-        switch (gameMode) { // 解析游戏模式
-            case SURVIVAL:
-                if (setGameModeIfPermissionOrSenMessage(sender, GameMode.SURVIVAL, target, "floracore.command.gamemode.other.creative")) {
-                    Message.COMMAND_GAMEMODE_OTHER.send(sender, target.getName(), Message.COMMAND_MISC_GAMEMODE_SURVIVAL.build());
-                    if (silent == null || !silent) { // 若非静音模式，则发送消息
-                        Message.COMMAND_GAMEMODE_FROM.send(sender, s.getName(), Message.COMMAND_MISC_GAMEMODE_SURVIVAL.build());
+        if (execute) {
+            Sender ts = getPlugin().getSenderFactory().wrap(target);
+            switch (gameMode) {
+                case SURVIVAL:
+                    if (setGameModeIfPermissionOrSenMessage(sender, GameMode.SURVIVAL, t, "floracore.command.gamemode.creative")) {
+                        if (own) {
+                            Message.COMMAND_GAMEMODE_SELF.send(sender, Message.COMMAND_MISC_GAMEMODE_SURVIVAL.build());
+                        } else {
+                            Message.COMMAND_GAMEMODE_OTHER.send(sender, t.getName(), Message.COMMAND_MISC_GAMEMODE_SURVIVAL.build());
+                            if (silent == null || !silent) { // 若非静音模式，则发送消息
+                                Message.COMMAND_GAMEMODE_FROM.send(ts, s.getName(), Message.COMMAND_MISC_GAMEMODE_SURVIVAL.build());
+                            }
+                        }
                     }
-                }
-                break;
-            case CREATIVE:
-                if (setGameModeIfPermissionOrSenMessage(sender, GameMode.CREATIVE, target, "floracore.command.gamemode.other.creative")) {
-                    Message.COMMAND_GAMEMODE_OTHER.send(sender, target.getName(), Message.COMMAND_MISC_GAMEMODE_CREATIVE.build());
-                    if (silent == null || !silent) { // 若非静音模式，则发送消息
-                        Message.COMMAND_GAMEMODE_FROM.send(sender, s.getName(), Message.COMMAND_MISC_GAMEMODE_CREATIVE.build());
+                    break;
+                case CREATIVE:
+                    if (setGameModeIfPermissionOrSenMessage(sender, GameMode.CREATIVE, t, "floracore.command.gamemode.creative")) {
+                        if (own) {
+                            Message.COMMAND_GAMEMODE_SELF.send(sender, Message.COMMAND_MISC_GAMEMODE_CREATIVE.build());
+                        } else {
+                            Message.COMMAND_GAMEMODE_OTHER.send(sender, t.getName(), Message.COMMAND_MISC_GAMEMODE_CREATIVE.build());
+                            if (silent == null || !silent) { // 若非静音模式，则发送消息
+                                Message.COMMAND_GAMEMODE_FROM.send(ts, s.getName(), Message.COMMAND_MISC_GAMEMODE_CREATIVE.build());
+                            }
+                        }
                     }
-                }
-                break;
-            case ADVENTURE:
-                if (setGameModeIfPermissionOrSenMessage(sender, GameMode.ADVENTURE, target, "floracore.command.gamemode.other.adventure")) {
-                    Message.COMMAND_GAMEMODE_OTHER.send(sender, target.getName(), Message.COMMAND_MISC_GAMEMODE_ADVENTURE.build());
-                    if (silent == null || !silent) { // 若非静音模式，则发送消息
-                        Message.COMMAND_GAMEMODE_FROM.send(sender, s.getName(), Message.COMMAND_MISC_GAMEMODE_ADVENTURE.build());
+                    break;
+                case ADVENTURE:
+                    if (setGameModeIfPermissionOrSenMessage(sender, GameMode.ADVENTURE, t, "floracore.command.gamemode.adventure")) {
+                        if (own) {
+                            Message.COMMAND_GAMEMODE_SELF.send(sender, Message.COMMAND_MISC_GAMEMODE_ADVENTURE.build());
+                        } else {
+                            Message.COMMAND_GAMEMODE_OTHER.send(sender, t.getName(), Message.COMMAND_MISC_GAMEMODE_ADVENTURE.build());
+                            if (silent == null || !silent) { // 若非静音模式，则发送消息
+                                Message.COMMAND_GAMEMODE_FROM.send(ts, s.getName(), Message.COMMAND_MISC_GAMEMODE_ADVENTURE.build());
+                            }
+                        }
                     }
-                }
-                break;
-            case SPECTATOR:
-                if (setGameModeIfPermissionOrSenMessage(sender, GameMode.SPECTATOR, target, "floracore.command.gamemode.other.spectator")) {
-                    Message.COMMAND_GAMEMODE_OTHER.send(sender, target.getName(), Message.COMMAND_MISC_GAMEMODE_SPECTATOR.build());
-                    if (silent == null || !silent) { // 若非静音模式，则发送消息
-                        Message.COMMAND_GAMEMODE_FROM.send(sender, s.getName(), Message.COMMAND_MISC_GAMEMODE_SPECTATOR.build());
+                    break;
+                case SPECTATOR:
+                    if (setGameModeIfPermissionOrSenMessage(sender, GameMode.SPECTATOR, t, "floracore.command.gamemode.spectator")) {
+                        if (own) {
+                            Message.COMMAND_GAMEMODE_SELF.send(sender, Message.COMMAND_MISC_GAMEMODE_SPECTATOR.build());
+                        } else {
+                            Message.COMMAND_GAMEMODE_OTHER.send(sender, t.getName(), Message.COMMAND_MISC_GAMEMODE_SPECTATOR.build());
+                            if (silent == null || !silent) { // 若非静音模式，则发送消息
+                                Message.COMMAND_GAMEMODE_FROM.send(ts, s.getName(), Message.COMMAND_MISC_GAMEMODE_SPECTATOR.build());
+                            }
+                        }
                     }
-                }
-                break;
+                    break;
+            }
+        } else {
+            Message.COMMAND_INVALID_COMMAND_SENDER.send(sender, CommandSender.class.getSimpleName(), Player.class.getSimpleName());
         }
     }
 
@@ -114,12 +112,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
      * @param permission      权限节点
      * @return 是否拥有权限并成功设置
      */
-    private boolean setGameModeIfPermissionOrSenMessage(
-            @NotNull Sender messageReceiver,
-            @NotNull GameMode gameMode,
-            @NotNull Player target,
-            @NotNull String permission
-    ) {
+    private boolean setGameModeIfPermissionOrSenMessage(@NotNull Sender messageReceiver, @NotNull GameMode gameMode, @NotNull Player target, @NotNull String permission) {
         if (messageReceiver.hasPermission(permission)) {
             target.setGameMode(gameMode);
             return true;
@@ -131,7 +124,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
 
     @Suggestions("gamemodes")
     public List<String> getGameModes(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
-        return new ArrayList<>(Arrays.asList("0", "survival", "s", "1", "creative", "c", "2", "adventure", "a", "3", "spectator", "sp"));
+        return new ArrayList<>(Arrays.asList("survival", "creative", "adventure", "spectator"));
     }
 
     private @NotNull GameMode parseGamemode(@NotNull String text) throws NoSuchGameModeException {

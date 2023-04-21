@@ -1,12 +1,15 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
+import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
+
+import java.util.*;
 
 public class FlyCommand extends AbstractFloraCoreCommand {
     public FlyCommand(FloraCorePlugin plugin) {
@@ -15,10 +18,15 @@ public class FlyCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("fly")
     @CommandPermission("floracore.command.fly")
-    public void self(@NotNull Player s) {
+    @CommandDescription("为自己开启飞行状态")
+    public void self(final @NotNull Player s) {
         boolean old = s.getAllowFlight();
         s.setAllowFlight(!old);
         // TODO 设置自动同步飞行状态
+        UUID uuid = s.getUniqueId();
+        getPlugin().getStorage().getImplementation().deleteDataExpired(uuid);
+        // 永不过期
+        getPlugin().getStorage().getImplementation().insertData(uuid, "auto-sync", "fly", String.valueOf(!old), 0);
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         if (old) {
             Message.COMMAND_FLY_DISABLE_SELF.send(sender);
@@ -27,12 +35,16 @@ public class FlyCommand extends AbstractFloraCoreCommand {
         }
     }
 
-    @CommandMethod("fly <target> [silent]")
+    @CommandMethod("fly <target>")
     @CommandPermission("floracore.command.fly.other")
-    public void other(@NotNull Player s, @Argument("target") Player target, @Argument("silent") @Nullable Boolean silent) {
+    @CommandDescription("为别人开启飞行状态")
+    public void other(final @NotNull CommandSender s, final @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
         boolean old = target.getAllowFlight();
         target.setAllowFlight(!old);
         // TODO 设置自动同步飞行状态
+        UUID uuid = target.getUniqueId();
+        // 永不过期
+        getPlugin().getStorage().getImplementation().insertData(uuid, "auto-sync", "fly", String.valueOf(!old), 0);
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Sender targetSender = getPlugin().getSenderFactory().wrap(target);
         if (old) {

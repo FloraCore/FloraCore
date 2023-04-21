@@ -10,25 +10,29 @@ import java.util.*;
 public class Data extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}data' WHERE uuid=?";
     public static final String DELETE_ALL = "DELETE FROM '{prefix}data' WHERE uuid=?";
-    public static final String DELETE_TYPE = "DELETE FROM '{prefix}data' WHERE uuid=? AND type=?";
-    public static final String DELETE_KEY = "DELETE FROM '{prefix}data' WHERE uuid=? AND type=? AND `key`=?";
-    public static final String DELETE_EXPIRED = "DELETE FROM '{prefix}data' WHERE expiry > 0 AND expiry <= UNIX_TIMESTAMP() AND uuid=?";
+    public static final String DELETE_ID = "DELETE FROM '{prefix}data' WHERE id=?";
     private static final String UPDATE_VALUE = "UPDATE '{prefix}data' SET value=? WHERE uuid=? AND type=? AND `key`=?";
     private static final String UPDATE_EXPIRY = "UPDATE '{prefix}data' SET expiry=? WHERE uuid=? AND type=? AND `key`=?";
-    private static final String INSERT = "INSERT INTO '{prefix}data' (uuid, type, key, value, expiry) VALUES(?, ?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO '{prefix}data' (uuid, type, `key`, value, expiry) VALUES(?, ?, ?, ?, ?)";
+    private final int id;
     private final UUID uuid;
     private final String type;
     private final String key;
     private String value;
     private long expiry;
 
-    public Data(FloraCorePlugin plugin, SqlStorage sqlStorage, UUID uuid, String type, String key, String value, long expiry) {
+    public Data(FloraCorePlugin plugin, SqlStorage sqlStorage, int id, UUID uuid, String type, String key, String value, long expiry) {
         super(plugin, sqlStorage);
+        this.id = id;
         this.uuid = uuid;
         this.type = type;
         this.key = key;
         this.value = value;
         this.expiry = expiry;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public UUID getUuid() {

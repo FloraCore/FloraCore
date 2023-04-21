@@ -24,6 +24,14 @@ public interface StorageImplementation {
 
     void deletePlayers(UUID u);
 
+    /**
+     * 虽然名称是插入数据，但是并不是简单的插入数据。
+     * 如果不存在数据，才会进行插入操作。
+     * 如果存在数据，则会读取数据，而不进行插入操作。
+     * 如果存在数据，还会同时更新value和expiry数据。
+     *
+     * @return Data数据。
+     */
     Data insertData(UUID uuid, String type, String key, String value, long expiry);
 
     List<Data> selectData(UUID uuid);
@@ -34,7 +42,5 @@ public interface StorageImplementation {
 
     void deleteDataExpired(UUID uuid);
 
-    void deleteDataType(UUID uuid, String type);
-
-    void deleteDataKey(UUID uuid, String type, String key);
+    void deleteDataID(int id);
 }

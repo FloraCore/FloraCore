@@ -10,7 +10,7 @@ public class ListenerManager {
     public ListenerManager(FloraCorePlugin plugin) {
         this.plugin = plugin;
 
-        // Create the commands
+        // Create the Listeners
         this.constructListeners();
     }
 
