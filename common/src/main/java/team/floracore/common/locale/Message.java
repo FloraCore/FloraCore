@@ -179,7 +179,7 @@ public interface Message {
     Args0 COMMAND_FLY_DISABLE_SELF = () -> prefixed(translatable()
             .key("floracore.command.fly.self")
             .color(AQUA)
-            .args(translatable("floracore.command.misc.on").color(RED))
+            .args(translatable("floracore.command.misc.off").color(RED))
     );
 
     Args1<String> COMMAND_FLY_ENABLE_OTHER = target -> prefixed(translatable()
@@ -203,7 +203,7 @@ public interface Message {
     Args1<String> COMMAND_FLY_DISABLE_FROM = from -> prefixed(translatable()
             .key("floracore.command.fly.from")
             .color(AQUA)
-            .args(text(from).color(GREEN), translatable("floracore.command.misc.on").color(GREEN))
+            .args(text(from).color(GREEN), translatable("floracore.command.misc.off").color(GREEN))
     );
 
     static TextComponent prefixed(ComponentLike component) {

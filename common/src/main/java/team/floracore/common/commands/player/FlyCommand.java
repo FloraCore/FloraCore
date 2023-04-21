@@ -1,4 +1,4 @@
-package team.floracore.common.commands.admin.player;
+package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandMethod;
@@ -30,20 +30,21 @@ public class FlyCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("fly <target> [silent]")
     @CommandPermission("floracore.fly.other")
-    public void other(@NotNull Player s, @Argument("target") Player target, @Argument(value = "silent", suggestions = "booleans") boolean silent) {
+    public void other(@NotNull Player s, @Argument("target") Player target, @Argument("silent") Boolean silent) {
         boolean old = target.getAllowFlight();
         target.setAllowFlight(!old);
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Sender targetSender = getPlugin().getSenderFactory().wrap(target);
-        if (silent) { // 静音模式
-            return;
-        }
         if (old) {
             Message.COMMAND_FLY_DISABLE_OTHER.send(sender, target.getName());
-            Message.COMMAND_FLY_DISABLE_FROM.send(targetSender, s.getName());
+            if (!silent) { // 非静音模式
+                Message.COMMAND_FLY_DISABLE_FROM.send(targetSender, s.getName());
+            }
         } else {
             Message.COMMAND_FLY_ENABLE_OTHER.send(sender, target.getName());
-            Message.COMMAND_FLY_ENABLE_FROM.send(targetSender, s.getName());
+            if (!silent) {
+                Message.COMMAND_FLY_ENABLE_FROM.send(targetSender, s.getName());
+            }
         }
     }
 }
