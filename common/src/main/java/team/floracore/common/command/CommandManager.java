@@ -76,6 +76,12 @@ public class CommandManager {
             Message.COMMAND_NO_PERMISSION.send(sender);
         });
 
+        // 类型错误
+        this.manager.registerExceptionHandler(InvalidCommandSenderException.class, (context, exception) -> {
+            Sender sender = plugin.getSenderFactory().wrap(context);
+            Message.COMMAND_INVALID_COMMAND_SENDER.send(sender, context.getClass().getSimpleName(), exception.getRequiredSender().getSimpleName());
+        });
+
         // Create the commands
         this.constructCommands();
     }
