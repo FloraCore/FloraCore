@@ -5,6 +5,7 @@ import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import team.floracore.common.command.AbstractFloraCoreCommand;
 import team.floracore.common.locale.Message;
 import team.floracore.common.plugin.FloraCorePlugin;
@@ -30,20 +31,21 @@ public class FlyCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("fly <target> [silent]")
     @CommandPermission("floracore.fly.other")
-    public void other(@NotNull Player s, @Argument("target") Player target, @Argument("silent") Boolean silent) {
+    public void other(@NotNull Player s, @Argument("target") Player target, @Argument("silent") @Nullable Boolean silent) {
         boolean old = target.getAllowFlight();
         target.setAllowFlight(!old);
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Sender targetSender = getPlugin().getSenderFactory().wrap(target);
-        if (silent) { // 静音模式
-            return;
-        }
         if (old) {
             Message.COMMAND_FLY_DISABLE_OTHER.send(sender, target.getName());
-            Message.COMMAND_FLY_DISABLE_FROM.send(targetSender, s.getName());
+            if (silent == null || !silent) {
+                Message.COMMAND_FLY_DISABLE_FROM.send(targetSender, s.getName());
+            }
         } else {
             Message.COMMAND_FLY_ENABLE_OTHER.send(sender, target.getName());
-            Message.COMMAND_FLY_ENABLE_FROM.send(targetSender, s.getName());
+            if (silent == null || !silent) {
+                Message.COMMAND_FLY_ENABLE_FROM.send(targetSender, s.getName());
+            }
         }
     }
 }
