@@ -203,7 +203,7 @@ public interface Message {
     Args1<String> COMMAND_FLY_DISABLE_FROM = from -> prefixed(translatable()
             .key("floracore.command.fly.from")
             .color(AQUA)
-            .args(text(from).color(GREEN), translatable("floracore.command.misc.on").color(GREEN))
+            .args(text(from).color(GREEN), translatable("floracore.command.misc.off").color(GREEN))
     );
 
     static TextComponent prefixed(ComponentLike component) {

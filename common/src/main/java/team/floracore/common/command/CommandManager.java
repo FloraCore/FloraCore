@@ -9,7 +9,7 @@ import cloud.commandframework.execution.*;
 import cloud.commandframework.meta.*;
 import cloud.commandframework.paper.*;
 import org.bukkit.command.*;
-import team.floracore.common.commands.admin.player.*;
+import team.floracore.common.commands.player.*;
 import team.floracore.common.commands.misc.FloraCoreCommand;
 import team.floracore.common.commands.test.*;
 import team.floracore.common.locale.*;
