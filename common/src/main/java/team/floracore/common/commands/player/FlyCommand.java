@@ -17,10 +17,11 @@ public class FlyCommand extends AbstractFloraCoreCommand {
     }
 
     @CommandMethod("fly")
-    @CommandPermission("floracore.fly")
+    @CommandPermission("floracore.command.fly")
     public void self(@NotNull Player s) {
         boolean old = s.getAllowFlight();
         s.setAllowFlight(!old);
+        // TODO 设置自动同步飞行状态
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         if (old) {
             Message.COMMAND_FLY_DISABLE_SELF.send(sender);
@@ -30,10 +31,11 @@ public class FlyCommand extends AbstractFloraCoreCommand {
     }
 
     @CommandMethod("fly <target> [silent]")
-    @CommandPermission("floracore.fly.other")
+    @CommandPermission("floracore.command.fly.other")
     public void other(@NotNull Player s, @Argument("target") Player target, @Argument("silent") @Nullable Boolean silent) {
         boolean old = target.getAllowFlight();
         target.setAllowFlight(!old);
+        // TODO 设置自动同步飞行状态
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Sender targetSender = getPlugin().getSenderFactory().wrap(target);
         if (old) {

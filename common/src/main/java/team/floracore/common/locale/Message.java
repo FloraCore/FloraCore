@@ -176,6 +176,11 @@ public interface Message {
             .append(FULL_STOP)
     );
 
+    Args0 COMMAND_MISC_GAMEMODE_SURVIVAL = () -> translatable("floracore.command.misc.gamemode.survival");
+    Args0 COMMAND_MISC_GAMEMODE_CREATIVE = () -> translatable("floracore.command.misc.gamemode.creative");
+    Args0 COMMAND_MISC_GAMEMODE_ADVENTURE = () -> translatable("floracore.command.misc.gamemode.adventure");
+    Args0 COMMAND_MISC_GAMEMODE_SPECTATOR = () -> translatable("floracore.command.misc.gamemode.spectator");
+
     Args0 COMMAND_FLY_ENABLE_SELF = () -> prefixed(translatable()
             .key("floracore.command.fly.self")
             .color(AQUA)
@@ -210,6 +215,30 @@ public interface Message {
             .key("floracore.command.fly.from")
             .color(AQUA)
             .args(text(from).color(GREEN), translatable("floracore.command.misc.off").color(GREEN))
+    );
+
+    Args1<Component> COMMAND_GAMEMODE_SELF = mode -> prefixed(translatable()
+            .key("floracore.command.gamemode.self")
+            .color(AQUA)
+            .args(mode.color(GREEN))
+    );
+
+    Args2<String, Component> COMMAND_GAMEMODE_OTHER = (target, mode) -> prefixed(translatable()
+            .key("floracore.command.gamemode.other")
+            .color(AQUA)
+            .args(text(target).color(GREEN), mode.color(GREEN))
+    );
+
+    Args2<String, Component> COMMAND_GAMEMODE_FROM = (from, mode) -> prefixed(translatable()
+            .key("floracore.command.gamemode.from")
+            .color(AQUA)
+            .args(text(from).color(GREEN), mode.color(GREEN))
+    );
+
+    Args1<String> COMMAND_GAMEMODE_NOSUCH = (mode) -> prefixed(translatable()
+            .key("floracore.command.gamemode.nosuch")
+            .color(RED)
+            .args(text(mode).color(GREEN))
     );
 
     static TextComponent prefixed(ComponentLike component) {
