@@ -1,23 +1,19 @@
 package team.floracore.common.commands.player;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
-import org.bukkit.GameMode;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import team.floracore.common.command.AbstractFloraCoreCommand;
-import team.floracore.common.exception.NoSuchGameModeException;
-import team.floracore.common.locale.Message;
-import team.floracore.common.plugin.FloraCorePlugin;
-import team.floracore.common.sender.Sender;
+import cloud.commandframework.annotations.*;
+import cloud.commandframework.annotations.suggestions.*;
+import cloud.commandframework.context.*;
+import org.bukkit.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.jetbrains.annotations.*;
+import team.floracore.common.command.*;
+import team.floracore.common.exception.*;
+import team.floracore.common.locale.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class GameModeCommand extends AbstractFloraCoreCommand {
     public GameModeCommand(FloraCorePlugin plugin) {
@@ -111,10 +107,11 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
 
     /**
      * 若`messageReceiver`拥有`permission`权限，将`target`的游戏模式设置为`gameMode`，否则发送没有权限消息给`messageReceiver`
+     *
      * @param messageReceiver 消息接收者
-     * @param gameMode 游戏模式
-     * @param target 需要设置游戏模式的目标玩家
-     * @param permission 权限节点
+     * @param gameMode        游戏模式
+     * @param target          需要设置游戏模式的目标玩家
+     * @param permission      权限节点
      * @return 是否拥有权限并成功设置
      */
     private boolean setGameModeIfPermissionOrSenMessage(
