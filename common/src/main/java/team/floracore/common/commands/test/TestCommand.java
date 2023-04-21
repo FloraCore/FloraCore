@@ -5,6 +5,10 @@ import cloud.commandframework.annotations.processing.*;
 import cloud.commandframework.annotations.specifier.*;
 import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
+import net.kyori.adventure.audience.*;
+import net.kyori.adventure.bossbar.*;
+import net.kyori.adventure.inventory.*;
+import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
@@ -96,5 +100,35 @@ public class TestCommand extends AbstractFloraCoreCommand {
     @CommandDescription("测试c3 a2命令")
     public void test_c3_a2_qu(final @NonNull CommandSender sender, final @Argument("query") @Greedy Player query) {
         sender.sendMessage("我是c2中的a2命令，你选择的query是" + query);
+    }
+
+    @CommandMethod("test c4 a1")
+    @CommandDescription("测试c4 a1命令")
+    public void test_c4_a1(final @NonNull Player player) {
+        Component bookTitle = Component.text("Encyclopedia of cats");
+        Component bookAuthor = Component.text("kashike");
+        Collection<Component> bookPages = new ArrayList<>();
+        Component b1 = Component.text("哈哈哈我是测试c4 a1");
+        bookPages.add(b1);
+
+        Book myBook = Book.book(bookTitle, bookAuthor, bookPages);
+        Audience target = getPlugin().getBukkitAudiences().player(player);
+        target.openBook(myBook);
+    }
+
+    @CommandMethod("test c4 a2")
+    @CommandDescription("测试c4 a2命令")
+    public void test_c4_a2(final @NonNull Player player) {
+        final Component name = Component.text("Awesome BossBar");
+        // Creates a red boss bar which has no progress and no notches
+        final BossBar emptyBar = BossBar.bossBar(name, 0, BossBar.Color.RED, BossBar.Overlay.PROGRESS);
+        // Creates a green boss bar which has 50% progress and 10 notches
+        final BossBar halfBar = BossBar.bossBar(name, 0.5f, BossBar.Color.GREEN, BossBar.Overlay.NOTCHED_10);
+        // etc..
+        final BossBar fullBar = BossBar.bossBar(name, 1, BossBar.Color.BLUE, BossBar.Overlay.NOTCHED_20);
+
+        Audience target = getPlugin().getBukkitAudiences().player(player);
+        // Send a bossbar to your audience
+        target.showBossBar(fullBar);
     }
 }
