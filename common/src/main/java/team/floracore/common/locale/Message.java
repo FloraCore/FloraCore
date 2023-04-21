@@ -170,6 +170,12 @@ public interface Message {
             .append(FULL_STOP)
     );
 
+    Args2<String,String> COMMAND_INVALID_COMMAND_SENDER = (commandSender,requiredSender) -> prefixed(text()
+            .color(RED)
+            .append(translatable("floracore.commandsystem.invalid-command-sender", text(commandSender),text(requiredSender)))
+            .append(FULL_STOP)
+    );
+
     Args0 COMMAND_FLY_ENABLE_SELF = () -> prefixed(translatable()
             .key("floracore.command.fly.self")
             .color(AQUA)
