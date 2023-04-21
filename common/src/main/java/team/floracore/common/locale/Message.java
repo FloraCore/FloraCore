@@ -3,7 +3,9 @@ package team.floracore.common.locale;
 import net.kyori.adventure.text.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.sender.*;
+import team.floracore.common.util.*;
 
+import java.time.*;
 import java.util.*;
 
 import static net.kyori.adventure.text.Component.*;
@@ -240,6 +242,56 @@ public interface Message {
             .color(RED)
             .args(text(mode).color(GREEN))
     );
+
+    Args1<String> DATA_NONE = target -> prefixed(translatable()
+            .key("floracore.command.generic.data.none")
+            .color(AQUA)
+            .args(text(target))
+            .append(FULL_STOP)
+    );
+
+    Args1<String> DATA_HEADER = target -> prefixed(translatable()
+            .key("floracore.command.generic.data.info.title")
+            .color(AQUA)
+            .args(text(target))
+    );
+
+    Args1<String> PLAYER_NOT_FOUND = id -> prefixed(translatable()
+            .key("floracore.command.misc.loading.error.player-not-found")
+            .color(RED)
+            .args(text(id, DARK_RED))
+            .append(FULL_STOP)
+    );
+
+    Args4<String,String,String,Long> DATA_ENTRY = (type, key, value,expiry) -> {
+        Instant instant = Instant.ofEpochMilli(expiry);
+        Instant now = Instant.now();
+        Duration timeElapsed = Duration.between(now, instant);
+        return prefixed(text()
+                .append(text(type, GREEN))
+                .append(space())
+                .append(text("->", AQUA))
+                .append(space())
+                .append(text(key, AQUA))
+                .append(text(" - ", WHITE))
+                .append(text().color(WHITE).append(text('\'')).append(text(value)).append(text('\'')))
+                .apply(builder -> {
+                    if (expiry > 0) {
+                        builder.append(space());
+                        builder.append(text()
+                                .color(DARK_GRAY)
+                                .append(OPEN_BRACKET)
+                                .append(translatable()
+                                        .key("floracore.command.generic.info.expires-in")
+                                        .color(GRAY)
+                                        .append(space())
+                                        .append(text().color(AQUA).append(DurationFormatter.CONCISE.format(timeElapsed)))
+                                )
+                                .append(CLOSE_BRACKET)
+                        );
+                    }
+                }));
+    };
 
     static TextComponent prefixed(ComponentLike component) {
         return text()

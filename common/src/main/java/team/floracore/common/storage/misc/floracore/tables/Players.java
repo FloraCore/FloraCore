@@ -9,6 +9,7 @@ import java.util.*;
 
 public class Players extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}players' WHERE uuid=?";
+    public static final String SELECT_NAME = "SELECT * FROM '{prefix}players' WHERE name=?";
     public static final String DELETE = "DELETE FROM '{prefix}players' WHERE uuid=?";
     private static final String UPDATE_NAME = "UPDATE '{prefix}players' SET name=? WHERE uuid=?";
     private static final String UPDATE_LAST_LOGIN_IP = "UPDATE '{prefix}players' SET lastLoginIp=? WHERE uuid=?";

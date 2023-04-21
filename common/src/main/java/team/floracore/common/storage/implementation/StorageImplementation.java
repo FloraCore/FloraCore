@@ -17,6 +17,10 @@ public interface StorageImplementation {
 
     void shutdown();
 
+    /**
+     * 此方法慎用，未经过缓存，频繁使用易使负载过大。
+     */
+    Players selectPlayers(String name);
 
     Players selectPlayers(UUID uuid);
 

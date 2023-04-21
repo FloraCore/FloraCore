@@ -106,7 +106,6 @@ public class SqlStorage implements StorageImplementation {
         }
     }
 
-
     @Override
     public Players selectPlayers(UUID uuid, String n, String loginIp) {
         CompletableFuture<Players> p = playersCache.get(uuid, u -> {
@@ -135,6 +134,32 @@ public class SqlStorage implements StorageImplementation {
             return players;
         });
         return p.join();
+    }
+
+    @Override
+    public Players selectPlayers(String name) {
+        Players players;
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Players.SELECT_NAME))) {
+                ps.setString(1, name);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        String uuid = rs.getString("uuid");
+                        String firstLoginIp = rs.getString("firstLoginIp");
+                        String lastLoginIp = rs.getString("lastLoginIp");
+                        long firstLoginTime = rs.getLong("firstLoginTime");
+                        long lastLoginTime = rs.getLong("lastLoginTime");
+                        long playTime = rs.getLong("playTime");
+                        players = new Players(plugin, this, UUID.fromString(uuid), name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
+                    } else {
+                        throw new RuntimeException("Specified player data does not exist!");
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return players;
     }
 
     @Override
