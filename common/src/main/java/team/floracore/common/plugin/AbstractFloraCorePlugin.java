@@ -8,6 +8,7 @@ import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
+import team.floracore.common.listener.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.sender.*;
@@ -31,6 +32,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private SimpleExtensionManager extensionManager;
     private BukkitAudiences bukkitAudiences;
     private CommandManager commandManager;
+    private ListenerManager listenerManager;
     private OkHttpClient httpClient;
     private TranslationRepository translationRepository;
     private BukkitSenderFactory senderFactory;
@@ -77,8 +79,9 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // initialise storage
         this.storage = storageFactory.getInstance();
 
-        getLogger().info("Loading cloud command framework...");
+        getLogger().info("Loading framework...");
         this.commandManager = new CommandManager(this);
+        this.listenerManager = new ListenerManager(this);
 
         // register with the FC API
         this.apiProvider = new FloraCoreApiProvider(this);
@@ -145,27 +148,26 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     protected Set<Dependency> getGlobalDependencies() {
-        // @formatter:off
-        return EnumSet.of(Dependency.ADVENTURE,
-                Dependency.ADVENTURE_NBT,
-                Dependency.ADVENTURE_KEY,
-                Dependency.ADVENTURE_PLATFORM_API,
-                Dependency.ADVENTURE_PLATFORM_FACET,
-                Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY,
-                Dependency.ADVENTURE_TEXT_SERIALIZER_GSON,
-                Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL,
-                Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN,
-                Dependency.EXAMINATION_API,
-                Dependency.CLOUD_CORE,
-                Dependency.CLOUD_ANNOTATIONS,
-                Dependency.CLOUD_BRIGADIER,
-                Dependency.CLOUD_SERVICES,
-                Dependency.CLOUD_TASKS,
-                Dependency.GEANTYREF,
-                Dependency.INVENTORY_FRAMEWORK,
-                Dependency.OKHTTP,
-                Dependency.OKIO,
-                Dependency.CAFFEINE);
+        Set<Dependency> ret = EnumSet.of(Dependency.ADVENTURE, Dependency.ADVENTURE_NBT);
+        ret.add(Dependency.ADVENTURE_KEY);
+        ret.add(Dependency.ADVENTURE_PLATFORM_API);
+        ret.add(Dependency.ADVENTURE_PLATFORM_FACET);
+        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY);
+        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON);
+        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL);
+        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN);
+        ret.add(Dependency.EXAMINATION_API);
+        ret.add(Dependency.CLOUD_CORE);
+        ret.add(Dependency.CLOUD_ANNOTATIONS);
+        ret.add(Dependency.CLOUD_BRIGADIER);
+        ret.add(Dependency.CLOUD_SERVICES);
+        ret.add(Dependency.CLOUD_TASKS);
+        ret.add(Dependency.GEANTYREF);
+        ret.add(Dependency.INVENTORY_FRAMEWORK);
+        ret.add(Dependency.OKHTTP);
+        ret.add(Dependency.OKIO);
+        ret.add(Dependency.CAFFEINE);
+        return ret;
     }
 
     @Override
@@ -182,18 +184,27 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     public BukkitAudiences getBukkitAudiences() {
         return this.bukkitAudiences;
     }
+
     @Override
     public BukkitSenderFactory getSenderFactory() {
         return senderFactory;
     }
-@Override
+
+    @Override
     public FloraCoreConfiguration getConfiguration() {
         return this.configuration;
     }
+
+    @Override
+    public ListenerManager getListenerManager() {
+        return this.listenerManager;
+    }
+
     @Override
     public TranslationRepository getTranslationRepository() {
         return this.translationRepository;
     }
+
     @Override
     public Storage getStorage() {
         return this.storage;

@@ -7,6 +7,7 @@ import team.floracore.common.command.*;
 import team.floracore.common.config.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
+import team.floracore.common.listener.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
@@ -45,6 +46,13 @@ public interface FloraCorePlugin {
      * @return the command manager
      */
     CommandManager getCommandManager();
+
+    /**
+     * Gets the Listener manager
+     *
+     * @return the listener manager
+     */
+    ListenerManager getListenerManager();
 
     BukkitAudiences getBukkitAudiences();
 

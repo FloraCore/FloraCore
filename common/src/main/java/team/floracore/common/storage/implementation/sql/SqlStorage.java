@@ -1,25 +1,28 @@
 package team.floracore.common.storage.implementation.sql;
 
+import com.github.benmanes.caffeine.cache.*;
 import com.google.gson.reflect.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.implementation.sql.connection.*;
+import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.io.*;
 import java.lang.reflect.*;
+import java.sql.Date;
 import java.sql.*;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.function.*;
 import java.util.stream.*;
 
 public class SqlStorage implements StorageImplementation {
     private static final Type LIST_STRING_TYPE = new TypeToken<List<String>>() {
     }.getType();
-
     private final FloraCorePlugin plugin;
-
     private final ConnectionFactory connectionFactory;
     private final Function<String, String> statementProcessor;
+    AsyncCache<UUID, Players> playersCache = Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).maximumSize(10000).executor(Executors.newSingleThreadExecutor()).buildAsync();
 
     public SqlStorage(FloraCorePlugin plugin, ConnectionFactory connectionFactory, String tablePrefix) {
         this.plugin = plugin;
@@ -60,9 +63,7 @@ public class SqlStorage implements StorageImplementation {
                 throw new IOException("Couldn't locate schema file for " + this.connectionFactory.getImplementationName());
             }
 
-            statements = SchemaReader.getStatements(is).stream()
-                    .map(this.statementProcessor)
-                    .collect(Collectors.toList());
+            statements = SchemaReader.getStatements(is).stream().map(this.statementProcessor).collect(Collectors.toList());
         }
 
         try (Connection connection = this.connectionFactory.getConnection()) {
@@ -103,6 +104,53 @@ public class SqlStorage implements StorageImplementation {
             this.connectionFactory.shutdown();
         } catch (Exception e) {
             this.plugin.getLogger().severe("Exception whilst disabling SQL storage", e);
+        }
+    }
+
+
+    @Override
+    public Players selectPlayerBaseInfo(UUID uuid, String n, String loginIp) {
+        CompletableFuture<Players> p = playersCache.get(uuid, u -> {
+            Players players;
+            try (Connection c = this.connectionFactory.getConnection()) {
+                try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Players.SELECT))) {
+                    ps.setString(1, uuid.toString());
+                    try (ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            String name = rs.getString("name");
+                            String firstLoginIp = rs.getString("firstLoginIp");
+                            String lastLoginIp = rs.getString("lastLoginIp");
+                            Date firstLoginTime = rs.getDate("firstLoginTime");
+                            Date lastLoginTime = rs.getDate("lastLoginTime");
+                            long playTime = rs.getLong("playTime");
+                            players = new Players(plugin, this, u, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
+                        } else {
+                            players = new Players(plugin, this, u, n, loginIp);
+                            players.init();
+                        }
+                    }
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+            return players;
+        });
+        return p.join();
+    }
+
+    @Override
+    public Players selectPlayerBaseInfo(UUID uuid) {
+        return selectPlayerBaseInfo(uuid, null, null);
+    }
+
+
+    @Override
+    public void deletePlayers(UUID u) throws SQLException {
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Players.DELETE))) {
+                ps.setString(1, u.toString());
+                ps.execute();
+            }
         }
     }
 }
