@@ -3,8 +3,8 @@
 CREATE TABLE IF NOT EXISTS "{prefix}players"
 (
     id             SERIAL                              NOT NULL PRIMARY KEY,
-    uuid           VARCHAR(32)                         NOT NULL,
-    name           VARCHAR(36)                         NOT NULL,
+    uuid           VARCHAR(36)                         NOT NULL,
+    name           VARCHAR(16)                         NOT NULL,
     firstLoginIp   VARCHAR(39)                         NOT NULL,
     lastLoginIp    VARCHAR(39)                         NOT NULL,
     firstLoginTime TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,

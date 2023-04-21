@@ -2,8 +2,6 @@ package team.floracore.common.storage.implementation.sql;
 
 import com.github.benmanes.caffeine.cache.*;
 import com.google.gson.reflect.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.implementation.sql.connection.*;
@@ -109,7 +107,9 @@ public class SqlStorage implements StorageImplementation {
         }
     }
 
-    public Players selectPlayerBaseInfo(UUID uuid) {
+
+    @Override
+    public Players selectPlayerBaseInfo(UUID uuid, String n, String loginIp) {
         CompletableFuture<Players> p = playersCache.get(uuid, u -> {
             Players players;
             try (Connection c = this.connectionFactory.getConnection()) {
@@ -125,14 +125,8 @@ public class SqlStorage implements StorageImplementation {
                             long playTime = rs.getLong("playTime");
                             players = new Players(plugin, this, u, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
                         } else {
-                            Player player = Bukkit.getPlayer(u);
-                            if (player != null) {
-                                String name = player.getName();
-                                String loginIp = Objects.requireNonNull(player.getAddress()).getHostString();
-                                players = new Players(plugin, this, u, name, loginIp);
-                                players.init();
-                            }
-                            throw new RuntimeException("指定用户不存在！");
+                            players = new Players(plugin, this, u, n, loginIp);
+                            players.init();
                         }
                     }
                 }
@@ -144,6 +138,13 @@ public class SqlStorage implements StorageImplementation {
         return p.join();
     }
 
+    @Override
+    public Players selectPlayerBaseInfo(UUID uuid) {
+        return selectPlayerBaseInfo(uuid, null, null);
+    }
+
+
+    @Override
     public void deletePlayers(UUID u) throws SQLException {
         try (Connection c = this.connectionFactory.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Players.DELETE))) {
