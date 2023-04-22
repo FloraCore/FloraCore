@@ -23,6 +23,18 @@ public class TimeCommand extends AbstractFloraCoreCommand {
         super(plugin);
     }
 
+    @CommandMethod("time")
+    @CommandPermission("floracore.command.time")
+    @CommandDescription("显示所有世界的时间")
+    public void time(final @NotNull CommandSender s) {
+        Sender sender = getPlugin().getSenderFactory().wrap(s);
+        final Set<World> worlds;
+
+        worlds = getWorlds(s, null);
+        assert worlds != null;
+        getWorldsTime(sender, worlds);
+    }
+
     @CommandMethod("time set <time>")
     @CommandPermission("floracore.command.time")
     @CommandDescription("设置当前（或指定）世界的时间")
@@ -48,6 +60,33 @@ public class TimeCommand extends AbstractFloraCoreCommand {
                 joiner.add(w.getName());
             }
             Message.COMMAND_TIME_SET.send(sender, joiner.toString(), Message.DURATION_FORMAT.build(timeTick));
+        }
+    }
+
+    @CommandMethod("time add <time>")
+    @CommandPermission("floracore.command.time")
+    @CommandDescription("快进当前（或指定）世界的时间")
+    public void addTime(final @NotNull CommandSender s, final @NotNull @Argument(value = "time", suggestions = "timeNumbers") String time, final @Nullable @Flag(value = "world", suggestions = "worlds-all") String world) {
+        Sender sender = getPlugin().getSenderFactory().wrap(s);
+        final long timeTick;
+        final Set<World> worlds;
+        try {
+            timeTick = DescParseTickFormat.parse(NumberUtil.isInt(time) ? (time + "t") : time);
+            worlds = getWorlds(s, world);
+        } catch (final NumberFormatException e) {
+            Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
+            return;
+        }
+
+
+        final StringJoiner joiner = new StringJoiner(", ");
+        if (worlds != null) {
+            for (final World w : worlds) {
+                long t = w.getTime();
+                w.setTime(t + timeTick);
+                joiner.add(w.getName());
+            }
+            Message.COMMAND_TIME_ADD.send(sender, joiner.toString(), Message.DURATION_FORMAT.build(timeTick));
         }
     }
 
