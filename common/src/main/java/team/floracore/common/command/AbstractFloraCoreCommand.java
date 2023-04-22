@@ -58,7 +58,7 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
 
     @Override
     @Suggestions("commonDurations")
-    public @NonNull List<Integer> getCommonDurations(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
-        return ImmutableList.of(1, 60, 600, 3600, 86400);
+    public @NonNull List<String> getCommonDurations(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+        return ImmutableList.of("1", "60", "600", "3600", "86400");
     }
 }

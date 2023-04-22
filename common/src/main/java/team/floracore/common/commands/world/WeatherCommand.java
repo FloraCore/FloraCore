@@ -4,6 +4,7 @@ import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
 import com.google.common.collect.*;
+import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
@@ -23,26 +24,29 @@ public class WeatherCommand extends AbstractFloraCoreCommand {
     @CommandMethod("weather <weather> [time]")
     @CommandPermission("floracore.command.weather")
     @CommandDescription("设置天气状态并指定持续时间")
-    public void weather(final @NonNull Player p, final @NonNull @Argument(value = "weather", suggestions = "weather") String weather, final @Argument(value = "time", suggestions = "commonDurations") Integer time, @Flag("world") World world) {
+    public void weather(final @NonNull Player p, final @NonNull @Argument(value = "weather", suggestions = "weather") String weather, final @Argument(value = "time", suggestions = "commonDurations") String time, @Flag("world") World world) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         if (world == null) {
             world = p.getWorld();
         }
         final boolean isStorm;
+        Component component;
         if (weather.endsWith("sun")) {
             isStorm = false;
+            component = Message.COMMAND_MISC_WEATHER_SUM.build();
         } else if (weather.endsWith("storm") || weather.endsWith("rain")) {
             isStorm = true;
+            component = Message.COMMAND_MISC_WEATHER_STORM.build();
         } else {
             Message.COMMAND_WEATHER_NOSUCH.send(sender, weather);
             return;
         }
         world.setStorm(isStorm);
         if (time != null) {
-            world.setWeatherDuration(time * 20);
-            Message.COMMAND_WEATHER_TIME.send(sender, world, weather, time);
+            world.setWeatherDuration(Integer.parseInt(time) * 20);
+            Message.COMMAND_WEATHER_TIME.send(sender, world, component, time);
         } else {
-            Message.COMMAND_WEATHER_NORMAL.send(sender, world, weather);
+            Message.COMMAND_WEATHER_NORMAL.send(sender, world, component);
         }
     }
 

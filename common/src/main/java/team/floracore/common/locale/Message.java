@@ -163,13 +163,13 @@ public interface Message {
             // {0} 不是合法的天气类型
             .key("floracore.command.weather.nosuch").color(RED).args(text(weather).color(GREEN)).append(FULL_STOP));
 
-    Args2<World, String> COMMAND_WEATHER_NORMAL = (world, weather) -> prefixed(translatable()
+    Args2<World, Component> COMMAND_WEATHER_NORMAL = (world, weather) -> prefixed(translatable()
             // 你将 {0} 的天气设为 {1}
-            .key("floracore.command.weather.normal").color(AQUA).args(text(world.getName()).color(GREEN), text(weather).color(GREEN)).append(FULL_STOP));
+            .key("floracore.command.weather.normal").color(AQUA).args(text(world.getName()).color(GREEN), weather.color(GREEN)).append(FULL_STOP));
 
-    Args3<World, String, Integer> COMMAND_WEATHER_TIME = (world, weather, time) -> prefixed(translatable()
+    Args3<World, Component, String> COMMAND_WEATHER_TIME = (world, weather, time) -> prefixed(translatable()
             // 你将 {0} 的天气设为 {1}，持续 {2} 秒
-            .key("floracore.command.weather.time").color(AQUA).args(text(world.getName()).color(GREEN), text(weather).color(GREEN), text(time).color(GREEN)).append(FULL_STOP));
+            .key("floracore.command.weather.time").color(AQUA).args(text(world.getName()).color(GREEN), weather.color(GREEN), text(time).color(GREEN)).append(FULL_STOP));
 
     Args0 COMMAND_INVSEE_SELF = () -> prefixed(translatable()
             // 你只能查看其他玩家的物品栏!
