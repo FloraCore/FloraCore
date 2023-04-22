@@ -6,7 +6,10 @@ import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.util.*;
 
+import java.time.*;
+import java.time.temporal.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -15,6 +18,31 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
 
     public AbstractFloraCoreCommand(FloraCorePlugin plugin) {
         this.plugin = plugin;
+    }
+
+    public static Duration parseDuration(String input) {
+        try {
+            long number = Long.parseLong(input);
+            Instant now = Instant.now().truncatedTo(ChronoUnit.SECONDS);
+            return checkPastDate(Duration.between(now, Instant.ofEpochSecond(number)));
+        } catch (NumberFormatException e) {
+            // ignore
+        }
+
+        try {
+            return checkPastDate(DurationParser.parseDuration(input));
+        } catch (IllegalArgumentException e) {
+            // ignore
+        }
+
+        return null;
+    }
+
+    private static Duration checkPastDate(Duration duration) {
+        if (duration.isNegative()) {
+            throw new RuntimeException();
+        }
+        return duration;
     }
 
     public FloraCorePlugin getPlugin() {

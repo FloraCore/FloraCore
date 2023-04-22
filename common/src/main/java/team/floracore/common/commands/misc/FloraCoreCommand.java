@@ -7,6 +7,7 @@ import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
+import org.jetbrains.annotations.Nullable;
 import team.floracore.common.command.*;
 import team.floracore.common.http.*;
 import team.floracore.common.locale.*;
@@ -16,6 +17,7 @@ import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.io.*;
+import java.time.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -78,7 +80,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("fc|floracore data <target>")
     @CommandDescription("获取玩家存储的数据")
-    public void data(final @NonNull CommandSender sender, final @Argument(value = "target", suggestions = "onlinePlayers") String target) {
+    public void data(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
@@ -103,9 +105,133 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
         } else {
             Message.DATA_HEADER.send(s, name);
             for (Data data : ret) {
-                Message.DATA_ENTRY.send(s, data.getType(), data.getKey(), data.getValue(), data.getExpiry());
+                Message.DATA_ENTRY.send(s, data.getType().getName(), data.getKey(), data.getValue(), data.getExpiry());
             }
         }
     }
 
+    @CommandMethod("fc|floracore data <target> set <key> <value>")
+    @CommandDescription("设置玩家自定义的数据")
+    public void dataSet(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key, final @NonNull @Argument("value") String value) {
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Player p = Bukkit.getPlayer(target);
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        String name;
+        UUID u;
+        if (p == null) {
+            try {
+                Players i = storageImplementation.selectPlayers(target);
+                u = i.getUuid();
+                name = i.getName();
+            } catch (Throwable e) {
+                Message.PLAYER_NOT_FOUND.send(s, target);
+                return;
+            }
+        } else {
+            u = p.getUniqueId();
+            name = p.getName();
+        }
+        Data data = storageImplementation.insertData(u, Data.DataType.CUSTOM, key, value, 0);
+        Message.SET_DATA_SUCCESS.send(s, key, value, name);
+    }
+
+    @CommandMethod("fc|floracore data <target> unset <key>")
+    @CommandDescription("删除玩家存储的自定义数据")
+    public void dataUnSet(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key) {
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Player p = Bukkit.getPlayer(target);
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        String name;
+        UUID u;
+        if (p == null) {
+            try {
+                Players i = storageImplementation.selectPlayers(target);
+                u = i.getUuid();
+                name = i.getName();
+            } catch (Throwable e) {
+                Message.PLAYER_NOT_FOUND.send(s, target);
+                return;
+            }
+        } else {
+            u = p.getUniqueId();
+            name = p.getName();
+        }
+        Data data = storageImplementation.getSpecifiedData(u, Data.DataType.CUSTOM, key);
+        if (data == null) {
+            Message.DOESNT_HAVE_DATA.send(s, target, key);
+            return;
+        }
+        storageImplementation.deleteDataID(data.getId());
+        Message.UNSET_DATA_SUCCESS.send(s, key, name);
+    }
+
+    @CommandMethod("fc|floracore data <target> settemp <key> <value> <duration>")
+    @CommandDescription("临时设置玩家自定义的数据")
+    public void dataSetTemp(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key, final @NonNull @Argument("value") String value, final @NonNull @Argument("duration") String duration) {
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Player p = Bukkit.getPlayer(target);
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        String name;
+        UUID u;
+        if (p == null) {
+            try {
+                Players i = storageImplementation.selectPlayers(target);
+                u = i.getUuid();
+                name = i.getName();
+            } catch (Throwable e) {
+                Message.PLAYER_NOT_FOUND.send(s, target);
+                return;
+            }
+        } else {
+            u = p.getUniqueId();
+            name = p.getName();
+        }
+
+        try {
+            Duration d = parseDuration(duration);
+            if (d != null) {
+                // 将当前时间加上时间差
+                Instant newTime = Instant.now().plus(d);
+                // 将结果转换为时间戳
+                long expiry = newTime.toEpochMilli();
+                Data data = storageImplementation.insertData(u, Data.DataType.CUSTOM, key, value, expiry);
+                Message.SET_DATA_TEMP_SUCCESS.send(s, key, value, name, d);
+            } else {
+                Message.ILLEGAL_DATE_ERROR.send(s, duration);
+            }
+        } catch (Throwable e) {
+            Message.PAST_DATE_ERROR.send(s);
+        }
+    }
+
+    @CommandMethod("fc|floracore data <target> clear")
+    @CommandDescription("清空玩家存储的数据")
+    public void dataClear(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @Nullable @Flag("type") Data.DataType type) {
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Player p = Bukkit.getPlayer(target);
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        String name;
+        UUID u;
+        if (p == null) {
+            try {
+                Players i = storageImplementation.selectPlayers(target);
+                u = i.getUuid();
+                name = i.getName();
+            } catch (Throwable e) {
+                Message.PLAYER_NOT_FOUND.send(s, target);
+                return;
+            }
+        } else {
+            u = p.getUniqueId();
+            name = p.getName();
+        }
+        if (type != null) {
+            // remove type
+            storageImplementation.deleteDataType(u, type);
+        } else {
+            // remove all
+            storageImplementation.deleteDataAll(u);
+        }
+        Message.DATA_CLEAR_SUCCESS.send(s, name, type);
+    }
 }

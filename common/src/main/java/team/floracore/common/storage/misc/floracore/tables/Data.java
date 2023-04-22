@@ -10,18 +10,19 @@ import java.util.*;
 public class Data extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}data' WHERE uuid=?";
     public static final String DELETE_ALL = "DELETE FROM '{prefix}data' WHERE uuid=?";
+    public static final String DELETE_TYPE = "DELETE FROM '{prefix}data' WHERE uuid=? AND type=?";
     public static final String DELETE_ID = "DELETE FROM '{prefix}data' WHERE id=?";
     private static final String UPDATE_VALUE = "UPDATE '{prefix}data' SET value=? WHERE uuid=? AND type=? AND `key`=?";
     private static final String UPDATE_EXPIRY = "UPDATE '{prefix}data' SET expiry=? WHERE uuid=? AND type=? AND `key`=?";
     private static final String INSERT = "INSERT INTO '{prefix}data' (uuid, type, `key`, value, expiry) VALUES(?, ?, ?, ?, ?)";
     private final int id;
     private final UUID uuid;
-    private final String type;
+    private final DataType type;
     private final String key;
     private String value;
     private long expiry;
 
-    public Data(FloraCorePlugin plugin, SqlStorage sqlStorage, int id, UUID uuid, String type, String key, String value, long expiry) {
+    public Data(FloraCorePlugin plugin, SqlStorage sqlStorage, int id, UUID uuid, DataType type, String key, String value, long expiry) {
         super(plugin, sqlStorage);
         this.id = id;
         this.uuid = uuid;
@@ -39,7 +40,7 @@ public class Data extends AbstractFloraCoreTable {
         return uuid;
     }
 
-    public String getType() {
+    public DataType getType() {
         return type;
     }
 
@@ -57,7 +58,7 @@ public class Data extends AbstractFloraCoreTable {
             try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(UPDATE_VALUE))) {
                 ps.setString(1, value);
                 ps.setString(2, uuid.toString());
-                ps.setString(3, type);
+                ps.setString(3, type.getName());
                 ps.setString(4, key);
                 ps.execute();
             }
@@ -76,7 +77,7 @@ public class Data extends AbstractFloraCoreTable {
             try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(UPDATE_EXPIRY))) {
                 ps.setLong(1, expiry);
                 ps.setString(2, uuid.toString());
-                ps.setString(3, type);
+                ps.setString(3, type.getName());
                 ps.setString(4, key);
                 ps.execute();
             }
@@ -90,12 +91,39 @@ public class Data extends AbstractFloraCoreTable {
         try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(INSERT))) {
                 ps.setString(1, uuid.toString());
-                ps.setString(2, type);
+                ps.setString(2, type.getName());
                 ps.setString(3, key);
                 ps.setString(4, value);
                 ps.setLong(5, expiry);
                 ps.execute();
             }
+        }
+    }
+
+    public enum DataType {
+        AUTO_SYNC("auto-sync"),
+        CUSTOM("custom");
+        final String name;
+
+        DataType(String name) {
+            this.name = name;
+        }
+
+        public static DataType parse(String name, DataType def) {
+            for (DataType t : values()) {
+                if (t.getName().equalsIgnoreCase(name)) {
+                    return t;
+                }
+            }
+            return def;
+        }
+
+        public static DataType parse(String name) {
+            return parse(name, AUTO_SYNC);
+        }
+
+        public String getName() {
+            return name;
         }
     }
 }

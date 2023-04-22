@@ -20,7 +20,7 @@ public class TranslationManager {
     /**
      * The default locale used by FloraCore messages
      */
-    public static final Locale DEFAULT_LOCALE = Locale.ENGLISH;
+    public static final Locale DEFAULT_LOCALE = Locale.SIMPLIFIED_CHINESE;
 
     private final FloraCorePlugin plugin;
     private final Set<Locale> installed = ConcurrentHashMap.newKeySet();

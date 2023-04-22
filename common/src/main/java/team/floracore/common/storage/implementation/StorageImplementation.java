@@ -36,13 +36,15 @@ public interface StorageImplementation {
      *
      * @return Data数据。
      */
-    Data insertData(UUID uuid, String type, String key, String value, long expiry);
+    Data insertData(UUID uuid, Data.DataType type, String key, String value, long expiry);
 
     List<Data> selectData(UUID uuid);
 
-    Data getSpecifiedData(UUID uuid, String type, String key);
+    Data getSpecifiedData(UUID uuid, Data.DataType type, String key);
 
     void deleteDataAll(UUID uuid);
+
+    void deleteDataType(UUID uuid, Data.DataType type);
 
     void deleteDataExpired(UUID uuid);
 

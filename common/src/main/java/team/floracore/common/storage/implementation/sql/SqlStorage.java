@@ -181,7 +181,7 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Data insertData(UUID uuid, String type, String key, String value, long expiry) {
+    public Data insertData(UUID uuid, Data.DataType type, String key, String value, long expiry) {
         Data data = getSpecifiedData(uuid, type, key);
         if (data == null) {
             data = new Data(plugin, this, -1, uuid, type, key, value, expiry);
@@ -210,7 +210,7 @@ public class SqlStorage implements StorageImplementation {
                         String key = rs.getString("key");
                         String value = rs.getString("value");
                         long expiry = rs.getLong("expiry");
-                        ret.add(new Data(plugin, this, id, uuid, type, key, value, expiry));
+                        ret.add(new Data(plugin, this, id, uuid, Data.DataType.parse(type), key, value, expiry));
                     }
                 }
             }
@@ -221,10 +221,10 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Data getSpecifiedData(UUID uuid, String type, String key) {
+    public Data getSpecifiedData(UUID uuid, Data.DataType type, String key) {
         List<Data> ret = selectData(uuid);
         for (Data data : ret) {
-            if (data.getType().equalsIgnoreCase(type) && data.getKey().equalsIgnoreCase(key)) {
+            if (data.getType() == type && data.getKey().equalsIgnoreCase(key)) {
                 long currentTime = System.currentTimeMillis();
                 if (data.getExpiry() <= 0 || data.getExpiry() > currentTime) {
                     return data;
@@ -239,6 +239,19 @@ public class SqlStorage implements StorageImplementation {
         try (Connection c = this.connectionFactory.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_ALL))) {
                 ps.setString(1, uuid.toString());
+                ps.execute();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteDataType(UUID uuid, Data.DataType type) {
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_TYPE))) {
+                ps.setString(1, uuid.toString());
+                ps.setString(2, type.getName());
                 ps.execute();
             }
         } catch (SQLException e) {
