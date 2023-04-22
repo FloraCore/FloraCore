@@ -5,7 +5,6 @@ import cloud.commandframework.context.*;
 import com.google.common.collect.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.util.*;
@@ -15,10 +14,7 @@ import java.time.temporal.*;
 import java.util.*;
 import java.util.stream.*;
 
-import static team.floracore.common.util.ReflectionWrapper.*;
-
 public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
-    public static final boolean restrictions = isVersionGreaterThan(getVersion(), "v1_9_R1");
     private final FloraCorePlugin plugin;
 
     public AbstractFloraCoreCommand(FloraCorePlugin plugin) {
@@ -64,24 +60,5 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     @Suggestions("commonDurations")
     public @NonNull List<String> getCommonDurations(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
         return ImmutableList.of("1", "60", "600", "3600", "86400");
-    }
-
-    @Override
-    public ItemStack getItemInMainHand(final Player player) {
-        if (!restrictions) {
-            //noinspection deprecation
-            return player.getInventory().getItemInHand();
-        }
-        return player.getInventory().getItemInMainHand();
-    }
-
-    @Override
-    public void setItemInMainHand(final Player player, final ItemStack stack) {
-        if (restrictions) {
-            player.getInventory().setItemInMainHand(stack);
-        } else {
-            //noinspection deprecation
-            player.setItemInHand(stack);
-        }
     }
 }

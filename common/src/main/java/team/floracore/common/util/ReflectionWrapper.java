@@ -442,6 +442,10 @@ public final class ReflectionWrapper {
         }
     }
 
+    public static boolean isVersionGreaterThanOrEqual(String version, String compareVersion) {
+        return isVersionGreaterThan(version, compareVersion) || version.equals(compareVersion);
+    }
+
 
     public static Unsafe unsafe = getStaticFieldValue(getField(Unsafe.class, "theUnsafe"));
 }

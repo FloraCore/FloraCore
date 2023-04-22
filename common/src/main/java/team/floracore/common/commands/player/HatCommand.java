@@ -10,6 +10,7 @@ import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
+import team.floracore.common.util.craftbukkit.*;
 
 public class HatCommand extends AbstractFloraCoreCommand {
     public HatCommand(FloraCorePlugin plugin) {
@@ -23,7 +24,7 @@ public class HatCommand extends AbstractFloraCoreCommand {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         PlayerInventory inv = p.getInventory();
         final ItemStack head = inv.getHelmet();
-        final ItemStack hand = getItemInMainHand(p);
+        final ItemStack hand = Inventories.getItemInMainHand(p);
         if (hand.getType() == Material.AIR) {
             Message.COMMAND_HAT_FAIL.send(sender);
             return;
@@ -33,12 +34,12 @@ public class HatCommand extends AbstractFloraCoreCommand {
             Message.COMMAND_HAT_ARMOR.send(sender);
             return;
         }
-        if (restrictions && head != null && head.getEnchantments().containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission("floracore.command.hat.ignore-binding")) {
+        if (Inventories.HAS_OFFHAND && head != null && head.getEnchantments().containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission("floracore.command.hat.ignore-binding")) {
             Message.COMMAND_HAT_CURSE.send(sender);
             return;
         }
         inv.setHelmet(hand);
-        setItemInMainHand(p, head);
+        Inventories.setItemInMainHand(p, head);
         Message.COMMAND_HAT_PLACED.send(sender);
     }
 
@@ -51,12 +52,12 @@ public class HatCommand extends AbstractFloraCoreCommand {
         final ItemStack head = inv.getHelmet();
         if (head == null || head.getType() == Material.AIR) {
             Message.COMMAND_HAT_EMPTY.send(sender);
-        } else if (restrictions && head.getEnchantments().containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission("floracore.command.hat.ignore-binding")) {
+        } else if (Inventories.HAS_OFFHAND && head.getEnchantments().containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission("floracore.command.hat.ignore-binding")) {
             Message.COMMAND_HAT_CURSE.send(sender);
         } else {
             final ItemStack air = new ItemStack(Material.AIR);
             inv.setHelmet(air);
-            // add Item
+            Inventories.addItem(p, head);
             Message.COMMAND_HAT_REMOVED.send(sender);
         }
     }
