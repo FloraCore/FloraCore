@@ -15,6 +15,7 @@ import java.util.*;
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 import static net.kyori.adventure.text.format.TextDecoration.*;
+import static team.floracore.common.util.ReflectionWrapper.*;
 
 public interface Message {
     TextComponent OPEN_BRACKET = Component.text('(');
@@ -32,7 +33,9 @@ public interface Message {
                 // v{}
                 .append(text("v" + bootstrap.getVersion(), AQUA)).append(space())
                 // Running
-                .append(text("is Running", DARK_GRAY)).build();
+                .append(text("is Running on", DARK_GRAY)).append(space())
+                // server version
+                .append(text(getVersion(), DARK_GRAY)).build();
 
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
 
@@ -170,6 +173,30 @@ public interface Message {
     Args3<World, Component, String> COMMAND_WEATHER_TIME = (world, weather, time) -> prefixed(translatable()
             // 你将 {0} 的天气设为 {1}，持续 {2} 秒
             .key("floracore.command.weather.time").color(AQUA).args(text(world.getName()).color(GREEN), weather.color(GREEN), text(time).color(GREEN)).append(FULL_STOP));
+
+    Args0 COMMAND_HAT_ARMOR = () -> prefixed(translatable()
+            // 你无法将这个物品当做帽子戴上!
+            .key("floracore.command.hat.armor").color(RED));
+
+    Args0 COMMAND_HAT_CURSE = () -> prefixed(translatable()
+            // 你不能移除带有绑定诅咒的帽子!
+            .key("floracore.command.hat.curse").color(RED));
+
+    Args0 COMMAND_HAT_EMPTY = () -> prefixed(translatable()
+            // 你现在没有戴帽子!
+            .key("floracore.command.hat.empty").color(RED));
+
+    Args0 COMMAND_HAT_FAIL = () -> prefixed(translatable()
+            // 你必须把想要戴的帽子拿在手中!
+            .key("floracore.command.hat.fail").color(RED));
+
+    Args0 COMMAND_HAT_REMOVED = () -> prefixed(translatable()
+            // 你的帽子已被移除
+            .key("floracore.command.hat.removed").color(AQUA).append(FULL_STOP));
+
+    Args0 COMMAND_HAT_PLACED = () -> prefixed(translatable()
+            // 你戴上了新帽子
+            .key("floracore.command.hat.placed").color(AQUA).append(FULL_STOP));
 
     Args0 COMMAND_INVSEE_SELF = () -> prefixed(translatable()
             // 你只能查看其他玩家的物品栏!

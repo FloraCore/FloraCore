@@ -54,6 +54,8 @@ dependencies {
 
     api 'com.zaxxer:HikariCP:4.0.3'
     api 'io.lettuce:lettuce-core:6.2.3.RELEASE'
+
+    api 'io.github.karlatemp:unsafe-accessor:1.7.0'
 }
 
 tasks.withType(JavaCompile).configureEach {

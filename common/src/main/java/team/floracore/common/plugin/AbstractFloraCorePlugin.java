@@ -167,6 +167,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         ret.add(Dependency.OKHTTP);
         ret.add(Dependency.OKIO);
         ret.add(Dependency.CAFFEINE);
+        ret.add(Dependency.UNSAFE_ACCESSOR);
         return ret;
     }
 
