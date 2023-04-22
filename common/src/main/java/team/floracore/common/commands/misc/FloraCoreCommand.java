@@ -8,6 +8,7 @@ import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.jetbrains.annotations.Nullable;
+import team.floracore.api.data.*;
 import team.floracore.common.command.*;
 import team.floracore.common.http.*;
 import team.floracore.common.locale.*;
@@ -131,7 +132,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             u = p.getUniqueId();
             name = p.getName();
         }
-        Data data = storageImplementation.insertData(u, Data.DataType.CUSTOM, key, value, 0);
+        Data data = storageImplementation.insertData(u, DataType.CUSTOM, key, value, 0);
         Message.SET_DATA_SUCCESS.send(s, key, value, name);
     }
 
@@ -156,7 +157,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             u = p.getUniqueId();
             name = p.getName();
         }
-        Data data = storageImplementation.getSpecifiedData(u, Data.DataType.CUSTOM, key);
+        Data data = storageImplementation.getSpecifiedData(u, DataType.CUSTOM, key);
         if (data == null) {
             Message.DOESNT_HAVE_DATA.send(s, target, key);
             return;
@@ -194,7 +195,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
                 Instant newTime = Instant.now().plus(d);
                 // 将结果转换为时间戳
                 long expiry = newTime.toEpochMilli();
-                Data data = storageImplementation.insertData(u, Data.DataType.CUSTOM, key, value, expiry);
+                Data data = storageImplementation.insertData(u, DataType.CUSTOM, key, value, expiry);
                 Message.SET_DATA_TEMP_SUCCESS.send(s, key, value, name, d);
             } else {
                 Message.ILLEGAL_DATE_ERROR.send(s, duration);
@@ -206,7 +207,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("fc|floracore data <target> clear")
     @CommandDescription("清空玩家存储的数据")
-    public void dataClear(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @Nullable @Flag("type") Data.DataType type) {
+    public void dataClear(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @Nullable @Flag("type") DataType type) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();

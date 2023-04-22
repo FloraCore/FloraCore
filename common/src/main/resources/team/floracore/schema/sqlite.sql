@@ -14,10 +14,10 @@ CREATE TABLE IF NOT EXISTS `{prefix}players`
 
 CREATE TABLE IF NOT EXISTS `{prefix}data`
 (
-    id     INT AUTOINCREMENT NOT NULL PRIMARY KEY,
-    uuid   VARCHAR(36)       NOT NULL,
-    type   VARCHAR(16)       NOT NULL,
-    key    VARCHAR(255)      NOT NULL,
-    value  VARCHAR(255)      NOT NULL,
-    expiry BIGINT            NOT NULL
+    id       INT AUTOINCREMENT NOT NULL PRIMARY KEY,
+    uuid     VARCHAR(36)       NOT NULL,
+    type     VARCHAR(16)       NOT NULL,
+    data_key VARCHAR(255)      NOT NULL,
+    value    VARCHAR(255)      NOT NULL,
+    expiry   BIGINT            NOT NULL
 );

@@ -3,9 +3,9 @@ package team.floracore.common.locale;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.event.*;
 import net.kyori.adventure.text.serializer.legacy.*;
+import team.floracore.api.data.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.sender.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
 import team.floracore.common.util.*;
 
 import java.time.*;
@@ -225,7 +225,7 @@ public interface Message {
             // 成功中为 {1} 取消设置数据键 {0}
             .key("floracore.command.generic.data.unset").color(GREEN).args(text().color(WHITE).append(text('\'')).append(text(key)).append(text('\'')), text().color(AQUA).append(text(target))).append(FULL_STOP));
 
-    Args2<String, Data.DataType> DATA_CLEAR_SUCCESS = (target, type) -> prefixed(translatable()
+    Args2<String, DataType> DATA_CLEAR_SUCCESS = (target, type) -> prefixed(translatable()
             // {0} 的数据({1})已被清除
             .key("floracore.command.generic.data.clear").color(GREEN)
             // target

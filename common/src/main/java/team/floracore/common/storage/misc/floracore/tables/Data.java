@@ -1,5 +1,6 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
+import team.floracore.api.data.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.sql.*;
 import team.floracore.common.storage.misc.floracore.*;
@@ -12,9 +13,9 @@ public class Data extends AbstractFloraCoreTable {
     public static final String DELETE_ALL = "DELETE FROM '{prefix}data' WHERE uuid=?";
     public static final String DELETE_TYPE = "DELETE FROM '{prefix}data' WHERE uuid=? AND type=?";
     public static final String DELETE_ID = "DELETE FROM '{prefix}data' WHERE id=?";
-    private static final String UPDATE_VALUE = "UPDATE '{prefix}data' SET value=? WHERE uuid=? AND type=? AND `key`=?";
-    private static final String UPDATE_EXPIRY = "UPDATE '{prefix}data' SET expiry=? WHERE uuid=? AND type=? AND `key`=?";
-    private static final String INSERT = "INSERT INTO '{prefix}data' (uuid, type, `key`, value, expiry) VALUES(?, ?, ?, ?, ?)";
+    private static final String UPDATE_VALUE = "UPDATE '{prefix}data' SET value=? WHERE uuid=? AND type=? AND data_key=?";
+    private static final String UPDATE_EXPIRY = "UPDATE '{prefix}data' SET expiry=? WHERE uuid=? AND type=? AND data_key=?";
+    private static final String INSERT = "INSERT INTO '{prefix}data' (uuid, type, data_key, value, expiry) VALUES(?, ?, ?, ?, ?)";
     private final int id;
     private final UUID uuid;
     private final DataType type;
@@ -97,33 +98,6 @@ public class Data extends AbstractFloraCoreTable {
                 ps.setLong(5, expiry);
                 ps.execute();
             }
-        }
-    }
-
-    public enum DataType {
-        AUTO_SYNC("auto-sync"),
-        CUSTOM("custom");
-        final String name;
-
-        DataType(String name) {
-            this.name = name;
-        }
-
-        public static DataType parse(String name, DataType def) {
-            for (DataType t : values()) {
-                if (t.getName().equalsIgnoreCase(name)) {
-                    return t;
-                }
-            }
-            return def;
-        }
-
-        public static DataType parse(String name) {
-            return parse(name, AUTO_SYNC);
-        }
-
-        public String getName() {
-            return name;
         }
     }
 }

@@ -1,6 +1,8 @@
 package team.floracore.common.api;
 
 import team.floracore.api.*;
+import team.floracore.api.data.*;
+import team.floracore.common.api.implementation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
@@ -12,8 +14,11 @@ public class FloraCoreApiProvider implements FloraCore {
 
     private final FloraCorePlugin plugin;
 
+    private final DataAPI dataAPI;
+
     public FloraCoreApiProvider(FloraCorePlugin plugin) {
         this.plugin = plugin;
+        this.dataAPI = new ApiData(plugin);
     }
 
     public void ensureApiWasLoadedByPlugin() {
@@ -43,5 +48,10 @@ public class FloraCoreApiProvider implements FloraCore {
                 return;
             }
         }
+    }
+
+    @Override
+    public DataAPI getDataAPI() {
+        return this.dataAPI;
     }
 }

@@ -1,5 +1,7 @@
 package team.floracore.api;
 
+import team.floracore.api.data.*;
+
 /**
  * The FloraCore API.
  *
@@ -19,4 +21,5 @@ package team.floracore.api;
  * {@link team.floracore.api.FloraCoreProvider}.</p>
  */
 public interface FloraCore {
+    DataAPI getDataAPI();
 }

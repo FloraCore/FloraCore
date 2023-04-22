@@ -1,13 +1,14 @@
-/**
- * 数据库操作的接口
- */
 package team.floracore.common.storage.implementation;
 
+import team.floracore.api.data.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.util.*;
 
+/**
+ * 数据库操作的接口
+ */
 public interface StorageImplementation {
     FloraCorePlugin getPlugin();
 
@@ -36,15 +37,15 @@ public interface StorageImplementation {
      *
      * @return Data数据。
      */
-    Data insertData(UUID uuid, Data.DataType type, String key, String value, long expiry);
+    Data insertData(UUID uuid, DataType type, String key, String value, long expiry);
 
     List<Data> selectData(UUID uuid);
 
-    Data getSpecifiedData(UUID uuid, Data.DataType type, String key);
+    Data getSpecifiedData(UUID uuid, DataType type, String key);
 
     void deleteDataAll(UUID uuid);
 
-    void deleteDataType(UUID uuid, Data.DataType type);
+    void deleteDataType(UUID uuid, DataType type);
 
     void deleteDataExpired(UUID uuid);
 

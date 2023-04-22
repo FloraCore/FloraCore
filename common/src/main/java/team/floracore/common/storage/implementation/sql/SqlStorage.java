@@ -2,6 +2,7 @@ package team.floracore.common.storage.implementation.sql;
 
 import com.github.benmanes.caffeine.cache.*;
 import com.google.gson.reflect.*;
+import team.floracore.api.data.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.implementation.sql.connection.*;
@@ -181,7 +182,7 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Data insertData(UUID uuid, Data.DataType type, String key, String value, long expiry) {
+    public Data insertData(UUID uuid, DataType type, String key, String value, long expiry) {
         Data data = getSpecifiedData(uuid, type, key);
         if (data == null) {
             data = new Data(plugin, this, -1, uuid, type, key, value, expiry);
@@ -207,10 +208,10 @@ public class SqlStorage implements StorageImplementation {
                     while (rs.next()) {
                         int id = rs.getInt("id");
                         String type = rs.getString("type");
-                        String key = rs.getString("key");
+                        String key = rs.getString("data_key");
                         String value = rs.getString("value");
                         long expiry = rs.getLong("expiry");
-                        ret.add(new Data(plugin, this, id, uuid, Data.DataType.parse(type), key, value, expiry));
+                        ret.add(new Data(plugin, this, id, uuid, DataType.parse(type), key, value, expiry));
                     }
                 }
             }
@@ -221,7 +222,7 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Data getSpecifiedData(UUID uuid, Data.DataType type, String key) {
+    public Data getSpecifiedData(UUID uuid, DataType type, String key) {
         List<Data> ret = selectData(uuid);
         for (Data data : ret) {
             if (data.getType() == type && data.getKey().equalsIgnoreCase(key)) {
@@ -247,7 +248,7 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public void deleteDataType(UUID uuid, Data.DataType type) {
+    public void deleteDataType(UUID uuid, DataType type) {
         try (Connection c = this.connectionFactory.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_TYPE))) {
                 ps.setString(1, uuid.toString());
