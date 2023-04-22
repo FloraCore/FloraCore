@@ -3,6 +3,7 @@ package team.floracore.common.locale;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.event.*;
 import net.kyori.adventure.text.serializer.legacy.*;
+import org.bukkit.*;
 import team.floracore.api.data.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.sender.*;
@@ -153,6 +154,22 @@ public interface Message {
     Args1<String> COMMAND_GAMEMODE_NOSUCH = (mode) -> prefixed(translatable()
             // {0} 不是合法的游戏模式
             .key("floracore.command.gamemode.nosuch").color(RED).args(text(mode).color(GREEN)).append(FULL_STOP));
+
+    Args0 COMMAND_MISC_WEATHER = () -> translatable("floracore.command.misc.weather");
+    Args0 COMMAND_MISC_WEATHER_SUM = () -> translatable("floracore.command.misc.weather.sun");
+    Args0 COMMAND_MISC_WEATHER_STORM = () -> translatable("floracore.command.misc.weather.storm");
+
+    Args1<String> COMMAND_WEATHER_NOSUCH = (weather) -> prefixed(translatable()
+            // {0} 不是合法的天气类型
+            .key("floracore.command.weather.nosuch").color(RED).args(text(weather).color(GREEN)).append(FULL_STOP));
+
+    Args2<World, String> COMMAND_WEATHER_NORMAL = (world, weather) -> prefixed(translatable()
+            // 你将 {0} 的天气设为 {1}
+            .key("floracore.command.weather.normal").color(AQUA).args(text(world.getName()).color(GREEN), text(weather).color(GREEN)).append(FULL_STOP));
+
+    Args3<World, String, Integer> COMMAND_WEATHER_TIME = (world, weather, time) -> prefixed(translatable()
+            // 你将 {0} 的天气设为 {1}，持续 {2} 秒
+            .key("floracore.command.weather.time").color(AQUA).args(text(world.getName()).color(GREEN), text(weather).color(GREEN), text(time).color(GREEN)).append(FULL_STOP));
 
     Args0 COMMAND_INVSEE_SELF = () -> prefixed(translatable()
             // 你只能查看其他玩家的物品栏!

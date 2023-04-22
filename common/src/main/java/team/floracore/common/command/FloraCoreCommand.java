@@ -10,4 +10,7 @@ import java.util.*;
 public interface FloraCoreCommand {
     @Suggestions("onlinePlayers")
     @NonNull List<String> getOnlinePlayers(@NonNull CommandContext<CommandSender> sender, @NonNull String input);
+
+    @Suggestions("commonDurations")
+    @NonNull List<Integer> getCommonDurations(@NonNull CommandContext<CommandSender> sender, @NonNull String input);
 }

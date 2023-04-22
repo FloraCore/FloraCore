@@ -28,7 +28,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
         GameMode gameMode;
         try {
             gameMode = parseGamemode(mode); // 解析游戏模式
-        } catch (NoSuchGameModeException ex) {
+        } catch (NoSuchTypeException ex) {
             Message.COMMAND_GAMEMODE_NOSUCH.send(sender, mode);
             return;
         }
@@ -122,7 +122,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
         return new ArrayList<>(Arrays.asList("survival", "creative", "adventure", "spectator"));
     }
 
-    private @NotNull GameMode parseGamemode(@NotNull String text) throws NoSuchGameModeException {
+    private @NotNull GameMode parseGamemode(@NotNull String text) throws NoSuchTypeException {
         switch (text.toLowerCase()) {
             case "0":
             case "survival":
@@ -141,7 +141,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
             case "sp":
                 return GameMode.SPECTATOR;
             default:
-                throw new NoSuchGameModeException(text);
+                throw new NoSuchTypeException(text);
         }
     }
 }

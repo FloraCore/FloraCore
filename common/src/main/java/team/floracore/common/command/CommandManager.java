@@ -12,6 +12,7 @@ import org.bukkit.command.*;
 import team.floracore.common.commands.misc.FloraCoreCommand;
 import team.floracore.common.commands.player.*;
 import team.floracore.common.commands.test.*;
+import team.floracore.common.commands.world.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
@@ -99,10 +100,21 @@ public class CommandManager {
     }
 
     public void constructCommands() {
+        // test
         this.annotationParser.parse(new TestCommand(plugin));
+
+        // misc
         this.annotationParser.parse(new FloraCoreCommand(plugin));
+
+        // player
         this.annotationParser.parse(new FlyCommand(plugin));
         this.annotationParser.parse(new GameModeCommand(plugin));
         this.annotationParser.parse(new InvSeeCommand(plugin));
+
+        // server
+
+        // world
+        this.annotationParser.parse(new TimeCommand(plugin));
+        this.annotationParser.parse(new WeatherCommand(plugin));
     }
 }

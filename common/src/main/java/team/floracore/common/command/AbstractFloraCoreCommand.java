@@ -2,6 +2,7 @@ package team.floracore.common.command;
 
 import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
+import com.google.common.collect.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
@@ -53,5 +54,11 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     @Suggestions("onlinePlayers")
     public @NonNull List<String> getOnlinePlayers(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
         return plugin.getBootstrap().getServer().getOnlinePlayers().stream().sorted(Comparator.comparing(Player::getDisplayName)).map(Player::getDisplayName).collect(Collectors.toList());
+    }
+
+    @Override
+    @Suggestions("commonDurations")
+    public @NonNull List<Integer> getCommonDurations(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+        return ImmutableList.of(1, 60, 600, 3600, 86400);
     }
 }
