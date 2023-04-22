@@ -131,57 +131,36 @@ public interface Message {
     Args0 COMMAND_MISC_GAMEMODE_ADVENTURE = () -> translatable("floracore.command.misc.gamemode.adventure");
     Args0 COMMAND_MISC_GAMEMODE_SPECTATOR = () -> translatable("floracore.command.misc.gamemode.spectator");
 
-    Args0 COMMAND_FLY_ENABLE_SELF = () -> prefixed(translatable()
-            // 为您自己设置飞行状态为 {0}
-            .key("floracore.command.fly.self").color(AQUA)
-            // 开
-            .args(translatable("floracore.command.misc.on").color(GREEN)));
+    Args2<Boolean, String> COMMAND_FLY = (status, target) -> prefixed(translatable()
+            // {1} 的飞行模式被设置为 {0}
+            .key("floracore.command.fly").color(AQUA)
+            // 开 / 关
+            .args(translatable(status ? "floracore.command.misc.on" : "floracore.command.misc.off").color(GREEN), text(target).color(RED)).append(FULL_STOP));
 
-    Args0 COMMAND_FLY_DISABLE_SELF = () -> prefixed(translatable()
-            // 为您自己设置飞行状态为 {0}
-            .key("floracore.command.fly.self").color(AQUA)
-            // 关
-            .args(translatable("floracore.command.misc.off").color(RED)));
-
-    Args1<String> COMMAND_FLY_ENABLE_OTHER = target -> prefixed(translatable()
-            // 为 {0} 设置飞行状态为 {1}
-            .key("floracore.command.fly.other").color(AQUA)
-            // 开
-            .args(text(target).color(GREEN), translatable("floracore.command.misc.on").color(GREEN)));
-
-    Args1<String> COMMAND_FLY_DISABLE_OTHER = target -> prefixed(translatable()
-            // 为 {0} 设置飞行状态为 {1}
-            .key("floracore.command.fly.other").color(AQUA)
-            // 关
-            .args(text(target).color(GREEN), translatable("floracore.command.misc.off").color(RED)));
-
-    Args1<String> COMMAND_FLY_ENABLE_FROM = from -> prefixed(translatable()
-            // {0} 为您设置飞行状态为 {1}
+    Args2<Boolean, String> COMMAND_FLY_FROM = (status, from) -> prefixed(translatable()
+            // {1} 将您的游戏模式设置为 {0}
             .key("floracore.command.fly.from").color(AQUA)
-            // 开
-            .args(text(from).color(GREEN), translatable("floracore.command.misc.on").color(GREEN)));
+            // 开 / 关
+            .args(translatable(status ? "floracore.command.misc.on" : "floracore.command.misc.off").color(GREEN), text(from).color(GREEN)).append(FULL_STOP));
+    Args2<Component, String> COMMAND_GAMEMODE = (mode, target) -> prefixed(translatable()
+            // 将{1}的游戏模式设置为{0}
+            .key("floracore.command.gamemode").color(AQUA).args(mode.color(GREEN), text(target).color(GREEN)).append(FULL_STOP));
 
-    Args1<String> COMMAND_FLY_DISABLE_FROM = from -> prefixed(translatable()
-            // {0} 为您设置飞行状态为 {1}
-            .key("floracore.command.fly.from").color(AQUA)
-            // 关
-            .args(text(from).color(GREEN), translatable("floracore.command.misc.off").color(GREEN)));
-
-    Args1<Component> COMMAND_GAMEMODE_SELF = mode -> prefixed(translatable()
-            // 为您自己设置游戏模式为 {0}
-            .key("floracore.command.gamemode.self").color(AQUA).args(mode.color(GREEN)));
-
-    Args2<String, Component> COMMAND_GAMEMODE_OTHER = (target, mode) -> prefixed(translatable()
-            // 为 {0} 设置游戏模式为 {1}
-            .key("floracore.command.gamemode.other").color(AQUA).args(text(target).color(GREEN), mode.color(GREEN)));
-
-    Args2<String, Component> COMMAND_GAMEMODE_FROM = (from, mode) -> prefixed(translatable()
-            // {0} 为您设置游戏模式为 {1}
-            .key("floracore.command.gamemode.from").color(AQUA).args(text(from).color(GREEN), mode.color(GREEN)));
+    Args2<Component, String> COMMAND_GAMEMODE_FROM = (mode, from) -> prefixed(translatable()
+            // {1} 将您的游戏模式设置为 {0}
+            .key("floracore.command.gamemode.from").color(AQUA).args(mode.color(GREEN), text(from).color(GREEN)).append(FULL_STOP));
 
     Args1<String> COMMAND_GAMEMODE_NOSUCH = (mode) -> prefixed(translatable()
             // {0} 不是合法的游戏模式
-            .key("floracore.command.gamemode.nosuch").color(RED).args(text(mode).color(GREEN)));
+            .key("floracore.command.gamemode.nosuch").color(RED).args(text(mode).color(GREEN)).append(FULL_STOP));
+
+    Args0 COMMAND_INVSEE_SELF = () -> prefixed(translatable()
+            // 你只能查看其他玩家的物品栏!
+            .key("floracore.command.invsee.self").color(RED));
+
+    Args1<String> COMMAND_INVSEE = (target) -> prefixed(translatable()
+            // 你打开了 {0} 的物品栏
+            .key("floracore.command.invsee").color(AQUA).args(text(target).color(GREEN)).append(FULL_STOP));
 
     Args1<String> DATA_NONE = target -> prefixed(translatable()
             // {0} 无记录的数据

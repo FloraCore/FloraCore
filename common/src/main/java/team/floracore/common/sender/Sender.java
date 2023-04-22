@@ -33,6 +33,8 @@ public interface Sender {
      */
     String getName();
 
+    String getDisplayName();
+
     /**
      * Gets the sender's unique id.
      *

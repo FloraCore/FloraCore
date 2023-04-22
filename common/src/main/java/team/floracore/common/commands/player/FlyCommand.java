@@ -29,11 +29,7 @@ public class FlyCommand extends AbstractFloraCoreCommand {
         // 永不过期
         getPlugin().getStorage().getImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
         Sender sender = getPlugin().getSenderFactory().wrap(s);
-        if (old) {
-            Message.COMMAND_FLY_DISABLE_SELF.send(sender);
-        } else {
-            Message.COMMAND_FLY_ENABLE_SELF.send(sender);
-        }
+        Message.COMMAND_FLY.send(sender, !old, s.getDisplayName());
     }
 
     @CommandMethod("fly <target>")
@@ -48,16 +44,9 @@ public class FlyCommand extends AbstractFloraCoreCommand {
         getPlugin().getStorage().getImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Sender targetSender = getPlugin().getSenderFactory().wrap(target);
-        if (old) {
-            Message.COMMAND_FLY_DISABLE_OTHER.send(sender, target.getName());
-            if (silent == null || !silent) {
-                Message.COMMAND_FLY_DISABLE_FROM.send(targetSender, s.getName());
-            }
-        } else {
-            Message.COMMAND_FLY_ENABLE_OTHER.send(sender, target.getName());
-            if (silent == null || !silent) {
-                Message.COMMAND_FLY_ENABLE_FROM.send(targetSender, s.getName());
-            }
+        Message.COMMAND_FLY.send(sender, !old, target.getDisplayName());
+        if (silent == null || !silent) {
+            Message.COMMAND_FLY_FROM.send(targetSender, !old, sender.getDisplayName());
         }
     }
 }

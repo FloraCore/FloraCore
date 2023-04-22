@@ -17,6 +17,7 @@ public final class AbstractSender<T> implements Sender {
 
     private final UUID uniqueId;
     private final String name;
+    private final String displayName;
     private final boolean isConsole;
 
     AbstractSender(FloraCorePlugin plugin, SenderFactory<?, T> factory, T sender) {
@@ -25,6 +26,7 @@ public final class AbstractSender<T> implements Sender {
         this.sender = sender;
         this.uniqueId = factory.getUniqueId(this.sender);
         this.name = factory.getName(this.sender);
+        this.displayName = factory.getDisplayName(this.sender);
         this.isConsole = this.factory.isConsole(this.sender);
     }
 
@@ -41,6 +43,11 @@ public final class AbstractSender<T> implements Sender {
     @Override
     public String getName() {
         return this.name;
+    }
+
+    @Override
+    public String getDisplayName() {
+        return this.displayName;
     }
 
     @Override

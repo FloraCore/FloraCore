@@ -25,6 +25,14 @@ public class BukkitSenderFactory extends SenderFactory<FloraCorePlugin, CommandS
     }
 
     @Override
+    protected String getDisplayName(CommandSender sender) {
+        if (sender instanceof Player) {
+            return ((Player) sender).getDisplayName();
+        }
+        return Sender.CONSOLE_NAME;
+    }
+
+    @Override
     protected UUID getUniqueId(CommandSender sender) {
         if (sender instanceof Player) {
             return ((Player) sender).getUniqueId();

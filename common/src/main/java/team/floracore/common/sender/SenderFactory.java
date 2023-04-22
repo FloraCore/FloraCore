@@ -26,6 +26,8 @@ public abstract class SenderFactory<P extends FloraCorePlugin, T> implements Aut
 
     protected abstract String getName(T sender);
 
+    protected abstract String getDisplayName(T sender);
+
     protected abstract void sendMessage(T sender, Component message);
 
     protected abstract boolean hasPermission(T sender, String node);
