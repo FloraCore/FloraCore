@@ -174,6 +174,26 @@ public interface Message {
             // 你将 {0} 的天气设为 {1}，持续 {2} 秒
             .key("floracore.command.weather.time").color(AQUA).args(text(world.getName()).color(GREEN), weather.color(GREEN), text(time).color(GREEN)).append(FULL_STOP));
 
+    Args1<Long> DURATION_FORMAT = (ticks) -> translatable()
+            // {0} 或 {1}（或 {2} ）
+            .key("floracore.duration.format").color(RED).args(text(DescParseTickFormat.format24(ticks)).color(GREEN), text(DescParseTickFormat.format12(ticks)).color(GREEN), text(DescParseTickFormat.formatTicks(ticks)).color(GREEN)).build();
+
+    Args0 COMMAND_MISC_WORLD_INVALID = () -> prefixed(translatable()
+            // 无效的世界
+            .key("floracore.command.misc.world.invalid").color(RED));
+
+    Args2<World, Component> COMMAND_TIME_WORLD_CURRENT = (world, time) -> prefixed(translatable()
+            // 当前 {0} 的时间是 {1}
+            .key("floracore.command.time.world.current").color(AQUA).args(text(world.getName()).color(GREEN), time));
+
+    Args2<String, Component> COMMAND_TIME_SET = (world, time) -> prefixed(translatable()
+            // {0} 的时间被设置为 {1}
+            .key("floracore.command.time.set").color(AQUA).args(text(world).color(GREEN), time));
+
+    Args2<String, Component> COMMAND_TIME_ADD = (world, time) -> prefixed(translatable()
+            // {0} 的时间已被 {1} 快进
+            .key("floracore.command.time.add").color(AQUA).args(text(world).color(GREEN), time));
+
     Args0 COMMAND_HAT_ARMOR = () -> prefixed(translatable()
             // 你无法将这个物品当做帽子戴上!
             .key("floracore.command.hat.armor").color(RED));
@@ -265,6 +285,11 @@ public interface Message {
     Args0 PAST_DATE_ERROR = () -> prefixed(translatable()
             // 不能设置已经过去的日期\!
             .key("floracore.command.misc.date-in-past-error").color(RED));
+
+
+    Args0 COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION = () -> prefixed(translatable()
+            // 执行命令异常
+            .key("floracore.command.misc.execute-command-exception").color(RED));
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();

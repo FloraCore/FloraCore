@@ -1,10 +1,106 @@
 package team.floracore.common.commands.world;
 
+import cloud.commandframework.annotations.*;
+import cloud.commandframework.annotations.suggestions.*;
+import cloud.commandframework.context.*;
+import com.google.common.collect.*;
+import org.bukkit.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.checkerframework.checker.nullness.qual.*;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
+import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
+import team.floracore.common.util.*;
+
+import java.util.*;
 
 public class TimeCommand extends AbstractFloraCoreCommand {
     public TimeCommand(FloraCorePlugin plugin) {
         super(plugin);
+    }
+
+    @CommandMethod("time set <time>")
+    @CommandPermission("floracore.command.time")
+    @CommandDescription("设置当前（或指定）世界的时间")
+    public void setTime(final @NotNull CommandSender s, final @NotNull @Argument(value = "time", suggestions = "timeNames") String time, final @Nullable @Flag(value = "world", suggestions = "worlds-all") String world) {
+        Sender sender = getPlugin().getSenderFactory().wrap(s);
+        final long timeTick;
+        final Set<World> worlds;
+
+        try {
+            timeTick = DescParseTickFormat.parse(NumberUtil.isInt(time) ? (time + "t") : time);
+            worlds = getWorlds(s, world);
+        } catch (final NumberFormatException e) {
+            Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
+            return;
+        }
+
+        final StringJoiner joiner = new StringJoiner(", ");
+        if (worlds != null) {
+            for (final World w : worlds) {
+                long t = w.getTime();
+                t -= t % 24000;
+                w.setTime(t + (24000) + timeTick);
+                joiner.add(w.getName());
+            }
+            Message.COMMAND_TIME_SET.send(sender, joiner.toString(), Message.DURATION_FORMAT.build(timeTick));
+        }
+    }
+
+    private void getWorldsTime(final Sender sender, final Collection<World> worlds) {
+        if (worlds.size() == 1) {
+            final Iterator<World> iter = worlds.iterator();
+            Message.DURATION_FORMAT.send(sender, iter.next().getTime());
+            return;
+        }
+
+        for (final World world : worlds) {
+            Message.COMMAND_TIME_WORLD_CURRENT.send(sender, world, Message.DURATION_FORMAT.build(world.getTime()));
+        }
+    }
+
+    /**
+     * Parses worlds from command args, otherwise returns all worlds.
+     */
+    private Set<World> getWorlds(final CommandSender sender, final String selector) {
+        Server server = Bukkit.getServer();
+        final Set<World> worlds = new HashSet<>();
+
+        // If there is no selector we want the world the user is currently in. Or all worlds if it isn't a user.
+        if (selector == null) {
+            if (sender instanceof Player) {
+                worlds.add(((Player) sender).getWorld());
+            } else {
+                worlds.addAll(server.getWorlds());
+            }
+            return worlds;
+        }
+
+        // Try to find the world with name = selector
+        final World world = server.getWorld(selector);
+        if (world != null) {
+            worlds.add(world);
+        } else if (selector.equalsIgnoreCase("*")) { // If that fails, Is the argument something like "*" or "all"?
+            worlds.addAll(server.getWorlds());
+        } else {
+            Sender s = getPlugin().getSenderFactory().wrap(sender);
+            Message.COMMAND_MISC_WORLD_INVALID.send(s);
+            return null;
+        }
+        return worlds;
+    }
+
+    @Suggestions("timeNames")
+    public @NonNull List<String> getTimeNames(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+        return ImmutableList.of("sunrise", "day", "morning", "noon", "afternoon", "sunset", "night", "midnight");
+    }
+
+    @Suggestions("timeNumbers")
+    public @NonNull List<String> getTimeNumbers(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+        return ImmutableList.of("1000", "2000", "3000", "4000", "5000");
     }
 }

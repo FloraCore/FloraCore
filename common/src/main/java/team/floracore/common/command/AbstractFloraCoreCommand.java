@@ -3,6 +3,7 @@ package team.floracore.common.command;
 import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
 import com.google.common.collect.*;
+import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
@@ -54,6 +55,27 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     @Suggestions("onlinePlayers")
     public @NonNull List<String> getOnlinePlayers(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
         return plugin.getBootstrap().getServer().getOnlinePlayers().stream().sorted(Comparator.comparing(Player::getDisplayName)).map(Player::getDisplayName).collect(Collectors.toList());
+    }
+
+    @Override
+    @Suggestions("worlds")
+    public @NonNull List<String> getWorlds(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+        final List<String> worlds = Lists.newArrayList();
+        for (final World world : plugin.getBootstrap().getServer().getWorlds()) {
+            worlds.add(world.getName());
+        }
+        return worlds;
+    }
+
+    @Override
+    @Suggestions("worlds-all")
+    public @NonNull List<String> getWorldsWithAll(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+        final List<String> worlds = Lists.newArrayList();
+        for (final World world : plugin.getBootstrap().getServer().getWorlds()) {
+            worlds.add(world.getName());
+        }
+        worlds.add("*");
+        return worlds;
     }
 
     @Override

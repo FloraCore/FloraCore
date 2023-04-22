@@ -11,6 +11,12 @@ public interface FloraCoreCommand {
     @Suggestions("onlinePlayers")
     @NonNull List<String> getOnlinePlayers(@NonNull CommandContext<CommandSender> sender, @NonNull String input);
 
+    @Suggestions("worlds")
+    @NonNull List<String> getWorlds(@NonNull CommandContext<CommandSender> sender, @NonNull String input);
+
+    @Suggestions("worlds-all")
+    @NonNull List<String> getWorldsWithAll(@NonNull CommandContext<CommandSender> sender, @NonNull String input);
+
     @Suggestions("commonDurations")
     @NonNull List<String> getCommonDurations(@NonNull CommandContext<CommandSender> sender, @NonNull String input);
 }
