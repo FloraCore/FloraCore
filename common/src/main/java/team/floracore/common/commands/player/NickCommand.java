@@ -6,10 +6,14 @@ import net.kyori.adventure.inventory.*;
 import net.kyori.adventure.text.*;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
+import team.floracore.api.data.*;
 import team.floracore.common.command.*;
 import team.floracore.common.config.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
+import team.floracore.common.storage.implementation.*;
+import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.util.*;
 
@@ -37,6 +41,8 @@ public class NickCommand extends AbstractFloraCoreCommand {
     @CommandDescription("根据页面召唤Nick书本")
     public void bookNick(final @NotNull Player p, final @Argument("page") Integer page, final @Argument("rank") String rank, final @Argument("skin") String skin, final @Argument("name") String name) {
         Audience target = getPlugin().getBukkitAudiences().player(p);
+        Sender sender = getPlugin().getSenderFactory().wrap(p);
+        Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
         switch (page) {
             case 0:
                 // start page
@@ -48,12 +54,16 @@ public class NickCommand extends AbstractFloraCoreCommand {
                 break;
             case 2:
                 // skin page
+                Message.COMMAND_NICK_SETUP_RANK.send(sender, ranks.get(rank));
                 target.openBook(getSkinPage(p, rank));
                 break;
             case 3:
                 // name page
-                // rank skin
+                Message.COMMAND_NICK_SETUP_SKIN.send(sender);
+                target.openBook(getNamePage(p, rank, skin));
                 break;
+            case 4:
+                //
         }
     }
 
@@ -94,6 +104,7 @@ public class NickCommand extends AbstractFloraCoreCommand {
     }
 
     private Book getSkinPage(Player player, String rank) {
+        UUID uuid = player.getUniqueId();
         Component bookTitle = text("FloraCore Nick SkinPage");
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
@@ -105,6 +116,35 @@ public class NickCommand extends AbstractFloraCoreCommand {
                 Message.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_STEVE_ALEX.build(rank),
                 // random skin
                 Message.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_RANDOM.build(rank)).asComponent();
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin.reuse");
+        if (data != null) {
+            // reuse skin
+            component = join(joinConfig, component, Message.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_REUSE.build(rank, data.getValue()));
+        }
+        bookPages.add(component);
+        return Book.book(bookTitle, bookAuthor, bookPages);
+    }
+
+    private Book getNamePage(Player player, String rank, String skin) {
+        UUID uuid = player.getUniqueId();
+        Component bookTitle = text("FloraCore Nick NamePage");
+        Component bookAuthor = text("FloraCore");
+        Collection<Component> bookPages = new ArrayList<>();
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        Component component = join(joinConfig, Message.COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1.build(), space(),
+                // random name
+                Message.COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM.build(rank, skin)).asComponent();
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.name.reuse");
+        if (data != null) {
+            // reuse name
+            component = join(joinConfig, component, Message.COMMAND_MISC_NICK_BOOK_NAME_PAGE_REUSE.build(rank, skin, data.getValue()));
+        }
+        if (player.hasPermission("floracore.command.nick.admin")) {
+            component = join(joinConfig, component, Message.COMMAND_MISC_NICK_BOOK_NAME_PAGE_CUSTOM.build(rank, skin));
+        }
+        component = join(joinConfig, component, space(), Message.COMMAND_MISC_NICK_BOOK_RESET.build());
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }

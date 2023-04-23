@@ -327,7 +327,9 @@ public interface Message {
 
     Args0 COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_2 = () -> translatable()
             // 首先,你需要选择你希望在Nick后显示为哪一个{0}
-            .key("floracore.command.misc.nick.book.rank-page.line.2").args(translatable("floracore.command.misc.nick.book.rank-page.rank").decoration(BOLD, true)).color(BLACK).build();
+            .key("floracore.command.misc.nick.book.rank-page.line.2")
+            // {0}
+            .args(translatable("floracore.command.misc.nick.book.rank-page.rank").decoration(BOLD, true)).append(FULL_STOP).color(BLACK).build();
 
     Args2<String, String> COMMAND_MISC_NICK_BOOK_RANK_PAGE_RANK = (rankName, rank) -> {
         ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 2 " + rankName);
@@ -342,9 +344,20 @@ public interface Message {
                 .clickEvent(clickEvent));
     };
 
+    Args1<String> COMMAND_NICK_SETUP_RANK = (rank) -> {
+        Component r = formatColoredValue(rank);
+        return prefixed(translatable()
+                // 你的昵称会员等级已设置为 {0} !
+                .key("floracore.command.nick.setup.rank")
+                // {0}
+                .args(r).color(AQUA));
+    };
+
     Args0 COMMAND_MISC_NICK_BOOK_SKIN_PAGE_LINE_1 = () -> translatable()
             // 芜湖!现在,你希望在Nick后使用哪种皮肤?
-            .key("floracore.command.misc.nick.book.skin-page.line.1").color(BLACK).build();
+            .key("floracore.command.misc.nick.book.skin-page.line.1")
+            // {0}
+            .args(translatable("floracore.command.misc.nick.book.skin-page.skin").decoration(BOLD, true)).color(BLACK).build();
 
     Args1<String> COMMAND_MISC_NICK_BOOK_SKIN_PAGE_NORMAL = (rank) -> {
         ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 3 " + rank + " normal");
@@ -375,6 +388,69 @@ public interface Message {
                 // 随机皮肤
                 .key("floracore.command.misc.nick.book.skin-page.skin.random").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
     };
+
+    Args2<String, String> COMMAND_MISC_NICK_BOOK_SKIN_PAGE_REUSE = (rank, reuse) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 3 " + rank + " reuse");
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
+                // 重新使用 {0} 的皮肤
+                .key("floracore.command.misc.nick.book.skin-page.skin.reuse.hover")
+                // {0}
+                .args(text(reuse)).color(WHITE).build());
+        return ARROW.color(BLACK).append(space()).append(translatable()
+                // 点击这里以重新使用 {0} 的皮肤
+                .key("floracore.command.misc.nick.book.skin-page.skin.reuse").hoverEvent(hoverEvent).clickEvent(clickEvent)
+                // {0}
+                .args(text(reuse)).color(BLACK).build());
+    };
+
+    Args0 COMMAND_NICK_SETUP_SKIN = () -> prefixed(translatable()
+            // 你已拥有皮肤了!
+            .key("floracore.command.nick.setup.skin").color(AQUA));
+
+    Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
+            // 现在,请选择你要使用的{0}!
+            .key("floracore.command.misc.nick.book.name-page.line.1")
+            // {0}
+            .args(translatable("floracore.command.misc.nick.book.name-page.name").decoration(BOLD, true)).color(BLACK).build();
+
+    Args0 COMMAND_MISC_NICK_BOOK_RESET = () -> translatable()
+            // 想要恢复平常状态,请输入{0}
+            .key("floracore.command.misc.nick.book.reset")
+            // {0}
+            .args(text("/unnick").decoration(BOLD, true)).append(FULL_STOP).color(BLACK).build();
+
+    Args2<String, String> COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM = (rank, skin) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin + " random");
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
+                // 点击这里以使用随机昵称
+                .key("floracore.command.misc.nick.book.name-page.name.random.hover").color(WHITE).build());
+        return ARROW.color(BLACK).append(space()).append(translatable()
+                // 使用随机昵称
+                .key("floracore.command.misc.nick.book.name-page.name.random").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
+    };
+
+    Args2<String, String> COMMAND_MISC_NICK_BOOK_NAME_PAGE_CUSTOM = (rank, skin) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin + " custom");
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
+                // 使用自定义昵称
+                .key("floracore.command.misc.nick.book.name-page.name.custom.hover").color(WHITE).build());
+        return ARROW.color(BLACK).append(space()).append(translatable()
+                // 点击这里以使用自定义昵称
+                .key("floracore.command.misc.nick.book.name-page.name.custom").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
+    };
+
+    Args3<String, String, String> COMMAND_MISC_NICK_BOOK_NAME_PAGE_REUSE = (rank, skin, reuse) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin + " reuse");
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
+                // 再次使用"{0}"
+                .key("floracore.command.misc.nick.book.name-page.name.reuse.hover")
+                // {0}
+                .args(text(reuse)).color(WHITE).build());
+        return ARROW.color(BLACK).append(space()).append(translatable()
+                // 点击这里以再次使用"{0}"
+                .key("floracore.command.misc.nick.book.name-page.name.reuse").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
+    };
+
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();

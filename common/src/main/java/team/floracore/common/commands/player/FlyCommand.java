@@ -9,6 +9,7 @@ import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
+import team.floracore.common.storage.implementation.*;
 
 import java.util.*;
 
@@ -23,11 +24,10 @@ public class FlyCommand extends AbstractFloraCoreCommand {
     public void self(final @NotNull Player s) {
         boolean old = s.getAllowFlight();
         s.setAllowFlight(!old);
-        // TODO 设置自动同步飞行状态
         UUID uuid = s.getUniqueId();
-        getPlugin().getStorage().getImplementation().deleteDataExpired(uuid);
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         // 永不过期
-        getPlugin().getStorage().getImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
+        storageImplementation.insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Message.COMMAND_FLY.send(sender, !old, s.getDisplayName());
     }
@@ -38,10 +38,10 @@ public class FlyCommand extends AbstractFloraCoreCommand {
     public void other(final @NotNull CommandSender s, final @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
         boolean old = target.getAllowFlight();
         target.setAllowFlight(!old);
-        // TODO 设置自动同步飞行状态
         UUID uuid = target.getUniqueId();
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         // 永不过期
-        getPlugin().getStorage().getImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
+        storageImplementation.insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Sender targetSender = getPlugin().getSenderFactory().wrap(target);
         Message.COMMAND_FLY.send(sender, !old, target.getDisplayName());
