@@ -448,7 +448,9 @@ public interface Message {
                 .args(text(reuse)).color(WHITE).build());
         return ARROW.color(BLACK).append(space()).append(translatable()
                 // 点击这里以再次使用"{0}"
-                .key("floracore.command.misc.nick.book.name-page.name.reuse").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
+                .key("floracore.command.misc.nick.book.name-page.name.reuse")
+                // {0}
+                .args(text(reuse)).hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
     };
 
     Args0 COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1 = () -> translatable()

@@ -4,7 +4,9 @@ import cloud.commandframework.annotations.*;
 import net.kyori.adventure.audience.*;
 import net.kyori.adventure.inventory.*;
 import net.kyori.adventure.text.*;
+import org.bukkit.*;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
 import org.jetbrains.annotations.*;
 import team.floracore.api.data.*;
 import team.floracore.common.command.*;
@@ -17,9 +19,11 @@ import team.floracore.common.storage.misc.floracore.tables.*;
 import team.floracore.common.util.*;
 import team.floracore.common.util.craftbukkit.signgui.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 import static net.kyori.adventure.text.Component.*;
+import static team.floracore.common.util.ReflectionWrapper.*;
 
 @CommandPermission("floracore.command.nick")
 public class NickCommand extends AbstractFloraCoreCommand {
@@ -51,7 +55,6 @@ public class NickCommand extends AbstractFloraCoreCommand {
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         boolean custom = p.hasPermission("floracore.command.nick.custom");
         try {
-
             switch (page) {
                 case 0:
                     // start page
@@ -75,19 +78,19 @@ public class NickCommand extends AbstractFloraCoreCommand {
                     if (name.equalsIgnoreCase("custom") && custom) {
                         bookNick(p, 6, rank, skin, name, nickname);
                     } else {
-                        // finish page
+                        if (name.equalsIgnoreCase("random") && custom) {
+                            bookNick(p, 5, rank, skin, name, nickname);
+                            return;
+                        }
                         if (name.equalsIgnoreCase("reuse")) {
-                            Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.name.reuse");
+                            Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
                             nickname = (data != null) ? data.getValue() : FakerUtil.getRandomLegalName();
-                        } else if (name.equalsIgnoreCase("random")) {
-                            if (custom) {
-                                bookNick(p, 5, rank, skin, name, nickname);
-                            } else {
-                                nickname = FakerUtil.getRandomLegalName();
-                            }
+                        } else if (name.equalsIgnoreCase("random") && !custom) {
+                            nickname = FakerUtil.getRandomLegalName();
                         }
                         target.openBook(getFinishPage(ranks_prefix.get(rank), nickname));
                     }
+
                     break;
                 case 5:
                     // random page
@@ -102,8 +105,8 @@ public class NickCommand extends AbstractFloraCoreCommand {
                         String i = event.getLines().get(0);
                         int nameLengthMin = Math.min(3, 16), nameLengthMax = Math.max(16, 1);
                         if (!(i.isEmpty()) && (i.length() <= nameLengthMax) && (i.length() >= nameLengthMin)) {
-                            System.out.println(i);
-                            // utils.performRankedNick(player, rankName, skinType, name);
+                            performNick(p, rank, skin, i);
+                            target.openBook(getFinishPage(ranks_prefix.get(rank), i));
                         }
                     }, Arrays.asList(line1, line2, line3, line4), uuid, getPlugin().getBootstrap().getPlugin());
                     signGUIAPI.open();
@@ -113,6 +116,74 @@ public class NickCommand extends AbstractFloraCoreCommand {
             e.printStackTrace();
             Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
         }
+    }
+
+    private void performNick(Player p, String rank, String skin, String name) {
+        UUID uuid = p.getUniqueId();
+        String on = p.getName();
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> storageImplementation.insertData(uuid, DataType.FUNCTION, "nick.name", name, 0));
+
+        Object NMSPlayer = invokeMethod(getHandle, p);
+        Class<?> action = getInnerClass(getNMSClass("PacketPlayOutPlayerInfo"), "EnumPlayerInfoAction");
+        Object ps = Array.newInstance(NMSPlayer.getClass(), 1);
+        Array.set(ps, 0, NMSPlayer);
+        Object pack = newInstance(getConstructor(getNMSClass("PacketPlayOutPlayerInfo"), action, ps.getClass()), Enum.valueOf((Class) action, "REMOVE_PLAYER"), ps);
+        sendPacketToAllPlayers(pack);
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityDestroy"), int[].class), new int[]{p.getEntityId()});
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+        setFieldValue(getField(NMSPlayer.getClass(), "displayName"), NMSPlayer, name);
+        Object n2 = invokeMethod(getMethod(getInnerClass(getNMSClass("IChatBaseComponent"), "ChatSerializer"), "a", String.class), null, "{\"text\":\"" + name.replace("\"", "\\\"") + "\"}");
+        setFieldValue(getField(NMSPlayer.getClass(), "listName"), NMSPlayer, n2);
+        Object gameProfile = invokeMethod(getMethod(p.getClass(), "getProfile"), p);
+        setFieldValue(getField(gameProfile.getClass(), "name"), gameProfile, name);
+        /*PropertyMap tm = getFieldValue(getField(gameProfile.getClass(), "properties"), gameProfile);
+        if (tm == null) tm = new PropertyMap();
+        Property textu = (Property) api.getSkinPropertyBackup(api.getUUIDBackup(n));
+        if (tm.containsKey("textures") || textu == null) {
+            tm.removeAll("textures");
+        }
+        if (textu != null) tm.put("textures", textu);
+        setFieldValue(getField(gameProfile.getClass(), "properties"), gameProfile, tm);*/
+        Object NMSServer = getFieldValue(getField(Bukkit.getServer().getClass(), "console"), Bukkit.getServer());
+        Object pl = invokeMethod(getMethod(NMSServer.getClass(), "getPlayerList"), NMSServer);
+        Map<String, Object> players = getFieldValue(getField(getNMSClass("PlayerList"), "playersByName"), pl);
+        players.remove(on);
+        players.put(name, NMSPlayer);
+        setFieldValue(getField(getNMSClass("PlayerList"), "playersByName"), pl, players);
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutPlayerInfo"), action, ps.getClass()), Enum.valueOf((Class) action, "ADD_PLAYER"), ps);
+        sendPacketToAllPlayers(pack);
+        Object NMSWorld = invokeMethod(getMethod(p.getWorld().getClass(), "getHandle"), p.getWorld());
+        int dim = getFieldValue(getField(NMSWorld.getClass(), "dimension"), NMSWorld);
+        Object worldData = invokeMethod(getMethod(NMSWorld.getClass().getSuperclass(), "getWorldData"), NMSWorld);
+        Object diff = invokeMethod(getMethod(worldData.getClass(), "getDifficulty"), worldData);
+        Object worldType = invokeMethod(getMethod(worldData.getClass(), "getType"), worldData);
+        Object playerInteractManager = getFieldValue(getField(NMSPlayer.getClass(), "playerInteractManager"), NMSPlayer);
+        Object gameMode = invokeMethod(getMethod(playerInteractManager.getClass(), "getGameMode"), playerInteractManager);
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutRespawn"), int.class, diff.getClass(), worldType.getClass(), gameMode.getClass()), dim, diff, worldType, gameMode);
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 == p || p2.equals(p));
+        invokeMethod(getMethod(NMSPlayer.getClass(), "updateAbilities"), NMSPlayer);
+        Location l = p.getLocation();
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutPosition"), double.class, double.class, double.class, float.class, float.class, Set.class), l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch(), new HashSet<Enum<?>>());
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 == p || p2.equals(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutHeldItemSlot"), int.class), p.getInventory().getHeldItemSlot());
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 == p || p2.equals(p));
+        invokeMethod(getMethod(p.getClass(), "updateScaledHealth"), p);
+        invokeMethod(getMethod(p.getClass(), "updateInventory"), p);
+        invokeMethod(getMethod(NMSPlayer.getClass(), "triggerHealthUpdate"), NMSPlayer);
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityEquipment"), int.class, int.class, getNMSClass("ItemStack")), p.getEntityId(), 0, invokeMethod(getMethod(getCraftBukkitClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class), null, p.getItemInHand()));
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityEquipment"), int.class, int.class, getNMSClass("ItemStack")), p.getEntityId(), 4, invokeMethod(getMethod(getCraftBukkitClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class), null, p.getInventory().getHelmet()));
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityEquipment"), int.class, int.class, getNMSClass("ItemStack")), p.getEntityId(), 3, invokeMethod(getMethod(getCraftBukkitClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class), null, p.getInventory().getChestplate()));
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityEquipment"), int.class, int.class, getNMSClass("ItemStack")), p.getEntityId(), 2, invokeMethod(getMethod(getCraftBukkitClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class), null, p.getInventory().getLeggings()));
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityEquipment"), int.class, int.class, getNMSClass("ItemStack")), p.getEntityId(), 1, invokeMethod(getMethod(getCraftBukkitClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class), null, p.getInventory().getBoots()));
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutNamedEntitySpawn"), getNMSClass("EntityHuman")), NMSPlayer);
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+
     }
 
     private Book getStartPage() {
@@ -165,7 +236,7 @@ public class NickCommand extends AbstractFloraCoreCommand {
                 // random skin
                 Message.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_RANDOM.build(rank)).asComponent();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin.reuse");
+        Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
         if (data != null) {
             // reuse skin
             component = join(joinConfig, component, Message.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_REUSE.build(rank, data.getValue()));
@@ -184,7 +255,7 @@ public class NickCommand extends AbstractFloraCoreCommand {
                 // random name
                 Message.COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM.build(rank, skin)).asComponent();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.name.reuse");
+        Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
         if (data != null) {
             // reuse name
             component = join(joinConfig, component, Message.COMMAND_MISC_NICK_BOOK_NAME_PAGE_REUSE.build(rank, skin, data.getValue()));
@@ -210,5 +281,4 @@ public class NickCommand extends AbstractFloraCoreCommand {
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
-
 }

@@ -134,6 +134,7 @@ public class SqlStorage implements StorageImplementation {
             }
             return players;
         });
+        playersCache.put(uuid, p);
         return p.join();
     }
 

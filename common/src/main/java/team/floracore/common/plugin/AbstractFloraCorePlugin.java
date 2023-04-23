@@ -83,8 +83,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         getLogger().info("Loading framework...");
         protocolManager = ProtocolLibrary.getProtocolManager();
-        this.commandManager = new CommandManager(this);
         this.listenerManager = new ListenerManager(this);
+        this.commandManager = new CommandManager(this);
 
 
         // register with the FC API

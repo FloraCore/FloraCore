@@ -26,7 +26,6 @@ public class FlyCommand extends AbstractFloraCoreCommand {
         s.setAllowFlight(!old);
         UUID uuid = s.getUniqueId();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        // 永不过期
         storageImplementation.insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Message.COMMAND_FLY.send(sender, !old, s.getDisplayName());
