@@ -5,6 +5,7 @@ website: https://github.com/FloraCore/FloraCore
 main: team.floracore.plugin.loader.BukkitLoaderPlugin
 depend:
   - ProtocolLib
+  - LuckPerms
 permissions:
   floracore.admin:
     default: op

@@ -58,8 +58,7 @@ public enum Dependency {
     OKHTTP("com{}squareup{}" + RelocationHelper.OKHTTP3_STRING, "okhttp", "3.14.9", "JXD6tVUVy/iB16TO70n8UVSQvAJwV+Zmd2ooMkZa7KA=", Relocation.of(RelocationHelper.OKHTTP3_STRING, RelocationHelper.OKHTTP3_STRING), Relocation.of(RelocationHelper.OKIO_STRING, RelocationHelper.OKIO_STRING)),
     OKIO("com{}squareup{}" + RelocationHelper.OKIO_STRING, RelocationHelper.OKIO_STRING, "1.17.5", "Gaf/SNhtPPRJf38lD78pX0MME6Uo3Vt7ID+CGAK4hq0=", Relocation.of(RelocationHelper.OKIO_STRING, RelocationHelper.OKIO_STRING)),
     CAFFEINE("com.github.ben-manes.caffeine", "caffeine", "2.8.2", "U60wqcyKOJZbqkmGQoDP5zyINxyvZoDFGd5CqqNvd64="),
-    UNSAFE_ACCESSOR("io.github.karlatemp", "unsafe-accessor", "1.7.0", "NEbDztyvV/6NlpxBR1TtzOm6qy5OxBL/UsnXBSopp2g="),
-    JAVAFAKER("com.github.javafaker", "javafaker", "1.0.2", "75WuRoCX83iIC+aajGdW+NFRgODwdUf7Cplhf/Qhsqw=");
+    UNSAFE_ACCESSOR("io.github.karlatemp", "unsafe-accessor", "1.7.0", "NEbDztyvV/6NlpxBR1TtzOm6qy5OxBL/UsnXBSopp2g=");
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";
     private final String mavenRepoPath;

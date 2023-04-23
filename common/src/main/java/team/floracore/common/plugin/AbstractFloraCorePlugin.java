@@ -172,7 +172,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         ret.add(Dependency.OKIO);
         ret.add(Dependency.CAFFEINE);
         ret.add(Dependency.UNSAFE_ACCESSOR);
-        ret.add(Dependency.JAVAFAKER);
         return ret;
     }
 
@@ -248,5 +247,17 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public SimpleExtensionManager getExtensionManager() {
         return this.extensionManager;
+    }
+
+    @Override
+    public String getRandomName() {
+        InputStream inputStream = getBootstrap().getResourceStream("names.txt");
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+
+        String[] lines = reader.lines().toArray(String[]::new);
+        Random random = new Random();
+        int randomLineIndex = random.nextInt(lines.length);
+
+        return lines[randomLineIndex];
     }
 }

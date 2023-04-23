@@ -16,7 +16,6 @@ import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
-import team.floracore.common.util.*;
 import team.floracore.common.util.craftbukkit.signgui.*;
 
 import java.lang.reflect.*;
@@ -84,9 +83,9 @@ public class NickCommand extends AbstractFloraCoreCommand {
                         }
                         if (name.equalsIgnoreCase("reuse")) {
                             Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
-                            nickname = (data != null) ? data.getValue() : FakerUtil.getRandomLegalName();
+                            nickname = (data != null) ? data.getValue() : getPlugin().getRandomName();
                         } else if (name.equalsIgnoreCase("random") && !custom) {
-                            nickname = FakerUtil.getRandomLegalName();
+                            nickname = getPlugin().getRandomName();
                         }
                         target.openBook(getFinishPage(ranks_prefix.get(rank), nickname));
                     }

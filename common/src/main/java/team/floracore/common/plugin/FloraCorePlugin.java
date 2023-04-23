@@ -118,4 +118,6 @@ public interface FloraCorePlugin {
      * @return the translation repository
      */
     TranslationRepository getTranslationRepository();
+
+    String getRandomName();
 }
