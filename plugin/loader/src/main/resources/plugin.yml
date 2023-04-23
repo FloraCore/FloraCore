@@ -9,9 +9,10 @@ depend:
 permissions:
   floracore.admin:
     default: op
-  floracore.command.fly:
+  floracore.command.fly.*:
     default: op
     children:
+      floracore.command.fly: true
       floracore.command.fly.other: true
   floracore.command.gamemode:
     default: op
@@ -26,9 +27,10 @@ permissions:
     default: op
   floracore.command.invsee:
     default: op
-  floracore.command.nick:
+  floracore.command.nick.*:
     default: op
     children:
+      floracore.command.nick: true
       floracore.command.nick.custom: true
   floracore.command.realname:
     default: op
