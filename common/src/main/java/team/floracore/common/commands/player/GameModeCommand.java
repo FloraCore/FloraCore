@@ -53,7 +53,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
             }
             switch (gameMode) {
                 case SURVIVAL:
-                    if (setGameModeIfPermissionOrSenMessage(sender, GameMode.SURVIVAL, t, "floracore.command.gamemode.creative")) {
+                    if (setGameModeIfPermissionOrSenMessage(sender, GameMode.SURVIVAL, t, "floracore.command.gamemode.survival")) {
                         Message.COMMAND_GAMEMODE.send(sender, Message.COMMAND_MISC_GAMEMODE_SURVIVAL.build(), t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) { // 若非静音模式，则发送消息

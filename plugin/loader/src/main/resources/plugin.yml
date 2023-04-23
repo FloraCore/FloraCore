@@ -5,3 +5,36 @@ website: https://github.com/FloraCore/FloraCore
 main: team.floracore.plugin.loader.BukkitLoaderPlugin
 depend:
   - ProtocolLib
+permissions:
+  floracore.admin:
+    default: op
+  floracore.command.fly:
+    default: op
+    children:
+      floracore.command.fly.other: true
+  floracore.command.gamemode:
+    default: op
+    children:
+      floracore.command.gamemode.survival: true
+      floracore.command.gamemode.creative: true
+      floracore.command.gamemode.adventure: true
+      floracore.command.gamemode.spectator: true
+  floracore.command.give:
+    default: op
+  floracore.command.hat:
+    default: op
+  floracore.command.invsee:
+    default: op
+  floracore.command.nick:
+    default: op
+    children:
+      floracore.command.nick.custom: true
+  floracore.command.realname:
+    default: op
+  floracore.command.speed:
+    default: op
+  floracore.command.time:
+    default: op
+  floracore.command.weather:
+    default: op
+
