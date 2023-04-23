@@ -33,19 +33,18 @@ public class FakerUtil {
         int randomNum = ThreadLocalRandom.current().nextInt(4);
         int dr = ThreadLocalRandom.current().nextInt(5);
         int dei = ThreadLocalRandom.current().nextInt(10) + 4;
-        String digit = IntStream.range(0, dr)
-                .mapToObj(i -> String.valueOf(ThreadLocalRandom.current().nextInt(10)))
-                .collect(Collectors.joining());
-        String digit1 = IntStream.range(0, dei)
-                .mapToObj(i -> String.valueOf(ThreadLocalRandom.current().nextInt(10)))
-                .collect(Collectors.joining());
-        String[] randomNameOptions = {
-                faker.name().lastName() + "_" + digit,
-                digit + "_" + faker.name().firstName(),
-                digit1,
-                faker.name().fullName()
-        };
+        String digit = IntStream.range(0, dr).mapToObj(i -> String.valueOf(ThreadLocalRandom.current().nextInt(10))).collect(Collectors.joining());
+        String digit1 = IntStream.range(0, dei).mapToObj(i -> String.valueOf(ThreadLocalRandom.current().nextInt(10))).collect(Collectors.joining());
+        String[] randomNameOptions = {faker.name().lastName() + "_" + digit, digit + "_" + faker.name().firstName(), digit1, faker.name().fullName()};
         randomName = randomNameOptions[randomNum].replaceAll("\\s+|\\.", getRandomReplacement());
+        return randomName;
+    }
+
+    public static String getRandomLegalName() {
+        String randomName;
+        do {
+            randomName = getRandomName();
+        } while (randomName.length() < 5 || randomName.length() > 16);
         return randomName;
     }
 }

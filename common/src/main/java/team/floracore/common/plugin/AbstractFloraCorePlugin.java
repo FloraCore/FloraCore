@@ -1,5 +1,6 @@
 package team.floracore.common.plugin;
 
+import com.comphenix.protocol.*;
 import net.kyori.adventure.platform.bukkit.*;
 import okhttp3.*;
 import team.floracore.common.api.*;
@@ -36,6 +37,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private OkHttpClient httpClient;
     private TranslationRepository translationRepository;
     private BukkitSenderFactory senderFactory;
+    private ProtocolManager protocolManager;
 
     /**
      * Performs the initial actions to load the plugin
@@ -80,8 +82,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.storage = storageFactory.getInstance();
 
         getLogger().info("Loading framework...");
+        protocolManager = ProtocolLibrary.getProtocolManager();
         this.commandManager = new CommandManager(this);
         this.listenerManager = new ListenerManager(this);
+
 
         // register with the FC API
         this.apiProvider = new FloraCoreApiProvider(this);
@@ -185,6 +189,11 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public BukkitAudiences getBukkitAudiences() {
         return this.bukkitAudiences;
+    }
+
+    @Override
+    public ProtocolManager getProtocolManager() {
+        return protocolManager;
     }
 
     @Override

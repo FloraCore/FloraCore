@@ -119,3 +119,15 @@ commands:
       rank3: "&bMVP"
       rank4: "&bMVP&c+"
       rank5: "&6MVP&c++"
+    rank-prefix:
+      rank0: ""
+      rank1: "&a[VIP]"
+      rank2: "&a[VIP&6+&a]"
+      rank3: "&b[MVP]"
+      rank4: "&b[MVP&c+&b]"
+      rank5: "&6[MVP&c++&6]"
+    sign:
+      line1: ""
+      line2: "^^^^^^^^^^^^^^^"
+      line3: "Enter your"
+      line4: "nickname here"

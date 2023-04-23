@@ -77,6 +77,8 @@ public class ConfigKeys {
     public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK_PERMISSION = notReloadable(mapKey("commands.nick.rank-permission"));
 
     public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK = notReloadable(mapKey("commands.nick.rank"));
+    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK_PREFIX = notReloadable(mapKey("commands.nick.rank-prefix"));
+    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_SIGN = notReloadable(mapKey("commands.nick.sign"));
 
     /**
      * A list of the keys defined in this class.

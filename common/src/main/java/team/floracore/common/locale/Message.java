@@ -451,6 +451,18 @@ public interface Message {
                 .key("floracore.command.misc.nick.book.name-page.name.reuse").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
     };
 
+    Args0 COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1 = () -> translatable()
+            // 你已经完成了你的昵称的设置!
+            .key("floracore.command.misc.nick.book.finish-page.line.1").color(BLACK).build();
+
+    Args2<String, String> COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_2 = (rank, name) -> {
+        Component r = formatColoredValue(rank);
+        return translatable()
+                // 你现在的昵称是{0} {1}
+                .key("floracore.command.misc.nick.book.finish-page.line.2").color(BLACK)
+                // {}
+                .args(r, text(name)).build();
+    };
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();

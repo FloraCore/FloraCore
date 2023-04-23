@@ -1,5 +1,6 @@
 package team.floracore.common.plugin;
 
+import com.comphenix.protocol.*;
 import net.kyori.adventure.platform.bukkit.*;
 import okhttp3.*;
 import team.floracore.common.api.*;
@@ -55,6 +56,8 @@ public interface FloraCorePlugin {
     ListenerManager getListenerManager();
 
     BukkitAudiences getBukkitAudiences();
+
+    ProtocolManager getProtocolManager();
 
     BukkitSenderFactory getSenderFactory();
 
