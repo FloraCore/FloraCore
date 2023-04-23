@@ -16,13 +16,13 @@ import team.floracore.common.sender.*;
 
 import java.util.*;
 
+@CommandPermission("floracore.command.weather")
 public class WeatherCommand extends AbstractFloraCoreCommand {
     public WeatherCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("weather <weather> [time]")
-    @CommandPermission("floracore.command.weather")
     @CommandDescription("设置天气状态并指定持续时间")
     public void weather(final @NonNull Player p, final @NonNull @Argument(value = "weather", suggestions = "weather") String weather, final @Argument(value = "time", suggestions = "commonDurations") String time, @Flag("world") World world) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);

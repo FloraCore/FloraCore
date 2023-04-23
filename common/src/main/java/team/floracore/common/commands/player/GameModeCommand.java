@@ -15,13 +15,13 @@ import team.floracore.common.sender.*;
 
 import java.util.*;
 
+@CommandPermission("floracore.command.gamemode")
 public class GameModeCommand extends AbstractFloraCoreCommand {
     public GameModeCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("gm|gamemode <mode> [target]")
-    @CommandPermission("floracore.command.gamemode")
     @CommandDescription("设置游戏模式")
     public void gamemode(final @NotNull CommandSender s, final @NotNull @Argument(value = "mode", suggestions = "gamemodes") String mode, final @Nullable @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);

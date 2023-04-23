@@ -12,13 +12,13 @@ import team.floracore.common.sender.*;
 
 import java.util.*;
 
+@CommandPermission("floracore.command.fly")
 public class FlyCommand extends AbstractFloraCoreCommand {
     public FlyCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("fly")
-    @CommandPermission("floracore.command.fly")
     @CommandDescription("为自己开启飞行状态")
     public void self(final @NotNull Player s) {
         boolean old = s.getAllowFlight();

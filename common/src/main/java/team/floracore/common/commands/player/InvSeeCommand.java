@@ -8,13 +8,13 @@ import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 
+@CommandPermission("floracore.command.invsee")
 public class InvSeeCommand extends AbstractFloraCoreCommand {
     public InvSeeCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("invsee <target>")
-    @CommandPermission("floracore.command.invsee")
     @CommandDescription("打开指定玩家的物品栏")
     public void invsee(final @NotNull Player s, final @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);

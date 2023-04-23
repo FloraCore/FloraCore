@@ -21,6 +21,7 @@ public interface Message {
     TextComponent OPEN_BRACKET = Component.text('(');
     TextComponent CLOSE_BRACKET = Component.text(')');
     TextComponent FULL_STOP = Component.text('.');
+    TextComponent ARROW = Component.text('➤');
 
     Component PREFIX_COMPONENT = text()
             // [FC]
@@ -286,10 +287,94 @@ public interface Message {
             // 不能设置已经过去的日期\!
             .key("floracore.command.misc.date-in-past-error").color(RED));
 
-
     Args0 COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION = () -> prefixed(translatable()
             // 执行命令异常
             .key("floracore.command.misc.execute-command-exception").color(RED));
+
+    Args0 COMMAND_TELEPORT_TOP = () -> prefixed(translatable()
+            // 已传送到顶部
+            .key("floracore.command.teleport.top").color(AQUA)).append(FULL_STOP);
+
+    Args0 COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_1 = () -> translatable()
+            // Nick可以让你用不同的用户名来玩,以免被人认出
+            .key("floracore.command.misc.nick.book.start-page.line.1").color(BLACK).append(FULL_STOP).build();
+
+    Args0 COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_2 = () -> translatable()
+            // 所有规则仍然适用
+            .key("floracore.command.misc.nick.book.start-page.line.2").color(BLACK).append(FULL_STOP).build();
+
+    Args0 COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_3 = () -> translatable()
+            // 你仍然可以被举报,所有的姓名历史都会被储存
+            .key("floracore.command.misc.nick.book.start-page.line.3").color(BLACK).append(FULL_STOP).build();
+
+    Args0 COMMAND_MISC_NICK_BOOK_START_PAGE_ACCEPT_TEXT = () -> {
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
+                // 点击这里以继续
+                .key("floracore.command.misc.nick.book.start-page.accept.hover").color(WHITE).build());
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 1");
+        return ARROW.color(BLACK).append(space()).append(translatable()
+                // 我明白了,开始设置我的Nick
+                .key("floracore.command.misc.nick.book.start-page.accept.text").color(BLACK).decoration(UNDERLINED, true)
+                // hover
+                .hoverEvent(hoverEvent)
+                //click
+                .clickEvent(clickEvent).build());
+    };
+
+    Args0 COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_1 = () -> translatable()
+            // 让我们为你设置您的新昵称吧!
+            .key("floracore.command.misc.nick.book.rank-page.line.1").color(BLACK).build();
+
+    Args0 COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_2 = () -> translatable()
+            // 首先,你需要选择你希望在Nick后显示为哪一个{0}
+            .key("floracore.command.misc.nick.book.rank-page.line.2").args(translatable("floracore.command.misc.nick.book.rank-page.rank").decoration(BOLD, true)).color(BLACK).build();
+
+    Args2<String, String> COMMAND_MISC_NICK_BOOK_RANK_PAGE_RANK = (rankName, rank) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 2 " + rankName);
+        Component r = formatColoredValue(rank);
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
+                // 点击这里,显示为 {0} 会员等级
+                .key("floracore.command.misc.nick.book.rank-page.rank.hover").args(r.decoration(BOLD, true)).color(WHITE).build());
+        return ARROW.color(BLACK).append(space()).append(r
+                // hover
+                .hoverEvent(hoverEvent)
+                // click
+                .clickEvent(clickEvent));
+    };
+
+    Args0 COMMAND_MISC_NICK_BOOK_SKIN_PAGE_LINE_1 = () -> translatable()
+            // 芜湖!现在,你希望在Nick后使用哪种皮肤?
+            .key("floracore.command.misc.nick.book.skin-page.line.1").color(BLACK).build();
+
+    Args1<String> COMMAND_MISC_NICK_BOOK_SKIN_PAGE_NORMAL = (rank) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 3 " + rank + " normal");
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
+                // 点击这里以使用你自己的皮肤
+                .key("floracore.command.misc.nick.book.skin-page.skin.normal.hover").color(WHITE).build());
+        return ARROW.color(BLACK).append(space()).append(translatable()
+                // 我自己的皮肤
+                .key("floracore.command.misc.nick.book.skin-page.skin.normal").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
+    };
+
+    Args1<String> COMMAND_MISC_NICK_BOOK_SKIN_PAGE_STEVE_ALEX = (rank) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 3 " + rank + " steve-alex");
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
+                // 点击这里以使用Steve/Alex的皮肤
+                .key("floracore.command.misc.nick.book.skin-page.skin.steve-alex.hover").color(WHITE).build());
+        return ARROW.color(BLACK).append(space()).append(translatable()
+                // Steve/Alex的皮肤
+                .key("floracore.command.misc.nick.book.skin-page.skin.steve-alex").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
+    };
+
+    Args1<String> COMMAND_MISC_NICK_BOOK_SKIN_PAGE_RANDOM = (rank) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 3 " + rank + " random");
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
+                // 点击这里以使用随机皮肤
+                .key("floracore.command.misc.nick.book.skin-page.skin.random.hover").color(WHITE).build());
+        return ARROW.color(BLACK).append(space()).append(translatable()
+                // 随机皮肤
+                .key("floracore.command.misc.nick.book.skin-page.skin.random").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
+    };
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();
@@ -316,7 +401,7 @@ public interface Message {
     }
 
     static Component formatColoredValue(String value) {
-        return LegacyComponentSerializer.legacyAmpersand().deserialize(value).toBuilder().hoverEvent(HoverEvent.showText(text(value, WHITE))).build();
+        return LegacyComponentSerializer.legacyAmpersand().deserialize(value).toBuilder().build();
     }
 
     interface Args0 {

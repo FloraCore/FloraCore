@@ -74,6 +74,10 @@ public class ConfigKeys {
      */
     public static final ConfigKey<Boolean> REDIS_SSL = notReloadable(booleanKey("redis.ssl", false));
 
+    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK_PERMISSION = notReloadable(mapKey("commands.nick.rank-permission"));
+
+    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK = notReloadable(mapKey("commands.nick.rank"));
+
     /**
      * A list of the keys defined in this class.
      */
