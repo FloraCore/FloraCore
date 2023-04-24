@@ -445,6 +445,14 @@ public interface Message {
             // 你已拥有皮肤了!
             .key("floracore.command.nick.setup.skin").color(AQUA));
 
+    Args0 COMMAND_UNNICK_SUCCESS = () -> prefixed(translatable()
+            // 你的昵称已移除！
+            .key("floracore.command.unnick.success").color(AQUA));
+
+    Args0 COMMAND_UNNICK_NOT_IN = () -> prefixed(translatable()
+            // 你当前未处于昵称状态！
+            .key("floracore.command.unnick.not-in").color(RED));
+
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
             // 现在,请选择你要使用的{0}!
             .key("floracore.command.misc.nick.book.name-page.line.1")

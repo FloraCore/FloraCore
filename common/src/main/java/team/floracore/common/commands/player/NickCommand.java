@@ -43,14 +43,26 @@ public class NickCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("nick <name>")
     @CommandDescription("将你的昵称修改为一个指定的昵称")
+    @CommandPermission("floracore.command.nick.custom")
     public void nickSpecifiedName(final @NotNull Player p, final @Argument("name") String name) {
+        Audience target = getPlugin().getBukkitAudiences().player(p);
         performNick(p, "rank0", "random", name);
+        target.openBook(getFinishPage("rank0", name));
     }
 
     @CommandMethod("unnick")
     @CommandDescription("取消你的昵称")
     public void unNick(final @NotNull Player p) {
-        performUnNick(p);
+        UUID uuid = p.getUniqueId();
+        Sender sender = getPlugin().getSenderFactory().wrap(p);
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        Data statusData = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
+        if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
+            performUnNick(p);
+            Message.COMMAND_UNNICK_SUCCESS.send(sender);
+        } else {
+            Message.COMMAND_UNNICK_NOT_IN.send(sender);
+        }
     }
 
     @CommandMethod("book-nick <page> [rank] [skin] [name] [nickname]")
@@ -162,7 +174,9 @@ public class NickCommand extends AbstractFloraCoreCommand {
         Players ps = storageImplementation.selectPlayers(uuid);
         changePlayer(p, ps.getName());
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
+            Data statusData = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
             Data skinData = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
+            storageImplementation.deleteDataID(statusData.getId());
             if (skinData != null) {
                 storageImplementation.deleteDataID(skinData.getId());
                 try {
@@ -173,12 +187,16 @@ public class NickCommand extends AbstractFloraCoreCommand {
                 }
             }
         });
+
     }
 
     private void performNick(Player p, String rank, String skin, String name) {
-        performUnNick(p);
         UUID uuid = p.getUniqueId();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        Data statusData = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
+        if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
+            performUnNick(p);
+        }
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
             storageImplementation.insertData(uuid, DataType.FUNCTION, "nick.name", name, 0);
         });
@@ -200,6 +218,7 @@ public class NickCommand extends AbstractFloraCoreCommand {
                 });
             }
             Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
+                storageImplementation.insertData(uuid, DataType.FUNCTION, "nick.status", String.valueOf(true), 0);
                 try {
                     skinsRestorerAPI.setSkinData("custom", skinsRestorerAPI.createPlatformProperty("textures", selectedSkin.getValue(), selectedSkin.getSignature()), 0);
                     skinsRestorerAPI.setSkin(p.getName(), selectedSkin.getName());
