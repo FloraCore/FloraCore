@@ -1,6 +1,7 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
+import com.mojang.authlib.properties.*;
 import net.kyori.adventure.audience.*;
 import net.kyori.adventure.inventory.*;
 import net.kyori.adventure.text.*;
@@ -12,6 +13,7 @@ import team.floracore.api.data.*;
 import team.floracore.common.command.*;
 import team.floracore.common.config.*;
 import team.floracore.common.locale.*;
+import team.floracore.common.locale.data.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.implementation.*;
@@ -92,7 +94,7 @@ public class NickCommand extends AbstractFloraCoreCommand {
                         bookNick(p, 6, rank, skin, name, nickname);
                     } else {
                         if (name.equalsIgnoreCase("random") && custom) {
-                            bookNick(p, 5, rank, skin, name, nickname);
+                            target.openBook(getRandomPage(rank, skin));
                             return;
                         }
                         if (name.equalsIgnoreCase("reuse")) {
@@ -106,7 +108,21 @@ public class NickCommand extends AbstractFloraCoreCommand {
                     }
                     break;
                 case 5:
-                    // random page
+                    // random nick
+                    if (custom) {
+                        if (name.equalsIgnoreCase("random")) {
+                            if (nickname == null) {
+                                Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
+                            } else {
+                                performNick(p, rank, skin, nickname);
+                                target.openBook(getFinishPage(ranks_prefix.get(rank), nickname));
+                            }
+                        } else {
+                            Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
+                        }
+                    } else {
+                        Message.COMMAND_NO_PERMISSION.send(sender);
+                    }
                     break;
                 case 6:
                     // custom page
@@ -134,7 +150,14 @@ public class NickCommand extends AbstractFloraCoreCommand {
         UUID uuid = p.getUniqueId();
         String on = p.getName();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> storageImplementation.insertData(uuid, DataType.FUNCTION, "nick.name", name, 0));
+        Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
+            storageImplementation.insertData(uuid, DataType.FUNCTION, "nick.name", name, 0);
+            Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
+            if (data != null) {
+                storageImplementation.deleteDataID(data.getId());
+            }
+        });
+        boolean changeSkin = !skin.equalsIgnoreCase("normal");
 
         Object NMSPlayer = invokeMethod(getHandle, p);
         Class<?> action = getInnerClass(getNMSClass("PacketPlayOutPlayerInfo"), "EnumPlayerInfoAction");
@@ -149,14 +172,32 @@ public class NickCommand extends AbstractFloraCoreCommand {
         setFieldValue(getField(NMSPlayer.getClass(), "listName"), NMSPlayer, n2);
         Object gameProfile = invokeMethod(getMethod(p.getClass(), "getProfile"), p);
         setFieldValue(getField(gameProfile.getClass(), "name"), gameProfile, name);
-        /*PropertyMap tm = getFieldValue(getField(gameProfile.getClass(), "properties"), gameProfile);
-        if (tm == null) tm = new PropertyMap();
-        Property textu = (Property) api.getSkinPropertyBackup(api.getUUIDBackup(n));
-        if (tm.containsKey("textures") || textu == null) {
-            tm.removeAll("textures");
+        // 修改皮肤
+        if (changeSkin) {
+            Property textu;
+            if (skin.equalsIgnoreCase("steve-alex")) {
+                Random random = new Random();
+                // 生成 0 或 1 的随机数
+                int randomNum = random.nextInt(2);
+                // 如果随机数为 0，选择 Steve 皮肤属性，否则选择 Alex 皮肤属性
+                NamesRepository.NameProperty selectedSkin = (randomNum == 0) ? getPlugin().getNamesRepository().getSteveProperty() : getPlugin().getNamesRepository().getAlexProperty();
+                String value = selectedSkin.getValue();
+                String signature = selectedSkin.getSignature();
+                textu = new Property("textures", value, signature);
+            } else {
+                // TODO random
+                NamesRepository.NameProperty randomSkin = getPlugin().getNamesRepository().getRandomNameProperty();
+                Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> storageImplementation.insertData(uuid, DataType.FUNCTION, "nick.skin", randomSkin.getName(), 0));
+                textu = new Property("textures", randomSkin.getValue(), randomSkin.getSignature());
+            }
+            PropertyMap tm = getFieldValue(getField(gameProfile.getClass(), "properties"), gameProfile);
+            if (tm == null) tm = new PropertyMap();
+            if (tm.containsKey("textures")) {
+                tm.removeAll("textures");
+            }
+            tm.put("textures", textu);
+            setFieldValue(getField(gameProfile.getClass(), "properties"), gameProfile, tm);
         }
-        if (textu != null) tm.put("textures", textu);
-        setFieldValue(getField(gameProfile.getClass(), "properties"), gameProfile, tm);*/
         Object NMSServer = getFieldValue(getField(Bukkit.getServer().getClass(), "console"), Bukkit.getServer());
         Object pl = invokeMethod(getMethod(NMSServer.getClass(), "getPlayerList"), NMSServer);
         Map<String, Object> players = getFieldValue(getField(getNMSClass("PlayerList"), "playersByName"), pl);
@@ -165,6 +206,7 @@ public class NickCommand extends AbstractFloraCoreCommand {
         setFieldValue(getField(getNMSClass("PlayerList"), "playersByName"), pl, players);
         pack = newInstance(getConstructor(getNMSClass("PacketPlayOutPlayerInfo"), action, ps.getClass()), Enum.valueOf((Class) action, "ADD_PLAYER"), ps);
         sendPacketToAllPlayers(pack);
+        // 刷新玩家数据
         Object NMSWorld = invokeMethod(getMethod(p.getWorld().getClass(), "getHandle"), p.getWorld());
         int dim = getFieldValue(getField(NMSWorld.getClass(), "dimension"), NMSWorld);
         Object worldData = invokeMethod(getMethod(NMSWorld.getClass().getSuperclass(), "getWorldData"), NMSWorld);
@@ -276,6 +318,25 @@ public class NickCommand extends AbstractFloraCoreCommand {
             component = join(joinConfig, component, Message.COMMAND_MISC_NICK_BOOK_NAME_PAGE_CUSTOM.build(rank, skin));
         }
         component = join(joinConfig, component, space(), Message.COMMAND_MISC_NICK_BOOK_RESET.build());
+        bookPages.add(component);
+        return Book.book(bookTitle, bookAuthor, bookPages);
+    }
+
+    private Book getRandomPage(String rank, String skin) {
+        Component bookTitle = text("FloraCore Nick RandomPage");
+        Component bookAuthor = text("FloraCore");
+        Collection<Component> bookPages = new ArrayList<>();
+        String nickname = getPlugin().getNamesRepository().getRandomNameProperty().getName();
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        Component component = join(joinConfig, Message.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_LINE_1.build(),
+                // name
+                Message.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_NAME.build(nickname), space(),
+                // use
+                Message.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_USE_NAME.build(rank, skin, nickname),
+                // try
+                Message.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_TRY_AGAIN.build(rank, skin), space(),
+                // custom
+                Message.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_CUSTOM.build(rank, skin)).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
