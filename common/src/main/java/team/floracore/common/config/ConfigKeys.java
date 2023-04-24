@@ -1,7 +1,7 @@
 package team.floracore.common.config;
 
 import com.google.common.collect.*;
-import team.floracore.api.server.*;
+import org.floracore.api.server.*;
 import team.floracore.common.config.generic.*;
 import team.floracore.common.config.generic.key.*;
 import team.floracore.common.storage.*;

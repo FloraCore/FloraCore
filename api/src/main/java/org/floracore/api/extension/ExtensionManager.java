@@ -1,4 +1,4 @@
-package team.floracore.api.extension;
+package org.floracore.api.extension;
 
 import org.checkerframework.checker.nullness.qual.*;
 import org.jetbrains.annotations.*;

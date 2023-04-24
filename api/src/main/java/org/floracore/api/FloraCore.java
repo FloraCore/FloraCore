@@ -1,7 +1,7 @@
-package team.floracore.api;
+package org.floracore.api;
 
-import team.floracore.api.data.*;
-import team.floracore.api.player.*;
+import org.floracore.api.data.*;
+import org.floracore.api.player.*;
 
 /**
  * The FloraCore API.
@@ -19,7 +19,7 @@ import team.floracore.api.player.*;
  *
  * <p>For ease of use, and for platforms without a Service Manager, an instance
  * can also be obtained from the static singleton accessor in
- * {@link team.floracore.api.FloraCoreProvider}.</p>
+ * {@link FloraCoreProvider}.</p>
  */
 public interface FloraCore {
     DataAPI getDataAPI();

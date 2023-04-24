@@ -3,7 +3,7 @@ package team.floracore.common.plugin;
 import com.comphenix.protocol.*;
 import net.kyori.adventure.platform.bukkit.*;
 import okhttp3.*;
-import team.floracore.api.server.*;
+import org.floracore.api.server.*;
 import team.floracore.common.api.*;
 import team.floracore.common.command.*;
 import team.floracore.common.config.*;

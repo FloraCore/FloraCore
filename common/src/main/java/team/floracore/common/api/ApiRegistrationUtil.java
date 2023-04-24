@@ -1,6 +1,6 @@
 package team.floracore.common.api;
 
-import team.floracore.api.*;
+import org.floracore.api.*;
 
 import java.lang.reflect.*;
 

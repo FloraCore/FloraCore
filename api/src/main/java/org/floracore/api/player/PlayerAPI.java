@@ -1,4 +1,4 @@
-package team.floracore.api.player;
+package org.floracore.api.player;
 
 import java.util.*;
 

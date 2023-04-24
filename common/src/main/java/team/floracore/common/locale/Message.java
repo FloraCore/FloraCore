@@ -4,7 +4,7 @@ import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.event.*;
 import net.kyori.adventure.text.serializer.legacy.*;
 import org.bukkit.*;
-import team.floracore.api.data.*;
+import org.floracore.api.data.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.*;

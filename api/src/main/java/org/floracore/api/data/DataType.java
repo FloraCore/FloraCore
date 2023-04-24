@@ -1,4 +1,4 @@
-package team.floracore.api.data;
+package org.floracore.api.data;
 
 public enum DataType {
     AUTO_SYNC("auto-sync"),

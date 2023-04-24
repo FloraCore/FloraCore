@@ -1,4 +1,4 @@
-package team.floracore.api;
+package org.floracore.api;
 
 import org.checkerframework.checker.nullness.qual.*;
 

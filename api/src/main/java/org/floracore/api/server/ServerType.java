@@ -1,4 +1,4 @@
-package team.floracore.api.server;
+package org.floracore.api.server;
 
 public enum ServerType {
     NORMAL("normal", true),

@@ -2,7 +2,7 @@ plugins {
     id "java"
 }
 
-group 'team.floracore'
+group 'org.floracore'
 version rootProject.version
 
 repositories {

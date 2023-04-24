@@ -1,6 +1,6 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
-import team.floracore.api.data.*;
+import org.floracore.api.data.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.*;

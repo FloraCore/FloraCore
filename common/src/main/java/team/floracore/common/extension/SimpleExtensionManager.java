@@ -2,7 +2,7 @@ package team.floracore.common.extension;
 
 import com.google.gson.*;
 import org.checkerframework.checker.nullness.qual.*;
-import team.floracore.api.extension.*;
+import org.floracore.api.extension.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.plugin.classpath.*;
 import team.floracore.common.util.*;

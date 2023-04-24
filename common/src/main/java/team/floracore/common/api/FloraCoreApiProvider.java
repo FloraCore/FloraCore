@@ -1,8 +1,8 @@
 package team.floracore.common.api;
 
-import team.floracore.api.*;
-import team.floracore.api.data.*;
-import team.floracore.api.player.*;
+import org.floracore.api.*;
+import org.floracore.api.data.*;
+import org.floracore.api.player.*;
 import team.floracore.common.api.implementation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.plugin.bootstrap.*;
