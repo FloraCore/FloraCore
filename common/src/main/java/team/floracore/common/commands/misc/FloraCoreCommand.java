@@ -15,7 +15,6 @@ import team.floracore.common.locale.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
-import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.io.*;
@@ -84,8 +83,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     @CommandDescription("获取服务器的数据")
     public void server(final @NonNull CommandSender sender, final @NonNull @Argument("target") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        Servers servers = storageImplementation.selectServers(target);
+        Servers servers = getStorageImplementation().selectServers(target);
         if (servers == null) {
             // TODO 无记录的服务器数据
             System.out.println(false);
@@ -99,8 +97,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     @CommandDescription("设置服务器的数据")
     public void serverSet(final @NonNull CommandSender sender, final @NonNull @Argument("target") String target, final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        Servers servers = storageImplementation.selectServers(target);
+        Servers servers = getStorageImplementation().selectServers(target);
         if (servers == null) {
             // TODO 无记录的服务器数据
             System.out.println(false);
@@ -116,12 +113,11 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     public void data(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         String name;
         UUID u;
         if (p == null) {
             try {
-                Players i = storageImplementation.selectPlayers(target);
+                Players i = getStorageImplementation().selectPlayers(target);
                 u = i.getUuid();
                 name = i.getName();
             } catch (Throwable e) {
@@ -132,7 +128,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             u = p.getUniqueId();
             name = p.getName();
         }
-        List<Data> ret = storageImplementation.selectData(u);
+        List<Data> ret = getStorageImplementation().selectData(u);
         if (ret.isEmpty()) {
             Message.DATA_NONE.send(s, name);
         } else {
@@ -148,12 +144,11 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     public void dataSet(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key, final @NonNull @Argument("value") String value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         String name;
         UUID u;
         if (p == null) {
             try {
-                Players i = storageImplementation.selectPlayers(target);
+                Players i = getStorageImplementation().selectPlayers(target);
                 u = i.getUuid();
                 name = i.getName();
             } catch (Throwable e) {
@@ -164,7 +159,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             u = p.getUniqueId();
             name = p.getName();
         }
-        Data data = storageImplementation.insertData(u, DataType.CUSTOM, key, value, 0);
+        Data data = getStorageImplementation().insertData(u, DataType.CUSTOM, key, value, 0);
         Message.SET_DATA_SUCCESS.send(s, key, value, name);
     }
 
@@ -173,12 +168,11 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     public void dataUnSet(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         String name;
         UUID u;
         if (p == null) {
             try {
-                Players i = storageImplementation.selectPlayers(target);
+                Players i = getStorageImplementation().selectPlayers(target);
                 u = i.getUuid();
                 name = i.getName();
             } catch (Throwable e) {
@@ -189,12 +183,12 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             u = p.getUniqueId();
             name = p.getName();
         }
-        Data data = storageImplementation.getSpecifiedData(u, DataType.CUSTOM, key);
+        Data data = getStorageImplementation().getSpecifiedData(u, DataType.CUSTOM, key);
         if (data == null) {
             Message.DOESNT_HAVE_DATA.send(s, target, key);
             return;
         }
-        storageImplementation.deleteDataID(data.getId());
+        getStorageImplementation().deleteDataID(data.getId());
         Message.UNSET_DATA_SUCCESS.send(s, key, name);
     }
 
@@ -203,12 +197,11 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     public void dataSetTemp(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key, final @NonNull @Argument("value") String value, final @NonNull @Argument("duration") String duration) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         String name;
         UUID u;
         if (p == null) {
             try {
-                Players i = storageImplementation.selectPlayers(target);
+                Players i = getStorageImplementation().selectPlayers(target);
                 u = i.getUuid();
                 name = i.getName();
             } catch (Throwable e) {
@@ -227,7 +220,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
                 Instant newTime = Instant.now().plus(d);
                 // 将结果转换为时间戳
                 long expiry = newTime.toEpochMilli();
-                Data data = storageImplementation.insertData(u, DataType.CUSTOM, key, value, expiry);
+                Data data = getStorageImplementation().insertData(u, DataType.CUSTOM, key, value, expiry);
                 Message.SET_DATA_TEMP_SUCCESS.send(s, key, value, name, d);
             } else {
                 Message.ILLEGAL_DATE_ERROR.send(s, duration);
@@ -242,12 +235,11 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     public void dataClear(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @Nullable @Flag("type") DataType type) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         String name;
         UUID u;
         if (p == null) {
             try {
-                Players i = storageImplementation.selectPlayers(target);
+                Players i = getStorageImplementation().selectPlayers(target);
                 u = i.getUuid();
                 name = i.getName();
             } catch (Throwable e) {
@@ -260,10 +252,10 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
         }
         if (type != null) {
             // remove type
-            storageImplementation.deleteDataType(u, type);
+            getStorageImplementation().deleteDataType(u, type);
         } else {
             // remove all
-            storageImplementation.deleteDataAll(u);
+            getStorageImplementation().deleteDataAll(u);
         }
         Message.DATA_CLEAR_SUCCESS.send(s, name, type);
     }

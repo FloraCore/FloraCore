@@ -8,6 +8,8 @@ import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.storage.implementation.*;
+import team.floracore.common.storage.misc.floracore.tables.*;
 import team.floracore.common.util.*;
 
 import java.time.*;
@@ -17,9 +19,11 @@ import java.util.stream.*;
 
 public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     private final FloraCorePlugin plugin;
+    private final StorageImplementation storageImplementation;
 
     public AbstractFloraCoreCommand(FloraCorePlugin plugin) {
         this.plugin = plugin;
+        storageImplementation = getPlugin().getStorage().getImplementation();
     }
 
     public static Duration parseDuration(String input) {
@@ -82,5 +86,17 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     @Suggestions("commonDurations")
     public @NonNull List<String> getCommonDurations(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
         return ImmutableList.of("1", "60", "600", "3600", "86400");
+    }
+
+    @Override
+    public boolean whetherServerEnableAutoSync() {
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        Servers servers = storageImplementation.selectServers(getPlugin().getServerName());
+        return servers.isAutoSync();
+    }
+
+    @Override
+    public StorageImplementation getStorageImplementation() {
+        return storageImplementation;
     }
 }

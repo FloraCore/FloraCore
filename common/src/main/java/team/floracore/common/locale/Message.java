@@ -524,6 +524,11 @@ public interface Message {
             // {0}
             .args(translatable("floracore.command.misc.nick.book.rank-page.rank"), text(rank).color(DARK_RED).decoration(BOLD, true)).color(RED));
 
+    Args2<String, String> COMMAND_REALNAME_SUCCESS = (name, realName) -> prefixed(translatable()
+            // 玩家 {0} 的真实昵称为 {1}
+            .key("floracore.command.realname.success")
+            // {}
+            .args(text(name).color(GREEN), text(realName).color(GREEN)).color(AQUA));
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();
