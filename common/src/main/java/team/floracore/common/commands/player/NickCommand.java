@@ -9,6 +9,7 @@ import net.skinsrestorer.api.exception.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
+import org.bukkit.event.player.*;
 import org.floracore.api.data.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
@@ -172,17 +173,19 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         UUID uuid = p.getUniqueId();
         Players ps = getStorageImplementation().selectPlayers(uuid);
         changePlayer(p, ps.getName());
+        // TODO reset rank
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
             Data statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
             Data skinData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
+            Data rankData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.rank");
             getStorageImplementation().deleteDataID(statusData.getId());
+            getStorageImplementation().deleteDataID(rankData.getId());
             if (skinData != null) {
                 getStorageImplementation().deleteDataID(skinData.getId());
                 try {
                     skinsRestorerAPI.setSkin(p.getName(), ps.getName());
                     skinsRestorerAPI.applySkin(new PlayerWrapper(p));
-                } catch (SkinRequestException e) {
-                    e.printStackTrace();
+                } catch (SkinRequestException ignored) {
                 }
             }
         });
@@ -200,6 +203,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         });
         boolean changeSkin = !skin.equalsIgnoreCase("normal");
         changePlayer(p, name);
+        // TODO setup rank
         NamesRepository.NameProperty selectedSkin;
         if (changeSkin) {
             if (skin.equalsIgnoreCase("steve-alex")) {
@@ -216,13 +220,13 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                 });
             }
             Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
+                getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.rank", rank, 0);
                 getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.status", String.valueOf(true), 0);
                 try {
                     skinsRestorerAPI.setSkinData("custom", skinsRestorerAPI.createPlatformProperty("textures", selectedSkin.getValue(), selectedSkin.getSignature()), 0);
                     skinsRestorerAPI.setSkin(p.getName(), selectedSkin.getName());
                     skinsRestorerAPI.applySkin(new PlayerWrapper(p));
-                } catch (SkinRequestException e) {
-                    e.printStackTrace();
+                } catch (SkinRequestException ignored) {
                 }
             });
         }
@@ -371,5 +375,45 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                 Message.COMMAND_MISC_NICK_BOOK_RESET.build()).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        Player p = e.getPlayer();
+        UUID u = p.getUniqueId();
+        if (whetherServerEnableAutoSync()) {
+            Data data = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.status");
+            if (data != null) {
+                String value = data.getValue();
+                boolean nick = Boolean.parseBoolean(value);
+                if (nick && p.hasPermission("floracore.command.nick")) {
+                    Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
+                    Map<String, String> ranks_permission = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
+                    Data rankData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.rank");
+                    Data skinData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.skin");
+                    Data nameData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.name");
+                    if (rankData != null && skinData != null && nameData != null) {
+                        String rank = rankData.getValue();
+                        String skin = skinData.getValue();
+                        String name = nameData.getValue();
+                        if (rank != null && skin != null && name != null) {
+                            if (ranks.containsKey(rank)) {
+                                String permission = ranks_permission.get(rank);
+                                if (p.hasPermission(permission)) {
+                                    // TODO ansy nick
+                                    performNick(p, rank, skin, name);
+                                } else {
+                                    performUnNick(p);
+                                }
+                            } else {
+                                performUnNick(p);
+                            }
+                        } else {
+                            performUnNick(p);
+                        }
+                    }
+                }
+            }
+        }
     }
 }
