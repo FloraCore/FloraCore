@@ -1,6 +1,8 @@
 package team.floracore.common.locale.data;
 
 import com.google.gson.*;
+import com.opencsv.*;
+import com.opencsv.exceptions.*;
 import okhttp3.*;
 import team.floracore.common.config.*;
 import team.floracore.common.http.*;
@@ -10,14 +12,16 @@ import team.floracore.common.util.gson.*;
 import java.io.*;
 import java.nio.charset.*;
 import java.nio.file.*;
+import java.util.*;
 import java.util.concurrent.*;
 import java.util.function.*;
 
 public class NamesRepository {
     private static final String NAMES_DOWNLOAD_ENDPOINT = "https://fc-meta.kinomc.net/data/names";
-    private static final long CACHE_MAX_AGE = TimeUnit.DAYS.toMillis(7);
+    private static final long CACHE_MAX_AGE = TimeUnit.HOURS.toMillis(6);
     private final FloraCorePlugin plugin;
     private final AbstractHttpClient abstractHttpClient;
+    private List<NameProperty> namePropertyList;
 
     public NamesRepository(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -38,13 +42,32 @@ public class NamesRepository {
 
             try {
                 refresh();
+                namePropertyList = loadNamesCSVData();
             } catch (Exception e) {
                 // ignore
             }
         });
     }
 
-    private void refresh() throws Exception {
+    public List<NameProperty> loadNamesCSVData() throws IOException, CsvValidationException {
+        Path filePath = getNamesCSVFile();
+        int expectedSize = 10000; // 设置预期数据行数
+        List<NameProperty> ret = new ArrayList<>(expectedSize);
+        try (CSVReader reader = new CSVReaderBuilder(Files.newBufferedReader(filePath, StandardCharsets.UTF_8))
+                // 跳过第一行
+                .withSkipLines(1).build()) {
+            String[] nextLine;
+            while ((nextLine = reader.readNext()) != null) {
+                String name = nextLine[0];
+                String value = nextLine[1];
+                String signature = nextLine[2];
+                ret.add(new NameProperty(name, value, signature));
+            }
+        }
+        return ret;
+    }
+
+    private void refresh() {
         long lastRefresh = readLastRefreshTime();
         long timeSinceLastRefresh = System.currentTimeMillis() - lastRefresh;
 
@@ -76,6 +99,16 @@ public class NamesRepository {
             writeLastRefreshTime();
         }
         manager.reload();
+    }
+
+    public NameProperty getRandomNameProperty() {
+        if (namePropertyList == null || namePropertyList.isEmpty()) {
+            return null;
+        }
+
+        Random random = new Random();
+        int index = random.nextInt(namePropertyList.size());
+        return namePropertyList.get(index);
     }
 
     private void writeLastRefreshTime() {
@@ -122,5 +155,33 @@ public class NamesRepository {
 
     public Path getRepositoryStatusFile() {
         return this.plugin.getDataManager().getDataDirectory().resolve("status.json");
+    }
+
+    public Path getNamesCSVFile() {
+        return this.plugin.getDataManager().getDataDirectory().resolve("names.csv");
+    }
+
+    public static class NameProperty {
+        private final String name;
+        private final String value;
+        private final String signature;
+
+        public NameProperty(String name, String value, String signature) {
+            this.name = name;
+            this.value = value;
+            this.signature = signature;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getValue() {
+            return value;
+        }
+
+        public String getSignature() {
+            return signature;
+        }
     }
 }

@@ -466,6 +466,19 @@ public interface Message {
                 .args(r, text(name)).build();
     };
 
+    Args1<String> COMMAND_MISC_NICK_RANK_UNKNOWN = (rank) -> prefixed(translatable()
+            // {0} {1} 不存在!
+            .key("floracore.command.misc.nick.rank.unknown")
+            // {0}
+            .args(translatable("floracore.command.misc.nick.book.rank-page.rank"), text(rank).color(DARK_RED).decoration(BOLD, true)).color(RED));
+
+    Args1<String> COMMAND_MISC_NICK_RANK_NO_PERMISSION = (rank) -> prefixed(translatable()
+            // 你没有 {0} {1} 的使用权限!
+            .key("floracore.command.misc.nick.rank.no-permission")
+            // {0}
+            .args(translatable("floracore.command.misc.nick.book.rank-page.rank"), text(rank).color(DARK_RED).decoration(BOLD, true)).color(RED));
+
+
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();
     }

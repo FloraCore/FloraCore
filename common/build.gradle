@@ -61,6 +61,7 @@ dependencies {
     api 'io.lettuce:lettuce-core:6.2.3.RELEASE'
 
     api 'io.github.karlatemp:unsafe-accessor:1.7.0'
+    api 'com.opencsv:opencsv:5.7.1'
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -21,7 +21,7 @@ public class TranslationRepository {
     private static final String TRANSLATIONS_INFO_ENDPOINT = "https://fc-meta.kinomc.net/data/translations";
     private static final String TRANSLATIONS_DOWNLOAD_ENDPOINT = "https://fc-meta.kinomc.net/translation/";
     private static final long MAX_BUNDLE_SIZE = 1048576L; // 1mb
-    private static final long CACHE_MAX_AGE = TimeUnit.DAYS.toMillis(1);
+    private static final long CACHE_MAX_AGE = TimeUnit.HOURS.toMillis(1);
 
     private final FloraCorePlugin plugin;
     private final AbstractHttpClient abstractHttpClient;

@@ -49,10 +49,24 @@ public class NickCommand extends AbstractFloraCoreCommand {
         Audience target = getPlugin().getBukkitAudiences().player(p);
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
+        Map<String, String> ranks_permission = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
         Map<String, String> ranks_prefix = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PREFIX);
         Map<String, String> sign = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_SIGN);
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         boolean custom = p.hasPermission("floracore.command.nick.custom");
+        if (rank != null) {
+            if (ranks.containsKey(rank)) {
+                String permission = ranks_permission.get(rank);
+                if (!p.hasPermission(permission)) {
+                    Message.COMMAND_MISC_NICK_RANK_NO_PERMISSION.send(sender, rank);
+                    return;
+                }
+            } else {
+                Message.COMMAND_MISC_NICK_RANK_UNKNOWN.send(sender, rank);
+                return;
+            }
+        }
+
         try {
             switch (page) {
                 case 0:
@@ -83,9 +97,9 @@ public class NickCommand extends AbstractFloraCoreCommand {
                         }
                         if (name.equalsIgnoreCase("reuse")) {
                             Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
-                            nickname = (data != null) ? data.getValue() : getPlugin().getRandomName();
+                            nickname = (data != null) ? data.getValue() : getPlugin().getNamesRepository().getRandomNameProperty().getName();
                         } else if (name.equalsIgnoreCase("random") && !custom) {
-                            nickname = getPlugin().getRandomName();
+                            nickname = getPlugin().getNamesRepository().getRandomNameProperty().getName();
                         }
                         performNick(p, rank, skin, nickname);
                         target.openBook(getFinishPage(ranks_prefix.get(rank), nickname));
@@ -112,7 +126,6 @@ public class NickCommand extends AbstractFloraCoreCommand {
                     break;
             }
         } catch (Throwable e) {
-            e.printStackTrace();
             Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
         }
     }
