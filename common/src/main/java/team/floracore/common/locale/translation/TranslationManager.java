@@ -1,4 +1,4 @@
-package team.floracore.common.locale;
+package team.floracore.common.locale.translation;
 
 import com.google.common.collect.*;
 import net.kyori.adventure.key.*;

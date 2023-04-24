@@ -12,6 +12,8 @@ import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
 import team.floracore.common.listener.*;
 import team.floracore.common.locale.*;
+import team.floracore.common.locale.data.*;
+import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.*;
@@ -28,6 +30,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     // init during load
     private DependencyManager dependencyManager;
     private TranslationManager translationManager;
+    private DataManager dataManager;
 
     // init during enable
     private FloraCoreConfiguration configuration;
@@ -39,6 +42,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private ListenerManager listenerManager;
     private OkHttpClient httpClient;
     private TranslationRepository translationRepository;
+    private NamesRepository namesRepository;
     private BukkitSenderFactory senderFactory;
     private ProtocolManager protocolManager;
 
@@ -53,6 +57,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // load translations
         this.translationManager = new TranslationManager(this);
         this.translationManager.reload();
+
+        // load data
+        this.dataManager = new DataManager(this);
+        this.dataManager.reload();
     }
 
     public final void onEnable() {
@@ -76,6 +84,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // init translation repo and update bundle files
         this.translationRepository = new TranslationRepository(this);
         this.translationRepository.scheduleRefresh();
+
+        // init data names repo
+        this.namesRepository = new NamesRepository(this);
+        this.namesRepository.scheduleRefresh();
 
         // now the configuration is loaded, we can create a storage factory and load initial dependencies
         StorageFactory storageFactory = new StorageFactory(this);
@@ -231,6 +243,11 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     @Override
+    public NamesRepository getNamesRepository() {
+        return namesRepository;
+    }
+
+    @Override
     public Storage getStorage() {
         return this.storage;
     }
@@ -279,5 +296,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public String getServerName() {
         return configuration.get(ConfigKeys.SERVER_NAME);
+    }
+
+    @Override
+    public DataManager getDataManager() {
+        return dataManager;
     }
 }

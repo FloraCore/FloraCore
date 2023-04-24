@@ -12,6 +12,7 @@ import team.floracore.api.data.*;
 import team.floracore.common.command.*;
 import team.floracore.common.http.*;
 import team.floracore.common.locale.*;
+import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.implementation.*;

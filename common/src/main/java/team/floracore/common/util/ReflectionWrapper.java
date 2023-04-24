@@ -45,10 +45,10 @@ public final class ReflectionWrapper {
     public static Method getMethodParent(final Class<?> c, final String method, final Class<?>... args) {
         try {
             try {
-                return ReflectionWrapper.getMethod(c, method, args);
+                return getMethod(c, method, args);
             } catch (final Throwable e) {
                 if (c.getSuperclass() != null) {
-                    return ReflectionWrapper.getMethodParent(c.getSuperclass(), method, args);
+                    return getMethodParent(c.getSuperclass(), method, args);
                 } else if (e instanceof RuntimeException) {
                     throw (RuntimeException) e;
                 } else {
@@ -59,9 +59,9 @@ public final class ReflectionWrapper {
             final Class<?>[] classes = c.getInterfaces();
             Throwable lastExc = null;
             for (final Class<?> i : classes) {
-                Throwable exc = null;
+                Throwable exc;
                 try {
-                    return ReflectionWrapper.getMethodParent(i, method, args);
+                    return getMethodParent(i, method, args);
                 } catch (final Throwable e2) {
                     exc = e2;
                     // ignore
@@ -90,10 +90,10 @@ public final class ReflectionWrapper {
     public static Field getFieldParent(final Class<?> c, final String name) {
         try {
             try {
-                return ReflectionWrapper.getField(c, name);
+                return getField(c, name);
             } catch (final Throwable e) {
                 if (c.getSuperclass() != null) {
-                    return ReflectionWrapper.getFieldParent(c.getSuperclass(), name);
+                    return getFieldParent(c.getSuperclass(), name);
                 } else if (e instanceof RuntimeException) {
                     throw (RuntimeException) e;
                 } else {
@@ -106,7 +106,7 @@ public final class ReflectionWrapper {
             for (final Class<?> i : classes) {
                 Throwable exc = null;
                 try {
-                    return ReflectionWrapper.getFieldParent(i, name);
+                    return getFieldParent(i, name);
                 } catch (final Throwable e2) {
                     exc = e2;
                     // ignore
@@ -194,7 +194,7 @@ public final class ReflectionWrapper {
 
     public static <T> T invokeStaticMethod(final Method m, final Object... args) {
         Root.setAccessible(m, true);
-        return ReflectionWrapper.invokeMethod(m, null, args);
+        return invokeMethod(m, null, args);
     }
 
     public static String getNMSClassName(final String c) {
@@ -314,7 +314,7 @@ public final class ReflectionWrapper {
     }
 
     public static <T> T getStaticFieldValue(final Field f) {
-        return ReflectionWrapper.getFieldValue(f, null);
+        return getFieldValue(f, null);
     }
 
     @SuppressWarnings("restriction")
@@ -386,7 +386,7 @@ public final class ReflectionWrapper {
     }
 
     public static <T> T setStaticFieldValue(final Field f, final T v) {
-        return ReflectionWrapper.setFieldValue(f, null, v);
+        return setFieldValue(f, null, v);
     }
 
     public static void copyObjectData(Class<?> clazz, Object src, Object tar) {

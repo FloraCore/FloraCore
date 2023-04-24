@@ -1,10 +1,11 @@
-package team.floracore.common.locale;
+package team.floracore.common.locale.translation;
 
 import com.google.gson.*;
 import okhttp3.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.config.*;
 import team.floracore.common.http.*;
+import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.gson.*;
@@ -20,7 +21,7 @@ public class TranslationRepository {
     private static final String TRANSLATIONS_INFO_ENDPOINT = "https://fc-meta.kinomc.net/data/translations";
     private static final String TRANSLATIONS_DOWNLOAD_ENDPOINT = "https://fc-meta.kinomc.net/translation/";
     private static final long MAX_BUNDLE_SIZE = 1048576L; // 1mb
-    private static final long CACHE_MAX_AGE = TimeUnit.HOURS.toMillis(23);
+    private static final long CACHE_MAX_AGE = TimeUnit.DAYS.toMillis(1);
 
     private final FloraCorePlugin plugin;
     private final AbstractHttpClient abstractHttpClient;

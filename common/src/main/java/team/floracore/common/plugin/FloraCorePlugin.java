@@ -9,7 +9,8 @@ import team.floracore.common.config.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
 import team.floracore.common.listener.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.data.*;
+import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.sender.*;
@@ -68,6 +69,8 @@ public interface FloraCorePlugin {
      */
     FloraCoreConfiguration getConfiguration();
 
+    NamesRepository getNamesRepository();
+
     /**
      * Gets the primary data storage instance. This is likely to be wrapped with extra layers for caching, etc.
      *
@@ -122,4 +125,6 @@ public interface FloraCorePlugin {
     String getRandomName();
 
     String getServerName();
+
+    DataManager getDataManager();
 }
