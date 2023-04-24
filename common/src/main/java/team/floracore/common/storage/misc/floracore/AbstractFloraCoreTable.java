@@ -1,22 +1,22 @@
 package team.floracore.common.storage.misc.floracore;
 
 import team.floracore.common.plugin.*;
-import team.floracore.common.storage.implementation.sql.*;
+import team.floracore.common.storage.implementation.*;
 
 public abstract class AbstractFloraCoreTable implements FloraCoreTable {
     private final FloraCorePlugin plugin;
-    private final SqlStorage sqlStorage;
+    private final StorageImplementation storageImplementation;
 
-    public AbstractFloraCoreTable(FloraCorePlugin plugin, SqlStorage sqlStorage) {
+    public AbstractFloraCoreTable(FloraCorePlugin plugin, StorageImplementation storageImplementation) {
         this.plugin = plugin;
-        this.sqlStorage = sqlStorage;
+        this.storageImplementation = storageImplementation;
     }
 
     public FloraCorePlugin getPlugin() {
         return plugin;
     }
 
-    public SqlStorage getSqlStorage() {
-        return sqlStorage;
+    public StorageImplementation getStorageImplementation() {
+        return storageImplementation;
     }
 }

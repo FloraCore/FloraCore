@@ -2,9 +2,11 @@ package team.floracore.common.storage.implementation;
 
 import team.floracore.api.data.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.storage.implementation.sql.connection.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.util.*;
+import java.util.function.*;
 
 /**
  * 数据库操作的接口
@@ -13,6 +15,10 @@ public interface StorageImplementation {
     FloraCorePlugin getPlugin();
 
     String getImplementationName();
+
+    ConnectionFactory getConnectionFactory();
+
+    Function<String, String> getStatementProcessor();
 
     void init() throws Exception;
 
@@ -24,8 +30,6 @@ public interface StorageImplementation {
     Players selectPlayers(String name);
 
     Players selectPlayers(UUID uuid);
-
-    Players selectPlayers(UUID uuid, String n, String loginIp);
 
     void deletePlayers(UUID u);
 
@@ -41,6 +45,9 @@ public interface StorageImplementation {
 
     List<Data> selectData(UUID uuid);
 
+    /**
+     * 如果无该记录，则返回Null。
+     */
     Data getSpecifiedData(UUID uuid, DataType type, String key);
 
     void deleteDataAll(UUID uuid);
@@ -50,4 +57,6 @@ public interface StorageImplementation {
     void deleteDataExpired(UUID uuid);
 
     void deleteDataID(int id);
+
+    Servers selectServers(String name);
 }

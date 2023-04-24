@@ -3,6 +3,7 @@ package team.floracore.common.plugin;
 import com.comphenix.protocol.*;
 import net.kyori.adventure.platform.bukkit.*;
 import okhttp3.*;
+import team.floracore.api.server.*;
 import team.floracore.common.api.*;
 import team.floracore.common.command.*;
 import team.floracore.common.config.*;
@@ -14,9 +15,11 @@ import team.floracore.common.locale.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.*;
+import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.io.*;
 import java.nio.file.*;
+import java.sql.*;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
@@ -80,6 +83,18 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // initialise storage
         this.storage = storageFactory.getInstance();
+        Servers servers = storage.getImplementation().selectServers(getServerName());
+        if (servers == null) {
+            ServerType serverType = configuration.get(ConfigKeys.SERVER_TYPE);
+            servers = new Servers(this, storage.getImplementation(), -1, getServerName(), serverType, serverType.isAutoSync(), System.currentTimeMillis());
+            try {
+                servers.init();
+            } catch (SQLException e) {
+                throw new RuntimeException("服务器数据初始化失败！");
+            }
+        } else {
+            servers.setLastActiveTime(System.currentTimeMillis());
+        }
 
         getLogger().info("Loading framework...");
         protocolManager = ProtocolLibrary.getProtocolManager();
@@ -259,5 +274,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         int randomLineIndex = random.nextInt(lines.length);
 
         return lines[randomLineIndex];
+    }
+
+    @Override
+    public String getServerName() {
+        return configuration.get(ConfigKeys.SERVER_NAME);
     }
 }

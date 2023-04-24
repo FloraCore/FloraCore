@@ -1,7 +1,7 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
 import team.floracore.common.plugin.*;
-import team.floracore.common.storage.implementation.sql.*;
+import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.*;
 
 import java.sql.*;
@@ -17,6 +17,7 @@ public class Players extends AbstractFloraCoreTable {
     private static final String UPDATE_PLAY_TIME = "UPDATE '{prefix}players' SET playTime=? WHERE uuid=?";
     private static final String INSERT = "INSERT INTO '{prefix}players' (uuid, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
+    private final int id;
     private final UUID uuid;
     private final long firstLoginTime;
     private final String firstLoginIp;
@@ -25,8 +26,9 @@ public class Players extends AbstractFloraCoreTable {
     private long lastLoginTime;
     private long playTime;
 
-    public Players(FloraCorePlugin plugin, SqlStorage sqlStorage, UUID uuid, String name, String loginIp) {
-        super(plugin, sqlStorage);
+    public Players(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String loginIp) {
+        super(plugin, storageImplementation);
+        this.id = id;
         this.uuid = uuid;
         this.name = name;
         this.firstLoginIp = loginIp;
@@ -37,8 +39,9 @@ public class Players extends AbstractFloraCoreTable {
         this.playTime = 0;
     }
 
-    public Players(FloraCorePlugin plugin, SqlStorage sqlStorage, UUID uuid, String name, String firstLoginIp, String lastLoginIp, long firstLoginTime, long lastLoginTime, long playTime) {
-        super(plugin, sqlStorage);
+    public Players(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String firstLoginIp, String lastLoginIp, long firstLoginTime, long lastLoginTime, long playTime) {
+        super(plugin, storageImplementation);
+        this.id = id;
         this.uuid = uuid;
         this.name = name;
         this.firstLoginIp = firstLoginIp;
@@ -46,6 +49,10 @@ public class Players extends AbstractFloraCoreTable {
         this.firstLoginTime = firstLoginTime;
         this.lastLoginTime = lastLoginTime;
         this.playTime = playTime;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public UUID getUuid() {
@@ -58,8 +65,8 @@ public class Players extends AbstractFloraCoreTable {
 
     public void setName(String name) {
         this.name = name;
-        try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(UPDATE_NAME))) {
+        try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_NAME))) {
                 ps.setString(1, name);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -79,8 +86,8 @@ public class Players extends AbstractFloraCoreTable {
 
     public void setLastLoginIp(String lastLoginIp) {
         this.lastLoginIp = lastLoginIp;
-        try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(UPDATE_LAST_LOGIN_IP))) {
+        try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_LAST_LOGIN_IP))) {
                 ps.setString(1, lastLoginIp);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -100,8 +107,8 @@ public class Players extends AbstractFloraCoreTable {
 
     public void setLastLoginTime(long lastLoginTime) {
         this.lastLoginTime = lastLoginTime;
-        try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(UPDATE_LAST_LOGIN_TIME))) {
+        try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_LAST_LOGIN_TIME))) {
                 ps.setLong(1, lastLoginTime);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -117,8 +124,8 @@ public class Players extends AbstractFloraCoreTable {
 
     public void setPlayTime(long playTime) throws SQLException {
         this.playTime = playTime;
-        try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(UPDATE_PLAY_TIME))) {
+        try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_PLAY_TIME))) {
                 ps.setLong(1, playTime);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -128,8 +135,8 @@ public class Players extends AbstractFloraCoreTable {
 
     @Override
     public void init() throws SQLException {
-        try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(INSERT))) {
+        try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(INSERT))) {
                 ps.setString(1, uuid.toString());
                 ps.setString(2, name);
                 ps.setString(3, firstLoginIp);

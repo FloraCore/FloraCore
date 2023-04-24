@@ -79,6 +79,37 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
         Message.TRANSLATIONS_INSTALL_COMPLETE.send(s);
     }
 
+    @CommandMethod("fc|floracore server <target>")
+    @CommandDescription("获取服务器的数据")
+    public void server(final @NonNull CommandSender sender, final @NonNull @Argument("target") String target) {
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        Servers servers = storageImplementation.selectServers(target);
+        if (servers == null) {
+            // TODO 无记录的服务器数据
+            System.out.println(false);
+        } else {
+            // TODO 返回服务器的数据
+            System.out.println(true);
+        }
+    }
+
+    @CommandMethod("fc|floracore server <target> set autosync <value>")
+    @CommandDescription("设置服务器的数据")
+    public void serverSet(final @NonNull CommandSender sender, final @NonNull @Argument("target") String target, final @Argument("value") boolean value) {
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        Servers servers = storageImplementation.selectServers(target);
+        if (servers == null) {
+            // TODO 无记录的服务器数据
+            System.out.println(false);
+        } else {
+            // TODO 设置服务器的数据
+            servers.setAutoSync(value);
+            System.out.println(true);
+        }
+    }
+
     @CommandMethod("fc|floracore data <target>")
     @CommandDescription("获取玩家存储的数据")
     public void data(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {

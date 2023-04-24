@@ -21,3 +21,12 @@ CREATE TABLE IF NOT EXISTS "{prefix}data"
     value    VARCHAR(255) NOT NULL,
     expiry   BIGINT       NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS "{prefix}servers"
+(
+    id             SERIAL      NOT NULL PRIMARY KEY,
+    name           VARCHAR(16) NOT NULL,
+    type           VARCHAR(16) NOT NULL,
+    autoSync       BOOLEAN     NOT NULL,
+    lastActiveTime BIGINT      NOT NULL
+);

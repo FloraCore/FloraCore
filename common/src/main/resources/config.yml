@@ -131,3 +131,7 @@ commands:
       line2: "^^^^^^^^^^^^^^^"
       line3: "Enter your"
       line4: "nickname here"
+
+server:
+  name: "lobby"
+  type: "lobby"

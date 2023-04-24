@@ -87,9 +87,9 @@ public class NickCommand extends AbstractFloraCoreCommand {
                         } else if (name.equalsIgnoreCase("random") && !custom) {
                             nickname = getPlugin().getRandomName();
                         }
+                        performNick(p, rank, skin, nickname);
                         target.openBook(getFinishPage(ranks_prefix.get(rank), nickname));
                     }
-
                     break;
                 case 5:
                     // random page

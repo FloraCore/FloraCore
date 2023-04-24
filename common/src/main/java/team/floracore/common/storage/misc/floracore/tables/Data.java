@@ -2,7 +2,7 @@ package team.floracore.common.storage.misc.floracore.tables;
 
 import team.floracore.api.data.*;
 import team.floracore.common.plugin.*;
-import team.floracore.common.storage.implementation.sql.*;
+import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.*;
 
 import java.sql.*;
@@ -23,8 +23,8 @@ public class Data extends AbstractFloraCoreTable {
     private String value;
     private long expiry;
 
-    public Data(FloraCorePlugin plugin, SqlStorage sqlStorage, int id, UUID uuid, DataType type, String key, String value, long expiry) {
-        super(plugin, sqlStorage);
+    public Data(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, DataType type, String key, String value, long expiry) {
+        super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;
         this.type = type;
@@ -55,8 +55,8 @@ public class Data extends AbstractFloraCoreTable {
 
     public void setValue(String value) {
         this.value = value;
-        try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(UPDATE_VALUE))) {
+        try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_VALUE))) {
                 ps.setString(1, value);
                 ps.setString(2, uuid.toString());
                 ps.setString(3, type.getName());
@@ -74,8 +74,8 @@ public class Data extends AbstractFloraCoreTable {
 
     public void setExpiry(long expiry) {
         this.expiry = expiry;
-        try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(UPDATE_EXPIRY))) {
+        try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_EXPIRY))) {
                 ps.setLong(1, expiry);
                 ps.setString(2, uuid.toString());
                 ps.setString(3, type.getName());
@@ -89,8 +89,8 @@ public class Data extends AbstractFloraCoreTable {
 
     @Override
     public void init() throws SQLException {
-        try (Connection connection = getSqlStorage().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getSqlStorage().getStatementProcessor().apply(INSERT))) {
+        try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(INSERT))) {
                 ps.setString(1, uuid.toString());
                 ps.setString(2, type.getName());
                 ps.setString(3, key);

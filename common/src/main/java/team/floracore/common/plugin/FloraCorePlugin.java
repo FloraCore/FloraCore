@@ -120,4 +120,6 @@ public interface FloraCorePlugin {
     TranslationRepository getTranslationRepository();
 
     String getRandomName();
+
+    String getServerName();
 }

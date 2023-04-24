@@ -1,6 +1,7 @@
 package team.floracore.api;
 
 import team.floracore.api.data.*;
+import team.floracore.api.player.*;
 
 /**
  * The FloraCore API.
@@ -22,4 +23,6 @@ import team.floracore.api.data.*;
  */
 public interface FloraCore {
     DataAPI getDataAPI();
+
+    PlayerAPI getPlayerAPI();
 }

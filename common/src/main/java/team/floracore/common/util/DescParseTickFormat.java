@@ -12,9 +12,6 @@ import java.util.*;
  * @author Olof Larsson
  */
 public final class DescParseTickFormat {
-    // ============================================
-    // First some information vars. TODO: Should this be in a config file?
-    // --------------------------------------------
     public static final Map<String, Integer> nameToTicks = new LinkedHashMap<>();
     public static final Set<String> resetAliases = new HashSet<>();
     public static final int ticksAtMidnight = 18000;
@@ -60,7 +57,6 @@ public final class DescParseTickFormat {
     private DescParseTickFormat() {
     }
 
-    // ============================================
     public static long parse(String desc) throws NumberFormatException {
         // Only look at alphanumeric and lowercase and : for 24:00
         desc = desc.toLowerCase(Locale.ENGLISH).replaceAll("[^A-Za-z0-9:]", "");

@@ -22,3 +22,11 @@ CREATE TABLE IF NOT EXISTS `{prefix}data`
     expiry   BIGINT             NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS `{prefix}servers`
+(
+    id             INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    name           VARCHAR(16)        NOT NULL,
+    type           VARCHAR(16)        NOT NULL,
+    autoSync       BOOLEAN            NOT NULL,
+    lastActiveTime BIGINT             NOT NULL
+);

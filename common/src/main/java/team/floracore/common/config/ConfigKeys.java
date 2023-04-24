@@ -1,6 +1,7 @@
 package team.floracore.common.config;
 
 import com.google.common.collect.*;
+import team.floracore.api.server.*;
 import team.floracore.common.config.generic.*;
 import team.floracore.common.config.generic.key.*;
 import team.floracore.common.storage.*;
@@ -44,9 +45,7 @@ public class ConfigKeys {
     /**
      * The name of the storage method being used
      */
-    public static final ConfigKey<StorageType> STORAGE_METHOD = notReloadable(key(c -> {
-        return StorageType.parse(c.getString("storage-method", "h2"), StorageType.H2);
-    }));
+    public static final ConfigKey<StorageType> STORAGE_METHOD = notReloadable(key(c -> StorageType.parse(c.getString("storage-method", "h2"), StorageType.H2)));
 
 
     /**
@@ -79,6 +78,9 @@ public class ConfigKeys {
     public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK = notReloadable(mapKey("commands.nick.rank"));
     public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK_PREFIX = notReloadable(mapKey("commands.nick.rank-prefix"));
     public static final ConfigKey<Map<String, String>> COMMANDS_NICK_SIGN = notReloadable(mapKey("commands.nick.sign"));
+
+    public static final ConfigKey<String> SERVER_NAME = notReloadable(stringKey("server.name", "unknown"));
+    public static final ConfigKey<ServerType> SERVER_TYPE = notReloadable(key(c -> ServerType.parse(c.getString("server.type", "unknown"), ServerType.UNKNOWN)));
 
     /**
      * A list of the keys defined in this class.
