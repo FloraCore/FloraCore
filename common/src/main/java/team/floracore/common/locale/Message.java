@@ -512,6 +512,12 @@ public interface Message {
                 .args(r, text(name)).build();
     };
 
+    Args0 COMMAND_MISC_NICK_ACTION_BAR = () -> translatable()
+            // 当前已 {0}
+            .key("floracore.command.misc.nick.action-bar").color(WHITE)
+            // 匿名
+            .args(translatable("floracore.command.misc.nick.action-bar.nick").color(RED)).build();
+
     Args1<String> COMMAND_MISC_NICK_RANK_UNKNOWN = (rank) -> prefixed(translatable()
             // {0} {1} 不存在!
             .key("floracore.command.misc.nick.rank.unknown")

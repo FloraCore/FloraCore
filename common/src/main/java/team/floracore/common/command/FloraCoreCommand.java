@@ -21,7 +21,9 @@ public interface FloraCoreCommand {
     @Suggestions("commonDurations")
     @NonNull List<String> getCommonDurations(@NonNull CommandContext<CommandSender> sender, @NonNull String input);
 
-    boolean whetherServerEnableAutoSync();
+    boolean whetherServerEnableAutoSync1();
+
+    boolean whetherServerEnableAutoSync2();
 
     StorageImplementation getStorageImplementation();
 }

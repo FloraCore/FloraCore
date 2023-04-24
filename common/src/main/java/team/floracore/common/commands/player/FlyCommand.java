@@ -54,7 +54,7 @@ public class FlyCommand extends AbstractFloraCoreCommand implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         UUID u = p.getUniqueId();
-        if (whetherServerEnableAutoSync()) {
+        if (whetherServerEnableAutoSync1()) {
             Data data = getStorageImplementation().getSpecifiedData(u, DataType.AUTO_SYNC, "fly");
             if (data != null) {
                 String value = data.getValue();

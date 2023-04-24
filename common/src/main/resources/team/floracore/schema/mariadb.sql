@@ -27,6 +27,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}servers`
     id             INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     name           VARCHAR(16)        NOT NULL,
     type           VARCHAR(16)        NOT NULL,
-    autoSync       BOOLEAN            NOT NULL,
+    autoSync1      BOOLEAN            NOT NULL,
+    autoSync2      BOOLEAN            NOT NULL,
     lastActiveTime BIGINT             NOT NULL
 );

@@ -93,9 +93,9 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
         }
     }
 
-    @CommandMethod("fc|floracore server <target> set autosync <value>")
-    @CommandDescription("设置服务器的数据")
-    public void serverSet(final @NonNull CommandSender sender, final @NonNull @Argument("target") String target, final @Argument("value") boolean value) {
+    @CommandMethod("fc|floracore server <target> set autosync1 <value>")
+    @CommandDescription("设置服务器Sync1的数据")
+    public void serverSet1(final @NonNull CommandSender sender, final @NonNull @Argument("target") String target, final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Servers servers = getStorageImplementation().selectServers(target);
         if (servers == null) {
@@ -103,7 +103,22 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             System.out.println(false);
         } else {
             // TODO 设置服务器的数据
-            servers.setAutoSync(value);
+            servers.setAutoSync1(value);
+            System.out.println(true);
+        }
+    }
+
+    @CommandMethod("fc|floracore server <target> set autosync2 <value>")
+    @CommandDescription("设置服务器Sync2的数据")
+    public void serverSet2(final @NonNull CommandSender sender, final @NonNull @Argument("target") String target, final @Argument("value") boolean value) {
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Servers servers = getStorageImplementation().selectServers(target);
+        if (servers == null) {
+            // TODO 无记录的服务器数据
+            System.out.println(false);
+        } else {
+            // TODO 设置服务器的数据
+            servers.setAutoSync2(value);
             System.out.println(true);
         }
     }

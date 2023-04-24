@@ -294,9 +294,10 @@ public class SqlStorage implements StorageImplementation {
                         if (rs.next()) {
                             int id = rs.getInt("id");
                             String type = rs.getString("type");
-                            boolean autoSync = rs.getBoolean("autoSync");
+                            boolean autoSync1 = rs.getBoolean("autoSync1");
+                            boolean autoSync2 = rs.getBoolean("autoSync2");
                             long lastActiveTime = rs.getLong("lastActiveTime");
-                            servers = new Servers(plugin, this, id, name, ServerType.parse(type), autoSync, lastActiveTime);
+                            servers = new Servers(plugin, this, id, name, ServerType.parse(type), autoSync1, autoSync2, lastActiveTime);
                         } else {
                             return null;
                         }

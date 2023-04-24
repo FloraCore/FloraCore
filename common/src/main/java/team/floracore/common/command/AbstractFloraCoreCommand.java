@@ -89,10 +89,17 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     }
 
     @Override
-    public boolean whetherServerEnableAutoSync() {
+    public boolean whetherServerEnableAutoSync1() {
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         Servers servers = storageImplementation.selectServers(getPlugin().getServerName());
-        return servers.isAutoSync();
+        return servers.isAutoSync1();
+    }
+
+    @Override
+    public boolean whetherServerEnableAutoSync2() {
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        Servers servers = storageImplementation.selectServers(getPlugin().getServerName());
+        return servers.isAutoSync2();
     }
 
     @Override

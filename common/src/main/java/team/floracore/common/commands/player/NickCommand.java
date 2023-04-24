@@ -181,7 +181,6 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             getStorageImplementation().deleteDataID(statusData.getId());
             getStorageImplementation().deleteDataID(rankData.getId());
             if (skinData != null) {
-                getStorageImplementation().deleteDataID(skinData.getId());
                 try {
                     skinsRestorerAPI.setSkin(p.getName(), ps.getName());
                     skinsRestorerAPI.applySkin(new PlayerWrapper(p));
@@ -381,7 +380,8 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         UUID u = p.getUniqueId();
-        if (whetherServerEnableAutoSync()) {
+        Audience target = getPlugin().getBukkitAudiences().player(p);
+        if (whetherServerEnableAutoSync2()) {
             Data data = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.status");
             if (data != null) {
                 String value = data.getValue();
