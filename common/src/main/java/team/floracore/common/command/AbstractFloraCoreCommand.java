@@ -22,11 +22,13 @@ import java.util.stream.*;
 public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     private final FloraCorePlugin plugin;
     private final StorageImplementation storageImplementation;
-    AsyncCache<String, Servers> serversCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    private final AsyncCache<String, Servers> serversCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    private final Executor asyncExecutor;
 
     public AbstractFloraCoreCommand(FloraCorePlugin plugin) {
         this.plugin = plugin;
-        storageImplementation = getPlugin().getStorage().getImplementation();
+        this.storageImplementation = plugin.getStorage().getImplementation();
+        this.asyncExecutor = plugin.getBootstrap().getScheduler().async();
     }
 
     public static Duration parseDuration(String input) {
@@ -111,5 +113,10 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     @Override
     public StorageImplementation getStorageImplementation() {
         return storageImplementation;
+    }
+
+    @Override
+    public Executor getAsyncExecutor() {
+        return asyncExecutor;
     }
 }

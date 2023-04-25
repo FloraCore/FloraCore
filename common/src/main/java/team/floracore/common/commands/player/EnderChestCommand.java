@@ -1,40 +1,34 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryCloseEvent;
-import org.bukkit.event.inventory.InventoryDragEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import team.floracore.common.command.AbstractFloraCoreCommand;
-import team.floracore.common.locale.Message;
-import team.floracore.common.plugin.FloraCorePlugin;
-import team.floracore.common.sender.Sender;
-import team.floracore.common.util.SenderUtil;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.bukkit.event.*;
+import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.*;
+import org.bukkit.inventory.*;
+import org.jetbrains.annotations.*;
+import team.floracore.common.command.*;
+import team.floracore.common.locale.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
+import team.floracore.common.util.*;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 // TODO 监听器尚未注册
 @CommandDescription("打开末影箱")
 @CommandPermission("floracore.command.enderchest")
 public class EnderChestCommand extends AbstractFloraCoreCommand implements Listener {
-    public EnderChestCommand(FloraCorePlugin plugin) {
-        super(plugin);
-    }
-
     /**
      * 对应玩家禁止修改的内容
      */
     // TODO 在插件禁用时将这个列表清空
     public static final Map<UUID, Inventory> READONLY_MAP = new HashMap<>();
+
+    public EnderChestCommand(FloraCorePlugin plugin) {
+        super(plugin);
+    }
 
     @CommandMethod("ender|enderchest [target] [for]")
     @CommandDescription("为某人或自己打开某人或自己的末影箱")
@@ -49,7 +43,7 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
         if (!(s instanceof Player)) {
             // 当发送者不是玩家时，target和for都不能为空
             if (target == null || for_ == null) {
-                Message.COMMAND_ENDERCHEST_NOTPLAYER.send(sender);
+                Message.COMMAND_ENDERCHEST_NOT_PLAYER.send(sender);
                 return;
             }
         }

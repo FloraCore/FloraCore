@@ -24,6 +24,7 @@ import team.floracore.common.util.craftbukkit.signgui.*;
 
 import java.lang.reflect.*;
 import java.util.*;
+import java.util.concurrent.*;
 
 import static net.kyori.adventure.text.Component.*;
 import static team.floracore.common.util.ReflectionWrapper.*;
@@ -37,7 +38,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         super(plugin);
         skinsRestorerAPI = SkinsRestorerAPI.getApi();
         plugin.getListenerManager().registerListener(this);
-        Bukkit.getScheduler().runTaskTimerAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
+        plugin.getBootstrap().getScheduler().asyncRepeating(() -> {
             for (UUID uuid : nickedPlayers) {
                 Player p = Bukkit.getPlayer(uuid);
                 if (p != null) {
@@ -45,7 +46,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                     target.sendActionBar(Message.COMMAND_MISC_NICK_ACTION_BAR.build());
                 }
             }
-        }, 0, 20);
+        }, 1, TimeUnit.SECONDS);
     }
 
     @CommandMethod("nick")
@@ -207,7 +208,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                 // 重置玩家信息
                 changePlayer(p, ps.getName());
                 // 设置皮肤
-                Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
+                getAsyncExecutor().execute(() -> {
                     Data skinData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
                     if (skinData != null) {
                         try {
@@ -222,7 +223,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             nickedPlayers.remove(uuid);
         }
         // 清除数据库Nick状态
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
+        getAsyncExecutor().execute(() -> {
             Data rankData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.rank");
             if (statusData != null) {
                 getStorageImplementation().deleteDataID(statusData.getId());
@@ -258,13 +259,13 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                 selectedSkin = (randomNum == 0) ? getPlugin().getNamesRepository().getSteveProperty() : getPlugin().getNamesRepository().getAlexProperty();
             } else {
                 selectedSkin = getPlugin().getNamesRepository().getRandomNameProperty();
-                Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
+                getAsyncExecutor().execute(() -> {
                     getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.skin", selectedSkin.getName(), 0);
                 });
             }
             // 设置皮肤
             if (whetherServerEnableAutoSync2()) {
-                Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
+                getAsyncExecutor().execute(() -> {
                     try {
                         skinsRestorerAPI.setSkinData("custom", skinsRestorerAPI.createPlatformProperty("textures", selectedSkin.getValue(), selectedSkin.getSignature()), 0);
                         skinsRestorerAPI.setSkin(p.getName(), selectedSkin.getName());
@@ -275,7 +276,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             }
         }
         // 设置数据库Nick状态
-        Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
+        getAsyncExecutor().execute(() -> {
             getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.name", name, 0);
             getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.rank", rank, 0);
             getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.status", String.valueOf(true), 0);

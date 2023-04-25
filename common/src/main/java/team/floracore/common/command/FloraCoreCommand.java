@@ -7,6 +7,7 @@ import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.storage.implementation.*;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 public interface FloraCoreCommand {
     @Suggestions("onlinePlayers")
@@ -26,4 +27,6 @@ public interface FloraCoreCommand {
     boolean whetherServerEnableAutoSync2();
 
     StorageImplementation getStorageImplementation();
+
+    Executor getAsyncExecutor();
 }
