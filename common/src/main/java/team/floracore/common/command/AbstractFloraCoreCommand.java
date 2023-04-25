@@ -2,6 +2,7 @@ package team.floracore.common.command;
 
 import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
+import com.github.benmanes.caffeine.cache.*;
 import com.google.common.collect.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -15,11 +16,13 @@ import team.floracore.common.util.*;
 import java.time.*;
 import java.time.temporal.*;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.*;
 
 public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     private final FloraCorePlugin plugin;
     private final StorageImplementation storageImplementation;
+    AsyncCache<String, Servers> serversCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
 
     public AbstractFloraCoreCommand(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -88,18 +91,21 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
         return ImmutableList.of("1", "60", "600", "3600", "86400");
     }
 
+    public Servers getServer() {
+        String name = getPlugin().getServerName();
+        CompletableFuture<Servers> servers = serversCache.get(name, storageImplementation::selectServers);
+        serversCache.put(name, servers);
+        return servers.join();
+    }
+
     @Override
     public boolean whetherServerEnableAutoSync1() {
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        Servers servers = storageImplementation.selectServers(getPlugin().getServerName());
-        return servers.isAutoSync1();
+        return getServer().isAutoSync1();
     }
 
     @Override
     public boolean whetherServerEnableAutoSync2() {
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        Servers servers = storageImplementation.selectServers(getPlugin().getServerName());
-        return servers.isAutoSync2();
+        return getServer().isAutoSync2();
     }
 
     @Override
