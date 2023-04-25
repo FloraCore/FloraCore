@@ -1,9 +1,9 @@
 package team.floracore.common.util;
 
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import team.floracore.common.locale.Message;
-import team.floracore.common.sender.Sender;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import team.floracore.common.locale.*;
+import team.floracore.common.sender.*;
 
 public final class SenderUtil {
     private SenderUtil() {
@@ -21,7 +21,7 @@ public final class SenderUtil {
     /**
      * 判断命令发送者是否包含命令，若没有，告知没有权限消息
      *
-     * @param sender 命令发送者
+     * @param sender     命令发送者
      * @param permission 权限节点
      * @return 若没有权限节点，返回true
      */

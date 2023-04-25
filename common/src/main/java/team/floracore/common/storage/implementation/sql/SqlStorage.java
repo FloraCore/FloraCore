@@ -1,6 +1,5 @@
 package team.floracore.common.storage.implementation.sql;
 
-import com.github.benmanes.caffeine.cache.*;
 import com.google.gson.reflect.*;
 import org.floracore.api.data.*;
 import org.floracore.api.server.*;
@@ -13,7 +12,6 @@ import java.io.*;
 import java.lang.reflect.*;
 import java.sql.*;
 import java.util.*;
-import java.util.concurrent.*;
 import java.util.function.*;
 import java.util.stream.*;
 
@@ -23,8 +21,6 @@ public class SqlStorage implements StorageImplementation {
     private final FloraCorePlugin plugin;
     private final ConnectionFactory connectionFactory;
     private final Function<String, String> statementProcessor;
-    AsyncCache<UUID, Players> playersCache = Caffeine.newBuilder().expireAfterWrite(5, TimeUnit.SECONDS).maximumSize(10000).executor(Executors.newSingleThreadExecutor()).buildAsync();
-    AsyncCache<String, Servers> serversCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).executor(Executors.newSingleThreadExecutor()).buildAsync();
 
     public SqlStorage(FloraCorePlugin plugin, ConnectionFactory connectionFactory, String tablePrefix) {
         this.plugin = plugin;
@@ -113,33 +109,29 @@ public class SqlStorage implements StorageImplementation {
 
     @Override
     public Players selectPlayers(UUID uuid) {
-        CompletableFuture<Players> p = playersCache.get(uuid, u -> {
-            Players players;
-            try (Connection c = this.connectionFactory.getConnection()) {
-                try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Players.SELECT))) {
-                    ps.setString(1, uuid.toString());
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            int id = rs.getInt("id");
-                            String name = rs.getString("name");
-                            String firstLoginIp = rs.getString("firstLoginIp");
-                            String lastLoginIp = rs.getString("lastLoginIp");
-                            long firstLoginTime = rs.getLong("firstLoginTime");
-                            long lastLoginTime = rs.getLong("lastLoginTime");
-                            long playTime = rs.getLong("playTime");
-                            players = new Players(plugin, this, id, u, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
-                        } else {
-                            return null;
-                        }
+        Players players;
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Players.SELECT))) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        int id = rs.getInt("id");
+                        String name = rs.getString("name");
+                        String firstLoginIp = rs.getString("firstLoginIp");
+                        String lastLoginIp = rs.getString("lastLoginIp");
+                        long firstLoginTime = rs.getLong("firstLoginTime");
+                        long lastLoginTime = rs.getLong("lastLoginTime");
+                        long playTime = rs.getLong("playTime");
+                        players = new Players(plugin, this, id, uuid, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
+                    } else {
+                        return null;
                     }
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
             }
-            return players;
-        });
-        playersCache.put(uuid, p);
-        return p.join();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return players;
     }
 
     @Override
@@ -285,30 +277,26 @@ public class SqlStorage implements StorageImplementation {
 
     @Override
     public Servers selectServers(String name) {
-        CompletableFuture<Servers> s = serversCache.get(name, n -> {
-            Servers servers;
-            try (Connection c = this.connectionFactory.getConnection()) {
-                try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Servers.SELECT))) {
-                    ps.setString(1, n);
-                    try (ResultSet rs = ps.executeQuery()) {
-                        if (rs.next()) {
-                            int id = rs.getInt("id");
-                            String type = rs.getString("type");
-                            boolean autoSync1 = rs.getBoolean("autoSync1");
-                            boolean autoSync2 = rs.getBoolean("autoSync2");
-                            long lastActiveTime = rs.getLong("lastActiveTime");
-                            servers = new Servers(plugin, this, id, name, ServerType.parse(type), autoSync1, autoSync2, lastActiveTime);
-                        } else {
-                            return null;
-                        }
+        Servers servers;
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Servers.SELECT))) {
+                ps.setString(1, name);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        int id = rs.getInt("id");
+                        String type = rs.getString("type");
+                        boolean autoSync1 = rs.getBoolean("autoSync1");
+                        boolean autoSync2 = rs.getBoolean("autoSync2");
+                        long lastActiveTime = rs.getLong("lastActiveTime");
+                        servers = new Servers(plugin, this, id, name, ServerType.parse(type), autoSync1, autoSync2, lastActiveTime);
+                    } else {
+                        return null;
                     }
                 }
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
             }
-            return servers;
-        });
-        serversCache.put(name, s);
-        return s.join();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return servers;
     }
 }
