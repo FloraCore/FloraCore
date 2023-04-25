@@ -5,7 +5,7 @@ import net.kyori.adventure.audience.*;
 import net.kyori.adventure.inventory.*;
 import net.kyori.adventure.text.*;
 import net.skinsrestorer.api.*;
-import net.skinsrestorer.api.exception.*;
+import net.skinsrestorer.api.property.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -213,11 +213,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                 getAsyncExecutor().execute(() -> {
                     Data skinData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
                     if (skinData != null) {
-                        try {
-                            skinsRestorerAPI.setSkin(p.getName(), ps.getName());
-                            skinsRestorerAPI.applySkin(new PlayerWrapper(p));
-                        } catch (SkinRequestException ignored) {
-                        }
+                        skinsRestorerAPI.removeSkin(p.getName());
                     }
                 });
             }
@@ -259,6 +255,9 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                 int randomNum = random.nextInt(2);
                 // 如果随机数为 0，选择 Steve 皮肤属性，否则选择 Alex 皮肤属性
                 selectedSkin = (randomNum == 0) ? getPlugin().getNamesRepository().getSteveProperty() : getPlugin().getNamesRepository().getAlexProperty();
+                getAsyncExecutor().execute(() -> {
+                    getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.skin", randomNum == 0 ? "Steve" : "Alex", 0);
+                });
             } else {
                 selectedSkin = getPlugin().getNamesRepository().getRandomNameProperty();
                 getAsyncExecutor().execute(() -> {
@@ -268,13 +267,8 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             // 设置皮肤
             if (whetherServerEnableAutoSync2()) {
                 getAsyncExecutor().execute(() -> {
-                    try {
-                        System.out.println("set skin");
-                        skinsRestorerAPI.setSkinData("custom", skinsRestorerAPI.createPlatformProperty("textures", selectedSkin.getValue(), selectedSkin.getSignature()), 0);
-                        skinsRestorerAPI.setSkin(p.getName(), selectedSkin.getName());
-                        skinsRestorerAPI.applySkin(new PlayerWrapper(p));
-                    } catch (SkinRequestException ignored) {
-                    }
+                    IProperty iProperty = skinsRestorerAPI.createPlatformProperty(selectedSkin.getName(), selectedSkin.getValue(), selectedSkin.getSignature());
+                    skinsRestorerAPI.applySkin(new PlayerWrapper(p), iProperty);
                 });
             }
         }
