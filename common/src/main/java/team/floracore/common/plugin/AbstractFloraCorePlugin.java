@@ -95,18 +95,20 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // initialise storage
         this.storage = storageFactory.getInstance();
-        Servers servers = storage.getImplementation().selectServers(getServerName());
-        if (servers == null) {
-            ServerType serverType = configuration.get(ConfigKeys.SERVER_TYPE);
-            servers = new Servers(this, storage.getImplementation(), -1, getServerName(), serverType, serverType.isAutoSync1(), serverType.isAutoSync2(), System.currentTimeMillis());
-            try {
-                servers.init();
-            } catch (SQLException e) {
-                throw new RuntimeException("服务器数据初始化失败！");
+        getBootstrap().getScheduler().asyncRepeating(() -> {
+            Servers servers = storage.getImplementation().selectServers(getServerName());
+            if (servers == null) {
+                ServerType serverType = configuration.get(ConfigKeys.SERVER_TYPE);
+                servers = new Servers(this, storage.getImplementation(), -1, getServerName(), serverType, serverType.isAutoSync1(), serverType.isAutoSync2(), System.currentTimeMillis());
+                try {
+                    servers.init();
+                } catch (SQLException e) {
+                    throw new RuntimeException("服务器数据初始化失败！");
+                }
+            } else {
+                servers.setLastActiveTime(System.currentTimeMillis());
             }
-        } else {
-            servers.setLastActiveTime(System.currentTimeMillis());
-        }
+        }, 10, TimeUnit.MINUTES);
 
         getLogger().info("Loading framework...");
         protocolManager = ProtocolLibrary.getProtocolManager();

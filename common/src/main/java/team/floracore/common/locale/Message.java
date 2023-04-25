@@ -117,7 +117,11 @@ public interface Message {
 
     Args0 NO_PERMISSION_FOR_SUBCOMMANDS = () -> prefixed(translatable()
             // 你没有权限使用任何子命令
-            .key("floracore.commandsystem.no-permission-subcommands").color(DARK_AQUA).append(FULL_STOP));
+            .key("floracore.commandsystem.no-permission-subcommands").color(RED).append(FULL_STOP));
+
+    Args0 COMMAND_CURRENT_SERVER_FORBIDDEN = () -> prefixed(translatable()
+            // 你不能在当前服务器使用此命令!
+            .key("floracore.commandsystem.current-server-forbidden").color(RED));
 
     Args0 COMMAND_NO_PERMISSION = () -> prefixed(translatable()
             // 您没有使用此命令的权限！
@@ -130,6 +134,11 @@ public interface Message {
     Args2<String, String> COMMAND_INVALID_COMMAND_SENDER = (commandSender, requiredSender) -> prefixed(text()
             // {0} 不允许执行该命令，必须由 {1} 执行
             .color(RED).append(translatable("floracore.commandsystem.invalid-command-sender", text(commandSender), text(requiredSender))).append(FULL_STOP));
+
+    Args0 COMMAND_SERVER_DATA_TYPE = () -> translatable("floracore.command.server.data.type");
+    Args0 COMMAND_SERVER_DATA_AUTO_SYNC_1 = () -> translatable("floracore.command.server.data.autosync.1");
+    Args0 COMMAND_SERVER_DATA_AUTO_SYNC_2 = () -> translatable("floracore.command.server.data.autosync.2");
+    Args0 COMMAND_SERVER_DATA_ACTIVE_TIME = () -> translatable("floracore.command.server.data.active-time");
 
     Args0 COMMAND_MISC_GAMEMODE_SURVIVAL = () -> translatable("floracore.command.misc.gamemode.survival");
     Args0 COMMAND_MISC_GAMEMODE_CREATIVE = () -> translatable("floracore.command.misc.gamemode.creative");
@@ -252,6 +261,11 @@ public interface Message {
             }
         }));
     };
+
+    Args2<Component, String> SERVER_DATA_ENTRY = (key, value) -> prefixed(text().append(key.color(GREEN)).append(space()).append(text("->", AQUA)).append(space()).append(text(value, WHITE)).apply(builder -> {
+    }));
+    Args2<Component, Component> SERVER_DATA_ENTRY_1 = (key, value) -> prefixed(text().append(key.color(GREEN)).append(space()).append(text("->", AQUA)).append(space()).append(value.color(WHITE)).apply(builder -> {
+    }));
 
     Args3<String, String, String> SET_DATA_SUCCESS = (key, value, target) -> prefixed(translatable()
             // 成功将 {2} 的数据键 {0} 设置为 {1}

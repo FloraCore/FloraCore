@@ -40,8 +40,10 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         Bukkit.getScheduler().runTaskTimerAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
             for (UUID uuid : nickedPlayers) {
                 Player p = Bukkit.getPlayer(uuid);
-                Audience target = getPlugin().getBukkitAudiences().player(p);
-                target.sendActionBar(Message.COMMAND_MISC_NICK_ACTION_BAR.build());
+                if (p != null) {
+                    Audience target = getPlugin().getBukkitAudiences().player(p);
+                    target.sendActionBar(Message.COMMAND_MISC_NICK_ACTION_BAR.build());
+                }
             }
         }, 0, 20);
     }
@@ -49,6 +51,11 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     @CommandMethod("nick")
     @CommandDescription("更改你的昵称")
     public void nick(final @NotNull Player p) {
+        Sender sender = getPlugin().getSenderFactory().wrap(p);
+        if (whetherServerEnableAutoSync2()) {
+            Message.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
+            return;
+        }
         bookNick(p, 0, null, null, null, null);
     }
 
@@ -56,6 +63,11 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     @CommandDescription("将你的昵称修改为一个指定的昵称")
     @CommandPermission("floracore.command.nick.custom")
     public void nickSpecifiedName(final @NotNull Player p, final @Argument("name") String name) {
+        Sender sender = getPlugin().getSenderFactory().wrap(p);
+        if (whetherServerEnableAutoSync2()) {
+            Message.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
+            return;
+        }
         Audience target = getPlugin().getBukkitAudiences().player(p);
         performNick(p, "rank0", "random", name);
         target.openBook(getFinishPage("rank0", name));
@@ -66,6 +78,10 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     public void unNick(final @NotNull Player p) {
         UUID uuid = p.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(p);
+        if (whetherServerEnableAutoSync2()) {
+            Message.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
+            return;
+        }
         Data statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
             performUnNick(p);
@@ -81,6 +97,10 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         UUID uuid = p.getUniqueId();
         Audience target = getPlugin().getBukkitAudiences().player(p);
         Sender sender = getPlugin().getSenderFactory().wrap(p);
+        if (whetherServerEnableAutoSync2()) {
+            Message.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
+            return;
+        }
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
         Map<String, String> ranks_permission = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
         Map<String, String> ranks_prefix = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PREFIX);
@@ -224,6 +244,8 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         if (whetherServerEnableAutoSync2()) {
             // 修改玩家信息
             changePlayer(p, name);
+        } else {
+            nickedPlayers.add(uuid);
         }
         // 设置皮肤
         NamesRepository.NameProperty selectedSkin;
@@ -409,12 +431,12 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         UUID u = p.getUniqueId();
-        if (whetherServerEnableAutoSync2()) {
-            Data data = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.status");
-            if (data != null) {
-                String value = data.getValue();
-                boolean nick = Boolean.parseBoolean(value);
-                if (nick && p.hasPermission("floracore.command.nick")) {
+        Data data = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.status");
+        if (data != null) {
+            String value = data.getValue();
+            boolean nick = Boolean.parseBoolean(value);
+            if (nick && p.hasPermission("floracore.command.nick")) {
+                if (whetherServerEnableAutoSync2()) {
                     Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
                     Map<String, String> ranks_permission = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
                     Data rankData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.rank");
@@ -428,7 +450,6 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                             if (ranks.containsKey(rank)) {
                                 String permission = ranks_permission.get(rank);
                                 if (p.hasPermission(permission)) {
-                                    // TODO ansy nick
                                     performNick(p, rank, skin, name);
                                 } else {
                                     performUnNick(p);
@@ -440,10 +461,10 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                             performUnNick(p);
                         }
                     }
+                } else {
+                    nickedPlayers.add(u);
                 }
             }
-        } else {
-            nickedPlayers.add(u);
         }
     }
 

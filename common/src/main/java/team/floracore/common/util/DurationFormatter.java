@@ -3,6 +3,7 @@ package team.floracore.common.util;
 import net.kyori.adventure.text.*;
 
 import java.time.*;
+import java.time.format.*;
 import java.time.temporal.*;
 import java.util.*;
 
@@ -60,6 +61,13 @@ public class DurationFormatter {
         }
         return builder.build();
     }
+
+    public static String getTimeFromTimestamp(long timestamp) {
+        Instant instant = Instant.ofEpochMilli(timestamp);
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        return formatter.format(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()));
+    }
+
 
     private TranslatableComponent formatPart(long amount, ChronoUnit unit) {
         String format = this.concise ? "short" : amount == 1 ? "singular" : "plural";

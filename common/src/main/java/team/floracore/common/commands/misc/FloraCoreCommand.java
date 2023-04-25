@@ -2,6 +2,8 @@ package team.floracore.common.commands.misc;
 
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.processing.*;
+import cloud.commandframework.annotations.suggestions.*;
+import cloud.commandframework.context.*;
 import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -9,6 +11,7 @@ import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.http.*;
 import team.floracore.common.locale.*;
@@ -16,6 +19,7 @@ import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.*;
 
 import java.io.*;
 import java.time.*;
@@ -81,21 +85,25 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("fc|floracore server <target>")
     @CommandDescription("获取服务器的数据")
-    public void server(final @NonNull CommandSender sender, final @NonNull @Argument("target") String target) {
+    public void server(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Servers servers = getStorageImplementation().selectServers(target);
         if (servers == null) {
-            // TODO 无记录的服务器数据
-            System.out.println(false);
+            Message.DATA_NONE.send(s, target);
         } else {
-            // TODO 返回服务器的数据
-            System.out.println(true);
+            Component on = Component.translatable("floracore.command.misc.on");
+            Component off = Component.translatable("floracore.command.misc.off");
+            Message.DATA_HEADER.send(s, target);
+            Message.SERVER_DATA_ENTRY.send(s, Message.COMMAND_SERVER_DATA_TYPE.build(), servers.getType().getName());
+            Message.SERVER_DATA_ENTRY_1.send(s, Message.COMMAND_SERVER_DATA_AUTO_SYNC_1.build(), servers.isAutoSync1() ? on : off);
+            Message.SERVER_DATA_ENTRY_1.send(s, Message.COMMAND_SERVER_DATA_AUTO_SYNC_2.build(), servers.isAutoSync2() ? on : off);
+            Message.SERVER_DATA_ENTRY.send(s, Message.COMMAND_SERVER_DATA_ACTIVE_TIME.build(), DurationFormatter.getTimeFromTimestamp(servers.getLastActiveTime()));
         }
     }
 
     @CommandMethod("fc|floracore server <target> set autosync1 <value>")
     @CommandDescription("设置服务器Sync1的数据")
-    public void serverSet1(final @NonNull CommandSender sender, final @NonNull @Argument("target") String target, final @Argument("value") boolean value) {
+    public void serverSet1(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target, final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Servers servers = getStorageImplementation().selectServers(target);
         if (servers == null) {
@@ -110,7 +118,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("fc|floracore server <target> set autosync2 <value>")
     @CommandDescription("设置服务器Sync2的数据")
-    public void serverSet2(final @NonNull CommandSender sender, final @NonNull @Argument("target") String target, final @Argument("value") boolean value) {
+    public void serverSet2(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target, final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Servers servers = getStorageImplementation().selectServers(target);
         if (servers == null) {
@@ -121,6 +129,11 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             servers.setAutoSync2(value);
             System.out.println(true);
         }
+    }
+
+    @Suggestions("servers")
+    public List<String> getServers(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
+        return new ArrayList<>(Collections.singletonList(getPlugin().getServerName()));
     }
 
     @CommandMethod("fc|floracore data <target>")
