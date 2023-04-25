@@ -504,12 +504,12 @@ public interface Message {
             .key("floracore.command.misc.nick.book.finish-page.line.1").color(BLACK).build();
 
     Args2<String, String> COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_2 = (rank, name) -> {
-        Component r = formatColoredValue(rank);
+        Component r = formatColoredValue(rank + " " + name);
         return translatable()
-                // 你现在的昵称是{0} {1}
+                // 当你在游戏时,你的昵称将会变为{0}。你设置的昵称不会在大厅显示。
                 .key("floracore.command.misc.nick.book.finish-page.line.2").color(BLACK)
                 // {}
-                .args(r, text(name)).build();
+                .args(r).build();
     };
 
     Args0 COMMAND_MISC_NICK_ACTION_BAR = () -> translatable()

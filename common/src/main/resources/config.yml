@@ -113,14 +113,14 @@ commands:
       rank4: "floracore.command.nick.rank.rank4"
       rank5: "floracore.command.nick.rank.rank5"
     rank:
-      rank0: "DEFAULT"
+      rank0: "&7DEFAULT"
       rank1: "&aVIP"
       rank2: "&aVIP&6+"
       rank3: "&bMVP"
       rank4: "&bMVP&c+"
       rank5: "&6MVP&c++"
     rank-prefix:
-      rank0: ""
+      rank0: "&7"
       rank1: "&a[VIP]"
       rank2: "&a[VIP&6+&a]"
       rank3: "&b[MVP]"
