@@ -85,10 +85,12 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // init translation repo and update bundle files
         this.translationRepository = new TranslationRepository(this);
         this.translationRepository.scheduleRefresh();
+        this.translationRepository.scheduleRefreshRepeating();
 
         // init data names repo
         this.namesRepository = new NamesRepository(this);
         this.namesRepository.scheduleRefresh();
+        this.namesRepository.scheduleRefreshRepeating();
 
         // now the configuration is loaded, we can create a storage factory and load initial dependencies
         StorageFactory storageFactory = new StorageFactory(this);

@@ -28,6 +28,10 @@ public class NamesRepository {
         this.abstractHttpClient = new AbstractHttpClient(plugin.getHttpClient());
     }
 
+    public void scheduleRefreshRepeating() {
+        this.plugin.getBootstrap().getScheduler().asyncRepeating(this::scheduleRefresh, 6, TimeUnit.HOURS);
+    }
+
     /**
      * Schedules a refresh of the current translations if necessary.
      */
@@ -172,6 +176,7 @@ public class NamesRepository {
     public Path getNamesCSVFile() {
         return this.plugin.getDataManager().getDataDirectory().resolve("names.csv");
     }
+
 
     public static class NameProperty {
         private final String name;

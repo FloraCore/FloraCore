@@ -42,6 +42,10 @@ public class TranslationRepository {
         return getTranslationsMetadata().languages;
     }
 
+    public void scheduleRefreshRepeating() {
+        this.plugin.getBootstrap().getScheduler().asyncRepeating(this::scheduleRefresh, 1, TimeUnit.HOURS);
+    }
+
     /**
      * Schedules a refresh of the current translations if necessary.
      */
