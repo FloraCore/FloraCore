@@ -1,16 +1,18 @@
 package org.floracore.api.server;
 
 public enum ServerType {
-    NORMAL("normal", true),
-    LOBBY("lobby", false),
-    GAME("game", true),
-    UNKNOWN("unknown", false);
+    NORMAL("normal", false, true),
+    LOBBY("lobby", true, false),
+    GAME("game", false, true),
+    UNKNOWN("unknown", true, false);
     final String name;
-    final boolean autoSync;
+    final boolean autoSync1;
+    final boolean autoSync2;
 
-    ServerType(String name, boolean autoSync) {
+    ServerType(String name, boolean autoSync1, boolean autoSync2) {
         this.name = name;
-        this.autoSync = autoSync;
+        this.autoSync1 = autoSync1;
+        this.autoSync2 = autoSync2;
     }
 
     public static ServerType parse(String name, ServerType def) {
@@ -30,7 +32,11 @@ public enum ServerType {
         return name;
     }
 
-    public boolean isAutoSync() {
-        return autoSync;
+    public boolean isAutoSync1() {
+        return autoSync1;
+    }
+
+    public boolean isAutoSync2() {
+        return autoSync2;
     }
 }

@@ -552,6 +552,12 @@ public interface Message {
                 .args(r, text(name)).build();
     };
 
+    Args0 COMMAND_MISC_NICK_ACTION_BAR = () -> translatable()
+            // 当前已 {0}
+            .key("floracore.command.misc.nick.action-bar").color(WHITE)
+            // 匿名
+            .args(translatable("floracore.command.misc.nick.action-bar.nick").color(RED)).build();
+
     Args1<String> COMMAND_MISC_NICK_RANK_UNKNOWN = (rank) -> prefixed(translatable()
             // {0} {1} 不存在!
             .key("floracore.command.misc.nick.rank.unknown")
@@ -564,6 +570,11 @@ public interface Message {
             // {0}
             .args(translatable("floracore.command.misc.nick.book.rank-page.rank"), text(rank).color(DARK_RED).decoration(BOLD, true)).color(RED));
 
+    Args2<String, String> COMMAND_REALNAME_SUCCESS = (name, realName) -> prefixed(translatable()
+            // 玩家 {0} 的真实昵称为 {1}
+            .key("floracore.command.realname.success")
+            // {}
+            .args(text(name).color(GREEN), text(realName).color(GREEN)).color(AQUA));
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();

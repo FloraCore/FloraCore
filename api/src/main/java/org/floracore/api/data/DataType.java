@@ -3,6 +3,7 @@ package org.floracore.api.data;
 public enum DataType {
     AUTO_SYNC("auto-sync"),
     FUNCTION("function"),
+    STAGING_DATA("staging-data"),
     CUSTOM("custom");
     final String name;
 

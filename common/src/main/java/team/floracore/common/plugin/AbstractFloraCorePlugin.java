@@ -98,7 +98,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         Servers servers = storage.getImplementation().selectServers(getServerName());
         if (servers == null) {
             ServerType serverType = configuration.get(ConfigKeys.SERVER_TYPE);
-            servers = new Servers(this, storage.getImplementation(), -1, getServerName(), serverType, serverType.isAutoSync(), System.currentTimeMillis());
+            servers = new Servers(this, storage.getImplementation(), -1, getServerName(), serverType, serverType.isAutoSync1(), serverType.isAutoSync2(), System.currentTimeMillis());
             try {
                 servers.init();
             } catch (SQLException e) {

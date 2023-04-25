@@ -4,6 +4,7 @@ import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
 import org.bukkit.command.*;
 import org.checkerframework.checker.nullness.qual.*;
+import team.floracore.common.storage.implementation.*;
 
 import java.util.*;
 
@@ -19,4 +20,10 @@ public interface FloraCoreCommand {
 
     @Suggestions("commonDurations")
     @NonNull List<String> getCommonDurations(@NonNull CommandContext<CommandSender> sender, @NonNull String input);
+
+    boolean whetherServerEnableAutoSync1();
+
+    boolean whetherServerEnableAutoSync2();
+
+    StorageImplementation getStorageImplementation();
 }
