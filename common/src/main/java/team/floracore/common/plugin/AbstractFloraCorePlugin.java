@@ -3,6 +3,7 @@ package team.floracore.common.plugin;
 import com.comphenix.protocol.*;
 import net.kyori.adventure.platform.bukkit.*;
 import okhttp3.*;
+import org.bukkit.*;
 import org.floracore.api.server.*;
 import team.floracore.common.api.*;
 import team.floracore.common.command.*;
@@ -95,7 +96,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // initialise storage
         this.storage = storageFactory.getInstance();
-        getBootstrap().getScheduler().asyncRepeating(() -> {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getPlugin(), () -> {
             Servers servers = storage.getImplementation().selectServers(getServerName());
             if (servers == null) {
                 ServerType serverType = configuration.get(ConfigKeys.SERVER_TYPE);
@@ -108,7 +109,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
             } else {
                 servers.setLastActiveTime(System.currentTimeMillis());
             }
-        }, 10, TimeUnit.MINUTES);
+        }, 0, 20 * 60 * 10);
 
         getLogger().info("Loading framework...");
         protocolManager = ProtocolLibrary.getProtocolManager();
