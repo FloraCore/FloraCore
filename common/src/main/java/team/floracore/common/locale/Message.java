@@ -527,12 +527,12 @@ public interface Message {
             .args(text(from).color(GREEN), text(target).color(GREEN))
     );
 
-    Args0 COMMAND_ENDERCHEST_UNEDITABLE_TO = () -> prefixed(translatable()
-            .key("floracore.command.enderchest.uneditable.to").color(YELLOW)
+    Args0 COMMAND_ENDERCHEST_READONLY_TO = () -> prefixed(translatable()
+            .key("floracore.command.enderchest.readonly.to").color(YELLOW)
     );
 
-    Args0 COMMAND_ENDERCHEST_UNEDITABLE_FROM = () -> prefixed(translatable()
-            .key("floracore.command.enderchest.uneditable.from").color(RED)
+    Args0 COMMAND_ENDERCHEST_READONLY_FROM = () -> prefixed(translatable()
+            .key("floracore.command.enderchest.readonly.from").color(RED)
     );
 
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
