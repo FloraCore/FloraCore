@@ -53,7 +53,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
             }
             switch (gameMode) {
                 case SURVIVAL:
-                    if (setGameModeIfPermissionOrSenMessage(sender, GameMode.SURVIVAL, t, "floracore.command.gamemode.survival")) {
+                    if (setGameModeIfPermissionOrSendMessage(sender, GameMode.SURVIVAL, t, "floracore.command.gamemode.survival")) {
                         Message.COMMAND_GAMEMODE.send(sender, Message.COMMAND_MISC_GAMEMODE_SURVIVAL.build(), t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) { // 若非静音模式，则发送消息
@@ -63,7 +63,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
                     }
                     break;
                 case CREATIVE:
-                    if (setGameModeIfPermissionOrSenMessage(sender, GameMode.CREATIVE, t, "floracore.command.gamemode.creative")) {
+                    if (setGameModeIfPermissionOrSendMessage(sender, GameMode.CREATIVE, t, "floracore.command.gamemode.creative")) {
                         Message.COMMAND_GAMEMODE.send(sender, Message.COMMAND_MISC_GAMEMODE_CREATIVE.build(), t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) {
@@ -73,7 +73,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
                     }
                     break;
                 case ADVENTURE:
-                    if (setGameModeIfPermissionOrSenMessage(sender, GameMode.ADVENTURE, t, "floracore.command.gamemode.adventure")) {
+                    if (setGameModeIfPermissionOrSendMessage(sender, GameMode.ADVENTURE, t, "floracore.command.gamemode.adventure")) {
                         Message.COMMAND_GAMEMODE.send(sender, Message.COMMAND_MISC_GAMEMODE_ADVENTURE.build(), t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) {
@@ -83,7 +83,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
                     }
                     break;
                 case SPECTATOR:
-                    if (setGameModeIfPermissionOrSenMessage(sender, GameMode.SPECTATOR, t, "floracore.command.gamemode.spectator")) {
+                    if (setGameModeIfPermissionOrSendMessage(sender, GameMode.SPECTATOR, t, "floracore.command.gamemode.spectator")) {
                         Message.COMMAND_GAMEMODE.send(sender, Message.COMMAND_MISC_GAMEMODE_SPECTATOR.build(), t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) {
@@ -107,7 +107,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
      * @param permission      权限节点
      * @return 是否拥有权限并成功设置
      */
-    private boolean setGameModeIfPermissionOrSenMessage(@NotNull Sender messageReceiver, @NotNull GameMode gameMode, @NotNull Player target, @NotNull String permission) {
+    private boolean setGameModeIfPermissionOrSendMessage(@NotNull Sender messageReceiver, @NotNull GameMode gameMode, @NotNull Player target, @NotNull String permission) {
         if (messageReceiver.hasPermission(permission)) {
             target.setGameMode(gameMode);
             return true;
