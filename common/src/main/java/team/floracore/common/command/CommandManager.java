@@ -110,9 +110,9 @@ public class CommandManager {
         this.annotationParser.parse(new AirCommand(plugin));
         this.annotationParser.parse(new FlyCommand(plugin));
         this.annotationParser.parse(new GameModeCommand(plugin));
-        this.annotationParser.parse(new InvSeeCommand(plugin));
-        this.annotationParser.parse(new HatCommand(plugin));
         this.annotationParser.parse(new GiveCommand(plugin));
+        this.annotationParser.parse(new HatCommand(plugin));
+        this.annotationParser.parse(new InvSeeCommand(plugin));
         this.annotationParser.parse(new NickCommand(plugin));
         this.annotationParser.parse(new RealNameCommand(plugin));
         this.annotationParser.parse(new SpeedCommand(plugin));
