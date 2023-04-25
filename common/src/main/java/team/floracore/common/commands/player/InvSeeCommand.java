@@ -14,7 +14,7 @@ public class InvSeeCommand extends AbstractFloraCoreCommand {
         super(plugin);
     }
 
-    @CommandMethod("invsee <target>")
+    @CommandMethod("invsee|inv <target>")
     @CommandDescription("打开指定玩家的物品栏")
     public void invsee(final @NotNull Player s, final @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
