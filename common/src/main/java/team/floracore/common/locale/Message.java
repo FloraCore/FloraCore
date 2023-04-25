@@ -501,6 +501,28 @@ public interface Message {
 
     Args0 COMMAND_ENDERCHEST_READONLY_FROM = () -> prefixed(translatable().key("floracore.command.enderchest.readonly.from").color(RED));
 
+    Args1<Integer> COMMAND_FOOD_GET_SELF_NUTRITION = value -> prefixed(translatable().key("floracore.command.food.get.self.nutrition").color(AQUA).args(text(value)).color(GREEN));
+
+    Args1<Float> COMMAND_FOOD_GET_SELF_SATURATION = value -> prefixed(translatable().key("floracore.command.food.get.self.saturation").color(AQUA).args(text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_FOOD_GET_OTHER_NUTRITION = (target, value) -> prefixed(translatable().key("floracore.command.food.get.other.nutrition").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Float> COMMAND_FOOD_GET_OTHER_SATURATION = (target, value) -> prefixed(translatable().key("floracore.command.food.get.other.saturation").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args1<Integer> COMMAND_FOOD_SET_SELF_NUTRITION = value -> prefixed(translatable().key("floracore.command.food.set.self.nutrition").color(AQUA).args(text(value)).color(GREEN));
+
+    Args1<Float> COMMAND_FOOD_SET_SELF_SATURATION = value -> prefixed(translatable().key("floracore.command.food.set.self.saturation").color(AQUA).args(text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_FOOD_SET_OTHER_NUTRITION = (target, value) -> prefixed(translatable().key("floracore.command.food.set.other.nutrition").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Float> COMMAND_FOOD_SET_OTHER_SATURATION = (target, value) -> prefixed(translatable().key("floracore.command.food.set.other.saturation").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_FOOD_SET_FROM_NUTRITION = (from, value) -> prefixed(translatable().key("floracore.command.food.set.from.nutrition").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Float> COMMAND_FOOD_SET_FROM_SATURATION = (from, value) -> prefixed(translatable().key("floracore.command.food.set.from.saturation").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
+
+    Args0 COMMAND_FOOD_SET_INVALIDVALUE = () -> prefixed(translatable().key("floracore.command.food.set.invalidvalue").color(RED));
+
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
             // 现在,请选择你要使用的{0}!
             .key("floracore.command.misc.nick.book.name-page.line.1")

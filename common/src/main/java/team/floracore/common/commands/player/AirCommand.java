@@ -57,6 +57,7 @@ public class AirCommand extends AbstractFloraCoreCommand {
             if (SenderUtil.sendIfNoPermission(sender, "floracore.command.air.set.max.other")) { // 发送者没有特定权限
                 return;
             }
+            target.setMaximumAir(value);
             Message.COMMAND_AIR_SET_OTHER_MAX.send(sender, target.getName(), value); // 告知设置成功
             if (silent == null || !silent) { // 非静音模式
                 Message.COMMAND_AIR_SET_FROM_MAX.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
@@ -76,12 +77,13 @@ public class AirCommand extends AbstractFloraCoreCommand {
                 return;
             }
             Player player = (Player) s;
-            player.setRemainingAir(value); // 设置最大氧气
+            player.setRemainingAir(value); // 设置剩余氧气
             Message.COMMAND_AIR_SET_SELF_REMAINING.send(sender, value); // 告知设置成功
         } else { // 指定了目标玩家
             if (SenderUtil.sendIfNoPermission(sender, "floracore.command.air.set.remaining.other")) { // 发送者没有特定权限
                 return;
             }
+            target.setRemainingAir(value);
             Message.COMMAND_AIR_SET_OTHER_REMAINING.send(sender, target.getName(), value); // 告知设置成功
             if (silent == null || !silent) { // 非静音模式
                 Message.COMMAND_AIR_SET_FROM_REMAINING.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
