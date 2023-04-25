@@ -10,6 +10,7 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
+import org.bukkit.inventory.*;
 import org.floracore.api.data.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
@@ -20,6 +21,7 @@ import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.craftbukkit.*;
 import team.floracore.common.util.craftbukkit.signgui.*;
 
 import java.lang.reflect.*;
@@ -267,6 +269,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             if (whetherServerEnableAutoSync2()) {
                 getAsyncExecutor().execute(() -> {
                     try {
+                        System.out.println("set skin");
                         skinsRestorerAPI.setSkinData("custom", skinsRestorerAPI.createPlatformProperty("textures", selectedSkin.getValue(), selectedSkin.getSignature()), 0);
                         skinsRestorerAPI.setSkin(p.getName(), selectedSkin.getName());
                         skinsRestorerAPI.applySkin(new PlayerWrapper(p));
@@ -286,7 +289,6 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     /**
      * 修改玩家的名字
      */
-
     public void changePlayer(Player p, String name) {
         String on = p.getName();
         Object NMSPlayer = invokeMethod(getHandle, p);
@@ -312,6 +314,27 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         setFieldValue(getField(getNMSClass("PlayerList"), "playersByName"), pl, players);
         pack = newInstance(getConstructor(getNMSClass("PacketPlayOutPlayerInfo"), action, ps.getClass()), Enum.valueOf((Class) action, "ADD_PLAYER"), ps);
         sendPacketToAllPlayers(pack);
+        invokeMethod(getMethod(NMSPlayer.getClass(), "updateAbilities"), NMSPlayer);
+        Location l = p.getLocation();
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutPosition"), double.class, double.class, double.class, float.class, float.class, Set.class), l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch(), new HashSet<Enum<?>>());
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 == p || p2.equals(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutHeldItemSlot"), int.class), p.getInventory().getHeldItemSlot());
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 == p || p2.equals(p));
+        invokeMethod(getMethod(p.getClass(), "updateScaledHealth"), p);
+        invokeMethod(getMethod(p.getClass(), "updateInventory"), p);
+        invokeMethod(getMethod(NMSPlayer.getClass(), "triggerHealthUpdate"), NMSPlayer);
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityEquipment"), int.class, int.class, getNMSClass("ItemStack")), p.getEntityId(), 0, invokeMethod(getMethod(getCraftBukkitClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class), null, Inventories.getItemInMainHand(p)));
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityEquipment"), int.class, int.class, getNMSClass("ItemStack")), p.getEntityId(), 4, invokeMethod(getMethod(getCraftBukkitClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class), null, p.getInventory().getHelmet()));
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityEquipment"), int.class, int.class, getNMSClass("ItemStack")), p.getEntityId(), 3, invokeMethod(getMethod(getCraftBukkitClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class), null, p.getInventory().getChestplate()));
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityEquipment"), int.class, int.class, getNMSClass("ItemStack")), p.getEntityId(), 2, invokeMethod(getMethod(getCraftBukkitClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class), null, p.getInventory().getLeggings()));
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityEquipment"), int.class, int.class, getNMSClass("ItemStack")), p.getEntityId(), 1, invokeMethod(getMethod(getCraftBukkitClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class), null, p.getInventory().getBoots()));
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+        pack = newInstance(getConstructor(getNMSClass("PacketPlayOutNamedEntitySpawn"), getNMSClass("EntityHuman")), NMSPlayer);
+        sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
     }
 
     private Book getStartPage() {
