@@ -19,7 +19,10 @@ public class AirCommand extends AbstractFloraCoreCommand {
     @CommandMethod("air get [target]")
     @CommandPermission("floracore.command.air.get")
     @CommandDescription("获取一名玩家的氧气值（单位：ticks）")
-    public void get(@NotNull CommandSender s, @Nullable @Argument("target") Player target) {
+    public void get(
+            @NotNull CommandSender s,
+            @Nullable @Argument("target") Player target
+    ) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         if (target == null) { // 目标为空，则目标为自己
             // 目标为自己时，发送者必须是玩家
@@ -42,7 +45,12 @@ public class AirCommand extends AbstractFloraCoreCommand {
     @CommandMethod("air setmax <value> [target]")
     @CommandPermission("floracore.command.air.set.max")
     @CommandDescription("设置一名玩家的最大氧气值（单位：ticks）")
-    public void setMax(@NotNull CommandSender s, @Argument("value") int value, @Nullable @Argument("target") Player target, @Nullable @Flag("silent") Boolean silent) {
+    public void setMax(
+            @NotNull CommandSender s,
+            @Argument("value") int value,
+            @Nullable @Argument("target") Player target,
+            @Nullable @Flag("silent") Boolean silent
+    ) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         if (target == null) { // 目标为空，则目标为自己
             // 目标为自己时，发送者必须是玩家
@@ -68,7 +76,12 @@ public class AirCommand extends AbstractFloraCoreCommand {
     @CommandMethod("air setremaining <value> [target]")
     @CommandPermission("floracore.command.air.set.remaining")
     @CommandDescription("设置一名玩家的剩余氧气值（单位：ticks）")
-    public void setRemaining(@NotNull CommandSender s, @Argument("value") int value, @Nullable @Argument("target") Player target, @Nullable @Flag("silent") Boolean silent) {
+    public void setRemaining(
+            @NotNull CommandSender s,
+            @Argument("value") int value,
+            @Nullable @Argument("target") Player target,
+            @Nullable @Flag("silent") Boolean silent
+    ) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         if (target == null) { // 目标为空，则目标为自己
             // 目标为自己时，发送者必须是玩家

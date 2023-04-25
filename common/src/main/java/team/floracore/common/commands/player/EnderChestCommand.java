@@ -32,11 +32,12 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
 
     @CommandMethod("ender|enderchest [target] [for]")
     @CommandDescription("为某人或自己打开某人或自己的末影箱")
-    public void enderChest(@NotNull CommandSender s,
-                           @Nullable @Argument(value = "target", description = "末影箱主人，默认自己") Player target,
-                           @Nullable @Argument(value = "for", description = "打开目标，默认自己") Player for_,
-                           @Nullable @Flag(value = "readonly", description = "本次是否为只读模式，即使拥有权限") Boolean readonly,
-                           @Nullable @Flag(value = "silent", description = "静音模式，不通知打开目标") Boolean silent
+    public void enderChest(
+            @NotNull CommandSender s,
+            @Nullable @Argument(value = "target", description = "末影箱主人，默认自己") Player target,
+            @Nullable @Argument(value = "for", description = "打开目标，默认自己") Player for_,
+            @Nullable @Flag(value = "readonly", description = "本次是否为只读模式，即使拥有权限") Boolean readonly,
+            @Nullable @Flag(value = "silent", description = "静音模式，不通知打开目标") Boolean silent
     ) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         // 先排除一些错误问题
