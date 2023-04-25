@@ -107,6 +107,7 @@ public class CommandManager {
         this.annotationParser.parse(new FloraCoreCommand(plugin));
 
         // player
+        this.annotationParser.parse(new AirCommand(plugin));
         this.annotationParser.parse(new FlyCommand(plugin));
         this.annotationParser.parse(new GameModeCommand(plugin));
         this.annotationParser.parse(new InvSeeCommand(plugin));
