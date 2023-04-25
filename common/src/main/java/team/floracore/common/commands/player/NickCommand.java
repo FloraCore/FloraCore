@@ -224,21 +224,24 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         if (whetherServerEnableAutoSync2()) {
             // 修改玩家信息
             changePlayer(p, name);
+        }
+        // 设置皮肤
+        NamesRepository.NameProperty selectedSkin;
+        if (changeSkin) {
+            if (skin.equalsIgnoreCase("steve-alex")) {
+                Random random = new Random();
+                // 生成 0 或 1 的随机数
+                int randomNum = random.nextInt(2);
+                // 如果随机数为 0，选择 Steve 皮肤属性，否则选择 Alex 皮肤属性
+                selectedSkin = (randomNum == 0) ? getPlugin().getNamesRepository().getSteveProperty() : getPlugin().getNamesRepository().getAlexProperty();
+            } else {
+                selectedSkin = getPlugin().getNamesRepository().getRandomNameProperty();
+                Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
+                    getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.skin", selectedSkin.getName(), 0);
+                });
+            }
             // 设置皮肤
-            NamesRepository.NameProperty selectedSkin;
-            if (changeSkin) {
-                if (skin.equalsIgnoreCase("steve-alex")) {
-                    Random random = new Random();
-                    // 生成 0 或 1 的随机数
-                    int randomNum = random.nextInt(2);
-                    // 如果随机数为 0，选择 Steve 皮肤属性，否则选择 Alex 皮肤属性
-                    selectedSkin = (randomNum == 0) ? getPlugin().getNamesRepository().getSteveProperty() : getPlugin().getNamesRepository().getAlexProperty();
-                } else {
-                    selectedSkin = getPlugin().getNamesRepository().getRandomNameProperty();
-                    Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
-                        getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.skin", selectedSkin.getName(), 0);
-                    });
-                }
+            if (whetherServerEnableAutoSync2()) {
                 Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
                     try {
                         skinsRestorerAPI.setSkinData("custom", skinsRestorerAPI.createPlatformProperty("textures", selectedSkin.getValue(), selectedSkin.getSignature()), 0);
@@ -248,8 +251,6 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                     }
                 });
             }
-        } else {
-            nickedPlayers.add(uuid);
         }
         // 设置数据库Nick状态
         Bukkit.getScheduler().runTaskAsynchronously(getPlugin().getBootstrap().getPlugin(), () -> {
