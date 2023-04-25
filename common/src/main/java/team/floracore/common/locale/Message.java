@@ -507,6 +507,34 @@ public interface Message {
             .key("floracore.command.air.set.from.remaining").color(AQUA)
             .args(text(from).color(GREEN), text(value)).color(GREEN));
 
+    Args0 COMMAND_ENDERCHEST_NOTPLAYER = () -> prefixed(translatable()
+            .key("floracore.command.enderchest.notplayer").color(RED));
+
+    Args0 COMMAND_ENDERCHEST_OPEN_SELF = () -> prefixed(translatable()
+            .key("floracore.command.enderchest.open.self").color(AQUA));
+
+    Args1<String> COMMAND_ENDERCHEST_OPEN_OTHER = target -> prefixed(translatable()
+            .key("floracore.command.enderchest.open.other").color(AQUA)
+            .args(text(target).color(GREEN)));
+
+    Args2<String, String> COMMAND_ENDERCHEST_OPEN_FOR = (target, for_) -> prefixed(translatable()
+            .key("floracore.command.enderchest.open.for").color(AQUA)
+            .args(text(target).color(GREEN), text(for_).color(GREEN))
+    );
+
+    Args2<String, String> COMMAND_ENDERCHEST_OPEN_FROM = (from, target) -> prefixed(translatable()
+            .key("floracore.command.enderchest.open.from").color(AQUA)
+            .args(text(from).color(GREEN), text(target).color(GREEN))
+    );
+
+    Args0 COMMAND_ENDERCHEST_UNEDITABLE_TO = () -> prefixed(translatable()
+            .key("floracore.command.enderchest.uneditable.to").color(YELLOW)
+    );
+
+    Args0 COMMAND_ENDERCHEST_UNEDITABLE_FROM = () -> prefixed(translatable()
+            .key("floracore.command.enderchest.uneditable.from").color(RED)
+    );
+
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
             // 现在,请选择你要使用的{0}!
             .key("floracore.command.misc.nick.book.name-page.line.1")

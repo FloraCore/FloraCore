@@ -108,6 +108,7 @@ public class CommandManager {
 
         // player
         this.annotationParser.parse(new AirCommand(plugin));
+        this.annotationParser.parse(new EnderChestCommand(plugin));
         this.annotationParser.parse(new FlyCommand(plugin));
         this.annotationParser.parse(new GameModeCommand(plugin));
         this.annotationParser.parse(new GiveCommand(plugin));
