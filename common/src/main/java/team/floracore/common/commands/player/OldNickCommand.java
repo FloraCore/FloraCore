@@ -32,11 +32,12 @@ import static net.kyori.adventure.text.Component.*;
 import static team.floracore.common.util.ReflectionWrapper.*;
 
 @CommandPermission("floracore.command.nick")
-public class NickCommand extends AbstractFloraCoreCommand implements Listener {
+@Deprecated
+public class OldNickCommand extends AbstractFloraCoreCommand implements Listener {
     private final SkinsRestorerAPI skinsRestorerAPI;
     private final Set<UUID> nickedPlayers = new HashSet<>();
 
-    public NickCommand(FloraCorePlugin plugin) {
+    public OldNickCommand(FloraCorePlugin plugin) {
         super(plugin);
         skinsRestorerAPI = SkinsRestorerAPI.getApi();
         plugin.getListenerManager().registerListener(this);
