@@ -31,6 +31,7 @@ FC的框架是基于[LuckPerms](https://luckperms.net/)(下称LP)
 # 开发
 
 - [JavaDoc](https://floracore.github.io/index.html)
+- [项目逻辑图](./FloraCore.png)
 
 # Visitors
 
