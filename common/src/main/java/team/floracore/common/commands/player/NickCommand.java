@@ -32,12 +32,11 @@ import static net.kyori.adventure.text.Component.*;
 import static team.floracore.common.util.ReflectionWrapper.*;
 
 @CommandPermission("floracore.command.nick")
-@Deprecated
-public class OldNickCommand extends AbstractFloraCoreCommand implements Listener {
+public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     private final SkinsRestorerAPI skinsRestorerAPI;
     private final Set<UUID> nickedPlayers = new HashSet<>();
 
-    public OldNickCommand(FloraCorePlugin plugin) {
+    public NickCommand(FloraCorePlugin plugin) {
         super(plugin);
         skinsRestorerAPI = SkinsRestorerAPI.getApi();
         plugin.getListenerManager().registerListener(this);
@@ -73,7 +72,7 @@ public class OldNickCommand extends AbstractFloraCoreCommand implements Listener
             return;
         }
         Audience target = getPlugin().getBukkitAudiences().player(p);
-        performNick(p, "rank0", "random", name);
+        performNick(p, "rank0", "random", name, true);
         target.openBook(getFinishPage("rank0", name));
     }
 
@@ -157,7 +156,7 @@ public class OldNickCommand extends AbstractFloraCoreCommand implements Listener
                         } else if (name.equalsIgnoreCase("random") && !custom) {
                             nickname = getPlugin().getNamesRepository().getRandomNameProperty().getName();
                         }
-                        performNick(p, rank, skin, nickname);
+                        performNick(p, rank, skin, nickname, true);
                         target.openBook(getFinishPage(ranks_prefix.get(rank), nickname));
                     }
                     break;
@@ -168,7 +167,7 @@ public class OldNickCommand extends AbstractFloraCoreCommand implements Listener
                             if (nickname == null) {
                                 Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
                             } else {
-                                performNick(p, rank, skin, nickname);
+                                performNick(p, rank, skin, nickname, true);
                                 target.openBook(getFinishPage(ranks_prefix.get(rank), nickname));
                             }
                         } else {
@@ -188,7 +187,7 @@ public class OldNickCommand extends AbstractFloraCoreCommand implements Listener
                         String i = event.getLines().get(0);
                         int nameLengthMin = Math.min(3, 16), nameLengthMax = Math.max(16, 1);
                         if (!(i.isEmpty()) && (i.length() <= nameLengthMax) && (i.length() >= nameLengthMin)) {
-                            performNick(p, rank, skin, i);
+                            performNick(p, rank, skin, i, true);
                             target.openBook(getFinishPage(ranks_prefix.get(rank), i));
                         }
                     }, Arrays.asList(line1, line2, line3, line4), uuid, getPlugin().getBootstrap().getPlugin());
@@ -205,20 +204,7 @@ public class OldNickCommand extends AbstractFloraCoreCommand implements Listener
         UUID uuid = p.getUniqueId();
         Data statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         // 获取是否已经Nick
-        if (whetherServerEnableAutoSync2()) {
-            if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
-                Players ps = getStorageImplementation().selectPlayers(uuid);
-                // 重置玩家信息
-                changePlayer(p, ps.getName());
-                // 设置皮肤
-                getAsyncExecutor().execute(() -> {
-                    Data skinData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
-                    if (skinData != null) {
-                        skinsRestorerAPI.removeSkin(p.getName());
-                    }
-                });
-            }
-        } else {
+        if (!whetherServerEnableAutoSync2()) {
             nickedPlayers.remove(uuid);
         }
         // 清除数据库Nick状态
@@ -233,14 +219,13 @@ public class OldNickCommand extends AbstractFloraCoreCommand implements Listener
         });
     }
 
-    private void performNick(Player p, String rank, String skin, String name) {
+    private void performNick(Player p, String rank, String skin, String name, boolean typeNick) {
         UUID uuid = p.getUniqueId();
         // 获取是否已经Nick
         Data statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
             performUnNick(p);
         }
-        boolean changeSkin = !skin.equalsIgnoreCase("normal");
         if (whetherServerEnableAutoSync2()) {
             // 修改玩家信息
             changePlayer(p, name);
@@ -248,33 +233,48 @@ public class OldNickCommand extends AbstractFloraCoreCommand implements Listener
             nickedPlayers.add(uuid);
         }
         // 设置皮肤
-        NamesRepository.NameProperty selectedSkin;
-        if (changeSkin) {
-            if (skin.equalsIgnoreCase("steve-alex")) {
+        String skinName;
+        if (typeNick) {
+            if (skin.equalsIgnoreCase("normal")) {
+                skinName = uuid.toString();
+            } else if (skin.equalsIgnoreCase("steve-alex")) {
                 Random random = new Random();
-                // 生成 0 或 1 的随机数
                 int randomNum = random.nextInt(2);
-                // 如果随机数为 0，选择 Steve 皮肤属性，否则选择 Alex 皮肤属性
-                selectedSkin = (randomNum == 0) ? getPlugin().getNamesRepository().getSteveProperty() : getPlugin().getNamesRepository().getAlexProperty();
-                getAsyncExecutor().execute(() -> {
-                    getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.skin", randomNum == 0 ? "Steve" : "Alex", 0);
-                });
+                skinName = randomNum == 0 ? "Steve" : "Alex";
             } else {
-                selectedSkin = getPlugin().getNamesRepository().getRandomNameProperty();
-                getAsyncExecutor().execute(() -> {
-                    getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.skin", selectedSkin.getName(), 0);
-                });
+                skinName = getPlugin().getNamesRepository().getRandomNameProperty().getName();
             }
-            // 设置皮肤
-            if (whetherServerEnableAutoSync2()) {
-                getAsyncExecutor().execute(() -> {
-                    IProperty iProperty = skinsRestorerAPI.createPlatformProperty(selectedSkin.getName(), selectedSkin.getValue(), selectedSkin.getSignature());
-                    skinsRestorerAPI.applySkin(new PlayerWrapper(p), iProperty);
-                });
+        } else {
+            skinName = skin;
+        }
+        if (whetherServerEnableAutoSync2()) {
+            try {
+                // 判断是否为Normal，如果为Normal则不进行操作
+                UUID i = UUID.fromString(skinName);
+            } catch (IllegalArgumentException exception) {
+                NamesRepository.NameProperty selectedSkin;
+                // 不是Normal
+                // 判断是不是Steve/Alex
+                if (skinName.equalsIgnoreCase("Steve")) {
+                    selectedSkin = getPlugin().getNamesRepository().getSteveProperty();
+                } else if (skinName.equalsIgnoreCase("Alex")) {
+                    selectedSkin = getPlugin().getNamesRepository().getAlexProperty();
+                } else {
+                    selectedSkin = getPlugin().getNamesRepository().getNameProperty(skinName);
+                }
+                if (selectedSkin != null) {
+                    // 设置玩家皮肤
+                    getAsyncExecutor().execute(() -> {
+                        IProperty iProperty = skinsRestorerAPI.createPlatformProperty(selectedSkin.getName(), selectedSkin.getValue(), selectedSkin.getSignature());
+                        skinsRestorerAPI.applySkin(new PlayerWrapper(p), iProperty);
+                        System.out.println("1");
+                    });
+                }
             }
         }
         // 设置数据库Nick状态
         getAsyncExecutor().execute(() -> {
+            getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.skin", skinName, 0);
             getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.name", name, 0);
             getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.rank", rank, 0);
             getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.status", String.valueOf(true), 0);
@@ -469,7 +469,7 @@ public class OldNickCommand extends AbstractFloraCoreCommand implements Listener
                             if (ranks.containsKey(rank)) {
                                 String permission = ranks_permission.get(rank);
                                 if (p.hasPermission(permission)) {
-                                    performNick(p, rank, skin, name);
+                                    performNick(p, rank, skin, name, false);
                                 } else {
                                     performUnNick(p);
                                 }

@@ -115,7 +115,7 @@ public class CommandManager {
         this.annotationParser.parse(new GiveCommand(plugin));
         this.annotationParser.parse(new HatCommand(plugin));
         this.annotationParser.parse(new InvSeeCommand(plugin));
-        this.annotationParser.parse(new OldNickCommand(plugin));
+        this.annotationParser.parse(new NickCommand(plugin));
         this.annotationParser.parse(new RealNameCommand(plugin));
         this.annotationParser.parse(new SpeedCommand(plugin));
         this.annotationParser.parse(new TopCommand(plugin));

@@ -1,15 +1,14 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import team.floracore.common.command.AbstractFloraCoreCommand;
-import team.floracore.common.locale.Message;
-import team.floracore.common.plugin.FloraCorePlugin;
-import team.floracore.common.sender.Sender;
-import team.floracore.common.util.SenderUtil;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.jetbrains.annotations.*;
+import team.floracore.common.command.*;
+import team.floracore.common.locale.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
+import team.floracore.common.util.*;
 
 @CommandDescription("设置玩家的饥饿度")
 public class FoodCommand extends AbstractFloraCoreCommand {
@@ -20,10 +19,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
     @CommandMethod("food get [target]")
     @CommandPermission("floracore.command.food.get")
     @CommandDescription("获取一名玩家的饥饿值")
-    public void get(
-            @NotNull CommandSender s,
-            @Nullable @Argument("target") Player target
-    ) {
+    public void get(@NotNull CommandSender s, @Nullable @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         if (target == null) { // 目标为空，则目标为自己
             // 目标为自己时，发送者必须是玩家
@@ -46,12 +42,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
     @CommandMethod("food setnutrition <value> [target]")
     @CommandPermission("floracore.command.food.set.nutrition")
     @CommandDescription("设置一名玩家的饥饿值")
-    public void setNutrition(
-            @NotNull CommandSender s,
-            @Argument("value") int value,
-            @Nullable @Argument("target") Player target,
-            @Nullable @Flag("silent") Boolean silent
-    ) {
+    public void setNutrition(@NotNull CommandSender s, @Argument("value") int value, @Nullable @Argument("target") Player target, @Nullable @Flag("silent") Boolean silent) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         if (value < 0 || value > 20) {
             Message.COMMAND_FOOD_SET_INVALIDVALUE.send(sender);
@@ -81,12 +72,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
     @CommandMethod("food setsaturation <value> [target]")
     @CommandPermission("floracore.command.food.set.saturation")
     @CommandDescription("设置一名玩家的饱和度")
-    public void setSaturation(
-            @NotNull CommandSender s,
-            @Argument("value") float value,
-            @Nullable @Argument("target") Player target,
-            @Nullable @Flag("silent") Boolean silent
-    ) {
+    public void setSaturation(@NotNull CommandSender s, @Argument("value") float value, @Nullable @Argument("target") Player target, @Nullable @Flag("silent") Boolean silent) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         if (value < 0.0F || value > 20.0F) {
             Message.COMMAND_FOOD_SET_INVALIDVALUE.send(sender);
