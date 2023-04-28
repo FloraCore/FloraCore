@@ -531,6 +531,8 @@ public interface Message {
 
     Args1<String> COMMAND_FEED_OTHER = target -> prefixed(translatable().key("floracore.command.feed.other").color(AQUA).args(text(target)));
 
+    Args1<String> COMMAND_FEED_FROM = from -> prefixed(translatable().key("floracore.command.feed.from").color(AQUA).args(text(from)));
+
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
             // 现在,请选择你要使用的{0}!
             .key("floracore.command.misc.nick.book.name-page.line.1")

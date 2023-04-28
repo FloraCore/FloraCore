@@ -1,12 +1,10 @@
 package team.floracore.common.commands.player;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.*;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import team.floracore.common.command.AbstractFloraCoreCommand;
 import team.floracore.common.locale.Message;
 import team.floracore.common.plugin.FloraCorePlugin;
@@ -30,10 +28,14 @@ public class FeedCommand extends AbstractFloraCoreCommand {
     @CommandPermission("floracore.command.feed.other")
     public void other(
             @NotNull CommandSender s,
-            @NotNull @Argument("target") Player target
+            @NotNull @Argument("target") Player target,
+            @Nullable @Flag("silent") Boolean silent
     ) {
         feed(target);
         Message.COMMAND_FEED_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName());
+        if (silent == null || !silent) {
+            Message.COMMAND_FEED_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName());
+        }
     }
 
     private void feed(@NotNull Player player) {
