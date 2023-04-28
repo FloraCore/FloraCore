@@ -16,7 +16,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
         super(plugin);
     }
 
-    @CommandMethod("food get [target]")
+    @CommandMethod("food|hunger get [target]")
     @CommandPermission("floracore.command.food.get")
     @CommandDescription("获取一名玩家的饥饿值")
     public void get(@NotNull CommandSender s, @Nullable @Argument("target") Player target) {
@@ -39,7 +39,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
         }
     }
 
-    @CommandMethod("food setnutrition <value> [target]")
+    @CommandMethod("food|hunger setnutrition <value> [target]")
     @CommandPermission("floracore.command.food.set.nutrition")
     @CommandDescription("设置一名玩家的饥饿值")
     public void setNutrition(@NotNull CommandSender s, @Argument("value") int value, @Nullable @Argument("target") Player target, @Nullable @Flag("silent") Boolean silent) {
@@ -69,7 +69,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
         }
     }
 
-    @CommandMethod("food setsaturation <value> [target]")
+    @CommandMethod("food|hunger setsaturation <value> [target]")
     @CommandPermission("floracore.command.food.set.saturation")
     @CommandDescription("设置一名玩家的饱和度")
     public void setSaturation(@NotNull CommandSender s, @Argument("value") float value, @Nullable @Argument("target") Player target, @Nullable @Flag("silent") Boolean silent) {
