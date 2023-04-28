@@ -545,6 +545,16 @@ public interface Message {
 
     Args2<String, Integer> COMMAND_FIRETICK_FROM = (from, time) -> prefixed(translatable().key("floracore.command.firetick.from").color(AQUA).args(text(from).color(GREEN), text(time).color(GREEN)));
 
+    Args1<Integer> COMMAND_OPLIST_HEADER = count -> prefixed(translatable().key("floracore.command.oplist.header").color(AQUA).args(text(count).color(GREEN)));
+
+    Args0 COMMAND_OPLIST_HEADER_NONE = () -> prefixed(translatable().key("floracore.command.oplist.header.none").color(AQUA));
+
+    Args3<String, UUID, Boolean> COMMAND_OPLIST_ENTRY = (name, uuid, online) -> prefixed(translatable().key("floracore.command.oplist.entry").color(AQUA).args(
+            text(name).color(GREEN),
+            text(uuid.toString()).color(GREEN),
+            translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline").color(online ? GREEN : RED)
+    ));
+
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
             // 现在,请选择你要使用的{0}!
             .key("floracore.command.misc.nick.book.name-page.line.1")
