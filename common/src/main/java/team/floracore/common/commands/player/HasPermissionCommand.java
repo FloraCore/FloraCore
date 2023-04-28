@@ -1,16 +1,13 @@
 package team.floracore.common.commands.player;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import team.floracore.common.command.AbstractFloraCoreCommand;
-import team.floracore.common.locale.Message;
-import team.floracore.common.plugin.FloraCorePlugin;
-import team.floracore.common.sender.Sender;
+import cloud.commandframework.annotations.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.jetbrains.annotations.*;
+import team.floracore.common.command.*;
+import team.floracore.common.locale.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
 
 @CommandDescription("检查玩家是否拥有目标权限")
 @CommandPermission("floracore.command.haspermission")
