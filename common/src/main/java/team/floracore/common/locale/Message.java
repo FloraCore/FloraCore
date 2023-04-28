@@ -555,6 +555,26 @@ public interface Message {
             translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline").color(online ? GREEN : RED)
     ));
 
+    Args1<Integer> COMMAND_PING_SELF = ping -> prefixed(translatable().key("floracore.command.ping.self").color(AQUA).args(text(ping)
+            .color(
+                    ping > 250 ? DARK_RED :
+                            ping > 200 ? RED :
+                                    ping > 150 ? GOLD :
+                                            ping > 100 ? YELLOW :
+                                                    ping > 50 ? GREEN :
+                                                            ping > 0 ? DARK_GREEN : WHITE
+            )));
+
+    Args2<String, Integer> COMMAND_PING_OTHER = (target, ping) -> prefixed(translatable().key("floracore.command.ping.other").color(AQUA).args(text(target).color(GREEN), text(ping)
+            .color(
+                    ping > 250 ? DARK_RED :
+                            ping > 200 ? RED :
+                                    ping > 150 ? GOLD :
+                                            ping > 100 ? YELLOW :
+                                                    ping > 50 ? GREEN :
+                                                            ping > 0 ? DARK_GREEN : WHITE
+            )));
+
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
             // 现在,请选择你要使用的{0}!
             .key("floracore.command.misc.nick.book.name-page.line.1")
