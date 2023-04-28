@@ -113,6 +113,7 @@ public class CommandManager {
         this.annotationParser.parse(new FoodCommand(plugin));
         this.annotationParser.parse(new GameModeCommand(plugin));
         this.annotationParser.parse(new GiveCommand(plugin));
+        this.annotationParser.parse(new HasPermissionCommand(plugin));
         this.annotationParser.parse(new HatCommand(plugin));
         this.annotationParser.parse(new InvSeeCommand(plugin));
         this.annotationParser.parse(new NickCommand(plugin));
