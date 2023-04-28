@@ -65,7 +65,7 @@ permissions:
     default: op
   floracore.command.hat:
     default: op
-  floracore.command.heal:
+  floracore.command.heal.*:
     default: op
     children:
       floracore.command.heal: true

@@ -30,7 +30,8 @@ public class MaxHealthCommand extends AbstractFloraCoreCommand {
         Message.COMMAND_MAXHEALTH_GET_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName(), MultipleVersionsUtil.getMaxHealth(target));
     }
 
-    @CommandMethod("maxhealth|maxhp set <value>")
+    // TODO 异常的命令
+    /*@CommandMethod("maxhealth|maxhp set <value>")
     @CommandDescription("设置自己的最大生命值")
     @CommandPermission("floracore.command.maxhealth.set")
     public void setOwnMaxHealth(@NotNull Player s, @Argument("value") double value) {
@@ -47,5 +48,5 @@ public class MaxHealthCommand extends AbstractFloraCoreCommand {
         if (silent == null || !silent) {
             Message.COMMAND_MAXHEALTH_SET_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value);
         }
-    }
+    }*/
 }

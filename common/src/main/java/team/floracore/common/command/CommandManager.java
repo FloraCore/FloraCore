@@ -107,9 +107,11 @@ public class CommandManager {
         this.annotationParser.parse(new FloraCoreCommand(plugin));
 
         // player
+        // TODO 命令异常
         this.annotationParser.parse(new AirCommand(plugin));
         this.annotationParser.parse(new EnderChestCommand(plugin));
         this.annotationParser.parse(new FeedCommand(plugin));
+        // TODO 命令异常
         this.annotationParser.parse(new FireTickCommand(plugin));
         this.annotationParser.parse(new FlyCommand(plugin));
         this.annotationParser.parse(new FoodCommand(plugin));
@@ -119,11 +121,14 @@ public class CommandManager {
         this.annotationParser.parse(new HatCommand(plugin));
         this.annotationParser.parse(new HealCommand(plugin));
         this.annotationParser.parse(new InvSeeCommand(plugin));
+        // TODO 命令异常
         this.annotationParser.parse(new MaxHealthCommand(plugin));
+        // TODO 命令测试中 未完善
         this.annotationParser.parse(new NickCommand(plugin));
         this.annotationParser.parse(new OPListCommand(plugin));
         this.annotationParser.parse(new PingCommand(plugin));
         this.annotationParser.parse(new RealNameCommand(plugin));
+        // TODO 未测试
         this.annotationParser.parse(new SpeedCommand(plugin));
         this.annotationParser.parse(new TopCommand(plugin));
 
