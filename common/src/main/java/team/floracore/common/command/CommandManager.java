@@ -120,7 +120,7 @@ public class CommandManager {
         this.annotationParser.parse(new HealCommand(plugin)); // TODO 未测试命令
         this.annotationParser.parse(new InvSeeCommand(plugin));
         this.annotationParser.parse(new MaxHealthCommand(plugin)); // TODO 命令异常
-        this.annotationParser.parse(new NickCommand(plugin)); // TODO 命令测试中 未完善
+        this.annotationParser.parse(new NickCommand(plugin)); // TODO 命令测试中 未测试：Rank设置 未完善：Skin设置
         this.annotationParser.parse(new OPListCommand(plugin)); // TODO 未测试命令
         this.annotationParser.parse(new PingCommand(plugin)); // TODO 未测试命令
         this.annotationParser.parse(new RealNameCommand(plugin));
