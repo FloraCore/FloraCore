@@ -37,6 +37,34 @@ public abstract class StringBasedConfigurationAdapter implements ConfigurationAd
     }
 
     @Override
+    public float getFloat(String path, float def) {
+        String value = resolveValue(path);
+        if (value == null) {
+            return def;
+        }
+
+        try {
+            return Float.parseFloat(value);
+        } catch (IllegalArgumentException e) {
+            return def;
+        }
+    }
+
+    @Override
+    public double getDouble(String path, double def) {
+        String value = resolveValue(path);
+        if (value == null) {
+            return def;
+        }
+
+        try {
+            return Double.parseDouble(value);
+        } catch (IllegalArgumentException e) {
+            return def;
+        }
+    }
+
+    @Override
     public boolean getBoolean(String path, boolean def) {
         String value = resolveValue(path);
         if (value == null) {

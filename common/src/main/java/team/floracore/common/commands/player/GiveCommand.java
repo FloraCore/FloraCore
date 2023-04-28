@@ -10,5 +10,5 @@ public class GiveCommand extends AbstractFloraCoreCommand {
         super(plugin);
     }
 
-    // TODO 未完成的命令
+    // TODO Give命令
 }

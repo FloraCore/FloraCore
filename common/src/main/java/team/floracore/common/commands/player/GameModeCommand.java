@@ -112,7 +112,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
             target.setGameMode(gameMode);
             return true;
         } else {
-            Message.COMMAND_NO_PERMISSION.send(messageReceiver);
+            Message.NO_PERMISSION_FOR_SUBCOMMANDS.send(messageReceiver);
             return false;
         }
     }

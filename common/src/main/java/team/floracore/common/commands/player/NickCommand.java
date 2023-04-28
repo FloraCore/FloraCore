@@ -174,7 +174,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                             Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
                         }
                     } else {
-                        Message.COMMAND_NO_PERMISSION.send(sender);
+                        Message.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                     }
                     break;
                 case 6:

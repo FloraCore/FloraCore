@@ -549,31 +549,11 @@ public interface Message {
 
     Args0 COMMAND_OPLIST_HEADER_NONE = () -> prefixed(translatable().key("floracore.command.oplist.header.none").color(AQUA));
 
-    Args3<String, UUID, Boolean> COMMAND_OPLIST_ENTRY = (name, uuid, online) -> prefixed(translatable().key("floracore.command.oplist.entry").color(AQUA).args(
-            text(name).color(GREEN),
-            text(uuid.toString()).color(GREEN),
-            translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline").color(online ? GREEN : RED)
-    ));
+    Args3<String, UUID, Boolean> COMMAND_OPLIST_ENTRY = (name, uuid, online) -> prefixed(translatable().key("floracore.command.oplist.entry").color(AQUA).args(text(name).color(GREEN), text(uuid.toString()).color(GREEN), translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline").color(online ? GREEN : RED)));
 
-    Args1<Integer> COMMAND_PING_SELF = ping -> prefixed(translatable().key("floracore.command.ping.self").color(AQUA).args(text(ping)
-            .color(
-                    ping > 250 ? DARK_RED :
-                            ping > 200 ? RED :
-                                    ping > 150 ? GOLD :
-                                            ping > 100 ? YELLOW :
-                                                    ping > 50 ? GREEN :
-                                                            ping > 0 ? DARK_GREEN : WHITE
-            )));
+    Args1<Integer> COMMAND_PING_SELF = ping -> prefixed(translatable().key("floracore.command.ping.self").color(AQUA).args(text(ping).color(ping > 250 ? DARK_RED : ping > 200 ? RED : ping > 150 ? GOLD : ping > 100 ? YELLOW : ping > 50 ? GREEN : ping > 0 ? DARK_GREEN : WHITE)));
 
-    Args2<String, Integer> COMMAND_PING_OTHER = (target, ping) -> prefixed(translatable().key("floracore.command.ping.other").color(AQUA).args(text(target).color(GREEN), text(ping)
-            .color(
-                    ping > 250 ? DARK_RED :
-                            ping > 200 ? RED :
-                                    ping > 150 ? GOLD :
-                                            ping > 100 ? YELLOW :
-                                                    ping > 50 ? GREEN :
-                                                            ping > 0 ? DARK_GREEN : WHITE
-            )));
+    Args2<String, Integer> COMMAND_PING_OTHER = (target, ping) -> prefixed(translatable().key("floracore.command.ping.other").color(AQUA).args(text(target).color(GREEN), text(ping).color(ping > 250 ? DARK_RED : ping > 200 ? RED : ping > 150 ? GOLD : ping > 100 ? YELLOW : ping > 50 ? GREEN : ping > 0 ? DARK_GREEN : WHITE)));
 
     Args1<Double> COMMAND_MAXHEALTH_GET_SELF = value -> prefixed(translatable().key("floracore.command.maxhealth.get.self").color(AQUA).args(text(value).color(GREEN)));
 
@@ -667,6 +647,27 @@ public interface Message {
             .key("floracore.command.realname.success")
             // {}
             .args(text(name).color(GREEN), text(realName).color(GREEN)).color(AQUA));
+
+    Args1<String> COMMAND_SPEED_NOSUCH = (type) -> prefixed(translatable()
+            // {0} 不是合法的速度类型
+            .key("floracore.command.speed.nosuch")
+            // {}
+            .args(text(type).color(DARK_RED)).color(RED));
+
+    Args3<String, Component, String> COMMAND_SPEED = (target, type, speed) -> prefixed(translatable()
+            // 将 {0} 的 {1} 速度设为 {2}
+            .key("floracore.command.speed")
+            // {}
+            .args(text(target).color(GREEN), type.color(GREEN), text(speed).color(GREEN)).color(AQUA));
+
+    Args3<String, Component, String> COMMAND_SPEED_OTHER = (sender, type, speed) -> prefixed(translatable()
+            // {0} 将您的 {1} 速度设为 {2}
+            .key("floracore.command.speed.other")
+            // {}
+            .args(text(sender).color(GREEN), type.color(GREEN), text(speed).color(GREEN)).color(AQUA));
+
+    Args0 COMMAND_MISC_SPEED_FLY = () -> translatable("floracore.command.misc.speed.fly");
+    Args0 COMMAND_MISC_SPEED_WALK = () -> translatable("floracore.command.misc.speed.walk");
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();

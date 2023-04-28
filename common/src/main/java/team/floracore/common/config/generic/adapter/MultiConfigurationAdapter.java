@@ -62,6 +62,24 @@ public class MultiConfigurationAdapter implements ConfigurationAdapter {
     }
 
     @Override
+    public float getFloat(String path, float def) {
+        float result = def;
+        for (ConfigurationAdapter adapter : this.adapters) {
+            result = adapter.getFloat(path, result);
+        }
+        return result;
+    }
+
+    @Override
+    public double getDouble(String path, double def) {
+        double result = def;
+        for (ConfigurationAdapter adapter : this.adapters) {
+            result = adapter.getDouble(path, result);
+        }
+        return result;
+    }
+
+    @Override
     public boolean getBoolean(String path, boolean def) {
         boolean result = def;
         for (ConfigurationAdapter adapter : this.adapters) {
