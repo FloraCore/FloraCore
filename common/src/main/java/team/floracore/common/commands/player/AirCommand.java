@@ -8,99 +8,86 @@ import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
-import team.floracore.common.util.*;
 
-@CommandDescription("获取或设置氧气值（单位：ticks）")
+@CommandDescription("获取或设置氧气值")
+@CommandPermission("floracore.command.air")
 public class AirCommand extends AbstractFloraCoreCommand {
     public AirCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
 
-    @CommandMethod("air get [target]")
+    @CommandMethod("air get")
     @CommandPermission("floracore.command.air.get")
-    @CommandDescription("获取一名玩家的氧气值（单位：ticks）")
-    public void get(
-            @NotNull CommandSender s,
-            @Nullable @Argument("target") Player target
-    ) {
+    @CommandDescription("获取自己的氧气值（单位：ticks）")
+    public void getSelf(@NotNull Player s) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
-        if (target == null) { // 目标为空，则目标为自己
-            // 目标为自己时，发送者必须是玩家
-            if (!(s instanceof Player)) { // 不是玩家
-                SenderUtil.sendMustBePlayer(sender); // 告知不予执行
-                return;
-            }
-            Player player = (Player) s;
-            Message.COMMAND_AIR_GET_SELF_REMAINING.send(sender, player.getRemainingAir()); // 返回剩余氧气值
-            Message.COMMAND_AIR_GET_SELF_MAX.send(sender, player.getMaximumAir()); // 返回最大氧气值
-        } else { // 指定了目标玩家
-            if (SenderUtil.sendIfNoPermission(sender, "floracore.command.air.get.other")) { // 玩家没有特定权限
-                return;
-            }
-            Message.COMMAND_AIR_GET_OTHER_REMAINING.send(sender, target.getName(), target.getRemainingAir()); // 返回剩余氧气值
-            Message.COMMAND_AIR_GET_OTHER_MAX.send(sender, target.getName(), target.getMaximumAir()); // 返回最大氧气值
-        }
+        Message.COMMAND_AIR_GET_REMAINING_SELF.send(sender, s.getRemainingAir()); // 返回剩余氧气值
+        Message.COMMAND_AIR_GET_MAX_SELF.send(sender, s.getMaximumAir()); // 返回最大氧气值
     }
 
-    @CommandMethod("air setmax <value> [target]")
+    @CommandMethod("air get <target>")
+    @CommandPermission("floracore.command.air.get.other")
+    @CommandDescription("获取目标的氧气值（单位：ticks）")
+    public void getOther(
+            @NotNull CommandSender s,
+            @NotNull @Argument("target") Player target
+    ) {
+        Sender sender = getPlugin().getSenderFactory().wrap(s);
+        Message.COMMAND_AIR_GET_REMAINING_OTHER.send(sender, target.getName(), target.getRemainingAir()); // 返回剩余氧气值
+        Message.COMMAND_AIR_GET_MAX_OTHER.send(sender, target.getName(), target.getMaximumAir()); // 返回最大氧气值
+    }
+
+    @CommandMethod("air setmax <value>")
     @CommandPermission("floracore.command.air.set.max")
-    @CommandDescription("设置一名玩家的最大氧气值（单位：ticks）")
-    public void setMax(
+    @CommandDescription("设置自己的最大氧气值（单位：ticks）")
+    public void setOwnMax(
+            @NotNull Player s,
+            @Argument("value") int value
+    ) {
+        s.setMaximumAir(value); // 设置最大氧气
+        Message.COMMAND_AIR_SET_MAX_SELF.send(getPlugin().getSenderFactory().wrap(s), value); // 告知设置成功
+    }
+
+    @CommandMethod("air setmax <target> <value>")
+    @CommandPermission("floracore.command.air.set.max.other")
+    @CommandDescription("设置目标的最大氧气值（单位：ticks）")
+    public void setOtherMax(
             @NotNull CommandSender s,
+            @NotNull @Argument("target") Player target,
             @Argument("value") int value,
-            @Nullable @Argument("target") Player target,
             @Nullable @Flag("silent") Boolean silent
     ) {
-        Sender sender = getPlugin().getSenderFactory().wrap(s);
-        if (target == null) { // 目标为空，则目标为自己
-            // 目标为自己时，发送者必须是玩家
-            if (!(s instanceof Player)) { // 不是玩家
-                SenderUtil.sendMustBePlayer(sender); // 告知不予执行
-                return;
-            }
-            Player player = (Player) s;
-            player.setMaximumAir(value); // 设置最大氧气
-            Message.COMMAND_AIR_SET_SELF_MAX.send(sender, value); // 告知设置成功
-        } else { // 指定了目标玩家
-            if (SenderUtil.sendIfNoPermission(sender, "floracore.command.air.set.max.other")) { // 发送者没有特定权限
-                return;
-            }
-            target.setMaximumAir(value);
-            Message.COMMAND_AIR_SET_OTHER_MAX.send(sender, target.getName(), value); // 告知设置成功
-            if (silent == null || !silent) { // 非静音模式
-                Message.COMMAND_AIR_SET_FROM_MAX.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
-            }
+        target.setMaximumAir(value);
+        Message.COMMAND_AIR_SET_MAX_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName(), value); // 告知设置成功
+        if (silent == null || !silent) { // 非静音模式
+            Message.COMMAND_AIR_SET_MAX_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
         }
     }
 
-    @CommandMethod("air setremaining <value> [target]")
+    @CommandMethod("air setremaining <value>")
     @CommandPermission("floracore.command.air.set.remaining")
-    @CommandDescription("设置一名玩家的剩余氧气值（单位：ticks）")
-    public void setRemaining(
+    @CommandDescription("设置自己的剩余氧气值（单位：ticks）")
+    public void setOwnRemaining(
+            @NotNull Player s,
+            @Argument("value") int value
+    ) {
+        s.setRemainingAir(value); // 设置最大氧气
+        Message.COMMAND_AIR_SET_REMAINING_SELF.send(getPlugin().getSenderFactory().wrap(s), value); // 告知设置成功
+    }
+
+    @CommandMethod("air setremaining <target> <value>")
+    @CommandPermission("floracore.command.air.set.remaining.other")
+    @CommandDescription("设置目标的剩余氧气值（单位：ticks）")
+    public void setOtherRemaining(
             @NotNull CommandSender s,
+            @NotNull @Argument("target") Player target,
             @Argument("value") int value,
-            @Nullable @Argument("target") Player target,
             @Nullable @Flag("silent") Boolean silent
     ) {
-        Sender sender = getPlugin().getSenderFactory().wrap(s);
-        if (target == null) { // 目标为空，则目标为自己
-            // 目标为自己时，发送者必须是玩家
-            if (!(s instanceof Player)) { // 不是玩家
-                SenderUtil.sendMustBePlayer(sender); // 告知不予执行
-                return;
-            }
-            Player player = (Player) s;
-            player.setRemainingAir(value); // 设置剩余氧气
-            Message.COMMAND_AIR_SET_SELF_REMAINING.send(sender, value); // 告知设置成功
-        } else { // 指定了目标玩家
-            if (SenderUtil.sendIfNoPermission(sender, "floracore.command.air.set.remaining.other")) { // 发送者没有特定权限
-                return;
-            }
-            target.setRemainingAir(value);
-            Message.COMMAND_AIR_SET_OTHER_REMAINING.send(sender, target.getName(), value); // 告知设置成功
-            if (silent == null || !silent) { // 非静音模式
-                Message.COMMAND_AIR_SET_FROM_REMAINING.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
-            }
+        target.setRemainingAir(value);
+        Message.COMMAND_AIR_SET_REMAINING_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName(), value); // 告知设置成功
+        if (silent == null || !silent) { // 非静音模式
+            Message.COMMAND_AIR_SET_REMAINING_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
         }
     }
 }
