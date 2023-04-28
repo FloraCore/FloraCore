@@ -119,6 +119,7 @@ public class CommandManager {
         this.annotationParser.parse(new HatCommand(plugin));
         this.annotationParser.parse(new HealCommand(plugin));
         this.annotationParser.parse(new InvSeeCommand(plugin));
+        this.annotationParser.parse(new MaxHealthCommand(plugin));
         this.annotationParser.parse(new NickCommand(plugin));
         this.annotationParser.parse(new OPListCommand(plugin));
         this.annotationParser.parse(new PingCommand(plugin));

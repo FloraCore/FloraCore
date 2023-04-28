@@ -575,6 +575,16 @@ public interface Message {
                                                             ping > 0 ? DARK_GREEN : WHITE
             )));
 
+    Args1<Double> COMMAND_MAXHEALTH_GET_SELF = value -> prefixed(translatable().key("floracore.command.maxhealth.get.self").color(AQUA).args(text(value).color(GREEN)));
+
+    Args2<String, Double> COMMAND_MAXHEALTH_GET_OTHER = (target, value) -> prefixed(translatable().key("floracore.command.maxhealth.get.other").color(AQUA).args(text(target).color(GREEN), text(value).color(GREEN)));
+
+    Args1<Double> COMMAND_MAXHEALTH_SET_SELF = value -> prefixed(translatable().key("floracore.command.maxhealth.set.self").color(AQUA).args(text(value).color(GREEN)));
+
+    Args2<String, Double> COMMAND_MAXHEALTH_SET_OTHER = (target, value) -> prefixed(translatable().key("floracore.command.maxhealth.set.other").color(AQUA).args(text(target).color(GREEN), text(value).color(GREEN)));
+
+    Args2<String, Double> COMMAND_MAXHEALTH_SET_FROM = (from, value) -> prefixed(translatable().key("floracore.command.maxhealth.set.from").color(AQUA).args(text(from).color(GREEN), text(value).color(GREEN)));
+
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
             // 现在,请选择你要使用的{0}!
             .key("floracore.command.misc.nick.book.name-page.line.1")

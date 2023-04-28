@@ -39,31 +39,6 @@ public class HealCommand extends AbstractFloraCoreCommand {
     }
 
     private void heal(@NotNull Player player) {
-        player.setHealth(getMaxHealth(player));
-    }
-
-    /**
-     * 获取玩家最大生命值
-     * 低版本没有Attribute概念，直接调用getMaxHealth
-     *
-     * @param player 玩家
-     * @return 玩家最大生命值
-     */
-    private double getMaxHealth(Player player) {
-        try {
-            Class<?> classAttribute = Class.forName("org.bukkit.attribute.Attribute");
-            // Attribute enumGenericMaxHealth = Attribute.GENERIC_MAX_HEALTH
-            Object enumGenericMaxHealth = ReflectionWrapper.getStaticFieldValue(ReflectionWrapper.getField(classAttribute, "GENERIC_MAX_HEALTH"));
-            // AttributeInstance attrInstance = player.getAttribute(enumGenericMaxHealth);
-            Object attrInstance = ReflectionWrapper.invokeMethod(
-                    ReflectionWrapper.getMethod(player.getClass(), "getAttribute", classAttribute),
-                    player, enumGenericMaxHealth
-            );
-            // return attrInstance.getValue()
-            return ReflectionWrapper.invokeMethod(ReflectionWrapper.getMethod(attrInstance.getClass(), "getValue"), attrInstance);
-        } catch (ClassNotFoundException e) { // 没有org.bukkit.attribute.Attribute这个类，说明不存在Attribute概念，应该是低版本
-            // return player.getMaxHealth()
-            return ReflectionWrapper.invokeMethod(ReflectionWrapper.getMethod(Player.class, "getMaxHealth"), player);
-        }
+        player.setHealth(MultipleVersionsUtil.getMaxHealth(player));
     }
 }
