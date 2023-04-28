@@ -1,7 +1,7 @@
 package team.floracore.common.util;
 
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
+import org.bukkit.entity.*;
+import org.jetbrains.annotations.*;
 
 /**
  * 一些跨版本的常用类
@@ -41,7 +41,7 @@ public final class MultipleVersionsUtil {
      * 低版本没有Attribute概念，直接调用setMaxHealth
      *
      * @param player 玩家
-     * @param value 数值
+     * @param value  数值
      */
     public static void setMaxHealth(@NotNull Player player, double value) {
         try {

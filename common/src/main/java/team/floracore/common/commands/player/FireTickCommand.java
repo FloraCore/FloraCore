@@ -25,12 +25,7 @@ public class FireTickCommand extends AbstractFloraCoreCommand {
     @CommandMethod("firetick|burn <target> <time>")
     @CommandDescription("设置目标的着火时间（单位：秒）")
     @CommandPermission("floracore.command.firetick.other")
-    public void other(
-            @NotNull CommandSender s,
-            @NotNull @Argument("target") Player target,
-            @Argument("time") int time,
-            @Nullable @Flag("silent") Boolean silent
-    ) {
+    public void other(@NotNull CommandSender s, @NotNull @Argument("target") Player target, @Argument("time") int time, @Nullable @Flag("silent") Boolean silent) {
         target.setFireTicks(time * 20);
         Message.COMMAND_FIRETICK_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName(), time);
         if (silent == null || !silent) {

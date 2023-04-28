@@ -1,18 +1,15 @@
 package team.floracore.common.commands.player;
 
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.command.CommandSender;
-import org.jetbrains.annotations.NotNull;
-import team.floracore.common.command.AbstractFloraCoreCommand;
-import team.floracore.common.locale.Message;
-import team.floracore.common.plugin.FloraCorePlugin;
-import team.floracore.common.sender.Sender;
+import cloud.commandframework.annotations.*;
+import org.bukkit.*;
+import org.bukkit.command.*;
+import org.jetbrains.annotations.*;
+import team.floracore.common.command.*;
+import team.floracore.common.locale.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
 
-import java.util.Set;
+import java.util.*;
 
 @CommandDescription("列出本服所有拥有OP权限的玩家")
 @CommandPermission("floracore.command.oplist")

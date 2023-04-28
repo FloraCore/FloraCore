@@ -36,6 +36,7 @@ public class TimeCommand extends AbstractFloraCoreCommand {
     }
 
     @CommandMethod("time set <time>")
+    @CommandPermission("floracore.command.time.set")
     @CommandDescription("设置当前（或指定）世界的时间")
     public void setTime(final @NotNull CommandSender s, final @NotNull @Argument(value = "time", suggestions = "timeNames") String time, final @Nullable @Flag(value = "world", suggestions = "worlds-all") String world) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
@@ -63,6 +64,7 @@ public class TimeCommand extends AbstractFloraCoreCommand {
     }
 
     @CommandMethod("time add <time>")
+    @CommandPermission("floracore.command.time.add")
     @CommandDescription("快进当前（或指定）世界的时间")
     public void addTime(final @NotNull CommandSender s, final @NotNull @Argument(value = "time", suggestions = "timeNumbers") String time, final @Nullable @Flag(value = "world", suggestions = "worlds-all") String world) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);

@@ -11,6 +11,7 @@ import team.floracore.common.sender.*;
 import team.floracore.common.util.*;
 
 @CommandDescription("设置玩家的饥饿度")
+@CommandPermission("floracore.command.food")
 public class FoodCommand extends AbstractFloraCoreCommand {
     public FoodCommand(FloraCorePlugin plugin) {
         super(plugin);
