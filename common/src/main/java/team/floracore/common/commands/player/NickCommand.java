@@ -4,6 +4,9 @@ import cloud.commandframework.annotations.*;
 import net.kyori.adventure.audience.*;
 import net.kyori.adventure.inventory.*;
 import net.kyori.adventure.text.*;
+import net.luckperms.api.*;
+import net.luckperms.api.model.user.*;
+import net.luckperms.api.node.types.*;
 import net.skinsrestorer.api.*;
 import net.skinsrestorer.api.property.*;
 import org.bukkit.*;
@@ -35,10 +38,12 @@ import static team.floracore.common.util.ReflectionWrapper.*;
 public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     private final SkinsRestorerAPI skinsRestorerAPI;
     private final Set<UUID> nickedPlayers = new HashSet<>();
+    private final LuckPerms luckPerms;
 
     public NickCommand(FloraCorePlugin plugin) {
         super(plugin);
-        skinsRestorerAPI = SkinsRestorerAPI.getApi();
+        this.skinsRestorerAPI = SkinsRestorerAPI.getApi();
+        this.luckPerms = LuckPermsProvider.get();
         plugin.getListenerManager().registerListener(this);
         plugin.getBootstrap().getScheduler().asyncRepeating(() -> {
             for (UUID uuid : nickedPlayers) {
@@ -210,11 +215,22 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         // 清除数据库Nick状态
         getAsyncExecutor().execute(() -> {
             Data rankData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.rank");
+            Data lpPrefixData = getStorageImplementation().getSpecifiedData(uuid, DataType.STAGING_DATA, "luckperms.prefix");
             if (statusData != null) {
                 getStorageImplementation().deleteDataID(statusData.getId());
             }
             if (rankData != null) {
                 getStorageImplementation().deleteDataID(rankData.getId());
+            }
+            if (lpPrefixData != null) {
+                // 恢复LP的Rank状态
+                User user = luckPerms.getUserManager().getUser(uuid);
+                if (user != null) {
+                    PrefixNode node = PrefixNode.builder(lpPrefixData.getValue(), 100).build();
+                    user.data().add(node);
+                    luckPerms.getUserManager().saveUser(user);
+                    getStorageImplementation().deleteDataID(lpPrefixData.getId());
+                }
             }
         });
     }
@@ -272,6 +288,24 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                 }
             }
         }
+        // 设置Rank
+        User user = luckPerms.getUserManager().getUser(uuid);
+        if (user != null) {
+            Data lpPrefixData = getStorageImplementation().getSpecifiedData(uuid, DataType.STAGING_DATA, "luckperms.prefix");
+            String prefix = user.getCachedData().getMetaData().getPrefix();
+            if (lpPrefixData != null) {
+                if (whetherServerEnableAutoSync2()) {
+                    PrefixNode node = PrefixNode.builder(lpPrefixData.getValue(), 100).build();
+                    user.data().add(node);
+                    luckPerms.getUserManager().saveUser(user);
+                } else {
+                    getAsyncExecutor().execute(() -> {
+                        getStorageImplementation().insertData(uuid, DataType.FUNCTION, "luckperms.prefix", prefix, 0);
+                    });
+                }
+            }
+        }
+
         // 设置数据库Nick状态
         getAsyncExecutor().execute(() -> {
             getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.skin", skinName, 0);

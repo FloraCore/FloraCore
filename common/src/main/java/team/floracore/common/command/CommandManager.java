@@ -123,7 +123,7 @@ public class CommandManager {
         this.annotationParser.parse(new InvSeeCommand(plugin));
         // TODO 命令异常
         this.annotationParser.parse(new MaxHealthCommand(plugin));
-        // TODO 命令测试中 未完善
+        // TODO 命令测试中 未完善 未测试：跨服Nick同步状态，Rank设置 未完善：Skin设置
         this.annotationParser.parse(new NickCommand(plugin));
         this.annotationParser.parse(new OPListCommand(plugin));
         this.annotationParser.parse(new PingCommand(plugin));
