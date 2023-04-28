@@ -527,6 +527,10 @@ public interface Message {
 
     Args2<String, String> COMMAND_HASPERMISSION_NO = (target, permission) -> prefixed(translatable().key("floracore.command.haspermission.no").color(RED).args(text(target).color(GREEN), text(permission)).color(GREEN));
 
+    Args0 COMMAND_FEED_SELF = () -> prefixed(translatable().key("floracore.command.feed.self").color(AQUA));
+
+    Args1<String> COMMAND_FEED_OTHER = target -> prefixed(translatable().key("floracore.command.feed.other").color(AQUA).args(text(target)));
+
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
             // 现在,请选择你要使用的{0}!
             .key("floracore.command.misc.nick.book.name-page.line.1")
