@@ -529,15 +529,21 @@ public interface Message {
 
     Args0 COMMAND_FEED_SELF = () -> prefixed(translatable().key("floracore.command.feed.self").color(AQUA));
 
-    Args1<String> COMMAND_FEED_OTHER = target -> prefixed(translatable().key("floracore.command.feed.other").color(AQUA).args(text(target)));
+    Args1<String> COMMAND_FEED_OTHER = target -> prefixed(translatable().key("floracore.command.feed.other").color(AQUA).args(text(target).color(GREEN)));
 
-    Args1<String> COMMAND_FEED_FROM = from -> prefixed(translatable().key("floracore.command.feed.from").color(AQUA).args(text(from)));
+    Args1<String> COMMAND_FEED_FROM = from -> prefixed(translatable().key("floracore.command.feed.from").color(AQUA).args(text(from).color(GREEN)));
 
     Args0 COMMAND_HEAL_SELF = () -> prefixed(translatable().key("floracore.command.heal.self").color(AQUA));
 
-    Args1<String> COMMAND_HEAL_OTHER = target -> prefixed(translatable().key("floracore.command.heal.other").color(AQUA).args(text(target)));
+    Args1<String> COMMAND_HEAL_OTHER = target -> prefixed(translatable().key("floracore.command.heal.other").color(AQUA).args(text(target).color(GREEN)));
 
-    Args1<String> COMMAND_HEAL_FROM = from -> prefixed(translatable().key("floracore.command.heal.from").color(AQUA).args(text(from)));
+    Args1<String> COMMAND_HEAL_FROM = from -> prefixed(translatable().key("floracore.command.heal.from").color(AQUA).args(text(from).color(GREEN)));
+
+    Args1<Integer> COMMAND_FIRETICK_SELF = time -> prefixed(translatable().key("floracore.command.firetick.self").color(AQUA).args(text(time).color(GREEN)));
+
+    Args2<String, Integer> COMMAND_FIRETICK_OTHER = (target, time) -> prefixed(translatable().key("floracore.command.firetick.other").color(AQUA).args(text(target).color(GREEN), text(time).color(GREEN)));
+
+    Args2<String, Integer> COMMAND_FIRETICK_FROM = (from, time) -> prefixed(translatable().key("floracore.command.firetick.from").color(AQUA).args(text(from).color(GREEN), text(time).color(GREEN)));
 
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
             // 现在,请选择你要使用的{0}!

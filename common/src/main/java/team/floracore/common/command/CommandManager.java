@@ -111,11 +111,13 @@ public class CommandManager {
         this.annotationParser.parse(new EnderChestCommand(plugin));
         this.annotationParser.parse(new FlyCommand(plugin));
         this.annotationParser.parse(new FeedCommand(plugin));
+        this.annotationParser.parse(new FireTickCommand(plugin));
         this.annotationParser.parse(new FoodCommand(plugin));
         this.annotationParser.parse(new GameModeCommand(plugin));
         this.annotationParser.parse(new GiveCommand(plugin));
         this.annotationParser.parse(new HasPermissionCommand(plugin));
         this.annotationParser.parse(new HatCommand(plugin));
+        this.annotationParser.parse(new HealCommand(plugin));
         this.annotationParser.parse(new InvSeeCommand(plugin));
         this.annotationParser.parse(new NickCommand(plugin));
         this.annotationParser.parse(new RealNameCommand(plugin));
