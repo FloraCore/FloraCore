@@ -52,18 +52,29 @@ public class TestCommand extends AbstractFloraCoreCommand {
         sender.sendMessage("这是一个测试命令。");
     }
 
+    /**
+     * 这是含有一个指定参数的子命令。
+     * 值得注意的是，我们无需注册test根命令，该命令也能解析。
+     */
     @CommandMethod("test c1")
     @CommandDescription("测试c1命令")
     public void test_c1(final @NonNull CommandSender sender) {
         sender.sendMessage("我是c1命令。");
     }
 
+    /**
+     * 这是基于test_c1命令的，这里的变化是在c1的基础上，多了一个子命令b1。
+     */
     @CommandMethod("test c1 b1")
     @CommandDescription("测试c1命令")
     public void test_c1_b1(final @NonNull CommandSender sender) {
         sender.sendMessage("我是c1中的b1命令。");
     }
 
+    /**
+     * 这是需要拥有指定的权限才能使用的命令。
+     * 值得注意的是，如果类顶部被指定了权限，那么执行这个命令的条件就是既满足类顶部的权限，也满足方法顶部注解的权限。
+     */
     @CommandMethod("test c2")
     @CommandPermission("admin.test1")
     @CommandDescription("测试c2命令")
@@ -71,6 +82,9 @@ public class TestCommand extends AbstractFloraCoreCommand {
         sender.sendMessage("我是c2命令。");
     }
 
+    /**
+     * 这是命令参数的推荐内容，必须搭配@Argument注解使用，详情使用看test_c2_a1_qu函数。
+     */
     @Suggestions("test_c2_a1_sug")
     public @NonNull List<String> test_c2_a1_sug(final @NonNull CommandContext<CommandSender> ctx, final @NonNull String input) {
         List<String> ret = new ArrayList<>();
@@ -90,6 +104,11 @@ public class TestCommand extends AbstractFloraCoreCommand {
         sender.sendMessage("我是c2中的a1命令，你选择的query是" + query);
     }
 
+    /**
+     * 这个命令，虽然没有指定参数推荐，但是它却指定了参数类型World。
+     * 这就意味着，在指定参数类型的情况下，Cloud框架会智能识别这些参数。
+     * 值得注意的是，并不是所有的参数类型都能被识别，可以在进一步的测试中进行测试。
+     */
     @CommandMethod("test c3 a1 [query]")
     @CommandDescription("测试c3 a1命令")
     public void test_c3_a1_qu(final @NonNull CommandSender sender, final @Argument("query") @Greedy World query) {
@@ -102,6 +121,9 @@ public class TestCommand extends AbstractFloraCoreCommand {
         sender.sendMessage("我是c2中的a2命令，你选择的query是" + query);
     }
 
+    /**
+     * 这是打开书本的命令测试。
+     */
     @CommandMethod("test c4 a1")
     @CommandDescription("测试c4 a1命令")
     public void test_c4_a1(final @NonNull Player player) {
@@ -116,6 +138,11 @@ public class TestCommand extends AbstractFloraCoreCommand {
         target.openBook(myBook);
     }
 
+    /**
+     * 这是使玩家顶部召唤BoosBar的命令测试。
+     *
+     * @param player
+     */
     @CommandMethod("test c4 a2")
     @CommandDescription("测试c4 a2命令")
     public void test_c4_a2(final @NonNull Player player) {
@@ -130,5 +157,14 @@ public class TestCommand extends AbstractFloraCoreCommand {
         Audience target = getPlugin().getBukkitAudiences().player(player);
         // Send a bossbar to your audience
         target.showBossBar(fullBar);
+    }
+
+    /**
+     * 这是含有参数列表的参数例示。
+     */
+    @CommandMethod("test c5 a1 [query]")
+    @CommandDescription("测试c5 a1命令")
+    public void test_c5_a1_qu(final @NonNull CommandSender sender, final @Argument("query") String[] query) {
+        sender.sendMessage("我是c2中的a2命令，你选择的query是" + Arrays.toString(query));
     }
 }
