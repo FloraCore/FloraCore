@@ -26,6 +26,11 @@ public interface Message {
     Component PREFIX_COMPONENT = text()
             // [FC]
             .color(GRAY).append(text('[')).append(text().decoration(BOLD, true).append(text('F', AQUA)).append(text('C', YELLOW))).append(text(']')).build();
+
+    Component PREFIX_BROADCAST = text()
+            // [公告]
+            .color(GRAY).append(text('[')).append(text().decoration(BOLD, true).append(translatable("floracore.command.misc.server.broadcast.prefix").color(AQUA))).append(text(']')).build();
+
     Args1<FloraCoreBootstrap> STARTUP_BANNER = bootstrap -> {
         // FloraCore v{} is Running.
         Component infoLine1 = text()
@@ -695,6 +700,8 @@ public interface Message {
             .key("floracore.command.speed")
             // {}
             .args(text(target).color(GREEN), type.color(YELLOW), text(speed).color(DARK_GREEN)).color(AQUA));
+
+    Args1<String> COMMAND_BROADCAST = contents -> text().append(PREFIX_BROADCAST).append(space()).append(formatColoredValue(contents)).build();
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();

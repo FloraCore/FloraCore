@@ -11,6 +11,7 @@ import cloud.commandframework.paper.*;
 import org.bukkit.command.*;
 import team.floracore.common.commands.misc.FloraCoreCommand;
 import team.floracore.common.commands.player.*;
+import team.floracore.common.commands.server.*;
 import team.floracore.common.commands.test.*;
 import team.floracore.common.commands.world.*;
 import team.floracore.common.locale.*;
@@ -128,6 +129,7 @@ public class CommandManager {
         this.annotationParser.parse(new TopCommand(plugin));
 
         // server
+        this.annotationParser.parse(new BroadCastCommand(plugin));
 
         // world
         this.annotationParser.parse(new TimeCommand(plugin));
