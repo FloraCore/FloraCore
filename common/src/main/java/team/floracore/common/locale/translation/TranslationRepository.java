@@ -75,9 +75,6 @@ public class TranslationRepository {
         }
 
         MetadataResponse metadata = getTranslationsMetadata();
-        if (timeSinceLastRefresh <= metadata.cacheMaxAge) {
-            return;
-        }
 
         // perform a refresh!
         downloadAndInstallTranslations(metadata.languages, null, true);

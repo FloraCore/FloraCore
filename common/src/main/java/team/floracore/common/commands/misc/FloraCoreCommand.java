@@ -65,7 +65,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     }
 
     @CommandMethod("fc|floracore translations install")
-    @CommandDescription("插件翻译列表")
+    @CommandDescription("安装插件翻译列表")
     public void installTranslations(final @NonNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Message.TRANSLATIONS_SEARCHING.send(s);
