@@ -283,7 +283,6 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                     getAsyncExecutor().execute(() -> {
                         IProperty iProperty = skinsRestorerAPI.createPlatformProperty(selectedSkin.getName(), selectedSkin.getValue(), selectedSkin.getSignature());
                         skinsRestorerAPI.applySkin(new PlayerWrapper(p), iProperty);
-                        System.out.println("1");
                     });
                 }
             }

@@ -114,12 +114,12 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
                 servers.setLastActiveTime(System.currentTimeMillis());
             }
         }, 0, 20 * 60 * 10);
-        this.chatManager = new ChatManager(this);
 
         getLogger().info("Loading framework...");
         protocolManager = ProtocolLibrary.getProtocolManager();
         this.listenerManager = new ListenerManager(this);
         this.commandManager = new CommandManager(this);
+        this.chatManager = new ChatManager(this);
 
 
         // register with the FC API
