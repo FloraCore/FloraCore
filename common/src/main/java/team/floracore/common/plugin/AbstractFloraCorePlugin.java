@@ -13,6 +13,7 @@ import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
 import team.floracore.common.listener.*;
 import team.floracore.common.locale.*;
+import team.floracore.common.locale.chat.*;
 import team.floracore.common.locale.data.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.logging.*;
@@ -46,6 +47,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private NamesRepository namesRepository;
     private BukkitSenderFactory senderFactory;
     private ProtocolManager protocolManager;
+    private ChatManager chatManager;
 
     /**
      * Performs the initial actions to load the plugin
@@ -112,6 +114,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
                 servers.setLastActiveTime(System.currentTimeMillis());
             }
         }, 0, 20 * 60 * 10);
+        this.chatManager = new ChatManager(this);
 
         getLogger().info("Loading framework...");
         protocolManager = ProtocolLibrary.getProtocolManager();
@@ -137,6 +140,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // cancel delayed/repeating tasks
         getBootstrap().getScheduler().shutdownScheduler();
+
+        getChatManager().shutdown();
 
         // close storage
         getLogger().info("Closing storage...");
@@ -295,5 +300,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public DataManager getDataManager() {
         return dataManager;
+    }
+
+    @Override
+    public ChatManager getChatManager() {
+        return chatManager;
     }
 }

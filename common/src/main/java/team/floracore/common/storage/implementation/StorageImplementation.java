@@ -59,4 +59,10 @@ public interface StorageImplementation {
     void deleteDataID(int id);
 
     Servers selectServers(String name);
+
+    List<Chat> selectChat(String name);
+
+    Chat selectChatWithStartTime(String name, long startTime);
+
+    void insertChat(String name, long startTime);
 }
