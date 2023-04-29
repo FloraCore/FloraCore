@@ -2,6 +2,7 @@ package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -24,22 +25,24 @@ public class SpeedCommand extends AbstractFloraCoreCommand implements Listener {
         super(plugin);
     }
 
-    @CommandMethod("speed <type> <speed>")
-    @CommandDescription("修改移动/飞行速度")
-    public void setSpeed(final @Nonnull Player player, @Nonnull @Argument("type") String type, @Nonnull @Argument("speed") String speed) {
-        checkSyntaxAndExecute(player, type, speed, null, false);
-    }
-
-    @CommandMethod("speed <type> <speed> <target>")
+    @CommandMethod("setspeed|speed <type> <speed> [target]")
     @CommandDescription("修改玩家的移动/飞行速度")
-    public void setSpeed(final @Nonnull CommandSender commandSender, @Nonnull @Argument("type") String type, @Nonnull @Argument("speed") String speed, @Argument("target") String target, final @Nullable @Flag("silent") Boolean silent) {
-        Player player = Bukkit.getPlayer(target);
-        if (player == null) {
-            Sender sender = getPlugin().getSenderFactory().wrap(commandSender);
-            Message.PLAYER_NOT_FOUND.send(sender, target);
-            return;
+    public void setSpeed(final @Nonnull CommandSender commandSender, @Nonnull @Argument("type") String type, @Nonnull @Argument("speed") String speed, @Nullable @Argument("target") String target, final @Nullable @Flag("silent") Boolean silent) {
+        if (target == null) {
+            if (commandSender instanceof Player) {
+                checkSyntaxAndExecute((Player) commandSender, type, speed, null, false);
+            } else {
+                commandSender.sendMessage(ChatColor.RED + "Usage: /speed <type> <speed> <target>");
+            }
+        } else {
+            Player player = Bukkit.getPlayer(target);
+            if (player == null) {
+                Sender sender = getPlugin().getSenderFactory().wrap(commandSender);
+                Message.PLAYER_NOT_FOUND.send(sender, target);
+                return;
+            }
+            checkSyntaxAndExecute(player, type, speed, commandSender, Boolean.TRUE.equals(silent));
         }
-        checkSyntaxAndExecute(player, type, speed, commandSender, Boolean.TRUE.equals(silent));
     }
 
     private void checkSyntaxAndExecute(Player target, String type, String speed, CommandSender sender, boolean silent) {
