@@ -1,6 +1,9 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
+import cloud.commandframework.annotations.suggestions.*;
+import cloud.commandframework.context.*;
+import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
@@ -9,15 +12,17 @@ import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 
+import java.util.*;
+
 @CommandPermission("floracore.command.speed")
 public class SpeedCommand extends AbstractFloraCoreCommand {
     public SpeedCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
 
-    @CommandMethod("speed <speed> [type] [target]")
+    @CommandMethod("speed <speed> <type> [target]")
     @CommandDescription("传送至你当前位置的最高点设置你（或指定玩家）的指定类型的速度")
-    public void speed(final @NotNull Player p, final @Argument("speed") float speed, final @Argument("type") String type, final @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
+    public void speed(final @NotNull Player p, final @Argument(value = "speed", suggestions = "speeds") float speed, final @Argument(value = "type", suggestions = "types") String type, final @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         try {
             final SpeedType speedType = SpeedType.parseSpeedType(type);
@@ -52,6 +57,7 @@ public class SpeedCommand extends AbstractFloraCoreCommand {
                 Message.COMMAND_SPEED.send(sender, p.getDisplayName(), speedType == SpeedType.FLY ? Message.COMMAND_MISC_SPEED_FLY.build() : Message.COMMAND_MISC_SPEED_WALK.build(), String.valueOf(speed));
             }
         } catch (IllegalArgumentException e) {
+            System.out.println(1);
             Message.COMMAND_SPEED_NOSUCH.send(sender, type);
         }
 
@@ -70,6 +76,16 @@ public class SpeedCommand extends AbstractFloraCoreCommand {
             final float ratio = ((userSpeed - 1) / 9) * (maxSpeed - defaultSpeed);
             return ratio + defaultSpeed;
         }
+    }
+
+    @Suggestions("speeds")
+    public List<String> getSpeeds(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
+        return new ArrayList<>(Arrays.asList("1", "1.5", "1.75", "2"));
+    }
+
+    @Suggestions("types")
+    public List<String> getTypes(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
+        return new ArrayList<>(Arrays.asList("walk", "fly"));
     }
 
     private enum SpeedType {
