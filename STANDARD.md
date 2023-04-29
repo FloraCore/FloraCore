@@ -11,7 +11,7 @@
 - 未测试和异常的命令需在 [CommandManager](./common/src/main/java/team/floracore/common/command/CommandManager.java)
   标记以便后续处理。
 - 开发者应了解框架，不熟悉代码不得修改。
-- 开发者需在新分支上编写代码，避免影响主分支。
+- 开发者需在新分支(或已存在的分支)上编写代码，避免影响主分支。
 - 版本发布由指定人员完成。
 
 # 附录
