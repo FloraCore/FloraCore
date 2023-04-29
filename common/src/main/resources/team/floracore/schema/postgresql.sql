@@ -31,3 +31,12 @@ CREATE TABLE IF NOT EXISTS "{prefix}servers"
     autoSync2      BOOLEAN     NOT NULL,
     lastActiveTime BIGINT      NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS "{prefix}chat"
+(
+    id        SERIAL      NOT NULL PRIMARY KEY,
+    name      VARCHAR(16) NOT NULL,
+    record    TEXT        NOT NULL,
+    startTime BIGINT      NOT NULL,
+    endTime   BIGINT      NULL
+);

@@ -4,6 +4,7 @@ public enum DataType {
     AUTO_SYNC("auto-sync"),
     FUNCTION("function"),
     STAGING_DATA("staging-data"),
+    CHAT("chat"),
     CUSTOM("custom");
     final String name;
 
