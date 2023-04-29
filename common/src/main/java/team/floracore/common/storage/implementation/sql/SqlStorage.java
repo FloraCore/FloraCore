@@ -1,6 +1,8 @@
 package team.floracore.common.storage.implementation.sql;
 
+import com.google.gson.*;
 import com.google.gson.reflect.*;
+import org.floracore.api.chat.*;
 import org.floracore.api.data.*;
 import org.floracore.api.server.*;
 import team.floracore.common.plugin.*;
@@ -298,5 +300,69 @@ public class SqlStorage implements StorageImplementation {
             throw new RuntimeException(e);
         }
         return servers;
+    }
+
+    @Override
+    public List<Chat> selectChat(String name) {
+        List<Chat> ret = new ArrayList<>();
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Chat.SELECT))) {
+                ps.setString(1, name);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        String recordsJson = rs.getString("records");
+                        Gson gson = new Gson();
+                        Type type = new TypeToken<List<ChatRecord>>() {
+                        }.getType();
+                        List<ChatRecord> records = gson.fromJson(recordsJson, type);
+                        long startTime = rs.getLong("startTime");
+                        long endTime = rs.getLong("endTime");
+                        ret.add(new Chat(plugin, this, id, name, records, startTime, endTime));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ret;
+    }
+
+    @Override
+    public Chat selectChatWithStartTime(String name, long startTime) {
+        Chat chat;
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Chat.SELECT_WITH_START_TIME))) {
+                ps.setString(1, name);
+                ps.setLong(2, startTime);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        int id = rs.getInt("id");
+                        String recordsJson = rs.getString("records");
+                        Gson gson = new Gson();
+                        Type type = new TypeToken<List<ChatRecord>>() {
+                        }.getType();
+                        List<ChatRecord> records = gson.fromJson(recordsJson, type);
+                        long endTime = rs.getLong("endTime");
+                        chat = new Chat(plugin, this, id, name, records, startTime, endTime);
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return chat;
+    }
+
+    @Override
+    public void insertChat(String name, long startTime) {
+        Chat chat = new Chat(plugin, this, name, startTime);
+        try {
+            chat.init();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

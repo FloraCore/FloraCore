@@ -9,6 +9,7 @@ import team.floracore.common.config.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
 import team.floracore.common.listener.*;
+import team.floracore.common.locale.chat.*;
 import team.floracore.common.locale.data.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.bootstrap.*;
@@ -125,4 +126,6 @@ public interface FloraCorePlugin {
     String getServerName();
 
     DataManager getDataManager();
+
+    ChatManager getChatManager();
 }
