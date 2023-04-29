@@ -590,6 +590,30 @@ public interface Message {
             // {}
             .args(text(name).color(GREEN), text(realName).color(GREEN)).color(AQUA));
 
+    Args1<String> COMMAND_SPEED_NO_SUCH = (type) -> prefixed(translatable()
+            // {0} 不是合法的速度类型
+            .key("floracore.command.speed.nosuch")
+            // {0}
+            .args(text(type)).color(RED));
+
+    Args1<String> COMMAND_INVALID_NUMBER = (number) -> prefixed(translatable()
+            // {0} 不是有效的数字
+            .key("floracore.command.invalid-number")
+            // {0}
+            .args(text(number)).color(RED));
+
+    Args3<String, String, String> COMMAND_SPEED_OTHER = (sender, type, speed) -> prefixed(translatable()
+            //{0} 将您的 {1} 速度设为 {2}
+            .key("floracore.command.speed.other")
+            // {}
+            .args(text(sender).color(YELLOW), text(type).color(YELLOW), text(speed).color(YELLOW)).color(GREEN));
+
+    Args3<String, String, String> COMMAND_SPEED = (target, type, speed) -> prefixed(translatable()
+            //{0} 将您的 {1} 速度设为 {2}
+            .key("floracore.command.speed")
+            // {}
+            .args(text(target).color(YELLOW), text(type).color(YELLOW), text(speed).color(YELLOW)).color(GREEN));
+
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();
     }
