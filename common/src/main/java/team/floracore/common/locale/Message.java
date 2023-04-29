@@ -467,45 +467,25 @@ public interface Message {
             // 你当前未处于昵称状态！
             .key("floracore.command.unnick.not-in").color(RED));
 
-    Args1<Integer> COMMAND_AIR_GET_SELF_MAX = value -> prefixed(translatable()
-            .key("floracore.command.air.get.self.max").color(AQUA)
-            .args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_AIR_GET_SELF_MAX = value -> prefixed(translatable().key("floracore.command.air.get.self.max").color(AQUA).args(text(value)).color(GREEN));
 
-    Args1<Integer> COMMAND_AIR_GET_SELF_REMAINING = value -> prefixed(translatable()
-            .key("floracore.command.air.get.self.remaining").color(AQUA)
-            .args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_AIR_GET_SELF_REMAINING = value -> prefixed(translatable().key("floracore.command.air.get.self.remaining").color(AQUA).args(text(value)).color(GREEN));
 
-    Args2<String, Integer> COMMAND_AIR_GET_OTHER_MAX = (target, value) -> prefixed(translatable()
-            .key("floracore.command.air.get.other.max").color(AQUA)
-            .args(text(target).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Integer> COMMAND_AIR_GET_OTHER_MAX = (target, value) -> prefixed(translatable().key("floracore.command.air.get.other.max").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
 
-    Args2<String, Integer> COMMAND_AIR_GET_OTHER_REMAINING = (target, value) -> prefixed(translatable()
-            .key("floracore.command.air.get.other.remaining").color(AQUA)
-            .args(text(target).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Integer> COMMAND_AIR_GET_OTHER_REMAINING = (target, value) -> prefixed(translatable().key("floracore.command.air.get.other.remaining").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
 
-    Args1<Integer> COMMAND_AIR_SET_SELF_MAX = value -> prefixed(translatable()
-            .key("floracore.command.air.set.self.max").color(AQUA)
-            .args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_AIR_SET_SELF_MAX = value -> prefixed(translatable().key("floracore.command.air.set.self.max").color(AQUA).args(text(value)).color(GREEN));
 
-    Args1<Integer> COMMAND_AIR_SET_SELF_REMAINING = value -> prefixed(translatable()
-            .key("floracore.command.air.set.self.remaining").color(AQUA)
-            .args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_AIR_SET_SELF_REMAINING = value -> prefixed(translatable().key("floracore.command.air.set.self.remaining").color(AQUA).args(text(value)).color(GREEN));
 
-    Args2<String, Integer> COMMAND_AIR_SET_OTHER_MAX = (target, value) -> prefixed(translatable()
-            .key("floracore.command.air.set.other.max").color(AQUA)
-            .args(text(target).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Integer> COMMAND_AIR_SET_OTHER_MAX = (target, value) -> prefixed(translatable().key("floracore.command.air.set.other.max").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
 
-    Args2<String, Integer> COMMAND_AIR_SET_OTHER_REMAINING = (target, value) -> prefixed(translatable()
-            .key("floracore.command.air.set.other.remaining").color(AQUA)
-            .args(text(target).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Integer> COMMAND_AIR_SET_OTHER_REMAINING = (target, value) -> prefixed(translatable().key("floracore.command.air.set.other.remaining").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
 
-    Args2<String, Integer> COMMAND_AIR_SET_FROM_MAX = (from, value) -> prefixed(translatable()
-            .key("floracore.command.air.set.from.max").color(AQUA)
-            .args(text(from).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Integer> COMMAND_AIR_SET_FROM_MAX = (from, value) -> prefixed(translatable().key("floracore.command.air.set.from.max").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
 
-    Args2<String, Integer> COMMAND_AIR_SET_FROM_REMAINING = (from, value) -> prefixed(translatable()
-            .key("floracore.command.air.set.from.remaining").color(AQUA)
-            .args(text(from).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Integer> COMMAND_AIR_SET_FROM_REMAINING = (from, value) -> prefixed(translatable().key("floracore.command.air.set.from.remaining").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
 
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
             // 现在,请选择你要使用的{0}!
@@ -590,29 +570,131 @@ public interface Message {
             // {}
             .args(text(name).color(GREEN), text(realName).color(GREEN)).color(AQUA));
 
+
+    Args1<Integer> COMMAND_AIR_GET_MAX_SELF = value -> prefixed(translatable().key("floracore.command.air.get.max.self").color(AQUA).args(text(value)).color(GREEN));
+
+    Args1<Integer> COMMAND_AIR_GET_REMAINING_SELF = value -> prefixed(translatable().key("floracore.command.air.get.remaining.self").color(AQUA).args(text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_AIR_GET_MAX_OTHER = (target, value) -> prefixed(translatable().key("floracore.command.air.get.max.other").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_AIR_GET_REMAINING_OTHER = (target, value) -> prefixed(translatable().key("floracore.command.air.get.remaining.other").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args1<Integer> COMMAND_AIR_SET_MAX_SELF = value -> prefixed(translatable().key("floracore.command.air.set.max.self").color(AQUA).args(text(value)).color(GREEN));
+
+    Args1<Integer> COMMAND_AIR_SET_REMAINING_SELF = value -> prefixed(translatable().key("floracore.command.air.set.remaining.self").color(AQUA).args(text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_AIR_SET_MAX_OTHER = (target, value) -> prefixed(translatable().key("floracore.command.air.set.max.other").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_AIR_SET_REMAINING_OTHER = (target, value) -> prefixed(translatable().key("floracore.command.air.set.remaining.other").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_AIR_SET_MAX_FROM = (from, value) -> prefixed(translatable().key("floracore.command.air.set.max.from").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_AIR_SET_REMAINING_FROM = (from, value) -> prefixed(translatable().key("floracore.command.air.set.remaining.from").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
+
+    Args0 COMMAND_ENDERCHEST_NOT_PLAYER = () -> prefixed(translatable().key("floracore.command.enderchest.not-player").color(RED));
+
+    Args0 COMMAND_ENDERCHEST_OPEN_SELF = () -> prefixed(translatable().key("floracore.command.enderchest.open.self").color(AQUA));
+
+    Args1<String> COMMAND_ENDERCHEST_OPEN_OTHER = target -> prefixed(translatable().key("floracore.command.enderchest.open.other").color(AQUA).args(text(target).color(GREEN)));
+
+    Args2<String, String> COMMAND_ENDERCHEST_OPEN_FOR = (target, for_) -> prefixed(translatable().key("floracore.command.enderchest.open.for").color(AQUA).args(text(target).color(GREEN), text(for_).color(GREEN)));
+
+    Args2<String, String> COMMAND_ENDERCHEST_OPEN_FROM = (from, target) -> prefixed(translatable().key("floracore.command.enderchest.open.from").color(AQUA).args(text(from).color(GREEN), text(target).color(GREEN)));
+
+    Args0 COMMAND_ENDERCHEST_READONLY_TO = () -> prefixed(translatable().key("floracore.command.enderchest.readonly.to").color(YELLOW));
+
+    Args0 COMMAND_ENDERCHEST_READONLY_FROM = () -> prefixed(translatable().key("floracore.command.enderchest.readonly.from").color(RED));
+
+    Args1<Integer> COMMAND_FOOD_GET_SELF_NUTRITION = value -> prefixed(translatable().key("floracore.command.food.get.self.nutrition").color(AQUA).args(text(value)).color(GREEN));
+
+    Args1<Float> COMMAND_FOOD_GET_SELF_SATURATION = value -> prefixed(translatable().key("floracore.command.food.get.self.saturation").color(AQUA).args(text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_FOOD_GET_OTHER_NUTRITION = (target, value) -> prefixed(translatable().key("floracore.command.food.get.other.nutrition").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Float> COMMAND_FOOD_GET_OTHER_SATURATION = (target, value) -> prefixed(translatable().key("floracore.command.food.get.other.saturation").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args1<Integer> COMMAND_FOOD_SET_SELF_NUTRITION = value -> prefixed(translatable().key("floracore.command.food.set.self.nutrition").color(AQUA).args(text(value)).color(GREEN));
+
+    Args1<Float> COMMAND_FOOD_SET_SELF_SATURATION = value -> prefixed(translatable().key("floracore.command.food.set.self.saturation").color(AQUA).args(text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_FOOD_SET_OTHER_NUTRITION = (target, value) -> prefixed(translatable().key("floracore.command.food.set.other.nutrition").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Float> COMMAND_FOOD_SET_OTHER_SATURATION = (target, value) -> prefixed(translatable().key("floracore.command.food.set.other.saturation").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Integer> COMMAND_FOOD_SET_FROM_NUTRITION = (from, value) -> prefixed(translatable().key("floracore.command.food.set.from.nutrition").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
+
+    Args2<String, Float> COMMAND_FOOD_SET_FROM_SATURATION = (from, value) -> prefixed(translatable().key("floracore.command.food.set.from.saturation").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
+
+    Args0 COMMAND_FOOD_SET_INVALIDVALUE = () -> prefixed(translatable().key("floracore.command.food.set.invalidvalue").color(RED));
+
+    Args2<String, String> COMMAND_HASPERMISSION_YES = (target, permission) -> prefixed(translatable().key("floracore.command.haspermission.yes").color(AQUA).args(text(target).color(GREEN), text(permission)).color(GREEN));
+
+    Args2<String, String> COMMAND_HASPERMISSION_NO = (target, permission) -> prefixed(translatable().key("floracore.command.haspermission.no").color(RED).args(text(target).color(GREEN), text(permission)).color(GREEN));
+
+    Args0 COMMAND_FEED_SELF = () -> prefixed(translatable().key("floracore.command.feed.self").color(AQUA));
+
+    Args1<String> COMMAND_FEED_OTHER = target -> prefixed(translatable().key("floracore.command.feed.other").color(AQUA).args(text(target).color(GREEN)));
+
+    Args1<String> COMMAND_FEED_FROM = from -> prefixed(translatable().key("floracore.command.feed.from").color(AQUA).args(text(from).color(GREEN)));
+
+    Args0 COMMAND_HEAL_SELF = () -> prefixed(translatable().key("floracore.command.heal.self").color(AQUA));
+
+    Args1<String> COMMAND_HEAL_OTHER = target -> prefixed(translatable().key("floracore.command.heal.other").color(AQUA).args(text(target).color(GREEN)));
+
+    Args1<String> COMMAND_HEAL_FROM = from -> prefixed(translatable().key("floracore.command.heal.from").color(AQUA).args(text(from).color(GREEN)));
+
+    Args1<Integer> COMMAND_FIRETICK_SELF = time -> prefixed(translatable().key("floracore.command.firetick.self").color(AQUA).args(text(time).color(GREEN)));
+
+    Args2<String, Integer> COMMAND_FIRETICK_OTHER = (target, time) -> prefixed(translatable().key("floracore.command.firetick.other").color(AQUA).args(text(target).color(GREEN), text(time).color(GREEN)));
+
+    Args2<String, Integer> COMMAND_FIRETICK_FROM = (from, time) -> prefixed(translatable().key("floracore.command.firetick.from").color(AQUA).args(text(from).color(GREEN), text(time).color(GREEN)));
+
+    Args1<Integer> COMMAND_OPLIST_HEADER = count -> prefixed(translatable().key("floracore.command.oplist.header").color(AQUA).args(text(count).color(GREEN)));
+
+    Args0 COMMAND_OPLIST_HEADER_NONE = () -> prefixed(translatable().key("floracore.command.oplist.header.none").color(AQUA));
+
+    Args3<String, UUID, Boolean> COMMAND_OPLIST_ENTRY = (name, uuid, online) -> prefixed(translatable().key("floracore.command.oplist.entry").color(AQUA).args(text(name).color(GREEN), text(uuid.toString()).color(GREEN), translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline").color(online ? GREEN : RED)));
+
+    Args1<Integer> COMMAND_PING_SELF = ping -> prefixed(translatable().key("floracore.command.ping.self").color(AQUA).args(text(ping).color(ping > 250 ? DARK_RED : ping > 200 ? RED : ping > 150 ? GOLD : ping > 100 ? YELLOW : ping > 50 ? GREEN : ping > 0 ? DARK_GREEN : WHITE)));
+
+    Args2<String, Integer> COMMAND_PING_OTHER = (target, ping) -> prefixed(translatable().key("floracore.command.ping.other").color(AQUA).args(text(target).color(GREEN), text(ping).color(ping > 250 ? DARK_RED : ping > 200 ? RED : ping > 150 ? GOLD : ping > 100 ? YELLOW : ping > 50 ? GREEN : ping > 0 ? DARK_GREEN : WHITE)));
+
+    Args1<Double> COMMAND_MAXHEALTH_GET_SELF = value -> prefixed(translatable().key("floracore.command.maxhealth.get.self").color(AQUA).args(text(value).color(GREEN)));
+
+    Args2<String, Double> COMMAND_MAXHEALTH_GET_OTHER = (target, value) -> prefixed(translatable().key("floracore.command.maxhealth.get.other").color(AQUA).args(text(target).color(GREEN), text(value).color(GREEN)));
+
+    Args1<Double> COMMAND_MAXHEALTH_SET_SELF = value -> prefixed(translatable().key("floracore.command.maxhealth.set.self").color(AQUA).args(text(value).color(GREEN)));
+
+    Args2<String, Double> COMMAND_MAXHEALTH_SET_OTHER = (target, value) -> prefixed(translatable().key("floracore.command.maxhealth.set.other").color(AQUA).args(text(target).color(GREEN), text(value).color(GREEN)));
+
+    Args2<String, Double> COMMAND_MAXHEALTH_SET_FROM = (from, value) -> prefixed(translatable().key("floracore.command.maxhealth.set.from").color(AQUA).args(text(from).color(GREEN), text(value).color(GREEN)));
+
+    Args0 COMMAND_MISC_SPEED_FLY = () -> translatable("floracore.command.misc.speed.fly");
+    Args0 COMMAND_MISC_SPEED_WALK = () -> translatable("floracore.command.misc.speed.walk");
+
     Args1<String> COMMAND_SPEED_NO_SUCH = (type) -> prefixed(translatable()
             // {0} 不是合法的速度类型
             .key("floracore.command.speed.nosuch")
             // {0}
             .args(text(type)).color(RED));
 
-    Args1<String> COMMAND_INVALID_NUMBER = (number) -> prefixed(translatable()
+    Args1<String> COMMAND_MISC_INVALID_NUMBER = (number) -> prefixed(translatable()
             // {0} 不是有效的数字
-            .key("floracore.command.invalid-number")
+            .key("floracore.command.misc.invalid-number")
             // {0}
             .args(text(number)).color(RED));
 
-    Args3<String, String, String> COMMAND_SPEED_OTHER = (sender, type, speed) -> prefixed(translatable()
+    Args3<String, Component, String> COMMAND_SPEED_OTHER = (sender, type, speed) -> prefixed(translatable()
             //{0} 将您的 {1} 速度设为 {2}
             .key("floracore.command.speed.other")
             // {}
-            .args(text(sender).color(YELLOW), text(type).color(YELLOW), text(speed).color(YELLOW)).color(GREEN));
+            .args(text(sender).color(GREEN), type.color(YELLOW), text(speed).color(DARK_GREEN)).color(AQUA));
 
-    Args3<String, String, String> COMMAND_SPEED = (target, type, speed) -> prefixed(translatable()
+    Args3<String, Component, String> COMMAND_SPEED = (target, type, speed) -> prefixed(translatable()
             //{0} 将您的 {1} 速度设为 {2}
             .key("floracore.command.speed")
             // {}
-            .args(text(target).color(YELLOW), text(type).color(YELLOW), text(speed).color(YELLOW)).color(GREEN));
+            .args(text(target).color(GREEN), type.color(YELLOW), text(speed).color(DARK_GREEN)).color(AQUA));
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();

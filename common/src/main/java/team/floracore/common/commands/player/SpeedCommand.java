@@ -1,23 +1,21 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.floracore.api.data.DataType;
+import net.kyori.adventure.text.*;
+import org.bukkit.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.bukkit.event.*;
+import org.bukkit.event.player.*;
+import org.floracore.api.data.*;
 import team.floracore.common.command.*;
-import team.floracore.common.locale.Message;
+import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
-import team.floracore.common.sender.Sender;
-import team.floracore.common.storage.misc.floracore.tables.Data;
+import team.floracore.common.sender.*;
+import team.floracore.common.storage.misc.floracore.tables.*;
 
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import java.util.UUID;
+import javax.annotation.*;
+import java.util.*;
 
 @CommandPermission("floracore.command.speed")
 public class SpeedCommand extends AbstractFloraCoreCommand implements Listener {
@@ -32,7 +30,8 @@ public class SpeedCommand extends AbstractFloraCoreCommand implements Listener {
             if (commandSender instanceof Player) {
                 checkSyntaxAndExecute((Player) commandSender, type, speed, null, false);
             } else {
-                commandSender.sendMessage(ChatColor.RED + "Usage: /speed <type> <speed> <target>");
+                Sender sender = getPlugin().getSenderFactory().wrap(commandSender);
+                Message.COMMAND_INVALID_COMMAND_SENDER.send(sender, commandSender.getClass().getSimpleName(), Player.class.getSimpleName());
             }
         } else {
             Player player = Bukkit.getPlayer(target);
@@ -50,7 +49,7 @@ public class SpeedCommand extends AbstractFloraCoreCommand implements Listener {
         try {
             targetSpeed = Float.parseFloat(speed);
         } catch (NumberFormatException e) {
-            Message.COMMAND_INVALID_NUMBER.send(getPlugin().getSenderFactory().wrap(sender == null ? target : sender), speed);
+            Message.COMMAND_MISC_INVALID_NUMBER.send(getPlugin().getSenderFactory().wrap(sender == null ? target : sender), speed);
             return;
         }
         boolean modified = false;
@@ -68,29 +67,33 @@ public class SpeedCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     private void setSpeed(@Nonnull Player target, @Nonnull Type type, float speed, @Nullable CommandSender sender, boolean silent) {
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Sender t = getPlugin().getSenderFactory().wrap(target);
         switch (type) {
-            case FLY -> {
+            case FLY:
                 target.setFlySpeed(speed);
+                Component fly = Message.COMMAND_MISC_SPEED_FLY.build();
                 if (sender == null) {
-                    Message.COMMAND_SPEED_OTHER.send(getPlugin().getSenderFactory().wrap(target), "", "飞行", String.valueOf(speed));
+                    Message.COMMAND_SPEED.send(t, t.getDisplayName(), fly, String.valueOf(speed));
                 } else {
-                    Message.COMMAND_SPEED.send(getPlugin().getSenderFactory().wrap(sender), target.getName(), "飞行", String.valueOf(speed));
+                    Message.COMMAND_SPEED.send(s, t.getDisplayName(), fly, String.valueOf(speed));
                     if (!silent) {
-                        Message.COMMAND_SPEED_OTHER.send(getPlugin().getSenderFactory().wrap(target), sender.getName(), "飞行", String.valueOf(speed));
+                        Message.COMMAND_SPEED_OTHER.send(t, s.getDisplayName(), fly, String.valueOf(speed));
                     }
                 }
-            }
-            case WALK -> {
+                break;
+            case WALK:
                 target.setWalkSpeed(speed);
+                Component walk = Message.COMMAND_MISC_SPEED_WALK.build();
                 if (sender == null) {
-                    Message.COMMAND_SPEED_OTHER.send(getPlugin().getSenderFactory().wrap(target), "", "移动", String.valueOf(speed));
+                    Message.COMMAND_SPEED.send(t, t.getDisplayName(), walk, String.valueOf(speed));
                 } else {
-                    Message.COMMAND_SPEED.send(getPlugin().getSenderFactory().wrap(sender), target.getName(), "移动", String.valueOf(speed));
+                    Message.COMMAND_SPEED.send(s, t.getDisplayName(), walk, String.valueOf(speed));
                     if (!silent) {
-                        Message.COMMAND_SPEED_OTHER.send(getPlugin().getSenderFactory().wrap(target), sender.getName(), "移动", String.valueOf(speed));
+                        Message.COMMAND_SPEED_OTHER.send(t, s.getDisplayName(), walk, String.valueOf(speed));
                     }
                 }
-            }
+                break;
         }
     }
 
