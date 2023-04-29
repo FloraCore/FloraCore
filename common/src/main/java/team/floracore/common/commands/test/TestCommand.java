@@ -167,4 +167,14 @@ public class TestCommand extends AbstractFloraCoreCommand {
     public void test_c5_a1_qu(final @NonNull CommandSender sender, final @Argument("query") String[] query) {
         sender.sendMessage("我是c2中的a2命令，你选择的query是" + Arrays.toString(query));
     }
+
+    /**
+     * 这是含有参数列表的参数例示。
+     * 使用@Greedy同样能实现上述效果，在任何情况下，都推荐使用这种方式。
+     */
+    @CommandMethod("test c5 a2 [query]")
+    @CommandDescription("测试c5 a2命令")
+    public void test_c5_a2_qu(final @NonNull CommandSender sender, final @Argument("query") @Greedy String query) {
+        sender.sendMessage("我是c2中的a2命令，你选择的query是" + query);
+    }
 }
