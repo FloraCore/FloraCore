@@ -23,11 +23,11 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
     /**
      * 对应玩家禁止修改的内容
      */
-    // TODO 在插件禁用时将这个列表清空
     public static final Map<UUID, Inventory> READONLY_MAP = new HashMap<>();
 
     public EnderChestCommand(FloraCorePlugin plugin) {
         super(plugin);
+        plugin.getListenerManager().registerListener(this);
     }
 
     @CommandMethod("ender|enderchest [target] [for]")
