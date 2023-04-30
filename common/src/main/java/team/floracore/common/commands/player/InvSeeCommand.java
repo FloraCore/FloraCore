@@ -8,6 +8,9 @@ import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 
+/**
+ * InvSee命令
+ */
 @CommandPermission("floracore.command.invsee")
 public class InvSeeCommand extends AbstractFloraCoreCommand {
     public InvSeeCommand(FloraCorePlugin plugin) {

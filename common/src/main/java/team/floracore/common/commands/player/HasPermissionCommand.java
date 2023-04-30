@@ -14,6 +14,9 @@ import team.floracore.common.sender.*;
 
 import java.util.*;
 
+/**
+ * HasPermission命令
+ */
 @CommandDescription("检查玩家是否拥有目标权限")
 @CommandPermission("floracore.command.haspermission")
 public class HasPermissionCommand extends AbstractFloraCoreCommand {

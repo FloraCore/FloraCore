@@ -13,6 +13,9 @@ import java.lang.reflect.*;
 
 import static team.floracore.common.util.ReflectionWrapper.*;
 
+/**
+ * Ping命令
+ */
 @CommandDescription("获取玩家ping延迟")
 @CommandPermission("floracore.command.ping")
 public class PingCommand extends AbstractFloraCoreCommand {

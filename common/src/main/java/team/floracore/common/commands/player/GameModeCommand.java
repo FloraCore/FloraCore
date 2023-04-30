@@ -15,6 +15,9 @@ import team.floracore.common.sender.*;
 
 import java.util.*;
 
+/**
+ * GameMode命令
+ */
 @CommandPermission("floracore.command.gamemode")
 public class GameModeCommand extends AbstractFloraCoreCommand {
     public GameModeCommand(FloraCorePlugin plugin) {

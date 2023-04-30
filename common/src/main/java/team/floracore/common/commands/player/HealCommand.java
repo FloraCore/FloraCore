@@ -9,6 +9,9 @@ import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.util.*;
 
+/**
+ * Heal命令
+ */
 @CommandPermission("floracore.command.heal")
 @CommandDescription("治疗一名玩家")
 public class HealCommand extends AbstractFloraCoreCommand {

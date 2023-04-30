@@ -11,6 +11,9 @@ import team.floracore.common.sender.*;
 
 import java.util.*;
 
+/**
+ * OPList命令
+ */
 @CommandDescription("列出本服所有拥有OP权限的玩家")
 @CommandPermission("floracore.command.oplist")
 public class OPListCommand extends AbstractFloraCoreCommand {

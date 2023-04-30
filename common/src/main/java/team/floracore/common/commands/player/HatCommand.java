@@ -12,6 +12,9 @@ import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.craftbukkit.*;
 
+/**
+ * Hat命令
+ */
 @CommandPermission("floracore.command.hat")
 public class HatCommand extends AbstractFloraCoreCommand {
     public HatCommand(FloraCorePlugin plugin) {

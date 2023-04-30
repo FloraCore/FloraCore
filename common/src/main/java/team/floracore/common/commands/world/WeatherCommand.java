@@ -16,6 +16,9 @@ import team.floracore.common.sender.*;
 
 import java.util.*;
 
+/**
+ * Weather命令
+ */
 @CommandPermission("floracore.command.weather")
 public class WeatherCommand extends AbstractFloraCoreCommand {
     public WeatherCommand(FloraCorePlugin plugin) {

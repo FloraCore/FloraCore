@@ -15,6 +15,9 @@ import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.util.*;
 
+/**
+ * Fly命令
+ */
 @CommandPermission("floracore.command.fly")
 public class FlyCommand extends AbstractFloraCoreCommand implements Listener {
     public FlyCommand(FloraCorePlugin plugin) {

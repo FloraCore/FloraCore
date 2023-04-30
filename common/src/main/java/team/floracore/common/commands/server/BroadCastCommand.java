@@ -12,6 +12,10 @@ import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 
+/**
+ * BroadCast命令
+ */
+@CommandPermission("floracore.command.broadcast")
 public class BroadCastCommand extends AbstractFloraCoreCommand {
     public BroadCastCommand(FloraCorePlugin plugin) {
         super(plugin);

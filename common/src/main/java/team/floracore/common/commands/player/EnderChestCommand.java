@@ -17,6 +17,10 @@ import team.floracore.common.util.*;
 import java.util.*;
 
 // TODO 监听器尚未注册
+
+/**
+ * EnderChest命令
+ */
 @CommandDescription("打开末影箱")
 @CommandPermission("floracore.command.enderchest")
 public class EnderChestCommand extends AbstractFloraCoreCommand implements Listener {
