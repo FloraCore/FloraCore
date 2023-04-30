@@ -1,5 +1,6 @@
 package org.floracore.api;
 
+import org.floracore.api.chat.*;
 import org.floracore.api.data.*;
 import org.floracore.api.player.*;
 
@@ -25,4 +26,6 @@ public interface FloraCore {
     DataAPI getDataAPI();
 
     PlayerAPI getPlayerAPI();
+
+    ChatAPI getChatAPI();
 }

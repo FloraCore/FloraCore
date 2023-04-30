@@ -8,7 +8,7 @@ import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
-import team.floracore.common.util.SenderUtil;
+import team.floracore.common.util.*;
 
 @CommandDescription("获取或设置氧气值")
 @CommandPermission("floracore.command.air")

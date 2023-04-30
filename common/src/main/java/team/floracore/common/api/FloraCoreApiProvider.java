@@ -1,6 +1,7 @@
 package team.floracore.common.api;
 
 import org.floracore.api.*;
+import org.floracore.api.chat.*;
 import org.floracore.api.data.*;
 import org.floracore.api.player.*;
 import team.floracore.common.api.implementation.*;
@@ -18,11 +19,13 @@ public class FloraCoreApiProvider implements FloraCore {
     private final DataAPI dataAPI;
 
     private final PlayerAPI playerAPI;
+    private final ChatAPI chatAPI;
 
     public FloraCoreApiProvider(FloraCorePlugin plugin) {
         this.plugin = plugin;
         this.dataAPI = new ApiData(plugin);
         this.playerAPI = new ApiPlayer(plugin);
+        this.chatAPI = new ApiChat(plugin);
     }
 
     public void ensureApiWasLoadedByPlugin() {
@@ -62,5 +65,10 @@ public class FloraCoreApiProvider implements FloraCore {
     @Override
     public PlayerAPI getPlayerAPI() {
         return this.playerAPI;
+    }
+
+    @Override
+    public ChatAPI getChatAPI() {
+        return this.chatAPI;
     }
 }
