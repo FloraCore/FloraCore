@@ -35,7 +35,7 @@ public class AirCommand extends AbstractFloraCoreCommand {
         Message.COMMAND_AIR_GET_MAX_OTHER.send(sender, target.getName(), target.getMaximumAir()); // 返回最大氧气值
     }
 
-    @CommandMethod("air setmax <value> [player]")
+    @CommandMethod("air setmax <value> [target]")
     @CommandPermission("floracore.command.air.set.max")
     @CommandDescription("设置自己的最大氧气值（单位：ticks）")
     public void setMax(

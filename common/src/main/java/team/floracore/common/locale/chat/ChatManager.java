@@ -1,9 +1,11 @@
 package team.floracore.common.locale.chat;
 
+import com.google.gson.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.floracore.api.chat.*;
+import org.floracore.api.data.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
@@ -12,6 +14,7 @@ import java.util.*;
 public class ChatManager implements Listener {
     private final FloraCorePlugin plugin;
     private final Chat chat;
+    private final HashMap<UUID, MapPlayerRecord> players = new HashMap<>();
 
     public ChatManager(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -50,14 +53,66 @@ public class ChatManager implements Listener {
         this.chat.setRecords(chatRecords);
     }
 
+    public UUID getPlayerChatUUID(Player player) {
+        UUID uuid = player.getUniqueId();
+        return players.get(uuid).getChatUUID();
+    }
+
     @EventHandler
     public void onChat(AsyncPlayerChatEvent e) {
         Player p = e.getPlayer();
         UUID uuid = p.getUniqueId();
-        String message = e.getMessage();
         long time = System.currentTimeMillis();
+        String message = e.getMessage();
         int id = this.chat.getRecords().size() + 1;
         ChatRecord chatRecord = new ChatRecord(id, uuid, message, time);
         this.plugin.getBootstrap().getScheduler().async().execute(() -> addChatRecord(chatRecord));
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
+        long time = System.currentTimeMillis();
+        UUID chatUUID = UUID.randomUUID();
+        MapPlayerRecord mapPlayerRecord = new MapPlayerRecord(time, chatUUID);
+        players.put(uuid, mapPlayerRecord);
+        this.plugin.getBootstrap().getScheduler().async().execute(() -> {
+            this.plugin.getStorage().getImplementation().insertData(uuid, DataType.CHAT, chatUUID.toString(), "", 0);
+        });
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
+        MapPlayerRecord mapPlayerRecord = players.get(uuid);
+        long joinTime = mapPlayerRecord.getJoinTime();
+        long quitTime = System.currentTimeMillis();
+        players.remove(uuid);
+        PlayerChatRecord playerChatRecord = new PlayerChatRecord(this.chat.getId(), joinTime, quitTime);
+        Gson gson = new Gson();
+        String recordsJson = gson.toJson(playerChatRecord);
+        this.plugin.getBootstrap().getScheduler().async().execute(() -> {
+            this.plugin.getStorage().getImplementation().insertData(uuid, DataType.CHAT, mapPlayerRecord.getChatUUID().toString(), recordsJson, 0);
+        });
+    }
+
+    public static class MapPlayerRecord {
+        private final long joinTime;
+        private final UUID chatUUID;
+
+        public MapPlayerRecord(long joinTime, UUID chatUUID) {
+            this.joinTime = joinTime;
+            this.chatUUID = chatUUID;
+        }
+
+        public long getJoinTime() {
+            return joinTime;
+        }
+
+        public UUID getChatUUID() {
+            return chatUUID;
+        }
     }
 }
