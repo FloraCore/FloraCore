@@ -92,19 +92,35 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
 
     @EventHandler
     public void onClickInventory(InventoryClickEvent event) {
-        Inventory inventory = READONLY_MAP.get(event.getWhoClicked().getUniqueId());
-        if (event.getInventory().equals(inventory)) { // 禁止修改这个物品栏
+        if (!(event.getWhoClicked() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = READONLY_MAP.get(player.getUniqueId());
+        boolean cancel = false;
+        //noinspection RedundantIfStatement
+        if (inventory != null && (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
+            cancel = true;
+        }
+        if (Objects.equals(event.getClickedInventory(), inventory)) { // 禁止修改这个物品栏
+            cancel = true;
+        }
+        if (cancel) {
             event.setCancelled(true);
-            Message.COMMAND_ENDERCHEST_READONLY_FROM.send(getPlugin().getSenderFactory().wrap(event.getWhoClicked()));
+            Message.COMMAND_ENDERCHEST_READONLY_FROM.send(getPlugin().getSenderFactory().wrap(player));
         }
     }
 
     @EventHandler
     public void onClickInventory(InventoryDragEvent event) {
-        Inventory inventory = READONLY_MAP.get(event.getWhoClicked().getUniqueId());
-        if (event.getInventory().equals(inventory)) { // 禁止修改这个物品栏
+        if (!(event.getWhoClicked() instanceof Player)) {
+            return;
+        }
+        Player player = (Player) event.getWhoClicked();
+        Inventory inventory = READONLY_MAP.get(player.getUniqueId());
+        if (Objects.equals(event.getInventory(), inventory)) { // 禁止修改这个物品栏
             event.setCancelled(true);
-            Message.COMMAND_ENDERCHEST_READONLY_FROM.send(getPlugin().getSenderFactory().wrap(event.getWhoClicked()));
+            Message.COMMAND_ENDERCHEST_READONLY_FROM.send(getPlugin().getSenderFactory().wrap(player));
         }
     }
 
