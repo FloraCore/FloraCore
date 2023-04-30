@@ -136,5 +136,5 @@ commands:
     max-walk-speed: 0.8
 
 server:
-  name: "lobby"
+  name: "global"
   type: "lobby"

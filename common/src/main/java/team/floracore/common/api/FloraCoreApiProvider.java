@@ -4,7 +4,9 @@ import org.floracore.api.*;
 import org.floracore.api.chat.*;
 import org.floracore.api.data.*;
 import org.floracore.api.player.*;
+import org.floracore.api.server.*;
 import team.floracore.common.api.implementation.*;
+import team.floracore.common.config.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
@@ -55,6 +57,16 @@ public class FloraCoreApiProvider implements FloraCore {
                 return;
             }
         }
+    }
+
+    @Override
+    public String getServerName() {
+        return plugin.getServerName();
+    }
+
+    @Override
+    public ServerType getServerType() {
+        return plugin.getConfiguration().get(ConfigKeys.SERVER_TYPE);
     }
 
     @Override

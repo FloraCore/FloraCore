@@ -3,6 +3,7 @@ package org.floracore.api;
 import org.floracore.api.chat.*;
 import org.floracore.api.data.*;
 import org.floracore.api.player.*;
+import org.floracore.api.server.*;
 
 /**
  * The FloraCore API.
@@ -23,9 +24,44 @@ import org.floracore.api.player.*;
  * {@link FloraCoreProvider}.</p>
  */
 public interface FloraCore {
+
+    /**
+     * Gets the name of this server.
+     *
+     * <p>This is defined in the FloraCore configuration file, and is used for
+     * server specific permission handling.</p>
+     *
+     * <p>The default server name is "global".</p>
+     *
+     * @return the server name
+     */
+    String getServerName();
+
+    /**
+     * 获取服务器的类型
+     *
+     * @return 服务器的类型
+     */
+    ServerType getServerType();
+
+    /**
+     * 获取数据API
+     *
+     * @return 数据API
+     */
     DataAPI getDataAPI();
 
+    /**
+     * 获取玩家API
+     *
+     * @return 玩家API
+     */
     PlayerAPI getPlayerAPI();
 
+    /**
+     * 获取聊天API
+     *
+     * @return 聊天API
+     */
     ChatAPI getChatAPI();
 }

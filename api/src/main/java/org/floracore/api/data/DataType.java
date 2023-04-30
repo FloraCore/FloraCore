@@ -1,10 +1,32 @@
 package org.floracore.api.data;
 
+/**
+ * 这个类是关于Data数据库中存储的数据类型。
+ */
 public enum DataType {
+    /**
+     * 自动同步
+     * 例如：Fly
+     */
     AUTO_SYNC("auto-sync"),
+    /**
+     * 功能
+     * 例如：Nick
+     */
     FUNCTION("function"),
+    /**
+     * 暂存储的数据
+     * 例如：LuckPerms的Prefix
+     */
     STAGING_DATA("staging-data"),
+    /**
+     * 聊天记录
+     */
     CHAT("chat"),
+    /**
+     * 自定义
+     * 用于命令
+     */
     CUSTOM("custom");
     final String name;
 
