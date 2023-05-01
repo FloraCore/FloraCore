@@ -61,7 +61,7 @@ public final class MultipleVersionsUtil {
         } catch (ClassNotFoundException e) { // 没有org.bukkit.attribute.Attribute这个类，说明不存在Attribute概念，应该是低版本
             // return player.setMaxHealth(value)
             ReflectionWrapper.invokeMethod(
-                    ReflectionWrapper.getMethod(Player.class, "setMaxHealth", double.class),
+                    ReflectionWrapper.getMethod(Damageable.class, "setMaxHealth", double.class),
                     player
             );
         }
