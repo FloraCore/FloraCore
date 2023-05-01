@@ -126,7 +126,7 @@ public class CommandManager {
         this.annotationParser.parse(new PingCommand(plugin)); // TODO 未测试命令
         this.annotationParser.parse(new RealNameCommand(plugin));
         this.annotationParser.parse(new SpeedCommand(plugin)); // TODO 命令异常
-        this.annotationParser.parse(new SuicideCommand(plugin)); // TODO 未测试命令
+        this.annotationParser.parse(new SuicideCommand(plugin));
         this.annotationParser.parse(new TopCommand(plugin));
 
         // server
