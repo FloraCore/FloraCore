@@ -1,28 +1,21 @@
 package team.floracore.common.commands.item;
 
 import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
-import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import team.floracore.common.command.AbstractFloraCoreCommand;
-import team.floracore.common.locale.Message;
-import team.floracore.common.plugin.FloraCorePlugin;
-import team.floracore.common.sender.Sender;
-import team.floracore.common.util.MultipleVersionsUtil;
-import team.floracore.common.util.SenderUtil;
+import cloud.commandframework.annotations.suggestions.*;
+import cloud.commandframework.context.*;
+import org.bukkit.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.*;
+import org.jetbrains.annotations.*;
+import team.floracore.common.command.*;
+import team.floracore.common.locale.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
+import team.floracore.common.util.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @CommandPermission("floracore.command.itemflag")
 @CommandDescription("给手上的物品添加或删除Flag")
@@ -167,9 +160,9 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
     /**
      * 检查玩家手上的物品，若物品不正确，则发送消息
      *
-     * @param sender 命令发送者
+     * @param sender    命令发送者
      * @param inventory 物品栏
-     * @param other 根据是否是他人发送对应的消息，当为null时发送self消息；当不为null时，发送other消息
+     * @param other     根据是否是他人发送对应的消息，当为null时发送self消息；当不为null时，发送other消息
      * @return 若检查通过，返回ItemStack，否则返回empty
      */
     private @NotNull Optional<ItemStack> checkItemInHand(@NotNull Sender sender, @NotNull PlayerInventory inventory, @Nullable String other) {

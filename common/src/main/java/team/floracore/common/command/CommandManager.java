@@ -9,7 +9,7 @@ import cloud.commandframework.execution.*;
 import cloud.commandframework.meta.*;
 import cloud.commandframework.paper.*;
 import org.bukkit.command.*;
-import team.floracore.common.commands.item.ItemFlagCommand;
+import team.floracore.common.commands.item.*;
 import team.floracore.common.commands.misc.FloraCoreCommand;
 import team.floracore.common.commands.player.*;
 import team.floracore.common.commands.server.*;
@@ -110,16 +110,27 @@ public class CommandManager {
 
         // player
         this.annotationParser.parse(new AirCommand(plugin));
+        /*
+         * BUG复现：
+         * 操作：打开背包，往背包周围点，就可以触发floracore.command.enderchest.readonly.from
+         */
         this.annotationParser.parse(new EnderChestCommand(plugin)); // TODO 命令异常 命令事件逻辑异常 与FireTick命令冲突
         this.annotationParser.parse(new FeedCommand(plugin)); // TODO 未测试命令
         this.annotationParser.parse(new FireTickCommand(plugin)); // TODO 未测试命令 可以使用，但是经过测试发现，会在火焰消失后发送 floracore.command.enderchest.readonly.from
         this.annotationParser.parse(new FlyCommand(plugin));
         this.annotationParser.parse(new FoodCommand(plugin)); // TODO 未测试命令
         this.annotationParser.parse(new GameModeCommand(plugin));
-        this.annotationParser.parse(new GiveCommand(plugin));
+        this.annotationParser.parse(new GiveCommand(plugin)); // TODO 尚未编写的命令
         this.annotationParser.parse(new HasPermissionCommand(plugin));
         this.annotationParser.parse(new HatCommand(plugin));
-        this.annotationParser.parse(new HealCommand(plugin)); // TODO 命令异常 java.lang.NoSuchMethodException: org.bukkit.entity.Player.getMaxHealth()
+        /*
+         * 出现的异常：（Heal命令）
+         * java.lang.ClassCastException: java.lang.Integer cannot be cast to java.lang.Double
+         * at team.floracore.common.util.MultipleVersionsUtil.getMaxHealth(MultipleVersionsUtil.java:41) ~[floracore-jarinjar581403494597557186.jar.tmp:?]
+         * at team.floracore.common.commands.player.HealCommand.heal(HealCommand.java:45) ~[floracore-jarinjar581403494597557186.jar.tmp:?]
+         * at team.floracore.common.commands.player.HealCommand.other(HealCommand.java:37) ~[floracore-jarinjar581403494597557186.jar.tmp:?]
+         */
+        this.annotationParser.parse(new HealCommand(plugin)); // TODO 命令异常
         this.annotationParser.parse(new InvSeeCommand(plugin));
         this.annotationParser.parse(new MaxHealthCommand(plugin)); // TODO 待测试命令
         this.annotationParser.parse(new NickCommand(plugin)); // TODO 命令测试中 未测试：Rank设置 未完善：Skin设置

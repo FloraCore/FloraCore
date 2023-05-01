@@ -1,8 +1,8 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
+import cloud.commandframework.annotations.suggestions.*;
+import cloud.commandframework.context.*;
 import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -10,13 +10,14 @@ import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.floracore.api.data.*;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
+import javax.annotation.Nullable;
 import javax.annotation.*;
 import java.util.*;
 
@@ -129,13 +130,13 @@ public class SpeedCommand extends AbstractFloraCoreCommand implements Listener {
         }
     }
 
-    enum Type {
-        FLY,
-        WALK
-    }
-
     @Suggestions("get_types")
     public List<String> getTypes(@NotNull CommandContext<CommandSender> sender, @NotNull String input) {
         return new ArrayList<>(Arrays.asList("fly", "walk"));
+    }
+
+    enum Type {
+        FLY,
+        WALK
     }
 }

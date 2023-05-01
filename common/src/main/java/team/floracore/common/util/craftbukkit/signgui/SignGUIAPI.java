@@ -72,14 +72,10 @@ public final class SignGUIAPI {
             public void onPacketReceiving(PacketEvent event) {
                 if (event.getPlayer().getUniqueId().equals(SignGUIAPI.this.uuid)) {
                     List<String> lines = Stream.of(0, 1, 2, 3).map(line -> getLine(event, line)).collect(Collectors.toList());
-
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         manager.removePacketListener(this);
-
                         HandlerList.unregisterAll(SignGUIAPI.this.listener);
-
                         SignGUIAPI.this.sign.getBlock().setType(Material.AIR);
-
                         SignGUIAPI.this.action.onSignClose(new SignCompletedEvent(event.getPlayer(), lines));
                     });
                 }

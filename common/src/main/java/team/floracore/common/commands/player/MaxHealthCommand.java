@@ -7,7 +7,7 @@ import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
-import team.floracore.common.sender.Sender;
+import team.floracore.common.sender.*;
 import team.floracore.common.util.*;
 
 /**
