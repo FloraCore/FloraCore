@@ -9,6 +9,7 @@ import cloud.commandframework.execution.*;
 import cloud.commandframework.meta.*;
 import cloud.commandframework.paper.*;
 import org.bukkit.command.*;
+import team.floracore.common.commands.item.ItemFlagCommand;
 import team.floracore.common.commands.misc.FloraCoreCommand;
 import team.floracore.common.commands.player.*;
 import team.floracore.common.commands.server.*;
@@ -135,5 +136,8 @@ public class CommandManager {
         // world
         this.annotationParser.parse(new TimeCommand(plugin));
         this.annotationParser.parse(new WeatherCommand(plugin));
+
+        // item
+        this.annotationParser.parse(new ItemFlagCommand(plugin)); // TODO 未测试
     }
 }

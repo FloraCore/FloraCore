@@ -711,6 +711,40 @@ public interface Message {
             // {}
             .args(text(target).color(GREEN)).color(AQUA));
 
+    Args0 COMMAND_ITEMFLAG_NOITEM_SELF = () -> prefixed(translatable().key("floracore.command.itemflag.noitem.self").color(RED));
+
+    Args1<String> COMMAND_ITEMFLAG_NOITEM_OTHER = target -> prefixed(translatable().key("floracore.command.itemflag.noitem.other").color(RED).args(text(target).color(GREEN)));
+
+    Args0 COMMAND_ITEMFLAG_UNSUPPORTEDITEM = () -> prefixed(translatable().key("floracore.command.itemflag.unsupporteditem").color(RED));
+
+    Args1<String> COMMAND_ITEMFLAG_ALREADYHAS_SELF = flag -> prefixed(translatable().key("floracore.command.itemflag.alreadyhas.self").color(RED).args(text(flag).color(GREEN)));
+
+    Args2<String, String> COMMAND_ITEMFLAG_ALREADYHAS_OTHER = (target, flag) -> prefixed(translatable().key("floracore.command.itemflag.alreadyhas.other").color(RED).args(text(target).color(GREEN), text(flag).color(GREEN)));
+
+    Args1<String> COMMAND_ITEMFLAG_HASNO_SELF = flag -> prefixed(translatable().key("floracore.command.itemflag.hasno.self").color(RED).args(text(flag).color(GREEN)));
+
+    Args2<String, String> COMMAND_ITEMFLAG_HASNO_OTHER = (target, flag) -> prefixed(translatable().key("floracore.command.itemflag.hasno.other").color(RED).args(text(target).color(GREEN), text(flag).color(GREEN)));
+
+    Args1<String> COMMAND_ITEMFLAG_ADD_SELF = flag -> prefixed(translatable().key("floracore.command.itemflag.add.self").color(AQUA).args(text(flag).color(GREEN)));
+
+    Args2<String, String> COMMAND_ITEMFLAG_ADD_OTHER = (target, flag) -> prefixed(translatable().key("floracore.command.itemflag.add.other").color(AQUA).args(text(target).color(GREEN), text(flag).color(GREEN)));
+
+    Args2<String, String> COMMAND_ITEMFLAG_ADD_FROM = (from, flag) -> prefixed(translatable().key("floracore.command.itemflag.add.from").color(AQUA).args(text(from).color(GREEN), text(flag).color(GREEN)));
+
+    Args1<String> COMMAND_ITEMFLAG_REMOVE_SELF = flag -> prefixed(translatable().key("floracore.command.itemflag.remove.self").color(AQUA).args(text(flag).color(GREEN)));
+
+    Args2<String, String> COMMAND_ITEMFLAG_REMOVE_OTHER = (target, flag) -> prefixed(translatable().key("floracore.command.itemflag.remove.other").color(AQUA).args(text(target).color(GREEN), text(flag).color(GREEN)));
+
+    Args2<String, String> COMMAND_ITEMFLAG_REMOVE_FROM = (from, flag) -> prefixed(translatable().key("floracore.command.itemflag.remove.from").color(AQUA).args(text(from).color(GREEN), text(flag).color(GREEN)));
+
+    Args0 COMMAND_ITEMFLAG_CLEAR_SELF = () -> prefixed(translatable().key("floracore.command.itemflag.clear.self").color(AQUA));
+
+    Args1<String> COMMAND_ITEMFLAG_CLEAR_OTHER = target -> prefixed(translatable().key("floracore.command.itemflag.clear.other").color(AQUA).args(text(target).color(GREEN)));
+
+    Args1<String> COMMAND_ITEMFLAG_CLEAR_FROM = from -> prefixed(translatable().key("floracore.command.itemflag.clear.from").color(AQUA).args(text(from).color(GREEN)));
+
+    Args0 COMMAND_ITEMFLAG_UNKNOWNOPTION_MESSAGE = () -> prefixed(translatable().key("floracore.command.itemflag.unknownoption.message").color(RED).args(translatable("floracore.command.itemflag.unknownoption.options").color(GREEN)));
+
     Args1<String> COMMAND_BROADCAST = contents -> text().append(PREFIX_BROADCAST).append(space()).append(formatColoredValue(contents)).build();
 
     static TextComponent prefixed(ComponentLike component) {
