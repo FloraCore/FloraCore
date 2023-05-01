@@ -32,7 +32,7 @@ public final class MultipleVersionsUtil {
             return ReflectionWrapper.invokeMethod(ReflectionWrapper.getMethod(attrInstance.getClass(), "getValue"), attrInstance);
         } catch (ClassNotFoundException e) { // 没有org.bukkit.attribute.Attribute这个类，说明不存在Attribute概念，应该是低版本
             // return player.getMaxHealth()
-            return ReflectionWrapper.invokeMethod(ReflectionWrapper.getMethod(Player.class, "getMaxHealth"), player);
+            return ReflectionWrapper.invokeMethod(ReflectionWrapper.getMethod(Damageable.class, "getMaxHealth"), player);
         }
     }
 
