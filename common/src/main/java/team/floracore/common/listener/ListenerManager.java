@@ -15,6 +15,10 @@ public class ListenerManager {
         this.constructListeners();
     }
 
+    public PluginManager getPluginManager() {
+        return plugin.getBootstrap().getServer().getPluginManager();
+    }
+
     private void constructListeners() {
         PluginManager pm = plugin.getBootstrap().getServer().getPluginManager();
         Plugin p = plugin.getBootstrap().getPlugin();

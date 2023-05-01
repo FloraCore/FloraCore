@@ -1,9 +1,9 @@
 package team.floracore.common.util;
 
-import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
-import team.floracore.common.locale.Message;
-import team.floracore.common.sender.Sender;
+import org.bukkit.entity.*;
+import org.jetbrains.annotations.*;
+import team.floracore.common.locale.*;
+import team.floracore.common.sender.*;
 
 public final class SenderUtil {
     private SenderUtil() {

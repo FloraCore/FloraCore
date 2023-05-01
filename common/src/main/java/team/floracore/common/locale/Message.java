@@ -690,16 +690,26 @@ public interface Message {
             .args(text(number)).color(RED));
 
     Args3<String, Component, String> COMMAND_SPEED_OTHER = (sender, type, speed) -> prefixed(translatable()
-            //{0} 将您的 {1} 速度设为 {2}
+            // {0} 将您的 {1} 速度设为 {2}
             .key("floracore.command.speed.other")
             // {}
             .args(text(sender).color(GREEN), type.color(YELLOW), text(speed).color(DARK_GREEN)).color(AQUA));
 
     Args3<String, Component, String> COMMAND_SPEED = (target, type, speed) -> prefixed(translatable()
-            //{0} 将您的 {1} 速度设为 {2}
+            // {0} 将您的 {1} 速度设为 {2}
             .key("floracore.command.speed")
             // {}
             .args(text(target).color(GREEN), type.color(YELLOW), text(speed).color(DARK_GREEN)).color(AQUA));
+
+    Args0 COMMAND_SUICIDE = () -> prefixed(translatable()
+            // 你已自杀
+            .key("floracore.command.suicide").color(AQUA));
+
+    Args1<String> COMMAND_SUICIDE_BROADCAST = (target) -> prefixed(translatable()
+            // {0} 自杀了!
+            .key("floracore.command.suicide.broadcast")
+            // {}
+            .args(text(target).color(GREEN)).color(AQUA));
 
     Args1<String> COMMAND_BROADCAST = contents -> text().append(PREFIX_BROADCAST).append(space()).append(formatColoredValue(contents)).build();
 

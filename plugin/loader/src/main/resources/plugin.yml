@@ -100,6 +100,8 @@ permissions:
       floracore.command.speed: true
       floracore.command.speed.other: true
       floracore.command.speed.bypass: false
+  floracore.command.suicide:
+    default: op
   floracore.command.top:
     default: op
   floracore.command.time.*:

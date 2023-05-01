@@ -6,7 +6,7 @@ import org.bukkit.entity.*;
 import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.*;
 import org.checkerframework.checker.nullness.qual.*;
-import team.floracore.common.commands.player.EnderChestCommand;
+import team.floracore.common.commands.player.*;
 import team.floracore.common.loader.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.classpath.*;
