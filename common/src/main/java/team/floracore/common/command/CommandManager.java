@@ -121,7 +121,7 @@ public class CommandManager {
         this.annotationParser.parse(new HatCommand(plugin));
         this.annotationParser.parse(new HealCommand(plugin)); // TODO 命令异常 java.lang.NoSuchMethodException: org.bukkit.entity.Player.getMaxHealth()
         this.annotationParser.parse(new InvSeeCommand(plugin));
-        this.annotationParser.parse(new MaxHealthCommand(plugin)); // TODO 命令异常
+        this.annotationParser.parse(new MaxHealthCommand(plugin)); // TODO 待测试命令
         this.annotationParser.parse(new NickCommand(plugin)); // TODO 命令测试中 未测试：Rank设置 未完善：Skin设置
         this.annotationParser.parse(new OPListCommand(plugin));
         this.annotationParser.parse(new PingCommand(plugin));

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.sender.Sender;
 import team.floracore.common.util.*;
 
 /**
@@ -33,23 +34,30 @@ public class MaxHealthCommand extends AbstractFloraCoreCommand {
         Message.COMMAND_MAXHEALTH_GET_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName(), MultipleVersionsUtil.getMaxHealth(target));
     }
 
-    // TODO 异常的命令
-    /*@CommandMethod("maxhealth|maxhp set <value>")
-    @CommandDescription("设置自己的最大生命值")
-    @CommandPermission("floracore.command.maxhealth.set")
-    public void setOwnMaxHealth(@NotNull Player s, @Argument("value") double value) {
-        MultipleVersionsUtil.setMaxHealth(s, value);
-        Message.COMMAND_MAXHEALTH_SET_SELF.send(getPlugin().getSenderFactory().wrap(s), value);
-    }
-
-    @CommandMethod("maxhealth|maxhp set <target> <value>")
+    @CommandMethod("maxhealth|maxhp set <value> [target]")
     @CommandDescription("设置目标的最大生命值")
     @CommandPermission("floracore.command.maxhealth.set.other")
-    public void setOtherMaxHealth(@NotNull Player s, @NotNull @Argument("target") Player target, @Argument("value") double value, @Nullable @Flag("silent") Boolean silent) {
-        MultipleVersionsUtil.setMaxHealth(target, value);
-        Message.COMMAND_MAXHEALTH_SET_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName(), value);
-        if (silent == null || !silent) {
-            Message.COMMAND_MAXHEALTH_SET_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value);
+    public void setOtherMaxHealth(
+            @NotNull CommandSender s,
+            @Argument("value") double value,
+            @Nullable @Argument("target") Player target,
+            @Nullable @Flag("silent") Boolean silent
+    ) {
+        Sender sender = getPlugin().getSenderFactory().wrap(s);
+        if (target == null) {
+            if (s instanceof Player) {
+                Player player = (Player) s;
+                MultipleVersionsUtil.setMaxHealth(player, value);
+                Message.COMMAND_MAXHEALTH_SET_SELF.send(sender, value);
+            } else {
+                SenderUtil.sendMustBePlayer(sender, s.getClass());
+            }
+        } else {
+            MultipleVersionsUtil.setMaxHealth(target, value);
+            Message.COMMAND_MAXHEALTH_SET_OTHER.send(sender, target.getName(), value);
+            if (silent == null || !silent) {
+                Message.COMMAND_MAXHEALTH_SET_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value);
+            }
         }
-    }*/
+    }
 }
