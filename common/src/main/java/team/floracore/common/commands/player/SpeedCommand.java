@@ -1,6 +1,8 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
+import cloud.commandframework.annotations.suggestions.Suggestions;
+import cloud.commandframework.context.CommandContext;
 import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -8,6 +10,7 @@ import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.floracore.api.data.*;
+import org.jetbrains.annotations.NotNull;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
@@ -28,7 +31,13 @@ public class SpeedCommand extends AbstractFloraCoreCommand implements Listener {
 
     @CommandMethod("setspeed|speed <type> <speed> [target]")
     @CommandDescription("修改玩家的移动/飞行速度")
-    public void setSpeed(final @Nonnull CommandSender commandSender, @Nonnull @Argument("type") String type, @Nonnull @Argument("speed") String speed, @Nullable @Argument("target") String target, final @Nullable @Flag("silent") Boolean silent) {
+    public void setSpeed(
+            final @NotNull CommandSender commandSender,
+            @NotNull @Argument(value = "type", suggestions = "get_types") String type,
+            @NotNull @Argument("speed") String speed,
+            @Nullable @Argument("target") String target,
+            final @Nullable @Flag("silent") Boolean silent
+    ) {
         if (target == null) {
             if (commandSender instanceof Player) {
                 checkSyntaxAndExecute((Player) commandSender, type, speed, null, false);
@@ -123,5 +132,10 @@ public class SpeedCommand extends AbstractFloraCoreCommand implements Listener {
     enum Type {
         FLY,
         WALK
+    }
+
+    @Suggestions("get_types")
+    public List<String> getTypes(@NotNull CommandContext<CommandSender> sender, @NotNull String input) {
+        return new ArrayList<>(Arrays.asList("fly", "walk"));
     }
 }
