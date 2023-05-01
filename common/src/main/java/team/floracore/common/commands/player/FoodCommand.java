@@ -25,7 +25,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
         if (target == null) { // 目标为空，则目标为自己
             // 目标为自己时，发送者必须是玩家
             if (!(s instanceof Player)) { // 不是玩家
-                SenderUtil.sendMustBePlayer(sender); // 告知不予执行
+                SenderUtil.sendMustBePlayer(sender, s.getClass()); // 告知不予执行
                 return;
             }
             Player player = (Player) s;
@@ -52,7 +52,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
         if (target == null) { // 目标为空，则目标为自己
             // 目标为自己时，发送者必须是玩家
             if (!(s instanceof Player)) { // 不是玩家
-                SenderUtil.sendMustBePlayer(sender); // 告知不予执行
+                SenderUtil.sendMustBePlayer(sender, s.getClass()); // 告知不予执行
                 return;
             }
             Player player = (Player) s;
@@ -82,7 +82,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
         if (target == null) { // 目标为空，则目标为自己
             // 目标为自己时，发送者必须是玩家
             if (!(s instanceof Player)) { // 不是玩家
-                SenderUtil.sendMustBePlayer(sender); // 告知不予执行
+                SenderUtil.sendMustBePlayer(sender, s.getClass()); // 告知不予执行
                 return;
             }
             Player player = (Player) s;

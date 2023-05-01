@@ -1,9 +1,9 @@
 package team.floracore.common.util;
 
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import team.floracore.common.locale.*;
-import team.floracore.common.sender.*;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.common.locale.Message;
+import team.floracore.common.sender.Sender;
 
 public final class SenderUtil {
     private SenderUtil() {
@@ -14,8 +14,8 @@ public final class SenderUtil {
      *
      * @param sender 命令发送者
      */
-    public static void sendMustBePlayer(Sender sender) {
-        Message.COMMAND_INVALID_COMMAND_SENDER.send(sender, CommandSender.class.getSimpleName(), Player.class.getSimpleName());
+    public static void sendMustBePlayer(@NotNull Sender sender, @NotNull Class<?> currentType) {
+        Message.COMMAND_INVALID_COMMAND_SENDER.send(sender, currentType.getSimpleName(), Player.class.getSimpleName());
     }
 
     /**

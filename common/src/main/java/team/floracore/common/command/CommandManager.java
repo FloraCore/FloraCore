@@ -111,7 +111,7 @@ public class CommandManager {
         this.annotationParser.parse(new AirCommand(plugin));
         this.annotationParser.parse(new EnderChestCommand(plugin));
         this.annotationParser.parse(new FeedCommand(plugin)); // TODO 未测试命令
-        this.annotationParser.parse(new FireTickCommand(plugin)); // TODO 命令异常
+        this.annotationParser.parse(new FireTickCommand(plugin)); // TODO 未测试命令
         this.annotationParser.parse(new FlyCommand(plugin));
         this.annotationParser.parse(new FoodCommand(plugin)); // TODO 未测试命令
         this.annotationParser.parse(new GameModeCommand(plugin));
