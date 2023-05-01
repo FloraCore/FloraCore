@@ -34,6 +34,9 @@ import java.util.concurrent.*;
 import static net.kyori.adventure.text.Component.*;
 import static team.floracore.common.util.ReflectionWrapper.*;
 
+/**
+ * Nick命令
+ */
 @CommandPermission("floracore.command.nick")
 public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     private final SkinsRestorerAPI skinsRestorerAPI;

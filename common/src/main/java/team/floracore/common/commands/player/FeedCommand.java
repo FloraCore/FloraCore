@@ -8,6 +8,9 @@ import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 
+/**
+ * Feed命令
+ */
 @CommandPermission("floracore.command.feed")
 @CommandDescription("喂饱一名玩家")
 public class FeedCommand extends AbstractFloraCoreCommand {

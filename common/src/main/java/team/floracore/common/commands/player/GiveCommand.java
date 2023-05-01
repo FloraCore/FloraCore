@@ -4,6 +4,9 @@ import cloud.commandframework.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.plugin.*;
 
+/**
+ * Give命令
+ */
 @CommandPermission("floracore.command.give")
 public class GiveCommand extends AbstractFloraCoreCommand {
     public GiveCommand(FloraCorePlugin plugin) {

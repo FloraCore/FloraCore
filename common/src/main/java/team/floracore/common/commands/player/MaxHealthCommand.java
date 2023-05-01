@@ -9,6 +9,9 @@ import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.util.*;
 
+/**
+ * MaxHealth命令
+ */
 @CommandDescription("获取和设置最大生命值")
 @CommandPermission("floracore.command.maxhealth")
 public class MaxHealthCommand extends AbstractFloraCoreCommand {

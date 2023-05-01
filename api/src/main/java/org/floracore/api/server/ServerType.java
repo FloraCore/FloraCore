@@ -1,9 +1,24 @@
 package org.floracore.api.server;
 
+/**
+ * 服务器类型
+ */
 public enum ServerType {
+    /**
+     * 普通类型
+     */
     NORMAL("normal", false, true),
+    /**
+     * 大厅类型
+     */
     LOBBY("lobby", true, false),
+    /**
+     * 游戏类型
+     */
     GAME("game", false, true),
+    /**
+     * 未知的类型
+     */
     UNKNOWN("unknown", true, false);
     final String name;
     final boolean autoSync1;

@@ -11,6 +11,9 @@ import team.floracore.common.plugin.*;
 import team.floracore.common.sender.Sender;
 import team.floracore.common.util.SenderUtil;
 
+/**
+ * FireTick命令
+ */
 @CommandDescription("设置玩家着火时间")
 @CommandPermission("floracore.command.firetick")
 public class FireTickCommand extends AbstractFloraCoreCommand {

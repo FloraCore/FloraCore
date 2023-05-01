@@ -2,6 +2,9 @@ package org.floracore.api.chat;
 
 import java.util.*;
 
+/**
+ * 关于服务器聊天记录，通常使用List存储。
+ */
 public class ChatRecord {
     protected final int id;
     protected final UUID uuid;

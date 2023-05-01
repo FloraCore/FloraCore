@@ -2,6 +2,9 @@ package org.floracore.api.data;
 
 import java.util.*;
 
+/**
+ * 这个类是关于Data数据库的API。
+ */
 public interface DataAPI {
     /**
      * 获取指定的Data的值

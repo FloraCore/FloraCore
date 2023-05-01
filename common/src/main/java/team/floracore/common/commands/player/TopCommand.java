@@ -10,6 +10,9 @@ import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.*;
 
+/**
+ * Top命令
+ */
 @CommandPermission("floracore.command.top")
 public class TopCommand extends AbstractFloraCoreCommand {
     public TopCommand(FloraCorePlugin plugin) {

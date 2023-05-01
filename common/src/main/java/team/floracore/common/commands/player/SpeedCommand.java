@@ -17,6 +17,9 @@ import team.floracore.common.storage.misc.floracore.tables.*;
 import javax.annotation.*;
 import java.util.*;
 
+/**
+ * Speed命令
+ */
 @CommandPermission("floracore.command.speed")
 public class SpeedCommand extends AbstractFloraCoreCommand implements Listener {
     public SpeedCommand(FloraCorePlugin plugin) {

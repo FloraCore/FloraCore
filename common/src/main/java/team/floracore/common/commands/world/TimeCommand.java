@@ -18,6 +18,9 @@ import team.floracore.common.util.*;
 
 import java.util.*;
 
+/**
+ * Time命令
+ */
 @CommandPermission("floracore.command.time")
 public class TimeCommand extends AbstractFloraCoreCommand {
     public TimeCommand(FloraCorePlugin plugin) {

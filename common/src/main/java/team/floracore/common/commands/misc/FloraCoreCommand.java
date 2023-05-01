@@ -26,6 +26,9 @@ import java.time.*;
 import java.util.*;
 import java.util.stream.*;
 
+/**
+ * FloraCore命令
+ */
 @CommandContainer
 @CommandPermission("floracore.admin")
 public class FloraCoreCommand extends AbstractFloraCoreCommand {

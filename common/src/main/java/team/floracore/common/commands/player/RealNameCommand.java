@@ -11,6 +11,9 @@ import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.util.*;
 
+/**
+ * RealName命令
+ */
 @CommandPermission("floracore.command.realname")
 public class RealNameCommand extends AbstractFloraCoreCommand {
     public RealNameCommand(FloraCorePlugin plugin) {
