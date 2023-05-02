@@ -66,7 +66,7 @@ public final class MultipleVersionsUtil {
             // return player.setMaxHealth(value)
             ReflectionWrapper.invokeMethod(
                     ReflectionWrapper.getMethod(Damageable.class, "setMaxHealth", double.class),
-                    player
+                    player, value
             );
         }
     }
