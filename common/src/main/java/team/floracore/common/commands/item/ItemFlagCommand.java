@@ -131,6 +131,7 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
                     return;
                 }
                 meta.addItemFlags(flag);
+                item.setItemMeta(meta);
                 Message.COMMAND_ITEMFLAG_ADD_OTHER.send(sender, target.getName(), flag.name());
                 if (silent == null || !silent) {
                     Message.COMMAND_ITEMFLAG_ADD_FROM.send(targetSender, s.getName(), flag.name());
@@ -142,6 +143,7 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
                     return;
                 }
                 meta.removeItemFlags(flag);
+                item.setItemMeta(meta);
                 Message.COMMAND_ITEMFLAG_REMOVE_OTHER.send(sender, target.getName(), flag.name());
                 if (silent == null || !silent) {
                     Message.COMMAND_ITEMFLAG_REMOVE_FROM.send(targetSender, s.getName(), flag.name());
@@ -154,7 +156,7 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
 
     @Suggestions("get_options")
     public @NotNull List<String> getOptions(@NotNull CommandContext<CommandSender> sender, @NotNull String input) {
-        return new ArrayList<>(Arrays.asList("add", "remove", "clear"));
+        return new ArrayList<>(Arrays.asList("add", "remove"));
     }
 
     /**

@@ -1,22 +1,28 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.*;
-import org.bukkit.inventory.*;
-import org.jetbrains.annotations.*;
-import team.floracore.common.command.*;
-import team.floracore.common.locale.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.util.*;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryAction;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import team.floracore.common.command.AbstractFloraCoreCommand;
+import team.floracore.common.locale.Message;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.util.SenderUtil;
 
-import java.util.*;
-
-// TODO 监听器尚未注册
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * EnderChest命令
@@ -95,19 +101,18 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
     }
 
     @EventHandler
-    public void onClickInventory(InventoryClickEvent event) {
+    public void onDragInventory(InventoryClickEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }
         Player player = (Player) event.getWhoClicked();
-        Inventory inventory = READONLY_MAP.get(player.getUniqueId());
+        Inventory readOnlyInventory = READONLY_MAP.get(player.getUniqueId());
+        Inventory clickedInventory = event.getClickedInventory();
         boolean cancel = false;
-        //noinspection RedundantIfStatement
-        if (inventory != null && (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY)) {
-            cancel = true;
-        }
-        if (Objects.equals(event.getClickedInventory(), inventory)) { // 禁止修改这个物品栏
-            cancel = true;
+        if (readOnlyInventory != null) {
+            if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || readOnlyInventory.equals(clickedInventory)) {
+                cancel = true;
+            }
         }
         if (cancel) {
             event.setCancelled(true);
@@ -116,7 +121,7 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
     }
 
     @EventHandler
-    public void onClickInventory(InventoryDragEvent event) {
+    public void onDragInventory(InventoryDragEvent event) {
         if (!(event.getWhoClicked() instanceof Player)) {
             return;
         }
