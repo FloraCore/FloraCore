@@ -143,6 +143,7 @@ public class CommandManager {
         this.annotationParser.parse(new WeatherCommand(plugin));
 
         // item
-        this.annotationParser.parse(new ItemFlagCommand(plugin));
+        this.annotationParser.parse(new ItemFlagCommand(plugin)); // TODO 修改内容待测试
+        this.annotationParser.parse(new ItemNameCommand(plugin)); // TODO 未测试命令
     }
 }

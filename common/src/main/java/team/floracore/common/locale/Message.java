@@ -743,7 +743,23 @@ public interface Message {
 
     Args1<String> COMMAND_ITEMFLAG_CLEAR_FROM = from -> prefixed(translatable().key("floracore.command.itemflag.clear.from").color(AQUA).args(text(from).color(GREEN)));
 
-    Args0 COMMAND_ITEMFLAG_UNKNOWNOPTION_MESSAGE = () -> prefixed(translatable().key("floracore.command.itemflag.unknownoption.message").color(RED).args(translatable("floracore.command.itemflag.unknownoption.options").color(GREEN)));
+    Args0 COMMAND_ITEMNAME_NOITEM_SELF =  () -> prefixed(translatable().key("floracore.command.itemname.noitem.self").color(RED));
+
+    Args1<String> COMMAND_ITEMNAME_NOITEM_OTHER =  player -> prefixed(translatable().key("floracore.command.itemname.noitem.other").color(RED).args(text(player).color(GREEN)));
+
+    Args0 COMMAND_ITEMNAME_UNSUPPORTEDITEM =  () -> prefixed(translatable().key("floracore.command.itemname.unsupporteditem").color(RED));
+
+    Args1<String> COMMAND_ITEMNAME_SET_SELF = name -> prefixed(translatable().key("floracore.command.itemname.set.self").color(AQUA).args(text(name).color(GREEN)));
+    
+    Args2<String, String> COMMAND_ITEMNAME_SET_OTHER = (player, name) -> prefixed(translatable().key("floracore.command.itemname.set.other").color(AQUA).args(text(player).color(GREEN), text(name).color(GREEN)));
+
+    Args2<String, String> COMMAND_ITEMNAME_SET_FROM = (from, name) -> prefixed(translatable().key("floracore.command.itemname.set.from").color(AQUA).args(text(from).color(GREEN), text(name).color(GREEN)));
+
+    Args0 COMMAND_ITEMNAME_RESET_SELF = () -> prefixed(translatable().key("floracore.command.itemname.reset.self").color(AQUA));
+
+    Args1<String> COMMAND_ITEMNAME_RESET_OTHER = player -> prefixed(translatable().key("floracore.command.itemname.reset.other").color(AQUA).args(text(player).color(GREEN)));
+
+    Args1<String> COMMAND_ITEMNAME_RESET_FROM = from -> prefixed(translatable().key("floracore.command.itemname.reset.from").color(AQUA).args(text(from).color(GREEN)));
 
     Args1<String> COMMAND_BROADCAST = contents -> text().append(PREFIX_BROADCAST).append(space()).append(formatColoredValue(contents)).build();
 
