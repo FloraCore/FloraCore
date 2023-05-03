@@ -4,6 +4,7 @@ import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.processing.*;
 import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
+import com.github.benmanes.caffeine.cache.*;
 import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
@@ -24,6 +25,7 @@ import team.floracore.common.util.*;
 import java.io.*;
 import java.time.*;
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.*;
 
 /**
@@ -32,6 +34,9 @@ import java.util.stream.*;
 @CommandContainer
 @CommandPermission("floracore.admin")
 public class FloraCoreCommand extends AbstractFloraCoreCommand {
+    private final AsyncCache<UUID, List<Data>> dataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    private final AsyncCache<String, UUID> uuidCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+
     public FloraCoreCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
@@ -139,31 +144,37 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
         return new ArrayList<>(Collections.singletonList(getPlugin().getServerName()));
     }
 
-    @CommandMethod("fc|floracore data <target>")
+    @CommandMethod("fc|floracore data <target> <type>")
     @CommandDescription("获取玩家存储的数据")
-    public void data(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {
+    public void data(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, @Argument("type") DataType type) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        String name;
-        UUID u;
-        if (p == null) {
-            try {
-                Players i = getStorageImplementation().selectPlayers(target);
-                u = i.getUuid();
-                name = i.getName();
-            } catch (Throwable e) {
-                Message.PLAYER_NOT_FOUND.send(s, target);
-                return;
+        CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
+            UUID u;
+            if (p == null) {
+                try {
+                    Players i = getStorageImplementation().selectPlayers(target);
+                    u = i.getUuid();
+                } catch (Throwable e) {
+                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    return null;
+                }
+            } else {
+                u = p.getUniqueId();
             }
-        } else {
-            u = p.getUniqueId();
-            name = p.getName();
+            return u;
+        });
+        uuidCache.put(target.toLowerCase(), uf);
+        UUID u = uf.join();
+        if (u == null) {
+            return;
         }
-        List<Data> ret = getStorageImplementation().selectData(u);
+        CompletableFuture<List<Data>> ldf = dataCache.get(u, (a) -> getStorageImplementation().selectData(u));
+        List<Data> ret = ldf.join();
         if (ret.isEmpty()) {
-            Message.DATA_NONE.send(s, name);
+            Message.DATA_NONE.send(s, target);
         } else {
-            Message.DATA_HEADER.send(s, name);
+            Message.DATA_HEADER.send(s, target);
             for (Data data : ret) {
                 Message.DATA_ENTRY.send(s, data.getType().getName(), data.getKey(), data.getValue(), data.getExpiry());
             }
@@ -175,23 +186,28 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     public void dataSet(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key, final @NonNull @Argument("value") String value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        String name;
-        UUID u;
-        if (p == null) {
-            try {
-                Players i = getStorageImplementation().selectPlayers(target);
-                u = i.getUuid();
-                name = i.getName();
-            } catch (Throwable e) {
-                Message.PLAYER_NOT_FOUND.send(s, target);
-                return;
+        CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
+            UUID u;
+            if (p == null) {
+                try {
+                    Players i = getStorageImplementation().selectPlayers(target);
+                    u = i.getUuid();
+                } catch (Throwable e) {
+                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    return null;
+                }
+            } else {
+                u = p.getUniqueId();
             }
-        } else {
-            u = p.getUniqueId();
-            name = p.getName();
+            return u;
+        });
+        uuidCache.put(target.toLowerCase(), uf);
+        UUID u = uf.join();
+        if (u == null) {
+            return;
         }
         Data data = getStorageImplementation().insertData(u, DataType.CUSTOM, key, value, 0);
-        Message.SET_DATA_SUCCESS.send(s, key, value, name);
+        Message.SET_DATA_SUCCESS.send(s, key, value, target);
     }
 
     @CommandMethod("fc|floracore data <target> unset <key>")
@@ -199,20 +215,25 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     public void dataUnSet(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        String name;
-        UUID u;
-        if (p == null) {
-            try {
-                Players i = getStorageImplementation().selectPlayers(target);
-                u = i.getUuid();
-                name = i.getName();
-            } catch (Throwable e) {
-                Message.PLAYER_NOT_FOUND.send(s, target);
-                return;
+        CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
+            UUID u;
+            if (p == null) {
+                try {
+                    Players i = getStorageImplementation().selectPlayers(target);
+                    u = i.getUuid();
+                } catch (Throwable e) {
+                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    return null;
+                }
+            } else {
+                u = p.getUniqueId();
             }
-        } else {
-            u = p.getUniqueId();
-            name = p.getName();
+            return u;
+        });
+        uuidCache.put(target.toLowerCase(), uf);
+        UUID u = uf.join();
+        if (u == null) {
+            return;
         }
         Data data = getStorageImplementation().getSpecifiedData(u, DataType.CUSTOM, key);
         if (data == null) {
@@ -220,7 +241,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             return;
         }
         getStorageImplementation().deleteDataID(data.getId());
-        Message.UNSET_DATA_SUCCESS.send(s, key, name);
+        Message.UNSET_DATA_SUCCESS.send(s, key, target);
     }
 
     @CommandMethod("fc|floracore data <target> settemp <key> <value> <duration>")
@@ -228,22 +249,26 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     public void dataSetTemp(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key, final @NonNull @Argument("value") String value, final @NonNull @Argument("duration") String duration) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        String name;
-        UUID u;
-        if (p == null) {
-            try {
-                Players i = getStorageImplementation().selectPlayers(target);
-                u = i.getUuid();
-                name = i.getName();
-            } catch (Throwable e) {
-                Message.PLAYER_NOT_FOUND.send(s, target);
-                return;
+        CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
+            UUID u;
+            if (p == null) {
+                try {
+                    Players i = getStorageImplementation().selectPlayers(target);
+                    u = i.getUuid();
+                } catch (Throwable e) {
+                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    return null;
+                }
+            } else {
+                u = p.getUniqueId();
             }
-        } else {
-            u = p.getUniqueId();
-            name = p.getName();
+            return u;
+        });
+        uuidCache.put(target.toLowerCase(), uf);
+        UUID u = uf.join();
+        if (u == null) {
+            return;
         }
-
         try {
             Duration d = parseDuration(duration);
             if (d != null) {
@@ -252,7 +277,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
                 // 将结果转换为时间戳
                 long expiry = newTime.toEpochMilli();
                 Data data = getStorageImplementation().insertData(u, DataType.CUSTOM, key, value, expiry);
-                Message.SET_DATA_TEMP_SUCCESS.send(s, key, value, name, d);
+                Message.SET_DATA_TEMP_SUCCESS.send(s, key, value, target, d);
             } else {
                 Message.ILLEGAL_DATE_ERROR.send(s, duration);
             }
@@ -266,20 +291,25 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     public void dataClear(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @Nullable @Flag("type") DataType type) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        String name;
-        UUID u;
-        if (p == null) {
-            try {
-                Players i = getStorageImplementation().selectPlayers(target);
-                u = i.getUuid();
-                name = i.getName();
-            } catch (Throwable e) {
-                Message.PLAYER_NOT_FOUND.send(s, target);
-                return;
+        CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
+            UUID u;
+            if (p == null) {
+                try {
+                    Players i = getStorageImplementation().selectPlayers(target);
+                    u = i.getUuid();
+                } catch (Throwable e) {
+                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    return null;
+                }
+            } else {
+                u = p.getUniqueId();
             }
-        } else {
-            u = p.getUniqueId();
-            name = p.getName();
+            return u;
+        });
+        uuidCache.put(target.toLowerCase(), uf);
+        UUID u = uf.join();
+        if (u == null) {
+            return;
         }
         if (type != null) {
             // remove type
@@ -288,6 +318,6 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             // remove all
             getStorageImplementation().deleteDataAll(u);
         }
-        Message.DATA_CLEAR_SUCCESS.send(s, name, type);
+        Message.DATA_CLEAR_SUCCESS.send(s, target, type);
     }
 }

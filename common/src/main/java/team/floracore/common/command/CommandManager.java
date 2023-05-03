@@ -139,7 +139,7 @@ public class CommandManager {
          * at team.floracore.common.commands.player.MaxHealthCommand.getOtherMaxHealth(MaxHealthCommand.java:34) ~[floracore-jarinjar581403494597557186.jar.tmp:?]
          */
         this.annotationParser.parse(new MaxHealthCommand(plugin)); // TODO 待测试命令
-        this.annotationParser.parse(new NickCommand(plugin)); // TODO 命令测试中 未测试：Rank设置 未完善：Skin设置
+        this.annotationParser.parse(new NickCommand(plugin)); // TODO 命令基本成型 未测试：Rank设置 未完善：Skin设置
         this.annotationParser.parse(new OPListCommand(plugin));
         this.annotationParser.parse(new PingCommand(plugin));
         this.annotationParser.parse(new RealNameCommand(plugin));
