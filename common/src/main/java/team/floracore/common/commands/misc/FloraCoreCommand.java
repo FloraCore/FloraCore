@@ -170,7 +170,8 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             return;
         }
         CompletableFuture<List<Data>> ldf = dataCache.get(u, (a) -> getStorageImplementation().selectData(u));
-        List<Data> ret = ldf.join();
+        List<Data> all = ldf.join();
+        List<Data> ret = all.parallelStream().filter(data -> data.getType() == type).collect(Collectors.toList());
         if (ret.isEmpty()) {
             Message.DATA_NONE.send(s, target);
         } else {
