@@ -1,8 +1,6 @@
 package team.floracore.common.commands.item;
 
 import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.suggestions.*;
-import cloud.commandframework.context.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
@@ -26,6 +24,7 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("itemflag clear [target]")
     @CommandDescription("给手上的物品清空Flag")
+    @CommandPermission("floracore.command.itemflag.clear")
     public void clear(
             @NotNull CommandSender s,
             @Nullable @Argument("target") Player target,
@@ -52,6 +51,9 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
             item.setItemMeta(meta);
             Message.COMMAND_ITEMFLAG_CLEAR_SELF.send(sender);
         } else {
+            if (SenderUtil.sendIfNoPermission(sender, "floracore.command.itemflag.clear.other")) {
+                return;
+            }
             PlayerInventory inventory = target.getInventory();
             // 检查物品是否存在（即手上有物品）且可修改（即拥有ItemMeta）
             Optional<ItemStack> optItem = checkItemInHand(sender, inventory, target.getName());
@@ -71,13 +73,13 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
         }
     }
 
-    @CommandMethod("itemflag <option> <flag> [target]")
-    @CommandDescription("给手上的物品添加或删除Flag")
-    public void option(
+    @CommandMethod("itemflag add <flag> [target]")
+    @CommandDescription("给手上的物品添加Flag")
+    @CommandPermission("floracore.command.itemflag.add")
+    public void add(
             @NotNull CommandSender s,
-            @NotNull @Argument(value = "option", suggestions = "get_options") String option,
             @NotNull @Argument("flag") ItemFlag flag,
-            @Nullable @Argument("target") Player target,
+            @Nullable Player target,
             @Nullable @Flag("silent") Boolean silent
     ) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
@@ -94,28 +96,18 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
             }
             ItemStack item = optItem.get();
             ItemMeta meta = item.getItemMeta();
-            if (option.equalsIgnoreCase("add")) { // /itemflag add flag
-                //noinspection DataFlowIssue 已经检查过不会为null了
-                if (meta.getItemFlags().contains(flag)) {
-                    Message.COMMAND_ITEMFLAG_ALREADYHAS_SELF.send(sender, flag.name());
-                    return;
-                }
-                meta.addItemFlags(flag);
-                item.setItemMeta(meta);
-                Message.COMMAND_ITEMFLAG_REMOVE_SELF.send(sender, flag.name());
-            } else if (option.equalsIgnoreCase("remove")) { // /itemflag remove flag
-                //noinspection DataFlowIssue 已经检查过不会为null了
-                if (!meta.getItemFlags().contains(flag)) {
-                    Message.COMMAND_ITEMFLAG_HASNO_SELF.send(sender, flag.name());
-                    return;
-                }
-                meta.removeItemFlags(flag);
-                item.setItemMeta(meta);
-                Message.COMMAND_ITEMFLAG_REMOVE_SELF.send(sender, flag.name());
-            } else {
-                Message.COMMAND_ITEMFLAG_UNKNOWNOPTION_MESSAGE.send(sender);
+            //noinspection DataFlowIssue 已经检查过不会为null了
+            if (meta.getItemFlags().contains(flag)) {
+                Message.COMMAND_ITEMFLAG_ALREADYHAS_SELF.send(sender, flag.name());
+                return;
             }
+            meta.addItemFlags(flag);
+            item.setItemMeta(meta);
+            Message.COMMAND_ITEMFLAG_REMOVE_SELF.send(sender, flag.name());
         } else {
+            if (SenderUtil.sendIfNoPermission(sender, "floracore.command.itemflag.add.other")) {
+                return;
+            }
             PlayerInventory inventory = target.getInventory();
             Optional<ItemStack> optItem = checkItemInHand(sender, inventory, target.getName());
             if (!optItem.isPresent()) { // 检查未通过
@@ -124,37 +116,75 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
             ItemStack item = optItem.get();
             ItemMeta meta = item.getItemMeta();
             Sender targetSender = getPlugin().getSenderFactory().wrap(target);
-            if (option.equalsIgnoreCase("add")) { // /itemflag add flag target
-                //noinspection DataFlowIssue 已经检查过不会为null了
-                if (meta.getItemFlags().contains(flag)) {
-                    Message.COMMAND_ITEMFLAG_ALREADYHAS_OTHER.send(sender, target.getName(), flag.name());
-                    return;
-                }
-                meta.addItemFlags(flag);
-                Message.COMMAND_ITEMFLAG_ADD_OTHER.send(sender, target.getName(), flag.name());
-                if (silent == null || !silent) {
-                    Message.COMMAND_ITEMFLAG_ADD_FROM.send(targetSender, s.getName(), flag.name());
-                }
-            } else if (option.equalsIgnoreCase("remove")) { // /itemflag remove flag target
-                //noinspection DataFlowIssue 已经检查过不会为null了
-                if (!meta.getItemFlags().contains(flag)) {
-                    Message.COMMAND_ITEMFLAG_HASNO_OTHER.send(sender, target.getName(), flag.name());
-                    return;
-                }
-                meta.removeItemFlags(flag);
-                Message.COMMAND_ITEMFLAG_REMOVE_OTHER.send(sender, target.getName(), flag.name());
-                if (silent == null || !silent) {
-                    Message.COMMAND_ITEMFLAG_REMOVE_FROM.send(targetSender, s.getName(), flag.name());
-                }
-            } else {
-                Message.COMMAND_ITEMFLAG_UNKNOWNOPTION_MESSAGE.send(sender);
+            //noinspection DataFlowIssue 已经检查过不会为null了
+            if (meta.getItemFlags().contains(flag)) {
+                Message.COMMAND_ITEMFLAG_ALREADYHAS_OTHER.send(sender, target.getName(), flag.name());
+                return;
+            }
+            meta.addItemFlags(flag);
+            item.setItemMeta(meta);
+            Message.COMMAND_ITEMFLAG_ADD_OTHER.send(sender, target.getName(), flag.name());
+            if (silent == null || !silent) {
+                Message.COMMAND_ITEMFLAG_ADD_FROM.send(targetSender, s.getName(), flag.name());
             }
         }
     }
 
-    @Suggestions("get_options")
-    public @NotNull List<String> getOptions(@NotNull CommandContext<CommandSender> sender, @NotNull String input) {
-        return new ArrayList<>(Arrays.asList("add", "remove", "clear"));
+    @CommandMethod("itemflag remove <flag> [target]")
+    @CommandDescription("给手上的物品移除Flag")
+    @CommandPermission("floracore.command.itemflag.remove")
+    public void remove(
+            @NotNull CommandSender s,
+            @NotNull @Argument("flag") ItemFlag flag,
+            @Nullable Player target,
+            @Nullable @Flag("silent") Boolean silent
+    ) {
+        Sender sender = getPlugin().getSenderFactory().wrap(s);
+        if (target == null) {
+            if (!(s instanceof Player)) {
+                SenderUtil.sendMustBePlayer(sender, s.getClass());
+                return;
+            }
+            Player player = (Player) s;
+            PlayerInventory inventory = player.getInventory();
+            Optional<ItemStack> optItem = checkItemInHand(sender, inventory, null);
+            if (!optItem.isPresent()) { // 检查未通过
+                return;
+            }
+            ItemStack item = optItem.get();
+            ItemMeta meta = item.getItemMeta();
+            //noinspection DataFlowIssue 已经检查过不会为null了
+            if (!meta.getItemFlags().contains(flag)) {
+                Message.COMMAND_ITEMFLAG_HASNO_SELF.send(sender, flag.name());
+                return;
+            }
+            meta.removeItemFlags(flag);
+            item.setItemMeta(meta);
+            Message.COMMAND_ITEMFLAG_REMOVE_SELF.send(sender, flag.name());
+        } else {
+            if (SenderUtil.sendIfNoPermission(sender, "floracore.command.itemflag.remove.other")) {
+                return;
+            }
+            PlayerInventory inventory = target.getInventory();
+            Optional<ItemStack> optItem = checkItemInHand(sender, inventory, target.getName());
+            if (!optItem.isPresent()) { // 检查未通过
+                return;
+            }
+            ItemStack item = optItem.get();
+            ItemMeta meta = item.getItemMeta();
+            Sender targetSender = getPlugin().getSenderFactory().wrap(target);
+            //noinspection DataFlowIssue 已经检查过不会为null了
+            if (!meta.getItemFlags().contains(flag)) {
+                Message.COMMAND_ITEMFLAG_HASNO_OTHER.send(sender, target.getName(), flag.name());
+                return;
+            }
+            meta.removeItemFlags(flag);
+            item.setItemMeta(meta);
+            Message.COMMAND_ITEMFLAG_REMOVE_OTHER.send(sender, target.getName(), flag.name());
+            if (silent == null || !silent) {
+                Message.COMMAND_ITEMFLAG_REMOVE_FROM.send(targetSender, s.getName(), flag.name());
+            }
+        }
     }
 
     /**

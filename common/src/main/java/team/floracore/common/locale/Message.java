@@ -610,25 +610,25 @@ public interface Message {
 
     Args0 COMMAND_ENDERCHEST_READONLY_FROM = () -> prefixed(translatable().key("floracore.command.enderchest.readonly.from").color(RED));
 
-    Args1<Integer> COMMAND_FOOD_GET_SELF_NUTRITION = value -> prefixed(translatable().key("floracore.command.food.get.self.nutrition").color(AQUA).args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_FOOD_GET_SELF_NUTRITION = value -> prefixed(translatable().key("floracore.command.food.get.self.nutrition").color(AQUA).args(text(value).color(GREEN)));
 
-    Args1<Float> COMMAND_FOOD_GET_SELF_SATURATION = value -> prefixed(translatable().key("floracore.command.food.get.self.saturation").color(AQUA).args(text(value)).color(GREEN));
+    Args1<Float> COMMAND_FOOD_GET_SELF_SATURATION = value -> prefixed(translatable().key("floracore.command.food.get.self.saturation").color(AQUA).args(text(value).color(GREEN)));
 
-    Args2<String, Integer> COMMAND_FOOD_GET_OTHER_NUTRITION = (target, value) -> prefixed(translatable().key("floracore.command.food.get.other.nutrition").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Integer> COMMAND_FOOD_GET_OTHER_NUTRITION = (target, value) -> prefixed(translatable().key("floracore.command.food.get.other.nutrition").color(AQUA).args(text(target).color(GREEN), text(value).color(GREEN)));
 
-    Args2<String, Float> COMMAND_FOOD_GET_OTHER_SATURATION = (target, value) -> prefixed(translatable().key("floracore.command.food.get.other.saturation").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Float> COMMAND_FOOD_GET_OTHER_SATURATION = (target, value) -> prefixed(translatable().key("floracore.command.food.get.other.saturation").color(AQUA).args(text(target).color(GREEN), text(value).color(GREEN)));
 
-    Args1<Integer> COMMAND_FOOD_SET_SELF_NUTRITION = value -> prefixed(translatable().key("floracore.command.food.set.self.nutrition").color(AQUA).args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_FOOD_SET_SELF_NUTRITION = value -> prefixed(translatable().key("floracore.command.food.set.self.nutrition").color(AQUA).args(text(value).color(GREEN)));
 
-    Args1<Float> COMMAND_FOOD_SET_SELF_SATURATION = value -> prefixed(translatable().key("floracore.command.food.set.self.saturation").color(AQUA).args(text(value)).color(GREEN));
+    Args1<Float> COMMAND_FOOD_SET_SELF_SATURATION = value -> prefixed(translatable().key("floracore.command.food.set.self.saturation").color(AQUA).args(text(value).color(GREEN)));
 
-    Args2<String, Integer> COMMAND_FOOD_SET_OTHER_NUTRITION = (target, value) -> prefixed(translatable().key("floracore.command.food.set.other.nutrition").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Integer> COMMAND_FOOD_SET_OTHER_NUTRITION = (target, value) -> prefixed(translatable().key("floracore.command.food.set.other.nutrition").color(AQUA).args(text(target).color(GREEN), text(value).color(GREEN)));
 
-    Args2<String, Float> COMMAND_FOOD_SET_OTHER_SATURATION = (target, value) -> prefixed(translatable().key("floracore.command.food.set.other.saturation").color(AQUA).args(text(target).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Float> COMMAND_FOOD_SET_OTHER_SATURATION = (target, value) -> prefixed(translatable().key("floracore.command.food.set.other.saturation").color(AQUA).args(text(target).color(GREEN), text(value).color(GREEN)));
 
-    Args2<String, Integer> COMMAND_FOOD_SET_FROM_NUTRITION = (from, value) -> prefixed(translatable().key("floracore.command.food.set.from.nutrition").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Integer> COMMAND_FOOD_SET_FROM_NUTRITION = (from, value) -> prefixed(translatable().key("floracore.command.food.set.from.nutrition").color(AQUA).args(text(from).color(GREEN), text(value).color(GREEN)));
 
-    Args2<String, Float> COMMAND_FOOD_SET_FROM_SATURATION = (from, value) -> prefixed(translatable().key("floracore.command.food.set.from.saturation").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Float> COMMAND_FOOD_SET_FROM_SATURATION = (from, value) -> prefixed(translatable().key("floracore.command.food.set.from.saturation").color(AQUA).args(text(from).color(GREEN), text(value).color(GREEN)));
 
     Args0 COMMAND_FOOD_SET_INVALIDVALUE = () -> prefixed(translatable().key("floracore.command.food.set.invalidvalue").color(RED));
 
@@ -743,7 +743,23 @@ public interface Message {
 
     Args1<String> COMMAND_ITEMFLAG_CLEAR_FROM = from -> prefixed(translatable().key("floracore.command.itemflag.clear.from").color(AQUA).args(text(from).color(GREEN)));
 
-    Args0 COMMAND_ITEMFLAG_UNKNOWNOPTION_MESSAGE = () -> prefixed(translatable().key("floracore.command.itemflag.unknownoption.message").color(RED).args(translatable("floracore.command.itemflag.unknownoption.options").color(GREEN)));
+    Args0 COMMAND_ITEMNAME_NOITEM_SELF =  () -> prefixed(translatable().key("floracore.command.itemname.noitem.self").color(RED));
+
+    Args1<String> COMMAND_ITEMNAME_NOITEM_OTHER =  player -> prefixed(translatable().key("floracore.command.itemname.noitem.other").color(RED).args(text(player).color(GREEN)));
+
+    Args0 COMMAND_ITEMNAME_UNSUPPORTEDITEM =  () -> prefixed(translatable().key("floracore.command.itemname.unsupporteditem").color(RED));
+
+    Args1<String> COMMAND_ITEMNAME_SET_SELF = name -> prefixed(translatable().key("floracore.command.itemname.set.self").color(AQUA).args(text(name).color(GREEN)));
+    
+    Args2<String, String> COMMAND_ITEMNAME_SET_OTHER = (player, name) -> prefixed(translatable().key("floracore.command.itemname.set.other").color(AQUA).args(text(player).color(GREEN), text(name).color(GREEN)));
+
+    Args2<String, String> COMMAND_ITEMNAME_SET_FROM = (from, name) -> prefixed(translatable().key("floracore.command.itemname.set.from").color(AQUA).args(text(from).color(GREEN), text(name).color(GREEN)));
+
+    Args0 COMMAND_ITEMNAME_RESET_SELF = () -> prefixed(translatable().key("floracore.command.itemname.reset.self").color(AQUA));
+
+    Args1<String> COMMAND_ITEMNAME_RESET_OTHER = player -> prefixed(translatable().key("floracore.command.itemname.reset.other").color(AQUA).args(text(player).color(GREEN)));
+
+    Args1<String> COMMAND_ITEMNAME_RESET_FROM = from -> prefixed(translatable().key("floracore.command.itemname.reset.from").color(AQUA).args(text(from).color(GREEN)));
 
     Args1<String> COMMAND_BROADCAST = contents -> text().append(PREFIX_BROADCAST).append(space()).append(formatColoredValue(contents)).build();
 
