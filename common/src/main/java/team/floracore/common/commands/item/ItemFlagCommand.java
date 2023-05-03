@@ -79,7 +79,7 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
     public void add(
             @NotNull CommandSender s,
             @NotNull @Argument("flag") ItemFlag flag,
-            @Nullable Player target,
+            @Nullable @Argument("target") Player target,
             @Nullable @Flag("silent") Boolean silent
     ) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
