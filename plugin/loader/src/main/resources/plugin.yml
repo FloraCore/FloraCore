@@ -6,7 +6,6 @@ main: team.floracore.plugin.loader.BukkitLoaderPlugin
 depend:
   - ProtocolLib
   - LuckPerms
-  - SkinsRestorer
   - PremiumVanish
 permissions:
   floracore.admin:

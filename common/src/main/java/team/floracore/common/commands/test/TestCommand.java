@@ -9,6 +9,8 @@ import net.kyori.adventure.audience.*;
 import net.kyori.adventure.bossbar.*;
 import net.kyori.adventure.inventory.*;
 import net.kyori.adventure.text.*;
+import net.luckperms.api.*;
+import net.luckperms.api.model.user.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
@@ -176,5 +178,17 @@ public class TestCommand extends AbstractFloraCoreCommand {
     @CommandDescription("测试c5 a2命令")
     public void test_c5_a2_qu(final @NonNull CommandSender sender, final @Argument("query") @Greedy String query) {
         sender.sendMessage("我是c2中的a2命令，你选择的query是" + query);
+    }
+
+    @CommandMethod("test lp a1")
+    @CommandDescription("测试lp a1命令")
+    public void luckPermsTest(final @NonNull Player player) {
+        UUID uuid = player.getUniqueId();
+        LuckPerms luckPerms = LuckPermsProvider.get();
+        User user = luckPerms.getUserManager().getUser(uuid);
+        if (user != null) {
+            String pPrefix = user.getCachedData().getMetaData().getPrefix();
+            player.sendMessage(pPrefix);
+        }
     }
 }

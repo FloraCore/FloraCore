@@ -121,7 +121,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.commandManager = new CommandManager(this);
         this.chatManager = new ChatManager(this);
 
-
         // register with the FC API
         this.apiProvider = new FloraCoreApiProvider(this);
         this.apiProvider.ensureApiWasLoadedByPlugin();
