@@ -1,24 +1,20 @@
 package team.floracore.common.commands.item;
 
 import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.specifier.Greedy;
-import org.bukkit.Material;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.PlayerInventory;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import team.floracore.common.command.AbstractFloraCoreCommand;
-import team.floracore.common.locale.Message;
-import team.floracore.common.plugin.FloraCorePlugin;
-import team.floracore.common.sender.Sender;
-import team.floracore.common.util.MultipleVersionsUtil;
-import team.floracore.common.util.SenderUtil;
-import team.floracore.common.util.StringUtil;
+import cloud.commandframework.annotations.specifier.*;
+import org.bukkit.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.*;
+import org.jetbrains.annotations.*;
+import team.floracore.common.command.*;
+import team.floracore.common.locale.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
+import team.floracore.common.util.*;
 
-import java.util.Optional;
+import java.util.*;
 
 @CommandDescription("更改手上物品的名称")
 @CommandPermission("floracore.command.itemname")

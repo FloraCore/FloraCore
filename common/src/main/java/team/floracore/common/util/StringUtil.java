@@ -1,8 +1,8 @@
 package team.floracore.common.util;
 
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.*;
 
-import java.util.Objects;
+import java.util.*;
 
 public final class StringUtil {
     private StringUtil() {
