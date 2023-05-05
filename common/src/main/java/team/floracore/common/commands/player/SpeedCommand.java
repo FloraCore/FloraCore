@@ -3,140 +3,124 @@ package team.floracore.common.commands.player;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
-import net.kyori.adventure.text.*;
-import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.bukkit.event.player.*;
-import org.floracore.api.data.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
+import team.floracore.common.config.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
 
 import javax.annotation.Nullable;
-import javax.annotation.*;
 import java.util.*;
 
 /**
  * Speed命令
  */
 @CommandPermission("floracore.command.speed")
-public class SpeedCommand extends AbstractFloraCoreCommand implements Listener {
+public class SpeedCommand extends AbstractFloraCoreCommand {
     public SpeedCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
 
-    @CommandMethod("setspeed|speed <type> <speed> [target]")
-    @CommandDescription("修改玩家的移动/飞行速度")
-    public void setSpeed(
-            final @NotNull CommandSender commandSender,
-            @NotNull @Argument(value = "type", suggestions = "get_types") String type,
-            @NotNull @Argument("speed") String speed,
-            @Nullable @Argument("target") String target,
-            final @Nullable @Flag("silent") Boolean silent
-    ) {
-        if (target == null) {
-            if (commandSender instanceof Player) {
-                checkSyntaxAndExecute((Player) commandSender, type, speed, null, false);
-            } else {
-                Sender sender = getPlugin().getSenderFactory().wrap(commandSender);
-                Message.COMMAND_INVALID_COMMAND_SENDER.send(sender, commandSender.getClass().getSimpleName(), Player.class.getSimpleName());
-            }
-        } else {
-            Player player = Bukkit.getPlayer(target);
-            if (player == null) {
-                Sender sender = getPlugin().getSenderFactory().wrap(commandSender);
-                Message.PLAYER_NOT_FOUND.send(sender, target);
-                return;
-            }
-            checkSyntaxAndExecute(player, type, speed, commandSender, Boolean.TRUE.equals(silent));
-        }
+    @CommandMethod("speed <speed>")
+    @CommandDescription("设置你当前状态的速度")
+    public void speed(final @NotNull Player p, final @Argument(value = "speed", suggestions = "speeds") float speed) {
+        boolean isFlying = p.isFlying();
+        speedAdvance(p, speed, isFlying ? SpeedType.FLY.getName() : SpeedType.WALK.getName(), null, null);
     }
 
-    private void checkSyntaxAndExecute(Player target, String type, String speed, CommandSender sender, boolean silent) {
-        float targetSpeed;
+    @CommandMethod("speed <speed> <type> [target]")
+    @CommandDescription("设置你（或指定玩家）的指定类型的速度")
+    public void speedAdvance(final @NotNull Player p, final @Argument(value = "speed", suggestions = "speeds") float speed, final @Argument(value = "type", suggestions = "types") String type, final @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
+        Sender sender = getPlugin().getSenderFactory().wrap(p);
         try {
-            targetSpeed = Float.parseFloat(speed);
-        } catch (NumberFormatException e) {
-            Message.COMMAND_MISC_INVALID_NUMBER.send(getPlugin().getSenderFactory().wrap(sender == null ? target : sender), speed);
-            return;
-        }
-        boolean modified = false;
-        if (type.equalsIgnoreCase("fly") || type.equalsIgnoreCase("flight") || type.equalsIgnoreCase("all") || type.equalsIgnoreCase("general")) {
-            setSpeed(target, Type.FLY, targetSpeed, sender, silent);
-            modified = true;
-        }
-        if (type.equalsIgnoreCase("walk") || type.equalsIgnoreCase("move") || type.equalsIgnoreCase("all") || type.equalsIgnoreCase("general")) {
-            setSpeed(target, Type.WALK, targetSpeed, sender, silent);
-            modified = true;
-        }
-        if (!modified) {
-            Message.COMMAND_SPEED_NO_SUCH.send(getPlugin().getSenderFactory().wrap(sender == null ? target : sender), type);
+            final SpeedType speedType = SpeedType.parseSpeedType(type);
+            final boolean isBypass = p.hasPermission("floracore.command.speed.bypass");
+            if (target != null) {
+                if (!p.hasPermission("floracore.command.speed.other")) {
+                    Message.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
+                    return;
+                }
+                switch (speedType) {
+                    case FLY:
+                        target.setFlySpeed(getRealMoveSpeed(speed, speedType, isBypass));
+                        break;
+                    case WALK:
+                        target.setWalkSpeed(getRealMoveSpeed(speed, speedType, isBypass));
+                        break;
+                }
+                if (!(silent != null && silent)) {
+                    Message.COMMAND_SPEED_OTHER.send(sender, p.getDisplayName(), speedType == SpeedType.FLY ? Message.COMMAND_MISC_SPEED_FLY.build() : Message.COMMAND_MISC_SPEED_WALK.build(), String.valueOf(speed));
+                }
+                Message.COMMAND_SPEED.send(sender, target.getDisplayName(), speedType == SpeedType.FLY ? Message.COMMAND_MISC_SPEED_FLY.build() : Message.COMMAND_MISC_SPEED_WALK.build(), String.valueOf(speed));
+            } else {
+                switch (speedType) {
+                    case FLY:
+                        p.setFlySpeed(getRealMoveSpeed(speed, speedType, isBypass));
+                        break;
+                    case WALK:
+                        p.setWalkSpeed(getRealMoveSpeed(speed, speedType, isBypass));
+                        break;
+                }
+                Message.COMMAND_SPEED.send(sender, p.getDisplayName(), speedType == SpeedType.FLY ? Message.COMMAND_MISC_SPEED_FLY.build() : Message.COMMAND_MISC_SPEED_WALK.build(), String.valueOf(speed));
+            }
+        } catch (IllegalArgumentException e) {
+            Message.COMMAND_SPEED_NO_SUCH.send(sender, type);
         }
     }
 
-    private void setSpeed(@Nonnull Player target, @Nonnull Type type, float speed, @Nullable CommandSender sender, boolean silent) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
-        Sender t = getPlugin().getSenderFactory().wrap(target);
-        switch (type) {
-            case FLY:
-                target.setFlySpeed(speed);
-                Component fly = Message.COMMAND_MISC_SPEED_FLY.build();
-                if (sender == null) {
-                    Message.COMMAND_SPEED.send(t, t.getDisplayName(), fly, String.valueOf(speed));
-                } else {
-                    Message.COMMAND_SPEED.send(s, t.getDisplayName(), fly, String.valueOf(speed));
-                    if (!silent) {
-                        Message.COMMAND_SPEED_OTHER.send(t, s.getDisplayName(), fly, String.valueOf(speed));
+    private float getRealMoveSpeed(final float userSpeed, final SpeedType speedType, final boolean isBypass) {
+        final float defaultSpeed = speedType == SpeedType.FLY ? 0.1f : 0.2f;
+        float maxSpeed = 1f;
+        if (!isBypass) {
+            maxSpeed = (speedType == SpeedType.FLY ? getPlugin().getConfiguration().get(ConfigKeys.SPEED_MAX_FLY_SPEED) : getPlugin().getConfiguration().get(ConfigKeys.SPEED_MAX_WALK_SPEED)).floatValue();
+        }
+
+        if (userSpeed < 1f) {
+            return defaultSpeed * userSpeed;
+        } else {
+            final float ratio = ((userSpeed - 1) / 9) * (maxSpeed - defaultSpeed);
+            return ratio + defaultSpeed;
+        }
+    }
+
+    @Suggestions("speeds")
+    public List<String> getSpeeds(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
+        return new ArrayList<>(Arrays.asList("1", "1.5", "1.75", "2"));
+    }
+
+    @Suggestions("types")
+    public List<String> getTypes(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
+        return new ArrayList<>(Arrays.asList("walk", "fly"));
+    }
+
+    private enum SpeedType {
+        FLY("fly", "f"),
+        WALK("walk", "w", "run", "r");
+        final String[] aliases;
+
+        SpeedType(String... aliases) {
+            this.aliases = aliases;
+        }
+
+        public static SpeedType parseSpeedType(String input) throws IllegalArgumentException {
+            for (SpeedType speedType : values()) {
+                if (speedType.name().equalsIgnoreCase(input)) {
+                    return speedType;
+                }
+                for (String alias : speedType.aliases) {
+                    if (alias.equalsIgnoreCase(input)) {
+                        return speedType;
                     }
                 }
-                break;
-            case WALK:
-                target.setWalkSpeed(speed);
-                Component walk = Message.COMMAND_MISC_SPEED_WALK.build();
-                if (sender == null) {
-                    Message.COMMAND_SPEED.send(t, t.getDisplayName(), walk, String.valueOf(speed));
-                } else {
-                    Message.COMMAND_SPEED.send(s, t.getDisplayName(), walk, String.valueOf(speed));
-                    if (!silent) {
-                        Message.COMMAND_SPEED_OTHER.send(t, s.getDisplayName(), walk, String.valueOf(speed));
-                    }
-                }
-                break;
-        }
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) {
-        Player p = e.getPlayer();
-        UUID u = p.getUniqueId();
-        if (whetherServerEnableAutoSync1()) {
-            Data data = getStorageImplementation().getSpecifiedData(u, DataType.AUTO_SYNC, "fly-speed");
-            if (data != null) {
-                String value = data.getValue();
-                float flySpeed = Float.parseFloat(value);
-                p.setFlySpeed(flySpeed);
             }
-            data = getStorageImplementation().getSpecifiedData(u, DataType.AUTO_SYNC, "walk-speed");
-            if (data != null) {
-                String value = data.getValue();
-                float walkSpeed = Float.parseFloat(value);
-                p.setWalkSpeed(walkSpeed);
-            }
+            throw new IllegalArgumentException("Invalid input: " + input);
         }
-    }
 
-    @Suggestions("get_types")
-    public List<String> getTypes(@NotNull CommandContext<CommandSender> sender, @NotNull String input) {
-        return new ArrayList<>(Arrays.asList("fly", "walk"));
-    }
-
-    enum Type {
-        FLY,
-        WALK
+        public String getName() {
+            return aliases[0];
+        }
     }
 }
