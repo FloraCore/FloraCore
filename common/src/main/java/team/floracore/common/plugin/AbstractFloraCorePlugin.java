@@ -20,6 +20,7 @@ import team.floracore.common.plugin.logging.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.github.*;
 
 import java.io.*;
 import java.nio.file.*;
@@ -74,6 +75,21 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // send the startup banner
         Message.STARTUP_BANNER.send(getConsoleSender(), getBootstrap());
+
+        // check update
+        this.getBootstrap().getScheduler().async().execute(() -> {
+            try {
+                Message.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
+                String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
+                if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
+                    Message.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(), getBootstrap(), leastReleaseTagVersion);
+                } else {
+                    Message.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());
+                }
+            } catch (IOException e) {
+                Message.STARTUP_CHECKING_UPDATE_FAILED.send(getConsoleSender(), getBootstrap());
+            }
+        });
 
         // load configuration
         getLogger().info("Loading configuration...");

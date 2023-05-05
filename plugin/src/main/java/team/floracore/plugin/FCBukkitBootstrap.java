@@ -3,14 +3,12 @@ package team.floracore.plugin;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
-import org.bukkit.plugin.*;
 import org.bukkit.plugin.java.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.commands.player.*;
 import team.floracore.common.loader.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.classpath.*;
-import team.floracore.common.plugin.logging.PluginLogger;
 import team.floracore.common.plugin.logging.*;
 
 import java.lang.reflect.*;
@@ -202,7 +200,7 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
     }
 
     @Override
-    public Plugin getPlugin() {
+    public JavaPlugin getPlugin() {
         return getLoader();
     }
 

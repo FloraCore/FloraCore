@@ -48,6 +48,11 @@ public interface Message {
         return join(joinConfig, text().append(infoLine1).build());
     };
 
+    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE = bootstrap -> prefixed(text("Checking FloraCore version information...").color(AQUA));
+    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE_NEWEST = bootstrap -> prefixed(text("The current version of FloraCore is the latest version!").color(GREEN));
+    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE_FAILED = bootstrap -> prefixed(text("FloraCore version check failed!").color(RED));
+    Args2<FloraCoreBootstrap, String> STARTUP_CHECKING_UPDATE_OUTDATED = (bootstrap, version) -> prefixed(text("The current FloraCore version is outdated! Latest version: ").color(RED).append(text("v" + version).color(DARK_AQUA)));
+
     Args0 TRANSLATIONS_SEARCHING = () -> prefixed(translatable()
             // 正在搜索可用的翻译, 请稍候...
             .key("floracore.command.translations.searching").color(GRAY));
