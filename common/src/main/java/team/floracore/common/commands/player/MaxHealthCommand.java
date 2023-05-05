@@ -39,7 +39,7 @@ public class MaxHealthCommand extends AbstractFloraCoreCommand {
     @CommandPermission("floracore.command.maxhealth.set.other")
     public void setOtherMaxHealth(
             @NotNull CommandSender s,
-            @Argument("value") double value,
+            @Argument("value") Double value,
             @Nullable @Argument("target") Player target,
             @Nullable @Flag("silent") Boolean silent
     ) {

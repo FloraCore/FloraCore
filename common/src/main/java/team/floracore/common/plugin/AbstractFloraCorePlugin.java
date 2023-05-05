@@ -80,7 +80,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         ConfigurationAdapter configFileAdapter = provideConfigurationAdapter();
         this.configuration = new FloraCoreConfiguration(this, new MultiConfigurationAdapter(this, new SystemPropertyConfigAdapter(this), new EnvironmentVariableConfigAdapter(this), configFileAdapter));
 
-
         // setup a bytebin instance
         this.httpClient = new OkHttpClient.Builder().callTimeout(15, TimeUnit.SECONDS).build();
 

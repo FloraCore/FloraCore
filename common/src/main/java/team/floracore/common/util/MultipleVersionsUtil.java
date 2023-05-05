@@ -6,6 +6,8 @@ import org.jetbrains.annotations.*;
 
 import java.lang.reflect.*;
 
+import static team.floracore.common.util.ReflectionWrapper.*;
+
 /**
  * 一些跨版本的常用类
  */
@@ -22,20 +24,26 @@ public final class MultipleVersionsUtil {
      * @return 玩家最大生命值
      */
     public static double getMaxHealth(@NotNull Player player) {
+        Object result;
         try {
             Class<?> classAttribute = Class.forName("org.bukkit.attribute.Attribute");
             // Attribute enumGenericMaxHealth = Attribute.GENERIC_MAX_HEALTH
-            Object enumGenericMaxHealth = ReflectionWrapper.getStaticFieldValue(ReflectionWrapper.getField(classAttribute, "GENERIC_MAX_HEALTH"));
+            Object enumGenericMaxHealth = getStaticFieldValue(getField(classAttribute, "GENERIC_MAX_HEALTH"));
             // AttributeInstance attrInstance = player.getAttribute(enumGenericMaxHealth);
-            Object attrInstance = ReflectionWrapper.invokeMethod(
-                    ReflectionWrapper.getMethod(player.getClass(), "getAttribute", classAttribute),
+            Object attrInstance = invokeMethod(
+                    getMethod(player.getClass(), "getAttribute", classAttribute),
                     player, enumGenericMaxHealth
             );
             // return attrInstance.getValue()
-            return ReflectionWrapper.invokeMethod(ReflectionWrapper.getMethod(attrInstance.getClass(), "getValue"), attrInstance);
+            result = invokeMethod(getMethod(attrInstance.getClass(), "getValue"), attrInstance);
         } catch (ClassNotFoundException e) { // 没有org.bukkit.attribute.Attribute这个类，说明不存在Attribute概念，应该是低版本
             // return player.getMaxHealth()
-            return ReflectionWrapper.invokeMethod(ReflectionWrapper.getMethod(Damageable.class, "getMaxHealth"), player);
+            result = invokeMethod(getMethod(Damageable.class, "getMaxHealth"), player);
+        }
+        if (result instanceof Integer) {
+            return ((Integer) result).doubleValue();
+        } else {
+            return (Double) result;
         }
     }
 
@@ -50,21 +58,21 @@ public final class MultipleVersionsUtil {
         try {
             Class<?> classAttribute = Class.forName("org.bukkit.attribute.Attribute");
             // Attribute enumGenericMaxHealth = Attribute.GENERIC_MAX_HEALTH
-            Object enumGenericMaxHealth = ReflectionWrapper.getStaticFieldValue(ReflectionWrapper.getField(classAttribute, "GENERIC_MAX_HEALTH"));
-//            AttributeInstance attrInstance = player.getAttribute(enumGenericMaxHealth);
-            Object attrInstance = ReflectionWrapper.invokeMethod(
-                    ReflectionWrapper.getMethod(player.getClass(), "getAttribute", classAttribute),
+            Object enumGenericMaxHealth = getStaticFieldValue(getField(classAttribute, "GENERIC_MAX_HEALTH"));
+            // AttributeInstance attrInstance = player.getAttribute(enumGenericMaxHealth);
+            Object attrInstance = invokeMethod(
+                    getMethod(player.getClass(), "getAttribute", classAttribute),
                     player, enumGenericMaxHealth
             );
-//            attrInstance.setBaseValue(value);
-            ReflectionWrapper.invokeMethod(
-                    ReflectionWrapper.getMethod(attrInstance.getClass(), "setBaseValue", double.class),
+            // attrInstance.setBaseValue(value);
+            invokeMethod(
+                    getMethod(attrInstance.getClass(), "setBaseValue", double.class),
                     attrInstance, value
             );
         } catch (ClassNotFoundException e) { // 没有org.bukkit.attribute.Attribute这个类，说明不存在Attribute概念，应该是低版本
             // return player.setMaxHealth(value)
-            ReflectionWrapper.invokeMethod(
-                    ReflectionWrapper.getMethod(Damageable.class, "setMaxHealth", double.class),
+            invokeMethod(
+                    getMethod(Damageable.class, "setMaxHealth", double.class),
                     player, value
             );
         }
@@ -81,9 +89,9 @@ public final class MultipleVersionsUtil {
     public static @Nullable ItemStack getItemInMainHand(@NotNull PlayerInventory inventory) {
         try {
             Method method = PlayerInventory.class.getMethod("getItemInMainHand");
-            return ReflectionWrapper.invokeMethod(method, inventory);
+            return invokeMethod(method, inventory);
         } catch (NoSuchMethodException e) {
-            return ReflectionWrapper.invokeMethod(ReflectionWrapper.getMethod(PlayerInventory.class, "getItemInHand"), inventory);
+            return invokeMethod(getMethod(PlayerInventory.class, "getItemInHand"), inventory);
         }
     }
 }
