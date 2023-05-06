@@ -230,6 +230,19 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
+    public List<Data> getSpecifiedTypeData(UUID uuid, DataType type) {
+        List<Data> ret = new ArrayList<>();
+        long currentTime = System.currentTimeMillis();
+        for (Data data : selectData(uuid)) {
+            if (data.getType() == type && (data.getExpiry() <= 0 || data.getExpiry() > currentTime)) {
+                ret.add(data);
+            }
+        }
+        return ret;
+    }
+
+
+    @Override
     public void deleteDataAll(UUID uuid) {
         try (Connection c = this.connectionFactory.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_ALL))) {

@@ -138,3 +138,5 @@ commands:
 server:
   name: "global"
   type: "lobby"
+
+check-update: true

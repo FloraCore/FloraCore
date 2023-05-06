@@ -92,6 +92,8 @@ public class ConfigKeys {
     public static final ConfigKey<String> SERVER_NAME = notReloadable(stringKey("server.name", "unknown"));
     public static final ConfigKey<ServerType> SERVER_TYPE = notReloadable(key(c -> ServerType.parse(c.getString("server.type", "unknown"), ServerType.UNKNOWN)));
 
+    public static final ConfigKey<Boolean> CHECK_UPDATE = notReloadable(booleanKey("check-update", false));
+
     /**
      * A list of the keys defined in this class.
      */

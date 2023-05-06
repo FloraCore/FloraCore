@@ -69,6 +69,15 @@ public class ChatManager implements Listener {
         this.plugin.getBootstrap().getScheduler().async().execute(() -> addChatRecord(chatRecord));
     }
 
+    public void clearPlayerChatsInvalid(UUID uuid) {
+        List<Data> ret = plugin.getStorage().getImplementation().getSpecifiedTypeData(uuid, DataType.CHAT);
+        for (Data data : ret) {
+            if (data.getValue().isEmpty()) {
+                plugin.getStorage().getImplementation().deleteDataID(data.getId());
+            }
+        }
+    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -79,6 +88,7 @@ public class ChatManager implements Listener {
         players.put(uuid, mapPlayerRecord);
         this.plugin.getBootstrap().getScheduler().async().execute(() -> {
             this.plugin.getStorage().getImplementation().insertData(uuid, DataType.CHAT, chatUUID.toString(), "", 0);
+            clearPlayerChatsInvalid(uuid);
         });
     }
 

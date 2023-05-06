@@ -76,25 +76,27 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // send the startup banner
         Message.STARTUP_BANNER.send(getConsoleSender(), getBootstrap());
 
-        // check update
-        this.getBootstrap().getScheduler().async().execute(() -> {
-            try {
-                Message.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
-                String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
-                if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
-                    Message.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(), getBootstrap(), leastReleaseTagVersion);
-                } else {
-                    Message.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());
-                }
-            } catch (IOException e) {
-                Message.STARTUP_CHECKING_UPDATE_FAILED.send(getConsoleSender(), getBootstrap());
-            }
-        });
-
         // load configuration
         getLogger().info("Loading configuration...");
         ConfigurationAdapter configFileAdapter = provideConfigurationAdapter();
         this.configuration = new FloraCoreConfiguration(this, new MultiConfigurationAdapter(this, new SystemPropertyConfigAdapter(this), new EnvironmentVariableConfigAdapter(this), configFileAdapter));
+
+        // check update
+        if (this.configuration.get(ConfigKeys.CHECK_UPDATE)) {
+            this.getBootstrap().getScheduler().async().execute(() -> {
+                try {
+                    Message.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
+                    String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
+                    if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
+                        Message.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(), getBootstrap(), leastReleaseTagVersion);
+                    } else {
+                        Message.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());
+                    }
+                } catch (IOException e) {
+                    Message.STARTUP_CHECKING_UPDATE_FAILED.send(getConsoleSender(), getBootstrap());
+                }
+            });
+        }
 
         // setup a bytebin instance
         this.httpClient = new OkHttpClient.Builder().callTimeout(15, TimeUnit.SECONDS).build();

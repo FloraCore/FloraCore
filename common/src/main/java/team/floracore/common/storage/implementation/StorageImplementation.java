@@ -50,6 +50,8 @@ public interface StorageImplementation {
      */
     Data getSpecifiedData(UUID uuid, DataType type, String key);
 
+    List<Data> getSpecifiedTypeData(UUID uuid, DataType type);
+
     void deleteDataAll(UUID uuid);
 
     void deleteDataType(UUID uuid, DataType type);
