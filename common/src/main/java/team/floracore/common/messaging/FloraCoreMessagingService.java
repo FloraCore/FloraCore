@@ -1,7 +1,6 @@
 package team.floracore.common.messaging;
 
 import com.google.gson.*;
-import net.luckperms.api.messenger.message.type.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.*;
 import org.floracore.api.messenger.message.*;
@@ -72,6 +71,15 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
     }
 
     @Override
+    public void pushReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer) {
+        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
+            UUID requestId = generatePingId();
+            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            this.messenger.sendOutgoingMessage(new ReportMessageImpl(requestId, reporter, reportedUser, reporterServer, reportedUserServer));
+        });
+    }
+
+    @Override
     public boolean consumeIncomingMessage(@NonNull Message message) {
         Objects.requireNonNull(message, "message");
         if (!this.receivedMessages.add(message.getId())) {
@@ -79,9 +87,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         }
 
         // determine if the message can be handled by us
-        boolean valid = message instanceof UpdateMessage ||
-                message instanceof UserUpdateMessage ||
-                message instanceof ActionLogMessage;
+        boolean valid = message instanceof ReportMessage;
 
         // instead of throwing an exception here, just return false
         // it means an instance of LP can gracefully handle messages it doesn't
@@ -133,7 +139,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
 
         // decode message
         Message decoded;
-        if (type.equals(ReportMessageImpl.TYPE)) {
+        if (type.equalsIgnoreCase(ReportMessageImpl.TYPE)) {
             decoded = ReportMessageImpl.decode(content, id);
         } else {
             // gracefully return if we just don't recognise the type
@@ -148,6 +154,14 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
     private void processIncomingMessage(Message message) {
         if (message instanceof ReportMessage) {
             ReportMessage msg = (ReportMessage) message;
+            final UUID reporter = msg.getReporter();
+            final UUID reportedUser = msg.getReportedUser();
+            final String reporterServer = msg.getReporterServer();
+            final String reportedUserServer = msg.getReportedUserServer();
+            System.out.println(reporter);
+            System.out.println(reportedUser);
+            System.out.println(reporterServer);
+            System.out.println(reportedUserServer);
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }

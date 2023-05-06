@@ -4,6 +4,7 @@ import com.google.gson.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.message.type.*;
 import team.floracore.common.messaging.*;
+import team.floracore.common.util.gson.*;
 
 import java.util.*;
 
@@ -49,7 +50,12 @@ public class ReportMessageImpl extends AbstractMessage implements ReportMessage 
 
     @Override
     public @NonNull String asEncodedString() {
-        return FloraCoreMessagingService.encodeMessageAsString(TYPE, getId(), null);
+        return FloraCoreMessagingService.encodeMessageAsString(TYPE, getId(),
+                new JObject().add("reporter", this.reporter.toString())
+                        .add("reportedUser", this.reportedUser.toString())
+                        .add("reporterServer", this.reporterServer)
+                        .add("reportedUserServer", this.reportedUserServer).toJson()
+        );
     }
 
     @Override

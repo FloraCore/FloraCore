@@ -2,6 +2,8 @@ package team.floracore.common.messaging;
 
 import org.floracore.api.messenger.*;
 
+import java.util.*;
+
 public interface InternalMessagingService {
     /**
      * Gets the name of this messaging service
@@ -18,4 +20,6 @@ public interface InternalMessagingService {
      * Closes the messaging service
      */
     void close();
+
+    void pushReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer);
 }

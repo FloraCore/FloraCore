@@ -47,5 +47,4 @@ public interface IncomingMessageConsumer {
      * @return true if the message was accepted by the plugin
      */
     boolean consumeIncomingMessageAsString(@NonNull String encodedString);
-
 }

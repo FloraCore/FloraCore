@@ -87,7 +87,6 @@ public abstract class AbstractSqlMessenger implements Messenger {
                     while (rs.next()) {
                         long id = rs.getLong("id");
                         this.lastId = Math.max(this.lastId, id);
-
                         String message = rs.getString("msg");
                         this.consumer.consumeIncomingMessageAsString(message);
                     }

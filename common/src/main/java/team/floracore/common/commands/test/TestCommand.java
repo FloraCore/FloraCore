@@ -191,4 +191,17 @@ public class TestCommand extends AbstractFloraCoreCommand {
             player.sendMessage(pPrefix);
         }
     }
+
+    @CommandMethod("test mess a1")
+    @CommandDescription("测试mess a1命令")
+    public void messagingTest(final @NonNull CommandSender sender) {
+        sender.sendMessage("OKKKKK~");
+        getPlugin().getMessagingService().ifPresent(service -> {
+            final UUID reporter = UUID.randomUUID();
+            final UUID reportedUser = UUID.randomUUID();
+            final String reporterServer = "Test1";
+            final String reportedUserServer = "Test2";
+            service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer);
+        });
+    }
 }
