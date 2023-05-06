@@ -5,6 +5,8 @@ import net.luckperms.api.messenger.message.type.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.*;
 import org.floracore.api.messenger.message.*;
+import org.floracore.api.messenger.message.type.*;
+import team.floracore.common.messaging.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.util.*;
 import team.floracore.common.util.gson.*;
@@ -131,48 +133,23 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
 
         // decode message
         Message decoded;
-        // gracefully return if we just don't recognise the type
-        return false;
+        if (type.equals(ReportMessageImpl.TYPE)) {
+            decoded = ReportMessageImpl.decode(content, id);
+        } else {
+            // gracefully return if we just don't recognise the type
+            return false;
+        }
 
         // consume the message
-        // TODO 消息类型
-        // processIncomingMessage(decoded);
-        // return true;
+        processIncomingMessage(decoded);
+        return true;
     }
 
     private void processIncomingMessage(Message message) {
-        /*if (message instanceof UpdateMessage) {
-            UpdateMessage msg = (UpdateMessage) message;
-
-            this.plugin.getLogger().info("[Messaging] Received update ping with id: " + msg.getId());
-
-            if (this.plugin.getEventDispatcher().dispatchNetworkPreSync(false, msg.getId())) {
-                return;
-            }
-
-            this.plugin.getSyncTaskBuffer().request();
-        } else if (message instanceof UserUpdateMessage) {
-            UserUpdateMessage msg = (UserUpdateMessage) message;
-
-            User user = this.plugin.getUserManager().getIfLoaded(msg.getUserUniqueId());
-            if (user == null) {
-                return;
-            }
-
-            this.plugin.getLogger().info("[Messaging] Received user update ping for '" + user.getPlainDisplayName() + "' with id: " + msg.getId());
-
-            if (this.plugin.getEventDispatcher().dispatchNetworkPreSync(false, msg.getId())) {
-                return;
-            }
-
-            this.plugin.getStorage().loadUser(user.getUniqueId(), null);
-        } else if (message instanceof ActionLogMessage) {
-            ActionLogMessage msg = (ActionLogMessage) message;
-
-            this.plugin.getEventDispatcher().dispatchLogReceive(msg.getId(), msg.getAction());
-            this.plugin.getLogDispatcher().dispatchFromRemote((LoggedAction) msg.getAction());
+        if (message instanceof ReportMessage) {
+            ReportMessage msg = (ReportMessage) message;
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
-        }*/
+        }
     }
 }
