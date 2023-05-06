@@ -45,6 +45,8 @@ public class DependencyRegistry {
         }
 
         if (redis) {
+            dependencies.add(Dependency.COMMONS_POOL_2);
+            dependencies.add(Dependency.JEDIS);
             dependencies.add(Dependency.SLF4J_API);
             dependencies.add(Dependency.SLF4J_SIMPLE);
         }

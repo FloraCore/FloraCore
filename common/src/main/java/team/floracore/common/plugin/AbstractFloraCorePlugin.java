@@ -16,6 +16,7 @@ import team.floracore.common.locale.*;
 import team.floracore.common.locale.chat.*;
 import team.floracore.common.locale.data.*;
 import team.floracore.common.locale.translation.*;
+import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.*;
@@ -39,6 +40,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private FloraCoreConfiguration configuration;
     private FloraCoreApiProvider apiProvider;
     private Storage storage;
+    private InternalMessagingService messagingService = null;
     private SimpleExtensionManager extensionManager;
     private BukkitAudiences bukkitAudiences;
     private CommandManager commandManager;
@@ -117,6 +119,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // initialise storage
         this.storage = storageFactory.getInstance();
+        this.messagingService = provideMessagingFactory().getInstance();
         Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getPlugin(), () -> {
             Servers servers = storage.getImplementation().selectServers(getServerName());
             if (servers == null) {
@@ -158,6 +161,12 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         getBootstrap().getScheduler().shutdownScheduler();
 
         getChatManager().shutdown();
+
+        // close messaging service
+        if (this.messagingService != null) {
+            getLogger().info("Closing messaging service...");
+            this.messagingService.close();
+        }
 
         // close storage
         getLogger().info("Closing storage...");
@@ -230,6 +239,18 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     @Override
+    public Optional<InternalMessagingService> getMessagingService() {
+        return Optional.ofNullable(this.messagingService);
+    }
+
+    @Override
+    public void setMessagingService(InternalMessagingService messagingService) {
+        if (this.messagingService == null) {
+            this.messagingService = messagingService;
+        }
+    }
+
+    @Override
     public TranslationManager getTranslationManager() {
         return this.translationManager;
     }
@@ -282,6 +303,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     protected DependencyManager createDependencyManager() {
         return new DependencyManagerImpl(this);
     }
+
+    protected abstract MessagingFactory<?> provideMessagingFactory();
 
     @Override
     public DependencyManager getDependencyManager() {

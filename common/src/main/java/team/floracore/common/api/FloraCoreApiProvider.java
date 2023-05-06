@@ -1,15 +1,21 @@
 package team.floracore.common.api;
 
+import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.*;
 import org.floracore.api.chat.*;
 import org.floracore.api.data.*;
+import org.floracore.api.messaging.*;
+import org.floracore.api.messenger.*;
 import org.floracore.api.player.*;
 import org.floracore.api.server.*;
 import team.floracore.common.api.implementation.*;
 import team.floracore.common.config.*;
+import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
+
+import java.util.*;
 
 /**
  * Implements the FloraCore API using the plugin instance
@@ -82,5 +88,17 @@ public class FloraCoreApiProvider implements FloraCore {
     @Override
     public ChatAPI getChatAPI() {
         return this.chatAPI;
+    }
+
+    @Override
+    public void registerMessengerProvider(@NonNull MessengerProvider messengerProvider) {
+        if (this.plugin.getConfiguration().get(ConfigKeys.MESSAGING_SERVICE).equals("custom")) {
+            this.plugin.setMessagingService(new FloraCoreMessagingService(this.plugin, messengerProvider));
+        }
+    }
+
+    @Override
+    public @NonNull Optional<MessagingService> getMessagingService() {
+        return this.plugin.getMessagingService().map(ApiMessagingService::new);
     }
 }

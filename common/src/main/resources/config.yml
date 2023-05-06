@@ -16,7 +16,7 @@
 #   |=> H2
 #
 # - A H2 database is the default option.
-storage-method: h2
+storage-method: H2
 
 # The following block defines the settings for remote database storage methods.
 #
@@ -100,7 +100,20 @@ redis:
   username: ''
   password: ''
 
-# If FloraCore should automatically install translation bundles and periodically update them.
+# 定义插件应该使用哪个消息传递服务。
+#
+# - 如果启用和配置，FloraCore将使用消息服务通知其他连接的服务器。
+# - 数据不使用此服务存储。它仅用作消息传递平台。
+#
+# - 可能的选项:
+#   => sql       使用sql数据库组成队列系统进行通信。仅当 “存储方法” 设置为MySQL或MariaDB时才起作用。
+#                如果选项设置为 “auto” 并且正在使用SQL存储，则默认选择此选项。
+#   => redis     使用Redis pub-sub推送更改。您的服务器连接信息必须在下面配置。
+#   => custom    使用使用FloraCore API提供的消息服务。
+#   => auto      尝试使用redis或sql自动设置消息服务。
+messaging-service: auto
+
+# 如果FloraCore应该自动安装翻译包并定期更新它们。
 auto-install-translations: true
 
 commands:

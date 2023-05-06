@@ -47,6 +47,10 @@ public class ConfigKeys {
      */
     public static final ConfigKey<StorageType> STORAGE_METHOD = notReloadable(key(c -> StorageType.parse(c.getString("storage-method", "h2"), StorageType.H2)));
 
+    /**
+     * The name of the messaging service in use, or "none" if not enabled
+     */
+    public static final ConfigKey<String> MESSAGING_SERVICE = notReloadable(lowercaseStringKey("messaging-service", "auto"));
 
     /**
      * If redis messaging is enabled

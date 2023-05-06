@@ -12,11 +12,13 @@ import team.floracore.common.listener.*;
 import team.floracore.common.locale.chat.*;
 import team.floracore.common.locale.data.*;
 import team.floracore.common.locale.translation.*;
+import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.*;
 
+import java.util.*;
 import java.util.stream.*;
 
 public interface FloraCorePlugin {
@@ -108,6 +110,10 @@ public interface FloraCorePlugin {
      * @return the extension manager
      */
     SimpleExtensionManager getExtensionManager();
+
+    Optional<InternalMessagingService> getMessagingService();
+
+    void setMessagingService(InternalMessagingService messagingService);
 
     /**
      * Gets the instance providing locale translations for the plugin

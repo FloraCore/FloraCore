@@ -62,7 +62,7 @@ dependencies {
     api 'com.github.ben-manes.caffeine:caffeine:2.8.2'
 
     api 'com.zaxxer:HikariCP:4.0.3'
-    api 'io.lettuce:lettuce-core:6.2.3.RELEASE'
+    api 'redis.clients:jedis:4.3.1'
 
     api 'io.github.karlatemp:unsafe-accessor:1.7.0'
     api 'com.opencsv:opencsv:5.7.1'
