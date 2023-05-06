@@ -55,6 +55,10 @@ public class ChatManager implements Listener {
 
     public UUID getPlayerChatUUID(Player player) {
         UUID uuid = player.getUniqueId();
+        return getPlayerChatUUID(uuid);
+    }
+
+    public UUID getPlayerChatUUID(UUID uuid) {
         return players.get(uuid).getChatUUID();
     }
 
