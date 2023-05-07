@@ -82,12 +82,10 @@ public class MessagingFactory<P extends FloraCorePlugin> {
                 getPlugin().getLogger().severe("Exception occurred whilst enabling SQL messaging service", e);
             }
         }
-
         return null;
     }
 
     private class RedisMessengerProvider implements MessengerProvider {
-
         @Override
         public @NonNull String getName() {
             return "Redis";
@@ -96,7 +94,6 @@ public class MessagingFactory<P extends FloraCorePlugin> {
         @Override
         public @NonNull Messenger obtain(@NonNull IncomingMessageConsumer incomingMessageConsumer) {
             RedisMessenger redis = new RedisMessenger(getPlugin(), incomingMessageConsumer);
-
             FloraCoreConfiguration config = getPlugin().getConfiguration();
             String address = config.get(ConfigKeys.REDIS_ADDRESS);
             String username = config.get(ConfigKeys.REDIS_USERNAME);
@@ -108,7 +105,6 @@ public class MessagingFactory<P extends FloraCorePlugin> {
                 username = null;
             }
             boolean ssl = config.get(ConfigKeys.REDIS_SSL);
-
             redis.init(address, username, password, ssl);
             return redis;
         }

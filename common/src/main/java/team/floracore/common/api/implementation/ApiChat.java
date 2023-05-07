@@ -1,6 +1,6 @@
 package team.floracore.common.api.implementation;
 
-import org.floracore.api.chat.*;
+import org.floracore.api.data.chat.*;
 import team.floracore.common.locale.chat.*;
 import team.floracore.common.plugin.*;
 

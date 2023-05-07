@@ -4,8 +4,8 @@ import com.google.gson.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
-import org.floracore.api.chat.*;
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 

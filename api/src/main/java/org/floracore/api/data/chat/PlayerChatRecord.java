@@ -1,4 +1,4 @@
-package org.floracore.api.chat;
+package org.floracore.api.data.chat;
 
 /**
  * 玩家在当前服务器的聊天记录。

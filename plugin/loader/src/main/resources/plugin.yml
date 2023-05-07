@@ -111,3 +111,9 @@ permissions:
       floracore.command.time.add: true
   floracore.command.weather:
     default: op
+  floracore.command.report.*:
+    default: op
+    children:
+      floracore.command.report: true
+      floracore.command.report.staff: true
+      floracore.command.report.admin: true

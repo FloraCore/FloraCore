@@ -1,7 +1,7 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
 import com.google.gson.*;
-import org.floracore.api.chat.*;
+import org.floracore.api.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.*;

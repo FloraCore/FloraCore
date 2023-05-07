@@ -2,8 +2,8 @@ package team.floracore.common.storage.implementation.sql;
 
 import com.google.gson.*;
 import com.google.gson.reflect.*;
-import org.floracore.api.chat.*;
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import org.floracore.api.server.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;

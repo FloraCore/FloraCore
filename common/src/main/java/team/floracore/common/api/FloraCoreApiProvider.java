@@ -2,8 +2,8 @@ package team.floracore.common.api;
 
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.*;
-import org.floracore.api.chat.*;
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import org.floracore.api.messaging.*;
 import org.floracore.api.messenger.*;
 import org.floracore.api.player.*;

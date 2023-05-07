@@ -21,5 +21,5 @@ public interface InternalMessagingService {
      */
     void close();
 
-    void pushReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer);
+    void pushReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason);
 }

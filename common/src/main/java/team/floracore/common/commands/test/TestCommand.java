@@ -17,6 +17,7 @@ import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.command.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.util.*;
 
 import java.util.*;
 
@@ -197,11 +198,13 @@ public class TestCommand extends AbstractFloraCoreCommand {
     public void messagingTest(final @NonNull CommandSender sender) {
         sender.sendMessage("OKKKKK~");
         getPlugin().getMessagingService().ifPresent(service -> {
-            final UUID reporter = UUID.randomUUID();
-            final UUID reportedUser = UUID.randomUUID();
+            final UUID reporter = Objects.requireNonNull(PlayerUtil.getRandomPlayer()).getUniqueId();
+            final UUID reportedUser = Objects.requireNonNull(PlayerUtil.getRandomPlayer()).getUniqueId();
             final String reporterServer = "Test1";
             final String reportedUserServer = "Test2";
-            service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer);
+            final String reason = "Test3";
+            service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason
+            );
         });
     }
 }

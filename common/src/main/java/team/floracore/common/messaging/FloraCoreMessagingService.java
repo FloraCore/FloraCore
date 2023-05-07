@@ -1,12 +1,16 @@
 package team.floracore.common.messaging;
 
 import com.google.gson.*;
+import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
+import org.floracore.api.event.message.*;
 import org.floracore.api.messenger.*;
 import org.floracore.api.messenger.message.*;
 import org.floracore.api.messenger.message.type.*;
 import team.floracore.common.messaging.message.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
 import team.floracore.common.util.*;
 import team.floracore.common.util.gson.*;
 
@@ -16,7 +20,6 @@ import java.util.concurrent.*;
 public class FloraCoreMessagingService implements InternalMessagingService, IncomingMessageConsumer {
     private final FloraCorePlugin plugin;
     private final ExpiringSet<UUID> receivedMessages;
-
     private final MessengerProvider messengerProvider;
     private final Messenger messenger;
 
@@ -40,7 +43,6 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     }
                 })
                 .toJson();
-
         return GsonProvider.normal().toJson(json);
     }
 
@@ -70,13 +72,34 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         return uuid;
     }
 
+    public boolean dispatchMessageReceiveEvent(Message message) {
+        MessageReceiveEvent event = new MessageReceiveEvent(plugin.getApiProvider(), message);
+        Bukkit.getPluginManager().callEvent(event);
+        return !event.isCancelled();
+    }
+
     @Override
-    public void pushReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer) {
+    public void pushReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
         this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
             UUID requestId = generatePingId();
             this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
-            this.messenger.sendOutgoingMessage(new ReportMessageImpl(requestId, reporter, reportedUser, reporterServer, reportedUserServer));
+            ReportMessageImpl reportMessage = new ReportMessageImpl(requestId, reporter, reportedUser, reporterServer, reportedUserServer, reason);
+            this.messenger.sendOutgoingMessage(reportMessage);
+            if (dispatchMessageReceiveEvent(reportMessage)) {
+                String player = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
+                String target = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reportedUser);
+                notifyStaffReport(player, target, reporterServer, reportedUserServer, reason);
+            }
         });
+    }
+
+    public void notifyStaffReport(String reporter, String reportedUser, String reporterServer, String reportedUserServer, String reason) {
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (onlinePlayer.hasPermission("floracore.report.staff")) {
+                Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
+                team.floracore.common.locale.Message.COMMAND_MISC_REPORT_BROADCAST.send(s, reporter, reportedUser, reason, reporterServer, reportedUserServer);
+            }
+        }
     }
 
     @Override
@@ -139,10 +162,9 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
 
         // decode message
         Message decoded;
-        if (type.equalsIgnoreCase(ReportMessageImpl.TYPE)) {
+        if (type.equals(ReportMessageImpl.TYPE)) {
             decoded = ReportMessageImpl.decode(content, id);
-        } else {
-            // gracefully return if we just don't recognise the type
+        } else {// gracefully return if we just don't recognise the type
             return false;
         }
 
@@ -152,18 +174,20 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
     }
 
     private void processIncomingMessage(Message message) {
-        if (message instanceof ReportMessage) {
-            ReportMessage msg = (ReportMessage) message;
-            final UUID reporter = msg.getReporter();
-            final UUID reportedUser = msg.getReportedUser();
-            final String reporterServer = msg.getReporterServer();
-            final String reportedUserServer = msg.getReportedUserServer();
-            System.out.println(reporter);
-            System.out.println(reportedUser);
-            System.out.println(reporterServer);
-            System.out.println(reportedUserServer);
-        } else {
-            throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
+        if (dispatchMessageReceiveEvent(message)) {
+            if (message instanceof ReportMessage) {
+                ReportMessage msg = (ReportMessage) message;
+                final UUID reporter = msg.getReporter();
+                final UUID reportedUser = msg.getReportedUser();
+                final String reporterServer = msg.getReporterServer();
+                final String reportedUserServer = msg.getReportedUserServer();
+                final String reason = msg.getReason();
+                String player = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
+                String target = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reportedUser);
+                notifyStaffReport(player, target, reporterServer, reportedUserServer, reason);
+            } else {
+                throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
+            }
         }
     }
 }

@@ -79,7 +79,6 @@ public abstract class AbstractSqlMessenger implements Messenger {
             this.lock.readLock().unlock();
             return;
         }
-
         try (Connection c = getConnection()) {
             try (PreparedStatement ps = c.prepareStatement("SELECT `id`, `msg` FROM `" + getTableName() + "` WHERE `id` > ? AND (NOW() - `time` < 30)")) {
                 ps.setLong(1, this.lastId);

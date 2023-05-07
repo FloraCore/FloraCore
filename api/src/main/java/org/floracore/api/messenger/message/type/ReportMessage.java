@@ -35,4 +35,11 @@ public interface ReportMessage extends Message {
      * @return 举报者所在的服务器
      */
     @NonNull String getReporterServer();
+
+    /**
+     * 获取举报原因。
+     *
+     * @return 举报原因
+     */
+    @NonNull String getReason();
 }

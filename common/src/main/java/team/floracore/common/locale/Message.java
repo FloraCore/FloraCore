@@ -768,6 +768,22 @@ public interface Message {
 
     Args1<String> COMMAND_BROADCAST = contents -> text().append(PREFIX_BROADCAST).append(space()).append(formatColoredValue(contents)).build();
 
+    Args5<String, String, String, String, String> COMMAND_MISC_REPORT_BROADCAST = (player, target, reason, playerServer, targetServer) -> {
+        Component infoLine = text()
+                // 玩家 {0} 所在服务器: {1}
+                .append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA).args(text(player).color(GREEN), text(playerServer).color(YELLOW))).append(newline())
+                .append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA).args(text(target).color(GREEN), text(targetServer).color(YELLOW))).append(newline())
+                .append(ARROW).append(space()).append(translatable().key("floracore.command.misc.check-tp").color(YELLOW))
+                .build();
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(infoLine);
+        // 玩家 {0} 以 {2} 的理由举报了玩家 {1}
+        return prefixed(translatable().key("floracore.command.misc.report.broadcast").color(AQUA)
+                // {}
+                .args(text(player).color(GREEN), text(target).color(DARK_GREEN), text(reason).color(YELLOW)))
+                // hoverEvent
+                .hoverEvent(hoverEvent);
+    };
+
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();
     }

@@ -14,13 +14,15 @@ public class ReportMessageImpl extends AbstractMessage implements ReportMessage 
     private final UUID reportedUser;
     private final String reporterServer;
     private final String reportedUserServer;
+    private final String reason;
 
-    public ReportMessageImpl(UUID id, UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer) {
+    public ReportMessageImpl(UUID id, UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
         super(id);
         this.reporter = reporter;
         this.reportedUser = reportedUser;
         this.reporterServer = reporterServer;
         this.reportedUserServer = reportedUserServer;
+        this.reason = reason;
     }
 
     public static ReportMessageImpl decode(@Nullable JsonElement content, UUID id) {
@@ -45,7 +47,11 @@ public class ReportMessageImpl extends AbstractMessage implements ReportMessage 
                 .map(JsonElement::getAsString)
                 .orElseThrow(() -> new IllegalStateException("Incoming message has no reportedUserServer argument: " + content));
 
-        return new ReportMessageImpl(id, reporter, reportedUser, reporterServer, reportedUserServer);
+        String reason = Optional.ofNullable(content.getAsJsonObject().get("reason"))
+                .map(JsonElement::getAsString)
+                .orElseThrow(() -> new IllegalStateException("Incoming message has no reason argument: " + content));
+
+        return new ReportMessageImpl(id, reporter, reportedUser, reporterServer, reportedUserServer, reason);
     }
 
     @Override
@@ -54,7 +60,8 @@ public class ReportMessageImpl extends AbstractMessage implements ReportMessage 
                 new JObject().add("reporter", this.reporter.toString())
                         .add("reportedUser", this.reportedUser.toString())
                         .add("reporterServer", this.reporterServer)
-                        .add("reportedUserServer", this.reportedUserServer).toJson()
+                        .add("reportedUserServer", this.reportedUserServer)
+                        .add("reason", this.reason).toJson()
         );
     }
 
@@ -76,5 +83,10 @@ public class ReportMessageImpl extends AbstractMessage implements ReportMessage 
     @Override
     public @NonNull String getReporterServer() {
         return this.reporterServer;
+    }
+
+    @Override
+    public @NonNull String getReason() {
+        return this.reason;
     }
 }
