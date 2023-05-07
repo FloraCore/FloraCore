@@ -86,10 +86,10 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             ReportMessageImpl reportMessage = new ReportMessageImpl(requestId, reporter, reportedUser, reporterServer, reportedUserServer, reason);
             this.messenger.sendOutgoingMessage(reportMessage);
             if (dispatchMessageReceiveEvent(reportMessage)) {
-                String player = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
-                String target = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reportedUser);
-                boolean playerOnlineStatus = plugin.getApiProvider().getPlayerAPI().isOnline(reporter);
-                boolean targetOnlineStatus = plugin.getApiProvider().getPlayerAPI().isOnline(reportedUser);
+                String player = getPlayerName(reporter);
+                String target = getPlayerName(reportedUser);
+                boolean playerOnlineStatus = isPlayerOnline(reporter);
+                boolean targetOnlineStatus = isPlayerOnline(reportedUser);
                 notifyStaffReport(player, target, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
             }
         });
@@ -171,6 +171,9 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             case NoticeMessageImpl.TYPE:
                 decoded = NoticeMessageImpl.decode(content, id);
                 break;
+            case TeleportMessageImpl.TYPE:
+                decoded = TeleportMessageImpl.decode(content, id);
+                break;
             default:
                 // gracefully return if we just don't recognise the type
                 return false;
@@ -183,38 +186,53 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
     }
 
     private void processIncomingMessage(Message message) {
-        if (dispatchMessageReceiveEvent(message)) {
-            if (message instanceof ReportMessage) {
-                ReportMessage msg = (ReportMessage) message;
-                final UUID reporter = msg.getReporter();
-                final UUID reportedUser = msg.getReportedUser();
-                final String reporterServer = msg.getReporterServer();
-                final String reportedUserServer = msg.getReportedUserServer();
-                final String reason = msg.getReason();
-                String player = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
-                String target = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reportedUser);
-                boolean playerOnlineStatus = plugin.getApiProvider().getPlayerAPI().isOnline(reporter);
-                boolean targetOnlineStatus = plugin.getApiProvider().getPlayerAPI().isOnline(reportedUser);
-                notifyStaffReport(player, target, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
-            } else if (message instanceof NoticeMessage) {
-                NoticeMessage msg = (NoticeMessage) message;
-                Player p = Bukkit.getPlayer(msg.getReceiver());
-                String[] parameters = msg.getParameters();
-                if (p != null) {
-                    Sender sender = plugin.getSenderFactory().wrap(p);
-                    switch (msg.getType()) {
-                        case REPORT_ACCEPTED:
-                            team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters[0]);
-                            break;
-                        case REPORT_PROCESSED:
-                            team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters[0], parameters[1]);
-                            break;
-                    }
-                    team.floracore.common.locale.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
+        if (!dispatchMessageReceiveEvent(message)) {
+            return;
+        }
+
+        if (message instanceof ReportMessage) {
+            ReportMessage reportMsg = (ReportMessage) message;
+            UUID reporter = reportMsg.getReporter();
+            UUID reportedUser = reportMsg.getReportedUser();
+            String reporterServer = reportMsg.getReporterServer();
+            String reportedUserServer = reportMsg.getReportedUserServer();
+            String reason = reportMsg.getReason();
+            String player = getPlayerName(reporter);
+            String target = getPlayerName(reportedUser);
+            boolean playerOnline = isPlayerOnline(reporter);
+            boolean targetOnline = isPlayerOnline(reportedUser);
+            notifyStaffReport(player, target, reporterServer, reportedUserServer, reason, playerOnline, targetOnline);
+        } else if (message instanceof NoticeMessage) {
+            NoticeMessage noticeMsg = (NoticeMessage) message;
+            Player player = Bukkit.getPlayer(noticeMsg.getReceiver());
+            String[] parameters = noticeMsg.getParameters();
+
+            if (player != null) {
+                Sender sender = plugin.getSenderFactory().wrap(player);
+                switch (noticeMsg.getType()) {
+                    case REPORT_ACCEPTED:
+                        team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters[0]);
+                        break;
+                    case REPORT_PROCESSED:
+                        team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters[0], parameters[1]);
+                        break;
                 }
-            } else {
-                throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
+                team.floracore.common.locale.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
             }
+        } else if (message instanceof TeleportMessage) {
+            TeleportMessage teleportMsg = (TeleportMessage) message;
+            // TODO 加入预传送列表执行传送操作
+        } else {
+            throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }
     }
+
+    private String getPlayerName(UUID uuid) {
+        return plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(uuid);
+    }
+
+    private boolean isPlayerOnline(UUID uuid) {
+        return plugin.getApiProvider().getPlayerAPI().isOnline(uuid);
+    }
+
 }
