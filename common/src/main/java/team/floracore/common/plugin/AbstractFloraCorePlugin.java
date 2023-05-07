@@ -21,6 +21,7 @@ import team.floracore.common.plugin.logging.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.*;
 import team.floracore.common.util.github.*;
 
 import java.io.*;
@@ -51,6 +52,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private BukkitSenderFactory senderFactory;
     private ProtocolManager protocolManager;
     private ChatManager chatManager;
+    private BungeeUtil bungeeUtil;
 
     /**
      * Performs the initial actions to load the plugin
@@ -70,6 +72,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     public final void onEnable() {
+        this.bungeeUtil = new BungeeUtil(this);
         this.bukkitAudiences = BukkitAudiences.create(getBootstrap().getPlugin());
 
         // load the sender factory instance
@@ -344,5 +347,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public ChatManager getChatManager() {
         return chatManager;
+    }
+
+    @Override
+    public BungeeUtil getBungeeUtil() {
+        return bungeeUtil;
     }
 }

@@ -802,6 +802,11 @@ public interface Message {
         return i;
     };
 
+    Args1<String> COMMAND_REPORT_TP_SUCCESS = id -> prefixed(translatable()
+            // 已将你传送至玩家 {0} 的旁边!
+            .key("floracore.command.report.tp.success").color(AQUA).args(text(id, GREEN)));
+
+
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();
     }

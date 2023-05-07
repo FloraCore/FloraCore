@@ -9,7 +9,9 @@ import org.bukkit.entity.*;
 import org.floracore.api.data.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
+import team.floracore.common.locale.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.util.*;
@@ -25,20 +27,22 @@ public class ReportCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("report-tp <target> <server>")
     @CommandPermission("floracore.command.report.staff")
-    public void reportTP(final @NotNull Player s, final @Argument("target") String target, final @Argument("server") String server) {
+    public void reportTP(final @NotNull Player sender, final @Argument("target") String target, final @Argument("server") String server) {
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
         if (getPlugin().getServerName().equalsIgnoreCase(server)) {
             Player t = Bukkit.getPlayer(target);
             if (t != null) {
-                if (!VanishAPI.isInvisible(s)) {
-                    VanishAPI.hidePlayer(s);
+                if (!VanishAPI.isInvisible(sender)) {
+                    VanishAPI.hidePlayer(sender);
                 }
-                s.teleport(t.getLocation());
-                // TODO 传送成功
+                sender.teleport(t.getLocation());
+                Message.COMMAND_REPORT_TP_SUCCESS.send(s, target);
             } else {
-                // TODO 传送目标已离线
+                Message.PLAYER_NOT_FOUND.send(s, target);
             }
         } else {
             // TODO 跨服传送
+            getPlugin().getBungeeUtil().connect(sender, server);
         }
     }
 
