@@ -3,7 +3,6 @@ package team.floracore.common.commands.player;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.specifier.*;
 import de.myzelyam.api.vanish.*;
-import net.luckperms.api.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.floracore.api.data.*;
@@ -65,7 +64,6 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     @CommandMethod("report <target> <reason>")
     public void report(final @NotNull Player sender, final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NotNull @Argument("reason") @Greedy String reason) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        LuckPerms luckPerms = LuckPermsProvider.get();
         Player t = Bukkit.getPlayer(target);
         UUID reportedUser;
         if (t != null) {
