@@ -1,6 +1,7 @@
 package team.floracore.common.util.github;
 
 import com.google.gson.*;
+import team.floracore.common.util.gson.*;
 
 import javax.net.ssl.*;
 import java.io.*;
@@ -18,8 +19,7 @@ public class GithubUtil {
         conn.setRequestProperty("Accept", ACCEPT_HEADER);
 
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-            Gson gson = new Gson();
-            return gson.fromJson(reader, JsonObject.class);
+            return GsonProvider.normal().fromJson(reader, JsonObject.class);
         }
     }
 

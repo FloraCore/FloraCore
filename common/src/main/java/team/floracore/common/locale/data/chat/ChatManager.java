@@ -1,6 +1,5 @@
-package team.floracore.common.locale.chat;
+package team.floracore.common.locale.data.chat;
 
-import com.google.gson.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
@@ -8,6 +7,7 @@ import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.gson.*;
 
 import java.util.*;
 
@@ -104,9 +104,8 @@ public class ChatManager implements Listener {
         long joinTime = mapPlayerRecord.getJoinTime();
         long quitTime = System.currentTimeMillis();
         players.remove(uuid);
-        PlayerChatRecord playerChatRecord = new PlayerChatRecord(this.chat.getId(), joinTime, quitTime);
-        Gson gson = new Gson();
-        String recordsJson = gson.toJson(playerChatRecord);
+        DataChatRecord dataChatRecord = new DataChatRecord(this.chat.getId(), joinTime, quitTime);
+        String recordsJson = GsonProvider.normal().toJson(dataChatRecord);
         this.plugin.getBootstrap().getScheduler().async().execute(() -> {
             this.plugin.getStorage().getImplementation().insertData(uuid, DataType.CHAT, mapPlayerRecord.getChatUUID().toString(), recordsJson, 0);
         });

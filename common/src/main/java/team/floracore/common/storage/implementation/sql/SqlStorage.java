@@ -1,6 +1,5 @@
 package team.floracore.common.storage.implementation.sql;
 
-import com.google.gson.*;
 import com.google.gson.reflect.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
@@ -9,6 +8,7 @@ import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.implementation.sql.connection.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.gson.*;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -324,10 +324,9 @@ public class SqlStorage implements StorageImplementation {
                     while (rs.next()) {
                         int id = rs.getInt("id");
                         String recordsJson = rs.getString("records");
-                        Gson gson = new Gson();
                         Type type = new TypeToken<List<ChatRecord>>() {
                         }.getType();
-                        List<ChatRecord> records = gson.fromJson(recordsJson, type);
+                        List<ChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         long startTime = rs.getLong("startTime");
                         long endTime = rs.getLong("endTime");
                         ret.add(new Chat(plugin, this, id, name, records, startTime, endTime));
@@ -351,10 +350,9 @@ public class SqlStorage implements StorageImplementation {
                     if (rs.next()) {
                         int id = rs.getInt("id");
                         String recordsJson = rs.getString("records");
-                        Gson gson = new Gson();
                         Type type = new TypeToken<List<ChatRecord>>() {
                         }.getType();
-                        List<ChatRecord> records = gson.fromJson(recordsJson, type);
+                        List<ChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         long endTime = rs.getLong("endTime");
                         chat = new Chat(plugin, this, id, name, records, startTime, endTime);
                     } else {
