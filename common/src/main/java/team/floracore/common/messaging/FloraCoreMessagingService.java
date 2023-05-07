@@ -199,13 +199,18 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             } else if (message instanceof NoticeMessage) {
                 NoticeMessage msg = (NoticeMessage) message;
                 Player p = Bukkit.getPlayer(msg.getReceiver());
+                String[] parameters = msg.getParameters();
                 if (p != null) {
+                    Sender sender = plugin.getSenderFactory().wrap(p);
                     switch (msg.getType()) {
                         case REPORT_ACCEPTED:
+                            team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters[0]);
                             break;
                         case REPORT_PROCESSED:
+                            team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters[0], parameters[1]);
                             break;
                     }
+                    team.floracore.common.locale.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
                 }
             } else {
                 throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());

@@ -768,6 +768,12 @@ public interface Message {
 
     Args1<String> COMMAND_BROADCAST = contents -> text().append(PREFIX_BROADCAST).append(space()).append(formatColoredValue(contents)).build();
 
+    Args1<String> COMMAND_MISC_REPORT_NOTICE_ACCEPTED = target -> prefixed(translatable().key("floracore.command.misc.report.notice.accepted").color(AQUA).args(text(target).color(RED)));
+
+    Args2<String, String> COMMAND_MISC_REPORT_NOTICE_PROCESSED = (target, conclusion) -> prefixed(translatable().key("floracore.command.misc.report.notice.processed").color(AQUA).args(text(target).color(RED), text(conclusion).color(GREEN)));
+
+    Args0 COMMAND_MISC_REPORT_THANKS = () -> prefixed(translatable().key("floracore.command.misc.report.thanks").color(AQUA));
+
     Args7<String, String, String, String, String, Boolean, Boolean> COMMAND_MISC_REPORT_BROADCAST = (player, target, reason, playerServer, targetServer, playerOnlineStatus, targetOnlineStatus) -> {
         Component infoLine = text()
                 // 玩家 {0} 所在的服务器: {1} {2}
@@ -780,15 +786,20 @@ public interface Message {
                                 OPEN_BRACKET.append(translatable(targetOnlineStatus ? "floracore.command.misc.online" : "floracore.command.misc.offline")).append(CLOSE_BRACKET).color(targetOnlineStatus ? GREEN : RED)))
                 .build();
         if (targetOnlineStatus) {
-            infoLine = infoLine.append(newline()).append(ARROW).append(space()).append(translatable().key("floracore.command.misc.check-tp")).color(YELLOW).decoration(BOLD, true).decoration(UNDERLINED, true);
+            infoLine = infoLine.append(newline()).append(ARROW).append(space()).append(translatable().key("floracore.command.misc.check-tp").color(YELLOW).decoration(UNDERLINED, true));
         }
         HoverEvent<Component> hoverEvent = HoverEvent.showText(infoLine);
-        // 玩家 {0} 以 {2} 的理由举报了玩家 {1}
-        return prefixed(translatable().key("floracore.command.misc.report.broadcast").color(AQUA)
+        ClickEvent clickEvent = ClickEvent.runCommand("/report-tp " + target + " " + targetServer);
+        Component i = prefixed(translatable().key("floracore.command.misc.report.broadcast").color(AQUA)
                 // {}
                 .args(text(player).color(GREEN), text(target).color(RED), text(reason).color(YELLOW)))
                 // hoverEvent
                 .hoverEvent(hoverEvent);
+        if (targetOnlineStatus) {
+            i = i.clickEvent(clickEvent);
+        }
+        // 玩家 {0} 以 {2} 的理由举报了玩家 {1}
+        return i;
     };
 
     static TextComponent prefixed(ComponentLike component) {

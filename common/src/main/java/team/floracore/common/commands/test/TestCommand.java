@@ -203,8 +203,7 @@ public class TestCommand extends AbstractFloraCoreCommand {
             final String reporterServer = "Test1";
             final String reportedUserServer = "Test2";
             final String reason = "Test3";
-            service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason
-            );
+            service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
         });
     }
 }
