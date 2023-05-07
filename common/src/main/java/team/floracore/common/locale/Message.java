@@ -806,6 +806,9 @@ public interface Message {
             // 已将你传送至玩家 {0} 的旁边!
             .key("floracore.command.report.tp.success").color(AQUA).args(text(id, GREEN)));
 
+    Args0 COMMAND_REPORT_TP_TRANSMITTING = () -> prefixed(translatable()
+            // 传送中...
+            .key("floracore.command.report.tp.transmitting").color(AQUA));
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();

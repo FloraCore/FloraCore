@@ -38,6 +38,7 @@ import static team.floracore.common.util.ReflectionWrapper.*;
  * Nick命令
  */
 @CommandPermission("floracore.command.nick")
+@CommandDescription("修改玩家的昵称")
 public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     private final SkinsRestorerAPI skinsRestorerAPI;
     private final Set<UUID> nickedPlayers = new HashSet<>();

@@ -33,6 +33,7 @@ import java.util.stream.*;
  */
 @CommandContainer
 @CommandPermission("floracore.admin")
+@CommandDescription("FloraCore插件的主命令")
 public class FloraCoreCommand extends AbstractFloraCoreCommand {
     private final AsyncCache<UUID, List<Data>> dataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     private final AsyncCache<String, UUID> uuidCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();

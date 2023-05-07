@@ -8,6 +8,7 @@ import team.floracore.common.plugin.*;
  * Give命令
  */
 @CommandPermission("floracore.command.give")
+@CommandDescription("给予玩家指定的物品")
 public class GiveCommand extends AbstractFloraCoreCommand {
     public GiveCommand(FloraCorePlugin plugin) {
         super(plugin);

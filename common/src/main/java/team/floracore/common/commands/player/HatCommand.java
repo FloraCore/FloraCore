@@ -16,13 +16,13 @@ import team.floracore.common.util.craftbukkit.*;
  * Hat命令
  */
 @CommandPermission("floracore.command.hat")
+@CommandDescription("戴上一些酷炫的帽子")
 public class HatCommand extends AbstractFloraCoreCommand {
     public HatCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("hat")
-    @CommandDescription("戴上一些酷炫的帽子")
     public void hat(final @NotNull Player p) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         PlayerInventory inv = p.getInventory();

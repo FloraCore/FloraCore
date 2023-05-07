@@ -20,6 +20,7 @@ import java.util.*;
  * Report命令
  */
 @CommandPermission("floracore.command.report")
+@CommandDescription("举报一名玩家")
 public class ReportCommand extends AbstractFloraCoreCommand {
     public ReportCommand(FloraCorePlugin plugin) {
         super(plugin);
@@ -29,6 +30,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     @CommandPermission("floracore.command.report.staff")
     public void reportTP(final @NotNull Player sender, final @Argument("target") String target, final @Argument("server") String server) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Message.COMMAND_REPORT_TP_TRANSMITTING.send(s);
         if (getPlugin().getServerName().equalsIgnoreCase(server)) {
             Player t = Bukkit.getPlayer(target);
             if (t != null) {
@@ -42,6 +44,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             }
         } else {
             // TODO 跨服传送
+
             getPlugin().getBungeeUtil().connect(sender, server);
         }
     }

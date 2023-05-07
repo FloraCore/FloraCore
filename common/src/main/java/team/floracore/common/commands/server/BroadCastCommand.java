@@ -16,13 +16,13 @@ import team.floracore.common.sender.*;
  * BroadCast命令
  */
 @CommandPermission("floracore.command.broadcast")
+@CommandDescription("在服务器发送广播信息")
 public class BroadCastCommand extends AbstractFloraCoreCommand {
     public BroadCastCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("broadcast|bc <contents>")
-    @CommandDescription("喂饱您自己")
     public void broadcast(@NotNull CommandSender s, @NonNull @Argument("contents") @Greedy String contents) {
         Sender s1 = getPlugin().getConsoleSender();
         Message.COMMAND_BROADCAST.send(s1, contents);

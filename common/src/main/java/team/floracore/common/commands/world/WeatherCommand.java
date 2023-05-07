@@ -20,6 +20,7 @@ import java.util.*;
  * Weather命令
  */
 @CommandPermission("floracore.command.weather")
+@CommandDescription("设置世界的天气")
 public class WeatherCommand extends AbstractFloraCoreCommand {
     public WeatherCommand(FloraCorePlugin plugin) {
         super(plugin);
