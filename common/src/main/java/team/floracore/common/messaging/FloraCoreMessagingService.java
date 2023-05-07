@@ -1,8 +1,10 @@
 package team.floracore.common.messaging;
 
 import com.google.gson.*;
+import de.myzelyam.api.vanish.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
+import org.bukkit.scheduler.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.event.message.*;
 import org.floracore.api.messenger.*;
@@ -16,6 +18,7 @@ import team.floracore.common.util.gson.*;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 
 public class FloraCoreMessagingService implements InternalMessagingService, IncomingMessageConsumer {
     private final FloraCorePlugin plugin;
@@ -92,6 +95,19 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 boolean targetOnlineStatus = isPlayerOnline(reportedUser);
                 notifyStaffReport(player, target, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
             }
+        });
+    }
+
+    @Override
+    public void pushTeleport(UUID sender, UUID recipient, String serverName) {
+        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
+            UUID requestId = generatePingId();
+            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            TeleportMessageImpl teleportMessage = new TeleportMessageImpl(requestId, sender, recipient, serverName);
+            this.messenger.sendOutgoingMessage(teleportMessage);
+            /*if (dispatchMessageReceiveEvent(teleportMessage)) {
+
+            }*/
         });
     }
 
@@ -221,7 +237,37 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             }
         } else if (message instanceof TeleportMessage) {
             TeleportMessage teleportMsg = (TeleportMessage) message;
-            // TODO 加入预传送列表执行传送操作
+            UUID su = teleportMsg.getSender();
+            UUID ru = teleportMsg.getRecipient();
+            String serverName = teleportMsg.getServerName();
+            if (serverName.equalsIgnoreCase(plugin.getServerName())) {
+                BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+                AtomicBoolean shouldCancel = new AtomicBoolean(false);
+                final int[] taskId = new int[1];
+                taskId[0] = scheduler.runTaskTimer(plugin.getBootstrap().getPlugin(), new Runnable() {
+                    private int secondsElapsed = 0;
+
+                    public void run() {
+                        Player sender = Bukkit.getPlayer(su);
+                        Player recipient = Bukkit.getPlayer(ru);
+                        Sender s = plugin.getSenderFactory().wrap(sender);
+                        if (shouldCancel.get() || secondsElapsed >= 30 || recipient == null) {
+                            // 取消任务
+                            scheduler.cancelTask(taskId[0]);
+                            return;
+                        }
+                        if (sender != null) {
+                            if (!VanishAPI.isInvisible(sender)) {
+                                VanishAPI.hidePlayer(sender);
+                            }
+                            sender.teleport(recipient.getLocation());
+                            team.floracore.common.locale.Message.COMMAND_REPORT_TP_SUCCESS.send(s, recipient.getDisplayName());
+                            shouldCancel.set(true);
+                        }
+                        secondsElapsed++;
+                    }
+                }, 0L, 20L).getTaskId();
+            }
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }

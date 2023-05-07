@@ -1,9 +1,9 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
+import cloud.commandframework.annotations.specifier.*;
 import de.myzelyam.api.vanish.*;
 import net.luckperms.api.*;
-import net.luckperms.api.model.user.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.floracore.api.data.*;
@@ -26,11 +26,20 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         super(plugin);
     }
 
-    @CommandMethod("report-tp <target> <server>")
+    @CommandMethod("report-tp <target>")
     @CommandPermission("floracore.command.report.staff")
-    public void reportTP(final @NotNull Player sender, final @Argument("target") String target, final @Argument("server") String server) {
+    public void reportTeleport(final @NotNull Player sender, final @Argument("target") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Message.COMMAND_REPORT_TP_TRANSMITTING.send(s);
+        UUID u = sender.getUniqueId();
+        String server;
+        Data data = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "server-status");
+        if (data != null) {
+            server = data.getValue();
+        } else {
+            Message.PLAYER_NOT_FOUND.send(s, target);
+            return;
+        }
         if (getPlugin().getServerName().equalsIgnoreCase(server)) {
             Player t = Bukkit.getPlayer(target);
             if (t != null) {
@@ -43,30 +52,39 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 Message.PLAYER_NOT_FOUND.send(s, target);
             }
         } else {
-            // TODO 跨服传送
-
+            UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            if (ut == null) {
+                Message.PLAYER_NOT_FOUND.send(s, target);
+                return;
+            }
+            getPlugin().getMessagingService().ifPresent(service -> service.pushTeleport(u, ut, server));
             getPlugin().getBungeeUtil().connect(sender, server);
         }
     }
 
     @CommandMethod("report <target> <reason>")
-    public void report(final @NotNull Player s, final @NotNull String target, final @NotNull String reason) {
+    public void report(final @NotNull Player sender, final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NotNull @Argument("reason") @Greedy String reason) {
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
         LuckPerms luckPerms = LuckPermsProvider.get();
         Player t = Bukkit.getPlayer(target);
         UUID reportedUser;
         if (t != null) {
+            if (t.getUniqueId() == sender.getUniqueId()) {
+                Message.COMMAND_REPORT_SELF.send(s);
+                return;
+            }
             reportedUser = t.getUniqueId();
         } else {
-            User user = luckPerms.getUserManager().getUser(target);
-            if (user == null) {
-                // TODO 这名玩家从未上线过服务器
+            UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            if (ut == null) {
+                Message.PLAYER_NOT_FOUND.send(s, target);
                 return;
             }
-            if (user.getCachedData().getPermissionData().checkPermission("floracore.command.report.bypass").asBoolean()) {
-                // TODO 你无权举报这名玩家
+            if (hasPermission(ut, "floracore.command.report.bypass")) {
+                Message.COMMAND_REPORT_NOT_PERMISSION.send(s);
                 return;
             }
-            reportedUser = user.getUniqueId();
+            reportedUser = ut;
         }
         final String reporterServer = getPlugin().getServerName();
         Data data = getStorageImplementation().getSpecifiedData(reportedUser, DataType.FUNCTION, "server-status");
@@ -74,7 +92,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         if (data != null) {
             reportedUserServer = data.getValue();
         } else {
-            // TODO 这名玩家的数据异常!
+            Message.COMMAND_REPORT_ABNORMAL.send(s);
             return;
         }
         createReport(s.getUniqueId(), reportedUser, reporterServer, reportedUserServer, reason);
@@ -86,5 +104,4 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
         });
     }
-
 }

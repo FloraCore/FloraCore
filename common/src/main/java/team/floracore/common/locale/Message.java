@@ -774,7 +774,7 @@ public interface Message {
 
     Args0 COMMAND_MISC_REPORT_THANKS = () -> prefixed(translatable().key("floracore.command.misc.report.thanks").color(AQUA));
 
-    Args7<String, String, String, String, String, Boolean, Boolean> COMMAND_MISC_REPORT_BROADCAST = (player, target, reason, playerServer, targetServer, playerOnlineStatus, targetOnlineStatus) -> {
+    Args7<String, String, String, String, String, Boolean, Boolean> COMMAND_MISC_REPORT_BROADCAST = (player, target, playerServer, targetServer, reason, playerOnlineStatus, targetOnlineStatus) -> {
         Component infoLine = text()
                 // 玩家 {0} 所在的服务器: {1} {2}
                 .append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA)
@@ -789,7 +789,7 @@ public interface Message {
             infoLine = infoLine.append(newline()).append(ARROW).append(space()).append(translatable().key("floracore.command.misc.check-tp").color(YELLOW).decoration(UNDERLINED, true));
         }
         HoverEvent<Component> hoverEvent = HoverEvent.showText(infoLine);
-        ClickEvent clickEvent = ClickEvent.runCommand("/report-tp " + target + " " + targetServer);
+        ClickEvent clickEvent = ClickEvent.runCommand("/report-tp " + target);
         Component i = prefixed(translatable().key("floracore.command.misc.report.broadcast").color(AQUA)
                 // {}
                 .args(text(player).color(GREEN), text(target).color(RED), text(reason).color(YELLOW)))
@@ -809,6 +809,18 @@ public interface Message {
     Args0 COMMAND_REPORT_TP_TRANSMITTING = () -> prefixed(translatable()
             // 传送中...
             .key("floracore.command.report.tp.transmitting").color(AQUA));
+
+    Args0 COMMAND_REPORT_NOT_PERMISSION = () -> prefixed(translatable()
+            // 你不能举报这名玩家!
+            .key("floracore.command.report.no-permission").color(RED));
+
+    Args0 COMMAND_REPORT_SELF = () -> prefixed(translatable()
+            // 你不能举报你自己!
+            .key("floracore.command.report.self").color(RED));
+
+    Args0 COMMAND_REPORT_ABNORMAL = () -> prefixed(translatable()
+            // 这名玩家的数据异常!
+            .key("floracore.command.report.abnormal").color(RED));
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();
