@@ -93,7 +93,6 @@ public class SqlStorage implements StorageImplementation {
                     for (String query : statements) {
                         s.addBatch(query.replace("utf8mb4", "utf8"));
                     }
-
                     s.executeBatch();
                 }
             }

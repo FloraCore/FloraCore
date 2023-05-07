@@ -91,8 +91,8 @@ public class ChatManager implements Listener {
         MapPlayerRecord mapPlayerRecord = new MapPlayerRecord(time, chatUUID);
         players.put(uuid, mapPlayerRecord);
         this.plugin.getBootstrap().getScheduler().async().execute(() -> {
-            this.plugin.getStorage().getImplementation().insertData(uuid, DataType.CHAT, chatUUID.toString(), "", 0);
             clearPlayerChatsInvalid(uuid);
+            this.plugin.getStorage().getImplementation().insertData(uuid, DataType.CHAT, chatUUID.toString(), "", 0);
         });
     }
 

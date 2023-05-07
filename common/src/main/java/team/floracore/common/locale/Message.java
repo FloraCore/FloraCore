@@ -768,18 +768,25 @@ public interface Message {
 
     Args1<String> COMMAND_BROADCAST = contents -> text().append(PREFIX_BROADCAST).append(space()).append(formatColoredValue(contents)).build();
 
-    Args5<String, String, String, String, String> COMMAND_MISC_REPORT_BROADCAST = (player, target, reason, playerServer, targetServer) -> {
+    Args7<String, String, String, String, String, Boolean, Boolean> COMMAND_MISC_REPORT_BROADCAST = (player, target, reason, playerServer, targetServer, playerOnlineStatus, targetOnlineStatus) -> {
         Component infoLine = text()
-                // 玩家 {0} 所在服务器: {1}
-                .append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA).args(text(player).color(GREEN), text(playerServer).color(YELLOW))).append(newline())
-                .append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA).args(text(target).color(GREEN), text(targetServer).color(YELLOW))).append(newline())
-                .append(ARROW).append(space()).append(translatable().key("floracore.command.misc.check-tp").color(YELLOW))
+                // 玩家 {0} 所在的服务器: {1} {2}
+                .append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA)
+                        // {}
+                        .args(text(player).color(GREEN), text(playerServer).color(YELLOW),
+                                OPEN_BRACKET.append(translatable(playerOnlineStatus ? "floracore.command.misc.online" : "floracore.command.misc.offline")).append(CLOSE_BRACKET).color(playerOnlineStatus ? GREEN : RED))).append(newline())
+                .append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA)
+                        .args(text(target).color(GREEN), text(targetServer).color(YELLOW),
+                                OPEN_BRACKET.append(translatable(targetOnlineStatus ? "floracore.command.misc.online" : "floracore.command.misc.offline")).append(CLOSE_BRACKET).color(targetOnlineStatus ? GREEN : RED)))
                 .build();
+        if (targetOnlineStatus) {
+            infoLine = infoLine.append(newline()).append(ARROW).append(space()).append(translatable().key("floracore.command.misc.check-tp")).color(YELLOW).decoration(BOLD, true).decoration(UNDERLINED, true);
+        }
         HoverEvent<Component> hoverEvent = HoverEvent.showText(infoLine);
         // 玩家 {0} 以 {2} 的理由举报了玩家 {1}
         return prefixed(translatable().key("floracore.command.misc.report.broadcast").color(AQUA)
                 // {}
-                .args(text(player).color(GREEN), text(target).color(DARK_GREEN), text(reason).color(YELLOW)))
+                .args(text(player).color(GREEN), text(target).color(RED), text(reason).color(YELLOW)))
                 // hoverEvent
                 .hoverEvent(hoverEvent);
     };
@@ -865,6 +872,14 @@ public interface Message {
 
         default void send(Sender sender, A0 arg0, A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5) {
             sender.sendMessage(build(arg0, arg1, arg2, arg3, arg4, arg5));
+        }
+    }
+
+    interface Args7<A0, A1, A2, A3, A4, A5, A6> {
+        Component build(A0 arg0, A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5, A6 args6);
+
+        default void send(Sender sender, A0 arg0, A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5, A6 args6) {
+            sender.sendMessage(build(arg0, arg1, arg2, arg3, arg4, arg5, args6));
         }
     }
 }

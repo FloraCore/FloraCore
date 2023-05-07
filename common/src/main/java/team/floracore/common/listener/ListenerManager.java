@@ -22,7 +22,7 @@ public class ListenerManager {
     private void constructListeners() {
         PluginManager pm = plugin.getBootstrap().getServer().getPluginManager();
         Plugin p = plugin.getBootstrap().getPlugin();
-        pm.registerEvents(new PlayerLoginListener(plugin), p);
+        pm.registerEvents(new PlayerListener(plugin), p);
     }
 
     public FloraCorePlugin getPlugin() {

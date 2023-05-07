@@ -1,6 +1,7 @@
 package team.floracore.common.api.implementation;
 
 import com.github.benmanes.caffeine.cache.*;
+import org.floracore.api.data.*;
 import org.floracore.api.player.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -29,6 +30,15 @@ public class ApiPlayer implements PlayerAPI {
     @Override
     public String getPlayerRecordName(UUID uuid) {
         return getPlayers(uuid).getName();
+    }
+
+    @Override
+    public boolean isOnline(UUID uuid) {
+        String status = plugin.getApiProvider().getDataAPI().getSpecifiedDataValue(uuid, DataType.FUNCTION, "online-status");
+        if (status == null) {
+            return false;
+        }
+        return Boolean.parseBoolean(status);
     }
 
     public FloraCorePlugin getPlugin() {

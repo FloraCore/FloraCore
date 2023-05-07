@@ -14,4 +14,6 @@ public interface PlayerAPI {
      * @return 最后记录的名字
      */
     String getPlayerRecordName(UUID uuid);
+
+    boolean isOnline(UUID uuid);
 }

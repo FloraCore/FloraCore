@@ -11,12 +11,11 @@ import team.floracore.common.plugin.*;
  */
 public class RedisMessenger implements Messenger {
     private static final String CHANNEL = "floracore:messenger";
-
     private final FloraCorePlugin plugin;
     private final IncomingMessageConsumer consumer;
 
-    private /* final */ JedisPool jedisPool;
-    private /* final */ Subscription sub;
+    private JedisPool jedisPool;
+    private Subscription sub;
     private boolean closing = false;
 
     public RedisMessenger(FloraCorePlugin plugin, IncomingMessageConsumer consumer) {
@@ -56,7 +55,6 @@ public class RedisMessenger implements Messenger {
     }
 
     private class Subscription extends JedisPubSub implements Runnable {
-
         @Override
         public void run() {
             boolean first = true;
@@ -67,20 +65,16 @@ public class RedisMessenger implements Messenger {
                     } else {
                         RedisMessenger.this.plugin.getLogger().info("Redis pubsub connection re-established");
                     }
-
                     jedis.subscribe(this, CHANNEL); // blocking call
                 } catch (Exception e) {
                     if (RedisMessenger.this.closing) {
                         return;
                     }
-
                     RedisMessenger.this.plugin.getLogger().warn("Redis pubsub connection dropped, trying to re-open the connection", e);
                     try {
                         unsubscribe();
                     } catch (Exception ignored) {
-
                     }
-
                     // Sleep for 5 seconds to prevent massive spam in console
                     try {
                         Thread.sleep(5000);

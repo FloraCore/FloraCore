@@ -88,16 +88,18 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             if (dispatchMessageReceiveEvent(reportMessage)) {
                 String player = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
                 String target = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reportedUser);
-                notifyStaffReport(player, target, reporterServer, reportedUserServer, reason);
+                boolean playerOnlineStatus = plugin.getApiProvider().getPlayerAPI().isOnline(reporter);
+                boolean targetOnlineStatus = plugin.getApiProvider().getPlayerAPI().isOnline(reportedUser);
+                notifyStaffReport(player, target, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
             }
         });
     }
 
-    public void notifyStaffReport(String reporter, String reportedUser, String reporterServer, String reportedUserServer, String reason) {
+    public void notifyStaffReport(String reporter, String reportedUser, String reporterServer, String reportedUserServer, String reason, boolean playerOnlineStatus, boolean targetOnlineStatus) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.hasPermission("floracore.report.staff")) {
                 Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                team.floracore.common.locale.Message.COMMAND_MISC_REPORT_BROADCAST.send(s, reporter, reportedUser, reason, reporterServer, reportedUserServer);
+                team.floracore.common.locale.Message.COMMAND_MISC_REPORT_BROADCAST.send(s, reporter, reportedUser, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
             }
         }
     }
@@ -162,10 +164,17 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
 
         // decode message
         Message decoded;
-        if (type.equals(ReportMessageImpl.TYPE)) {
-            decoded = ReportMessageImpl.decode(content, id);
-        } else {// gracefully return if we just don't recognise the type
-            return false;
+        switch (type) {
+            case ReportMessageImpl.TYPE:
+                decoded = ReportMessageImpl.decode(content, id);
+                break;
+            case NoticeMessageImpl.TYPE:
+                decoded = NoticeMessageImpl.decode(content, id);
+                break;
+            default:
+                // gracefully return if we just don't recognise the type
+                return false;
+
         }
 
         // consume the message
@@ -184,7 +193,20 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 final String reason = msg.getReason();
                 String player = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
                 String target = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(reportedUser);
-                notifyStaffReport(player, target, reporterServer, reportedUserServer, reason);
+                boolean playerOnlineStatus = plugin.getApiProvider().getPlayerAPI().isOnline(reporter);
+                boolean targetOnlineStatus = plugin.getApiProvider().getPlayerAPI().isOnline(reportedUser);
+                notifyStaffReport(player, target, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
+            } else if (message instanceof NoticeMessage) {
+                NoticeMessage msg = (NoticeMessage) message;
+                Player p = Bukkit.getPlayer(msg.getReceiver());
+                if (p != null) {
+                    switch (msg.getType()) {
+                        case REPORT_ACCEPTED:
+                            break;
+                        case REPORT_PROCESSED:
+                            break;
+                    }
+                }
             } else {
                 throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
             }

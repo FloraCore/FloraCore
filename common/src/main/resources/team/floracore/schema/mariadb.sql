@@ -40,3 +40,17 @@ CREATE TABLE IF NOT EXISTS `{prefix}chat`
     startTime BIGINT             NOT NULL,
     endTime   BIGINT             NULL
 );
+
+CREATE TABLE IF NOT EXISTS `{prefix}report`
+(
+    id             INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    reporter       VARCHAR(36)        NOT NULL,
+    reported       VARCHAR(36)        NOT NULL,
+    reason         VARCHAR(20)        NOT NULL,
+    reportTime     BIGINT             NOT NULL,
+    handler        VARCHAR(36)        NOT NULL,
+    handleTime     BIGINT             NOT NULL,
+    conclusion     VARCHAR(10)        NOT NULL,
+    conclusionTime BIGINT             NOT NULL,
+    chat           TEXT               NOT NULL
+);

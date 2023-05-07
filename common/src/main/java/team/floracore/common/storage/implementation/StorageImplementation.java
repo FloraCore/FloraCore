@@ -26,6 +26,7 @@ public interface StorageImplementation {
 
     /**
      * 此方法慎用，未经过缓存，频繁使用易使负载过大。
+     * 若不存在，则返回null。
      */
     Players selectPlayers(String name);
 

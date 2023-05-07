@@ -24,17 +24,29 @@ public class ApiData implements DataAPI {
 
     @Override
     public String getSpecifiedDataValue(UUID uuid, DataType type, String key) {
-        return getSpecifiedData(uuid, type, key).getValue();
+        Data data = getSpecifiedData(uuid, type, key);
+        if (data == null) {
+            return null;
+        }
+        return data.getValue();
     }
 
     @Override
-    public long getSpecifiedDataExpiry(UUID uuid, DataType type, String key) {
-        return getSpecifiedData(uuid, type, key).getExpiry();
+    public Long getSpecifiedDataExpiry(UUID uuid, DataType type, String key) {
+        Data data = getSpecifiedData(uuid, type, key);
+        if (data == null) {
+            return null;
+        }
+        return data.getExpiry();
     }
 
     @Override
-    public int getSpecifiedDataID(UUID uuid, DataType type, String key) {
-        return getSpecifiedData(uuid, type, key).getId();
+    public Integer getSpecifiedDataID(UUID uuid, DataType type, String key) {
+        Data data = getSpecifiedData(uuid, type, key);
+        if (data == null) {
+            return null;
+        }
+        return data.getId();
     }
 
     @Override
