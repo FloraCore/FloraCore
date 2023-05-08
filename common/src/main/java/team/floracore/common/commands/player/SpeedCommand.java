@@ -19,6 +19,7 @@ import java.util.*;
  * Speed命令
  */
 @CommandPermission("floracore.command.speed")
+@CommandDescription("设置玩家的指定类型的速度")
 public class SpeedCommand extends AbstractFloraCoreCommand {
     public SpeedCommand(FloraCorePlugin plugin) {
         super(plugin);

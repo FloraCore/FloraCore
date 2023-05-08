@@ -7,6 +7,10 @@ import java.util.*;
  */
 public interface PlayerAPI {
 
+    boolean hasPlayerRecord(String name);
+
+    UUID getPlayerRecordUUID(String name);
+
     /**
      * 通过数据库获取玩家最后记录的名字。
      *
@@ -14,4 +18,6 @@ public interface PlayerAPI {
      * @return 最后记录的名字
      */
     String getPlayerRecordName(UUID uuid);
+
+    boolean isOnline(UUID uuid);
 }

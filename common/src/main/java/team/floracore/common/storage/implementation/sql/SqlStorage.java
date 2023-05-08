@@ -1,14 +1,14 @@
 package team.floracore.common.storage.implementation.sql;
 
-import com.google.gson.*;
 import com.google.gson.reflect.*;
-import org.floracore.api.chat.*;
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import org.floracore.api.server.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.implementation.sql.connection.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.gson.*;
 
 import java.io.*;
 import java.lang.reflect.*;
@@ -93,7 +93,6 @@ public class SqlStorage implements StorageImplementation {
                     for (String query : statements) {
                         s.addBatch(query.replace("utf8mb4", "utf8"));
                     }
-
                     s.executeBatch();
                 }
             }
@@ -230,6 +229,19 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
+    public List<Data> getSpecifiedTypeData(UUID uuid, DataType type) {
+        List<Data> ret = new ArrayList<>();
+        long currentTime = System.currentTimeMillis();
+        for (Data data : selectData(uuid)) {
+            if (data.getType() == type && (data.getExpiry() <= 0 || data.getExpiry() > currentTime)) {
+                ret.add(data);
+            }
+        }
+        return ret;
+    }
+
+
+    @Override
     public void deleteDataAll(UUID uuid) {
         try (Connection c = this.connectionFactory.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_ALL))) {
@@ -312,10 +324,9 @@ public class SqlStorage implements StorageImplementation {
                     while (rs.next()) {
                         int id = rs.getInt("id");
                         String recordsJson = rs.getString("records");
-                        Gson gson = new Gson();
                         Type type = new TypeToken<List<ChatRecord>>() {
                         }.getType();
-                        List<ChatRecord> records = gson.fromJson(recordsJson, type);
+                        List<ChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         long startTime = rs.getLong("startTime");
                         long endTime = rs.getLong("endTime");
                         ret.add(new Chat(plugin, this, id, name, records, startTime, endTime));
@@ -339,10 +350,9 @@ public class SqlStorage implements StorageImplementation {
                     if (rs.next()) {
                         int id = rs.getInt("id");
                         String recordsJson = rs.getString("records");
-                        Gson gson = new Gson();
                         Type type = new TypeToken<List<ChatRecord>>() {
                         }.getType();
-                        List<ChatRecord> records = gson.fromJson(recordsJson, type);
+                        List<ChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         long endTime = rs.getLong("endTime");
                         chat = new Chat(plugin, this, id, name, records, startTime, endTime);
                     } else {

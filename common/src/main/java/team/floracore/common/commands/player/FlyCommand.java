@@ -19,6 +19,7 @@ import java.util.*;
  * Fly命令
  */
 @CommandPermission("floracore.command.fly")
+@CommandDescription("设置玩家的飞行状态")
 public class FlyCommand extends AbstractFloraCoreCommand implements Listener {
     public FlyCommand(FloraCorePlugin plugin) {
         super(plugin);

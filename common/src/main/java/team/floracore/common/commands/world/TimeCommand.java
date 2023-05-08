@@ -22,6 +22,7 @@ import java.util.*;
  * Time命令
  */
 @CommandPermission("floracore.command.time")
+@CommandDescription("世界时间设置和显示")
 public class TimeCommand extends AbstractFloraCoreCommand {
     public TimeCommand(FloraCorePlugin plugin) {
         super(plugin);

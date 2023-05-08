@@ -29,4 +29,8 @@ public interface FloraCoreCommand {
     StorageImplementation getStorageImplementation();
 
     Executor getAsyncExecutor();
+
+    CompletableFuture<Boolean> hasPermissionAsync(UUID uuid, String permission);
+
+    boolean hasPermission(UUID uuid, String permission);
 }

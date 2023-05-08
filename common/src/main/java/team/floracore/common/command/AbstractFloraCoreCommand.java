@@ -4,6 +4,8 @@ import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
 import com.github.benmanes.caffeine.cache.*;
 import com.google.common.collect.*;
+import net.luckperms.api.*;
+import net.luckperms.api.model.user.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
@@ -118,5 +120,23 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     @Override
     public Executor getAsyncExecutor() {
         return asyncExecutor;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> hasPermissionAsync(UUID uuid, String permission) {
+        LuckPerms luckPerms = LuckPermsProvider.get();
+        CompletableFuture<User> future = luckPerms.getUserManager().loadUser(uuid);
+        return future.thenApply(user -> {
+            if (user == null) {
+                // 加载用户数据失败
+                return false;
+            }
+            return user.getCachedData().getPermissionData().checkPermission(permission).asBoolean();
+        });
+    }
+
+    @Override
+    public boolean hasPermission(UUID uuid, String permission) {
+        return hasPermissionAsync(uuid, permission).join();
     }
 }

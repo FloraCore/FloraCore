@@ -5,7 +5,6 @@ import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
-import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
@@ -26,9 +25,14 @@ public class HasPermissionCommand extends AbstractFloraCoreCommand {
 
     @CommandDescription("检查玩家是否拥有目标权限")
     @CommandMethod("haspermission <target> <permission>")
-    public void execute(@NotNull CommandSender s, @NotNull @Argument("target") Player target, @NotNull @Argument(value = "permission", suggestions = "permission_list") String permission) {
+    public void execute(@NotNull CommandSender s, @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target, @NotNull @Argument(value = "permission", suggestions = "permission_list") String permission) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
-        (target.hasPermission(permission) ? Message.COMMAND_HASPERMISSION_YES : Message.COMMAND_HASPERMISSION_NO).send(sender, target.getName(), permission);
+        UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+        if (ut == null) {
+            Message.PLAYER_NOT_FOUND.send(sender, target);
+            return;
+        }
+        (hasPermission(ut, permission) ? Message.COMMAND_HASPERMISSION_YES : Message.COMMAND_HASPERMISSION_NO).send(sender, target, permission);
     }
 
     @Suggestions("permission_list")

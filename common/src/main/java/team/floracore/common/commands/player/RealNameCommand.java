@@ -15,13 +15,13 @@ import java.util.*;
  * RealName命令
  */
 @CommandPermission("floracore.command.realname")
+@CommandDescription("获取指定玩家的真实昵称")
 public class RealNameCommand extends AbstractFloraCoreCommand {
     public RealNameCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("realname <target>")
-    @CommandDescription("获取指定玩家的真实昵称")
     public void realName(final @NotNull Player s, final @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         UUID tu = target.getUniqueId();

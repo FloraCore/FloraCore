@@ -1,7 +1,9 @@
 package team.floracore.common.listeners;
 
+import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
+import org.floracore.api.data.*;
 import team.floracore.common.listener.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
@@ -10,8 +12,8 @@ import team.floracore.common.storage.misc.floracore.tables.*;
 import java.sql.*;
 import java.util.*;
 
-public class PlayerLoginListener extends AbstractFloraCoreListener {
-    public PlayerLoginListener(FloraCorePlugin plugin) {
+public class PlayerListener extends AbstractFloraCoreListener {
+    public PlayerListener(FloraCorePlugin plugin) {
         super(plugin);
     }
 
@@ -38,5 +40,26 @@ public class PlayerLoginListener extends AbstractFloraCoreListener {
         }
         // 清除过期数据
         storageImplementation.deleteDataExpired(u);
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        getPlugin().getBootstrap().getScheduler().async().execute(() -> {
+            storageImplementation.insertData(uuid, DataType.FUNCTION, "online-status", "true", 0);
+            storageImplementation.insertData(uuid, DataType.FUNCTION, "server-status", getPlugin().getServerName(), 0);
+        });
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
+        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+        getPlugin().getBootstrap().getScheduler().async().execute(() -> {
+            storageImplementation.insertData(uuid, DataType.FUNCTION, "online-status", "false", 0);
+        });
     }
 }

@@ -48,6 +48,11 @@ public interface Message {
         return join(joinConfig, text().append(infoLine1).build());
     };
 
+    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE = bootstrap -> prefixed(text("Checking FloraCore version information...").color(AQUA));
+    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE_NEWEST = bootstrap -> prefixed(text("The current version of FloraCore is the latest version!").color(GREEN));
+    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE_FAILED = bootstrap -> prefixed(text("FloraCore version check failed!").color(RED));
+    Args2<FloraCoreBootstrap, String> STARTUP_CHECKING_UPDATE_OUTDATED = (bootstrap, version) -> prefixed(text("The current FloraCore version is outdated! Latest version: ").color(RED).append(text("v" + version).color(DARK_AQUA)));
+
     Args0 TRANSLATIONS_SEARCHING = () -> prefixed(translatable()
             // 正在搜索可用的翻译, 请稍候...
             .key("floracore.command.translations.searching").color(GRAY));
@@ -774,6 +779,60 @@ public interface Message {
 
     Args1<String> COMMAND_BROADCAST = contents -> text().append(PREFIX_BROADCAST).append(space()).append(formatColoredValue(contents)).build();
 
+    Args1<String> COMMAND_MISC_REPORT_NOTICE_ACCEPTED = target -> prefixed(translatable().key("floracore.command.misc.report.notice.accepted").color(AQUA).args(text(target).color(RED)));
+
+    Args2<String, String> COMMAND_MISC_REPORT_NOTICE_PROCESSED = (target, conclusion) -> prefixed(translatable().key("floracore.command.misc.report.notice.processed").color(AQUA).args(text(target).color(RED), text(conclusion).color(GREEN)));
+
+    Args0 COMMAND_MISC_REPORT_THANKS = () -> prefixed(translatable().key("floracore.command.misc.report.thanks").color(AQUA));
+
+    Args7<String, String, String, String, String, Boolean, Boolean> COMMAND_MISC_REPORT_BROADCAST = (player, target, playerServer, targetServer, reason, playerOnlineStatus, targetOnlineStatus) -> {
+        Component infoLine = text()
+                // 玩家 {0} 所在的服务器: {1} {2}
+                .append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA)
+                        // {}
+                        .args(text(player).color(GREEN), text(playerServer).color(YELLOW),
+                                OPEN_BRACKET.append(translatable(playerOnlineStatus ? "floracore.command.misc.online" : "floracore.command.misc.offline")).append(CLOSE_BRACKET).color(playerOnlineStatus ? GREEN : RED))).append(newline())
+                .append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA)
+                        .args(text(target).color(GREEN), text(targetServer).color(YELLOW),
+                                OPEN_BRACKET.append(translatable(targetOnlineStatus ? "floracore.command.misc.online" : "floracore.command.misc.offline")).append(CLOSE_BRACKET).color(targetOnlineStatus ? GREEN : RED)))
+                .build();
+        if (targetOnlineStatus) {
+            infoLine = infoLine.append(newline()).append(ARROW).append(space()).append(translatable().key("floracore.command.misc.check-tp").color(YELLOW).decoration(UNDERLINED, true));
+        }
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(infoLine);
+        ClickEvent clickEvent = ClickEvent.runCommand("/report-tp " + target);
+        Component i = prefixed(translatable().key("floracore.command.misc.report.broadcast").color(AQUA)
+                // {}
+                .args(text(player).color(GREEN), text(target).color(RED), text(reason).color(YELLOW)))
+                // hoverEvent
+                .hoverEvent(hoverEvent);
+        if (targetOnlineStatus) {
+            i = i.clickEvent(clickEvent);
+        }
+        // 玩家 {0} 以 {2} 的理由举报了玩家 {1}
+        return i;
+    };
+
+    Args1<String> COMMAND_REPORT_TP_SUCCESS = id -> prefixed(translatable()
+            // 已将你传送至玩家 {0} 的旁边!
+            .key("floracore.command.report.tp.success").color(AQUA).args(text(id, GREEN)));
+
+    Args0 COMMAND_REPORT_TP_TRANSMITTING = () -> prefixed(translatable()
+            // 传送中...
+            .key("floracore.command.report.tp.transmitting").color(AQUA));
+
+    Args0 COMMAND_REPORT_NOT_PERMISSION = () -> prefixed(translatable()
+            // 你不能举报这名玩家!
+            .key("floracore.command.report.no-permission").color(RED));
+
+    Args0 COMMAND_REPORT_SELF = () -> prefixed(translatable()
+            // 你不能举报你自己!
+            .key("floracore.command.report.self").color(RED));
+
+    Args0 COMMAND_REPORT_ABNORMAL = () -> prefixed(translatable()
+            // 这名玩家的数据异常!
+            .key("floracore.command.report.abnormal").color(RED));
+
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();
     }
@@ -855,6 +914,14 @@ public interface Message {
 
         default void send(Sender sender, A0 arg0, A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5) {
             sender.sendMessage(build(arg0, arg1, arg2, arg3, arg4, arg5));
+        }
+    }
+
+    interface Args7<A0, A1, A2, A3, A4, A5, A6> {
+        Component build(A0 arg0, A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5, A6 args6);
+
+        default void send(Sender sender, A0 arg0, A1 arg1, A2 arg2, A3 arg3, A4 arg4, A5 arg5, A6 args6) {
+            sender.sendMessage(build(arg0, arg1, arg2, arg3, arg4, arg5, args6));
         }
     }
 }

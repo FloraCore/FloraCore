@@ -1,10 +1,10 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
-import com.google.gson.*;
-import org.floracore.api.chat.*;
+import org.floracore.api.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.*;
+import team.floracore.common.util.gson.*;
 
 import java.sql.*;
 import java.util.*;
@@ -54,8 +54,7 @@ public class Chat extends AbstractFloraCoreTable {
 
     public void setRecords(List<ChatRecord> records) {
         this.records = records;
-        Gson gson = new Gson();
-        String recordsJson = gson.toJson(records);
+        String recordsJson = GsonProvider.normal().toJson(records);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_RECORDS))) {
                 ps.setString(1, recordsJson);
@@ -90,8 +89,7 @@ public class Chat extends AbstractFloraCoreTable {
 
     @Override
     public void init() throws SQLException {
-        Gson gson = new Gson();
-        String recordsJson = gson.toJson(records);
+        String recordsJson = GsonProvider.normal().toJson(records);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(INSERT))) {
                 ps.setString(1, name);

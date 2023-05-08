@@ -59,7 +59,10 @@ public enum Dependency {
     OKIO("com{}squareup{}" + RelocationHelper.OKIO_STRING, RelocationHelper.OKIO_STRING, "1.17.5", "Gaf/SNhtPPRJf38lD78pX0MME6Uo3Vt7ID+CGAK4hq0=", Relocation.of(RelocationHelper.OKIO_STRING, RelocationHelper.OKIO_STRING)),
     CAFFEINE("com.github.ben-manes.caffeine", "caffeine", "2.8.2", "U60wqcyKOJZbqkmGQoDP5zyINxyvZoDFGd5CqqNvd64="),
     UNSAFE_ACCESSOR("io.github.karlatemp", "unsafe-accessor", "1.7.0", "NEbDztyvV/6NlpxBR1TtzOm6qy5OxBL/UsnXBSopp2g="),
-    OPENCSV("com.opencsv", "opencsv", "5.7.1", "0Fp70l/WK/J4A9cbgPmK0tkpQgByZIwJom1FNE0l1rg=");
+    OPENCSV("com.opencsv", "opencsv", "5.7.1", "0Fp70l/WK/J4A9cbgPmK0tkpQgByZIwJom1FNE0l1rg="),
+    JEDIS("redis.clients", "jedis", "4.3.1", "WXiUJE5C4bMXFHDpKUeBgk2/YXlJ53qgIw6qPsR3LbQ=", Relocation.of("jedis", "redis{}clients{}jedis"), Relocation.of("commonspool2", "org{}apache{}commons{}pool2")),
+    COMMONS_POOL_2("org.apache.commons", "commons-pool2", "2.11.1", "6gUF7nUV5YsawOaG5NGl2ffYCOJRphvDcaoFlbmWP4M=", Relocation.of("commonspool2", "org{}apache{}commons{}pool2")),
+    ;
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";
     private final String mavenRepoPath;

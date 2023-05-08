@@ -94,6 +94,13 @@ permissions:
       floracore.command.ping.other: true
   floracore.command.realname:
     default: op
+  floracore.command.report.*:
+    default: op
+    children:
+      floracore.command.report: true
+      floracore.command.report.staff: true
+      floracore.command.report.admin: true
+      floracore.command.report.bypass: true
   floracore.command.speed.*:
     default: op
     children:

@@ -26,6 +26,7 @@ public interface StorageImplementation {
 
     /**
      * 此方法慎用，未经过缓存，频繁使用易使负载过大。
+     * 若不存在，则返回null。
      */
     Players selectPlayers(String name);
 
@@ -49,6 +50,8 @@ public interface StorageImplementation {
      * 如果无该记录，则返回Null。
      */
     Data getSpecifiedData(UUID uuid, DataType type, String key);
+
+    List<Data> getSpecifiedTypeData(UUID uuid, DataType type);
 
     void deleteDataAll(UUID uuid);
 

@@ -13,13 +13,16 @@ import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
 import team.floracore.common.listener.*;
 import team.floracore.common.locale.*;
-import team.floracore.common.locale.chat.*;
 import team.floracore.common.locale.data.*;
+import team.floracore.common.locale.data.chat.*;
 import team.floracore.common.locale.translation.*;
+import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.*;
+import team.floracore.common.util.github.*;
 
 import java.io.*;
 import java.nio.file.*;
@@ -38,6 +41,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private FloraCoreConfiguration configuration;
     private FloraCoreApiProvider apiProvider;
     private Storage storage;
+    private InternalMessagingService messagingService = null;
     private SimpleExtensionManager extensionManager;
     private BukkitAudiences bukkitAudiences;
     private CommandManager commandManager;
@@ -48,6 +52,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private BukkitSenderFactory senderFactory;
     private ProtocolManager protocolManager;
     private ChatManager chatManager;
+    private BungeeUtil bungeeUtil;
 
     /**
      * Performs the initial actions to load the plugin
@@ -67,6 +72,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     public final void onEnable() {
+        this.bungeeUtil = new BungeeUtil(this);
         this.bukkitAudiences = BukkitAudiences.create(getBootstrap().getPlugin());
 
         // load the sender factory instance
@@ -79,6 +85,23 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         getLogger().info("Loading configuration...");
         ConfigurationAdapter configFileAdapter = provideConfigurationAdapter();
         this.configuration = new FloraCoreConfiguration(this, new MultiConfigurationAdapter(this, new SystemPropertyConfigAdapter(this), new EnvironmentVariableConfigAdapter(this), configFileAdapter));
+
+        // check update
+        if (this.configuration.get(ConfigKeys.CHECK_UPDATE)) {
+            this.getBootstrap().getScheduler().async().execute(() -> {
+                try {
+                    Message.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
+                    String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
+                    if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
+                        Message.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(), getBootstrap(), leastReleaseTagVersion);
+                    } else {
+                        Message.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());
+                    }
+                } catch (IOException e) {
+                    Message.STARTUP_CHECKING_UPDATE_FAILED.send(getConsoleSender(), getBootstrap());
+                }
+            });
+        }
 
         // setup a bytebin instance
         this.httpClient = new OkHttpClient.Builder().callTimeout(15, TimeUnit.SECONDS).build();
@@ -99,6 +122,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // initialise storage
         this.storage = storageFactory.getInstance();
+        this.messagingService = provideMessagingFactory().getInstance();
         Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getPlugin(), () -> {
             Servers servers = storage.getImplementation().selectServers(getServerName());
             if (servers == null) {
@@ -140,6 +164,12 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         getBootstrap().getScheduler().shutdownScheduler();
 
         getChatManager().shutdown();
+
+        // close messaging service
+        if (this.messagingService != null) {
+            getLogger().info("Closing messaging service...");
+            this.messagingService.close();
+        }
 
         // close storage
         getLogger().info("Closing storage...");
@@ -212,6 +242,18 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     @Override
+    public Optional<InternalMessagingService> getMessagingService() {
+        return Optional.ofNullable(this.messagingService);
+    }
+
+    @Override
+    public void setMessagingService(InternalMessagingService messagingService) {
+        if (this.messagingService == null) {
+            this.messagingService = messagingService;
+        }
+    }
+
+    @Override
     public TranslationManager getTranslationManager() {
         return this.translationManager;
     }
@@ -265,6 +307,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         return new DependencyManagerImpl(this);
     }
 
+    protected abstract MessagingFactory<?> provideMessagingFactory();
+
     @Override
     public DependencyManager getDependencyManager() {
         return this.dependencyManager;
@@ -303,5 +347,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public ChatManager getChatManager() {
         return chatManager;
+    }
+
+    @Override
+    public BungeeUtil getBungeeUtil() {
+        return bungeeUtil;
     }
 }

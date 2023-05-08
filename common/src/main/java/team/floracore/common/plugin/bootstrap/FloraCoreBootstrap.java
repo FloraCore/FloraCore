@@ -1,10 +1,10 @@
 package team.floracore.common.plugin.bootstrap;
 
 import org.bukkit.*;
-import org.bukkit.plugin.*;
+import org.bukkit.plugin.java.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.plugin.classpath.*;
-import team.floracore.common.plugin.logging.PluginLogger;
+import team.floracore.common.plugin.logging.*;
 import team.floracore.common.plugin.scheduler.*;
 
 import java.io.*;
@@ -92,7 +92,7 @@ public interface FloraCoreBootstrap {
      */
     boolean isPlayerOnline(UUID uniqueId);
 
-    Plugin getPlugin();
+    JavaPlugin getPlugin();
 
     Server getServer();
 

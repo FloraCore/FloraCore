@@ -4,8 +4,10 @@ import org.bukkit.entity.*;
 import org.bukkit.plugin.java.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
+import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
+import team.floracore.plugin.messaging.*;
 
 import java.util.*;
 import java.util.stream.*;
@@ -44,6 +46,11 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         dependencies.add(Dependency.CLOUD_BUKKIT);
         dependencies.add(Dependency.CLOUD_PAPER);
         return dependencies;
+    }
+
+    @Override
+    protected MessagingFactory<?> provideMessagingFactory() {
+        return new BukkitMessagingFactory(this);
     }
 
     @Override

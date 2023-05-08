@@ -14,6 +14,7 @@ import team.floracore.common.util.*;
  * Top命令
  */
 @CommandPermission("floracore.command.top")
+@CommandDescription("传送至玩家当前位置的最高点")
 public class TopCommand extends AbstractFloraCoreCommand {
     public TopCommand(FloraCorePlugin plugin) {
         super(plugin);

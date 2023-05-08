@@ -30,6 +30,7 @@ import java.util.*;
  */
 @CommandDescription("给予玩家物品")
 @CommandPermission("floracore.command.give")
+@CommandDescription("给予玩家指定的物品")
 public class GiveCommand extends AbstractFloraCoreCommand {
     public GiveCommand(FloraCorePlugin plugin) {
         super(plugin);

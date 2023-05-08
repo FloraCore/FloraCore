@@ -19,6 +19,7 @@ import java.util.*;
  * GameMode命令
  */
 @CommandPermission("floracore.command.gamemode")
+@CommandDescription("设置玩家的游戏模式")
 public class GameModeCommand extends AbstractFloraCoreCommand {
     public GameModeCommand(FloraCorePlugin plugin) {
         super(plugin);

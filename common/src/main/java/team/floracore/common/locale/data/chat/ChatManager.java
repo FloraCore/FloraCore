@@ -1,13 +1,13 @@
-package team.floracore.common.locale.chat;
+package team.floracore.common.locale.data.chat;
 
-import com.google.gson.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
-import org.floracore.api.chat.*;
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.gson.*;
 
 import java.util.*;
 
@@ -55,6 +55,10 @@ public class ChatManager implements Listener {
 
     public UUID getPlayerChatUUID(Player player) {
         UUID uuid = player.getUniqueId();
+        return getPlayerChatUUID(uuid);
+    }
+
+    public UUID getPlayerChatUUID(UUID uuid) {
         return players.get(uuid).getChatUUID();
     }
 
@@ -69,6 +73,15 @@ public class ChatManager implements Listener {
         this.plugin.getBootstrap().getScheduler().async().execute(() -> addChatRecord(chatRecord));
     }
 
+    public void clearPlayerChatsInvalid(UUID uuid) {
+        List<Data> ret = plugin.getStorage().getImplementation().getSpecifiedTypeData(uuid, DataType.CHAT);
+        for (Data data : ret) {
+            if (data.getValue().isEmpty()) {
+                plugin.getStorage().getImplementation().deleteDataID(data.getId());
+            }
+        }
+    }
+
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
@@ -78,6 +91,7 @@ public class ChatManager implements Listener {
         MapPlayerRecord mapPlayerRecord = new MapPlayerRecord(time, chatUUID);
         players.put(uuid, mapPlayerRecord);
         this.plugin.getBootstrap().getScheduler().async().execute(() -> {
+            clearPlayerChatsInvalid(uuid);
             this.plugin.getStorage().getImplementation().insertData(uuid, DataType.CHAT, chatUUID.toString(), "", 0);
         });
     }
@@ -90,9 +104,8 @@ public class ChatManager implements Listener {
         long joinTime = mapPlayerRecord.getJoinTime();
         long quitTime = System.currentTimeMillis();
         players.remove(uuid);
-        PlayerChatRecord playerChatRecord = new PlayerChatRecord(this.chat.getId(), joinTime, quitTime);
-        Gson gson = new Gson();
-        String recordsJson = gson.toJson(playerChatRecord);
+        DataChatRecord dataChatRecord = new DataChatRecord(this.chat.getId(), joinTime, quitTime);
+        String recordsJson = GsonProvider.normal().toJson(dataChatRecord);
         this.plugin.getBootstrap().getScheduler().async().execute(() -> {
             this.plugin.getStorage().getImplementation().insertData(uuid, DataType.CHAT, mapPlayerRecord.getChatUUID().toString(), recordsJson, 0);
         });

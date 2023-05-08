@@ -24,7 +24,7 @@ public interface DataAPI {
      * @param key  数据值的键值
      * @return 过期时间戳
      */
-    long getSpecifiedDataExpiry(UUID uuid, DataType type, String key);
+    Long getSpecifiedDataExpiry(UUID uuid, DataType type, String key);
 
     /**
      * 获取指定Data的ID
@@ -34,7 +34,7 @@ public interface DataAPI {
      * @param key  数据值的键值
      * @return ID
      */
-    int getSpecifiedDataID(UUID uuid, DataType type, String key);
+    Integer getSpecifiedDataID(UUID uuid, DataType type, String key);
 
     /**
      * 插入数据

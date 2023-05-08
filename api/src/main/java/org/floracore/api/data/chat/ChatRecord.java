@@ -1,4 +1,4 @@
-package org.floracore.api.chat;
+package org.floracore.api.data.chat;
 
 import java.util.*;
 
