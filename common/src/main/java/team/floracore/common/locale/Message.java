@@ -761,6 +761,17 @@ public interface Message {
 
     Args1<String> COMMAND_ITEMNAME_RESET_FROM = from -> prefixed(translatable().key("floracore.command.itemname.reset.from").color(AQUA).args(text(from).color(GREEN)));
 
+    Args1<String> COMMAND_GIVE_ITEM_NOTFOUND = itemKey -> prefixed(translatable().key("floracore.command.give.item.notfound").color(RED).args(text(itemKey).color(YELLOW)));
+
+    Args1<String> COMMAND_GIVE_ITEM_NODATA = itemKey -> prefixed(translatable().key("floracore.command.give.item.nodata").color(RED).args(text(itemKey).color(YELLOW)));
+
+    Args0 COMMAND_GIVE_ITEM_NBTSYTAXEXCEPTION = () -> prefixed(translatable().key("floracore.command.give.item.nbtsyntaxexception").color(RED));
+
+    Args2<String, String> COMMAND_GIVE_ITEM_GIVEN = (item, player) -> prefixed(translatable().key("floracore.command.give.item.given").color(AQUA).args(
+            text(item).color(WHITE),
+            text(player).color(GREEN)
+    ));
+
     Args1<String> COMMAND_BROADCAST = contents -> text().append(PREFIX_BROADCAST).append(space()).append(formatColoredValue(contents)).build();
 
     static TextComponent prefixed(ComponentLike component) {
