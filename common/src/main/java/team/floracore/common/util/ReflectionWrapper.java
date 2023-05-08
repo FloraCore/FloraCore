@@ -3,11 +3,11 @@ package team.floracore.common.util;
 import io.github.karlatemp.unsafeaccessor.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
-import org.jetbrains.annotations.NotNull;
-import team.floracore.common.function.LookForMethodFunction;
+import org.jetbrains.annotations.*;
+import team.floracore.common.function.*;
 
 import java.lang.reflect.*;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.*;
 
 /**
@@ -463,13 +463,10 @@ public final class ReflectionWrapper {
         return isVersionGreaterThan(version, compareVersion) || version.equals(compareVersion);
     }
 
-
-    public static Unsafe unsafe = getStaticFieldValue(getField(Unsafe.class, "theUnsafe"));
-
     /**
      * 在一个类中寻找某个方法，可以有多种可能性，取最先找到的那个
      *
-     * @param cls 类
+     * @param cls       类
      * @param functions 尝试获取的方法，当返回时成功，当返回null或抛出异常时失败
      * @return 最先找到的可能的方法
      */
@@ -485,4 +482,8 @@ public final class ReflectionWrapper {
         }
         return Optional.empty();
     }
+
+    public static Unsafe unsafe = getStaticFieldValue(getField(Unsafe.class, "theUnsafe"));
+
+
 }

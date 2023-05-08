@@ -31,8 +31,10 @@ public class FlyCommand extends AbstractFloraCoreCommand implements Listener {
     public void self(final @NotNull Player s) {
         boolean old = s.getAllowFlight();
         s.setAllowFlight(!old);
-        UUID uuid = s.getUniqueId();
-        getStorageImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
+        if (whetherServerEnableAutoSync1()) {
+            UUID uuid = s.getUniqueId();
+            getStorageImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
+        }
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Message.COMMAND_FLY.send(sender, !old, s.getDisplayName());
     }
@@ -43,9 +45,10 @@ public class FlyCommand extends AbstractFloraCoreCommand implements Listener {
     public void other(final @NotNull CommandSender s, final @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
         boolean old = target.getAllowFlight();
         target.setAllowFlight(!old);
-        UUID uuid = target.getUniqueId();
-        // 永不过期
-        getStorageImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
+        if (whetherServerEnableAutoSync1()) {
+            UUID uuid = target.getUniqueId();
+            getStorageImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
+        }
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Sender targetSender = getPlugin().getSenderFactory().wrap(target);
         Message.COMMAND_FLY.send(sender, !old, target.getDisplayName());
