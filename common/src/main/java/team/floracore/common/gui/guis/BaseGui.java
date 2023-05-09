@@ -25,13 +25,6 @@ public abstract class BaseGui implements InventoryHolder {
     // The plugin instance for registering the event and for the close delay.
     private static final Plugin plugin = FloraCoreProvider.get().getPlugin();
 
-    // Registering the listener class.
-    static {
-        Bukkit.getPluginManager().registerEvents(new GuiListener(), plugin);
-        // TODO might join these two
-        Bukkit.getPluginManager().registerEvents(new InteractionModifierListener(), plugin);
-    }
-
     // Gui filler.
     private final GuiFiller filler = new GuiFiller(this);
     // Contains all items the GUI will have.

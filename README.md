@@ -29,6 +29,8 @@ FC的框架是基于[LuckPerms](https://luckperms.net/)(下称LP)
 - 数据库的加载及其用法 ([GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/storage))
 - 拓展的加载及其用法 ([GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/extension))
 
+FC的GUI框架是基于[Triumph GUI](https://triumphteam.dev/library/triumph-gui/gui)(下称TG)，由于BaseGui类在FC中无法正常获取Plugin，因此在FC中，我们决定将TG克隆到FC中，并解决相应的问题。
+
 # Wiki
 
 本插件的Wiki见[Wiki](https://github.com/FloraCore/FloraCore/wiki)

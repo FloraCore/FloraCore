@@ -1,7 +1,9 @@
 package team.floracore.common.listener;
 
+import org.bukkit.*;
 import org.bukkit.event.*;
 import org.bukkit.plugin.*;
+import team.floracore.common.gui.guis.*;
 import team.floracore.common.listeners.*;
 import team.floracore.common.plugin.*;
 
@@ -23,6 +25,8 @@ public class ListenerManager {
         PluginManager pm = plugin.getBootstrap().getServer().getPluginManager();
         Plugin p = plugin.getBootstrap().getPlugin();
         pm.registerEvents(new PlayerListener(plugin), p);
+        pm.registerEvents(new GuiListener(), p);
+        pm.registerEvents(new InteractionModifierListener(), p);
     }
 
     public FloraCorePlugin getPlugin() {
