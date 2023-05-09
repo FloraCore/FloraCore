@@ -54,8 +54,6 @@ dependencies {
     api 'cloud.commandframework:cloud-annotations:1.8.3'
     api 'cloud.commandframework:cloud-paper:1.8.3'
 
-    api 'dev.triumphteam:triumph-gui:3.1.2'
-
     api 'com.google.code.gson:gson:2.10.1'
     api 'com.google.guava:guava:31.1-jre'
 

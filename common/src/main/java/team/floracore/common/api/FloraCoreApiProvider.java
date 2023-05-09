@@ -1,5 +1,6 @@
 package team.floracore.common.api;
 
+import org.bukkit.plugin.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.*;
 import org.floracore.api.data.*;
@@ -13,7 +14,7 @@ import team.floracore.common.config.*;
 import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.plugin.bootstrap.*;
-import team.floracore.common.plugin.logging.*;
+import team.floracore.common.plugin.logging.PluginLogger;
 
 import java.util.*;
 
@@ -95,6 +96,11 @@ public class FloraCoreApiProvider implements FloraCore {
         if (this.plugin.getConfiguration().get(ConfigKeys.MESSAGING_SERVICE).equals("custom")) {
             this.plugin.setMessagingService(new FloraCoreMessagingService(this.plugin, messengerProvider));
         }
+    }
+
+    @Override
+    public Plugin getPlugin() {
+        return this.plugin.getBootstrap().getPlugin();
     }
 
     @Override

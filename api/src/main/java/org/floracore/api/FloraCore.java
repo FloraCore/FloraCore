@@ -1,5 +1,6 @@
 package org.floracore.api;
 
+import org.bukkit.plugin.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
@@ -93,4 +94,5 @@ public interface FloraCore {
      */
     void registerMessengerProvider(@NonNull MessengerProvider messengerProvider);
 
+    Plugin getPlugin();
 }
