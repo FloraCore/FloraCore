@@ -36,7 +36,7 @@ public class GiveCommand extends AbstractFloraCoreCommand {
     public void execute(
             @NotNull CommandSender s,
             @NotNull @Argument("player") Player player,
-            @NotNull @Argument("item") String itemKey,
+            @NotNull @Argument(value = "item", suggestions = "all-items-name") String itemKey,
             @Nullable @Argument("amount") Integer amount,
             @Nullable @Argument("data") Integer data,
             @Nullable @Greedy @Argument("tags") String tags
