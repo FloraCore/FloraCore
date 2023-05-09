@@ -173,7 +173,7 @@ public class GiveCommand extends AbstractFloraCoreCommand {
             Field fieldRegistry = ReflectionWrapper.getField(classItem, "REGISTRY");
             // RegistryMaterials<MinecraftKey, Item> registry = Item.REGISTRY;
             Object registry = ReflectionWrapper.getStaticFieldValue(fieldRegistry);
-            Class<?> classRegistrySimple = ReflectionWrapper.getClassByName("RegistrySimple");
+            Class<?> classRegistrySimple = ReflectionWrapper.getNMSClass("RegistrySimple");
             Method methodKeySet = ReflectionWrapper.getMethod(classRegistrySimple, "keySet");
             // Set<MinecraftKey> keySet = registry.keySet();
             Set<?> keySet = ReflectionWrapper.invokeMethod(methodKeySet, registry);
