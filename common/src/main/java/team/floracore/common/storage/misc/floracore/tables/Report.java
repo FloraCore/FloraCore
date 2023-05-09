@@ -10,7 +10,8 @@ import java.sql.*;
 import java.util.*;
 
 public class Report extends AbstractFloraCoreTable {
-    public static final String SELECT = "SELECT * FROM '{prefix}report' WHERE uuid=?";
+    public static final String SELECT = "SELECT * FROM '{prefix}report'";
+    public static final String SELECT_UUID = "SELECT * FROM '{prefix}report' WHERE uuid=?";
     public static final String DELETE = "DELETE FROM '{prefix}report' WHERE uuid=?";
     private static final String UPDATE_HANDLER = "UPDATE '{prefix}report' SET handler=? WHERE uuid=?";
     private static final String UPDATE_HANDLE_TIME = "UPDATE '{prefix}report' SET handleTime=? WHERE uuid=?";

@@ -13,4 +13,6 @@ public interface ChatAPI {
      * @return 当前服务器的聊天记录的UUID。
      */
     UUID getPlayerChatUUID(UUID uuid);
+
+    List<DataChatRecord> getPlayerChatUUIDRecent(UUID uuid, int number);
 }

@@ -375,4 +375,75 @@ public class SqlStorage implements StorageImplementation {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public List<Report> getReports() {
+        List<Report> ret = new ArrayList<>();
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Report.SELECT))) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        UUID uuid = UUID.fromString(rs.getString("uuid"));
+                        UUID reporter = UUID.fromString(rs.getString("reporter"));
+                        UUID reported = UUID.fromString(rs.getString("reported"));
+                        String reason = rs.getString("reported");
+                        long reportTime = rs.getLong("reportTime");
+                        UUID handler = UUID.fromString(rs.getString("handler"));
+                        Long handleTime = rs.getLong("handleTime");
+                        Boolean conclusion = rs.getBoolean("conclusion");
+                        Long conclusionTime = rs.getLong("conclusionTime");
+                        String recordsJson = rs.getString("chat");
+                        Type type = new TypeToken<List<DataChatRecord>>() {
+                        }.getType();
+                        List<DataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
+                        ret.add(new Report(plugin, this, id, uuid, reporter, reported, reason, reportTime, handler, handleTime, conclusion, conclusionTime, records));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ret;
+    }
+
+    @Override
+    public Report selectReport(UUID uuid) {
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Report.SELECT_UUID))) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        int id = rs.getInt("id");
+                        UUID reporter = UUID.fromString(rs.getString("reporter"));
+                        UUID reported = UUID.fromString(rs.getString("reported"));
+                        String reason = rs.getString("reported");
+                        long reportTime = rs.getLong("reportTime");
+                        UUID handler = UUID.fromString(rs.getString("handler"));
+                        Long handleTime = rs.getLong("handleTime");
+                        Boolean conclusion = rs.getBoolean("conclusion");
+                        Long conclusionTime = rs.getLong("conclusionTime");
+                        String recordsJson = rs.getString("chat");
+                        Type type = new TypeToken<List<DataChatRecord>>() {
+                        }.getType();
+                        List<DataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
+                        return new Report(plugin, this, id, uuid, reporter, reported, reason, reportTime, handler, handleTime, conclusion, conclusionTime, records);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return null;
+    }
+
+    @Override
+    public void insertReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<DataChatRecord> chat) {
+        Report report = new Report(plugin, this, -1, uuid, reporter, reported, reason, reportTime, null, null, null, null, chat);
+        try {
+            report.init();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

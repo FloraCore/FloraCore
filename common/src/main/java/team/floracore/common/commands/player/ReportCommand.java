@@ -6,6 +6,7 @@ import de.myzelyam.api.vanish.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
@@ -100,7 +101,14 @@ public class ReportCommand extends AbstractFloraCoreCommand {
 
     private void createReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
         getPlugin().getMessagingService().ifPresent(service -> {
-            // TODO 写入数据库
+            UUID uuid = UUID.randomUUID();
+            long reportTime = System.currentTimeMillis();
+            List<DataChatRecord> chat = new ArrayList<>();
+            List<DataChatRecord> c1 = getPlugin().getApiProvider().getChatAPI().getPlayerChatUUIDRecent(reporter, 3);
+            List<DataChatRecord> c2 = getPlugin().getApiProvider().getChatAPI().getPlayerChatUUIDRecent(reportedUser, 3);
+            chat.addAll(c1);
+            chat.addAll(c2);
+            getStorageImplementation().insertReport(uuid, reporter, reportedUser, reason, reportTime, chat);
             service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
         });
     }
