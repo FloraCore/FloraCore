@@ -257,8 +257,10 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                             return;
                         }
                         if (sender != null) {
-                            if (!VanishAPI.isInvisible(sender)) {
-                                VanishAPI.hidePlayer(sender);
+                            if (plugin.isPluginInstalled("PremiumVanish")) {
+                                if (!VanishAPI.isInvisible(sender)) {
+                                    VanishAPI.hidePlayer(sender);
+                                }
                             }
                             sender.teleport(recipient.getLocation());
                             team.floracore.common.locale.Message.COMMAND_REPORT_TP_SUCCESS.send(s, recipient.getDisplayName());

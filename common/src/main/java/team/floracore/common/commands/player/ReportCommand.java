@@ -1,22 +1,19 @@
 package team.floracore.common.commands.player;
 
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.specifier.Greedy;
-import de.myzelyam.api.vanish.VanishAPI;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.floracore.api.data.DataType;
-import org.jetbrains.annotations.NotNull;
-import team.floracore.common.command.AbstractFloraCoreCommand;
-import team.floracore.common.locale.Message;
-import team.floracore.common.plugin.FloraCorePlugin;
-import team.floracore.common.sender.Sender;
-import team.floracore.common.storage.misc.floracore.tables.Data;
+import cloud.commandframework.annotations.*;
+import cloud.commandframework.annotations.specifier.*;
+import de.myzelyam.api.vanish.*;
+import org.bukkit.*;
+import org.bukkit.entity.*;
+import org.floracore.api.data.*;
+import org.jetbrains.annotations.*;
+import team.floracore.common.command.*;
+import team.floracore.common.locale.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
+import team.floracore.common.storage.misc.floracore.tables.*;
 
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Report命令
@@ -50,8 +47,10 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         if (getPlugin().getServerName().equalsIgnoreCase(server)) {
             Player t = Bukkit.getPlayer(target);
             if (t != null) {
-                if (!VanishAPI.isInvisible(sender)) {
-                    VanishAPI.hidePlayer(sender);
+                if (getPlugin().isPluginInstalled("PremiumVanish")) {
+                    if (!VanishAPI.isInvisible(sender)) {
+                        VanishAPI.hidePlayer(sender);
+                    }
                 }
                 sender.teleport(t.getLocation());
                 Message.COMMAND_REPORT_TP_SUCCESS.send(s, target);

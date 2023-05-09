@@ -4,6 +4,7 @@ import com.comphenix.protocol.*;
 import net.kyori.adventure.platform.bukkit.*;
 import okhttp3.*;
 import org.bukkit.*;
+import org.bukkit.plugin.*;
 import org.floracore.api.server.*;
 import team.floracore.common.api.*;
 import team.floracore.common.command.*;
@@ -17,7 +18,7 @@ import team.floracore.common.locale.data.*;
 import team.floracore.common.locale.data.chat.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.messaging.*;
-import team.floracore.common.plugin.logging.*;
+import team.floracore.common.plugin.logging.PluginLogger;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -30,13 +31,15 @@ import java.sql.*;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.*;
 
 public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
+    // Active plugins on the server
+    private final Map<String, List<String>> loadedPlugins = new HashMap<>();
     // init during load
     private DependencyManager dependencyManager;
     private TranslationManager translationManager;
     private DataManager dataManager;
-
     // init during enable
     private FloraCoreConfiguration configuration;
     private FloraCoreApiProvider apiProvider;
@@ -152,6 +155,11 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // setup extension manager
         this.extensionManager = new SimpleExtensionManager(this);
         this.extensionManager.loadExtensions(getBootstrap().getConfigDirectory().resolve("extensions"));
+
+        // Cache loaded plugins
+        getBootstrap().getScheduler().async().execute(() -> Stream.of(Bukkit.getPluginManager().getPlugins())
+                .filter(Plugin::isEnabled)
+                .forEach(currentPlugin -> loadedPlugins.put(currentPlugin.getName(), currentPlugin.getDescription().getAuthors())));
 
         Duration timeTaken = Duration.between(getBootstrap().getStartupTime(), Instant.now());
         getLogger().info("Successfully enabled. (took " + timeTaken.toMillis() + "ms)");
@@ -352,5 +360,23 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public BungeeUtil getBungeeUtil() {
         return bungeeUtil;
+    }
+
+    @Override
+    public Map<String, List<String>> getLoadedPlugins() {
+        return loadedPlugins;
+    }
+
+    @Override
+    public boolean isPluginInstalled(String name) {
+        return loadedPlugins.containsKey(name);
+    }
+
+    @Override
+    public boolean isPluginInstalled(String name, String author) {
+        if (loadedPlugins.containsKey(name)) {
+            return loadedPlugins.get(name).contains(author);
+        }
+        return false;
     }
 }

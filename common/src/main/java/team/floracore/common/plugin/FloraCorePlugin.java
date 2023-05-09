@@ -137,4 +137,10 @@ public interface FloraCorePlugin {
     ChatManager getChatManager();
 
     BungeeUtil getBungeeUtil();
+
+    Map<String, List<String>> getLoadedPlugins();
+
+    boolean isPluginInstalled(String name);
+
+    boolean isPluginInstalled(String name, String author);
 }
