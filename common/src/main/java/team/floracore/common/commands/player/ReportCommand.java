@@ -99,6 +99,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             Message.COMMAND_REPORT_ABNORMAL.send(s);
             return;
         }
+        Message.COMMAND_REPORT_SUCCESS.send(s, target, reason);
         createReport(s.getUniqueId(), reportedUser, reporterServer, reportedUserServer, reason);
     }
 

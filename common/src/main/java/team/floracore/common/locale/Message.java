@@ -813,6 +813,10 @@ public interface Message {
         return i;
     };
 
+    Args2<String, String> COMMAND_REPORT_SUCCESS = (target, reason) -> prefixed(translatable()
+            // 你以"{1}"的理由举报了玩家 {0} ,请您耐心等待工作人员处理!
+            .key("floracore.command.report.success").color(AQUA).args(text(target, RED), text(reason, YELLOW)));
+
     Args1<String> COMMAND_REPORT_TP_SUCCESS = id -> prefixed(translatable()
             // 已将你传送至玩家 {0} 的旁边!
             .key("floracore.command.report.tp.success").color(AQUA).args(text(id, GREEN)));
