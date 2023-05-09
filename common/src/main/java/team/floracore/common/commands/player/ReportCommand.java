@@ -1,19 +1,22 @@
 package team.floracore.common.commands.player;
 
-import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.specifier.*;
-import de.myzelyam.api.vanish.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.floracore.api.data.*;
-import org.jetbrains.annotations.*;
-import team.floracore.common.command.*;
-import team.floracore.common.locale.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Greedy;
+import de.myzelyam.api.vanish.VanishAPI;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.floracore.api.data.DataType;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.common.command.AbstractFloraCoreCommand;
+import team.floracore.common.locale.Message;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.storage.misc.floracore.tables.Data;
 
-import java.util.*;
+import java.util.UUID;
 
 /**
  * Report命令
@@ -31,8 +34,13 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Message.COMMAND_REPORT_TP_TRANSMITTING.send(s);
         UUID u = sender.getUniqueId();
+        UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+        if (ut == null) {
+            Message.PLAYER_NOT_FOUND.send(s, target);
+            return;
+        }
         String server;
-        Data data = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "server-status");
+        Data data = getStorageImplementation().getSpecifiedData(ut, DataType.FUNCTION, "server-status");
         if (data != null) {
             server = data.getValue();
         } else {
@@ -51,11 +59,6 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 Message.PLAYER_NOT_FOUND.send(s, target);
             }
         } else {
-            UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
-            if (ut == null) {
-                Message.PLAYER_NOT_FOUND.send(s, target);
-                return;
-            }
             getPlugin().getMessagingService().ifPresent(service -> service.pushTeleport(u, ut, server));
             getPlugin().getBungeeUtil().connect(sender, server);
         }
