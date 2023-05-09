@@ -240,7 +240,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         ret.add(Dependency.CLOUD_SERVICES);
         ret.add(Dependency.CLOUD_TASKS);
         ret.add(Dependency.GEANTYREF);
-        ret.add(Dependency.INVENTORY_FRAMEWORK);
         ret.add(Dependency.OKHTTP);
         ret.add(Dependency.OKIO);
         ret.add(Dependency.CAFFEINE);

@@ -3,6 +3,8 @@ package team.floracore.common.commands.player;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.specifier.*;
 import de.myzelyam.api.vanish.*;
+import dev.triumphteam.gui.guis.*;
+import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.floracore.api.commands.report.*;
@@ -108,6 +110,16 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         }
         Message.COMMAND_REPORT_SUCCESS.send(s, target, reason);
         createReport(s.getUniqueId(), reportedUser, reporterServer, reportedUserServer, reason);
+    }
+
+    @CommandMethod("reports")
+    @CommandPermission("floracore.command.report.staff")
+    public void reports(final @NotNull Player sender) {
+        Gui gui = Gui.gui()
+                .title(Component.text("GUI Title!"))
+                .rows(6)
+                .create();
+        gui.open(sender);
     }
 
     private void createReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
