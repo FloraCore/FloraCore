@@ -1,7 +1,7 @@
 package team.floracore.common.storage.implementation;
 
+import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
-import org.floracore.api.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.sql.connection.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -74,5 +74,5 @@ public interface StorageImplementation {
 
     Report selectReport(UUID uuid);
 
-    void insertReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<DataChatRecord> chat);
+    void insertReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<ReportDataChatRecord> chat);
 }

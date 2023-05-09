@@ -1,6 +1,7 @@
 package team.floracore.common.storage.implementation.sql;
 
 import com.google.gson.reflect.*;
+import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.floracore.api.server.*;
@@ -394,9 +395,9 @@ public class SqlStorage implements StorageImplementation {
                         Boolean conclusion = rs.getBoolean("conclusion");
                         Long conclusionTime = rs.getLong("conclusionTime");
                         String recordsJson = rs.getString("chat");
-                        Type type = new TypeToken<List<DataChatRecord>>() {
+                        Type type = new TypeToken<List<ReportDataChatRecord>>() {
                         }.getType();
-                        List<DataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
+                        List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         ret.add(new Report(plugin, this, id, uuid, reporter, reported, reason, reportTime, handler, handleTime, conclusion, conclusionTime, records));
                     }
                 }
@@ -424,9 +425,9 @@ public class SqlStorage implements StorageImplementation {
                         Boolean conclusion = rs.getBoolean("conclusion");
                         Long conclusionTime = rs.getLong("conclusionTime");
                         String recordsJson = rs.getString("chat");
-                        Type type = new TypeToken<List<DataChatRecord>>() {
+                        Type type = new TypeToken<List<ReportDataChatRecord>>() {
                         }.getType();
-                        List<DataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
+                        List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         return new Report(plugin, this, id, uuid, reporter, reported, reason, reportTime, handler, handleTime, conclusion, conclusionTime, records);
                     }
                 }
@@ -438,7 +439,7 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public void insertReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<DataChatRecord> chat) {
+    public void insertReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<ReportDataChatRecord> chat) {
         Report report = new Report(plugin, this, -1, uuid, reporter, reported, reason, reportTime, null, null, null, null, chat);
         try {
             report.init();

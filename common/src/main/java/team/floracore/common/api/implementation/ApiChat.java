@@ -49,10 +49,9 @@ public class ApiChat implements ChatAPI {
             if (value.isEmpty()) {
                 continue;
             }
-            String recordsJson = GsonProvider.normal().toJson(value);
             Type type = new TypeToken<DataChatRecord>() {
             }.getType();
-            DataChatRecord records = GsonProvider.normal().fromJson(recordsJson, type);
+            DataChatRecord records = GsonProvider.normal().fromJson(value, type);
             ret.add(records);
         }
         return ret.stream()

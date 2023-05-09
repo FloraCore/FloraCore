@@ -5,16 +5,19 @@ import cloud.commandframework.annotations.specifier.*;
 import de.myzelyam.api.vanish.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
+import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.*;
+import team.floracore.common.locale.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.util.*;
+import java.util.stream.*;
 
 /**
  * Report命令
@@ -102,13 +105,33 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     private void createReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
         getPlugin().getMessagingService().ifPresent(service -> {
             UUID uuid = UUID.randomUUID();
-            long reportTime = System.currentTimeMillis();
-            List<DataChatRecord> chat = new ArrayList<>();
-            List<DataChatRecord> c1 = getPlugin().getApiProvider().getChatAPI().getPlayerChatUUIDRecent(reporter, 3);
-            List<DataChatRecord> c2 = getPlugin().getApiProvider().getChatAPI().getPlayerChatUUIDRecent(reportedUser, 3);
+            long time = System.currentTimeMillis();
+            List<ReportDataChatRecord> chat = new ArrayList<>();
+            ChatAPI chatAPI = getPlugin().getApiProvider().getChatAPI();
+            ChatManager chatManager = getPlugin().getChatManager();
+            List<ReportDataChatRecord> c1 = chatAPI.getPlayerChatUUIDRecent(reporter, 3)
+                    .stream()
+                    .map(dataChatRecord -> new ReportDataChatRecord(reporter, dataChatRecord))
+                    .collect(Collectors.toList());
+            ChatManager.MapPlayerRecord cm1 = chatManager.getMapPlayerRecord(reporter);
+            if (cm1 != null) {
+                int id = chatManager.getChat().getId();
+                DataChatRecord d = new DataChatRecord(id, cm1.getJoinTime(), time);
+                c1.add(new ReportDataChatRecord(reporter, d));
+            }
+            List<ReportDataChatRecord> c2 = chatAPI.getPlayerChatUUIDRecent(reportedUser, 3)
+                    .stream()
+                    .map(dataChatRecord -> new ReportDataChatRecord(reportedUser, dataChatRecord))
+                    .collect(Collectors.toList());
+            ChatManager.MapPlayerRecord cm2 = chatManager.getMapPlayerRecord(reportedUser);
+            if (cm2 != null) {
+                int id = chatManager.getChat().getId();
+                DataChatRecord d = new DataChatRecord(id, cm2.getJoinTime(), time);
+                c2.add(new ReportDataChatRecord(reportedUser, d));
+            }
             chat.addAll(c1);
             chat.addAll(c2);
-            getStorageImplementation().insertReport(uuid, reporter, reportedUser, reason, reportTime, chat);
+            getStorageImplementation().insertReport(uuid, reporter, reportedUser, reason, time, chat);
             service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
         });
     }

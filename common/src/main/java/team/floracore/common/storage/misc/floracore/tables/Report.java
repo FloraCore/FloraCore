@@ -1,6 +1,6 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
-import org.floracore.api.data.chat.*;
+import org.floracore.api.commands.report.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.*;
@@ -25,13 +25,13 @@ public class Report extends AbstractFloraCoreTable {
     private final UUID reported;
     private final String reason;
     private final long reportTime;
-    private final List<DataChatRecord> chat;
+    private final List<ReportDataChatRecord> chat;
     private UUID handler;
     private Long handleTime;
     private Boolean conclusion;
     private Long conclusionTime;
 
-    public Report(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, UUID handler, Long handleTime, Boolean conclusion, Long conclusionTime, List<DataChatRecord> chat) {
+    public Report(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, UUID handler, Long handleTime, Boolean conclusion, Long conclusionTime, List<ReportDataChatRecord> chat) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;
@@ -92,7 +92,7 @@ public class Report extends AbstractFloraCoreTable {
         }
     }
 
-    public List<DataChatRecord> getChat() {
+    public List<ReportDataChatRecord> getChat() {
         return chat;
     }
 
@@ -152,11 +152,11 @@ public class Report extends AbstractFloraCoreTable {
                 ps.setString(3, reported.toString());
                 ps.setString(4, reason);
                 ps.setLong(5, reportTime);
-                ps.setString(6, handler.toString());
-                ps.setLong(7, handleTime);
-                ps.setBoolean(8, conclusion);
-                ps.setLong(9, conclusionTime);
-                ps.setString(9, chatJson);
+                ps.setString(6, handler == null ? null : handler.toString());
+                ps.setLong(7, handleTime == null ? -1 : handleTime);
+                ps.setBoolean(8, conclusion != null && conclusion);
+                ps.setLong(9, conclusionTime == null ? -1 : conclusionTime);
+                ps.setString(10, chatJson);
                 ps.execute();
             }
         }

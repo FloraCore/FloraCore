@@ -59,7 +59,11 @@ public class ChatManager implements Listener {
     }
 
     public UUID getPlayerChatUUID(UUID uuid) {
-        return players.get(uuid).getChatUUID();
+        return getMapPlayerRecord(uuid).getChatUUID();
+    }
+
+    public MapPlayerRecord getMapPlayerRecord(UUID uuid) {
+        return players.get(uuid);
     }
 
     @EventHandler
