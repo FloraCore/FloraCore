@@ -72,7 +72,12 @@ public interface StorageImplementation {
 
     List<Report> getReports();
 
-    Report selectReport(UUID uuid);
+    List<Report> selectReports(UUID uuid);
 
-    void insertReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<ReportDataChatRecord> chat);
+    /**
+     * @return 返回未处理的举报；若无，则返回null。
+     */
+    Report getUnprocessedReports(UUID uuid);
+
+    void addReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<ReportDataChatRecord> chat);
 }

@@ -386,19 +386,26 @@ public class SqlStorage implements StorageImplementation {
                     while (rs.next()) {
                         int id = rs.getInt("id");
                         UUID uuid = UUID.fromString(rs.getString("uuid"));
-                        UUID reporter = UUID.fromString(rs.getString("reporter"));
+                        String reportersJson = rs.getString("reporters");
+                        Type type1 = new TypeToken<List<UUID>>() {
+                        }.getType();
+                        List<UUID> reporters = GsonProvider.normal().fromJson(reportersJson, type1);
                         UUID reported = UUID.fromString(rs.getString("reported"));
-                        String reason = rs.getString("reported");
+                        String reasonJson = rs.getString("reasons");
+                        Type type2 = new TypeToken<List<String>>() {
+                        }.getType();
+                        List<String> reasons = GsonProvider.normal().fromJson(reasonJson, type2);
                         long reportTime = rs.getLong("reportTime");
-                        UUID handler = UUID.fromString(rs.getString("handler"));
+                        String handlerString = rs.getString("handler");
+                        UUID handler = handlerString == null ? null : UUID.fromString(handlerString);
                         Long handleTime = rs.getLong("handleTime");
                         Boolean conclusion = rs.getBoolean("conclusion");
                         Long conclusionTime = rs.getLong("conclusionTime");
                         String recordsJson = rs.getString("chat");
-                        Type type = new TypeToken<List<ReportDataChatRecord>>() {
+                        Type type3 = new TypeToken<List<ReportDataChatRecord>>() {
                         }.getType();
-                        List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
-                        ret.add(new Report(plugin, this, id, uuid, reporter, reported, reason, reportTime, handler, handleTime, conclusion, conclusionTime, records));
+                        List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type3);
+                        ret.add(new Report(plugin, this, id, uuid, reporters, reported, reasons, reportTime, handler, handleTime, conclusion, conclusionTime, records));
                     }
                 }
             }
@@ -409,42 +416,72 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Report selectReport(UUID uuid) {
+    public List<Report> selectReports(UUID uuid) {
+        List<Report> ret = new ArrayList<>();
         try (Connection c = this.connectionFactory.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Report.SELECT_UUID))) {
                 ps.setString(1, uuid.toString());
                 try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
+                    while (rs.next()) {
                         int id = rs.getInt("id");
-                        UUID reporter = UUID.fromString(rs.getString("reporter"));
+                        UUID uuid1 = UUID.fromString(rs.getString("uuid"));
+                        String reportersJson = rs.getString("reporters");
+                        Type type1 = new TypeToken<List<UUID>>() {
+                        }.getType();
+                        List<UUID> reporters = GsonProvider.normal().fromJson(reportersJson, type1);
                         UUID reported = UUID.fromString(rs.getString("reported"));
-                        String reason = rs.getString("reported");
+                        String reasonJson = rs.getString("reasons");
+                        Type type2 = new TypeToken<List<String>>() {
+                        }.getType();
+                        List<String> reasons = GsonProvider.normal().fromJson(reasonJson, type2);
                         long reportTime = rs.getLong("reportTime");
-                        UUID handler = UUID.fromString(rs.getString("handler"));
+                        String handlerString = rs.getString("handler");
+                        UUID handler = handlerString == null ? null : UUID.fromString(handlerString);
                         Long handleTime = rs.getLong("handleTime");
                         Boolean conclusion = rs.getBoolean("conclusion");
                         Long conclusionTime = rs.getLong("conclusionTime");
                         String recordsJson = rs.getString("chat");
-                        Type type = new TypeToken<List<ReportDataChatRecord>>() {
+                        Type type3 = new TypeToken<List<ReportDataChatRecord>>() {
                         }.getType();
-                        List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
-                        return new Report(plugin, this, id, uuid, reporter, reported, reason, reportTime, handler, handleTime, conclusion, conclusionTime, records);
+                        List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type3);
+                        ret.add(new Report(plugin, this, id, uuid1, reporters, reported, reasons, reportTime, handler, handleTime, conclusion, conclusionTime, records));
                     }
                 }
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+        return ret;
+    }
+
+    @Override
+    public Report getUnprocessedReports(UUID uuid) {
+        List<Report> reports = selectReports(uuid);
+        for (Report report : reports) {
+            if (!report.getConclusion()) {
+                return report;
+            }
+        }
         return null;
     }
 
     @Override
-    public void insertReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<ReportDataChatRecord> chat) {
-        Report report = new Report(plugin, this, -1, uuid, reporter, reported, reason, reportTime, null, null, null, null, chat);
-        try {
-            report.init();
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
+    public void addReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<ReportDataChatRecord> chat) {
+        Report report = getUnprocessedReports(reported);
+        if (getUnprocessedReports(reported) == null) {
+            report = new Report(plugin, this, -1, uuid, Collections.singletonList(reporter), reported, Collections.singletonList(reason), reportTime, null, null, null, null, chat);
+            try {
+                report.init();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            List<UUID> reporters = report.getReporters();
+            reporters.add(reporter);
+            report.setReporters(reporters);
+            List<String> reasons = report.getReasons();
+            reasons.add(reason);
+            report.setReasons(reasons);
         }
     }
 }

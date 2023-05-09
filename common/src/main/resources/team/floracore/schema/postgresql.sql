@@ -45,9 +45,9 @@ CREATE TABLE IF NOT EXISTS "{prefix}report"
 (
     id             SERIAL      NOT NULL PRIMARY KEY,
     uuid           VARCHAR(36) NOT NULL,
-    reporter       VARCHAR(36) NOT NULL,
+    reporters      TEXT        NOT NULL,
     reported       VARCHAR(36) NOT NULL,
-    reason         VARCHAR(20) NOT NULL,
+    reasons        TEXT        NOT NULL,
     reportTime     BIGINT      NOT NULL,
     handler        VARCHAR(36) NULL,
     handleTime     BIGINT      NULL,

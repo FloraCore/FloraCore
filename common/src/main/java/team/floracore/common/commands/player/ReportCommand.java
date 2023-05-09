@@ -99,6 +99,13 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             Message.COMMAND_REPORT_ABNORMAL.send(s);
             return;
         }
+        Report report = getStorageImplementation().getUnprocessedReports(reportedUser);
+        if (report != null) {
+            if (report.getReporters().contains(s.getUniqueId())) {
+                Message.COMMAND_REPORT_REPEAT.send(s);
+                return;
+            }
+        }
         Message.COMMAND_REPORT_SUCCESS.send(s, target, reason);
         createReport(s.getUniqueId(), reportedUser, reporterServer, reportedUserServer, reason);
     }
@@ -132,7 +139,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             }
             chat.addAll(c1);
             chat.addAll(c2);
-            getStorageImplementation().insertReport(uuid, reporter, reportedUser, reason, time, chat);
+            getStorageImplementation().addReport(uuid, reporter, reportedUser, reason, time, chat);
             service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
         });
     }
