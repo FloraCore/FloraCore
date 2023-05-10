@@ -3,7 +3,6 @@ package team.floracore.common.commands.player;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.specifier.*;
 import de.myzelyam.api.vanish.*;
-import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.floracore.api.commands.report.*;
@@ -11,8 +10,6 @@ import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
-import team.floracore.common.gui.builder.item.*;
-import team.floracore.common.gui.guis.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.locale.data.chat.*;
 import team.floracore.common.plugin.*;
@@ -116,18 +113,9 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     @CommandMethod("reports")
     @CommandPermission("floracore.command.report.staff")
     public void reports(final @NotNull Player sender) {
-        Gui gui = Gui.gui()
-                .title(Component.text("GUI Title!"))
-                .rows(6)
-                .create();
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Message.COMMAND_REPORTS_MAIN_TITLE.send(s, 0);
 
-        GuiItem guiItem = ItemBuilder.from(Material.STONE).asGuiItem(event -> {
-            // Handle your click action here
-            System.out.println(1);
-        });
-        gui.disableAllInteractions();
-        gui.addItem(guiItem);
-        gui.open(sender);
     }
 
     private void createReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
@@ -162,16 +150,5 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             getStorageImplementation().addReport(uuid, reporter, reportedUser, reason, time, chat);
             service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
         });
-    }
-
-    public PaginatedGui getReportsGui() {
-        PaginatedGui paginatedGui = Gui.paginated()
-                .title(Component.text("GUI Title!"))
-                .rows(6)
-                .pageSize(45)
-                .create();
-        // 禁用交互
-        paginatedGui.disableAllInteractions();
-        return paginatedGui;
     }
 }
