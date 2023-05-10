@@ -34,6 +34,10 @@ public final class ReflectionWrapper {
         }
     }
 
+    public static <T> T newInstance(final Class<T> c, final Class<?>[] params, final Object... args) {
+        return newInstance(getConstructor(c, params), args);
+    }
+
     public static Class<?> getClassByName(final String n) {
         try {
             return Class.forName(n);
@@ -195,9 +199,17 @@ public final class ReflectionWrapper {
         }
     }
 
+    public static <T> T invokeMethod(final Class<?> c, final String name, final Class<?>[] params, final Object o, final Object... args) {
+        return invokeMethod(getMethod(c, name, params), o, args);
+    }
+
     public static <T> T invokeStaticMethod(final Method m, final Object... args) {
         Root.setAccessible(m, true);
         return invokeMethod(m, null, args);
+    }
+
+    public static <T> T invokeStaticMethod(final Class<?> c, final String name, final Class<?>[] params, final Object... args) {
+        return invokeStaticMethod(getMethod(c, name, params), args);
     }
 
     public static String getNMSClassName(final String c) {
@@ -318,6 +330,10 @@ public final class ReflectionWrapper {
 
     public static <T> T getStaticFieldValue(final Field f) {
         return getFieldValue(f, null);
+    }
+
+    public static <T> T getStaticFieldValue(final Class<?> c, final String name) {
+        return getStaticFieldValue(getField(c, name));
     }
 
     @SuppressWarnings("restriction")
