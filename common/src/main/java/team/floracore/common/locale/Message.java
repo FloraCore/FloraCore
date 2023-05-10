@@ -766,7 +766,7 @@ public interface Message {
 
     Args1<String> COMMAND_ITEMNAME_RESET_FROM = from -> prefixed(translatable().key("floracore.command.itemname.reset.from").color(AQUA).args(text(from).color(GREEN)));
 
-    Args1<String> COMMAND_GIVE_ITEM_NOTFOUND = itemKey -> prefixed(translatable().key("floracore.command.give.item.notfound").color(RED).args(text(itemKey).color(YELLOW)));
+    Args1<String> COMMAND_GIVE_ITEM_NOSUCH = itemKey -> prefixed(translatable().key("floracore.command.give.item.nosuch").color(RED).args(text(itemKey).color(YELLOW)));
 
     Args1<String> COMMAND_GIVE_ITEM_NODATA = itemKey -> prefixed(translatable().key("floracore.command.give.item.nodata").color(RED).args(text(itemKey).color(YELLOW)));
 

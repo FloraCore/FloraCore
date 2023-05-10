@@ -1,25 +1,31 @@
 package team.floracore.common.commands.player;
 
-import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.specifier.*;
-import cloud.commandframework.annotations.suggestions.*;
-import cloud.commandframework.context.*;
-import org.bukkit.*;
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.*;
-import org.checkerframework.checker.nullness.qual.*;
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Greedy;
+import cloud.commandframework.annotations.suggestions.Suggestions;
+import cloud.commandframework.context.CommandContext;
+import org.bukkit.Material;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.*;
-import team.floracore.common.command.*;
-import team.floracore.common.exception.*;
-import team.floracore.common.locale.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.util.*;
+import team.floracore.common.command.AbstractFloraCoreCommand;
+import team.floracore.common.exception.ItemStackNonApplicableDataValueException;
+import team.floracore.common.exception.NBTSyntaxException;
+import team.floracore.common.locale.Message;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.util.ReflectionWrapper;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.*;
 
 /**
@@ -32,6 +38,7 @@ public class GiveCommand extends AbstractFloraCoreCommand {
         super(plugin);
     }
 
+    @SuppressWarnings("RedundantSuppression")
     @CommandMethod("give <player> <item> [amount] [data] [tags]")
     public void execute(
             @NotNull CommandSender s,
@@ -44,27 +51,105 @@ public class GiveCommand extends AbstractFloraCoreCommand {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         @Nullable Material material = getMaterialByItemKey(itemKey);
         if (material == null) {
-            Message.COMMAND_GIVE_ITEM_NOTFOUND.send(sender, itemKey);
+            Message.COMMAND_GIVE_ITEM_NOSUCH.send(sender, itemKey);
             return;
         }
         amount = amount != null ? amount : 1;
-        ItemStack item = new ItemStack(material, amount);
-        if (data != null && data != 0) {
-            try {
-                setDurability(item, data);
-            } catch (ItemStackNonApplicableDataValueException e) {
-                Message.COMMAND_GIVE_ITEM_NODATA.send(sender, itemKey);
-            }
+        @Nullable Object item = getNMSItemByItemKey(itemKey);
+        if (item == null) {
+            Message.COMMAND_GIVE_ITEM_NOSUCH.send(sender, itemKey);
+            return;
         }
-        if (tags != null) {
-            try {
-                item = applyNBTTags(item, tags);
-            } catch (NBTSyntaxException e) {
-                Message.COMMAND_GIVE_ITEM_NBTSYTAXEXCEPTION.send(sender);
+        Object nmsItemStack;
+        String itemName;
+        Class<?> classItemStack;
+        try {
+            classItemStack = Class.forName("net.minecraft.world.item.ItemStack");
+//            nmsItemStack = new net.minecraft.world.item.ItemStack(item, amount);
+            nmsItemStack = ReflectionWrapper.newInstance(classItemStack, new Class[]{
+                    ReflectionWrapper.getClassByName("net.minecraft.world.level.IMaterial"),
+                    int.class
+            }, item, amount);
+            if (data != null && data != 0) {
+//                nmsItemStack.b(data); // 为物品堆设置damage
+                ReflectionWrapper.invokeMethod(classItemStack, "b", new Class[]{int.class}, nmsItemStack, data);
             }
+            if (tags != null) {
+//                NBTTagCompound nbt = MojangsonParser.a(tags); 解析NBT
+                Object nbt;
+                try {
+                    nbt = ReflectionWrapper.getClassByName("net.minecraft.nbt.MojangsonParser").getMethod("a", String.class).invoke(null, tags);
+                } catch (InvocationTargetException e) {
+                    if ("com.mojang.brigadier.exceptions.CommandSyntaxException".equals(e.getCause().getClass().getName())) {
+                        // NBT标签语法错误
+                        Message.COMMAND_GIVE_ITEM_NBTSYTAXEXCEPTION.send(sender);
+                        return;
+                    }
+                    throw new RuntimeException(e);
+                } catch (IllegalAccessException | NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                }
+                Class<?> classNBTTagCompound = ReflectionWrapper.getClassByName("net.minecraft.nbt.NBTTagCompound");
+//                nmsItemStack.c(nbt); // 为物品堆设置NBT
+                ReflectionWrapper.invokeMethod(classItemStack, "c", new Class[]{classNBTTagCompound}, nmsItemStack, nbt);
+            }
+//            IChatBaseComponent text = nmsItemStack.x(); // 获取物品名称
+            Object text = ReflectionWrapper.invokeMethod(classItemStack, "x", new Class[0], nmsItemStack);
+            Class<?> classIChatBaseComponent = ReflectionWrapper.getClassByName("net.minecraft.network.chat.IChatBaseComponent");
+//            itemName = text.getString();
+            itemName = ReflectionWrapper.invokeMethod(classIChatBaseComponent, "getString", new Class[0], text);
+        } catch (ClassNotFoundException e) {
+            classItemStack = ReflectionWrapper.getNMSClass("ItemStack");
+//            nmsItemStack = new ItemStack(item, amount, data == null ? 0 : data);
+            nmsItemStack = ReflectionWrapper.newInstance(classItemStack, new Class[]{
+                    ReflectionWrapper.getNMSClass("Item"),
+                    int.class, int.class
+            }, item, amount, data == null ? 0 : data);
+            if (tags != null) {
+//                NBTTagCompound nbt = MojangsonParser.parse(tags); 解析NBT
+                Object nbt;
+                try {
+                    nbt = ReflectionWrapper.getNMSClass("MojangsonParser").getMethod("parse", String.class).invoke(null, tags);
+                } catch (InvocationTargetException ex) {
+                    if (ReflectionWrapper.getNMSClassName("MojangsonParseException").equals(ex.getCause().getClass().getName())) {
+                        // NBT标签语法错误
+                        Message.COMMAND_GIVE_ITEM_NBTSYTAXEXCEPTION.send(sender);
+                        return;
+                    }
+                    throw new RuntimeException(ex);
+                } catch (IllegalAccessException | NoSuchMethodException ex) {
+                    throw new RuntimeException(ex);
+                }
+                Class<?> classNBTTagCompound = ReflectionWrapper.getNMSClass("NBTTagCompound");
+//                nmsItemStack.setTag(nbt);
+                ReflectionWrapper.invokeMethod(classItemStack, "setTag", new Class[]{classNBTTagCompound}, nmsItemStack, nbt);
+            }
+            itemName = ReflectionWrapper.invokeMethod(classItemStack, "getName", new Class[0], nmsItemStack);
         }
-        //noinspection DataFlowIssue
-        Message.COMMAND_GIVE_ITEM_GIVEN.send(sender, item.getItemMeta().getDisplayName(), player.getName());
+        Message.COMMAND_GIVE_ITEM_GIVEN.send(sender, itemName, player.getName());
+        Class<?> classCraftItemStack = ReflectionWrapper.getCraftBukkitClass("inventory.CraftItemStack");
+//        ItemStack itemStack = CraftItemStack.asBukkitCopy(nmsItemStack);
+        ItemStack itemStack = ReflectionWrapper.invokeStaticMethod(classCraftItemStack, "asBukkitCopy", new Class[]{classItemStack}, nmsItemStack);
+        player.getInventory().addItem(itemStack);
+    }
+
+    private @Nullable Object getNMSItemByItemKey(@NotNull String itemKey) {
+        Objects.requireNonNull(itemKey);
+        try {
+            Class<?> classBuiltInRegistries = Class.forName("net.minecraft.core.registries.BuiltInRegistries");
+//            RegistryBlocks<Item> ITEM = BuiltInRegistries.l;
+            Object ITEM = ReflectionWrapper.getStaticFieldValue(classBuiltInRegistries, "i");
+            Class<?> classMinecraftKey = ReflectionWrapper.getClassByName("net.minecraft.resources.MinecraftKey");
+//            MinecraftKey key = MinecraftKey.a(itemKey);
+            Object key = ReflectionWrapper.invokeStaticMethod(classMinecraftKey, "a", new Class[]{String.class}, itemKey);
+            Class<?> classRegistryBlocks = ReflectionWrapper.getClassByName("net.minecraft.core.RegistryBlocks");
+//            return ITEM.a(key);
+            return ReflectionWrapper.invokeMethod(classRegistryBlocks, "a", new Class[]{classMinecraftKey}, key);
+        } catch (ClassNotFoundException e) {
+            Class<?> classItem = ReflectionWrapper.getNMSClass("Item");
+//            return Item.d(itemKey);
+            return ReflectionWrapper.invokeStaticMethod(classItem, "d", new Class[]{String.class}, itemKey);
+        }
     }
 
     private @Nullable Material getMaterialByItemKey(@NotNull String itemKey) {
@@ -77,11 +162,36 @@ public class GiveCommand extends AbstractFloraCoreCommand {
             // 旧版需要调用NMS
             Class<?> classItem = ReflectionWrapper.getNMSClass("Item");
             // Item nmsItem = Item.d(item);
-            Object nmsItem = ReflectionWrapper.invokeStaticMethod(ReflectionWrapper.getMethod(classItem, "d", String.class), itemKey);
+            Object nmsItem = ReflectionWrapper.invokeStaticMethod(classItem, "d", new Class[]{String.class}, itemKey);
 //            return CraftMagicNumbers.getMaterial(nmsItem);
             Class<?> classCraftMagicNumbers = ReflectionWrapper.getCraftBukkitClass("util.CraftMagicNumbers");
             Method methodGetMaterial = ReflectionWrapper.getMethod(classCraftMagicNumbers, "getMaterial", classItem);
             return ReflectionWrapper.invokeStaticMethod(methodGetMaterial, nmsItem);
+        }
+    }
+
+    /**
+     * 通过NMS获取ItemStack名称
+     *
+     * @param itemStack ItemStack
+     * @return 通过NMS获取的ItemStack名称
+     */
+    private @NotNull String getItemNameByItemStack(@NotNull ItemStack itemStack) {
+        Class<?> classCraftItemStack = ReflectionWrapper.getCraftBukkitClass("inventory.CraftItemStack");
+//        ItemStack nmsCopy = CraftItemStack.asNMSCopy(itemStack);
+        Object nmsCopy = ReflectionWrapper.invokeStaticMethod(classCraftItemStack, "asNMSCopy", new Class[]{ItemStack.class}, itemStack);
+        try {
+            Class<?> classNMSItemStack = Class.forName("net.minecraft.world.item.ItemStack");
+//            IChatBaseComponent text = nmsCopy.x();
+            Object text = ReflectionWrapper.invokeMethod(classNMSItemStack, "x", new Class[0], nmsCopy);
+            Class<?> classIChatBaseComponent = ReflectionWrapper.getClassByName("net.minecraft.network.chat.IChatBaseComponent");
+//            return text.getString();
+            return ReflectionWrapper.invokeMethod(classIChatBaseComponent, "getString", new Class[0], text);
+        } catch (ClassNotFoundException e) {
+            // 旧版直接getName()
+            Class<?> classNMSItemStack = ReflectionWrapper.getNMSClass("ItemStack");
+//            return nmsCopy.getName();
+            return ReflectionWrapper.invokeMethod(classNMSItemStack, "getName", new Class[0], nmsCopy);
         }
     }
 
@@ -92,13 +202,13 @@ public class GiveCommand extends AbstractFloraCoreCommand {
 //            if (meta instanceof Damageable)
             if (classDamageable.isInstance(meta)) {
 //                ((Damageable) meta).setDamage(durability);
-                ReflectionWrapper.invokeMethod(ReflectionWrapper.getMethod(classDamageable, "setDamage", Integer.class), meta, durability);
+                ReflectionWrapper.invokeMethod(classDamageable, "setDamage", new Class[]{int.class}, meta, durability);
                 return;
             }
             throw new ItemStackNonApplicableDataValueException();
         } catch (ClassNotFoundException e) {
             // 旧版可以直接调用setDurability
-            ReflectionWrapper.invokeMethod(ReflectionWrapper.getMethod(ItemStack.class, "setDurability", Short.class), item, (short) durability);
+            ReflectionWrapper.invokeMethod(ItemStack.class, "setDurability", new Class[]{short.class}, item, (short) durability);
         }
     }
 
@@ -117,7 +227,7 @@ public class GiveCommand extends AbstractFloraCoreCommand {
             Object nbt = methodParse.invoke(null, tags);
             Class<?> classCraftItemStack = ReflectionWrapper.getCraftBukkitClass("inventory.CraftItemStack");
             Method methodAsNMSCopy = ReflectionWrapper.getMethod(classCraftItemStack, "asNMSCopy", ItemStack.class);
-//            net.minecraft.server.v1_8_R3.ItemStack nmsCopy = CraftItemStack.asNMSCopy(itemStack);
+//            ItemStack nmsCopy = CraftItemStack.asNMSCopy(itemStack);
             Object nmsCopy = ReflectionWrapper.invokeStaticMethod(methodAsNMSCopy, itemStack);
             @SuppressWarnings("OptionalGetWithoutIsPresent")
             Method methodSetTag = ReflectionWrapper.findPossibleMethod(nmsCopy.getClass(),
@@ -130,8 +240,10 @@ public class GiveCommand extends AbstractFloraCoreCommand {
 //            return CraftItemStack.asBukkitCopy(nmsCopy);
             return ReflectionWrapper.invokeStaticMethod(methodAsBukkitCopy, nmsCopy);
         } catch (InvocationTargetException e) {
+            Throwable cause = e.getCause();
 //            } catch (CommandSyntaxException e) {
-            if ("MojangsonParseException".equals(e.getClass().getSimpleName()) || "com.mojang.brigadier.exceptions.CommandSyntaxException".equals(e.getClass().getName())) {
+            if ("com.mojang.brigadier.exceptions.CommandSyntaxException".equals(cause.getClass().getName()) ||
+            ReflectionWrapper.getNMSClassName("MojangsonParseException").equals(cause.getClass().getName())) {
                 throw new NBTSyntaxException(e);
             }
             throw new RuntimeException(e);

@@ -116,7 +116,7 @@ public class CommandManager {
         this.annotationParser.parse(new FlyCommand(plugin));
         this.annotationParser.parse(new FoodCommand(plugin));
         this.annotationParser.parse(new GameModeCommand(plugin));
-        this.annotationParser.parse(new GiveCommand(plugin)); // TODO 待测试命令
+        this.annotationParser.parse(new GiveCommand(plugin));
         this.annotationParser.parse(new HasPermissionCommand(plugin));
         this.annotationParser.parse(new HatCommand(plugin));
         this.annotationParser.parse(new HealCommand(plugin));
