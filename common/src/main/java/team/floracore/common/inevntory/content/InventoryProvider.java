@@ -7,5 +7,4 @@ public interface InventoryProvider {
 
     default void update(Player player, InventoryContents contents) {
     }
-
 }

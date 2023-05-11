@@ -3,18 +3,24 @@ package team.floracore.common.commands.player;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.specifier.*;
 import de.myzelyam.api.vanish.*;
+import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
 import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
+import team.floracore.common.inevntory.*;
+import team.floracore.common.inevntory.content.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.locale.data.chat.*;
+import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.*;
 
 import java.util.*;
 import java.util.stream.*;
@@ -118,7 +124,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     @CommandPermission("floracore.command.report.staff")
     public void reports(final @NotNull Player player) {
         Sender s = getPlugin().getSenderFactory().wrap(player);
-        // getReportsMainGui(player).open(player);
+        getReportsMainGui(player).open(player);
     }
 
     private void createReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
@@ -155,47 +161,52 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         });
     }
 
-    /*private PaginatedGui getReportsMainGui(Player player) {
+    private SmartInventory getReportsMainGui(Player player) {
         UUID uuid = player.getUniqueId();
-        Component title = TranslationManager.render(Message.COMMAND_REPORTS_MAIN_TITLE.build(0), uuid);
-        PaginatedGui gui = Gui.paginated()
-                .title(title)
-                .rows(6)
-                .pageSize(27)
-                .create();
-        gui.disableAllInteractions();
-        title = TranslationManager.render(Message.COMMAND_REPORTS_MAIN_TITLE.build(gui.getCurrentPageNum()), uuid);
-        gui.updateTitle(title);
-
-        for (int i = 0; i < 9; i++) {
-            GuiItem empty;
-            if (ADVANCED_VERSION) {
-                empty = ItemBuilder.from(Material.GRAY_STAINED_GLASS_PANE).name(Component.space()).asGuiItem();
-            } else {
-                empty = ItemBuilder.from(new ItemStack(Material.matchMaterial("STAINED_GLASS_PANE"), 1, (short) 7)).name(Component.space()).asGuiItem();
+        Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid);
+        SmartInventory.Builder builder = SmartInventory.builder();
+        builder.title(title);
+        builder.closeable(true);
+        builder.size(6, 9);
+        builder.provider((player1, contents) -> {
+            Pagination pagination = contents.pagination();
+            ClickableItem[] items = new ClickableItem[54];
+            for (int i = 0; i < items.length; i++)
+                items[i] = ClickableItem.empty(new ItemStack(Material.STONE, i));
+            pagination.setItems(items);
+            pagination.setItemsPerPage(21);
+            contents.set(0, 4, ClickableItem.empty(new ItemBuilder(Material.BOOKSHELF).displayName(title).build()));
+            int i = 19;
+            for (ClickableItem pageItem : pagination.getPageItems()) {
+                i++;
+                if (i % 9 == 0) {
+                    i = i + 2;
+                }
+                contents.set(SmartInventory.getInventoryRow(i), SmartInventory.getInventoryColumn(i), pageItem);
             }
-            gui.setItem(6, i + 1, empty);
-            gui.setItem(2, i + 1, empty);
-        }
-
-        if (gui.getPagesNum() > 0) {
-            GuiItem previous = ItemBuilder.from(Material.PAPER).setName("Previous").asGuiItem(event -> gui.previous());
-            gui.setItem(6, 4, previous);
-        }
-
-        if (gui.getCurrentPageNum() + 1 <= gui.getPagesNum()) {
-            GuiItem next = ItemBuilder.from(Material.PAPER).setName("Next").asGuiItem(event -> gui.next());
-            gui.setItem(6, 6, next);
-        }
-
-        GuiItem close = ItemBuilder.from(Material.BARRIER).setName("Close").asGuiItem(event -> gui.close(player));
-        gui.setItem(6, 5, close);
-
-        for (int i = 0; i < 100; i++) {
-            GuiItem e = ItemBuilder.from(Material.STONE).setName(String.valueOf(i)).asGuiItem();
-            gui.addItem(e);
-        }
-
-        return gui;
-    }*/
+            for (int j = 0; j < 9; j++) {
+                ItemStack empty;
+                if (ADVANCED_VERSION) {
+                    empty = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).displayName(Component.space()).build();
+                } else {
+                    empty = new ItemBuilder(new ItemStack(Material.matchMaterial("STAINED_GLASS_PANE"), 1, (short) 7)).displayName(Component.space()).build();
+                }
+                contents.set(1, j, ClickableItem.empty(empty));
+                contents.set(5, j, ClickableItem.empty(empty));
+            }
+            if (!pagination.isFirst()) {
+                Component previous = TranslationManager.render(Message.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
+                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
+                contents.set(5, 0, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(previous).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.previous().getPage())));
+            }
+            if (!pagination.isLast()) {
+                Component next = TranslationManager.render(Message.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
+                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2), uuid);
+                contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(next).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.next().getPage())));
+            }
+            Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
+        });
+        return builder.build();
+    }
 }

@@ -36,6 +36,22 @@ public class SmartInventory {
         return new Builder();
     }
 
+    public static int getInventoryRow(int slot) {
+        int i = (slot / 9);
+        if (slot % 9 == 0) {
+            i--;
+        }
+        return i;
+    }
+
+    public static int getInventoryColumn(int slot) {
+        int i = (slot % 9) - 1;
+        if (i < 0) {
+            i = 8;
+        }
+        return i;
+    }
+
     public Inventory open(Player player) {
         return open(player, 0);
     }
@@ -136,7 +152,6 @@ public class SmartInventory {
     }
 
     public static final class Builder {
-
         private final List<InventoryListener<? extends Event>> listeners = new ArrayList<>();
         private String id = "unknown";
         private String title = "";
@@ -225,5 +240,4 @@ public class SmartInventory {
             return inv;
         }
     }
-
 }

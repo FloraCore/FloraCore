@@ -1,18 +1,25 @@
 package team.floracore.common.inevntory.opener;
 
-import com.google.common.base.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 import team.floracore.common.inevntory.*;
 
+import static com.google.common.base.Strings.*;
+
 public class ChestInventoryOpener implements InventoryOpener {
+    public static void checkArgument(boolean b, String errorMessageTemplate, int p1) {
+        if (!b) {
+            throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1));
+        }
+    }
+
     @Override
     public Inventory open(SmartInventory inv, Player player) {
-        Preconditions.checkArgument(inv.getColumns() == 9,
+        checkArgument(inv.getColumns() == 9,
                 "The column count for the chest inventory must be 9, found: %s.", inv.getColumns());
-        Preconditions.checkArgument(inv.getRows() >= 1 && inv.getRows() <= 6,
+        checkArgument(inv.getRows() >= 1 && inv.getRows() <= 6,
                 "The row count for the chest inventory must be between 1 and 6, found: %s", inv.getRows());
         InventoryManager manager = inv.getManager();
         Inventory handle = Bukkit.createInventory(player, inv.getRows() * inv.getColumns(), inv.getTitle());
@@ -26,5 +33,4 @@ public class ChestInventoryOpener implements InventoryOpener {
     public boolean supports(InventoryType type) {
         return type == InventoryType.CHEST || type == InventoryType.ENDER_CHEST;
     }
-
 }

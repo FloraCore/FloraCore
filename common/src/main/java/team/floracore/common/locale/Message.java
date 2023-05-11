@@ -841,14 +841,25 @@ public interface Message {
             // 这名玩家的数据异常!
             .key("floracore.command.report.abnormal").color(RED));
 
-    Args1<Integer> COMMAND_REPORTS_MAIN_TITLE = (page) -> translatable()
+    Args0 COMMAND_REPORTS_GUI_MAIN_TITLE = () -> translatable()
             // 举报列表
-            .key("floracore.command.misc.reports.gui.main.title").color(GOLD)
-            .append(space())
-            .append(ARROW.color(GRAY))
-            // 第 {0} 页
-            .append(space())
-            .append(translatable().key("floracore.command.misc.reports.gui.main.title.page").args(text(page)).color(YELLOW)).build();
+            .key("floracore.command.misc.reports.gui.main.title").color(GOLD).build();
+
+    Args0 COMMAND_MISC_GUI_CLOSE = () -> translatable()
+            // 关闭
+            .key("floracore.command.misc.gui.close").color(RED).build();
+
+    Args0 COMMAND_MISC_GUI_PREVIOUS_PAGE = () -> translatable()
+            // 上一页
+            .key("floracore.command.misc.gui.previous-page").color(GREEN).build();
+
+    Args0 COMMAND_MISC_GUI_NEXT_PAGE = () -> translatable()
+            // 下一页
+            .key("floracore.command.misc.gui.next-page").color(GREEN).build();
+
+    Args1<Integer> COMMAND_MISC_GUI_TURN_TO_PAGE = (page) -> translatable()
+            // 转到第 {0} 页
+            .key("floracore.command.misc.gui.turn-to-page").args(text(page)).color(GRAY).build();
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();
