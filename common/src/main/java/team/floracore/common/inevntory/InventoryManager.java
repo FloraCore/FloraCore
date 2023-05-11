@@ -8,8 +8,8 @@ import org.bukkit.event.player.*;
 import org.bukkit.event.server.*;
 import org.bukkit.inventory.*;
 import org.bukkit.plugin.*;
+import org.bukkit.plugin.java.*;
 import org.bukkit.scheduler.*;
-import org.floracore.api.*;
 import team.floracore.common.inevntory.content.*;
 import team.floracore.common.inevntory.opener.*;
 
@@ -17,7 +17,7 @@ import java.util.*;
 import java.util.logging.*;
 
 public class InventoryManager {
-    private final Plugin plugin = FloraCoreProvider.get().getPlugin();
+    private final JavaPlugin plugin;
     private final PluginManager pluginManager;
     private final Map<UUID, SmartInventory> inventories;
     private final Map<UUID, InventoryContents> contents;
@@ -25,7 +25,8 @@ public class InventoryManager {
     private final List<InventoryOpener> defaultOpeners;
     private final List<InventoryOpener> openers;
 
-    public InventoryManager() {
+    public InventoryManager(JavaPlugin plugin) {
+        this.plugin = plugin;
         this.pluginManager = Bukkit.getPluginManager();
         this.inventories = new HashMap<>();
         this.contents = new HashMap<>();

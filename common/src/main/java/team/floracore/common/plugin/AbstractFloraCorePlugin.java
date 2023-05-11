@@ -35,6 +35,7 @@ import java.util.concurrent.*;
 import java.util.stream.*;
 
 public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
+    private static InventoryManager inventoryManager;
     // Active plugins on the server
     private final Map<String, List<String>> loadedPlugins = new HashMap<>();
     // init during load
@@ -57,7 +58,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private ProtocolManager protocolManager;
     private ChatManager chatManager;
     private BungeeUtil bungeeUtil;
-    private static InventoryManager inventoryManager;
+
+    public static InventoryManager getInventoryManager() {
+        return inventoryManager;
+    }
 
     /**
      * Performs the initial actions to load the plugin
@@ -150,7 +154,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.chatManager = new ChatManager(this);
 
         getLogger().info("Loading inventory manager...");
-        inventoryManager = new InventoryManager();
+        inventoryManager = new InventoryManager(getBootstrap().getPlugin());
         inventoryManager.init();
 
         // register with the FC API
@@ -383,9 +387,5 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
             return loadedPlugins.get(name).contains(author);
         }
         return false;
-    }
-
-    public static InventoryManager getInventoryManager() {
-        return inventoryManager;
     }
 }
