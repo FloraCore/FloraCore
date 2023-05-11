@@ -1,11 +1,13 @@
 package team.floracore.common.gui.guis;
 
+import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.gui.components.*;
+import team.floracore.common.gui.components.util.*;
 
 import java.util.*;
 
@@ -250,6 +252,12 @@ public class PaginatedGui extends BaseGui {
         setUpdating(false);
 
         return this;
+    }
+
+    @Override
+    @NotNull
+    public BaseGui updateTitle(@NotNull final Component title) {
+        return updateTitle(Legacy.SERIALIZER.serialize(title));
     }
 
     /**

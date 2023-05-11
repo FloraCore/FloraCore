@@ -6,7 +6,6 @@ import net.kyori.adventure.key.*;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.translation.*;
 import net.kyori.adventure.util.*;
-import org.checkerframework.checker.nullness.qual.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.floracore.api.*;
 import org.floracore.api.data.*;
@@ -79,16 +78,16 @@ public class TranslationManager {
         CompletableFuture<Locale> lf = localeCache.get(uuid, u -> {
             String value = FloraCoreProvider.get().getDataAPI().getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
             if (value != null) {
-                return TranslationManager.parseLocale(value);
+                return parseLocale(value);
             }
             return null;
         });
         Locale locale = lf.join();
         if (locale != null) {
             localeCache.put(uuid, lf);
-            component = TranslationManager.render(component, locale);
+            return render(component, locale);
         }
-        return component;
+        return render(component);
     }
 
     public static @Nullable Locale parseLocale(@Nullable String locale) {

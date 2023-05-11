@@ -436,6 +436,12 @@ public abstract class BaseGui implements InventoryHolder {
         return this;
     }
 
+    @Contract("_ -> this")
+    @NotNull
+    public BaseGui updateTitle(@NotNull final Component title) {
+        return updateTitle(Legacy.SERIALIZER.serialize(title));
+    }
+
     /**
      * Updates the specified item in the GUI at runtime, without creating a new {@link GuiItem}.
      *

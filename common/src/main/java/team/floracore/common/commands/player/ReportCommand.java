@@ -3,15 +3,20 @@ package team.floracore.common.commands.player;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.specifier.*;
 import de.myzelyam.api.vanish.*;
+import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
 import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
+import team.floracore.common.gui.builder.item.*;
+import team.floracore.common.gui.guis.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.locale.data.chat.*;
+import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -19,12 +24,16 @@ import team.floracore.common.storage.misc.floracore.tables.*;
 import java.util.*;
 import java.util.stream.*;
 
+import static team.floracore.common.util.ReflectionWrapper.*;
+
 /**
  * Report命令
  */
 @CommandPermission("floracore.command.report")
 @CommandDescription("举报一名玩家")
 public class ReportCommand extends AbstractFloraCoreCommand {
+    public static final boolean ADVANCED_VERSION = isVersionGreaterThanOrEqual(getVersion(), "v1_13_R1");
+
     public ReportCommand(FloraCorePlugin plugin) {
         super(plugin);
     }
@@ -112,10 +121,9 @@ public class ReportCommand extends AbstractFloraCoreCommand {
 
     @CommandMethod("reports")
     @CommandPermission("floracore.command.report.staff")
-    public void reports(final @NotNull Player sender) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
-        Message.COMMAND_REPORTS_MAIN_TITLE.send(s, 0);
-
+    public void reports(final @NotNull Player player) {
+        Sender s = getPlugin().getSenderFactory().wrap(player);
+        getReportsMainGui(player).open(player);
     }
 
     private void createReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
@@ -150,5 +158,49 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             getStorageImplementation().addReport(uuid, reporter, reportedUser, reason, time, chat);
             service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
         });
+    }
+
+    private PaginatedGui getReportsMainGui(Player player) {
+        UUID uuid = player.getUniqueId();
+        Component title = TranslationManager.render(Message.COMMAND_REPORTS_MAIN_TITLE.build(0), uuid);
+        PaginatedGui gui = Gui.paginated()
+                .title(title)
+                .rows(6)
+                .pageSize(27)
+                .create();
+        gui.disableAllInteractions();
+        title = TranslationManager.render(Message.COMMAND_REPORTS_MAIN_TITLE.build(gui.getCurrentPageNum()), uuid);
+        gui.updateTitle(title);
+
+        for (int i = 0; i < 9; i++) {
+            GuiItem empty;
+            if (ADVANCED_VERSION) {
+                empty = ItemBuilder.from(Material.GRAY_STAINED_GLASS_PANE).name(Component.space()).asGuiItem();
+            } else {
+                empty = ItemBuilder.from(new ItemStack(Material.matchMaterial("STAINED_GLASS_PANE"), 1, (short) 7)).name(Component.space()).asGuiItem();
+            }
+            gui.setItem(6, i + 1, empty);
+            gui.setItem(2, i + 1, empty);
+        }
+
+        if (gui.getPagesNum() > 0) {
+            GuiItem previous = ItemBuilder.from(Material.PAPER).setName("Previous").asGuiItem(event -> gui.previous());
+            gui.setItem(6, 4, previous);
+        }
+
+        if (gui.getCurrentPageNum() + 1 <= gui.getPagesNum()) {
+            GuiItem next = ItemBuilder.from(Material.PAPER).setName("Next").asGuiItem(event -> gui.next());
+            gui.setItem(6, 6, next);
+        }
+
+        GuiItem close = ItemBuilder.from(Material.BARRIER).setName("Close").asGuiItem(event -> gui.close(player));
+        gui.setItem(6, 5, close);
+
+        for (int i = 0; i < 100; i++) {
+            GuiItem e = ItemBuilder.from(Material.STONE).setName(String.valueOf(i)).asGuiItem();
+            gui.addItem(e);
+        }
+
+        return gui;
     }
 }
