@@ -12,6 +12,7 @@ import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
+import team.floracore.common.inevntory.*;
 import team.floracore.common.listener.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.locale.data.*;
@@ -56,6 +57,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private ProtocolManager protocolManager;
     private ChatManager chatManager;
     private BungeeUtil bungeeUtil;
+    private static InventoryManager inventoryManager;
 
     /**
      * Performs the initial actions to load the plugin
@@ -146,6 +148,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.listenerManager = new ListenerManager(this);
         this.commandManager = new CommandManager(this);
         this.chatManager = new ChatManager(this);
+
+        getLogger().info("Loading inventory manager...");
+        inventoryManager = new InventoryManager();
+        inventoryManager.init();
 
         // register with the FC API
         this.apiProvider = new FloraCoreApiProvider(this);
@@ -377,5 +383,9 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
             return loadedPlugins.get(name).contains(author);
         }
         return false;
+    }
+
+    public static InventoryManager getInventoryManager() {
+        return inventoryManager;
     }
 }

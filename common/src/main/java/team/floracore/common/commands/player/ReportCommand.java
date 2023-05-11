@@ -3,20 +3,15 @@ package team.floracore.common.commands.player;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.specifier.*;
 import de.myzelyam.api.vanish.*;
-import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
 import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
-import team.floracore.common.gui.builder.item.*;
-import team.floracore.common.gui.guis.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.locale.data.chat.*;
-import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -123,7 +118,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     @CommandPermission("floracore.command.report.staff")
     public void reports(final @NotNull Player player) {
         Sender s = getPlugin().getSenderFactory().wrap(player);
-        getReportsMainGui(player).open(player);
+        // getReportsMainGui(player).open(player);
     }
 
     private void createReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
@@ -160,7 +155,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         });
     }
 
-    private PaginatedGui getReportsMainGui(Player player) {
+    /*private PaginatedGui getReportsMainGui(Player player) {
         UUID uuid = player.getUniqueId();
         Component title = TranslationManager.render(Message.COMMAND_REPORTS_MAIN_TITLE.build(0), uuid);
         PaginatedGui gui = Gui.paginated()
@@ -202,5 +197,5 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         }
 
         return gui;
-    }
+    }*/
 }
