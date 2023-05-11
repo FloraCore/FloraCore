@@ -19,7 +19,6 @@ public class ApiChat implements ChatAPI {
     private final ChatManager chatManager;
     AsyncCache<UUID, List<Data>> chatDataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
 
-
     public ApiChat(FloraCorePlugin plugin) {
         this.plugin = plugin;
         this.chatManager = plugin.getChatManager();
