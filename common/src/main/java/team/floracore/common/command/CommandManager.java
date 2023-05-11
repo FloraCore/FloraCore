@@ -11,6 +11,7 @@ import cloud.commandframework.paper.*;
 import org.bukkit.command.*;
 import team.floracore.common.commands.item.*;
 import team.floracore.common.commands.misc.FloraCoreCommand;
+import team.floracore.common.commands.misc.*;
 import team.floracore.common.commands.player.*;
 import team.floracore.common.commands.server.*;
 import team.floracore.common.commands.test.*;
@@ -107,6 +108,7 @@ public class CommandManager {
 
         // misc
         this.annotationParser.parse(new FloraCoreCommand(plugin));
+        this.annotationParser.parse(new LanguageCommand(plugin));
 
         // player
         this.annotationParser.parse(new AirCommand(plugin));
