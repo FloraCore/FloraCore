@@ -1,11 +1,16 @@
 package team.floracore.common.locale.translation;
 
+import com.github.benmanes.caffeine.cache.*;
 import com.google.common.collect.*;
 import net.kyori.adventure.key.*;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.translation.*;
 import net.kyori.adventure.util.*;
 import org.checkerframework.checker.nullness.qual.*;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.floracore.api.*;
+import org.floracore.api.data.*;
+import org.jetbrains.annotations.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.util.*;
 
@@ -21,7 +26,7 @@ public class TranslationManager {
      * The default locale used by FloraCore messages
      */
     public static final Locale DEFAULT_LOCALE = Locale.SIMPLIFIED_CHINESE;
-
+    private static final AsyncCache<UUID, Locale> localeCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     private final FloraCorePlugin plugin;
     private final Set<Locale> installed = ConcurrentHashMap.newKeySet();
     private final Path translationsDirectory;
@@ -68,6 +73,22 @@ public class TranslationManager {
             }
         }
         return GlobalTranslator.render(component, locale);
+    }
+
+    public static Component render(Component component, @NotNull UUID uuid) {
+        CompletableFuture<Locale> lf = localeCache.get(uuid, u -> {
+            String value = FloraCoreProvider.get().getDataAPI().getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
+            if (value != null) {
+                return TranslationManager.parseLocale(value);
+            }
+            return null;
+        });
+        Locale locale = lf.join();
+        if (locale != null) {
+            localeCache.put(uuid, lf);
+            component = TranslationManager.render(component, locale);
+        }
+        return component;
     }
 
     public static @Nullable Locale parseLocale(@Nullable String locale) {
