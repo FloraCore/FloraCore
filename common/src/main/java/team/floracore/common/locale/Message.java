@@ -841,6 +841,52 @@ public interface Message {
             // 这名玩家的数据异常!
             .key("floracore.command.report.abnormal").color(RED));
 
+    Args1<Integer> COMMAND_REPORTS_GUI_PAGE = (page) -> translatable()
+            // 第 {0} 页
+            .key("floracore.command.misc.reports.gui.page").args(text(page, GREEN)).color(AQUA).build();
+
+    Args1<Integer> COMMAND_REPORTS_GUI_MAIN_REPORT_TITLE = (page) -> translatable()
+            // 举报 {0}
+            .key("floracore.command.misc.reports.gui.main.report.title").args(text("#" + page, GRAY)).color(RED).build();
+
+    Args1<Component> COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS = (status) -> translatable()
+            // 状态: {0}
+            .key("floracore.command.misc.reports.gui.main.report.status").args(status).color(GRAY).build();
+
+    Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_TIME = (time) -> translatable()
+            // 日期: {0}
+            .key("floracore.command.misc.reports.gui.main.report.report-time").args(text(time, YELLOW)).color(GRAY).build();
+
+    Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORTER = (reporters) -> translatable()
+            // 举报者: {0}
+            .key("floracore.command.misc.reports.gui.main.report.reporter").args(text(reporters, GREEN)).color(GRAY).build();
+
+    Args2<String, Boolean> COMMAND_REPORTS_GUI_MAIN_REPORTED = (reported, online) -> translatable()
+            // 被举报者: {0}
+            .key("floracore.command.misc.reports.gui.main.report.reported")
+            .args(text(reported, RED),
+                    OPEN_BRACKET.append(translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline")).append(CLOSE_BRACKET).color(online ? GREEN : RED)).color(GRAY).build();
+
+    Args1<String> COMMAND_REPORTS_GUI_MAIN_REASON = (reason) -> translatable()
+            // 原因: {0}
+            .key("floracore.command.misc.reports.gui.main.report.reason").args(text(reason, AQUA)).color(GRAY).build();
+
+    Args0 COMMAND_REPORTS_CLICK_TO_LOOK = () -> translatable()
+            // 点击查看详情!
+            .key("floracore.command.misc.report.click-to-look").color(YELLOW).build();
+
+    Args0 COMMAND_REPORTS_STATUS_WAITING = () -> translatable()
+            // 等待中
+            .key("floracore.command.misc.reports.status.waiting").color(GREEN).build();
+
+    Args0 COMMAND_REPORTS_STATUS_ACCEPTED = () -> translatable()
+            // 受理中
+            .key("floracore.command.misc.reports.status.accepted").color(YELLOW).build();
+
+    Args0 COMMAND_REPORTS_STATUS_ENDED = () -> translatable()
+            // 已完成
+            .key("floracore.command.misc.reports.status.ended").color(RED).build();
+
     Args0 COMMAND_REPORTS_GUI_MAIN_TITLE = () -> translatable()
             // 举报列表
             .key("floracore.command.misc.reports.gui.main.title").color(GOLD).build();
@@ -863,7 +909,7 @@ public interface Message {
 
     Args0 COMMAND_LANGUAGE_TITLE = () -> translatable()
             // 切换你的显示语言
-            .key("floracore.command.misc.language.title").color(GOLD).build();
+            .key("floracore.command.misc.language.title").color(BLACK).build();
 
     Args1<String> COMMAND_LANGUAGE_CHANGE = (language) -> translatable()
             // 点击切换为 {0} !

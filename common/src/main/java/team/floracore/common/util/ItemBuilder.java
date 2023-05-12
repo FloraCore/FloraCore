@@ -313,10 +313,18 @@ public class ItemBuilder {
      *
      * @param lore List containing String as Lines for the ItemStack Lore
      */
-    public ItemBuilder lore(List<String> lore) {
+    public ItemBuilder loreString(List<String> lore) {
         Validate.notNull(lore, "The lores are null.");
         this.lore = lore;
         return this;
+    }
+
+    public ItemBuilder lore(List<Component> lore) {
+        List<String> ret = new ArrayList<>();
+        for (Component component : lore) {
+            ret.add(SERIALIZER.serialize(component));
+        }
+        return loreString(ret);
     }
 
     /**

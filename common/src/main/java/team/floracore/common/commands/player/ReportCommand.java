@@ -23,6 +23,7 @@ import team.floracore.common.storage.misc.floracore.tables.*;
 import team.floracore.common.util.*;
 
 import java.util.*;
+import java.util.concurrent.*;
 import java.util.stream.*;
 
 import static team.floracore.common.util.ReflectionWrapper.*;
@@ -34,9 +35,29 @@ import static team.floracore.common.util.ReflectionWrapper.*;
 @CommandDescription("举报一名玩家")
 public class ReportCommand extends AbstractFloraCoreCommand {
     public static final boolean ADVANCED_VERSION = isVersionGreaterThanOrEqual(getVersion(), "v1_13_R1");
+    private final List<Report> reports = new ArrayList<>();
 
     public ReportCommand(FloraCorePlugin plugin) {
         super(plugin);
+        reports.addAll(getStorageImplementation().getReports());
+        plugin.getBootstrap().getScheduler().asyncRepeating(() -> {
+            reports.clear();
+            reports.addAll(getStorageImplementation().getReports());
+        }, 3, TimeUnit.SECONDS);
+    }
+
+    public static String joinList(List<String> list, int number) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < Math.min(list.size(), number); i++) {
+            if (i > 0) {
+                sb.append(", ");
+            }
+            sb.append(list.get(i));
+        }
+        if (list.size() > number) {
+            sb.append(", ...");
+        }
+        return sb.toString();
     }
 
     @CommandMethod("report-tp <target>")
@@ -164,18 +185,64 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     private SmartInventory getReportsMainGui(Player player) {
         UUID uuid = player.getUniqueId();
         Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid);
+        List<Report> filteredReports = reports.stream()
+                .filter(report -> report.getHandler() == null || report.getHandler().equals(uuid))
+                .filter(report -> report.getHandler() == null || !Boolean.FALSE.equals(report.getConclusion()))
+                .sorted(Comparator.comparingInt(Report::getId))
+                .collect(Collectors.toList());
         SmartInventory.Builder builder = SmartInventory.builder();
         builder.title(title);
         builder.closeable(true);
         builder.size(6, 9);
         builder.provider((player1, contents) -> {
             Pagination pagination = contents.pagination();
-            ClickableItem[] items = new ClickableItem[54];
-            for (int i = 0; i < items.length; i++)
-                items[i] = ClickableItem.empty(new ItemStack(Material.STONE, i));
+            ClickableItem[] items = new ClickableItem[filteredReports.size()];
+            for (int i = 0; i < items.length; i++) {
+                Report report = filteredReports.get(i);
+                int id = report.getId();
+                Component rt = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_TITLE.build(id), uuid);
+                List<Component> lore = new ArrayList<>();
+                lore.add(Component.space());
+                if (report.getHandler() == null) {
+                    Component waiting = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_WAITING.build(), uuid);
+                    lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(waiting), uuid));
+                } else {
+                    if (report.getConclusion()) {
+                        Component ended = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_ENDED.build(), uuid);
+                        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(ended), uuid));
+                    } else {
+                        Component accepted = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_ACCEPTED.build(), uuid);
+                        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(accepted), uuid));
+                    }
+                }
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_TIME.build(DurationFormatter.getTimeFromTimestamp(report.getReportTime())), uuid));
+                lore.add(Component.space());
+                List<String> rns = new ArrayList<>();
+                for (UUID reporter : report.getReporters()) {
+                    String name = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
+                    if (name != null) {
+                        rns.add(name);
+                    }
+                }
+                String resultRns = joinList(rns, 3);
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid));
+                String reported = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(report.getReported());
+                if (reported == null) {
+                    reported = "UNKNOWN";
+                }
+                boolean online = getPlugin().getApiProvider().getPlayerAPI().isOnline(report.getReported());
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(reported, online), uuid));
+                String resultReason = joinList(report.getReasons(), 2);
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REASON.build(resultReason), uuid));
+                lore.add(Component.space());
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
+                ItemBuilder ri = new ItemBuilder(Material.PAPER).displayName(rt).lore(lore);
+                items[i] = ClickableItem.empty(ri.build());
+            }
             pagination.setItems(items);
             pagination.setItemsPerPage(21);
-            contents.set(0, 4, ClickableItem.empty(new ItemBuilder(Material.BOOKSHELF).displayName(title).build()));
+            Component t = TranslationManager.render(Message.COMMAND_REPORTS_GUI_PAGE.build(pagination.getPage() + 1), uuid);
+            contents.set(0, 4, ClickableItem.empty(new ItemBuilder(Material.BOOKSHELF).displayName(title).lore(t).build()));
             int i = 19;
             for (ClickableItem pageItem : pagination.getPageItems()) {
                 i++;

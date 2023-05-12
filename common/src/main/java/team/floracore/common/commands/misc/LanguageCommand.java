@@ -28,7 +28,7 @@ public class LanguageCommand extends AbstractFloraCoreCommand {
         super(plugin);
     }
 
-    @CommandMethod("language")
+    @CommandMethod("language|lang")
     public void language(final @NonNull Player player) {
         getLanguageGui(player).open(player);
     }
@@ -53,7 +53,7 @@ public class LanguageCommand extends AbstractFloraCoreCommand {
             ClickableItem[] items = new ClickableItem[finalAvailableTranslations.size() + 1];
             Locale defaultLanguage = TranslationManager.DEFAULT_LOCALE;
             String dpl = TranslationManager.localeDisplayName(defaultLanguage);
-            Component dc = TranslationManager.render(Message.COMMAND_LANGUAGE_CHANGE.build(dpl), defaultLanguage);
+            Component dc = TranslationManager.render(Message.COMMAND_LANGUAGE_CHANGE.build(dpl));
             ItemBuilder dib = new ItemBuilder(Material.PAPER).displayName(Component.text(dpl).color(NamedTextColor.GREEN)).lore(dc);
             items[0] = ClickableItem.of(dib.build(), inventoryClickEvent -> {
                 String value = defaultLanguage.toLanguageTag();
