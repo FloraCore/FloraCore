@@ -861,6 +861,18 @@ public interface Message {
             // 转到第 {0} 页
             .key("floracore.command.misc.gui.turn-to-page").args(text(page)).color(GRAY).build();
 
+    Args0 COMMAND_LANGUAGE_TITLE = () -> translatable()
+            // 切换你的显示语言
+            .key("floracore.command.misc.language.title").color(GOLD).build();
+
+    Args1<String> COMMAND_LANGUAGE_CHANGE = (language) -> translatable()
+            // 点击切换为 {0} !
+            .key("floracore.command.misc.language.change").args(text(language)).color(YELLOW).build();
+
+    Args1<String> COMMAND_LANGUAGE_CHANGE_SUCCESS = (language) -> translatable()
+            // 你已成功将你的显示语言更改为 {0} !
+            .key("floracore.command.language.change.success").args(text(language, GREEN)).color(AQUA).build();
+
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();
     }

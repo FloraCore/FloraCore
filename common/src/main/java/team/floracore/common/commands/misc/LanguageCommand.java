@@ -3,18 +3,22 @@ package team.floracore.common.commands.misc;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.processing.*;
 import net.kyori.adventure.text.*;
+import net.kyori.adventure.text.format.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
 import org.checkerframework.checker.nullness.qual.*;
+import org.floracore.api.data.*;
 import team.floracore.common.command.*;
+import team.floracore.common.http.*;
 import team.floracore.common.inevntory.*;
 import team.floracore.common.inevntory.content.*;
 import team.floracore.common.locale.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
 import team.floracore.common.util.*;
 
+import java.io.*;
 import java.util.*;
 
 @CommandContainer
@@ -30,17 +34,46 @@ public class LanguageCommand extends AbstractFloraCoreCommand {
     }
 
     private SmartInventory getLanguageGui(Player player) {
+        Sender s = getPlugin().getSenderFactory().wrap(player);
         UUID uuid = player.getUniqueId();
-        Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid);
+        List<TranslationRepository.LanguageInfo> availableTranslations = new ArrayList<>();
+        try {
+            availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
+        } catch (IOException | UnsuccessfulRequestException e) {
+            getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
+        }
+        Component title = TranslationManager.render(Message.COMMAND_LANGUAGE_TITLE.build(), uuid);
         SmartInventory.Builder builder = SmartInventory.builder();
         builder.title(title);
         builder.closeable(true);
         builder.size(6, 9);
+        List<TranslationRepository.LanguageInfo> finalAvailableTranslations = availableTranslations;
         builder.provider((player1, contents) -> {
             Pagination pagination = contents.pagination();
-            ClickableItem[] items = new ClickableItem[54];
-            for (int i = 0; i < items.length; i++)
-                items[i] = ClickableItem.empty(new ItemStack(Material.STONE, i));
+            ClickableItem[] items = new ClickableItem[finalAvailableTranslations.size() + 1];
+            Locale defaultLanguage = TranslationManager.DEFAULT_LOCALE;
+            String dpl = TranslationManager.localeDisplayName(defaultLanguage);
+            Component dc = TranslationManager.render(Message.COMMAND_LANGUAGE_CHANGE.build(dpl), defaultLanguage);
+            ItemBuilder dib = new ItemBuilder(Material.PAPER).displayName(Component.text(dpl).color(NamedTextColor.GREEN)).lore(dc);
+            items[0] = ClickableItem.of(dib.build(), inventoryClickEvent -> {
+                String value = defaultLanguage.toLanguageTag();
+                getStorageImplementation().insertData(uuid, DataType.FUNCTION, "language", value.replace("-", "_"), 0);
+                player.closeInventory();
+                Message.COMMAND_LANGUAGE_CHANGE_SUCCESS.send(s, dpl);
+            });
+            for (int i = 1; i < items.length; i++) {
+                TranslationRepository.LanguageInfo language = finalAvailableTranslations.get(i - 1);
+                Locale l = language.locale();
+                String pl = TranslationManager.localeDisplayName(l);
+                Component c = TranslationManager.render(Message.COMMAND_LANGUAGE_CHANGE.build(pl), l);
+                ItemBuilder itemBuilder = new ItemBuilder(Material.PAPER).displayName(Component.text(pl).color(NamedTextColor.GREEN)).lore(c);
+                items[i] = ClickableItem.of(itemBuilder.build(), inventoryClickEvent -> {
+                    String value = language.locale().toLanguageTag();
+                    getStorageImplementation().insertData(uuid, DataType.FUNCTION, "language", value.replace("-", "_"), 0);
+                    player.closeInventory();
+                    Message.COMMAND_LANGUAGE_CHANGE_SUCCESS.send(s, pl);
+                });
+            }
             pagination.setItems(items);
             pagination.setItemsPerPage(16);
             int i = 8;

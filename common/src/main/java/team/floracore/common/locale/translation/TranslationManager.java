@@ -25,7 +25,7 @@ public class TranslationManager {
      * The default locale used by FloraCore messages
      */
     public static final Locale DEFAULT_LOCALE = Locale.SIMPLIFIED_CHINESE;
-    private static final AsyncCache<UUID, Locale> localeCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    private static final AsyncCache<UUID, Locale> localeCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     private final FloraCorePlugin plugin;
     private final Set<Locale> installed = ConcurrentHashMap.newKeySet();
     private final Path translationsDirectory;
@@ -219,5 +219,4 @@ public class TranslationManager {
         this.installed.add(locale);
         return Maps.immutableEntry(locale, bundle);
     }
-
 }
