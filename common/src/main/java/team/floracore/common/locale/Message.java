@@ -867,7 +867,7 @@ public interface Message {
 
     Args1<String> COMMAND_LANGUAGE_CHANGE = (language) -> translatable()
             // 点击切换为 {0} !
-            .key("floracore.command.misc.language.change").args(text(language)).color(YELLOW).build();
+            .key("floracore.command.misc.language.change").args(text(language).decoration(BOLD, true)).color(YELLOW).build();
 
     Args1<String> COMMAND_LANGUAGE_CHANGE_SUCCESS = (language) -> translatable()
             // 你已成功将你的显示语言更改为 {0} !
