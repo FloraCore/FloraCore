@@ -16,7 +16,7 @@ import team.floracore.common.locale.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
-import team.floracore.common.util.*;
+import team.floracore.common.util.builder.*;
 
 import java.io.*;
 import java.util.*;

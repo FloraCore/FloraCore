@@ -1,4 +1,4 @@
-package team.floracore.common.util;
+package team.floracore.common.util.builder;
 
 import com.google.gson.*;
 import net.kyori.adventure.text.*;

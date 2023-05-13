@@ -23,6 +23,7 @@ import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 import team.floracore.common.util.*;
+import team.floracore.common.util.builder.*;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -254,6 +255,13 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         builder.size(6, 9);
         builder.provider((player1, contents) -> {
             contents.set(0, 4, ClickableItem.empty(new ItemBuilder(Material.PAPER).displayName(finalTitle).lore(getReportLore(report, uuid)).build()));
+            ItemStack rs = new ItemBuilder(Material.SLIME_BALL).displayName("reporters").build();
+            contents.set(2, 3, ClickableItem.empty(rs));
+            ItemStack rds = new ItemBuilder(Material.ENDER_PEARL).displayName("reported").build();
+            contents.set(2, 5, ClickableItem.of(rds, inventoryClickEvent -> {
+                reportTeleport(player, getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(report.getReported()));
+                player.closeInventory();
+            }));
             switch (report.getStatus()) {
                 case WAITING:
                     Component accepted = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_ACCEPTED.build(), uuid);
