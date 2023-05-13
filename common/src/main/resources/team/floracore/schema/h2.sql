@@ -49,9 +49,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}report`
     reported       VARCHAR(36)        NOT NULL,
     reasons        TEXT               NOT NULL,
     reportTime     BIGINT             NOT NULL,
-    handler        VARCHAR(36)        NULL,
-    handleTime     BIGINT             NULL,
-    conclusion     BOOLEAN            NULL,
+    status         VARCHAR(36)        NOT NULL,
     conclusionTime BIGINT             NULL,
     chat           TEXT               NOT NULL
 );

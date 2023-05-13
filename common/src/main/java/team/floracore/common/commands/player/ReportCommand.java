@@ -4,8 +4,10 @@ import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.specifier.*;
 import de.myzelyam.api.vanish.*;
 import net.kyori.adventure.text.*;
+import net.kyori.adventure.text.format.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
@@ -24,6 +26,7 @@ import team.floracore.common.util.*;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.function.*;
 import java.util.stream.*;
 
 import static team.floracore.common.util.ReflectionWrapper.*;
@@ -186,8 +189,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         UUID uuid = player.getUniqueId();
         Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid);
         List<Report> filteredReports = reports.stream()
-                .filter(report -> report.getHandler() == null || report.getHandler().equals(uuid))
-                .filter(report -> report.getHandler() == null || !Boolean.FALSE.equals(report.getConclusion()))
+                .filter(report -> report.getStatus() != ReportStatus.ENDED)
                 .sorted(Comparator.comparingInt(Report::getId))
                 .collect(Collectors.toList());
         SmartInventory.Builder builder = SmartInventory.builder();
@@ -201,54 +203,19 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 Report report = filteredReports.get(i);
                 int id = report.getId();
                 Component rt = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_TITLE.build(id), uuid);
-                List<Component> lore = new ArrayList<>();
-                lore.add(Component.space());
-                if (report.getHandler() == null) {
-                    Component waiting = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_WAITING.build(), uuid);
-                    lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(waiting), uuid));
-                } else {
-                    if (report.getConclusion()) {
-                        Component ended = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_ENDED.build(), uuid);
-                        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(ended), uuid));
-                    } else {
-                        Component accepted = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_ACCEPTED.build(), uuid);
-                        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(accepted), uuid));
-                    }
-                }
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_TIME.build(DurationFormatter.getTimeFromTimestamp(report.getReportTime())), uuid));
-                lore.add(Component.space());
-                List<String> rns = new ArrayList<>();
-                for (UUID reporter : report.getReporters()) {
-                    String name = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
-                    if (name != null) {
-                        rns.add(name);
-                    }
-                }
-                String resultRns = joinList(rns, 3);
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid));
-                String reported = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(report.getReported());
-                if (reported == null) {
-                    reported = "UNKNOWN";
-                }
-                boolean online = getPlugin().getApiProvider().getPlayerAPI().isOnline(report.getReported());
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(reported, online), uuid));
-                String resultReason = joinList(report.getReasons(), 2);
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REASON.build(resultReason), uuid));
+                List<Component> lore = getReportLore(report, uuid);
                 lore.add(Component.space());
                 lore.add(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
                 ItemBuilder ri = new ItemBuilder(Material.PAPER).displayName(rt).lore(lore);
-                items[i] = ClickableItem.empty(ri.build());
+                items[i] = ClickableItem.of(ri.build(), inventoryClickEvent -> getReportGui(player, report.getUuid()).open(player));
             }
             pagination.setItems(items);
-            pagination.setItemsPerPage(21);
+            pagination.setItemsPerPage(27);
             Component t = TranslationManager.render(Message.COMMAND_REPORTS_GUI_PAGE.build(pagination.getPage() + 1), uuid);
             contents.set(0, 4, ClickableItem.empty(new ItemBuilder(Material.BOOKSHELF).displayName(title).lore(t).build()));
-            int i = 19;
+            int i = 18;
             for (ClickableItem pageItem : pagination.getPageItems()) {
                 i++;
-                if (i % 9 == 0) {
-                    i = i + 2;
-                }
                 contents.set(SmartInventory.getInventoryRow(i), SmartInventory.getInventoryColumn(i), pageItem);
             }
             for (int j = 0; j < 9; j++) {
@@ -275,5 +242,116 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();
+    }
+
+    private SmartInventory getReportGui(Player player, UUID reportUUID) {
+        UUID uuid = player.getUniqueId();
+        Report report = getStorageImplementation().selectReport(reportUUID);
+        Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_TITLE.build(), uuid);
+        Component finalTitle = title.append(Component.space()).append(Message.ARROW.color(NamedTextColor.GRAY)).append(Component.space()).append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
+        SmartInventory.Builder builder = SmartInventory.builder();
+        builder.title(finalTitle);
+        builder.closeable(true);
+        builder.size(6, 9);
+        builder.provider((player1, contents) -> {
+            contents.set(0, 4, ClickableItem.empty(new ItemBuilder(Material.PAPER).displayName(finalTitle).lore(getReportLore(report, uuid)).build()));
+            switch (report.getStatus()) {
+                case WAITING:
+                    Component accepted = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_ACCEPTED.build(), uuid);
+                    ItemStack ai;
+                    if (ADVANCED_VERSION) {
+                        ai = new ItemBuilder(Material.LIME_TERRACOTTA).displayName(accepted).build();
+                    } else {
+                        ai = new ItemBuilder(new ItemStack(Material.matchMaterial("STAINED_CLAY"), 1, (short) 5)).displayName(accepted).build();
+                    }
+                    contents.set(3, 4, ClickableItem.of(ai, inventoryClickEvent -> {
+                        report.setStatus(ReportStatus.ACCEPTED);
+                        getReportGui(player, reportUUID).open(player);
+                        // TODO 发送全服通知
+                        // TODO 发送玩家通知
+                    }));
+                    break;
+                case ACCEPTED:
+                    Component end = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_END.build(), uuid);
+                    ItemStack ei;
+                    if (ADVANCED_VERSION) {
+                        ei = new ItemBuilder(Material.LIGHT_BLUE_TERRACOTTA).displayName(end).build();
+                    } else {
+                        ei = new ItemBuilder(new ItemStack(Material.matchMaterial("STAINED_CLAY"), 1, (short) 3)).displayName(end).build();
+                    }
+                    contents.set(3, 4, ClickableItem.of(ei, inventoryClickEvent -> {
+                        report.setStatus(ReportStatus.ENDED);
+                        report.setConclusionTime(System.currentTimeMillis());
+                        getReportGui(player, reportUUID).open(player);
+                        // TODO 发送全服通知
+                        // TODO 发送玩家通知
+                    }));
+                    break;
+                case ENDED:
+                    Component ended = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_ENDED.build(), uuid);
+                    ItemStack edi;
+                    if (ADVANCED_VERSION) {
+                        edi = new ItemBuilder(Material.RED_TERRACOTTA).displayName(ended).build();
+                    } else {
+                        edi = new ItemBuilder(new ItemStack(Material.matchMaterial("STAINED_CLAY"), 1, (short) 14)).displayName(ended).build();
+                    }
+                    contents.set(3, 4, ClickableItem.empty(edi));
+                    break;
+            }
+            for (int j = 0; j < 9; j++) {
+                ItemStack empty;
+                if (ADVANCED_VERSION) {
+                    empty = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).displayName(Component.space()).build();
+                } else {
+                    empty = new ItemBuilder(new ItemStack(Material.matchMaterial("STAINED_GLASS_PANE"), 1, (short) 7)).displayName(Component.space()).build();
+                }
+                contents.set(1, j, ClickableItem.empty(empty));
+                contents.set(5, j, ClickableItem.empty(empty));
+            }
+            Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
+            contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportsMainGui(player).open(player)));
+            Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
+        });
+        return builder.build();
+    }
+
+    private List<Component> getReportLore(Report report, UUID uuid) {
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.space());
+        switch (report.getStatus()) {
+            case WAITING:
+                Component waiting = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_WAITING.build(), uuid);
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(waiting), uuid));
+                break;
+            case ACCEPTED:
+                Component accepted = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_ACCEPTED.build(), uuid);
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(accepted), uuid));
+                break;
+            case ENDED:
+                Component ended = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_ENDED.build(), uuid);
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(ended), uuid));
+                break;
+        }
+        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_TIME.build(DurationFormatter.getTimeFromTimestamp(report.getReportTime())), uuid));
+        lore.add(Component.space());
+        List<String> rns = new ArrayList<>();
+        for (UUID reporter : report.getReporters()) {
+            String name = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
+            if (name != null) {
+                rns.add(name);
+            }
+        }
+        String resultRns = joinList(rns, 3);
+        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid));
+        String reported = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(report.getReported());
+        if (reported == null) {
+            reported = "UNKNOWN";
+        }
+        boolean online = getPlugin().getApiProvider().getPlayerAPI().isOnline(report.getReported());
+        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(reported, online), uuid));
+        String resultReason = joinList(report.getReasons(), 2);
+        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REASON.build(resultReason), uuid));
+        return lore;
     }
 }

@@ -74,6 +74,8 @@ public interface StorageImplementation {
 
     List<Report> selectReports(UUID uuid);
 
+    Report selectReport(UUID uuid);
+
     /**
      * @return 返回未处理的举报；若无，则返回null。
      */

@@ -11,15 +11,14 @@ import java.util.*;
 
 public class Report extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}report'";
-    public static final String SELECT_UUID = "SELECT * FROM '{prefix}report' WHERE reported=?";
+    public static final String SELECT_REPORTED_UUID = "SELECT * FROM '{prefix}report' WHERE reported=?";
+    public static final String SELECT_UUID = "SELECT * FROM '{prefix}report' WHERE uuid=?";
     public static final String DELETE = "DELETE FROM '{prefix}report' WHERE uuid=?";
     private static final String UPDATE_REPORTERS = "UPDATE '{prefix}report' SET reporters=? WHERE uuid=?";
     private static final String UPDATE_REASONS = "UPDATE '{prefix}report' SET reasons=? WHERE uuid=?";
-    private static final String UPDATE_HANDLER = "UPDATE '{prefix}report' SET handler=? WHERE uuid=?";
-    private static final String UPDATE_HANDLE_TIME = "UPDATE '{prefix}report' SET handleTime=? WHERE uuid=?";
-    private static final String UPDATE_CONCLUSION = "UPDATE '{prefix}report' SET conclusion=? WHERE uuid=?";
+    private static final String UPDATE_STATUS = "UPDATE '{prefix}report' SET status=? WHERE uuid=?";
     private static final String UPDATE_CONCLUSION_TIME = "UPDATE '{prefix}report' SET conclusionTime=? WHERE uuid=?";
-    private static final String INSERT = "INSERT INTO '{prefix}report' (uuid, reporters, reported, reasons, reportTime, handler, handleTime, conclusion, conclusionTime, chat) VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO '{prefix}report' (uuid, reporters, reported, reasons, reportTime, status, conclusionTime, chat) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
 
     private final int id;
     private final UUID uuid;
@@ -28,12 +27,10 @@ public class Report extends AbstractFloraCoreTable {
     private final List<ReportDataChatRecord> chat;
     private List<String> reasons;
     private List<UUID> reporters;
-    private UUID handler;
-    private Long handleTime;
-    private Boolean conclusion;
+    private ReportStatus status;
     private Long conclusionTime;
 
-    public Report(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, List<UUID> reporters, UUID reported, List<String> reasons, long reportTime, UUID handler, Long handleTime, Boolean conclusion, Long conclusionTime, List<ReportDataChatRecord> chat) {
+    public Report(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, List<UUID> reporters, UUID reported, List<String> reasons, long reportTime, ReportStatus status, Long conclusionTime, List<ReportDataChatRecord> chat) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;
@@ -41,9 +38,7 @@ public class Report extends AbstractFloraCoreTable {
         this.reported = reported;
         this.reasons = reasons;
         this.reportTime = reportTime;
-        this.handler = handler;
-        this.handleTime = handleTime;
-        this.conclusion = conclusion;
+        this.status = status;
         this.conclusionTime = conclusionTime;
         this.chat = chat;
     }
@@ -77,15 +72,15 @@ public class Report extends AbstractFloraCoreTable {
         return reportTime;
     }
 
-    public Long getHandleTime() {
-        return handleTime;
+    public ReportStatus getStatus() {
+        return status;
     }
 
-    public void setHandleTime(Long handleTime) {
-        this.handleTime = handleTime;
+    public void setStatus(ReportStatus status) {
+        this.status = status;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_HANDLE_TIME))) {
-                ps.setLong(1, handleTime);
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_STATUS))) {
+                ps.setString(1, status.name());
                 ps.setString(2, uuid.toString());
                 ps.execute();
             }
@@ -96,40 +91,6 @@ public class Report extends AbstractFloraCoreTable {
 
     public List<ReportDataChatRecord> getChat() {
         return chat;
-    }
-
-    public Boolean getConclusion() {
-        return conclusion;
-    }
-
-    public void setConclusion(Boolean conclusion) {
-        this.conclusion = conclusion;
-        try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_CONCLUSION))) {
-                ps.setBoolean(1, conclusion);
-                ps.setString(2, uuid.toString());
-                ps.execute();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public UUID getHandler() {
-        return handler;
-    }
-
-    public void setHandler(UUID handler) {
-        this.handler = handler;
-        try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_HANDLER))) {
-                ps.setString(1, handler.toString());
-                ps.setString(2, uuid.toString());
-                ps.execute();
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public List<UUID> getReporters() {
@@ -184,11 +145,9 @@ public class Report extends AbstractFloraCoreTable {
                 ps.setString(3, reported.toString());
                 ps.setString(4, reasonsJson);
                 ps.setLong(5, reportTime);
-                ps.setString(6, handler == null ? null : handler.toString());
-                ps.setLong(7, handleTime == null ? -1 : handleTime);
-                ps.setBoolean(8, conclusion != null && conclusion);
-                ps.setLong(9, conclusionTime == null ? -1 : conclusionTime);
-                ps.setString(10, chatJson);
+                ps.setString(6, status.name());
+                ps.setLong(7, conclusionTime == null ? -1 : conclusionTime);
+                ps.setString(8, chatJson);
                 ps.execute();
             }
         }

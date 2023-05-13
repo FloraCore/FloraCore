@@ -891,6 +891,22 @@ public interface Message {
             // 举报列表
             .key("floracore.command.misc.reports.gui.main.title").color(GOLD).build();
 
+    Args0 COMMAND_REPORTS_GUI_REPORT_TITLE = () -> translatable()
+            // 举报
+            .key("floracore.command.misc.reports.gui.report.title").color(GOLD).build();
+
+    Args0 COMMAND_REPORTS_GUI_REPORT_ACCEPTED = () -> translatable()
+            // 受理此举报
+            .key("floracore.command.misc.reports.gui.report.accepted").color(GREEN).build();
+
+    Args0 COMMAND_REPORTS_GUI_REPORT_END = () -> translatable()
+            // 处理此举报
+            .key("floracore.command.misc.reports.gui.report.end").color(AQUA).build();
+
+    Args0 COMMAND_REPORTS_GUI_REPORT_ENDED = () -> translatable()
+            // 此举报已处理
+            .key("floracore.command.misc.reports.gui.report.ended").color(RED).build();
+
     Args0 COMMAND_MISC_GUI_CLOSE = () -> translatable()
             // 关闭
             .key("floracore.command.misc.gui.close").color(RED).build();
@@ -902,6 +918,10 @@ public interface Message {
     Args0 COMMAND_MISC_GUI_NEXT_PAGE = () -> translatable()
             // 下一页
             .key("floracore.command.misc.gui.next-page").color(GREEN).build();
+
+    Args0 COMMAND_MISC_GUI_BACK = () -> translatable()
+            // 返回
+            .key("floracore.command.misc.gui.back").color(YELLOW).build();
 
     Args1<Integer> COMMAND_MISC_GUI_TURN_TO_PAGE = (page) -> translatable()
             // 转到第 {0} 页
