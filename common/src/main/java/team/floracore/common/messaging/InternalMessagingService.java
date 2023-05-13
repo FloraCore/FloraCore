@@ -1,6 +1,7 @@
 package team.floracore.common.messaging;
 
 import org.floracore.api.messenger.*;
+import org.floracore.api.messenger.message.type.*;
 
 import java.util.*;
 
@@ -24,4 +25,6 @@ public interface InternalMessagingService {
     void pushReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason);
 
     void pushTeleport(UUID sender, UUID recipient, String serverName);
+
+    void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, String[] parameters);
 }

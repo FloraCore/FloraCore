@@ -781,7 +781,11 @@ public interface Message {
 
     Args1<String> COMMAND_MISC_REPORT_NOTICE_ACCEPTED = target -> prefixed(translatable().key("floracore.command.misc.report.notice.accepted").color(AQUA).args(text(target).color(RED)));
 
-    Args2<String, String> COMMAND_MISC_REPORT_NOTICE_PROCESSED = (target, conclusion) -> prefixed(translatable().key("floracore.command.misc.report.notice.processed").color(AQUA).args(text(target).color(RED), text(conclusion).color(GREEN)));
+    Args1<String> COMMAND_MISC_REPORT_NOTICE_PROCESSED = (target) -> prefixed(translatable().key("floracore.command.misc.report.notice.processed").color(AQUA).args(text(target).color(RED)));
+
+    Args2<String, String> COMMAND_MISC_REPORT_NOTICE_STAFF_ACCEPTED = (reporter, target) -> prefixed(translatable().key("floracore.command.misc.report.notice.staff.accepted").color(AQUA).args(text(reporter).color(GREEN), text(target).color(RED)));
+
+    Args2<String, String> COMMAND_MISC_REPORT_NOTICE_STAFF_PROCESSED = (reporter, target) -> prefixed(translatable().key("floracore.command.misc.report.notice.staff.processed").color(AQUA).args(text(reporter).color(GREEN), text(target).color(RED)));
 
     Args0 COMMAND_MISC_REPORT_THANKS = () -> prefixed(translatable().key("floracore.command.misc.report.thanks").color(AQUA));
 

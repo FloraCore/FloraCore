@@ -7,11 +7,11 @@ import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.format.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
-import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
 import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
+import org.floracore.api.messenger.message.type.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.inevntory.*;
@@ -26,7 +26,6 @@ import team.floracore.common.util.*;
 
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.function.*;
 import java.util.stream.*;
 
 import static team.floracore.common.util.ReflectionWrapper.*;
@@ -267,8 +266,21 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                     contents.set(3, 4, ClickableItem.of(ai, inventoryClickEvent -> {
                         report.setStatus(ReportStatus.ACCEPTED);
                         getReportGui(player, reportUUID).open(player);
-                        // TODO 发送全服通知
-                        // TODO 发送玩家通知
+                        getPlugin().getMessagingService().ifPresent(service -> {
+                            List<String> rns = new ArrayList<>();
+                            for (UUID reporter : report.getReporters()) {
+                                String name = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
+                                if (name != null) {
+                                    rns.add(name);
+                                }
+                            }
+                            String resultRns = joinList(rns, 3);
+                            String reported = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(report.getReported());
+                            for (UUID reporter : report.getReporters()) {
+                                service.pushNoticeMessage(reporter, NoticeMessage.NoticeType.REPORT_ACCEPTED, new String[]{reported});
+                            }
+                            service.pushNoticeMessage(UUID.randomUUID(), NoticeMessage.NoticeType.REPORT_STAFF_ACCEPTED, new String[]{resultRns, reported});
+                        });
                     }));
                     break;
                 case ACCEPTED:
@@ -283,8 +295,21 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                         report.setStatus(ReportStatus.ENDED);
                         report.setConclusionTime(System.currentTimeMillis());
                         getReportGui(player, reportUUID).open(player);
-                        // TODO 发送全服通知
-                        // TODO 发送玩家通知
+                        getPlugin().getMessagingService().ifPresent(service -> {
+                            List<String> rns = new ArrayList<>();
+                            for (UUID reporter : report.getReporters()) {
+                                String name = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
+                                if (name != null) {
+                                    rns.add(name);
+                                }
+                            }
+                            String resultRns = joinList(rns, 3);
+                            String reported = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(report.getReported());
+                            for (UUID reporter : report.getReporters()) {
+                                service.pushNoticeMessage(reporter, NoticeMessage.NoticeType.REPORT_PROCESSED, new String[]{reported});
+                            }
+                            service.pushNoticeMessage(UUID.randomUUID(), NoticeMessage.NoticeType.REPORT_STAFF_PROCESSED, new String[]{resultRns, reported});
+                        });
                     }));
                     break;
                 case ENDED:

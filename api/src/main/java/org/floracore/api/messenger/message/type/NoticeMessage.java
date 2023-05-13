@@ -38,6 +38,8 @@ public interface NoticeMessage extends Message {
         /**
          * 举报处理通知
          */
-        REPORT_PROCESSED
+        REPORT_PROCESSED,
+        REPORT_STAFF_ACCEPTED,
+        REPORT_STAFF_PROCESSED,
     }
 }

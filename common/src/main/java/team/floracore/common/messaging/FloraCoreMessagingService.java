@@ -111,12 +111,62 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         });
     }
 
+    @Override
+    public void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, String[] parameters) {
+        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
+            UUID requestId = generatePingId();
+            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            NoticeMessageImpl noticeMessage = new NoticeMessageImpl(requestId, receiver, type, parameters);
+            this.messenger.sendOutgoingMessage(noticeMessage);
+            if (dispatchMessageReceiveEvent(noticeMessage)) {
+                notice(noticeMessage);
+            }
+        });
+    }
+
     public void notifyStaffReport(String reporter, String reportedUser, String reporterServer, String reportedUserServer, String reason, boolean playerOnlineStatus, boolean targetOnlineStatus) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.hasPermission("floracore.report.staff")) {
                 Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
                 team.floracore.common.locale.Message.COMMAND_MISC_REPORT_BROADCAST.send(s, reporter, reportedUser, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
             }
+        }
+    }
+
+    public void notice(NoticeMessage noticeMsg) {
+        Player player = Bukkit.getPlayer(noticeMsg.getReceiver());
+        String[] parameters = noticeMsg.getParameters();
+        switch (noticeMsg.getType()) {
+            case REPORT_STAFF_ACCEPTED:
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    if (onlinePlayer.hasPermission("floracore.report.staff")) {
+                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
+                        team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_ACCEPTED.send(s, parameters[0], parameters[1]);
+                    }
+                }
+                break;
+            case REPORT_STAFF_PROCESSED:
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    if (onlinePlayer.hasPermission("floracore.report.staff")) {
+                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
+                        team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_PROCESSED.send(s, parameters[0], parameters[1]);
+                    }
+                }
+                break;
+        }
+        if (player != null) {
+            Sender sender = plugin.getSenderFactory().wrap(player);
+            switch (noticeMsg.getType()) {
+                case REPORT_ACCEPTED:
+                    team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters[0]);
+                    team.floracore.common.locale.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
+                    break;
+                case REPORT_PROCESSED:
+                    team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters[0]);
+                    team.floracore.common.locale.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
+                    break;
+            }
+            team.floracore.common.locale.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
         }
     }
 
@@ -220,21 +270,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             notifyStaffReport(player, target, reporterServer, reportedUserServer, reason, playerOnline, targetOnline);
         } else if (message instanceof NoticeMessage) {
             NoticeMessage noticeMsg = (NoticeMessage) message;
-            Player player = Bukkit.getPlayer(noticeMsg.getReceiver());
-            String[] parameters = noticeMsg.getParameters();
-
-            if (player != null) {
-                Sender sender = plugin.getSenderFactory().wrap(player);
-                switch (noticeMsg.getType()) {
-                    case REPORT_ACCEPTED:
-                        team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters[0]);
-                        break;
-                    case REPORT_PROCESSED:
-                        team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters[0], parameters[1]);
-                        break;
-                }
-                team.floracore.common.locale.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
-            }
+            notice(noticeMsg);
         } else if (message instanceof TeleportMessage) {
             TeleportMessage teleportMsg = (TeleportMessage) message;
             UUID su = teleportMsg.getSender();
