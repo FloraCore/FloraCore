@@ -66,7 +66,10 @@ public class LanguageCommand extends AbstractFloraCoreCommand {
                 Locale l = language.locale();
                 String pl = TranslationManager.localeDisplayName(l);
                 Component c = TranslationManager.render(Message.COMMAND_LANGUAGE_CHANGE.build(pl), l);
-                ItemBuilder itemBuilder = new ItemBuilder(Material.PAPER).displayName(Component.text(pl).color(NamedTextColor.GREEN)).lore(c);
+                Component t = Component.text(pl).color(NamedTextColor.GREEN);
+                Component progress = Message.OPEN_BRACKET.append(Component.text(language.progress() + "%")).append(Message.CLOSE_BRACKET);
+                t = t.append(Component.space()).append(progress.color(NamedTextColor.GRAY));
+                ItemBuilder itemBuilder = new ItemBuilder(Material.PAPER).displayName(t).lore(c);
                 items[i] = ClickableItem.of(itemBuilder.build(), inventoryClickEvent -> {
                     String value = language.locale().toLanguageTag();
                     getStorageImplementation().insertData(uuid, DataType.FUNCTION, "language", value.replace("-", "_"), 0);
