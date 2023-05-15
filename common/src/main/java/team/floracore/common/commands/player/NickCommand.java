@@ -5,10 +5,6 @@ import net.kyori.adventure.audience.*;
 import net.kyori.adventure.inventory.*;
 import net.kyori.adventure.text.*;
 import net.luckperms.api.*;
-import net.luckperms.api.model.user.*;
-import net.luckperms.api.node.types.*;
-import net.skinsrestorer.api.*;
-import net.skinsrestorer.api.property.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
@@ -40,13 +36,13 @@ import static team.floracore.common.util.ReflectionWrapper.*;
 @CommandPermission("floracore.command.nick")
 @CommandDescription("修改玩家的昵称")
 public class NickCommand extends AbstractFloraCoreCommand implements Listener {
-    private final SkinsRestorerAPI skinsRestorerAPI;
+    // private final SkinsRestorerAPI skinsRestorerAPI;
     private final Set<UUID> nickedPlayers = new HashSet<>();
     private final LuckPerms luckPerms;
 
     public NickCommand(FloraCorePlugin plugin) {
         super(plugin);
-        this.skinsRestorerAPI = SkinsRestorerAPI.getApi();
+        // this.skinsRestorerAPI = SkinsRestorerAPI.getApi();
         this.luckPerms = LuckPermsProvider.get();
         plugin.getListenerManager().registerListener(this);
         plugin.getBootstrap().getScheduler().asyncRepeating(() -> {
@@ -228,13 +224,13 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             }
             if (lpPrefixData != null) {
                 // 恢复LP的Rank状态
-                User user = luckPerms.getUserManager().getUser(uuid);
+                /*User user = luckPerms.getUserManager().getUser(uuid);
                 if (user != null) {
                     PrefixNode node = PrefixNode.builder(lpPrefixData.getValue(), 100).build();
                     user.data().add(node);
                     luckPerms.getUserManager().saveUser(user);
                     getStorageImplementation().deleteDataID(lpPrefixData.getId());
-                }
+                }*/
             }
         });
     }
@@ -284,15 +280,15 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                 }
                 if (selectedSkin != null) {
                     // 设置玩家皮肤
-                    getAsyncExecutor().execute(() -> {
+                    /*getAsyncExecutor().execute(() -> {
                         IProperty iProperty = skinsRestorerAPI.createPlatformProperty(selectedSkin.getName(), selectedSkin.getValue(), selectedSkin.getSignature());
                         skinsRestorerAPI.applySkin(new PlayerWrapper(p), iProperty);
-                    });
+                    });*/
                 }
             }
         }
         // 设置Rank
-        User user = luckPerms.getUserManager().getUser(uuid);
+        /*User user = luckPerms.getUserManager().getUser(uuid);
         if (user != null) {
             Data lpPrefixData = getStorageImplementation().getSpecifiedData(uuid, DataType.STAGING_DATA, "luckperms.prefix");
             String prefix = user.getCachedData().getMetaData().getPrefix();
@@ -307,7 +303,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                     });
                 }
             }
-        }
+        }*/
 
         // 设置数据库Nick状态
         getAsyncExecutor().execute(() -> {
