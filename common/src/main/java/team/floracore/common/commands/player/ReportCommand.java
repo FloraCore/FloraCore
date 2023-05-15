@@ -158,31 +158,27 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             List<ReportDataChatRecord> chat = new ArrayList<>();
             ChatAPI chatAPI = getPlugin().getApiProvider().getChatAPI();
             ChatManager chatManager = getPlugin().getChatManager();
-            List<ReportDataChatRecord> c1 = chatAPI.getPlayerChatUUIDRecent(reporter, 3)
-                    .stream()
-                    .map(dataChatRecord -> new ReportDataChatRecord(reporter, dataChatRecord))
-                    .collect(Collectors.toList());
-            ChatManager.MapPlayerRecord cm1 = chatManager.getMapPlayerRecord(reporter);
-            if (cm1 != null) {
-                int id = chatManager.getChat().getId();
-                DataChatRecord d = new DataChatRecord(id, cm1.getJoinTime(), time);
-                c1.add(new ReportDataChatRecord(reporter, d));
-            }
-            List<ReportDataChatRecord> c2 = chatAPI.getPlayerChatUUIDRecent(reportedUser, 3)
-                    .stream()
-                    .map(dataChatRecord -> new ReportDataChatRecord(reportedUser, dataChatRecord))
-                    .collect(Collectors.toList());
-            ChatManager.MapPlayerRecord cm2 = chatManager.getMapPlayerRecord(reportedUser);
-            if (cm2 != null) {
-                int id = chatManager.getChat().getId();
-                DataChatRecord d = new DataChatRecord(id, cm2.getJoinTime(), time);
-                c2.add(new ReportDataChatRecord(reportedUser, d));
-            }
+            List<ReportDataChatRecord> c1 = getPlayerChatUUIDRecent(reporter, time, chatAPI, chatManager);
+            List<ReportDataChatRecord> c2 = getPlayerChatUUIDRecent(reportedUser, time, chatAPI, chatManager);
             chat.addAll(c1);
             chat.addAll(c2);
             getStorageImplementation().addReport(uuid, reporter, reportedUser, reason, time, chat);
             service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
         });
+    }
+
+    private List<ReportDataChatRecord> getPlayerChatUUIDRecent(UUID reporter, long time, ChatAPI chatAPI, ChatManager chatManager) {
+        List<ReportDataChatRecord> c = chatAPI.getPlayerChatUUIDRecent(reporter, 3)
+                .stream()
+                .map(dataChatRecord -> new ReportDataChatRecord(reporter, dataChatRecord))
+                .collect(Collectors.toList());
+        ChatManager.MapPlayerRecord cm1 = chatManager.getMapPlayerRecord(reporter);
+        if (cm1 != null) {
+            int id = chatManager.getChat().getId();
+            DataChatRecord d = new DataChatRecord(id, cm1.getJoinTime(), time);
+            c.add(new ReportDataChatRecord(reporter, d));
+        }
+        return c;
     }
 
     private SmartInventory getReportsMainGui(Player player) {
@@ -218,16 +214,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 i++;
                 contents.set(SmartInventory.getInventoryRow(i), SmartInventory.getInventoryColumn(i), pageItem);
             }
-            for (int j = 0; j < 9; j++) {
-                ItemStack empty;
-                if (ADVANCED_VERSION) {
-                    empty = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).displayName(Component.space()).build();
-                } else {
-                    empty = new ItemBuilder(new ItemStack(Material.matchMaterial("STAINED_GLASS_PANE"), 1, (short) 7)).displayName(Component.space()).build();
-                }
-                contents.set(1, j, ClickableItem.empty(empty));
-                contents.set(5, j, ClickableItem.empty(empty));
-            }
+            supplementaryMenu(contents);
             if (!pagination.isFirst()) {
                 Component previous = TranslationManager.render(Message.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
                 Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
@@ -331,22 +318,26 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                     contents.set(3, 4, ClickableItem.empty(edi));
                     break;
             }
-            for (int j = 0; j < 9; j++) {
-                ItemStack empty;
-                if (ADVANCED_VERSION) {
-                    empty = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).displayName(Component.space()).build();
-                } else {
-                    empty = new ItemBuilder(new ItemStack(Material.matchMaterial("STAINED_GLASS_PANE"), 1, (short) 7)).displayName(Component.space()).build();
-                }
-                contents.set(1, j, ClickableItem.empty(empty));
-                contents.set(5, j, ClickableItem.empty(empty));
-            }
+            supplementaryMenu(contents);
             Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
             contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportsMainGui(player).open(player)));
             Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();
+    }
+
+    private void supplementaryMenu(InventoryContents contents) {
+        for (int j = 0; j < 9; j++) {
+            ItemStack empty;
+            if (ADVANCED_VERSION) {
+                empty = new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).displayName(Component.space()).build();
+            } else {
+                empty = new ItemBuilder(new ItemStack(Material.matchMaterial("STAINED_GLASS_PANE"), 1, (short) 7)).displayName(Component.space()).build();
+            }
+            contents.set(1, j, ClickableItem.empty(empty));
+            contents.set(5, j, ClickableItem.empty(empty));
+        }
     }
 
     private List<Component> getReportLore(Report report, UUID uuid) {
