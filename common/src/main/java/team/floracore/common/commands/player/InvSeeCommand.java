@@ -4,7 +4,7 @@ import cloud.commandframework.annotations.*;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 

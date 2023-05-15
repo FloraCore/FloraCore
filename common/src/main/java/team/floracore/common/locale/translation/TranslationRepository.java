@@ -5,7 +5,7 @@ import okhttp3.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.config.*;
 import team.floracore.common.http.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.gson.*;
@@ -110,7 +110,7 @@ public class TranslationRepository {
 
         for (LanguageInfo language : languages) {
             if (sender != null) {
-                Message.TRANSLATIONS_INSTALLING_SPECIFIC.send(sender, language.locale().toString());
+                MiscMessage.TRANSLATIONS_INSTALLING_SPECIFIC.send(sender, language.locale().toString());
             }
 
             Request request = new Request.Builder().header("User-Agent", "floracore").url(TRANSLATIONS_DOWNLOAD_ENDPOINT + language.id()).build();
@@ -129,7 +129,7 @@ public class TranslationRepository {
                 }
             } catch (UnsuccessfulRequestException | IOException e) {
                 if (sender != null) {
-                    Message.TRANSLATIONS_DOWNLOAD_ERROR.send(sender, language.locale().toString());
+                    MiscMessage.TRANSLATIONS_DOWNLOAD_ERROR.send(sender, language.locale().toString());
                     this.plugin.getLogger().warn("Unable to download translations", e);
                 }
             }

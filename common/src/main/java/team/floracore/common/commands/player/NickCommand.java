@@ -14,8 +14,8 @@ import org.floracore.api.data.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.config.*;
-import team.floracore.common.locale.*;
 import team.floracore.common.locale.data.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.implementation.*;
@@ -61,7 +61,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     public void nick(final @NotNull Player p) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         if (whetherServerEnableAutoSync2()) {
-            Message.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
+            MiscMessage.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
             return;
         }
         bookNick(p, 0, null, null, null, null);
@@ -73,7 +73,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     public void nickSpecifiedName(final @NotNull Player p, final @Argument("name") String name) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         if (whetherServerEnableAutoSync2()) {
-            Message.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
+            MiscMessage.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
             return;
         }
         Audience target = getPlugin().getBukkitAudiences().player(p);
@@ -87,7 +87,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         UUID uuid = p.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         if (whetherServerEnableAutoSync2()) {
-            Message.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
+            MiscMessage.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
             return;
         }
         Data statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
@@ -106,7 +106,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         Audience target = getPlugin().getBukkitAudiences().player(p);
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         if (whetherServerEnableAutoSync2()) {
-            Message.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
+            MiscMessage.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
             return;
         }
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
@@ -139,7 +139,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                     break;
                 case 2:
                     // skin page
-                    Message.COMMAND_NICK_SETUP_RANK.send(sender, ranks.get(rank));
+                    BookMessage.COMMAND_NICK_SETUP_RANK.send(sender, ranks.get(rank));
                     target.openBook(getSkinPage(p, rank));
                     break;
                 case 3:
@@ -170,16 +170,16 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                     if (custom) {
                         if (name.equalsIgnoreCase("random")) {
                             if (nickname == null) {
-                                Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
+                                MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
                             } else {
                                 performNick(p, rank, skin, nickname, true);
                                 target.openBook(getFinishPage(ranks_prefix.get(rank), nickname));
                             }
                         } else {
-                            Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
+                            MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
                         }
                     } else {
-                        Message.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
+                        MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                     }
                     break;
                 case 6:
@@ -201,7 +201,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             }
         } catch (Throwable e) {
             e.printStackTrace();
-            Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
+            MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
         }
     }
 
@@ -370,13 +370,13 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, Message.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_1.build(), space(),
+        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_1.build(), space(),
                 // line 2
-                Message.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_2.build(),
+                BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_2.build(),
                 // line 3
-                Message.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_3.build(), space(),
+                BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_3.build(), space(),
                 // accept
-                Message.COMMAND_MISC_NICK_BOOK_START_PAGE_ACCEPT_TEXT.build()).asComponent();
+                BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_ACCEPT_TEXT.build()).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
@@ -386,15 +386,15 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, Message.COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_1.build(),
+        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_1.build(),
                 // line 2
-                Message.COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_2.build(), space()).asComponent();
+                BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_2.build(), space()).asComponent();
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
         for (Map.Entry<String, String> entry : ranks.entrySet()) {
             String rankName = entry.getKey();
             String rankPermission = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION).get(rankName);
             if (player.hasPermission(rankPermission)) {
-                component = join(joinConfig, component, Message.COMMAND_MISC_NICK_BOOK_RANK_PAGE_RANK.build(rankName, entry.getValue()));
+                component = join(joinConfig, component, BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_RANK.build(rankName, entry.getValue()));
             }
         }
         bookPages.add(component);
@@ -407,18 +407,18 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, Message.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_LINE_1.build(), space(),
+        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_LINE_1.build(), space(),
                 // normal skin
-                Message.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_NORMAL.build(rank),
+                BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_NORMAL.build(rank),
                 // steve / alex skin
-                Message.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_STEVE_ALEX.build(rank),
+                BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_STEVE_ALEX.build(rank),
                 // random skin
-                Message.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_RANDOM.build(rank)).asComponent();
+                BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_RANDOM.build(rank)).asComponent();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
         if (data != null) {
             // reuse skin
-            component = join(joinConfig, component, Message.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_REUSE.build(rank, data.getValue()));
+            component = join(joinConfig, component, BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_REUSE.build(rank, data.getValue()));
         }
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
@@ -430,18 +430,18 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, Message.COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1.build(), space(),
+        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1.build(), space(),
                 // random name
-                Message.COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM.build(rank, skin)).asComponent();
+                BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM.build(rank, skin)).asComponent();
         Data data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
         if (data != null) {
             // reuse name
-            component = join(joinConfig, component, Message.COMMAND_MISC_NICK_BOOK_NAME_PAGE_REUSE.build(rank, skin, data.getValue()));
+            component = join(joinConfig, component, BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_REUSE.build(rank, skin, data.getValue()));
         }
         if (player.hasPermission("floracore.command.nick.custom")) {
-            component = join(joinConfig, component, Message.COMMAND_MISC_NICK_BOOK_NAME_PAGE_CUSTOM.build(rank, skin));
+            component = join(joinConfig, component, BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_CUSTOM.build(rank, skin));
         }
-        component = join(joinConfig, component, space(), Message.COMMAND_MISC_NICK_BOOK_RESET.build());
+        component = join(joinConfig, component, space(), BookMessage.COMMAND_MISC_NICK_BOOK_RESET.build());
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
@@ -452,15 +452,15 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         Collection<Component> bookPages = new ArrayList<>();
         String nickname = getPlugin().getNamesRepository().getRandomNameProperty().getName();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, Message.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_LINE_1.build(),
+        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_LINE_1.build(),
                 // name
-                Message.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_NAME.build(nickname), space(),
+                BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_NAME.build(nickname), space(),
                 // use
-                Message.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_USE_NAME.build(rank, skin, nickname),
+                BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_USE_NAME.build(rank, skin, nickname),
                 // try
-                Message.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_TRY_AGAIN.build(rank, skin), space(),
+                BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_TRY_AGAIN.build(rank, skin), space(),
                 // custom
-                Message.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_CUSTOM.build(rank, skin)).asComponent();
+                BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_CUSTOM.build(rank, skin)).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
@@ -470,11 +470,11 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, Message.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1.build(), space(),
+        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1.build(), space(),
                 // line 2
-                Message.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_2.build(rank, name), space(),
+                BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_2.build(rank, name), space(),
                 // line 3
-                Message.COMMAND_MISC_NICK_BOOK_RESET.build()).asComponent();
+                BookMessage.COMMAND_MISC_NICK_BOOK_RESET.build()).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }

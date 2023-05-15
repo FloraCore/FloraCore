@@ -2,7 +2,7 @@ package team.floracore.common.util;
 
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.sender.*;
 
 public final class SenderUtil {
@@ -15,7 +15,7 @@ public final class SenderUtil {
      * @param sender 命令发送者
      */
     public static void sendMustBePlayer(@NotNull Sender sender, @NotNull Class<?> currentType) {
-        Message.COMMAND_INVALID_COMMAND_SENDER.send(sender, currentType.getSimpleName(), Player.class.getSimpleName());
+        MiscMessage.COMMAND_INVALID_COMMAND_SENDER.send(sender, currentType.getSimpleName(), Player.class.getSimpleName());
     }
 
     /**
@@ -27,7 +27,7 @@ public final class SenderUtil {
      */
     public static boolean sendIfNoPermission(Sender sender, String permission) {
         if (!sender.hasPermission(permission)) {
-            Message.COMMAND_NO_PERMISSION.send(sender);
+            MiscMessage.COMMAND_NO_PERMISSION.send(sender);
             return true;
         }
         return false;

@@ -11,7 +11,7 @@ import org.checkerframework.checker.nullness.qual.*;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.*;
@@ -51,7 +51,7 @@ public class TimeCommand extends AbstractFloraCoreCommand {
             timeTick = DescParseTickFormat.parse(NumberUtil.isInt(time) ? (time + "t") : time);
             worlds = getWorlds(s, world);
         } catch (final NumberFormatException e) {
-            Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
+            MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
             return;
         }
 
@@ -78,7 +78,7 @@ public class TimeCommand extends AbstractFloraCoreCommand {
             timeTick = DescParseTickFormat.parse(NumberUtil.isInt(time) ? (time + "t") : time);
             worlds = getWorlds(s, world);
         } catch (final NumberFormatException e) {
-            Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
+            MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
             return;
         }
 
@@ -131,7 +131,7 @@ public class TimeCommand extends AbstractFloraCoreCommand {
             worlds.addAll(server.getWorlds());
         } else {
             Sender s = getPlugin().getSenderFactory().wrap(sender);
-            Message.COMMAND_MISC_WORLD_INVALID.send(s);
+            MiscMessage.COMMAND_MISC_WORLD_INVALID.send(s);
             return null;
         }
         return worlds;

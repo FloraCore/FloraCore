@@ -16,7 +16,7 @@ import team.floracore.common.commands.player.*;
 import team.floracore.common.commands.server.*;
 import team.floracore.common.commands.test.*;
 import team.floracore.common.commands.world.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 
@@ -71,19 +71,19 @@ public class CommandManager {
         // 命令语法错误自定义
         this.manager.registerExceptionHandler(InvalidSyntaxException.class, (context, exception) -> {
             Sender sender = plugin.getSenderFactory().wrap(context);
-            Message.COMMAND_INVALID_COMMAND_SYNTAX.send(sender, "/" + exception.getCorrectSyntax());
+            MiscMessage.COMMAND_INVALID_COMMAND_SYNTAX.send(sender, "/" + exception.getCorrectSyntax());
         });
 
         // 无权限
         this.manager.registerExceptionHandler(NoPermissionException.class, (context, exception) -> {
             Sender sender = plugin.getSenderFactory().wrap(context);
-            Message.COMMAND_NO_PERMISSION.send(sender);
+            MiscMessage.COMMAND_NO_PERMISSION.send(sender);
         });
 
         // 类型错误
         this.manager.registerExceptionHandler(InvalidCommandSenderException.class, (context, exception) -> {
             Sender sender = plugin.getSenderFactory().wrap(context);
-            Message.COMMAND_INVALID_COMMAND_SENDER.send(sender, context.getClass().getSimpleName(), exception.getRequiredSender().getSimpleName());
+            MiscMessage.COMMAND_INVALID_COMMAND_SENDER.send(sender, context.getClass().getSimpleName(), exception.getRequiredSender().getSimpleName());
         });
 
         // Create the commands

@@ -12,7 +12,7 @@ import team.floracore.common.command.*;
 import team.floracore.common.http.*;
 import team.floracore.common.inevntory.*;
 import team.floracore.common.inevntory.content.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
@@ -42,7 +42,7 @@ public class LanguageCommand extends AbstractFloraCoreCommand {
         } catch (IOException | UnsuccessfulRequestException e) {
             getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
         }
-        Component title = TranslationManager.render(Message.COMMAND_LANGUAGE_TITLE.build(), uuid);
+        Component title = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_TITLE.build(), uuid);
         SmartInventory.Builder builder = SmartInventory.builder();
         builder.title(title);
         builder.closeable(true);
@@ -53,7 +53,7 @@ public class LanguageCommand extends AbstractFloraCoreCommand {
             ClickableItem[] items = new ClickableItem[finalAvailableTranslations.size() + 1];
             Locale defaultLanguage = TranslationManager.DEFAULT_LOCALE;
             String dpl = TranslationManager.localeDisplayName(defaultLanguage);
-            Component dc = TranslationManager.render(Message.COMMAND_LANGUAGE_CHANGE.build(dpl));
+            Component dc = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(dpl));
             ItemBuilder dib = new ItemBuilder(Material.PAPER).displayName(Component.text(dpl).color(NamedTextColor.GREEN)).lore(dc);
             items[0] = ClickableItem.of(dib.build(), inventoryClickEvent -> {
                 String value = defaultLanguage.toLanguageTag();
@@ -65,7 +65,7 @@ public class LanguageCommand extends AbstractFloraCoreCommand {
                 TranslationRepository.LanguageInfo language = finalAvailableTranslations.get(i - 1);
                 Locale l = language.locale();
                 String pl = TranslationManager.localeDisplayName(l);
-                Component c = TranslationManager.render(Message.COMMAND_LANGUAGE_CHANGE.build(pl), l);
+                Component c = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(pl), l);
                 Component t = Component.text(pl).color(NamedTextColor.GREEN);
                 Component progress = Message.OPEN_BRACKET.append(Component.text(language.progress() + "%")).append(Message.CLOSE_BRACKET);
                 t = t.append(Component.space()).append(progress.color(NamedTextColor.GRAY));
@@ -88,16 +88,16 @@ public class LanguageCommand extends AbstractFloraCoreCommand {
                 contents.set(SmartInventory.getInventoryRow(i), SmartInventory.getInventoryColumn(i) + 1, pageItem);
             }
             if (!pagination.isFirst()) {
-                Component previous = TranslationManager.render(Message.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
-                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
+                Component previous = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
+                Component turn = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
                 contents.set(5, 0, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(previous).lore(turn).build(), event -> getLanguageGui(player).open(player, pagination.previous().getPage())));
             }
             if (!pagination.isLast()) {
-                Component next = TranslationManager.render(Message.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
-                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2), uuid);
+                Component next = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
+                Component turn = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2), uuid);
                 contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(next).lore(turn).build(), event -> getLanguageGui(player).open(player, pagination.next().getPage())));
             }
-            Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();

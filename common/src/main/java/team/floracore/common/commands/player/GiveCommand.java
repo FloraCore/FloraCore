@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.exception.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.*;

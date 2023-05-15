@@ -10,7 +10,7 @@ import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.command.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 
@@ -37,10 +37,10 @@ public class WeatherCommand extends AbstractFloraCoreCommand {
         Component component;
         if (weather.endsWith("sun")) {
             isStorm = false;
-            component = Message.COMMAND_MISC_WEATHER_SUM.build();
+            component = MiscMessage.COMMAND_MISC_WEATHER_SUM.build();
         } else if (weather.endsWith("storm") || weather.endsWith("rain")) {
             isStorm = true;
-            component = Message.COMMAND_MISC_WEATHER_STORM.build();
+            component = MiscMessage.COMMAND_MISC_WEATHER_STORM.build();
         } else {
             Message.COMMAND_WEATHER_NOSUCH.send(sender, weather);
             return;

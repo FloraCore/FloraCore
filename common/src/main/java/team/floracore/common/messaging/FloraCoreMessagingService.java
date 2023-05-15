@@ -75,7 +75,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         return uuid;
     }
 
-    public boolean dispatchMessageReceiveEvent(Message message) {
+    public boolean dispatchMessageReceiveEvent(org.floracore.api.messenger.message.Message message) {
         MessageReceiveEvent event = new MessageReceiveEvent(plugin.getApiProvider(), message);
         Bukkit.getPluginManager().callEvent(event);
         return !event.isCancelled();
@@ -128,7 +128,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.hasPermission("floracore.report.staff")) {
                 Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                team.floracore.common.locale.Message.COMMAND_MISC_REPORT_BROADCAST.send(s, reporter, reportedUser, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
+                team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_BROADCAST.send(s, reporter, reportedUser, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
             }
         }
     }
@@ -141,7 +141,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (onlinePlayer.hasPermission("floracore.report.staff")) {
                         Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_ACCEPTED.send(s, parameters[0], parameters[1]);
+                        team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_ACCEPTED.send(s, parameters[0], parameters[1]);
                     }
                 }
                 break;
@@ -149,7 +149,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (onlinePlayer.hasPermission("floracore.report.staff")) {
                         Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_PROCESSED.send(s, parameters[0], parameters[1]);
+                        team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_PROCESSED.send(s, parameters[0], parameters[1]);
                     }
                 }
                 break;
@@ -158,15 +158,15 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             Sender sender = plugin.getSenderFactory().wrap(player);
             switch (noticeMsg.getType()) {
                 case REPORT_ACCEPTED:
-                    team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters[0]);
-                    team.floracore.common.locale.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters[0]);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
                     break;
                 case REPORT_PROCESSED:
-                    team.floracore.common.locale.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters[0]);
-                    team.floracore.common.locale.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters[0]);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
                     break;
             }
-            team.floracore.common.locale.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
+            team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
         }
     }
 
@@ -229,7 +229,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         @Nullable JsonElement content = json.get("content");
 
         // decode message
-        Message decoded;
+        org.floracore.api.messenger.message.Message decoded;
         switch (type) {
             case ReportMessageImpl.TYPE:
                 decoded = ReportMessageImpl.decode(content, id);
@@ -251,7 +251,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         return true;
     }
 
-    private void processIncomingMessage(Message message) {
+    private void processIncomingMessage(org.floracore.api.messenger.message.Message message) {
         if (!dispatchMessageReceiveEvent(message)) {
             return;
         }
@@ -299,7 +299,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                                 }
                             }
                             sender.teleport(recipient.getLocation());
-                            team.floracore.common.locale.Message.COMMAND_REPORT_TP_SUCCESS.send(s, recipient.getDisplayName());
+                            team.floracore.common.locale.message.Message.COMMAND_REPORT_TP_SUCCESS.send(s, recipient.getDisplayName());
                             shouldCancel.set(true);
                         }
                         secondsElapsed++;

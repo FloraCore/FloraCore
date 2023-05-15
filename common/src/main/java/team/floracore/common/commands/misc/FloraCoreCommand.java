@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.http.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
@@ -47,49 +47,49 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     public void reload(final @NonNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         getPlugin().getConfiguration().reload();
-        Message.RELOAD_CONFIG_SUCCESS.send(s);
+        MiscMessage.RELOAD_CONFIG_SUCCESS.send(s);
     }
 
     @CommandMethod("fc|floracore translations")
     @CommandDescription("插件翻译列表")
     public void translations(final @NonNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        Message.TRANSLATIONS_SEARCHING.send(s);
+        MiscMessage.TRANSLATIONS_SEARCHING.send(s);
 
         List<TranslationRepository.LanguageInfo> availableTranslations;
         try {
             availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
         } catch (IOException | UnsuccessfulRequestException e) {
-            Message.TRANSLATIONS_SEARCHING_ERROR.send(s);
+            MiscMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
             getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
             return;
         }
 
-        Message.INSTALLED_TRANSLATIONS.send(s, getPlugin().getTranslationManager().getInstalledLocales().stream().map(Locale::toLanguageTag).sorted().collect(Collectors.toList()));
+        MiscMessage.INSTALLED_TRANSLATIONS.send(s, getPlugin().getTranslationManager().getInstalledLocales().stream().map(Locale::toLanguageTag).sorted().collect(Collectors.toList()));
 
-        Message.AVAILABLE_TRANSLATIONS_HEADER.send(s);
-        availableTranslations.stream().sorted(Comparator.comparing(language -> language.locale().toLanguageTag())).forEach(language -> Message.AVAILABLE_TRANSLATIONS_ENTRY.send(s, language.locale().toLanguageTag(), TranslationManager.localeDisplayName(language.locale()), language.progress(), language.contributors()));
-        s.sendMessage(Message.prefixed(Component.empty()));
-        Message.TRANSLATIONS_DOWNLOAD_PROMPT.send(s);
+        MiscMessage.AVAILABLE_TRANSLATIONS_HEADER.send(s);
+        availableTranslations.stream().sorted(Comparator.comparing(language -> language.locale().toLanguageTag())).forEach(language -> MiscMessage.AVAILABLE_TRANSLATIONS_ENTRY.send(s, language.locale().toLanguageTag(), TranslationManager.localeDisplayName(language.locale()), language.progress(), language.contributors()));
+        s.sendMessage(AbstractMessage.prefixed(Component.empty()));
+        MiscMessage.TRANSLATIONS_DOWNLOAD_PROMPT.send(s);
     }
 
     @CommandMethod("fc|floracore translations install")
     @CommandDescription("安装插件翻译列表")
     public void installTranslations(final @NonNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        Message.TRANSLATIONS_SEARCHING.send(s);
+        MiscMessage.TRANSLATIONS_SEARCHING.send(s);
 
         List<TranslationRepository.LanguageInfo> availableTranslations;
         try {
             availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
         } catch (IOException | UnsuccessfulRequestException e) {
-            Message.TRANSLATIONS_SEARCHING_ERROR.send(s);
+            MiscMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
             getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
             return;
         }
-        Message.TRANSLATIONS_INSTALLING.send(s);
+        MiscMessage.TRANSLATIONS_INSTALLING.send(s);
         getPlugin().getTranslationRepository().downloadAndInstallTranslations(availableTranslations, s, true);
-        Message.TRANSLATIONS_INSTALL_COMPLETE.send(s);
+        MiscMessage.TRANSLATIONS_INSTALL_COMPLETE.send(s);
     }
 
     @CommandMethod("fc|floracore server <target>")
@@ -103,10 +103,10 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             Component on = Component.translatable("floracore.command.misc.on");
             Component off = Component.translatable("floracore.command.misc.off");
             Message.DATA_HEADER.send(s, target);
-            Message.SERVER_DATA_ENTRY.send(s, Message.COMMAND_SERVER_DATA_TYPE.build(), servers.getType().getName());
-            Message.SERVER_DATA_ENTRY_1.send(s, Message.COMMAND_SERVER_DATA_AUTO_SYNC_1.build(), servers.isAutoSync1() ? on : off);
-            Message.SERVER_DATA_ENTRY_1.send(s, Message.COMMAND_SERVER_DATA_AUTO_SYNC_2.build(), servers.isAutoSync2() ? on : off);
-            Message.SERVER_DATA_ENTRY.send(s, Message.COMMAND_SERVER_DATA_ACTIVE_TIME.build(), DurationFormatter.getTimeFromTimestamp(servers.getLastActiveTime()));
+            Message.SERVER_DATA_ENTRY.send(s, MiscMessage.COMMAND_SERVER_DATA_TYPE.build(), servers.getType().getName());
+            Message.SERVER_DATA_ENTRY_1.send(s, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_1.build(), servers.isAutoSync1() ? on : off);
+            Message.SERVER_DATA_ENTRY_1.send(s, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_2.build(), servers.isAutoSync2() ? on : off);
+            Message.SERVER_DATA_ENTRY.send(s, MiscMessage.COMMAND_SERVER_DATA_ACTIVE_TIME.build(), DurationFormatter.getTimeFromTimestamp(servers.getLastActiveTime()));
         }
     }
 
@@ -281,10 +281,10 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
                 Data data = getStorageImplementation().insertData(u, DataType.CUSTOM, key, value, expiry);
                 Message.SET_DATA_TEMP_SUCCESS.send(s, key, value, target, d);
             } else {
-                Message.ILLEGAL_DATE_ERROR.send(s, duration);
+                MiscMessage.ILLEGAL_DATE_ERROR.send(s, duration);
             }
         } catch (Throwable e) {
-            Message.PAST_DATE_ERROR.send(s);
+            MiscMessage.PAST_DATE_ERROR.send(s);
         }
     }
 

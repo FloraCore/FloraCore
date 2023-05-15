@@ -14,9 +14,9 @@ import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
 import team.floracore.common.inevntory.*;
 import team.floracore.common.listener.*;
-import team.floracore.common.locale.*;
 import team.floracore.common.locale.data.*;
 import team.floracore.common.locale.data.chat.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.logging.PluginLogger;
@@ -88,7 +88,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.senderFactory = new BukkitSenderFactory(this);
 
         // send the startup banner
-        Message.STARTUP_BANNER.send(getConsoleSender(), getBootstrap());
+        MiscMessage.STARTUP_BANNER.send(getConsoleSender(), getBootstrap());
 
         // load configuration
         getLogger().info("Loading configuration...");
@@ -99,15 +99,15 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         if (this.configuration.get(ConfigKeys.CHECK_UPDATE)) {
             this.getBootstrap().getScheduler().async().execute(() -> {
                 try {
-                    Message.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
+                    MiscMessage.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
                     String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
                     if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
-                        Message.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(), getBootstrap(), leastReleaseTagVersion);
+                        MiscMessage.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(), getBootstrap(), leastReleaseTagVersion);
                     } else {
-                        Message.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());
+                        MiscMessage.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());
                     }
                 } catch (IOException e) {
-                    Message.STARTUP_CHECKING_UPDATE_FAILED.send(getConsoleSender(), getBootstrap());
+                    MiscMessage.STARTUP_CHECKING_UPDATE_FAILED.send(getConsoleSender(), getBootstrap());
                 }
             });
         }

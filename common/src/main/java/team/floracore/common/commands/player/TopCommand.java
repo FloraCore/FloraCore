@@ -5,7 +5,7 @@ import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.*;
@@ -34,7 +34,7 @@ public class TopCommand extends AbstractFloraCoreCommand {
             p.teleport(safe);
             Message.COMMAND_TELEPORT_TOP.send(sender);
         } catch (Exception e) {
-            Message.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
+            MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
         }
     }
 }

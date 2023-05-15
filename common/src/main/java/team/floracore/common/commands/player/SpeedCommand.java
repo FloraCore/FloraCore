@@ -8,7 +8,7 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.config.*;
-import team.floracore.common.locale.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 
@@ -41,7 +41,7 @@ public class SpeedCommand extends AbstractFloraCoreCommand {
             final boolean isBypass = p.hasPermission("floracore.command.speed.bypass");
             if (target != null) {
                 if (!p.hasPermission("floracore.command.speed.other")) {
-                    Message.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
+                    MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                     return;
                 }
                 switch (speedType) {

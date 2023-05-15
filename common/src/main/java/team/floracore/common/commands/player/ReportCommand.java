@@ -19,8 +19,8 @@ import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.inevntory.*;
 import team.floracore.common.inevntory.content.*;
-import team.floracore.common.locale.*;
 import team.floracore.common.locale.data.chat.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
@@ -200,13 +200,13 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                     .filter(report -> report.getStatus() == ReportStatus.ENDED)
                     .sorted(Comparator.comparingInt(Report::getId))
                     .collect(Collectors.toList());
-            title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid).append(space()).append(TranslationManager.render(Message.COMMAND_REPORTS_GUI_PROCESSED.build(), uuid));
+            title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid).append(space()).append(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_PROCESSED.build(), uuid));
         } else {
             filteredReports = reports.stream()
                     .filter(report -> report.getStatus() != ReportStatus.ENDED)
                     .sorted(Comparator.comparingInt(Report::getId))
                     .collect(Collectors.toList());
-            title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid);
+            title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid);
         }
         SmartInventory.Builder builder = SmartInventory.builder();
         builder.title(title);
@@ -218,10 +218,10 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             for (int i = 0; i < items.length; i++) {
                 Report report = filteredReports.get(i);
                 int id = report.getId();
-                Component rt = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_TITLE.build(id), uuid);
+                Component rt = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_TITLE.build(id), uuid);
                 List<Component> lore = getReportLore(report, uuid);
                 lore.add(Component.space());
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
+                lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
                 ItemBuilder ri = new ItemBuilder(Material.PAPER).displayName(rt).lore(lore);
                 if (report.getStatus() == ReportStatus.ACCEPTED) {
                     ri.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).flags(ItemFlag.HIDE_ENCHANTS);
@@ -230,7 +230,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             }
             pagination.setItems(items);
             pagination.setItemsPerPage(27);
-            Component t = TranslationManager.render(Message.COMMAND_REPORTS_GUI_PAGE.build(pagination.getPage() + 1), uuid);
+            Component t = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_PAGE.build(pagination.getPage() + 1), uuid);
             contents.set(0, 4, ClickableItem.empty(new ItemBuilder(Material.BOOKSHELF).displayName(title).lore(t).build()));
             int i = 18;
             for (ClickableItem pageItem : pagination.getPageItems()) {
@@ -239,14 +239,14 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             }
             supplementaryMenu(contents);
             if (conclusion) {
-                Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
+                Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
                 contents.set(5, 5, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportsMainGui(player, false).open(player)));
             } else {
-                Component t1 = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_PROCESSED.build(), uuid);
+                Component t1 = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_PROCESSED.build(), uuid);
                 contents.set(0, 8, ClickableItem.of(new ItemBuilder(Material.CHEST).displayName(t1).build(), inventoryClickEvent -> getReportsMainGui(player, true).open(player)));
             }
             setPageSlot(player, conclusion, uuid, contents, pagination);
-            Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();
@@ -254,13 +254,13 @@ public class ReportCommand extends AbstractFloraCoreCommand {
 
     private void setPageSlot(Player player, boolean conclusion, UUID uuid, InventoryContents contents, Pagination pagination) {
         if (!pagination.isFirst()) {
-            Component previous = TranslationManager.render(Message.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
-            Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
+            Component previous = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
+            Component turn = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
             contents.set(5, 0, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(previous).lore(turn).build(), event -> getReportsMainGui(player, conclusion).open(player, pagination.previous().getPage())));
         }
         if (!pagination.isLast()) {
-            Component next = TranslationManager.render(Message.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
-            Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2), uuid);
+            Component next = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
+            Component turn = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2), uuid);
             contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(next).lore(turn).build(), event -> getReportsMainGui(player, conclusion).open(player, pagination.next().getPage())));
         }
     }
@@ -268,7 +268,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     private SmartInventory getReportGui(Player player, UUID reportUUID, boolean conclusion) {
         UUID uuid = player.getUniqueId();
         Report report = getStorageImplementation().selectReport(reportUUID);
-        Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_TITLE.build(), uuid);
+        Component title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_TITLE.build(), uuid);
         Component finalTitle = title.append(Component.space()).append(Message.ARROW.color(NamedTextColor.GRAY)).append(Component.space()).append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
         SmartInventory.Builder builder = SmartInventory.builder();
         builder.title(finalTitle);
@@ -279,16 +279,16 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             i1.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).flags(ItemFlag.HIDE_ENCHANTS);
             contents.set(0, 4, ClickableItem.empty(i1.build()));
             String resultRns = getReports(report);
-            ItemStack rs = getPlayerItemBuilder(report.getReporters().get(0)).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid)).lore(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid)).build();
+            ItemStack rs = getPlayerItemBuilder(report.getReporters().get(0)).displayName(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid)).lore(TranslationManager.render(MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid)).build();
             contents.set(2, 3, ClickableItem.of(rs, inventoryClickEvent -> getReportersGUI(player, reportUUID, conclusion).open(player)));
             String r1 = getPlayerRecordName(report.getReported());
             if (r1 == null) {
                 r1 = "UNKNOWN";
             }
             boolean online = isOnline(report.getReported());
-            ItemBuilder rds = getPlayerItemBuilder(report.getReported()).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(r1, online), uuid));
+            ItemBuilder rds = getPlayerItemBuilder(report.getReported()).displayName(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(r1, online), uuid));
             if (online) {
-                rds.lore(TranslationManager.render(Message.CHECK_TP.build(), uuid));
+                rds.lore(TranslationManager.render(MiscMessage.CHECK_TP.build(), uuid));
                 String finalR = r1;
                 contents.set(2, 5, ClickableItem.of(rds.build(), inventoryClickEvent -> {
                     reportTeleport(player, finalR);
@@ -297,11 +297,11 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             } else {
                 contents.set(2, 5, ClickableItem.empty(rds.build()));
             }
-            ItemStack chats = new ItemBuilder(Material.BOOKSHELF).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_CHAT.build(), uuid)).lore(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid)).build();
+            ItemStack chats = new ItemBuilder(Material.BOOKSHELF).displayName(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_CHAT.build(), uuid)).lore(TranslationManager.render(MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid)).build();
             contents.set(2, 4, ClickableItem.of(chats, inventoryClickEvent -> getChatsGUI(player, reportUUID, conclusion).open(player)));
             switch (report.getStatus()) {
                 case WAITING:
-                    Component accepted = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_ACCEPTED.build(), uuid);
+                    Component accepted = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_ACCEPTED.build(), uuid);
                     ItemStack ai;
                     if (ADVANCED_VERSION) {
                         ai = new ItemBuilder(Material.LIME_TERRACOTTA).displayName(accepted).build();
@@ -321,7 +321,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                     }));
                     break;
                 case ACCEPTED:
-                    Component end = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_END.build(), uuid);
+                    Component end = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_END.build(), uuid);
                     ItemBuilder ei;
                     if (ADVANCED_VERSION) {
                         ei = new ItemBuilder(Material.LIGHT_BLUE_TERRACOTTA).displayName(end);
@@ -343,7 +343,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                     }));
                     break;
                 case ENDED:
-                    Component ended = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_ENDED.build(), uuid);
+                    Component ended = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_ENDED.build(), uuid);
                     ItemStack edi;
                     if (ADVANCED_VERSION) {
                         edi = new ItemBuilder(Material.RED_TERRACOTTA).displayName(ended).build();
@@ -354,9 +354,9 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                     break;
             }
             supplementaryMenu(contents);
-            Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
+            Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
             contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportsMainGui(player, conclusion).open(player)));
-            Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();
@@ -365,7 +365,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     private SmartInventory getReportersGUI(Player player, UUID reportUUID, boolean conclusion) {
         UUID uuid = player.getUniqueId();
         Report report = getStorageImplementation().selectReport(reportUUID);
-        Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER_TITLE.build(), uuid);
+        Component title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER_TITLE.build(), uuid);
         Component finalTitle = title.append(Component.space()).append(Message.ARROW.color(NamedTextColor.GRAY)).append(Component.space()).append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
         SmartInventory.Builder builder = SmartInventory.builder();
         builder.title(finalTitle);
@@ -384,9 +384,9 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                     r1 = "UNKNOWN";
                 }
                 boolean online = isOnline(reporters.get(i));
-                ItemBuilder rds = getPlayerItemBuilder(reporters.get(i)).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER_DETAILED.build(r1, online), uuid));
+                ItemBuilder rds = getPlayerItemBuilder(reporters.get(i)).displayName(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER_DETAILED.build(r1, online), uuid));
                 if (online) {
-                    rds.lore(TranslationManager.render(Message.CHECK_TP.build(), uuid));
+                    rds.lore(TranslationManager.render(MiscMessage.CHECK_TP.build(), uuid));
                     String finalR = r1;
                     items[i] = ClickableItem.of(rds.build(), inventoryClickEvent -> {
                         reportTeleport(player, finalR);
@@ -405,9 +405,9 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             }
             supplementaryMenu(contents);
             setPageSlot(player, conclusion, uuid, contents, pagination);
-            Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
+            Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
             contents.set(5, 5, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportGui(player, reportUUID, conclusion).open(player)));
-            Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();
@@ -417,7 +417,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         UUID uuid = player.getUniqueId();
         Audience target = getPlugin().getBukkitAudiences().player(player);
         Report report = getStorageImplementation().selectReport(reportUUID);
-        Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_CHATS_TITLE.build(), uuid);
+        Component title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_CHATS_TITLE.build(), uuid);
         Component finalTitle = title.append(Component.space()).append(Message.ARROW.color(NamedTextColor.GRAY)).append(Component.space()).append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
         SmartInventory.Builder builder = SmartInventory.builder();
         builder.title(finalTitle);
@@ -434,17 +434,17 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 ReportDataChatRecord chat = chats.get(i);
                 ItemBuilder item = new ItemBuilder(Material.BOOK);
                 int id = chat.getDataChatRecord().getId();
-                Component ct = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_TITLE.build(id), uuid);
+                Component ct = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_TITLE.build(id), uuid);
                 item.displayName(ct);
                 List<Component> lore = new ArrayList<>();
                 lore.add(Component.space());
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_PLAYER.build(getPlayerRecordName(chat.getUuid())), uuid));
+                lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_PLAYER.build(getPlayerRecordName(chat.getUuid())), uuid));
                 long startTime = chat.getDataChatRecord().getJoinTime();
                 long endTime = chat.getDataChatRecord().getQuitTime();
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_START_TIME.build(DurationFormatter.getTimeFromTimestamp(startTime)), uuid));
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_END_TIME.build(DurationFormatter.getTimeFromTimestamp(endTime)), uuid));
+                lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_START_TIME.build(DurationFormatter.getTimeFromTimestamp(startTime)), uuid));
+                lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_END_TIME.build(DurationFormatter.getTimeFromTimestamp(endTime)), uuid));
                 lore.add(Component.space());
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
+                lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
                 item.lore(lore);
                 items[i] = ClickableItem.of(item.build(), inventoryClickEvent -> target.openBook(getChatPage(uuid, reportUUID, chat, conclusion)));
             }
@@ -457,9 +457,9 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             }
             supplementaryMenu(contents);
             setPageSlot(player, conclusion, uuid, contents, pagination);
-            Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
+            Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
             contents.set(5, 5, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportGui(player, reportUUID, conclusion).open(player)));
-            Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();
@@ -508,30 +508,30 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         lore.add(Component.space());
         switch (report.getStatus()) {
             case WAITING:
-                Component waiting = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_WAITING.build(), uuid);
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(waiting), uuid));
+                Component waiting = TranslationManager.render(MenuMessage.COMMAND_REPORTS_STATUS_WAITING.build(), uuid);
+                lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(waiting), uuid));
                 break;
             case ACCEPTED:
-                Component accepted = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_ACCEPTED.build(), uuid);
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(accepted), uuid));
+                Component accepted = TranslationManager.render(MenuMessage.COMMAND_REPORTS_STATUS_ACCEPTED.build(), uuid);
+                lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(accepted), uuid));
                 break;
             case ENDED:
-                Component ended = TranslationManager.render(Message.COMMAND_REPORTS_STATUS_ENDED.build(), uuid);
-                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(ended), uuid));
+                Component ended = TranslationManager.render(MenuMessage.COMMAND_REPORTS_STATUS_ENDED.build(), uuid);
+                lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(ended), uuid));
                 break;
         }
-        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_TIME.build(DurationFormatter.getTimeFromTimestamp(report.getReportTime())), uuid));
+        lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_TIME.build(DurationFormatter.getTimeFromTimestamp(report.getReportTime())), uuid));
         lore.add(Component.space());
         String resultRns = getReports(report);
-        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid));
+        lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid));
         String reported = getPlayerRecordName(report.getReported());
         if (reported == null) {
             reported = "UNKNOWN";
         }
         boolean online = isOnline(report.getReported());
-        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(reported, online), uuid));
+        lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(reported, online), uuid));
         String resultReason = joinList(report.getReasons(), 2);
-        lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REASON.build(resultReason), uuid));
+        lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REASON.build(resultReason), uuid));
         return lore;
     }
 
@@ -562,23 +562,23 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         }
         List<ChatRecord> filteredRecords = records.subList(startIndex, endIndex);
         Component main = join(joinConfig,
-                TranslationManager.render(Message.COMMAND_MISC_CHAT.build(), uuid),
+                TranslationManager.render(MenuMessage.COMMAND_MISC_CHAT.build(), uuid),
                 space(),
-                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_1.build(filteredRecords.size()), uuid),
+                TranslationManager.render(BookMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_1.build(filteredRecords.size()), uuid),
                 space(),
-                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_START_TIME_BOOK.build(DurationFormatter.getTimeFromTimestamp(startTime)), uuid),
-                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_END_TIME_BOOK.build(DurationFormatter.getTimeFromTimestamp(endTime)), uuid),
+                TranslationManager.render(BookMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_START_TIME_BOOK.build(DurationFormatter.getTimeFromTimestamp(startTime)), uuid),
+                TranslationManager.render(BookMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_END_TIME_BOOK.build(DurationFormatter.getTimeFromTimestamp(endTime)), uuid),
                 space(),
-                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_2.build(), uuid),
+                TranslationManager.render(BookMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_2.build(), uuid),
                 space(),
-                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3.build(reportUUID, conclusion), uuid)
+                TranslationManager.render(BookMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3.build(reportUUID, conclusion), uuid)
         ).asComponent();
         bookPages.add(main);
         for (ChatRecord record : filteredRecords) {
             Component c = join(joinConfig,
-                    TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_CHAT.build(DurationFormatter.getTimeFromTimestamp(record.getTime()), getPlayerRecordName(record.getUuid()), record.getMessage(), record.getUuid().equals(reportDataChatRecord.getUuid())), uuid),
+                    TranslationManager.render(BookMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_CHAT.build(DurationFormatter.getTimeFromTimestamp(record.getTime()), getPlayerRecordName(record.getUuid()), record.getMessage(), record.getUuid().equals(reportDataChatRecord.getUuid())), uuid),
                     space(),
-                    TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3.build(reportUUID, conclusion), uuid));
+                    TranslationManager.render(BookMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3.build(reportUUID, conclusion), uuid));
             bookPages.add(c);
         }
         return Book.book(bookTitle, bookAuthor, bookPages);
