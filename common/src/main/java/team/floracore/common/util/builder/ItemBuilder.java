@@ -135,6 +135,7 @@ public class ItemBuilder {
 
     public ItemBuilder lore(Component lore) {
         List<String> ret = new ArrayList<>();
+        ret.add(SERIALIZER.serialize(Component.space()));
         ret.add(SERIALIZER.serialize(lore));
         return loreString(ret);
     }

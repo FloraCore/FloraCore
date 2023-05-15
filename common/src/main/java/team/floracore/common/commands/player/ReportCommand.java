@@ -249,31 +249,26 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             i1.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).flags(ItemFlag.HIDE_ENCHANTS);
             contents.set(0, 4, ClickableItem.empty(i1.build()));
             String resultRns = getReports(report);
-            Material sm;
-            if (ADVANCED_VERSION) {
-                sm = Material.PLAYER_HEAD;
-            } else {
-                sm = Material.matchMaterial("SKULL_ITEM");
-            }
-            ItemStack rs = new ItemBuilder(sm).setSkullOwner(getPlayerRecordName(report.getReporters().get(0))).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid)).lore(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid)).build();
-            contents.set(2, 3, ClickableItem.empty(rs));
+            ItemStack rs = getPlayerItemBuilder(report.getReporters().get(0)).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid)).lore(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid)).build();
+            contents.set(2, 3, ClickableItem.of(rs, inventoryClickEvent -> getReportersGUI(player, reportUUID).open(player)));
             String r1 = getPlayerRecordName(report.getReported());
             if (r1 == null) {
                 r1 = "UNKNOWN";
             }
             boolean online = isOnline(report.getReported());
-            ItemBuilder rds = new ItemBuilder(sm).setSkullOwner(getPlayerRecordName(report.getReported())).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(r1, online), uuid));
+            ItemBuilder rds = getPlayerItemBuilder(report.getReported()).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(r1, online), uuid));
             if (online) {
                 rds.lore(TranslationManager.render(Message.CHECK_TP.build(), uuid));
+                String finalR = r1;
                 contents.set(2, 5, ClickableItem.of(rds.build(), inventoryClickEvent -> {
-                    reportTeleport(player, getPlayerRecordName(report.getReported()));
+                    reportTeleport(player, finalR);
                     player.closeInventory();
                 }));
             } else {
                 contents.set(2, 5, ClickableItem.empty(rds.build()));
             }
             ItemStack chats = new ItemBuilder(Material.BOOKSHELF).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_CHAT.build(), uuid)).lore(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid)).build();
-            contents.set(2, 4, ClickableItem.empty(chats));
+            contents.set(2, 4, ClickableItem.of(chats, inventoryClickEvent -> getChatsGUI(player, reportUUID).open(player)));
             switch (report.getStatus()) {
                 case WAITING:
                     Component accepted = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_ACCEPTED.build(), uuid);
@@ -335,6 +330,140 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();
+    }
+
+    private SmartInventory getReportersGUI(Player player, UUID reportUUID) {
+        UUID uuid = player.getUniqueId();
+        Report report = getStorageImplementation().selectReport(reportUUID);
+        Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER_TITLE.build(), uuid);
+        Component finalTitle = title.append(Component.space()).append(Message.ARROW.color(NamedTextColor.GRAY)).append(Component.space()).append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
+        SmartInventory.Builder builder = SmartInventory.builder();
+        builder.title(finalTitle);
+        builder.closeable(true);
+        builder.size(6, 9);
+        builder.provider((player1, contents) -> {
+            Pagination pagination = contents.pagination();
+            ItemBuilder i1 = new ItemBuilder(Material.PAPER).displayName(finalTitle).lore(getReportLore(report, uuid));
+            i1.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).flags(ItemFlag.HIDE_ENCHANTS);
+            contents.set(0, 4, ClickableItem.empty(i1.build()));
+            List<UUID> reporters = report.getReporters();
+            ClickableItem[] items = new ClickableItem[reporters.size()];
+            for (int i = 0; i < items.length; i++) {
+                String r1 = getPlayerRecordName(reporters.get(i));
+                if (r1 == null) {
+                    r1 = "UNKNOWN";
+                }
+                boolean online = isOnline(reporters.get(i));
+                ItemBuilder rds = getPlayerItemBuilder(reporters.get(i)).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER_DETAILED.build(r1, online), uuid));
+                if (online) {
+                    rds.lore(TranslationManager.render(Message.CHECK_TP.build(), uuid));
+                    String finalR = r1;
+                    items[i] = ClickableItem.of(rds.build(), inventoryClickEvent -> {
+                        reportTeleport(player, finalR);
+                        player.closeInventory();
+                    });
+                } else {
+                    items[i] = ClickableItem.empty(rds.build());
+                }
+            }
+            pagination.setItems(items);
+            pagination.setItemsPerPage(27);
+            int i = 18;
+            for (ClickableItem pageItem : pagination.getPageItems()) {
+                i++;
+                contents.set(SmartInventory.getInventoryRow(i), SmartInventory.getInventoryColumn(i), pageItem);
+            }
+            supplementaryMenu(contents);
+            if (!pagination.isFirst()) {
+                Component previous = TranslationManager.render(Message.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
+                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
+                contents.set(5, 0, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(previous).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.previous().getPage())));
+            }
+            if (!pagination.isLast()) {
+                Component next = TranslationManager.render(Message.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
+                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2), uuid);
+                contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(next).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.next().getPage())));
+            }
+            Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
+            contents.set(5, 5, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportGui(player, reportUUID).open(player)));
+            Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
+        });
+        return builder.build();
+    }
+
+    private SmartInventory getChatsGUI(Player player, UUID reportUUID) {
+        UUID uuid = player.getUniqueId();
+        Report report = getStorageImplementation().selectReport(reportUUID);
+        Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_CHATS_TITLE.build(), uuid);
+        Component finalTitle = title.append(Component.space()).append(Message.ARROW.color(NamedTextColor.GRAY)).append(Component.space()).append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
+        SmartInventory.Builder builder = SmartInventory.builder();
+        builder.title(finalTitle);
+        builder.closeable(true);
+        builder.size(6, 9);
+        builder.provider((player1, contents) -> {
+            Pagination pagination = contents.pagination();
+            ItemBuilder i1 = new ItemBuilder(Material.PAPER).displayName(finalTitle).lore(getReportLore(report, uuid));
+            i1.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).flags(ItemFlag.HIDE_ENCHANTS);
+            contents.set(0, 4, ClickableItem.empty(i1.build()));
+            List<ReportDataChatRecord> chats = report.getChat();
+            ClickableItem[] items = new ClickableItem[chats.size()];
+            for (int i = 0; i < items.length; i++) {
+                ReportDataChatRecord chat = chats.get(i);
+                ItemBuilder item = new ItemBuilder(Material.BOOK);
+                int id = chat.getDataChatRecord().getId();
+                Component ct = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_TITLE.build(id), uuid);
+                item.displayName(ct);
+                List<Component> lore = new ArrayList<>();
+                lore.add(Component.space());
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_PLAYER.build(getPlayerRecordName(chat.getUuid())), uuid));
+                long startTime = chat.getDataChatRecord().getJoinTime();
+                long endTime = chat.getDataChatRecord().getQuitTime();
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_START_TIME.build(DurationFormatter.getTimeFromTimestamp(startTime)), uuid));
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_END_TIME.build(DurationFormatter.getTimeFromTimestamp(endTime)), uuid));
+                lore.add(Component.space());
+                lore.add(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
+                item.lore(lore);
+                items[i] = ClickableItem.empty(item.build());
+            }
+            pagination.setItems(items);
+            pagination.setItemsPerPage(27);
+            int i = 18;
+            for (ClickableItem pageItem : pagination.getPageItems()) {
+                i++;
+                contents.set(SmartInventory.getInventoryRow(i), SmartInventory.getInventoryColumn(i), pageItem);
+            }
+            supplementaryMenu(contents);
+            if (!pagination.isFirst()) {
+                Component previous = TranslationManager.render(Message.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
+                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
+                contents.set(5, 0, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(previous).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.previous().getPage())));
+            }
+            if (!pagination.isLast()) {
+                Component next = TranslationManager.render(Message.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
+                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2), uuid);
+                contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(next).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.next().getPage())));
+            }
+            Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
+            contents.set(5, 5, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportGui(player, reportUUID).open(player)));
+            Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
+        });
+        return builder.build();
+    }
+
+    private ItemBuilder getPlayerItemBuilder(UUID uuid) {
+        Material sm;
+        if (ADVANCED_VERSION) {
+            sm = Material.PLAYER_HEAD;
+        } else {
+            sm = Material.matchMaterial("SKULL_ITEM");
+        }
+        ItemBuilder ib = new ItemBuilder(sm).setSkullOwner(getPlayerRecordName(uuid));
+        if (!ADVANCED_VERSION) {
+            ib.durability((short) 3);
+        }
+        return ib;
     }
 
     private String getReports(Report report) {

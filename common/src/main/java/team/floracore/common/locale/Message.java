@@ -855,21 +855,51 @@ public interface Message {
             // 举报 {0}
             .key("floracore.command.misc.reports.gui.main.report.title").args(text("#" + page, GRAY)).color(RED).build();
 
+    Args1<Integer> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_TITLE = (page) -> translatable()
+            // 聊天 {0}
+            .key("floracore.command.misc.reports.gui.main.report.chats.chat.title").args(text("#" + page, GRAY)).color(RED).build();
+
     Args1<Component> COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS = (status) -> translatable()
             // 状态: {0}
             .key("floracore.command.misc.reports.gui.main.report.status").args(status).color(GRAY).build();
+
+    Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_PLAYER = (player) -> translatable()
+            // 归属人: {0}
+            .key("floracore.command.misc.reports.gui.main.report.chats.chat.player").args(text(player, GREEN)).color(GRAY).build();
 
     Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_TIME = (time) -> translatable()
             // 日期: {0}
             .key("floracore.command.misc.reports.gui.main.report.report-time").args(text(time, YELLOW)).color(GRAY).build();
 
+    Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_START_TIME = (time) -> translatable()
+            // 开始时间: {0}
+            .key("floracore.command.misc.reports.gui.main.report.chats.chat.start-time").args(text(time, YELLOW)).color(GRAY).build();
+
+    Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_END_TIME = (time) -> translatable()
+            // 结束时间: {0}
+            .key("floracore.command.misc.reports.gui.main.report.chats.chat.end-time").args(text(time, YELLOW)).color(GRAY).build();
+
     Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORTER = (reporters) -> translatable()
             // 举报者: {0}
             .key("floracore.command.misc.reports.gui.main.report.reporter").args(text(reporters, GREEN)).color(GRAY).build();
 
+    Args0 COMMAND_REPORTS_GUI_MAIN_REPORTER_TITLE = () -> translatable()
+            // 举报者列表
+            .key("floracore.command.misc.reports.gui.main.report.reporter.title").color(GOLD).build();
+
+    Args0 COMMAND_REPORTS_GUI_MAIN_CHATS_TITLE = () -> translatable()
+            // 聊天列表
+            .key("floracore.command.misc.reports.gui.main.report.chats.title").color(GOLD).build();
+
     Args2<String, Boolean> COMMAND_REPORTS_GUI_MAIN_REPORTED = (reported, online) -> translatable()
-            // 被举报者: {0}
+            // 被举报者: {0} {1}
             .key("floracore.command.misc.reports.gui.main.report.reported")
+            .args(text(reported, RED),
+                    OPEN_BRACKET.append(translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline")).append(CLOSE_BRACKET).color(online ? GREEN : RED)).color(GRAY).build();
+
+    Args2<String, Boolean> COMMAND_REPORTS_GUI_MAIN_REPORTER_DETAILED = (reported, online) -> translatable()
+            // 举报者: {0} {1}
+            .key("floracore.command.misc.reports.gui.main.report.reporter.detailed")
             .args(text(reported, RED),
                     OPEN_BRACKET.append(translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline")).append(CLOSE_BRACKET).color(online ? GREEN : RED)).color(GRAY).build();
 
