@@ -895,11 +895,11 @@ public interface Message {
             // 翻页查看
             .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.main.line.2").color(RED).decoration(BOLD, true).decoration(UNDERLINED, true).build();
 
-    Args1<UUID> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3 = (uuid) -> {
+    Args2<UUID, Boolean> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3 = (uuid, conclusion) -> {
         HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
                 // 点击这里以返回
                 .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.main.line.3.hover").color(WHITE).build());
-        ClickEvent clickEvent = ClickEvent.runCommand("/rcs " + uuid.toString());
+        ClickEvent clickEvent = ClickEvent.runCommand("/rcs " + uuid.toString() + " " + conclusion);
         return translatable()
                 // 返回至聊天记录
                 .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.main.line.3").clickEvent(clickEvent).hoverEvent(hoverEvent).color(BLACK).decoration(BOLD, true).decoration(UNDERLINED, true).build();
@@ -954,9 +954,17 @@ public interface Message {
             // 已完成
             .key("floracore.command.misc.reports.status.ended").color(RED).build();
 
+    Args0 COMMAND_REPORTS_GUI_PROCESSED = () -> OPEN_BRACKET.append(translatable()
+            // (已处理)
+            .key("floracore.command.misc.reports.gui.processed")).append(CLOSE_BRACKET).color(BLACK);
+
     Args0 COMMAND_REPORTS_GUI_MAIN_TITLE = () -> translatable()
             // 举报列表
             .key("floracore.command.misc.reports.gui.main.title").color(GOLD).build();
+
+    Args0 COMMAND_REPORTS_GUI_MAIN_PROCESSED = () -> translatable()
+            // 查看已处理的举报列表
+            .key("floracore.command.misc.reports.gui.main.processed").color(YELLOW).build();
 
     Args0 COMMAND_REPORTS_GUI_REPORT_TITLE = () -> translatable()
             // 举报

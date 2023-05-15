@@ -152,13 +152,13 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     @CommandPermission("floracore.command.report.staff")
     public void reports(final @NotNull Player player) {
         Sender s = getPlugin().getSenderFactory().wrap(player);
-        getReportsMainGui(player).open(player);
+        getReportsMainGui(player, false).open(player);
     }
 
-    @CommandMethod("reports-chats|rcs <uuid>")
+    @CommandMethod("reports-chats|rcs <uuid> <conclusion>")
     @CommandPermission("floracore.command.report.staff")
-    public void reportsChats(final @NotNull Player player, final @NotNull @Argument("uuid") UUID uuid) {
-        getChatsGUI(player, uuid).open(player);
+    public void reportsChats(final @NotNull Player player, final @NotNull @Argument("uuid") UUID uuid, final @NotNull @Argument("conclusion") Boolean conclusion) {
+        getChatsGUI(player, uuid, conclusion).open(player);
     }
 
     private void createReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
@@ -191,13 +191,23 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         return c;
     }
 
-    private SmartInventory getReportsMainGui(Player player) {
+    private SmartInventory getReportsMainGui(Player player, boolean conclusion) {
         UUID uuid = player.getUniqueId();
-        Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid);
-        List<Report> filteredReports = reports.stream()
-                .filter(report -> report.getStatus() != ReportStatus.ENDED)
-                .sorted(Comparator.comparingInt(Report::getId))
-                .collect(Collectors.toList());
+        Component title;
+        List<Report> filteredReports;
+        if (conclusion) {
+            filteredReports = reports.stream()
+                    .filter(report -> report.getStatus() == ReportStatus.ENDED)
+                    .sorted(Comparator.comparingInt(Report::getId))
+                    .collect(Collectors.toList());
+            title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid).append(space()).append(TranslationManager.render(Message.COMMAND_REPORTS_GUI_PROCESSED.build(), uuid));
+        } else {
+            filteredReports = reports.stream()
+                    .filter(report -> report.getStatus() != ReportStatus.ENDED)
+                    .sorted(Comparator.comparingInt(Report::getId))
+                    .collect(Collectors.toList());
+            title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid);
+        }
         SmartInventory.Builder builder = SmartInventory.builder();
         builder.title(title);
         builder.closeable(true);
@@ -216,7 +226,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 if (report.getStatus() == ReportStatus.ACCEPTED) {
                     ri.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).flags(ItemFlag.HIDE_ENCHANTS);
                 }
-                items[i] = ClickableItem.of(ri.build(), inventoryClickEvent -> getReportGui(player, report.getUuid()).open(player));
+                items[i] = ClickableItem.of(ri.build(), inventoryClickEvent -> getReportGui(player, report.getUuid(), conclusion).open(player));
             }
             pagination.setItems(items);
             pagination.setItemsPerPage(27);
@@ -228,23 +238,34 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 contents.set(SmartInventory.getInventoryRow(i), SmartInventory.getInventoryColumn(i), pageItem);
             }
             supplementaryMenu(contents);
-            if (!pagination.isFirst()) {
-                Component previous = TranslationManager.render(Message.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
-                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
-                contents.set(5, 0, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(previous).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.previous().getPage())));
+            if (conclusion) {
+                Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
+                contents.set(5, 5, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportsMainGui(player, false).open(player)));
+            } else {
+                Component t1 = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_PROCESSED.build(), uuid);
+                contents.set(0, 8, ClickableItem.of(new ItemBuilder(Material.CHEST).displayName(t1).build(), inventoryClickEvent -> getReportsMainGui(player, true).open(player)));
             }
-            if (!pagination.isLast()) {
-                Component next = TranslationManager.render(Message.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
-                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2), uuid);
-                contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(next).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.next().getPage())));
-            }
+            setPageSlot(player, conclusion, uuid, contents, pagination);
             Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();
     }
 
-    private SmartInventory getReportGui(Player player, UUID reportUUID) {
+    private void setPageSlot(Player player, boolean conclusion, UUID uuid, InventoryContents contents, Pagination pagination) {
+        if (!pagination.isFirst()) {
+            Component previous = TranslationManager.render(Message.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
+            Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
+            contents.set(5, 0, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(previous).lore(turn).build(), event -> getReportsMainGui(player, conclusion).open(player, pagination.previous().getPage())));
+        }
+        if (!pagination.isLast()) {
+            Component next = TranslationManager.render(Message.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
+            Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2), uuid);
+            contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(next).lore(turn).build(), event -> getReportsMainGui(player, conclusion).open(player, pagination.next().getPage())));
+        }
+    }
+
+    private SmartInventory getReportGui(Player player, UUID reportUUID, boolean conclusion) {
         UUID uuid = player.getUniqueId();
         Report report = getStorageImplementation().selectReport(reportUUID);
         Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_TITLE.build(), uuid);
@@ -259,7 +280,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             contents.set(0, 4, ClickableItem.empty(i1.build()));
             String resultRns = getReports(report);
             ItemStack rs = getPlayerItemBuilder(report.getReporters().get(0)).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid)).lore(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid)).build();
-            contents.set(2, 3, ClickableItem.of(rs, inventoryClickEvent -> getReportersGUI(player, reportUUID).open(player)));
+            contents.set(2, 3, ClickableItem.of(rs, inventoryClickEvent -> getReportersGUI(player, reportUUID, conclusion).open(player)));
             String r1 = getPlayerRecordName(report.getReported());
             if (r1 == null) {
                 r1 = "UNKNOWN";
@@ -277,7 +298,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 contents.set(2, 5, ClickableItem.empty(rds.build()));
             }
             ItemStack chats = new ItemBuilder(Material.BOOKSHELF).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_CHAT.build(), uuid)).lore(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid)).build();
-            contents.set(2, 4, ClickableItem.of(chats, inventoryClickEvent -> getChatsGUI(player, reportUUID).open(player)));
+            contents.set(2, 4, ClickableItem.of(chats, inventoryClickEvent -> getChatsGUI(player, reportUUID, conclusion).open(player)));
             switch (report.getStatus()) {
                 case WAITING:
                     Component accepted = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_ACCEPTED.build(), uuid);
@@ -289,7 +310,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                     }
                     contents.set(3, 4, ClickableItem.of(ai, inventoryClickEvent -> {
                         report.setStatus(ReportStatus.ACCEPTED);
-                        getReportGui(player, reportUUID).open(player);
+                        getReportGui(player, reportUUID, conclusion).open(player);
                         getPlugin().getMessagingService().ifPresent(service -> {
                             String reported = getPlayerRecordName(report.getReported());
                             for (UUID reporter : report.getReporters()) {
@@ -311,7 +332,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                     contents.set(3, 4, ClickableItem.of(ei.build(), inventoryClickEvent -> {
                         report.setStatus(ReportStatus.ENDED);
                         report.setConclusionTime(System.currentTimeMillis());
-                        getReportGui(player, reportUUID).open(player);
+                        getReportGui(player, reportUUID, conclusion).open(player);
                         getPlugin().getMessagingService().ifPresent(service -> {
                             String reported = getPlayerRecordName(report.getReported());
                             for (UUID reporter : report.getReporters()) {
@@ -334,14 +355,14 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             }
             supplementaryMenu(contents);
             Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
-            contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportsMainGui(player).open(player)));
+            contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportsMainGui(player, conclusion).open(player)));
             Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();
     }
 
-    private SmartInventory getReportersGUI(Player player, UUID reportUUID) {
+    private SmartInventory getReportersGUI(Player player, UUID reportUUID, boolean conclusion) {
         UUID uuid = player.getUniqueId();
         Report report = getStorageImplementation().selectReport(reportUUID);
         Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER_TITLE.build(), uuid);
@@ -383,25 +404,16 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 contents.set(SmartInventory.getInventoryRow(i), SmartInventory.getInventoryColumn(i), pageItem);
             }
             supplementaryMenu(contents);
-            if (!pagination.isFirst()) {
-                Component previous = TranslationManager.render(Message.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
-                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
-                contents.set(5, 0, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(previous).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.previous().getPage())));
-            }
-            if (!pagination.isLast()) {
-                Component next = TranslationManager.render(Message.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
-                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2), uuid);
-                contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(next).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.next().getPage())));
-            }
+            setPageSlot(player, conclusion, uuid, contents, pagination);
             Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
-            contents.set(5, 5, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportGui(player, reportUUID).open(player)));
+            contents.set(5, 5, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportGui(player, reportUUID, conclusion).open(player)));
             Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();
     }
 
-    private SmartInventory getChatsGUI(Player player, UUID reportUUID) {
+    private SmartInventory getChatsGUI(Player player, UUID reportUUID, boolean conclusion) {
         UUID uuid = player.getUniqueId();
         Audience target = getPlugin().getBukkitAudiences().player(player);
         Report report = getStorageImplementation().selectReport(reportUUID);
@@ -434,7 +446,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 lore.add(Component.space());
                 lore.add(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
                 item.lore(lore);
-                items[i] = ClickableItem.of(item.build(), inventoryClickEvent -> target.openBook(getChatPage(uuid, reportUUID, chat)));
+                items[i] = ClickableItem.of(item.build(), inventoryClickEvent -> target.openBook(getChatPage(uuid, reportUUID, chat, conclusion)));
             }
             pagination.setItems(items);
             pagination.setItemsPerPage(27);
@@ -444,18 +456,9 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 contents.set(SmartInventory.getInventoryRow(i), SmartInventory.getInventoryColumn(i), pageItem);
             }
             supplementaryMenu(contents);
-            if (!pagination.isFirst()) {
-                Component previous = TranslationManager.render(Message.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
-                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()), uuid);
-                contents.set(5, 0, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(previous).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.previous().getPage())));
-            }
-            if (!pagination.isLast()) {
-                Component next = TranslationManager.render(Message.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
-                Component turn = TranslationManager.render(Message.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2), uuid);
-                contents.set(5, 8, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(next).lore(turn).build(), event -> getReportsMainGui(player).open(player, pagination.next().getPage())));
-            }
+            setPageSlot(player, conclusion, uuid, contents, pagination);
             Component back = TranslationManager.render(Message.COMMAND_MISC_GUI_BACK.build(), uuid);
-            contents.set(5, 5, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportGui(player, reportUUID).open(player)));
+            contents.set(5, 5, ClickableItem.of(new ItemBuilder(Material.ARROW).displayName(back).build(), event -> getReportGui(player, reportUUID, conclusion).open(player)));
             Component close = TranslationManager.render(Message.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
@@ -533,7 +536,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     }
 
 
-    private Book getChatPage(UUID uuid, UUID reportUUID, ReportDataChatRecord reportDataChatRecord) {
+    private Book getChatPage(UUID uuid, UUID reportUUID, ReportDataChatRecord reportDataChatRecord, boolean conclusion) {
         Component bookTitle = text("FloraCore Chat Page");
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
@@ -568,14 +571,14 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 space(),
                 TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_2.build(), uuid),
                 space(),
-                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3.build(reportUUID), uuid)
+                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3.build(reportUUID, conclusion), uuid)
         ).asComponent();
         bookPages.add(main);
         for (ChatRecord record : filteredRecords) {
             Component c = join(joinConfig,
                     TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_CHAT.build(DurationFormatter.getTimeFromTimestamp(record.getTime()), getPlayerRecordName(record.getUuid()), record.getMessage(), record.getUuid().equals(reportDataChatRecord.getUuid())), uuid),
                     space(),
-                    TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3.build(reportUUID), uuid));
+                    TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3.build(reportUUID, conclusion), uuid));
             bookPages.add(c);
         }
         return Book.book(bookTitle, bookAuthor, bookPages);
