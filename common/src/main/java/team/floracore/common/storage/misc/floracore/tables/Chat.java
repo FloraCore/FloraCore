@@ -11,6 +11,7 @@ import java.util.*;
 
 public class Chat extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}chat' WHERE name=?";
+    public static final String SELECT_WITH_ID = "SELECT * FROM '{prefix}chat' WHERE id=?";
     public static final String SELECT_WITH_START_TIME = "SELECT * FROM '{prefix}chat' WHERE name=? AND startTime=?";
     public static final String DELETE = "DELETE FROM '{prefix}chat' WHERE name=?";
     private static final String UPDATE_RECORDS = "UPDATE '{prefix}chat' SET records=? WHERE id=?";

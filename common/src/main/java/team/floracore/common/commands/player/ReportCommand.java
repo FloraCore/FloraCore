@@ -3,6 +3,8 @@ package team.floracore.common.commands.player;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.specifier.*;
 import de.myzelyam.api.vanish.*;
+import net.kyori.adventure.audience.*;
+import net.kyori.adventure.inventory.*;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.format.*;
 import org.bukkit.*;
@@ -30,6 +32,7 @@ import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.*;
 
+import static net.kyori.adventure.text.Component.*;
 import static team.floracore.common.util.ReflectionWrapper.*;
 
 /**
@@ -150,6 +153,12 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     public void reports(final @NotNull Player player) {
         Sender s = getPlugin().getSenderFactory().wrap(player);
         getReportsMainGui(player).open(player);
+    }
+
+    @CommandMethod("reports-chats|rcs <uuid>")
+    @CommandPermission("floracore.command.report.staff")
+    public void reportsChats(final @NotNull Player player, final @NotNull @Argument("uuid") UUID uuid) {
+        getChatsGUI(player, uuid).open(player);
     }
 
     private void createReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
@@ -394,6 +403,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
 
     private SmartInventory getChatsGUI(Player player, UUID reportUUID) {
         UUID uuid = player.getUniqueId();
+        Audience target = getPlugin().getBukkitAudiences().player(player);
         Report report = getStorageImplementation().selectReport(reportUUID);
         Component title = TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_CHATS_TITLE.build(), uuid);
         Component finalTitle = title.append(Component.space()).append(Message.ARROW.color(NamedTextColor.GRAY)).append(Component.space()).append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
@@ -424,7 +434,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 lore.add(Component.space());
                 lore.add(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
                 item.lore(lore);
-                items[i] = ClickableItem.empty(item.build());
+                items[i] = ClickableItem.of(item.build(), inventoryClickEvent -> target.openBook(getChatPage(uuid, reportUUID, chat)));
             }
             pagination.setItems(items);
             pagination.setItemsPerPage(27);
@@ -520,5 +530,54 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         String resultReason = joinList(report.getReasons(), 2);
         lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REASON.build(resultReason), uuid));
         return lore;
+    }
+
+
+    private Book getChatPage(UUID uuid, UUID reportUUID, ReportDataChatRecord reportDataChatRecord) {
+        Component bookTitle = text("FloraCore Chat Page");
+        Component bookAuthor = text("FloraCore");
+        Collection<Component> bookPages = new ArrayList<>();
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        DataChatRecord dataChatRecord = reportDataChatRecord.getDataChatRecord();
+        long startTime = dataChatRecord.getJoinTime();
+        long endTime = dataChatRecord.getQuitTime();
+        Chat chat = getStorageImplementation().selectChatWithID(dataChatRecord.getId());
+        List<ChatRecord> records = chat.getRecords();
+        int startIndex = 0;
+        int endIndex = records.size();
+        for (int i = 0; i < records.size(); i++) {
+            if (records.get(i).getTime() >= startTime) {
+                startIndex = i;
+                break;
+            }
+        }
+        for (int i = startIndex; i < records.size(); i++) {
+            if (records.get(i).getTime() > endTime) {
+                endIndex = i;
+                break;
+            }
+        }
+        List<ChatRecord> filteredRecords = records.subList(startIndex, endIndex);
+        Component main = join(joinConfig,
+                TranslationManager.render(Message.COMMAND_MISC_CHAT.build(), uuid),
+                space(),
+                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_1.build(filteredRecords.size()), uuid),
+                space(),
+                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_START_TIME_BOOK.build(DurationFormatter.getTimeFromTimestamp(startTime)), uuid),
+                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_END_TIME_BOOK.build(DurationFormatter.getTimeFromTimestamp(endTime)), uuid),
+                space(),
+                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_2.build(), uuid),
+                space(),
+                TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3.build(reportUUID), uuid)
+        ).asComponent();
+        bookPages.add(main);
+        for (ChatRecord record : filteredRecords) {
+            Component c = join(joinConfig,
+                    TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_CHAT.build(DurationFormatter.getTimeFromTimestamp(record.getTime()), getPlayerRecordName(record.getUuid()), record.getMessage(), record.getUuid().equals(reportDataChatRecord.getUuid())), uuid),
+                    space(),
+                    TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3.build(reportUUID), uuid));
+            bookPages.add(c);
+        }
+        return Book.book(bookTitle, bookAuthor, bookPages);
     }
 }

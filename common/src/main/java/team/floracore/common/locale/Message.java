@@ -875,9 +875,40 @@ public interface Message {
             // 开始时间: {0}
             .key("floracore.command.misc.reports.gui.main.report.chats.chat.start-time").args(text(time, YELLOW)).color(GRAY).build();
 
+    Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_START_TIME_BOOK = (time) -> translatable()
+            // 开始时间: {0}
+            .key("floracore.command.misc.reports.gui.main.report.chats.chat.start-time").args(text(time, DARK_GREEN)).color(BLACK).build();
+
     Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_END_TIME = (time) -> translatable()
             // 结束时间: {0}
             .key("floracore.command.misc.reports.gui.main.report.chats.chat.end-time").args(text(time, YELLOW)).color(GRAY).build();
+
+    Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_END_TIME_BOOK = (time) -> translatable()
+            // 结束时间: {0}
+            .key("floracore.command.misc.reports.gui.main.report.chats.chat.end-time").args(text(time, DARK_GREEN)).color(BLACK).build();
+
+    Args1<Integer> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_1 = (amounts) -> translatable()
+            // 共 {0} 条聊天记录
+            .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.main.line.1").args(text(amounts).decoration(BOLD, true).decoration(UNDERLINED, true)).color(GOLD).build();
+
+    Args0 COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_2 = () -> translatable()
+            // 翻页查看
+            .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.main.line.2").color(RED).decoration(BOLD, true).decoration(UNDERLINED, true).build();
+
+    Args1<UUID> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3 = (uuid) -> {
+        HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
+                // 点击这里以返回
+                .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.main.line.3.hover").color(WHITE).build());
+        ClickEvent clickEvent = ClickEvent.runCommand("/rcs " + uuid.toString());
+        return translatable()
+                // 返回至聊天记录
+                .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.main.line.3").clickEvent(clickEvent).hoverEvent(hoverEvent).color(BLACK).decoration(BOLD, true).decoration(UNDERLINED, true).build();
+    };
+
+    Args4<String, String, String, Boolean> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_CHAT = (time, player, chat, target) -> translatable()
+            // {0} {1} : {2}
+            .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.chat")
+            .args(text(time), text(player).decoration(BOLD, true), text(chat, BLACK).decoration(UNDERLINED, true)).color(target ? RED : BLACK).build();
 
     Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORTER = (reporters) -> translatable()
             // 举报者: {0}
@@ -950,6 +981,10 @@ public interface Message {
     Args0 COMMAND_MISC_GUI_CLOSE = () -> translatable()
             // 关闭
             .key("floracore.command.misc.gui.close").color(RED).build();
+
+    Args0 COMMAND_MISC_CHAT = () -> translatable()
+            // 聊天记录
+            .key("floracore.command.misc.chat").decoration(BOLD, true).decoration(UNDERLINED, true).color(BLACK).build();
 
     Args0 COMMAND_MISC_GUI_PREVIOUS_PAGE = () -> translatable()
             // 上一页

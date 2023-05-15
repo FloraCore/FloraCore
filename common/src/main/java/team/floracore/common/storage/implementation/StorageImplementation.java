@@ -68,6 +68,8 @@ public interface StorageImplementation {
 
     Chat selectChatWithStartTime(String name, long startTime);
 
+    Chat selectChatWithID(int id);
+
     void insertChat(String name, long startTime);
 
     List<Report> getReports();

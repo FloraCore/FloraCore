@@ -368,6 +368,33 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
+    public Chat selectChatWithID(int id) {
+        Chat chat;
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Chat.SELECT_WITH_ID))) {
+                ps.setInt(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        String recordsJson = rs.getString("records");
+                        String name = rs.getString("name");
+                        Type type = new TypeToken<List<ChatRecord>>() {
+                        }.getType();
+                        List<ChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
+                        long startTime = rs.getLong("startTime");
+                        long endTime = rs.getLong("endTime");
+                        chat = new Chat(plugin, this, id, name, records, startTime, endTime);
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return chat;
+    }
+
+    @Override
     public void insertChat(String name, long startTime) {
         Chat chat = new Chat(plugin, this, name, startTime);
         try {
