@@ -6,6 +6,7 @@ import de.myzelyam.api.vanish.*;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.format.*;
 import org.bukkit.*;
+import org.bukkit.enchantments.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
 import org.floracore.api.commands.report.*;
@@ -203,6 +204,9 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 lore.add(Component.space());
                 lore.add(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
                 ItemBuilder ri = new ItemBuilder(Material.PAPER).displayName(rt).lore(lore);
+                if (report.getStatus() == ReportStatus.ACCEPTED) {
+                    ri.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).flags(ItemFlag.HIDE_ENCHANTS);
+                }
                 items[i] = ClickableItem.of(ri.build(), inventoryClickEvent -> getReportGui(player, report.getUuid()).open(player));
             }
             pagination.setItems(items);
@@ -241,14 +245,35 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         builder.closeable(true);
         builder.size(6, 9);
         builder.provider((player1, contents) -> {
-            contents.set(0, 4, ClickableItem.empty(new ItemBuilder(Material.PAPER).displayName(finalTitle).lore(getReportLore(report, uuid)).build()));
-            ItemStack rs = new ItemBuilder(Material.SLIME_BALL).displayName("reporters").build();
+            ItemBuilder i1 = new ItemBuilder(Material.PAPER).displayName(finalTitle).lore(getReportLore(report, uuid));
+            i1.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).flags(ItemFlag.HIDE_ENCHANTS);
+            contents.set(0, 4, ClickableItem.empty(i1.build()));
+            String resultRns = getReports(report);
+            Material sm;
+            if (ADVANCED_VERSION) {
+                sm = Material.PLAYER_HEAD;
+            } else {
+                sm = Material.matchMaterial("SKULL_ITEM");
+            }
+            ItemStack rs = new ItemBuilder(sm).setSkullOwner(getPlayerRecordName(report.getReporters().get(0))).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid)).lore(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid)).build();
             contents.set(2, 3, ClickableItem.empty(rs));
-            ItemStack rds = new ItemBuilder(Material.ENDER_PEARL).displayName("reported").build();
-            contents.set(2, 5, ClickableItem.of(rds, inventoryClickEvent -> {
-                reportTeleport(player, getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(report.getReported()));
-                player.closeInventory();
-            }));
+            String r1 = getPlayerRecordName(report.getReported());
+            if (r1 == null) {
+                r1 = "UNKNOWN";
+            }
+            boolean online = isOnline(report.getReported());
+            ItemBuilder rds = new ItemBuilder(sm).setSkullOwner(getPlayerRecordName(report.getReported())).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(r1, online), uuid));
+            if (online) {
+                rds.lore(TranslationManager.render(Message.CHECK_TP.build(), uuid));
+                contents.set(2, 5, ClickableItem.of(rds.build(), inventoryClickEvent -> {
+                    reportTeleport(player, getPlayerRecordName(report.getReported()));
+                    player.closeInventory();
+                }));
+            } else {
+                contents.set(2, 5, ClickableItem.empty(rds.build()));
+            }
+            ItemStack chats = new ItemBuilder(Material.BOOKSHELF).displayName(TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_CHAT.build(), uuid)).lore(TranslationManager.render(Message.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid)).build();
+            contents.set(2, 4, ClickableItem.empty(chats));
             switch (report.getStatus()) {
                 case WAITING:
                     Component accepted = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_ACCEPTED.build(), uuid);
@@ -262,15 +287,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                         report.setStatus(ReportStatus.ACCEPTED);
                         getReportGui(player, reportUUID).open(player);
                         getPlugin().getMessagingService().ifPresent(service -> {
-                            List<String> rns = new ArrayList<>();
-                            for (UUID reporter : report.getReporters()) {
-                                String name = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
-                                if (name != null) {
-                                    rns.add(name);
-                                }
-                            }
-                            String resultRns = joinList(rns, 3);
-                            String reported = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(report.getReported());
+                            String reported = getPlayerRecordName(report.getReported());
                             for (UUID reporter : report.getReporters()) {
                                 service.pushNoticeMessage(reporter, NoticeMessage.NoticeType.REPORT_ACCEPTED, new String[]{reported});
                             }
@@ -280,26 +297,19 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                     break;
                 case ACCEPTED:
                     Component end = TranslationManager.render(Message.COMMAND_REPORTS_GUI_REPORT_END.build(), uuid);
-                    ItemStack ei;
+                    ItemBuilder ei;
                     if (ADVANCED_VERSION) {
-                        ei = new ItemBuilder(Material.LIGHT_BLUE_TERRACOTTA).displayName(end).build();
+                        ei = new ItemBuilder(Material.LIGHT_BLUE_TERRACOTTA).displayName(end);
                     } else {
-                        ei = new ItemBuilder(new ItemStack(Material.matchMaterial("STAINED_CLAY"), 1, (short) 3)).displayName(end).build();
+                        ei = new ItemBuilder(new ItemStack(Material.matchMaterial("STAINED_CLAY"), 1, (short) 3)).displayName(end);
                     }
-                    contents.set(3, 4, ClickableItem.of(ei, inventoryClickEvent -> {
+                    ei.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).flags(ItemFlag.HIDE_ENCHANTS);
+                    contents.set(3, 4, ClickableItem.of(ei.build(), inventoryClickEvent -> {
                         report.setStatus(ReportStatus.ENDED);
                         report.setConclusionTime(System.currentTimeMillis());
                         getReportGui(player, reportUUID).open(player);
                         getPlugin().getMessagingService().ifPresent(service -> {
-                            List<String> rns = new ArrayList<>();
-                            for (UUID reporter : report.getReporters()) {
-                                String name = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
-                                if (name != null) {
-                                    rns.add(name);
-                                }
-                            }
-                            String resultRns = joinList(rns, 3);
-                            String reported = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(report.getReported());
+                            String reported = getPlayerRecordName(report.getReported());
                             for (UUID reporter : report.getReporters()) {
                                 service.pushNoticeMessage(reporter, NoticeMessage.NoticeType.REPORT_PROCESSED, new String[]{reported});
                             }
@@ -325,6 +335,17 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             contents.set(5, 4, ClickableItem.of(new ItemBuilder(Material.BARRIER).displayName(close).build(), event -> player.closeInventory()));
         });
         return builder.build();
+    }
+
+    private String getReports(Report report) {
+        List<String> rns = new ArrayList<>();
+        for (UUID reporter : report.getReporters()) {
+            String name = getPlayerRecordName(reporter);
+            if (name != null) {
+                rns.add(name);
+            }
+        }
+        return joinList(rns, 3);
     }
 
     private void supplementaryMenu(InventoryContents contents) {
@@ -359,20 +380,13 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         }
         lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORT_TIME.build(DurationFormatter.getTimeFromTimestamp(report.getReportTime())), uuid));
         lore.add(Component.space());
-        List<String> rns = new ArrayList<>();
-        for (UUID reporter : report.getReporters()) {
-            String name = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(reporter);
-            if (name != null) {
-                rns.add(name);
-            }
-        }
-        String resultRns = joinList(rns, 3);
+        String resultRns = getReports(report);
         lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns), uuid));
-        String reported = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(report.getReported());
+        String reported = getPlayerRecordName(report.getReported());
         if (reported == null) {
             reported = "UNKNOWN";
         }
-        boolean online = getPlugin().getApiProvider().getPlayerAPI().isOnline(report.getReported());
+        boolean online = isOnline(report.getReported());
         lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(reported, online), uuid));
         String resultReason = joinList(report.getReasons(), 2);
         lore.add(TranslationManager.render(Message.COMMAND_REPORTS_GUI_MAIN_REASON.build(resultReason), uuid));

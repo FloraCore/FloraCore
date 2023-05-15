@@ -817,6 +817,8 @@ public interface Message {
         return i;
     };
 
+    Args0 CHECK_TP = () -> translatable("floracore.command.misc.check-tp", YELLOW);
+
     Args2<String, String> COMMAND_REPORT_SUCCESS = (target, reason) -> prefixed(translatable()
             // 你以"{1}"的理由举报了玩家 {0} ,请您耐心等待工作人员处理!
             .key("floracore.command.report.success").color(AQUA).args(text(target, RED), text(reason, YELLOW)));
@@ -898,6 +900,10 @@ public interface Message {
     Args0 COMMAND_REPORTS_GUI_REPORT_TITLE = () -> translatable()
             // 举报
             .key("floracore.command.misc.reports.gui.report.title").color(GOLD).build();
+
+    Args0 COMMAND_REPORTS_GUI_REPORT_CHAT = () -> translatable()
+            // 聊天记录
+            .key("floracore.command.misc.reports.gui.report.chat").color(GRAY).build();
 
     Args0 COMMAND_REPORTS_GUI_REPORT_ACCEPTED = () -> translatable()
             // 受理此举报
