@@ -14,6 +14,7 @@ import team.floracore.common.commands.misc.FloraCoreCommand;
 import team.floracore.common.commands.misc.*;
 import team.floracore.common.commands.player.*;
 import team.floracore.common.commands.server.*;
+import team.floracore.common.commands.socialsystems.*;
 import team.floracore.common.commands.test.*;
 import team.floracore.common.commands.world.*;
 import team.floracore.common.locale.message.*;
@@ -135,6 +136,9 @@ public class CommandManager {
 
         // server
         this.annotationParser.parse(new BroadCastCommand(plugin));
+
+        // social systems
+        this.annotationParser.parse(new PartyCommand(plugin));
 
         // world
         this.annotationParser.parse(new TimeCommand(plugin));

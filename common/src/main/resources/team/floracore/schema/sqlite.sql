@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}chat`
 (
     id        INTEGER     NOT NULL PRIMARY KEY AUTOINCREMENT,
     name      VARCHAR(16) NOT NULL,
+    type      VARCHAR(16) NOT NULL,
     records   TEXT        NOT NULL,
     startTime BIGINT      NOT NULL,
     endTime   BIGINT      NULL

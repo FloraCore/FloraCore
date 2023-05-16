@@ -2,6 +2,7 @@ package team.floracore.common.storage.implementation;
 
 import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.sql.connection.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -64,13 +65,13 @@ public interface StorageImplementation {
 
     SERVER selectServer(String name);
 
-    List<CHAT> selectChat(String name);
+    List<CHAT> selectChat(String name, ChatType type);
 
-    CHAT selectChatWithStartTime(String name, long startTime);
+    CHAT selectChatWithStartTime(String name, ChatType type, long startTime);
 
     CHAT selectChatWithID(int id);
 
-    void insertChat(String name, long startTime);
+    void insertChat(String name, ChatType type, long startTime);
 
     List<REPORT> getReports();
 

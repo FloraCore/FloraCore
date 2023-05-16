@@ -316,11 +316,12 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public List<CHAT> selectChat(String name) {
+    public List<CHAT> selectChat(String name, ChatType chatType) {
         List<CHAT> ret = new ArrayList<>();
         try (Connection c = this.connectionFactory.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(CHAT.SELECT))) {
                 ps.setString(1, name);
+                ps.setString(2, chatType.name());
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         int id = rs.getInt("id");
@@ -330,7 +331,7 @@ public class SqlStorage implements StorageImplementation {
                         List<ChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         long startTime = rs.getLong("startTime");
                         long endTime = rs.getLong("endTime");
-                        ret.add(new CHAT(plugin, this, id, name, records, startTime, endTime));
+                        ret.add(new CHAT(plugin, this, id, name, chatType, records, startTime, endTime));
                     }
                 }
             }
@@ -341,12 +342,13 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public CHAT selectChatWithStartTime(String name, long startTime) {
+    public CHAT selectChatWithStartTime(String name, ChatType chatType, long startTime) {
         CHAT chat;
         try (Connection c = this.connectionFactory.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(CHAT.SELECT_WITH_START_TIME))) {
                 ps.setString(1, name);
                 ps.setLong(2, startTime);
+                ps.setString(3, chatType.name());
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
                         int id = rs.getInt("id");
@@ -355,7 +357,7 @@ public class SqlStorage implements StorageImplementation {
                         }.getType();
                         List<ChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         long endTime = rs.getLong("endTime");
-                        chat = new CHAT(plugin, this, id, name, records, startTime, endTime);
+                        chat = new CHAT(plugin, this, id, name, chatType, records, startTime, endTime);
                     } else {
                         return null;
                     }
@@ -377,12 +379,13 @@ public class SqlStorage implements StorageImplementation {
                     if (rs.next()) {
                         String recordsJson = rs.getString("records");
                         String name = rs.getString("name");
+                        ChatType chatType = ChatType.valueOf(rs.getString("type"));
                         Type type = new TypeToken<List<ChatRecord>>() {
                         }.getType();
                         List<ChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         long startTime = rs.getLong("startTime");
                         long endTime = rs.getLong("endTime");
-                        chat = new CHAT(plugin, this, id, name, records, startTime, endTime);
+                        chat = new CHAT(plugin, this, id, name, chatType, records, startTime, endTime);
                     } else {
                         return null;
                     }
@@ -395,8 +398,8 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public void insertChat(String name, long startTime) {
-        CHAT chat = new CHAT(plugin, this, name, startTime);
+    public void insertChat(String name, ChatType type, long startTime) {
+        CHAT chat = new CHAT(plugin, this, name, type, startTime);
         try {
             chat.init();
         } catch (SQLException e) {
