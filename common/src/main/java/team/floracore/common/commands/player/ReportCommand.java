@@ -226,7 +226,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 if (report.getStatus() == ReportStatus.ACCEPTED) {
                     ri.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).flags(ItemFlag.HIDE_ENCHANTS);
                 }
-                items[i] = ClickableItem.of(ri.build(), inventoryClickEvent -> getReportGui(player, report.getUuid(), conclusion).open(player));
+                items[i] = ClickableItem.of(ri.build(), inventoryClickEvent -> getReportGui(player, report.getUniqueId(), conclusion).open(player));
             }
             pagination.setItems(items);
             pagination.setItemsPerPage(27);

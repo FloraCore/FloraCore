@@ -55,7 +55,7 @@ public class PLAYER extends AbstractFloraCoreTable {
         return id;
     }
 
-    public UUID getUuid() {
+    public UUID getUniqueId() {
         return uuid;
     }
 

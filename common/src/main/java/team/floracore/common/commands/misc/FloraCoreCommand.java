@@ -155,7 +155,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             if (p == null) {
                 try {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
-                    u = i.getUuid();
+                    u = i.getUniqueId();
                 } catch (Throwable e) {
                     Message.PLAYER_NOT_FOUND.send(s, target);
                     return null;
@@ -193,7 +193,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             if (p == null) {
                 try {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
-                    u = i.getUuid();
+                    u = i.getUniqueId();
                 } catch (Throwable e) {
                     Message.PLAYER_NOT_FOUND.send(s, target);
                     return null;
@@ -222,7 +222,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             if (p == null) {
                 try {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
-                    u = i.getUuid();
+                    u = i.getUniqueId();
                 } catch (Throwable e) {
                     Message.PLAYER_NOT_FOUND.send(s, target);
                     return null;
@@ -256,7 +256,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             if (p == null) {
                 try {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
-                    u = i.getUuid();
+                    u = i.getUniqueId();
                 } catch (Throwable e) {
                     Message.PLAYER_NOT_FOUND.send(s, target);
                     return null;
@@ -298,7 +298,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             if (p == null) {
                 try {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
-                    u = i.getUuid();
+                    u = i.getUniqueId();
                 } catch (Throwable e) {
                     Message.PLAYER_NOT_FOUND.send(s, target);
                     return null;

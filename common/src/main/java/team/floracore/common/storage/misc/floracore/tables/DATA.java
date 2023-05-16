@@ -37,7 +37,7 @@ public class DATA extends AbstractFloraCoreTable {
         return id;
     }
 
-    public UUID getUuid() {
+    public UUID getUniqueId() {
         return uuid;
     }
 

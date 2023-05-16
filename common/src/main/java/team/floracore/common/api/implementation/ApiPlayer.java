@@ -41,7 +41,7 @@ public class ApiPlayer implements PlayerAPI {
         if (players == null) {
             return null;
         }
-        return players.getUuid();
+        return players.getUniqueId();
     }
 
     @Override
