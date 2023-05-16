@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.*;
 
 public class DATA extends AbstractFloraCoreTable {
-    public static final String SELECT = "SELECT * FROM '{prefix}data' WHERE uuid=?";
+    public static final String SELECT = "SELECT * FROM '{prefix}data' WHERE uuid=? LIMIT 100";
     public static final String DELETE_ALL = "DELETE FROM '{prefix}data' WHERE uuid=?";
     public static final String DELETE_TYPE = "DELETE FROM '{prefix}data' WHERE uuid=? AND type=?";
     public static final String DELETE_ID = "DELETE FROM '{prefix}data' WHERE id=?";
