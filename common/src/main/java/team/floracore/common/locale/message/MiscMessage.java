@@ -15,6 +15,12 @@ public interface MiscMessage extends AbstractMessage {
             // [公告]
             .color(GRAY).append(text('[')).append(text().decoration(BOLD, true).append(translatable("floracore.command.misc.server.broadcast.prefix").color(AQUA))).append(text(']')).build();
 
+    Component PREFIX_PARTY = text()
+            // 组队 >
+            .append(translatable("floracore.command.misc.party.prefix", BLUE)).append(space()).append(text(">", DARK_GRAY)).build();
+
+    Args0 PARTY_HORIZONTAL_LINE = () -> HORIZONTAL_LINE.color(BLUE);
+
     Args1<FloraCoreBootstrap> STARTUP_BANNER = bootstrap -> {
         // FloraCore v{} is Running.
         Component infoLine1 = text()
@@ -182,5 +188,9 @@ public interface MiscMessage extends AbstractMessage {
     Args1<Integer> COMMAND_MISC_GUI_TURN_TO_PAGE = (page) -> translatable()
             // 转到第 {0} 页
             .key("floracore.command.misc.gui.turn-to-page").args(text(page)).color(GRAY).build();
+
+    Args1<String> PLAYER_NOT_FOUND = id -> AbstractMessage.prefixed(translatable()
+            // 无法找到 {0} 这名玩家
+            .key("floracore.command.misc.loading.error.player-not-found").color(RED).args(text(id, DARK_RED)).append(FULL_STOP));
 
 }

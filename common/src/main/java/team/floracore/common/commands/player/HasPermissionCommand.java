@@ -29,7 +29,7 @@ public class HasPermissionCommand extends AbstractFloraCoreCommand {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
         if (ut == null) {
-            Message.PLAYER_NOT_FOUND.send(sender, target);
+            MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
             return;
         }
         (hasPermission(ut, permission) ? Message.COMMAND_HASPERMISSION_YES : Message.COMMAND_HASPERMISSION_NO).send(sender, target, permission);

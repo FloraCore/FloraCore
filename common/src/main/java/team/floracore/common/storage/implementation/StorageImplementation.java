@@ -87,4 +87,6 @@ public interface StorageImplementation {
     void addReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<ReportDataChatRecord> chat);
 
     PARTY selectParty(UUID uuid);
+
+    void insertParty(UUID uuid, UUID leader, long createTime, int chat);
 }

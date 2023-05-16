@@ -157,7 +157,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
                     u = i.getUniqueId();
                 } catch (Throwable e) {
-                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                     return null;
                 }
             } else {
@@ -195,7 +195,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
                     u = i.getUniqueId();
                 } catch (Throwable e) {
-                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                     return null;
                 }
             } else {
@@ -224,7 +224,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
                     u = i.getUniqueId();
                 } catch (Throwable e) {
-                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                     return null;
                 }
             } else {
@@ -258,7 +258,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
                     u = i.getUniqueId();
                 } catch (Throwable e) {
-                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                     return null;
                 }
             } else {
@@ -300,7 +300,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
                     u = i.getUniqueId();
                 } catch (Throwable e) {
-                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                     return null;
                 }
             } else {

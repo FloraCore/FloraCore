@@ -105,10 +105,6 @@ public interface Message extends AbstractMessage {
             // {0} 的数据信息:
             .key("floracore.command.generic.data.info.title").color(AQUA).args(text(target)));
 
-    Args1<String> PLAYER_NOT_FOUND = id -> AbstractMessage.prefixed(translatable()
-            // 无法找到 {0} 这名玩家
-            .key("floracore.command.misc.loading.error.player-not-found").color(RED).args(text(id, DARK_RED)).append(FULL_STOP));
-
     Args4<String, String, String, Long> DATA_ENTRY = (type, key, value, expiry) -> {
         Instant instant = Instant.ofEpochMilli(expiry);
         Instant now = Instant.now();
@@ -477,4 +473,29 @@ public interface Message extends AbstractMessage {
             // 你已成功将你的显示语言更改为 {0} !
             .key("floracore.command.language.change.success").args(text(language, GREEN)).color(AQUA).build();
 
+    Args1<String> COMMAND_MISC_PARTY_INVITE_EXPIRED = (target) -> translatable("floracore.command.misc.party.invite.expired", AQUA).args(text(target, GREEN));
+
+    Args0 COMMAND_MISC_PARTY_INVITE_NO_PERMISSION = () -> translatable()
+            // 你没有发送组队邀请的权限!
+            .key("floracore.command.misc.party.invite.no-permission").color(RED).build();
+
+    Args0 COMMAND_MISC_PARTY_INVITE_SELF = () -> translatable()
+            // 你不能向自己发送组队邀请!
+            .key("floracore.command.misc.party.invite.self").color(RED).build();
+
+    Args3<String, String, Integer> COMMAND_MISC_PARTY_INVITE = (sender, target, time) -> translatable()
+            // {0} 已邀请 {1} 到组队中!他们有 {2} 秒时间接受邀请
+            .key("floracore.command.misc.party.invite").color(AQUA)
+            // {}
+            .args(text(sender, GREEN), text(target, YELLOW), text(time, RED)).append(AbstractMessage.FULL_STOP).build();
+
+    Args0 COMMAND_MISC_PARTY_NOT_IN = () -> translatable()
+            // 你当前不在组队中
+            .key("floracore.command.misc.party.not-in").color(RED).append(AbstractMessage.FULL_STOP).build();
+
+    Args1<String> COMMAND_MISC_PARTY_DISBAND = (sender) -> translatable()
+            // {0} 解散了组队!
+            .key("floracore.command.misc.party.disband").color(AQUA)
+            // {}
+            .args(text(sender, GREEN)).build();
 }

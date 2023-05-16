@@ -554,20 +554,35 @@ public class SqlStorage implements StorageImplementation {
                     if (rs.next()) {
                         int id = rs.getInt("id");
                         UUID leader = UUID.fromString(rs.getString("leader"));
-                        String membersJson = rs.getString("members");
+                        String moderatorsJson = rs.getString("moderators");
                         Type type1 = new TypeToken<List<UUID>>() {
                         }.getType();
-                        List<UUID> members = GsonProvider.normal().fromJson(membersJson, type1);
+                        List<UUID> moderators = GsonProvider.normal().fromJson(moderatorsJson, type1);
+                        String membersJson = rs.getString("members");
+                        Type type2 = new TypeToken<List<UUID>>() {
+                        }.getType();
+                        List<UUID> members = GsonProvider.normal().fromJson(membersJson, type2);
                         String settings = rs.getString("settings");
                         long createTime = rs.getLong("createTime");
                         long disbandTime = rs.getLong("disbandTime");
                         int chat = rs.getInt("chat");
-                        return new PARTY(plugin, this, id, uuid, leader, members, settings, createTime, disbandTime, chat);
+                        return new PARTY(plugin, this, id, uuid, leader, moderators, members, settings, createTime, disbandTime, chat);
                     } else {
                         return null;
                     }
                 }
             }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    @Override
+    public void insertParty(UUID uuid, UUID leader, long createTime, int chat) {
+        PARTY party = new PARTY(plugin, this, -1, uuid, leader, Collections.emptyList(), Collections.singletonList(leader), "", createTime, -1, chat);
+        try {
+            party.init();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

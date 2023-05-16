@@ -75,7 +75,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         UUID u = sender.getUniqueId();
         UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
         if (ut == null) {
-            Message.PLAYER_NOT_FOUND.send(s, target);
+            MiscMessage.PLAYER_NOT_FOUND.send(s, target);
             return;
         }
         String server;
@@ -83,7 +83,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         if (data != null) {
             server = data.getValue();
         } else {
-            Message.PLAYER_NOT_FOUND.send(s, target);
+            MiscMessage.PLAYER_NOT_FOUND.send(s, target);
             return;
         }
         if (getPlugin().getServerName().equalsIgnoreCase(server)) {
@@ -97,7 +97,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 sender.teleport(t.getLocation());
                 Message.COMMAND_REPORT_TP_SUCCESS.send(s, target);
             } else {
-                Message.PLAYER_NOT_FOUND.send(s, target);
+                MiscMessage.PLAYER_NOT_FOUND.send(s, target);
             }
         } else {
             getPlugin().getMessagingService().ifPresent(service -> service.pushTeleport(u, ut, server));
@@ -119,7 +119,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         } else {
             UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
             if (ut == null) {
-                Message.PLAYER_NOT_FOUND.send(s, target);
+                MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                 return;
             }
             if (hasPermission(ut, "floracore.command.report.bypass")) {

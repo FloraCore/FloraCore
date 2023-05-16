@@ -8,8 +8,9 @@ import org.bukkit.scheduler.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.event.message.*;
 import org.floracore.api.messenger.*;
-import org.floracore.api.messenger.message.*;
+import org.floracore.api.messenger.message.Message;
 import org.floracore.api.messenger.message.type.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.messaging.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
@@ -160,13 +161,37 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 case REPORT_ACCEPTED:
                     team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters[0]);
                     team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
                     break;
                 case REPORT_PROCESSED:
                     team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters[0]);
                     team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
+                    break;
+                case PARTY_INVITE:
+                    UUID su = UUID.fromString(parameters[0]);
+                    UUID tu1 = UUID.fromString(parameters[1]);
+                    String sn = getPlayerName(su);
+                    String tn = getPlayerName(tu1);
+                    MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_INVITE.send(sender, sn, tn, 60);
+                    MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
+                    break;
+                case PARTY_INVITE_EXPIRED:
+                    UUID tu2 = UUID.fromString(parameters[0]);
+                    String target = getPlayerName(tu2);
+                    MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_INVITE_EXPIRED.send(sender, target);
+                    MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
+                    break;
+                case PARTY_DISBAND:
+                    UUID s = UUID.fromString(parameters[0]);
+                    String sn1 = getPlayerName(s);
+                    MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_DISBAND.send(sender, sn1);
+                    MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
                     break;
             }
-            team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
         }
     }
 

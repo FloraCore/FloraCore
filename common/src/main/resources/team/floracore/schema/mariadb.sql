@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}data`
 (
     id       INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     uuid     VARCHAR(36)        NOT NULL,
-    type     VARCHAR(16)        NOT NULL,
+    type     VARCHAR(64)        NOT NULL,
     data_key VARCHAR(255)       NOT NULL,
     value    TEXT               NOT NULL,
     expiry   BIGINT             NOT NULL
@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}server`
 CREATE TABLE IF NOT EXISTS `{prefix}chat`
 (
     id        INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    name      VARCHAR(16)        NOT NULL,
+    name      VARCHAR(36)        NOT NULL,
     type      VARCHAR(16)        NOT NULL,
     records   TEXT               NOT NULL,
     startTime BIGINT             NOT NULL,
@@ -60,6 +60,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}party`
     id          INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     uuid        VARCHAR(36)        NOT NULL,
     leader      VARCHAR(36)        NOT NULL,
+    moderators  TEXT               NOT NULL,
     members     TEXT               NOT NULL,
     settings    TEXT               NOT NULL,
     createTime  BIGINT             NOT NULL,
