@@ -8,14 +8,14 @@ import team.floracore.common.storage.misc.floracore.*;
 import java.sql.*;
 
 public class Servers extends AbstractFloraCoreTable {
-    public static final String SELECT = "SELECT * FROM '{prefix}servers' WHERE name=?";
-    public static final String DELETE = "DELETE FROM '{prefix}servers' WHERE name=?";
-    private static final String UPDATE_NAME = "UPDATE '{prefix}servers' SET name=? WHERE name=?";
-    private static final String UPDATE_TYPE = "UPDATE '{prefix}servers' SET type=? WHERE name=?";
-    private static final String UPDATE_AUTO_SYNC_1 = "UPDATE '{prefix}servers' SET autoSync1=? WHERE name=?";
-    private static final String UPDATE_AUTO_SYNC_2 = "UPDATE '{prefix}servers' SET autoSync2=? WHERE name=?";
-    private static final String UPDATE_LAST_ACTIVE_TIME = "UPDATE '{prefix}servers' SET lastActiveTime=? WHERE name=?";
-    private static final String INSERT = "INSERT INTO '{prefix}servers' (name, type, autoSync1, autoSync2, lastActiveTime) VALUES(?, ?, ?, ?, ?)";
+    public static final String SELECT = "SELECT * FROM '{prefix}server' WHERE name=?";
+    public static final String DELETE = "DELETE FROM '{prefix}server' WHERE name=?";
+    private static final String UPDATE_NAME = "UPDATE '{prefix}server' SET name=? WHERE name=?";
+    private static final String UPDATE_TYPE = "UPDATE '{prefix}server' SET type=? WHERE name=?";
+    private static final String UPDATE_AUTO_SYNC_1 = "UPDATE '{prefix}server' SET autoSync1=? WHERE name=?";
+    private static final String UPDATE_AUTO_SYNC_2 = "UPDATE '{prefix}server' SET autoSync2=? WHERE name=?";
+    private static final String UPDATE_LAST_ACTIVE_TIME = "UPDATE '{prefix}server' SET lastActiveTime=? WHERE name=?";
+    private static final String INSERT = "INSERT INTO '{prefix}server' (name, type, autoSync1, autoSync2, lastActiveTime) VALUES(?, ?, ?, ?, ?)";
 
     private final int id;
     private String name;

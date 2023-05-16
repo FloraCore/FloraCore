@@ -24,6 +24,14 @@ public enum DataType {
      */
     CHAT("chat"),
     /**
+     * 社交系统
+     */
+    SOCIAL_SYSTEMS("social-systems"),
+    /**
+     * 社交系统-Party邀请
+     */
+    SOCIAL_SYSTEMS_PARTY_INVITE("social-systems-party-invite"),
+    /**
      * 自定义
      * 用于命令
      */

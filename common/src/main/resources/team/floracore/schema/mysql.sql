@@ -1,6 +1,6 @@
 -- FloraCore MySQL Schema
 
-CREATE TABLE IF NOT EXISTS `{prefix}players`
+CREATE TABLE IF NOT EXISTS `{prefix}player`
 (
     id             INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     uuid           VARCHAR(36)        NOT NULL,
@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}data`
     expiry   BIGINT             NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `{prefix}servers`
+CREATE TABLE IF NOT EXISTS `{prefix}server`
 (
     id             INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     name           VARCHAR(16)        NOT NULL,
@@ -53,3 +53,16 @@ CREATE TABLE IF NOT EXISTS `{prefix}report`
     conclusionTime BIGINT             NULL,
     chat           TEXT               NOT NULL
 );
+
+CREATE TABLE IF NOT EXISTS `{prefix}party`
+(
+    id          INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    uuid        VARCHAR(36)        NOT NULL,
+    leader      VARCHAR(36)        NOT NULL,
+    members     TEXT               NOT NULL,
+    settings    TEXT               NOT NULL,
+    createTime  BIGINT             NOT NULL,
+    disbandTime BIGINT             NOT NULL,
+    chat        INT                NOT NULL
+);
+
