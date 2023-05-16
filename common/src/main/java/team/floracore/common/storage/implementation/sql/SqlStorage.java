@@ -110,10 +110,10 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Players selectPlayers(UUID uuid) {
-        Players players;
+    public PLAYER selectPlayer(UUID uuid) {
+        PLAYER player;
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Players.SELECT))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(PLAYER.SELECT))) {
                 ps.setString(1, uuid.toString());
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
@@ -124,7 +124,7 @@ public class SqlStorage implements StorageImplementation {
                         long firstLoginTime = rs.getLong("firstLoginTime");
                         long lastLoginTime = rs.getLong("lastLoginTime");
                         long playTime = rs.getLong("playTime");
-                        players = new Players(plugin, this, id, uuid, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
+                        player = new PLAYER(plugin, this, id, uuid, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
                     } else {
                         return null;
                     }
@@ -133,14 +133,14 @@ public class SqlStorage implements StorageImplementation {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return players;
+        return player;
     }
 
     @Override
-    public Players selectPlayers(String name) {
-        Players players;
+    public PLAYER selectPlayer(String name) {
+        PLAYER player;
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Players.SELECT_NAME))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(PLAYER.SELECT_NAME))) {
                 ps.setString(1, name);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
@@ -151,7 +151,7 @@ public class SqlStorage implements StorageImplementation {
                         long firstLoginTime = rs.getLong("firstLoginTime");
                         long lastLoginTime = rs.getLong("lastLoginTime");
                         long playTime = rs.getLong("playTime");
-                        players = new Players(plugin, this, id, UUID.fromString(uuid), name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
+                        player = new PLAYER(plugin, this, id, UUID.fromString(uuid), name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
                     } else {
                         return null;
                     }
@@ -160,13 +160,13 @@ public class SqlStorage implements StorageImplementation {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return players;
+        return player;
     }
 
     @Override
-    public void deletePlayers(UUID uuid) {
+    public void deletePlayer(UUID uuid) {
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Players.DELETE))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(PLAYER.DELETE))) {
                 ps.setString(1, uuid.toString());
                 ps.execute();
             }
@@ -176,10 +176,10 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Data insertData(UUID uuid, DataType type, String key, String value, long expiry) {
-        Data data = getSpecifiedData(uuid, type, key);
+    public DATA insertData(UUID uuid, DataType type, String key, String value, long expiry) {
+        DATA data = getSpecifiedData(uuid, type, key);
         if (data == null) {
-            data = new Data(plugin, this, -1, uuid, type, key, value, expiry);
+            data = new DATA(plugin, this, -1, uuid, type, key, value, expiry);
             try {
                 data.init();
             } catch (SQLException e) {
@@ -193,10 +193,10 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public List<Data> selectData(UUID uuid) {
-        List<Data> ret = new ArrayList<>();
+    public List<DATA> selectData(UUID uuid) {
+        List<DATA> ret = new ArrayList<>();
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.SELECT))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA.SELECT))) {
                 ps.setString(1, uuid.toString());
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -205,7 +205,7 @@ public class SqlStorage implements StorageImplementation {
                         String key = rs.getString("data_key");
                         String value = rs.getString("value");
                         long expiry = rs.getLong("expiry");
-                        ret.add(new Data(plugin, this, id, uuid, DataType.parse(type), key, value, expiry));
+                        ret.add(new DATA(plugin, this, id, uuid, DataType.parse(type), key, value, expiry));
                     }
                 }
             }
@@ -216,9 +216,9 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Data getSpecifiedData(UUID uuid, DataType type, String key) {
-        List<Data> ret = selectData(uuid);
-        for (Data data : ret) {
+    public DATA getSpecifiedData(UUID uuid, DataType type, String key) {
+        List<DATA> ret = selectData(uuid);
+        for (DATA data : ret) {
             if (data.getType() == type && data.getKey().equalsIgnoreCase(key)) {
                 long currentTime = System.currentTimeMillis();
                 if (data.getExpiry() <= 0 || data.getExpiry() > currentTime) {
@@ -230,10 +230,10 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public List<Data> getSpecifiedTypeData(UUID uuid, DataType type) {
-        List<Data> ret = new ArrayList<>();
+    public List<DATA> getSpecifiedTypeData(UUID uuid, DataType type) {
+        List<DATA> ret = new ArrayList<>();
         long currentTime = System.currentTimeMillis();
-        for (Data data : selectData(uuid)) {
+        for (DATA data : selectData(uuid)) {
             if (data.getType() == type && (data.getExpiry() <= 0 || data.getExpiry() > currentTime)) {
                 ret.add(data);
             }
@@ -245,7 +245,7 @@ public class SqlStorage implements StorageImplementation {
     @Override
     public void deleteDataAll(UUID uuid) {
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_ALL))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA.DELETE_ALL))) {
                 ps.setString(1, uuid.toString());
                 ps.execute();
             }
@@ -257,7 +257,7 @@ public class SqlStorage implements StorageImplementation {
     @Override
     public void deleteDataType(UUID uuid, DataType type) {
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_TYPE))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA.DELETE_TYPE))) {
                 ps.setString(1, uuid.toString());
                 ps.setString(2, type.getName());
                 ps.execute();
@@ -269,8 +269,8 @@ public class SqlStorage implements StorageImplementation {
 
     @Override
     public void deleteDataExpired(UUID uuid) {
-        List<Data> ret = selectData(uuid);
-        for (Data data : ret) {
+        List<DATA> ret = selectData(uuid);
+        for (DATA data : ret) {
             long currentTime = System.currentTimeMillis();
             if (!(data.getExpiry() <= 0 || data.getExpiry() > currentTime)) {
                 deleteDataID(data.getId());
@@ -281,7 +281,7 @@ public class SqlStorage implements StorageImplementation {
     @Override
     public void deleteDataID(int id) {
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Data.DELETE_ID))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA.DELETE_ID))) {
                 ps.setInt(1, id);
                 ps.execute();
             }
@@ -291,10 +291,10 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Servers selectServers(String name) {
-        Servers servers;
+    public SERVER selectServer(String name) {
+        SERVER server;
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Servers.SELECT))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(SERVER.SELECT))) {
                 ps.setString(1, name);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
@@ -303,7 +303,7 @@ public class SqlStorage implements StorageImplementation {
                         boolean autoSync1 = rs.getBoolean("autoSync1");
                         boolean autoSync2 = rs.getBoolean("autoSync2");
                         long lastActiveTime = rs.getLong("lastActiveTime");
-                        servers = new Servers(plugin, this, id, name, ServerType.parse(type), autoSync1, autoSync2, lastActiveTime);
+                        server = new SERVER(plugin, this, id, name, ServerType.parse(type), autoSync1, autoSync2, lastActiveTime);
                     } else {
                         return null;
                     }
@@ -312,14 +312,14 @@ public class SqlStorage implements StorageImplementation {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return servers;
+        return server;
     }
 
     @Override
-    public List<Chat> selectChat(String name) {
-        List<Chat> ret = new ArrayList<>();
+    public List<CHAT> selectChat(String name) {
+        List<CHAT> ret = new ArrayList<>();
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Chat.SELECT))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(CHAT.SELECT))) {
                 ps.setString(1, name);
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -330,7 +330,7 @@ public class SqlStorage implements StorageImplementation {
                         List<ChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         long startTime = rs.getLong("startTime");
                         long endTime = rs.getLong("endTime");
-                        ret.add(new Chat(plugin, this, id, name, records, startTime, endTime));
+                        ret.add(new CHAT(plugin, this, id, name, records, startTime, endTime));
                     }
                 }
             }
@@ -341,10 +341,10 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Chat selectChatWithStartTime(String name, long startTime) {
-        Chat chat;
+    public CHAT selectChatWithStartTime(String name, long startTime) {
+        CHAT chat;
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Chat.SELECT_WITH_START_TIME))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(CHAT.SELECT_WITH_START_TIME))) {
                 ps.setString(1, name);
                 ps.setLong(2, startTime);
                 try (ResultSet rs = ps.executeQuery()) {
@@ -355,7 +355,7 @@ public class SqlStorage implements StorageImplementation {
                         }.getType();
                         List<ChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         long endTime = rs.getLong("endTime");
-                        chat = new Chat(plugin, this, id, name, records, startTime, endTime);
+                        chat = new CHAT(plugin, this, id, name, records, startTime, endTime);
                     } else {
                         return null;
                     }
@@ -368,10 +368,10 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Chat selectChatWithID(int id) {
-        Chat chat;
+    public CHAT selectChatWithID(int id) {
+        CHAT chat;
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Chat.SELECT_WITH_ID))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(CHAT.SELECT_WITH_ID))) {
                 ps.setInt(1, id);
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
@@ -382,7 +382,7 @@ public class SqlStorage implements StorageImplementation {
                         List<ChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type);
                         long startTime = rs.getLong("startTime");
                         long endTime = rs.getLong("endTime");
-                        chat = new Chat(plugin, this, id, name, records, startTime, endTime);
+                        chat = new CHAT(plugin, this, id, name, records, startTime, endTime);
                     } else {
                         return null;
                     }
@@ -396,7 +396,7 @@ public class SqlStorage implements StorageImplementation {
 
     @Override
     public void insertChat(String name, long startTime) {
-        Chat chat = new Chat(plugin, this, name, startTime);
+        CHAT chat = new CHAT(plugin, this, name, startTime);
         try {
             chat.init();
         } catch (SQLException e) {
@@ -405,10 +405,10 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public List<Report> getReports() {
-        List<Report> ret = new ArrayList<>();
+    public List<REPORT> getReports() {
+        List<REPORT> ret = new ArrayList<>();
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Report.SELECT))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(REPORT.SELECT))) {
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
                         int id = rs.getInt("id");
@@ -429,7 +429,7 @@ public class SqlStorage implements StorageImplementation {
                         Type type3 = new TypeToken<List<ReportDataChatRecord>>() {
                         }.getType();
                         List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type3);
-                        ret.add(new Report(plugin, this, id, uuid, reporters, reported, reasons, reportTime, status, conclusionTime, records));
+                        ret.add(new REPORT(plugin, this, id, uuid, reporters, reported, reasons, reportTime, status, conclusionTime, records));
                     }
                 }
             }
@@ -440,10 +440,10 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public List<Report> selectReports(UUID uuid) {
-        List<Report> ret = new ArrayList<>();
+    public List<REPORT> selectReports(UUID uuid) {
+        List<REPORT> ret = new ArrayList<>();
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Report.SELECT_REPORTED_UUID))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(REPORT.SELECT_REPORTED_UUID))) {
                 ps.setString(1, uuid.toString());
                 try (ResultSet rs = ps.executeQuery()) {
                     while (rs.next()) {
@@ -465,7 +465,7 @@ public class SqlStorage implements StorageImplementation {
                         Type type3 = new TypeToken<List<ReportDataChatRecord>>() {
                         }.getType();
                         List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type3);
-                        ret.add(new Report(plugin, this, id, uuid1, reporters, reported, reasons, reportTime, status, conclusionTime, records));
+                        ret.add(new REPORT(plugin, this, id, uuid1, reporters, reported, reasons, reportTime, status, conclusionTime, records));
                     }
                 }
             }
@@ -476,9 +476,9 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Report selectReport(UUID uuid) {
+    public REPORT selectReport(UUID uuid) {
         try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(Report.SELECT_UUID))) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(REPORT.SELECT_UUID))) {
                 ps.setString(1, uuid.toString());
                 try (ResultSet rs = ps.executeQuery()) {
                     if (rs.next()) {
@@ -500,7 +500,7 @@ public class SqlStorage implements StorageImplementation {
                         Type type3 = new TypeToken<List<ReportDataChatRecord>>() {
                         }.getType();
                         List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type3);
-                        return new Report(plugin, this, id, uuid1, reporters, reported, reasons, reportTime, status, conclusionTime, records);
+                        return new REPORT(plugin, this, id, uuid1, reporters, reported, reasons, reportTime, status, conclusionTime, records);
                     } else {
                         return null;
                     }
@@ -512,9 +512,9 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public Report getUnprocessedReports(UUID uuid) {
-        List<Report> reports = selectReports(uuid);
-        for (Report report : reports) {
+    public REPORT getUnprocessedReports(UUID uuid) {
+        List<REPORT> reports = selectReports(uuid);
+        for (REPORT report : reports) {
             if (report.getStatus() != ReportStatus.ENDED) {
                 return report;
             }
@@ -524,9 +524,9 @@ public class SqlStorage implements StorageImplementation {
 
     @Override
     public void addReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<ReportDataChatRecord> chat) {
-        Report report = getUnprocessedReports(reported);
+        REPORT report = getUnprocessedReports(reported);
         if (getUnprocessedReports(reported) == null) {
-            report = new Report(plugin, this, -1, uuid, Collections.singletonList(reporter), reported, Collections.singletonList(reason), reportTime, ReportStatus.WAITING, null, chat);
+            report = new REPORT(plugin, this, -1, uuid, Collections.singletonList(reporter), reported, Collections.singletonList(reason), reportTime, ReportStatus.WAITING, null, chat);
             try {
                 report.init();
             } catch (SQLException e) {

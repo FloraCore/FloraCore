@@ -7,7 +7,7 @@ import team.floracore.common.storage.misc.floracore.*;
 
 import java.sql.*;
 
-public class Servers extends AbstractFloraCoreTable {
+public class SERVER extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}server' WHERE name=?";
     public static final String DELETE = "DELETE FROM '{prefix}server' WHERE name=?";
     private static final String UPDATE_NAME = "UPDATE '{prefix}server' SET name=? WHERE name=?";
@@ -24,7 +24,7 @@ public class Servers extends AbstractFloraCoreTable {
     private boolean autoSync2;
     private long lastActiveTime;
 
-    public Servers(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, String name, ServerType type, boolean autoSync1, boolean autoSync2, long lastActiveTime) {
+    public SERVER(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, String name, ServerType type, boolean autoSync1, boolean autoSync2, long lastActiveTime) {
         super(plugin, storageImplementation);
         this.id = id;
         this.name = name;

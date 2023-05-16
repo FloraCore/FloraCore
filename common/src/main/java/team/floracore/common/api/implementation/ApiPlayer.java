@@ -11,21 +11,21 @@ import java.util.concurrent.*;
 
 public class ApiPlayer implements PlayerAPI {
     private final FloraCorePlugin plugin;
-    AsyncCache<UUID, Players> playersCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
-    AsyncCache<String, Players> playersRecordCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    AsyncCache<UUID, PLAYER> playersCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    AsyncCache<String, PLAYER> playersRecordCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
 
     public ApiPlayer(FloraCorePlugin plugin) {
         this.plugin = plugin;
     }
 
-    public Players getPlayers(UUID uuid) {
-        CompletableFuture<Players> players = playersCache.get(uuid, u -> plugin.getStorage().getImplementation().selectPlayers(u));
+    public PLAYER getPlayers(UUID uuid) {
+        CompletableFuture<PLAYER> players = playersCache.get(uuid, u -> plugin.getStorage().getImplementation().selectPlayer(u));
         playersCache.put(uuid, players);
         return players.join();
     }
 
-    public Players getPlayers(String name) {
-        CompletableFuture<Players> players = playersRecordCache.get(name, n -> plugin.getStorage().getImplementation().selectPlayers(n));
+    public PLAYER getPlayers(String name) {
+        CompletableFuture<PLAYER> players = playersRecordCache.get(name, n -> plugin.getStorage().getImplementation().selectPlayer(n));
         playersRecordCache.put(name, players);
         return players.join();
     }
@@ -37,7 +37,7 @@ public class ApiPlayer implements PlayerAPI {
 
     @Override
     public UUID getPlayerRecordUUID(String name) {
-        Players players = getPlayers(name);
+        PLAYER players = getPlayers(name);
         if (players == null) {
             return null;
         }
@@ -46,7 +46,7 @@ public class ApiPlayer implements PlayerAPI {
 
     @Override
     public String getPlayerRecordName(UUID uuid) {
-        Players players = getPlayers(uuid);
+        PLAYER players = getPlayers(uuid);
         if (players == null) {
             return null;
         }

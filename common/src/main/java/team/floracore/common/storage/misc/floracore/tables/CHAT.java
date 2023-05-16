@@ -9,7 +9,7 @@ import team.floracore.common.util.gson.*;
 import java.sql.*;
 import java.util.*;
 
-public class Chat extends AbstractFloraCoreTable {
+public class CHAT extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}chat' WHERE name=?";
     public static final String SELECT_WITH_ID = "SELECT * FROM '{prefix}chat' WHERE id=?";
     public static final String SELECT_WITH_START_TIME = "SELECT * FROM '{prefix}chat' WHERE name=? AND startTime=?";
@@ -24,7 +24,7 @@ public class Chat extends AbstractFloraCoreTable {
     private List<ChatRecord> records;
     private long endTime;
 
-    public Chat(FloraCorePlugin plugin, StorageImplementation storageImplementation, String name, long startTime) {
+    public CHAT(FloraCorePlugin plugin, StorageImplementation storageImplementation, String name, long startTime) {
         super(plugin, storageImplementation);
         this.id = -1;
         this.name = name;
@@ -32,7 +32,7 @@ public class Chat extends AbstractFloraCoreTable {
         this.startTime = startTime;
     }
 
-    public Chat(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, String name, List<ChatRecord> records, long startTime, long endTime) {
+    public CHAT(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, String name, List<ChatRecord> records, long startTime, long endTime) {
         super(plugin, storageImplementation);
         this.id = id;
         this.name = name;

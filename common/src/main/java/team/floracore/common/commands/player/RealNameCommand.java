@@ -25,7 +25,7 @@ public class RealNameCommand extends AbstractFloraCoreCommand {
     public void realName(final @NotNull Player s, final @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         UUID tu = target.getUniqueId();
-        Players ps = getStorageImplementation().selectPlayers(tu);
+        PLAYER ps = getStorageImplementation().selectPlayer(tu);
         String name = target.getDisplayName();
         String realName = ps.getName();
         Message.COMMAND_REALNAME_SUCCESS.send(sender, name, realName);

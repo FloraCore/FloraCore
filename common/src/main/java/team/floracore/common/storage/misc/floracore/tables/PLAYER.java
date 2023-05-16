@@ -7,7 +7,7 @@ import team.floracore.common.storage.misc.floracore.*;
 import java.sql.*;
 import java.util.*;
 
-public class Players extends AbstractFloraCoreTable {
+public class PLAYER extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}player' WHERE uuid=?";
     public static final String SELECT_NAME = "SELECT * FROM '{prefix}player' WHERE name=?";
     public static final String DELETE = "DELETE FROM '{prefix}player' WHERE uuid=?";
@@ -26,7 +26,7 @@ public class Players extends AbstractFloraCoreTable {
     private long lastLoginTime;
     private long playTime;
 
-    public Players(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String loginIp) {
+    public PLAYER(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String loginIp) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;
@@ -39,7 +39,7 @@ public class Players extends AbstractFloraCoreTable {
         this.playTime = 0;
     }
 
-    public Players(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String firstLoginIp, String lastLoginIp, long firstLoginTime, long lastLoginTime, long playTime) {
+    public PLAYER(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String firstLoginIp, String lastLoginIp, long firstLoginTime, long lastLoginTime, long playTime) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;

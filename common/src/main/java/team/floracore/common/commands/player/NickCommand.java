@@ -90,7 +90,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             MiscMessage.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
             return;
         }
-        Data statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
+        DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
             performUnNick(p);
             Message.COMMAND_UNNICK_SUCCESS.send(sender);
@@ -156,7 +156,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                             return;
                         }
                         if (name.equalsIgnoreCase("reuse")) {
-                            Data data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
+                            DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
                             nickname = (data != null) ? data.getValue() : getPlugin().getNamesRepository().getRandomNameProperty().getName();
                         } else if (name.equalsIgnoreCase("random") && !custom) {
                             nickname = getPlugin().getNamesRepository().getRandomNameProperty().getName();
@@ -207,15 +207,15 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
 
     private void performUnNick(Player p) {
         UUID uuid = p.getUniqueId();
-        Data statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
+        DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         // 获取是否已经Nick
         if (!whetherServerEnableAutoSync2()) {
             nickedPlayers.remove(uuid);
         }
         // 清除数据库Nick状态
         getAsyncExecutor().execute(() -> {
-            Data rankData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.rank");
-            Data lpPrefixData = getStorageImplementation().getSpecifiedData(uuid, DataType.STAGING_DATA, "luckperms.prefix");
+            DATA rankData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.rank");
+            DATA lpPrefixData = getStorageImplementation().getSpecifiedData(uuid, DataType.STAGING_DATA, "luckperms.prefix");
             if (statusData != null) {
                 getStorageImplementation().deleteDataID(statusData.getId());
             }
@@ -238,7 +238,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     private void performNick(Player p, String rank, String skin, String name, boolean typeNick) {
         UUID uuid = p.getUniqueId();
         // 获取是否已经Nick
-        Data statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
+        DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
             performUnNick(p);
         }
@@ -415,7 +415,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                 // random skin
                 BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_RANDOM.build(rank)).asComponent();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
+        DATA data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
         if (data != null) {
             // reuse skin
             component = join(joinConfig, component, BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_REUSE.build(rank, data.getValue()));
@@ -433,7 +433,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1.build(), space(),
                 // random name
                 BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM.build(rank, skin)).asComponent();
-        Data data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
         if (data != null) {
             // reuse name
             component = join(joinConfig, component, BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_REUSE.build(rank, skin, data.getValue()));
@@ -483,7 +483,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         UUID u = p.getUniqueId();
-        Data data = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.status");
+        DATA data = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.status");
         if (data != null) {
             String value = data.getValue();
             boolean nick = Boolean.parseBoolean(value);
@@ -491,9 +491,9 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                 if (whetherServerEnableAutoSync2()) {
                     Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
                     Map<String, String> ranks_permission = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
-                    Data rankData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.rank");
-                    Data skinData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.skin");
-                    Data nameData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.name");
+                    DATA rankData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.rank");
+                    DATA skinData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.skin");
+                    DATA nameData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.name");
                     if (rankData != null && skinData != null && nameData != null) {
                         String rank = rankData.getValue();
                         String skin = skinData.getValue();

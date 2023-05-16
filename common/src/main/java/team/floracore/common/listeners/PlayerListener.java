@@ -24,9 +24,9 @@ public class PlayerListener extends AbstractFloraCoreListener {
         String ip = e.getAddress().getHostAddress();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         // 初始化玩家数据
-        Players p = storageImplementation.selectPlayers(u);
+        PLAYER p = storageImplementation.selectPlayer(u);
         if (p == null) {
-            p = new Players(getPlugin(), storageImplementation, -1, u, name, ip);
+            p = new PLAYER(getPlugin(), storageImplementation, -1, u, name, ip);
             try {
                 p.init();
             } catch (SQLException ex) {

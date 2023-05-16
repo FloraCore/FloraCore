@@ -13,7 +13,7 @@ import java.util.*;
 
 public class ChatManager implements Listener {
     private final FloraCorePlugin plugin;
-    private final Chat chat;
+    private final CHAT chat;
     private final HashMap<UUID, MapPlayerRecord> players = new HashMap<>();
 
     public ChatManager(FloraCorePlugin plugin) {
@@ -23,8 +23,8 @@ public class ChatManager implements Listener {
         this.chat = plugin.getStorage().getImplementation().selectChatWithStartTime(plugin.getServerName(), startTime);
         plugin.getListenerManager().registerListener(this);
         plugin.getBootstrap().getScheduler().async().execute(() -> {
-            List<Chat> ret = plugin.getStorage().getImplementation().selectChat(plugin.getServerName());
-            for (Chat i : ret) {
+            List<CHAT> ret = plugin.getStorage().getImplementation().selectChat(plugin.getServerName());
+            for (CHAT i : ret) {
                 if (i.getId() != this.chat.getId()) {
                     if (i.getEndTime() <= 0) {
                         i.setEndTime(startTime);
@@ -34,7 +34,7 @@ public class ChatManager implements Listener {
         });
     }
 
-    public Chat getChat() {
+    public CHAT getChat() {
         return chat;
     }
 
@@ -78,8 +78,8 @@ public class ChatManager implements Listener {
     }
 
     public void clearPlayerChatsInvalid(UUID uuid) {
-        List<Data> ret = plugin.getStorage().getImplementation().getSpecifiedTypeData(uuid, DataType.CHAT);
-        for (Data data : ret) {
+        List<DATA> ret = plugin.getStorage().getImplementation().getSpecifiedTypeData(uuid, DataType.CHAT);
+        for (DATA data : ret) {
             if (data.getValue().isEmpty()) {
                 plugin.getStorage().getImplementation().deleteDataID(data.getId());
             }
