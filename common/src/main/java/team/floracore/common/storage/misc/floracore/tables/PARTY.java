@@ -9,7 +9,7 @@ import java.sql.*;
 import java.util.*;
 
 public class PARTY extends AbstractFloraCoreTable {
-    public static final String SELECT = "SELECT * FROM '{prefix}party' LIMIT 300";
+    public static final String SELECT_UUID = "SELECT * FROM '{prefix}party' WHERE uuid=?";
     public static final String DELETE = "DELETE FROM '{prefix}party' WHERE uuid=?";
     private static final String UPDATE_LEADER = "UPDATE '{prefix}party' SET leader=? WHERE uuid=?";
     private static final String UPDATE_MEMBERS = "UPDATE '{prefix}party' SET members=? WHERE uuid=?";

@@ -84,4 +84,6 @@ public interface StorageImplementation {
     REPORT getUnprocessedReports(UUID uuid);
 
     void addReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<ReportDataChatRecord> chat);
+
+    PARTY selectParty(UUID uuid);
 }

@@ -541,4 +541,32 @@ public class SqlStorage implements StorageImplementation {
             report.setReasons(reasons);
         }
     }
+
+    @Override
+    public PARTY selectParty(UUID uuid) {
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(PARTY.SELECT_UUID))) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        int id = rs.getInt("id");
+                        UUID leader = UUID.fromString(rs.getString("leader"));
+                        String membersJson = rs.getString("members");
+                        Type type1 = new TypeToken<List<UUID>>() {
+                        }.getType();
+                        List<UUID> members = GsonProvider.normal().fromJson(membersJson, type1);
+                        String settings = rs.getString("settings");
+                        long createTime = rs.getLong("createTime");
+                        long disbandTime = rs.getLong("disbandTime");
+                        int chat = rs.getInt("chat");
+                        return new PARTY(plugin, this, id, uuid, leader, members, settings, createTime, disbandTime, chat);
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
