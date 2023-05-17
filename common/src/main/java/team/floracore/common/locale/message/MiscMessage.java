@@ -19,6 +19,9 @@ public interface MiscMessage extends AbstractMessage {
             // 组队 >
             .append(translatable("floracore.command.misc.party.prefix", BLUE)).append(space()).append(text(">", DARK_GRAY)).build();
 
+    Component CLICK_TP = text().append(translatable("floracore.command.misc.click-tp", YELLOW)).build();
+    Component CLICK_HERE = text().append(translatable("floracore.command.misc.click-here", YELLOW)).build();
+
     Args0 PARTY_HORIZONTAL_LINE = () -> HORIZONTAL_LINE.color(BLUE);
 
     Args1<FloraCoreBootstrap> STARTUP_BANNER = bootstrap -> {
@@ -117,7 +120,7 @@ public interface MiscMessage extends AbstractMessage {
 
     Args0 NO_PERMISSION_FOR_SUBCOMMANDS = () -> AbstractMessage.prefixed(translatable()
             // 你没有权限使用任何子命令
-            .key("floracore.commandsystem.no-permission-subcommands").color(RED).append(FULL_STOP));
+            .key("floracore.commandsystem.no-permission-subcommands").color(RED));
 
     Args0 COMMAND_CURRENT_SERVER_FORBIDDEN = () -> AbstractMessage.prefixed(translatable()
             // 你不能在当前服务器使用此命令!
@@ -170,8 +173,6 @@ public interface MiscMessage extends AbstractMessage {
             .key("floracore.command.misc.invalid-number")
             // {0}
             .args(text(number)).color(RED));
-
-    Args0 CHECK_TP = () -> translatable("floracore.command.misc.check-tp", YELLOW);
 
     Args0 COMMAND_MISC_GUI_PREVIOUS_PAGE = () -> translatable()
             // 上一页

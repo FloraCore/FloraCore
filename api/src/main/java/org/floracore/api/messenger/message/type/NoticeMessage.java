@@ -42,6 +42,7 @@ public interface NoticeMessage extends Message {
         REPORT_STAFF_ACCEPTED,
         REPORT_STAFF_PROCESSED,
         PARTY_DISBAND,
+        PARTY_ACCEPT,
         PARTY_INVITE,
         PARTY_INVITE_EXPIRED,
     }

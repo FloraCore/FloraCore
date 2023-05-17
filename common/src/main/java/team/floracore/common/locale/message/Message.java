@@ -425,7 +425,7 @@ public interface Message extends AbstractMessage {
                                 OPEN_BRACKET.append(translatable(targetOnlineStatus ? "floracore.command.misc.online" : "floracore.command.misc.offline")).append(CLOSE_BRACKET).color(targetOnlineStatus ? GREEN : RED)))
                 .build();
         if (targetOnlineStatus) {
-            infoLine = infoLine.append(newline()).append(ARROW).append(space()).append(translatable().key("floracore.command.misc.check-tp").color(YELLOW).decoration(UNDERLINED, true));
+            infoLine = infoLine.append(newline()).append(ARROW).append(space()).append(MiscMessage.CLICK_TP.decoration(UNDERLINED, true));
         }
         HoverEvent<Component> hoverEvent = HoverEvent.showText(infoLine);
         ClickEvent clickEvent = ClickEvent.runCommand("/report-tp " + target);
@@ -483,11 +483,21 @@ public interface Message extends AbstractMessage {
             // 你不能向自己发送组队邀请!
             .key("floracore.command.misc.party.invite.self").color(RED).build();
 
-    Args3<String, String, Integer> COMMAND_MISC_PARTY_INVITE = (sender, target, time) -> translatable()
+    Args2<String, String> COMMAND_MISC_PARTY_INVITE = (sender, target) -> translatable()
             // {0} 已邀请 {1} 到组队中!他们有 {2} 秒时间接受邀请
             .key("floracore.command.misc.party.invite").color(AQUA)
             // {}
-            .args(text(sender, GREEN), text(target, YELLOW), text(time, RED)).append(AbstractMessage.FULL_STOP).build();
+            .args(text(sender, GRAY), text(target, GRAY), text(60, RED)).append(AbstractMessage.FULL_STOP).build();
+
+    Args2<String, UUID> COMMAND_MISC_PARTY_INVITE_ACCEPT = (sender, partyUUID) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/party accept " + partyUUID.toString());
+        Component click = MiscMessage.CLICK_HERE.clickEvent(clickEvent);
+        return translatable()
+                // {0} 已经邀请你加入他们的组队。你有 {1} 秒的时间来接受。{2} 这里加入!
+                .key("floracore.command.misc.party.invite.accept").color(AQUA)
+                // {}
+                .args(text(sender, GRAY), text(60, RED), click).build();
+    };
 
     Args0 COMMAND_MISC_PARTY_NOT_IN = () -> translatable()
             // 你当前不在组队中
@@ -497,5 +507,5 @@ public interface Message extends AbstractMessage {
             // {0} 解散了组队!
             .key("floracore.command.misc.party.disband").color(AQUA)
             // {}
-            .args(text(sender, GREEN)).build();
+            .args(text(sender, GRAY)).build();
 }

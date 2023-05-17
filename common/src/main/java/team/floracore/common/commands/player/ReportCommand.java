@@ -288,7 +288,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             boolean online = isOnline(report.getReported());
             ItemBuilder rds = getPlayerItemBuilder(report.getReported()).displayName(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(r1, online), uuid));
             if (online) {
-                rds.lore(TranslationManager.render(MiscMessage.CHECK_TP.build(), uuid));
+                rds.lore(TranslationManager.render(MiscMessage.CLICK_TP, uuid));
                 String finalR = r1;
                 contents.set(2, 5, ClickableItem.of(rds.build(), inventoryClickEvent -> {
                     reportTeleport(player, finalR);
@@ -386,7 +386,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 boolean online = isOnline(reporters.get(i));
                 ItemBuilder rds = getPlayerItemBuilder(reporters.get(i)).displayName(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER_DETAILED.build(r1, online), uuid));
                 if (online) {
-                    rds.lore(TranslationManager.render(MiscMessage.CHECK_TP.build(), uuid));
+                    rds.lore(TranslationManager.render(MiscMessage.CLICK_TP, uuid));
                     String finalR = r1;
                     items[i] = ClickableItem.of(rds.build(), inventoryClickEvent -> {
                         reportTeleport(player, finalR);

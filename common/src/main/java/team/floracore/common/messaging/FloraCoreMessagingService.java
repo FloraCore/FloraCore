@@ -168,13 +168,21 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
                     team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
                     break;
+                case PARTY_ACCEPT:
+                    UUID su1 = UUID.fromString(parameters[0]);
+                    String sn1 = getPlayerName(su1);
+                    UUID pu = UUID.fromString(parameters[1]);
+                    MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_INVITE_ACCEPT.send(sender, sn1, pu);
+                    MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
+                    break;
                 case PARTY_INVITE:
                     UUID su = UUID.fromString(parameters[0]);
                     UUID tu1 = UUID.fromString(parameters[1]);
                     String sn = getPlayerName(su);
                     String tn = getPlayerName(tu1);
                     MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_INVITE.send(sender, sn, tn, 60);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_INVITE.send(sender, sn, tn);
                     MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
                     break;
                 case PARTY_INVITE_EXPIRED:
@@ -186,9 +194,9 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     break;
                 case PARTY_DISBAND:
                     UUID s = UUID.fromString(parameters[0]);
-                    String sn1 = getPlayerName(s);
+                    String sn2 = getPlayerName(s);
                     MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_DISBAND.send(sender, sn1);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_DISBAND.send(sender, sn2);
                     MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
                     break;
             }

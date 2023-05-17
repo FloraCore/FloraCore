@@ -86,14 +86,12 @@ public class PartyCommand extends AbstractFloraCoreCommand {
                     });
                 }
             }, 1, TimeUnit.MINUTES);
-            getAsyncExecutor().execute(() -> {
-                getPlugin().getMessagingService().ifPresent(service -> {
-                    // TODO 向target发送被邀请的通知
-                    for (UUID member : members) {
-                        service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_INVITE, new String[]{uuid.toString(), ut.toString()});
-                    }
-                });
-            });
+            getAsyncExecutor().execute(() -> getPlugin().getMessagingService().ifPresent(service -> {
+                service.pushNoticeMessage(ut, NoticeMessage.NoticeType.PARTY_ACCEPT, new String[]{uuid.toString(), partyUUID.toString()});
+                for (UUID member : members) {
+                    service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_INVITE, new String[]{uuid.toString(), ut.toString()});
+                }
+            }));
         } else {
             MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
             Message.COMMAND_MISC_PARTY_INVITE_NO_PERMISSION.send(sender);
