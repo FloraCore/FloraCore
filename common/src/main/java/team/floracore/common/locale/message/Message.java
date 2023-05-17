@@ -205,6 +205,24 @@ public interface Message extends AbstractMessage {
             // {0}
             .args(translatable("floracore.command.misc.nick.book.rank-page.rank"), text(rank).color(DARK_RED).decoration(BOLD, true)).color(RED));
 
+    Args1<String> COMMAND_MISC_CHAT_DOES_NOT_EXIST = (type) -> AbstractMessage.prefixed(translatable()
+            // 不存在 {0} 这个聊天频道!
+            .key("floracore.command.misc.chat.does-not-exist")
+            // {0}
+            .args(text(type, DARK_RED)).color(RED));
+
+    Args1<Component> COMMAND_MISC_CHAT_SUCCESS = (type) -> AbstractMessage.prefixed(translatable()
+            // 成功切换到 {0} 聊天频道!
+            .key("floracore.command.misc.chat.success")
+            // {0}
+            .args(type).color(YELLOW));
+
+    Args1<String> COMMAND_MISC_CHAT_IS_IN = (type) -> AbstractMessage.prefixed(translatable()
+            // 你当前正处于 {0} 聊天频道中!
+            .key("floracore.command.misc.chat.is-in")
+            // {0}
+            .args(text(type, DARK_RED)).color(RED));
+
     Args2<String, String> COMMAND_REALNAME_SUCCESS = (name, realName) -> AbstractMessage.prefixed(translatable()
             // 玩家 {0} 的真实昵称为 {1}
             .key("floracore.command.realname.success")
