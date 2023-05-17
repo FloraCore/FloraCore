@@ -188,6 +188,10 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     String sn2 = getPlayerName(s);
                     team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_DISBAND.send(sender, sn2);
                     break;
+                case PARTY_JOINED:
+                    UUID s1 = UUID.fromString(parameters[0]);
+                    String sn3 = getPlayerName(s1);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_JOIN.send(sender, sn3);
             }
         }
     }
@@ -262,6 +266,8 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             case TeleportMessageImpl.TYPE:
                 decoded = TeleportMessageImpl.decode(content, id);
                 break;
+            case ChatMessageImpl.TYPE:
+                decoded = ChatMessageImpl.decode(content, id);
             default:
                 // gracefully return if we just don't recognise the type
                 return false;
@@ -328,6 +334,8 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     }
                 }, 0L, 20L).getTaskId();
             }
+        } else if (message instanceof ChatMessage) {
+            ChatMessage chatMsg = (ChatMessage) message;
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }

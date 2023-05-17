@@ -504,6 +504,30 @@ public interface Message extends AbstractMessage {
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
 
+    Args0 COMMAND_MISC_PARTY_ALREADY_IN_THE_TEAM = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // 你已经在组队里了，必须离开当前组队！
+                        .key("floracore.command.misc.party.already-in-the-team").color(RED).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
+
+    Args0 COMMAND_MISC_PARTY_ALREADY_JOINED_THE_TEAM = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // 你已经加入了这个队伍，不能重复加入!
+                        .key("floracore.command.misc.party.already_joined_the_team").color(RED).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
+
+    Args0 COMMAND_MISC_PARTY_INVALID = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // 这个组队不存在或已被解散!
+                        .key("floracore.command.misc.party.invalid").color(RED).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
+
     Args2<String, String> COMMAND_MISC_PARTY_INVITE = (sender, target) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
@@ -540,6 +564,17 @@ public interface Message extends AbstractMessage {
                 translatable()
                         // {0} 解散了组队!
                         .key("floracore.command.misc.party.disband").color(YELLOW)
+                        // {}
+                        .args(text(sender, GRAY)).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
+
+    Args1<String> COMMAND_MISC_PARTY_JOIN = (sender) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(),
+                translatable()
+                        // {0} 加入了组队
+                        .key("floracore.command.misc.party.join").append(AbstractMessage.FULL_STOP).color(YELLOW)
                         // {}
                         .args(text(sender, GRAY)).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());

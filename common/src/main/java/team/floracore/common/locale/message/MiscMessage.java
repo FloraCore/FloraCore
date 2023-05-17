@@ -172,7 +172,13 @@ public interface MiscMessage extends AbstractMessage {
             // {0} 不是有效的数字
             .key("floracore.command.misc.invalid-number")
             // {0}
-            .args(text(number)).color(RED));
+            .args(text(number, DARK_RED)).color(RED));
+
+    Args1<String> COMMAND_MISC_INVALID_FORMAT = (format) -> AbstractMessage.prefixed(translatable()
+            // {0} 不是有效的格式
+            .key("floracore.command.misc.invalid-format")
+            // {0}
+            .args(text(format, DARK_RED)).color(RED));
 
     Args0 COMMAND_MISC_GUI_PREVIOUS_PAGE = () -> translatable()
             // 上一页

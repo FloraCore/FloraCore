@@ -577,6 +577,16 @@ public class SqlStorage implements StorageImplementation {
         }
     }
 
+    @Override
+    public PARTY selectEffectiveParty(UUID uuid) {
+        PARTY party = selectParty(uuid);
+        if (party.getDisbandTime() > 0) {
+            return null;
+        } else {
+            return party;
+        }
+    }
+
 
     @Override
     public void insertParty(UUID uuid, UUID leader, long createTime, int chat) {

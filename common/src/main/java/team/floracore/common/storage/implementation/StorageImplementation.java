@@ -88,5 +88,7 @@ public interface StorageImplementation {
 
     PARTY selectParty(UUID uuid);
 
+    PARTY selectEffectiveParty(UUID uuid);
+
     void insertParty(UUID uuid, UUID leader, long createTime, int chat);
 }

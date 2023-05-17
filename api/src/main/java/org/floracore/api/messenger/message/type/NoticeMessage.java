@@ -45,5 +45,6 @@ public interface NoticeMessage extends Message {
         PARTY_ACCEPT,
         PARTY_INVITE,
         PARTY_INVITE_EXPIRED,
+        PARTY_JOINED,
     }
 }

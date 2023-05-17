@@ -7,6 +7,7 @@ import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.floracore.api.messenger.message.type.*;
+import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
@@ -54,7 +55,7 @@ public class PartyCommand extends AbstractFloraCoreCommand {
             getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "party", partyUUID.toString(), 0);
         } else {
             partyUUID = UUID.fromString(data.getValue());
-            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            PARTY party = getStorageImplementation().selectEffectiveParty(partyUUID);
             leader = party.getLeader();
             moderators = party.getModerators();
             members = party.getMembers();
@@ -109,7 +110,6 @@ public class PartyCommand extends AbstractFloraCoreCommand {
         if (data == null) {
             Message.COMMAND_MISC_PARTY_NOT_IN.send(sender);
         } else {
-            // TODO 解散
             UUID partyUUID = UUID.fromString(data.getValue());
             PARTY party = getStorageImplementation().selectParty(partyUUID);
             List<UUID> members = party.getMembers();
@@ -123,6 +123,42 @@ public class PartyCommand extends AbstractFloraCoreCommand {
                     }
                 });
             });
+        }
+    }
+
+    @CommandMethod("party|p accept <uuid>")
+    public void accept(final @NonNull Player player, final @NotNull @Argument("uuid") String pu) {
+        UUID uuid = player.getUniqueId();
+        Sender sender = getPlugin().getSenderFactory().wrap(player);
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+        if (data == null) {
+            try {
+                UUID partyUUID = UUID.fromString(pu);
+                PARTY party = getStorageImplementation().selectEffectiveParty(partyUUID);
+                if (party == null) {
+                    Message.COMMAND_MISC_PARTY_INVALID.send(sender);
+                    return;
+                }
+                List<UUID> members = party.getMembers();
+                if (members.contains(uuid)) {
+                    Message.COMMAND_MISC_PARTY_ALREADY_JOINED_THE_TEAM.send(sender);
+                    return;
+                }
+                members.add(uuid);
+                party.setMembers(members);
+                getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "party", partyUUID.toString(), 0);
+                getAsyncExecutor().execute(() -> {
+                    getPlugin().getMessagingService().ifPresent(service -> {
+                        for (UUID member : members) {
+                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_DISBAND, new String[]{uuid.toString()});
+                        }
+                    });
+                });
+            } catch (IllegalArgumentException e) {
+                MiscMessage.COMMAND_MISC_INVALID_FORMAT.send(sender, pu);
+            }
+        } else {
+            Message.COMMAND_MISC_PARTY_ALREADY_IN_THE_TEAM.send(sender);
         }
     }
 }
