@@ -3,6 +3,7 @@ package team.floracore.common.locale.message;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.event.*;
 import org.bukkit.*;
+import org.floracore.api.*;
 import org.floracore.api.data.*;
 import team.floracore.common.util.*;
 
@@ -528,6 +529,14 @@ public interface Message extends AbstractMessage {
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
 
+    Args0 COMMAND_MISC_PARTY_NOT_INVITED = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // 你没有被邀请加入到这个组队中!
+                        .key("floracore.command.misc.party.not-invited").color(RED).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
+
     Args2<String, String> COMMAND_MISC_PARTY_INVITE = (sender, target) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
@@ -540,13 +549,13 @@ public interface Message extends AbstractMessage {
 
     Args2<String, UUID> COMMAND_MISC_PARTY_INVITE_ACCEPT = (sender, partyUUID) -> {
         ClickEvent clickEvent = ClickEvent.runCommand("/party accept " + partyUUID.toString());
-        Component click = MiscMessage.CLICK_HERE.clickEvent(clickEvent);
+        Component click = MiscMessage.CLICK_JOIN;
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
                         // {0} 已经邀请你加入他们的组队。你有 {1} 秒的时间来接受。{2} 这里加入!
                         .key("floracore.command.misc.party.invite.accept").color(YELLOW)
                         // {}
-                        .args(text(sender, GRAY), text(60, RED), click).build(),
+                        .args(text(sender, GRAY), text(60, RED), click).clickEvent(clickEvent).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
 
@@ -578,5 +587,47 @@ public interface Message extends AbstractMessage {
                         // {}
                         .args(text(sender, GRAY)).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
+    Args3<UUID, List<UUID>, List<UUID>> COMMAND_MISC_PARTY_LIST = (leader, moderators, members) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        Component title = translatable("floracore.command.misc.party.list")
+                .args(AbstractMessage.OPEN_BRACKET.append(text(members.size())).append(AbstractMessage.CLOSE_BRACKET)).color(GOLD);
+        String leaderName = FloraCoreProvider.get().getPlayerAPI().getPlayerRecordName(leader);
+        boolean leaderOnline = FloraCoreProvider.get().getPlayerAPI().isOnline(leader);
+        Component leaderComponent = translatable("floracore.command.misc.party.leader")
+                // {}
+                .args(text(leaderName, GRAY).append(space()).append(AbstractMessage.CIRCLE.color(leaderOnline ? GREEN : RED))).color(YELLOW);
+        Component c = join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(),
+                title,
+                space(),
+                leaderComponent);
+        members.remove(leader);
+        if (!moderators.isEmpty()) {
+            Component mc = Component.empty();
+            for (UUID moderator : moderators) {
+                String moderatorName = FloraCoreProvider.get().getPlayerAPI().getPlayerRecordName(moderator);
+                boolean moderatorOnline = FloraCoreProvider.get().getPlayerAPI().isOnline(moderator);
+                mc = mc.append(text(moderatorName, GRAY).append(space()).append(AbstractMessage.CIRCLE.color(moderatorOnline ? GREEN : RED))).append(space());
+                members.remove(moderator);
+            }
+            c = join(joinConfig, c, space(),
+                    translatable().key("floracore.command.misc.party.moderators")
+                            // {}
+                            .args(mc).color(YELLOW).build());
+        }
+        if (!members.isEmpty()) {
+            Component mc = Component.empty();
+            for (UUID member : members) {
+                String memberName = FloraCoreProvider.get().getPlayerAPI().getPlayerRecordName(member);
+                boolean memberOnline = FloraCoreProvider.get().getPlayerAPI().isOnline(member);
+                mc = mc.append(text(memberName, GRAY).append(space()).append(AbstractMessage.CIRCLE.color(memberOnline ? GREEN : RED))).append(space());
+            }
+            c = join(joinConfig, c, space(),
+                    translatable().key("floracore.command.misc.party.members")
+                            // {}
+                            .args(mc).color(YELLOW).build());
+        }
+        c = join(joinConfig, c, MiscMessage.PARTY_HORIZONTAL_LINE.build());
+        return c;
     };
 }
