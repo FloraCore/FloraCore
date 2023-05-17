@@ -17,7 +17,7 @@ public interface MiscMessage extends AbstractMessage {
 
     Component PREFIX_PARTY = text()
             // 组队 >
-            .append(translatable("floracore.command.misc.party.prefix", BLUE)).append(space()).append(text(">", DARK_GRAY)).build();
+            .append(translatable("floracore.command.misc.party.prefix", BLUE)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
 
     Component CLICK_TP = text().append(translatable("floracore.command.misc.click-tp", YELLOW)).build();
     Component CLICK_JOIN = text().append(translatable("floracore.command.misc.click-join", GOLD)).build();

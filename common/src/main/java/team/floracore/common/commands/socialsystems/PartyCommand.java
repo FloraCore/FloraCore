@@ -2,12 +2,12 @@ package team.floracore.common.commands.socialsystems;
 
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.processing.*;
+import cloud.commandframework.annotations.specifier.*;
 import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.floracore.api.messenger.message.type.*;
-import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
@@ -131,7 +131,7 @@ public class PartyCommand extends AbstractFloraCoreCommand {
     }
 
     @CommandMethod("party|p accept <uuid>")
-    public void accept(final @NonNull Player player, final @NotNull @Argument("uuid") String pu) {
+    public void accept(final @NonNull Player player, final @NonNull @Argument("uuid") String pu) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
@@ -186,6 +186,27 @@ public class PartyCommand extends AbstractFloraCoreCommand {
             List<UUID> moderators = party.getModerators();
             List<UUID> members = party.getMembers();
             Message.COMMAND_MISC_PARTY_LIST.send(sender, leader, moderators, members);
+        }
+    }
+
+    @CommandMethod("party|p chat <message>")
+    public void chat(final @NonNull Player player, final @NonNull @Argument("message") @Greedy String message) {
+        UUID uuid = player.getUniqueId();
+        Sender sender = getPlugin().getSenderFactory().wrap(player);
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+        if (data == null) {
+            Message.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+        } else {
+            UUID partyUUID = UUID.fromString(data.getValue());
+            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            List<UUID> members = party.getMembers();
+            getAsyncExecutor().execute(() -> {
+                getPlugin().getMessagingService().ifPresent(service -> {
+                    for (UUID member : members) {
+                        service.pushChatMessage(member, ChatMessage.ChatMessageType.PARTY, new String[]{uuid.toString(), message});
+                    }
+                });
+            });
         }
     }
 }

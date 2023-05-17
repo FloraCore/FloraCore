@@ -588,6 +588,15 @@ public interface Message extends AbstractMessage {
                         .args(text(sender, GRAY)).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
+
+    Args2<String, String> COMMAND_MISC_PARTY_CHAT = (sender, message) -> text()
+            .append(MiscMessage.PREFIX_PARTY).append(space())
+            .append(space())
+            .append(text(sender, GRAY))
+            .append(AbstractMessage.COLON.color(WHITE))
+            .append(space())
+            .append(text(message, WHITE))
+            .build();
     Args3<UUID, List<UUID>, List<UUID>> COMMAND_MISC_PARTY_LIST = (leader, moderators, members) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         Component title = translatable("floracore.command.misc.party.list")

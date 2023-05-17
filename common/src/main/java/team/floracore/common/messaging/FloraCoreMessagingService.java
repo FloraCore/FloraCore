@@ -124,11 +124,38 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         });
     }
 
+    @Override
+    public void pushChatMessage(UUID receiver, ChatMessage.ChatMessageType type, String[] parameters) {
+        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
+            UUID requestId = generatePingId();
+            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            ChatMessageImpl chatMessage = new ChatMessageImpl(requestId, receiver, type, parameters);
+            this.messenger.sendOutgoingMessage(chatMessage);
+            if (dispatchMessageReceiveEvent(chatMessage)) {
+                chat(chatMessage);
+            }
+        });
+    }
+
     public void notifyStaffReport(String reporter, String reportedUser, String reporterServer, String reportedUserServer, String reason, boolean playerOnlineStatus, boolean targetOnlineStatus) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
             if (onlinePlayer.hasPermission("floracore.report.staff")) {
                 Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
                 team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_BROADCAST.send(s, reporter, reportedUser, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
+            }
+        }
+    }
+
+    public void chat(ChatMessage chatMsg) {
+        Player player = Bukkit.getPlayer(chatMsg.getReceiver());
+        String[] parameters = chatMsg.getParameters();
+        if (player != null) {
+            Sender sender = plugin.getSenderFactory().wrap(player);
+            if (chatMsg.getType() == ChatMessage.ChatMessageType.PARTY) {
+                UUID su1 = UUID.fromString(parameters[0]);
+                String sn1 = getPlayerName(su1);
+                String mess = parameters[1];
+                team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_CHAT.send(sender, sn1, mess);
             }
         }
     }
@@ -336,6 +363,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             }
         } else if (message instanceof ChatMessage) {
             ChatMessage chatMsg = (ChatMessage) message;
+            chat(chatMsg);
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }
