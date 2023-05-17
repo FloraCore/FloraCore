@@ -112,6 +112,16 @@ permissions:
     default: op
   floracore.command.top:
     default: op
+  floracore.command.broadcast:
+    default: op
+  floracore.socialsystems.*:
+    default: op
+    children:
+      floracore.socialsystems.party: true
+      floracore.socialsystems.blogger: true
+      floracore.socialsystems.builder: true
+      floracore.socialsystems.staff: true
+      floracore.socialsystems.admin: true
   floracore.command.time.*:
     default: op
     children:

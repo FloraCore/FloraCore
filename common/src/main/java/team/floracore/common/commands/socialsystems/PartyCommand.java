@@ -19,6 +19,7 @@ import java.util.concurrent.*;
 
 @CommandContainer
 @CommandDescription("组队是一个社交系统。玩家可以与其他玩家一起游玩")
+@CommandPermission("floracore.socialsystems.party")
 public class PartyCommand extends AbstractFloraCoreCommand {
     public PartyCommand(FloraCorePlugin plugin) {
         super(plugin);

@@ -591,7 +591,37 @@ public interface Message extends AbstractMessage {
 
     Args2<String, String> COMMAND_MISC_PARTY_CHAT = (sender, message) -> text()
             .append(MiscMessage.PREFIX_PARTY).append(space())
+            .append(text(sender, GRAY))
+            .append(AbstractMessage.COLON.color(WHITE))
             .append(space())
+            .append(text(message, WHITE))
+            .build();
+    Args2<String, String> COMMAND_MISC_STAFF_CHAT = (sender, message) -> text()
+            .append(MiscMessage.PREFIX_STAFF).append(space())
+            .append(text(sender, GRAY))
+            .append(AbstractMessage.COLON.color(WHITE))
+            .append(space())
+            .append(text(message, WHITE))
+            .build();
+
+    Args2<String, String> COMMAND_MISC_BLOGGER_CHAT = (sender, message) -> text()
+            .append(MiscMessage.PREFIX_BLOGGER).append(space())
+            .append(text(sender, GRAY))
+            .append(AbstractMessage.COLON.color(WHITE))
+            .append(space())
+            .append(text(message, WHITE))
+            .build();
+
+    Args2<String, String> COMMAND_MISC_BUILDER_CHAT = (sender, message) -> text()
+            .append(MiscMessage.PREFIX_BUILDER).append(space())
+            .append(text(sender, GRAY))
+            .append(AbstractMessage.COLON.color(WHITE))
+            .append(space())
+            .append(text(message, WHITE))
+            .build();
+
+    Args2<String, String> COMMAND_MISC_ADMIN_CHAT = (sender, message) -> text()
+            .append(MiscMessage.PREFIX_ADMIN).append(space())
             .append(text(sender, GRAY))
             .append(AbstractMessage.COLON.color(WHITE))
             .append(space())

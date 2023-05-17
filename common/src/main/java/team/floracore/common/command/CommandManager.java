@@ -138,7 +138,11 @@ public class CommandManager {
         this.annotationParser.parse(new BroadCastCommand(plugin));
 
         // social systems
+        this.annotationParser.parse(new AdminCommand(plugin));
+        this.annotationParser.parse(new BloggerCommand(plugin));
+        this.annotationParser.parse(new BuilderCommand(plugin));
         this.annotationParser.parse(new PartyCommand(plugin));
+        this.annotationParser.parse(new StaffCommand(plugin));
 
         // world
         this.annotationParser.parse(new TimeCommand(plugin));

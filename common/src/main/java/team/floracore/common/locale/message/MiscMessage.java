@@ -19,6 +19,22 @@ public interface MiscMessage extends AbstractMessage {
             // 组队 >
             .append(translatable("floracore.command.misc.party.prefix", BLUE)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
 
+    Component PREFIX_STAFF = text()
+            // 员工 >
+            .append(translatable("floracore.command.misc.staff.prefix", AQUA)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+
+    Component PREFIX_BLOGGER = text()
+            // 博主 >
+            .append(translatable("floracore.command.misc.blogger.prefix", WHITE)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+
+    Component PREFIX_BUILDER = text()
+            // 建筑组 >
+            .append(translatable("floracore.command.misc.builder.prefix", DARK_AQUA)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+
+    Component PREFIX_ADMIN = text()
+            // 管理 >
+            .append(translatable("floracore.command.misc.admin.prefix", RED)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+
     Component CLICK_TP = text().append(translatable("floracore.command.misc.click-tp", YELLOW)).build();
     Component CLICK_JOIN = text().append(translatable("floracore.command.misc.click-join", GOLD)).build();
 

@@ -32,5 +32,9 @@ public interface ChatMessage extends Message {
      */
     enum ChatMessageType {
         PARTY,
+        BLOGGER,
+        BUILDER,
+        STAFF,
+        ADMIN,
     }
 }
