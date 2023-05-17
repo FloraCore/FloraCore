@@ -70,9 +70,13 @@ public class PartyCommand extends AbstractFloraCoreCommand {
                 return;
             }
             if (ut.equals(uuid)) {
-                MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
                 Message.COMMAND_MISC_PARTY_INVITE_SELF.send(sender);
-                MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
+                return;
+            }
+            DATA td = getStorageImplementation().getSpecifiedData(ut, DataType.SOCIAL_SYSTEMS_PARTY_INVITE, partyUUID.toString());
+            if (td != null || members.contains(ut)) {
+                Message.COMMAND_MISC_PARTY_INVITE_HAS_BEEN_INVITED.send(sender);
+                return;
             }
             getStorageImplementation().insertData(ut, DataType.SOCIAL_SYSTEMS_PARTY_INVITE, partyUUID.toString(), uuid.toString(), 0);
             getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
@@ -93,9 +97,7 @@ public class PartyCommand extends AbstractFloraCoreCommand {
                 }
             }));
         } else {
-            MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
             Message.COMMAND_MISC_PARTY_INVITE_NO_PERMISSION.send(sender);
-            MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
         }
     }
 
@@ -105,9 +107,7 @@ public class PartyCommand extends AbstractFloraCoreCommand {
         Sender sender = getPlugin().getSenderFactory().wrap(player);
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
         if (data == null) {
-            MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
             Message.COMMAND_MISC_PARTY_NOT_IN.send(sender);
-            MiscMessage.PARTY_HORIZONTAL_LINE.send(sender);
         } else {
             // TODO 解散
             UUID partyUUID = UUID.fromString(data.getValue());

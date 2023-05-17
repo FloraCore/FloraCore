@@ -20,9 +20,9 @@ public interface MiscMessage extends AbstractMessage {
             .append(translatable("floracore.command.misc.party.prefix", BLUE)).append(space()).append(text(">", DARK_GRAY)).build();
 
     Component CLICK_TP = text().append(translatable("floracore.command.misc.click-tp", YELLOW)).build();
-    Component CLICK_HERE = text().append(translatable("floracore.command.misc.click-here", YELLOW)).build();
+    Component CLICK_HERE = text().append(translatable("floracore.command.misc.click-here", GOLD)).build();
 
-    Args0 PARTY_HORIZONTAL_LINE = () -> HORIZONTAL_LINE.color(BLUE);
+    Args0 PARTY_HORIZONTAL_LINE = () -> HORIZONTAL_LINE.decoration(STRIKETHROUGH, true).color(BLUE);
 
     Args1<FloraCoreBootstrap> STARTUP_BANNER = bootstrap -> {
         // FloraCore v{} is Running.

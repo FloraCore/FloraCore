@@ -473,39 +473,75 @@ public interface Message extends AbstractMessage {
             // 你已成功将你的显示语言更改为 {0} !
             .key("floracore.command.language.change.success").args(text(language, GREEN)).color(AQUA).build();
 
-    Args1<String> COMMAND_MISC_PARTY_INVITE_EXPIRED = (target) -> translatable("floracore.command.misc.party.invite.expired", AQUA).args(text(target, GREEN));
+    Args1<String> COMMAND_MISC_PARTY_INVITE_EXPIRED = (target) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(),
+                translatable("floracore.command.misc.party.invite.expired", YELLOW).args(text(target, GRAY)),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
 
-    Args0 COMMAND_MISC_PARTY_INVITE_NO_PERMISSION = () -> translatable()
-            // 你没有发送组队邀请的权限!
-            .key("floracore.command.misc.party.invite.no-permission").color(RED).build();
+    Args0 COMMAND_MISC_PARTY_INVITE_NO_PERMISSION = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // 你没有发送组队邀请的权限!
+                        .key("floracore.command.misc.party.invite.no-permission").color(RED).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
 
-    Args0 COMMAND_MISC_PARTY_INVITE_SELF = () -> translatable()
-            // 你不能向自己发送组队邀请!
-            .key("floracore.command.misc.party.invite.self").color(RED).build();
+    Args0 COMMAND_MISC_PARTY_INVITE_SELF = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // 你不能向自己发送组队邀请!
+                        .key("floracore.command.misc.party.invite.self").color(RED).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
 
-    Args2<String, String> COMMAND_MISC_PARTY_INVITE = (sender, target) -> translatable()
-            // {0} 已邀请 {1} 到组队中!他们有 {2} 秒时间接受邀请
-            .key("floracore.command.misc.party.invite").color(AQUA)
-            // {}
-            .args(text(sender, GRAY), text(target, GRAY), text(60, RED)).append(AbstractMessage.FULL_STOP).build();
+    Args0 COMMAND_MISC_PARTY_INVITE_HAS_BEEN_INVITED = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // 这名玩家已经被邀请到组队中了!
+                        .key("floracore.command.misc.party.invite.has-been-invited").color(RED).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
+
+    Args2<String, String> COMMAND_MISC_PARTY_INVITE = (sender, target) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // {0} 已邀请 {1} 到组队中!他们有 {2} 秒时间接受邀请
+                        .key("floracore.command.misc.party.invite").color(YELLOW)
+                        // {}
+                        .args(text(sender, GRAY), text(target, GRAY), text(60, RED)).append(AbstractMessage.FULL_STOP).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
 
     Args2<String, UUID> COMMAND_MISC_PARTY_INVITE_ACCEPT = (sender, partyUUID) -> {
         ClickEvent clickEvent = ClickEvent.runCommand("/party accept " + partyUUID.toString());
         Component click = MiscMessage.CLICK_HERE.clickEvent(clickEvent);
-        return translatable()
-                // {0} 已经邀请你加入他们的组队。你有 {1} 秒的时间来接受。{2} 这里加入!
-                .key("floracore.command.misc.party.invite.accept").color(AQUA)
-                // {}
-                .args(text(sender, GRAY), text(60, RED), click).build();
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // {0} 已经邀请你加入他们的组队。你有 {1} 秒的时间来接受。{2} 这里加入!
+                        .key("floracore.command.misc.party.invite.accept").color(YELLOW)
+                        // {}
+                        .args(text(sender, GRAY), text(60, RED), click).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
 
-    Args0 COMMAND_MISC_PARTY_NOT_IN = () -> translatable()
-            // 你当前不在组队中
-            .key("floracore.command.misc.party.not-in").color(RED).append(AbstractMessage.FULL_STOP).build();
+    Args0 COMMAND_MISC_PARTY_NOT_IN = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // 你当前不在组队中
+                        .key("floracore.command.misc.party.not-in").color(RED).append(AbstractMessage.FULL_STOP).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
 
-    Args1<String> COMMAND_MISC_PARTY_DISBAND = (sender) -> translatable()
-            // {0} 解散了组队!
-            .key("floracore.command.misc.party.disband").color(AQUA)
-            // {}
-            .args(text(sender, GRAY)).build();
+    Args1<String> COMMAND_MISC_PARTY_DISBAND = (sender) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(),
+                translatable()
+                        // {0} 解散了组队!
+                        .key("floracore.command.misc.party.disband").color(YELLOW)
+                        // {}
+                        .args(text(sender, GRAY)).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
 }
