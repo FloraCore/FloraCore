@@ -113,6 +113,19 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
     }
 
     @Override
+    public void pushConnectServer(UUID recipient, String serverName) {
+        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
+            UUID requestId = generatePingId();
+            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            ConnectServerMessageImpl connectServerMessage = new ConnectServerMessageImpl(requestId, recipient, serverName);
+            this.messenger.sendOutgoingMessage(connectServerMessage);
+            /*if (dispatchMessageReceiveEvent(connectServerMessage)) {
+
+            }*/
+        });
+    }
+
+    @Override
     public void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, String[] parameters) {
         this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
             UUID requestId = generatePingId();
@@ -429,6 +442,16 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         } else if (message instanceof ChatMessage) {
             ChatMessage chatMsg = (ChatMessage) message;
             chat(chatMsg);
+        } else if (message instanceof ConnectServerMessage) {
+            ConnectServerMessage connectServerMsg = (ConnectServerMessage) message;
+            UUID ru = connectServerMsg.getRecipient();
+            Player rp = Bukkit.getPlayer(ru);
+            if (rp != null) {
+                String serverName = connectServerMsg.getServerName();
+                if (!serverName.equalsIgnoreCase(plugin.getServerName())) {
+                    plugin.getBungeeUtil().connect(rp, serverName);
+                }
+            }
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }

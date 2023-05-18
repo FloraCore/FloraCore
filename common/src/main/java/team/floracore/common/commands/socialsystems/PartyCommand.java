@@ -372,15 +372,31 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             }
             if (leader.equals(uuid)) {
                 // TODO warp
+                partyWarp(party, getPlugin().getServerName());
             } else if (moderators.contains(uuid)) {
                 // TODO warp
+                partyWarp(party, getPlugin().getServerName());
             } else {
                 MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
             }
         }
     }
 
-    public void partyWarp(Player sender){
-
+    public void partyWarp(PARTY party, String serverName) {
+        List<UUID> members = party.getMembers();
+        getAsyncExecutor().execute(() -> {
+            getPlugin().getMessagingService().ifPresent(service -> {
+                for (UUID member : members) {
+                    String serverNow;
+                    DATA data = getStorageImplementation().getSpecifiedData(member, DataType.FUNCTION, "server-status");
+                    if (data != null) {
+                        serverNow = data.getValue();
+                        if (!serverName.equalsIgnoreCase(serverNow)) {
+                            service.pushConnectServer(member, serverName);
+                        }
+                    }
+                }
+            });
+        });
     }
 }

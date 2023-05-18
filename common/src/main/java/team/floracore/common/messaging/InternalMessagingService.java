@@ -26,6 +26,8 @@ public interface InternalMessagingService {
 
     void pushTeleport(UUID sender, UUID recipient, String serverName);
 
+    void pushConnectServer(UUID recipient, String serverName);
+
     void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, String[] parameters);
 
     void pushChatMessage(UUID receiver, ChatMessage.ChatMessageType type, String[] parameters);
