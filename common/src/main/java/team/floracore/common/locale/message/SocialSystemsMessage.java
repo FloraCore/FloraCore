@@ -119,6 +119,14 @@ public interface SocialSystemsMessage extends AbstractMessage {
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
 
+    Args0 COMMAND_MISC_PARTY_WARP_NOT_ENOUGH_PEOPLE = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // 组队中没有玩家可供传送
+                        .key("floracore.command.misc.party.warp.not-enough-people").color(RED).append(AbstractMessage.FULL_STOP).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
+
     Args0 COMMAND_MISC_PARTY_TARGET_NOT_IN = () -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
@@ -177,6 +185,17 @@ public interface SocialSystemsMessage extends AbstractMessage {
                 translatable()
                         // 你不能将自己移出组队!
                         .key("floracore.command.misc.party.kick.self").color(RED).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
+
+    Args1<String> COMMAND_MISC_PARTY_KICK_NOT_PERMISSION = (target) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(),
+                translatable()
+                        // 你不能将 {0} 移出组队!
+                        .key("floracore.command.misc.party.kick.no-permission")
+                        // {}
+                        .args(text(target, DARK_RED)).color(RED).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
 

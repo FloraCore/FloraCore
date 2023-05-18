@@ -49,5 +49,7 @@ public interface NoticeMessage extends Message {
         PARTY_KICK,
         PARTY_BE_KICKED,
         PARTY_LEAVE,
+        PARTY_WARP_LEADER,
+        PARTY_WARP_MODERATOR,
     }
 }
