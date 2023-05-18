@@ -52,7 +52,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
         }
         switch (t) {
             case BUILDER:
-                if (player.hasPermission("floracore.socialsystems.builder")) {
+                if (!player.hasPermission("floracore.socialsystems.builder")) {
                     MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                     return;
                 }
@@ -61,7 +61,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                 Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc);
                 break;
             case BLOGGER:
-                if (player.hasPermission("floracore.socialsystems.blogger")) {
+                if (!player.hasPermission("floracore.socialsystems.blogger")) {
                     MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                     return;
                 }
@@ -70,7 +70,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                 Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc1);
                 break;
             case STAFF:
-                if (player.hasPermission("floracore.socialsystems.staff")) {
+                if (!player.hasPermission("floracore.socialsystems.staff")) {
                     MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                     return;
                 }
@@ -79,7 +79,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                 Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc2);
                 break;
             case PARTY:
-                if (player.hasPermission("floracore.socialsystems.party")) {
+                if (!player.hasPermission("floracore.socialsystems.party")) {
                     MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                     return;
                 }
@@ -98,7 +98,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                 Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc4);
                 break;
             case ADMIN:
-                if (player.hasPermission("floracore.socialsystems.admin")) {
+                if (!player.hasPermission("floracore.socialsystems.admin")) {
                     MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                     return;
                 }
@@ -147,7 +147,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
             e.setCancelled(true);
             switch (type) {
                 case PARTY:
-                    if (p.hasPermission("floracore.socialsystems.party")) {
+                    if (!p.hasPermission("floracore.socialsystems.party")) {
                         MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                         return;
                     }
@@ -168,7 +168,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                     }
                     break;
                 case ADMIN:
-                    if (p.hasPermission("floracore.socialsystems.admin")) {
+                    if (!p.hasPermission("floracore.socialsystems.admin")) {
                         MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                         return;
                     }
@@ -179,7 +179,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                     });
                     break;
                 case STAFF:
-                    if (p.hasPermission("floracore.socialsystems.staff")) {
+                    if (!p.hasPermission("floracore.socialsystems.staff")) {
                         MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                         return;
                     }
@@ -190,7 +190,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                     });
                     break;
                 case BLOGGER:
-                    if (p.hasPermission("floracore.socialsystems.blogger")) {
+                    if (!p.hasPermission("floracore.socialsystems.blogger")) {
                         MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                         return;
                     }
@@ -201,7 +201,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                     });
                     break;
                 case BUILDER:
-                    if (p.hasPermission("floracore.socialsystems.builder")) {
+                    if (!p.hasPermission("floracore.socialsystems.builder")) {
                         MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
                         return;
                     }

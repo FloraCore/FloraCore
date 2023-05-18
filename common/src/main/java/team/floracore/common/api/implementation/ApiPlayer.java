@@ -1,6 +1,8 @@
 package team.floracore.common.api.implementation;
 
 import com.github.benmanes.caffeine.cache.*;
+import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.floracore.api.data.*;
 import org.floracore.api.player.*;
 import team.floracore.common.plugin.*;
@@ -55,6 +57,10 @@ public class ApiPlayer implements PlayerAPI {
 
     @Override
     public boolean isOnline(UUID uuid) {
+        Player p = Bukkit.getPlayer(uuid);
+        if (p != null) {
+            return true;
+        }
         String status = plugin.getApiProvider().getDataAPI().getSpecifiedDataValue(uuid, DataType.FUNCTION, "online-status");
         if (status == null) {
             return false;
