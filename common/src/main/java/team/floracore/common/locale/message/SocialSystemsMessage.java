@@ -126,6 +126,36 @@ public interface SocialSystemsMessage extends AbstractMessage {
                         .key("floracore.command.misc.party.warp.not-enough-people").color(RED).append(AbstractMessage.FULL_STOP).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
+    
+    Args0 COMMAND_MISC_PARTY_TRANSFER_NO_PERMISSION = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                    // 你不是组队队长！
+                    .key("floracore.command.misc.party.transfer.no-permission").color(RED).append(AbstractMessage.FULL_STOP).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build()
+        );
+    };
+
+    Args0 COMMAND_MISC_PARTY_TRANSFER_SELF = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // 你不是组队队长！
+                        .key("floracore.command.misc.party.transfer.self").color(RED).append(AbstractMessage.FULL_STOP).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build()
+        );
+    };
+
+    Args2<String, String> COMMAND_MISC_PARTY_TRANSFER_TRANSFERED = (sender, target) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // 组队队长 {0} 已将队长转让给 {1}
+                        .key("floracore.command.misc.party.transfer.transfered").color(AQUA)
+                        // {}
+                        .args(text(sender, GREEN), text(target, GREEN))
+                        .build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build()
+        );
+    };
 
     Args0 COMMAND_MISC_PARTY_TARGET_NOT_IN = () -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();

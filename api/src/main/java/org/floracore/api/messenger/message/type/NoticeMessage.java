@@ -51,5 +51,9 @@ public interface NoticeMessage extends Message {
         PARTY_LEAVE,
         PARTY_WARP_LEADER,
         PARTY_WARP_MODERATOR,
+        /**
+         * 队长转让给了另一名玩家
+         */
+        PARTY_TRANSFER
     }
 }

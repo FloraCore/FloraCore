@@ -9,6 +9,7 @@ import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.floracore.api.messenger.message.type.*;
+import org.jetbrains.annotations.NotNull;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
@@ -398,5 +399,46 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 }
             });
         });
+    }
+
+    // TODO 待测试命令：/party transfer
+    @CommandMethod("party|p transfer <target>")
+    public void transfer(@NotNull Player s, @NotNull @Argument("target") String target) {
+        UUID senderUUID = s.getUniqueId();
+        Sender sender = getPlugin().getSenderFactory().wrap(s);
+        DATA data = getStorageImplementation().getSpecifiedData(senderUUID, DataType.SOCIAL_SYSTEMS, "party");
+        if (data == null) {
+            SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+        } else {
+            UUID partyUUID = UUID.fromString(data.getValue());
+            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            UUID leaderUUID = party.getLeader();
+            UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            if (!senderUUID.equals(leaderUUID)) { // 发送者不是队长，无权限转让
+                SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_NO_PERMISSION.send(sender);
+                return;
+            }
+            if (targetUUID == null) { // 目标玩家不存在
+                MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
+                return;
+            }
+            if (targetUUID.equals(senderUUID)) { // 准备转让给自己
+                SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_SELF.send(sender);
+                return;
+            }
+            getAsyncExecutor().execute(() -> {
+                getPlugin().getMessagingService().ifPresent(service -> {
+                    List<UUID> moderators = party.getModerators();
+                    party.setLeader(targetUUID); // 更新目标为队长
+                    moderators.remove(targetUUID); // 目标不再是管理员
+                    moderators.add(senderUUID); // 将发送者设为管理员
+                    party.setModerators(moderators); // 更新管理员列表数据
+                    List<UUID> members = party.getMembers();
+                    members.forEach(member -> {
+                        service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_TRANSFER, new String[]{senderUUID.toString(), targetUUID.toString()});
+                    });
+                });
+            });
+        }
     }
 }
