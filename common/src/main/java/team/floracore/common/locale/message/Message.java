@@ -596,6 +596,17 @@ public interface Message extends AbstractMessage {
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
 
+    Args1<String> COMMAND_MISC_PARTY_KICK = (target) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(),
+                translatable()
+                        // {0} 被移出了组队
+                        .key("floracore.command.misc.party.kick").color(YELLOW)
+                        // {}
+                        .args(text(target, GRAY)).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
+
     Args1<String> COMMAND_MISC_PARTY_JOIN = (sender) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(),

@@ -16,6 +16,7 @@ import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.*;
 
 @CommandContainer
 @CommandDescription("组队是一个社交系统。玩家可以与其他玩家一起游玩")
@@ -128,6 +129,40 @@ public class PartyCommand extends AbstractFloraCoreCommand {
                     }
                 });
             });
+        }
+    }
+
+    @CommandMethod("party|p kickoffline")
+    public void kickoffline(final @NonNull Player player) {
+        UUID uuid = player.getUniqueId();
+        Sender sender = getPlugin().getSenderFactory().wrap(player);
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+        if (data == null) {
+            Message.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+        } else {
+            UUID partyUUID = UUID.fromString(data.getValue());
+            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            List<UUID> members = party.getMembers();
+            getAsyncExecutor().execute(() -> {
+                getPlugin().getMessagingService().ifPresent(service -> {
+                    List<UUID> newMembers = members.stream()
+                            .filter(this::isOnline)
+                            .collect(Collectors.toList());
+
+                    List<UUID> offlineMembers = members.stream()
+                            .filter(member -> !isOnline(member))
+                            .collect(Collectors.toList());
+
+                    offlineMembers.forEach(offlineMember -> {
+                        party.getMembers().forEach(member -> {
+                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_KICK, new String[]{offlineMember.toString()});
+                        });
+                    });
+
+                    party.setMembers(newMembers);
+                });
+            });
+
         }
     }
 

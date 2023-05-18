@@ -154,6 +154,9 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                     DATA cd = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
                     if (cd == null) {
                         Message.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+                        getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", type.name(), 0);
+                        Component tc4 = TranslationManager.render(MiscMessage.PREFIX_ALL_LIGHT, uuid);
+                        Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc4);
                     } else {
                         UUID partyUUID = UUID.fromString(cd.getValue());
                         PARTY party = getStorageImplementation().selectParty(partyUUID);

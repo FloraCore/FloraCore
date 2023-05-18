@@ -267,6 +267,11 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     UUID s1 = UUID.fromString(parameters[0]);
                     String sn3 = getPlayerName(s1);
                     team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_JOIN.send(sender, sn3);
+                    break;
+                case PARTY_KICK:
+                    UUID s3 = UUID.fromString(parameters[0]);
+                    String sn4 = getPlayerName(s3);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_KICK.send(sender, sn4);
             }
         }
     }
