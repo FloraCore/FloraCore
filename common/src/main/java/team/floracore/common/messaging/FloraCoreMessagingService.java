@@ -8,8 +8,9 @@ import org.bukkit.scheduler.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.event.message.*;
 import org.floracore.api.messenger.*;
-import org.floracore.api.messenger.message.*;
+import org.floracore.api.messenger.message.Message;
 import org.floracore.api.messenger.message.type.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.messaging.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
@@ -157,7 +158,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                         UUID su1 = UUID.fromString(parameters[0]);
                         String sn1 = getPlayerName(su1);
                         String mess = parameters[1];
-                        team.floracore.common.locale.message.Message.COMMAND_MISC_STAFF_CHAT.send(s, sn1, mess);
+                        SocialSystemsMessage.COMMAND_MISC_STAFF_CHAT.send(s, sn1, mess);
                     }
                 }
                 break;
@@ -168,7 +169,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                         UUID su1 = UUID.fromString(parameters[0]);
                         String sn1 = getPlayerName(su1);
                         String mess = parameters[1];
-                        team.floracore.common.locale.message.Message.COMMAND_MISC_BLOGGER_CHAT.send(s, sn1, mess);
+                        SocialSystemsMessage.COMMAND_MISC_BLOGGER_CHAT.send(s, sn1, mess);
                     }
                 }
                 break;
@@ -179,7 +180,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                         UUID su1 = UUID.fromString(parameters[0]);
                         String sn1 = getPlayerName(su1);
                         String mess = parameters[1];
-                        team.floracore.common.locale.message.Message.COMMAND_MISC_BUILDER_CHAT.send(s, sn1, mess);
+                        SocialSystemsMessage.COMMAND_MISC_BUILDER_CHAT.send(s, sn1, mess);
                     }
                 }
                 break;
@@ -190,7 +191,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                         UUID su1 = UUID.fromString(parameters[0]);
                         String sn1 = getPlayerName(su1);
                         String mess = parameters[1];
-                        team.floracore.common.locale.message.Message.COMMAND_MISC_ADMIN_CHAT.send(s, sn1, mess);
+                        SocialSystemsMessage.COMMAND_MISC_ADMIN_CHAT.send(s, sn1, mess);
                     }
                 }
                 break;
@@ -202,7 +203,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     UUID su1 = UUID.fromString(parameters[0]);
                     String sn1 = getPlayerName(su1);
                     String mess = parameters[1];
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_CHAT.send(sender, sn1, mess);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_CHAT.send(sender, sn1, mess);
                     break;
             }
         }
@@ -244,34 +245,45 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     UUID su1 = UUID.fromString(parameters[0]);
                     String sn1 = getPlayerName(su1);
                     UUID pu = UUID.fromString(parameters[1]);
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_INVITE_ACCEPT.send(sender, sn1, pu);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_ACCEPT.send(sender, sn1, pu);
                     break;
                 case PARTY_INVITE:
                     UUID su = UUID.fromString(parameters[0]);
                     UUID tu1 = UUID.fromString(parameters[1]);
                     String sn = getPlayerName(su);
                     String tn = getPlayerName(tu1);
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_INVITE.send(sender, sn, tn);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE.send(sender, sn, tn);
                     break;
                 case PARTY_INVITE_EXPIRED:
                     UUID tu2 = UUID.fromString(parameters[0]);
                     String target = getPlayerName(tu2);
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_INVITE_EXPIRED.send(sender, target);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_EXPIRED.send(sender, target);
                     break;
                 case PARTY_DISBAND:
                     UUID s = UUID.fromString(parameters[0]);
                     String sn2 = getPlayerName(s);
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_DISBAND.send(sender, sn2);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_DISBAND.send(sender, sn2);
                     break;
                 case PARTY_JOINED:
                     UUID s1 = UUID.fromString(parameters[0]);
                     String sn3 = getPlayerName(s1);
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_JOIN.send(sender, sn3);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_JOIN.send(sender, sn3);
                     break;
                 case PARTY_KICK:
                     UUID s3 = UUID.fromString(parameters[0]);
                     String sn4 = getPlayerName(s3);
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_PARTY_KICK.send(sender, sn4);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_KICK.send(sender, sn4);
+                    break;
+                case PARTY_BE_KICKED:
+                    UUID s4 = UUID.fromString(parameters[0]);
+                    String sn5 = getPlayerName(s4);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_BE_KICKED.send(sender, sn5);
+                    break;
+                case PARTY_LEAVE:
+                    UUID s5 = UUID.fromString(parameters[0]);
+                    String sn6 = getPlayerName(s5);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_LEAVE.send(sender, sn6);
+                    break;
             }
         }
     }

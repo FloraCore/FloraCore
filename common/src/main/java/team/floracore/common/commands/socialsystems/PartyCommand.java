@@ -73,16 +73,24 @@ public class PartyCommand extends AbstractFloraCoreCommand {
                 return;
             }
             if (ut.equals(uuid)) {
-                Message.COMMAND_MISC_PARTY_INVITE_SELF.send(sender);
+                SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_SELF.send(sender);
                 return;
             }
             if (members.contains(ut)) {
-                Message.COMMAND_MISC_PARTY_ALREADY_IN_THE_TEAM.send(sender);
+                SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_ALREADY_IN_THE_TEAM.send(sender);
                 return;
+            }
+            DATA tdp = getStorageImplementation().getSpecifiedData(ut, DataType.SOCIAL_SYSTEMS, "party");
+            if (tdp != null) {
+                UUID dpu = UUID.fromString(tdp.getValue());
+                if (!dpu.equals(partyUUID)) {
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_ALREADY_IN_THE_OTHER_TEAM.send(sender);
+                    return;
+                }
             }
             DATA td = getStorageImplementation().getSpecifiedData(ut, DataType.SOCIAL_SYSTEMS_PARTY_INVITE, partyUUID.toString());
             if (td != null || members.contains(ut)) {
-                Message.COMMAND_MISC_PARTY_INVITE_HAS_BEEN_INVITED.send(sender);
+                SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_HAS_BEEN_INVITED.send(sender);
                 return;
             }
             getStorageImplementation().insertData(ut, DataType.SOCIAL_SYSTEMS_PARTY_INVITE, partyUUID.toString(), uuid.toString(), 0);
@@ -104,7 +112,7 @@ public class PartyCommand extends AbstractFloraCoreCommand {
                 }
             }));
         } else {
-            Message.COMMAND_MISC_PARTY_INVITE_NO_PERMISSION.send(sender);
+            SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_NO_PERMISSION.send(sender);
         }
     }
 
@@ -114,7 +122,7 @@ public class PartyCommand extends AbstractFloraCoreCommand {
         Sender sender = getPlugin().getSenderFactory().wrap(player);
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
         if (data == null) {
-            Message.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+            SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
         } else {
             UUID partyUUID = UUID.fromString(data.getValue());
             PARTY party = getStorageImplementation().selectParty(partyUUID);
@@ -132,13 +140,89 @@ public class PartyCommand extends AbstractFloraCoreCommand {
         }
     }
 
+    @CommandMethod("party|p kick <target>")
+    public void kick(final @NonNull Player player, final @NonNull @Argument("target") String target) {
+        UUID uuid = player.getUniqueId();
+        Sender sender = getPlugin().getSenderFactory().wrap(player);
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+        if (data == null) {
+            SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+        } else {
+            UUID partyUUID = UUID.fromString(data.getValue());
+            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            List<UUID> members = party.getMembers();
+            UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            if (ut == null) {
+                MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
+                return;
+            }
+            if (ut.equals(uuid)) {
+                SocialSystemsMessage.COMMAND_MISC_PARTY_KICK_SELF.send(sender);
+                return;
+            }
+            if (!members.contains(ut)) {
+                SocialSystemsMessage.COMMAND_MISC_PARTY_TARGET_NOT_IN.send(sender);
+                return;
+            }
+            DATA td = getStorageImplementation().getSpecifiedData(ut, DataType.SOCIAL_SYSTEMS, "party");
+            getStorageImplementation().deleteDataID(td.getId());
+            getAsyncExecutor().execute(() -> {
+                getPlugin().getMessagingService().ifPresent(service -> {
+                    members.remove(ut);
+                    party.setMembers(members);
+                    service.pushNoticeMessage(ut, NoticeMessage.NoticeType.PARTY_BE_KICKED, new String[]{uuid.toString()});
+                    members.forEach(member -> {
+                        service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_KICK, new String[]{ut.toString()});
+                    });
+                });
+            });
+
+        }
+    }
+
+    @CommandMethod("party|p leave")
+    public void leave(final @NonNull Player player) {
+        UUID uuid = player.getUniqueId();
+        Sender sender = getPlugin().getSenderFactory().wrap(player);
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+        if (data == null) {
+            SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+        } else {
+            UUID partyUUID = UUID.fromString(data.getValue());
+            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            UUID leader = party.getLeader();
+            if (leader.equals(uuid)) {
+                SocialSystemsMessage.COMMAND_MISC_PARTY_LEAVE_IS_LEADER.send(sender);
+                return;
+            }
+            List<UUID> moderators = party.getModerators();
+            List<UUID> members = party.getMembers();
+            getStorageImplementation().deleteDataID(data.getId());
+            members.remove(uuid);
+            party.setMembers(members);
+            if (moderators.contains(uuid)) {
+                moderators.remove(uuid);
+                party.setModerators(moderators);
+            }
+            getAsyncExecutor().execute(() -> {
+                getPlugin().getMessagingService().ifPresent(service -> {
+                    service.pushNoticeMessage(uuid, NoticeMessage.NoticeType.PARTY_LEAVE, new String[]{uuid.toString()});
+                    members.forEach(member -> {
+                        service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_LEAVE, new String[]{uuid.toString()});
+                    });
+                });
+            });
+
+        }
+    }
+
     @CommandMethod("party|p kickoffline")
     public void kickoffline(final @NonNull Player player) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
         if (data == null) {
-            Message.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+            SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
         } else {
             UUID partyUUID = UUID.fromString(data.getValue());
             PARTY party = getStorageImplementation().selectParty(partyUUID);
@@ -153,16 +237,17 @@ public class PartyCommand extends AbstractFloraCoreCommand {
                             .filter(member -> !isOnline(member))
                             .collect(Collectors.toList());
 
+                    party.setMembers(newMembers);
+
                     offlineMembers.forEach(offlineMember -> {
-                        party.getMembers().forEach(member -> {
+                        DATA od = getStorageImplementation().getSpecifiedData(offlineMember, DataType.SOCIAL_SYSTEMS, "party");
+                        getStorageImplementation().deleteDataID(od.getId());
+                        newMembers.forEach(member -> {
                             service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_KICK, new String[]{offlineMember.toString()});
                         });
                     });
-
-                    party.setMembers(newMembers);
                 });
             });
-
         }
     }
 
@@ -176,17 +261,17 @@ public class PartyCommand extends AbstractFloraCoreCommand {
                 UUID partyUUID = UUID.fromString(pu);
                 DATA inviteData = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS_PARTY_INVITE, partyUUID.toString());
                 if (inviteData == null) {
-                    Message.COMMAND_MISC_PARTY_NOT_INVITED.send(sender);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_INVITED.send(sender);
                     return;
                 }
                 PARTY party = getStorageImplementation().selectEffectiveParty(partyUUID);
                 if (party == null) {
-                    Message.COMMAND_MISC_PARTY_INVALID.send(sender);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_INVALID.send(sender);
                     return;
                 }
                 List<UUID> members = party.getMembers();
                 if (members.contains(uuid)) {
-                    Message.COMMAND_MISC_PARTY_ALREADY_JOINED_THE_TEAM.send(sender);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_ALREADY_JOINED_THE_TEAM.send(sender);
                     return;
                 }
                 members.add(uuid);
@@ -204,7 +289,7 @@ public class PartyCommand extends AbstractFloraCoreCommand {
                 MiscMessage.COMMAND_MISC_INVALID_FORMAT.send(sender, pu);
             }
         } else {
-            Message.COMMAND_MISC_PARTY_ALREADY_IN_THE_TEAM.send(sender);
+            SocialSystemsMessage.COMMAND_MISC_PARTY_ALREADY_IN_THE_TEAM.send(sender);
         }
     }
 
@@ -214,14 +299,14 @@ public class PartyCommand extends AbstractFloraCoreCommand {
         Sender sender = getPlugin().getSenderFactory().wrap(player);
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
         if (data == null) {
-            Message.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+            SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
         } else {
             UUID partyUUID = UUID.fromString(data.getValue());
             PARTY party = getStorageImplementation().selectParty(partyUUID);
             UUID leader = party.getLeader();
             List<UUID> moderators = party.getModerators();
             List<UUID> members = party.getMembers();
-            Message.COMMAND_MISC_PARTY_LIST.send(sender, leader, moderators, members);
+            SocialSystemsMessage.COMMAND_MISC_PARTY_LIST.send(sender, leader, moderators, members);
         }
     }
 
@@ -231,7 +316,7 @@ public class PartyCommand extends AbstractFloraCoreCommand {
         Sender sender = getPlugin().getSenderFactory().wrap(player);
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
         if (data == null) {
-            Message.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+            SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
         } else {
             UUID partyUUID = UUID.fromString(data.getValue());
             PARTY party = getStorageImplementation().selectParty(partyUUID);

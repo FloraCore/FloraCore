@@ -38,7 +38,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
         Sender sender = getPlugin().getSenderFactory().wrap(player);
         Type t = Type.parse(type);
         if (t == null) {
-            Message.COMMAND_MISC_CHAT_DOES_NOT_EXIST.send(sender, type);
+            SocialSystemsMessage.COMMAND_MISC_CHAT_DOES_NOT_EXIST.send(sender, type);
             return;
         }
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "chat");
@@ -46,7 +46,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
             Type nt = Type.valueOf(data.getValue());
             if (t == nt) {
                 // TODO 你当前正处于 {0} 聊天频道中!
-                Message.COMMAND_MISC_CHAT_IS_IN.send(sender, t.name().toLowerCase());
+                SocialSystemsMessage.COMMAND_MISC_CHAT_IS_IN.send(sender, t.name().toLowerCase());
                 return;
             }
         }
@@ -58,7 +58,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                 }
                 getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", t.name(), 0);
                 Component tc = TranslationManager.render(MiscMessage.PREFIX_BUILDER_LIGHT, uuid);
-                Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc);
+                SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc);
                 break;
             case BLOGGER:
                 if (!player.hasPermission("floracore.socialsystems.blogger")) {
@@ -67,7 +67,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                 }
                 getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", t.name(), 0);
                 Component tc1 = TranslationManager.render(MiscMessage.PREFIX_BLOGGER_LIGHT, uuid);
-                Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc1);
+                SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc1);
                 break;
             case STAFF:
                 if (!player.hasPermission("floracore.socialsystems.staff")) {
@@ -76,7 +76,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                 }
                 getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", t.name(), 0);
                 Component tc2 = TranslationManager.render(MiscMessage.PREFIX_STAFF_LIGHT, uuid);
-                Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc2);
+                SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc2);
                 break;
             case PARTY:
                 if (!player.hasPermission("floracore.socialsystems.party")) {
@@ -85,17 +85,17 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                 }
                 DATA cd = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
                 if (cd == null) {
-                    Message.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
                 } else {
                     getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", t.name(), 0);
                     Component tc3 = TranslationManager.render(MiscMessage.PREFIX_PARTY_LIGHT, uuid);
-                    Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc3);
+                    SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc3);
                 }
                 break;
             case ALL:
                 getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", t.name(), 0);
                 Component tc4 = TranslationManager.render(MiscMessage.PREFIX_ALL_LIGHT, uuid);
-                Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc4);
+                SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc4);
                 break;
             case ADMIN:
                 if (!player.hasPermission("floracore.socialsystems.admin")) {
@@ -104,7 +104,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                 }
                 getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", t.name(), 0);
                 Component tc5 = TranslationManager.render(MiscMessage.PREFIX_ADMIN_LIGHT, uuid);
-                Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc5);
+                SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc5);
                 break;
         }
     }
@@ -153,10 +153,10 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                     }
                     DATA cd = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
                     if (cd == null) {
-                        Message.COMMAND_MISC_PARTY_NOT_IN.send(sender);
-                        getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", type.name(), 0);
+                        SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+                        getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", Type.ALL.name(), 0);
                         Component tc4 = TranslationManager.render(MiscMessage.PREFIX_ALL_LIGHT, uuid);
-                        Message.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc4);
+                        SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc4);
                     } else {
                         UUID partyUUID = UUID.fromString(cd.getValue());
                         PARTY party = getStorageImplementation().selectParty(partyUUID);
