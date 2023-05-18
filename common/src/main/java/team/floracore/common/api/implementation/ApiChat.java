@@ -17,7 +17,7 @@ import java.util.stream.*;
 public class ApiChat implements ChatAPI {
     private final FloraCorePlugin plugin;
     private final ChatManager chatManager;
-    AsyncCache<UUID, List<Data>> chatDataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    AsyncCache<UUID, List<DATA>> chatDataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
 
     public ApiChat(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -28,8 +28,8 @@ public class ApiChat implements ChatAPI {
         return plugin;
     }
 
-    public List<Data> getPlayerChatData(UUID uuid) {
-        CompletableFuture<List<Data>> data = chatDataCache.get(uuid, u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.CHAT));
+    public List<DATA> getPlayerChatData(UUID uuid) {
+        CompletableFuture<List<DATA>> data = chatDataCache.get(uuid, u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.CHAT));
         chatDataCache.put(uuid, data);
         return data.join();
     }
@@ -41,9 +41,9 @@ public class ApiChat implements ChatAPI {
 
     @Override
     public List<DataChatRecord> getPlayerChatUUIDRecent(UUID uuid, int number) {
-        List<Data> i = getPlayerChatData(uuid);
+        List<DATA> i = getPlayerChatData(uuid);
         List<DataChatRecord> ret = new ArrayList<>();
-        for (Data data : i) {
+        for (DATA data : i) {
             String value = data.getValue();
             if (value.isEmpty()) {
                 continue;

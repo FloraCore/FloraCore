@@ -24,7 +24,7 @@ import java.util.stream.*;
 public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     private final FloraCorePlugin plugin;
     private final StorageImplementation storageImplementation;
-    private final AsyncCache<String, Servers> serversCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    private final AsyncCache<String, SERVER> serversCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     private final Executor asyncExecutor;
 
     public AbstractFloraCoreCommand(FloraCorePlugin plugin) {
@@ -95,9 +95,9 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
         return ImmutableList.of("1", "60", "600", "3600", "86400");
     }
 
-    public Servers getServer() {
+    public SERVER getServer() {
         String name = getPlugin().getServerName();
-        CompletableFuture<Servers> servers = serversCache.get(name, storageImplementation::selectServers);
+        CompletableFuture<SERVER> servers = serversCache.get(name, storageImplementation::selectServer);
         serversCache.put(name, servers);
         return servers.join();
     }

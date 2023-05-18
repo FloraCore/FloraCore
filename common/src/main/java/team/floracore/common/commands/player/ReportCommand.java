@@ -42,7 +42,7 @@ import static team.floracore.common.util.ReflectionWrapper.*;
 @CommandDescription("举报一名玩家")
 public class ReportCommand extends AbstractFloraCoreCommand {
     public static final boolean ADVANCED_VERSION = isVersionGreaterThanOrEqual(getVersion(), "v1_13_R1");
-    private final List<Report> reports = new ArrayList<>();
+    private final List<REPORT> reports = new ArrayList<>();
 
     public ReportCommand(FloraCorePlugin plugin) {
         super(plugin);
@@ -75,15 +75,15 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         UUID u = sender.getUniqueId();
         UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
         if (ut == null) {
-            Message.PLAYER_NOT_FOUND.send(s, target);
+            MiscMessage.PLAYER_NOT_FOUND.send(s, target);
             return;
         }
         String server;
-        Data data = getStorageImplementation().getSpecifiedData(ut, DataType.FUNCTION, "server-status");
+        DATA data = getStorageImplementation().getSpecifiedData(ut, DataType.FUNCTION, "server-status");
         if (data != null) {
             server = data.getValue();
         } else {
-            Message.PLAYER_NOT_FOUND.send(s, target);
+            MiscMessage.PLAYER_NOT_FOUND.send(s, target);
             return;
         }
         if (getPlugin().getServerName().equalsIgnoreCase(server)) {
@@ -97,7 +97,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 sender.teleport(t.getLocation());
                 Message.COMMAND_REPORT_TP_SUCCESS.send(s, target);
             } else {
-                Message.PLAYER_NOT_FOUND.send(s, target);
+                MiscMessage.PLAYER_NOT_FOUND.send(s, target);
             }
         } else {
             getPlugin().getMessagingService().ifPresent(service -> service.pushTeleport(u, ut, server));
@@ -119,7 +119,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         } else {
             UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
             if (ut == null) {
-                Message.PLAYER_NOT_FOUND.send(s, target);
+                MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                 return;
             }
             if (hasPermission(ut, "floracore.command.report.bypass")) {
@@ -129,7 +129,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             reportedUser = ut;
         }
         final String reporterServer = getPlugin().getServerName();
-        Data data = getStorageImplementation().getSpecifiedData(reportedUser, DataType.FUNCTION, "server-status");
+        DATA data = getStorageImplementation().getSpecifiedData(reportedUser, DataType.FUNCTION, "server-status");
         final String reportedUserServer;
         if (data != null) {
             reportedUserServer = data.getValue();
@@ -137,7 +137,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             Message.COMMAND_REPORT_ABNORMAL.send(s);
             return;
         }
-        Report report = getStorageImplementation().getUnprocessedReports(reportedUser);
+        REPORT report = getStorageImplementation().getUnprocessedReports(reportedUser);
         if (report != null) {
             if (report.getReporters().contains(s.getUniqueId())) {
                 Message.COMMAND_REPORT_REPEAT.send(s);
@@ -194,17 +194,17 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     private SmartInventory getReportsMainGui(Player player, boolean conclusion) {
         UUID uuid = player.getUniqueId();
         Component title;
-        List<Report> filteredReports;
+        List<REPORT> filteredReports;
         if (conclusion) {
             filteredReports = reports.stream()
                     .filter(report -> report.getStatus() == ReportStatus.ENDED)
-                    .sorted(Comparator.comparingInt(Report::getId))
+                    .sorted(Comparator.comparingInt(REPORT::getId))
                     .collect(Collectors.toList());
             title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid).append(space()).append(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_PROCESSED.build(), uuid));
         } else {
             filteredReports = reports.stream()
                     .filter(report -> report.getStatus() != ReportStatus.ENDED)
-                    .sorted(Comparator.comparingInt(Report::getId))
+                    .sorted(Comparator.comparingInt(REPORT::getId))
                     .collect(Collectors.toList());
             title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid);
         }
@@ -216,7 +216,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             Pagination pagination = contents.pagination();
             ClickableItem[] items = new ClickableItem[filteredReports.size()];
             for (int i = 0; i < items.length; i++) {
-                Report report = filteredReports.get(i);
+                REPORT report = filteredReports.get(i);
                 int id = report.getId();
                 Component rt = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_TITLE.build(id), uuid);
                 List<Component> lore = getReportLore(report, uuid);
@@ -226,7 +226,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 if (report.getStatus() == ReportStatus.ACCEPTED) {
                     ri.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).flags(ItemFlag.HIDE_ENCHANTS);
                 }
-                items[i] = ClickableItem.of(ri.build(), inventoryClickEvent -> getReportGui(player, report.getUuid(), conclusion).open(player));
+                items[i] = ClickableItem.of(ri.build(), inventoryClickEvent -> getReportGui(player, report.getUniqueId(), conclusion).open(player));
             }
             pagination.setItems(items);
             pagination.setItemsPerPage(27);
@@ -267,7 +267,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
 
     private SmartInventory getReportGui(Player player, UUID reportUUID, boolean conclusion) {
         UUID uuid = player.getUniqueId();
-        Report report = getStorageImplementation().selectReport(reportUUID);
+        REPORT report = getStorageImplementation().selectReport(reportUUID);
         Component title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_TITLE.build(), uuid);
         Component finalTitle = title.append(Component.space()).append(Message.ARROW.color(NamedTextColor.GRAY)).append(Component.space()).append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
         SmartInventory.Builder builder = SmartInventory.builder();
@@ -288,7 +288,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             boolean online = isOnline(report.getReported());
             ItemBuilder rds = getPlayerItemBuilder(report.getReported()).displayName(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(r1, online), uuid));
             if (online) {
-                rds.lore(TranslationManager.render(MiscMessage.CHECK_TP.build(), uuid));
+                rds.lore(TranslationManager.render(MiscMessage.CLICK_TP, uuid));
                 String finalR = r1;
                 contents.set(2, 5, ClickableItem.of(rds.build(), inventoryClickEvent -> {
                     reportTeleport(player, finalR);
@@ -364,7 +364,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
 
     private SmartInventory getReportersGUI(Player player, UUID reportUUID, boolean conclusion) {
         UUID uuid = player.getUniqueId();
-        Report report = getStorageImplementation().selectReport(reportUUID);
+        REPORT report = getStorageImplementation().selectReport(reportUUID);
         Component title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER_TITLE.build(), uuid);
         Component finalTitle = title.append(Component.space()).append(Message.ARROW.color(NamedTextColor.GRAY)).append(Component.space()).append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
         SmartInventory.Builder builder = SmartInventory.builder();
@@ -386,7 +386,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 boolean online = isOnline(reporters.get(i));
                 ItemBuilder rds = getPlayerItemBuilder(reporters.get(i)).displayName(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER_DETAILED.build(r1, online), uuid));
                 if (online) {
-                    rds.lore(TranslationManager.render(MiscMessage.CHECK_TP.build(), uuid));
+                    rds.lore(TranslationManager.render(MiscMessage.CLICK_TP, uuid));
                     String finalR = r1;
                     items[i] = ClickableItem.of(rds.build(), inventoryClickEvent -> {
                         reportTeleport(player, finalR);
@@ -416,7 +416,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     private SmartInventory getChatsGUI(Player player, UUID reportUUID, boolean conclusion) {
         UUID uuid = player.getUniqueId();
         Audience target = getPlugin().getBukkitAudiences().player(player);
-        Report report = getStorageImplementation().selectReport(reportUUID);
+        REPORT report = getStorageImplementation().selectReport(reportUUID);
         Component title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_CHATS_TITLE.build(), uuid);
         Component finalTitle = title.append(Component.space()).append(Message.ARROW.color(NamedTextColor.GRAY)).append(Component.space()).append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
         SmartInventory.Builder builder = SmartInventory.builder();
@@ -479,7 +479,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         return ib;
     }
 
-    private String getReports(Report report) {
+    private String getReports(REPORT report) {
         List<String> rns = new ArrayList<>();
         for (UUID reporter : report.getReporters()) {
             String name = getPlayerRecordName(reporter);
@@ -503,7 +503,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         }
     }
 
-    private List<Component> getReportLore(Report report, UUID uuid) {
+    private List<Component> getReportLore(REPORT report, UUID uuid) {
         List<Component> lore = new ArrayList<>();
         lore.add(Component.space());
         switch (report.getStatus()) {
@@ -544,7 +544,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         DataChatRecord dataChatRecord = reportDataChatRecord.getDataChatRecord();
         long startTime = dataChatRecord.getJoinTime();
         long endTime = dataChatRecord.getQuitTime();
-        Chat chat = getStorageImplementation().selectChatWithID(dataChatRecord.getId());
+        CHAT chat = getStorageImplementation().selectChatWithID(dataChatRecord.getId());
         List<ChatRecord> records = chat.getRecords();
         int startIndex = 0;
         int endIndex = records.size();

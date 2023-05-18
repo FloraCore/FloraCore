@@ -35,7 +35,7 @@ import java.util.stream.*;
 @CommandPermission("floracore.admin")
 @CommandDescription("FloraCore插件的主命令")
 public class FloraCoreCommand extends AbstractFloraCoreCommand {
-    private final AsyncCache<UUID, List<Data>> dataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    private final AsyncCache<UUID, List<DATA>> dataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     private final AsyncCache<String, UUID> uuidCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
 
     public FloraCoreCommand(FloraCorePlugin plugin) {
@@ -96,17 +96,17 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     @CommandDescription("获取服务器的数据")
     public void server(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        Servers servers = getStorageImplementation().selectServers(target);
-        if (servers == null) {
+        SERVER server = getStorageImplementation().selectServer(target);
+        if (server == null) {
             Message.DATA_NONE.send(s, target);
         } else {
             Component on = Component.translatable("floracore.command.misc.on");
             Component off = Component.translatable("floracore.command.misc.off");
             Message.DATA_HEADER.send(s, target);
-            Message.SERVER_DATA_ENTRY.send(s, MiscMessage.COMMAND_SERVER_DATA_TYPE.build(), servers.getType().getName());
-            Message.SERVER_DATA_ENTRY_1.send(s, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_1.build(), servers.isAutoSync1() ? on : off);
-            Message.SERVER_DATA_ENTRY_1.send(s, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_2.build(), servers.isAutoSync2() ? on : off);
-            Message.SERVER_DATA_ENTRY.send(s, MiscMessage.COMMAND_SERVER_DATA_ACTIVE_TIME.build(), DurationFormatter.getTimeFromTimestamp(servers.getLastActiveTime()));
+            Message.SERVER_DATA_ENTRY.send(s, MiscMessage.COMMAND_SERVER_DATA_TYPE.build(), server.getType().getName());
+            Message.SERVER_DATA_ENTRY_1.send(s, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_1.build(), server.isAutoSync1() ? on : off);
+            Message.SERVER_DATA_ENTRY_1.send(s, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_2.build(), server.isAutoSync2() ? on : off);
+            Message.SERVER_DATA_ENTRY.send(s, MiscMessage.COMMAND_SERVER_DATA_ACTIVE_TIME.build(), DurationFormatter.getTimeFromTimestamp(server.getLastActiveTime()));
         }
     }
 
@@ -114,13 +114,13 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     @CommandDescription("设置服务器Sync1的数据")
     public void serverSet1(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target, final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        Servers servers = getStorageImplementation().selectServers(target);
-        if (servers == null) {
+        SERVER server = getStorageImplementation().selectServer(target);
+        if (server == null) {
             // TODO 无记录的服务器数据
             System.out.println(false);
         } else {
             // TODO 设置服务器的数据
-            servers.setAutoSync1(value);
+            server.setAutoSync1(value);
             System.out.println(true);
         }
     }
@@ -129,13 +129,13 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
     @CommandDescription("设置服务器Sync2的数据")
     public void serverSet2(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target, final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        Servers servers = getStorageImplementation().selectServers(target);
-        if (servers == null) {
+        SERVER server = getStorageImplementation().selectServer(target);
+        if (server == null) {
             // TODO 无记录的服务器数据
             System.out.println(false);
         } else {
             // TODO 设置服务器的数据
-            servers.setAutoSync2(value);
+            server.setAutoSync2(value);
             System.out.println(true);
         }
     }
@@ -154,10 +154,10 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             UUID u;
             if (p == null) {
                 try {
-                    Players i = getStorageImplementation().selectPlayers(target);
-                    u = i.getUuid();
+                    PLAYER i = getStorageImplementation().selectPlayer(target);
+                    u = i.getUniqueId();
                 } catch (Throwable e) {
-                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                     return null;
                 }
             } else {
@@ -170,14 +170,14 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
         if (u == null) {
             return;
         }
-        CompletableFuture<List<Data>> ldf = dataCache.get(u, (a) -> getStorageImplementation().selectData(u));
-        List<Data> all = ldf.join();
-        List<Data> ret = all.parallelStream().filter(data -> data.getType() == type).collect(Collectors.toList());
+        CompletableFuture<List<DATA>> ldf = dataCache.get(u, (a) -> getStorageImplementation().selectData(u));
+        List<DATA> all = ldf.join();
+        List<DATA> ret = all.parallelStream().filter(data -> data.getType() == type).collect(Collectors.toList());
         if (ret.isEmpty()) {
             Message.DATA_NONE.send(s, target);
         } else {
             Message.DATA_HEADER.send(s, target);
-            for (Data data : ret) {
+            for (DATA data : ret) {
                 Message.DATA_ENTRY.send(s, data.getType().getName(), data.getKey(), data.getValue(), data.getExpiry());
             }
         }
@@ -192,10 +192,10 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             UUID u;
             if (p == null) {
                 try {
-                    Players i = getStorageImplementation().selectPlayers(target);
-                    u = i.getUuid();
+                    PLAYER i = getStorageImplementation().selectPlayer(target);
+                    u = i.getUniqueId();
                 } catch (Throwable e) {
-                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                     return null;
                 }
             } else {
@@ -208,7 +208,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
         if (u == null) {
             return;
         }
-        Data data = getStorageImplementation().insertData(u, DataType.CUSTOM, key, value, 0);
+        DATA data = getStorageImplementation().insertData(u, DataType.CUSTOM, key, value, 0);
         Message.SET_DATA_SUCCESS.send(s, key, value, target);
     }
 
@@ -221,10 +221,10 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             UUID u;
             if (p == null) {
                 try {
-                    Players i = getStorageImplementation().selectPlayers(target);
-                    u = i.getUuid();
+                    PLAYER i = getStorageImplementation().selectPlayer(target);
+                    u = i.getUniqueId();
                 } catch (Throwable e) {
-                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                     return null;
                 }
             } else {
@@ -237,7 +237,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
         if (u == null) {
             return;
         }
-        Data data = getStorageImplementation().getSpecifiedData(u, DataType.CUSTOM, key);
+        DATA data = getStorageImplementation().getSpecifiedData(u, DataType.CUSTOM, key);
         if (data == null) {
             Message.DOESNT_HAVE_DATA.send(s, target, key);
             return;
@@ -255,10 +255,10 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             UUID u;
             if (p == null) {
                 try {
-                    Players i = getStorageImplementation().selectPlayers(target);
-                    u = i.getUuid();
+                    PLAYER i = getStorageImplementation().selectPlayer(target);
+                    u = i.getUniqueId();
                 } catch (Throwable e) {
-                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                     return null;
                 }
             } else {
@@ -278,7 +278,7 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
                 Instant newTime = Instant.now().plus(d);
                 // 将结果转换为时间戳
                 long expiry = newTime.toEpochMilli();
-                Data data = getStorageImplementation().insertData(u, DataType.CUSTOM, key, value, expiry);
+                DATA data = getStorageImplementation().insertData(u, DataType.CUSTOM, key, value, expiry);
                 Message.SET_DATA_TEMP_SUCCESS.send(s, key, value, target, d);
             } else {
                 MiscMessage.ILLEGAL_DATE_ERROR.send(s, duration);
@@ -297,10 +297,10 @@ public class FloraCoreCommand extends AbstractFloraCoreCommand {
             UUID u;
             if (p == null) {
                 try {
-                    Players i = getStorageImplementation().selectPlayers(target);
-                    u = i.getUuid();
+                    PLAYER i = getStorageImplementation().selectPlayer(target);
+                    u = i.getUniqueId();
                 } catch (Throwable e) {
-                    Message.PLAYER_NOT_FOUND.send(s, target);
+                    MiscMessage.PLAYER_NOT_FOUND.send(s, target);
                     return null;
                 }
             } else {

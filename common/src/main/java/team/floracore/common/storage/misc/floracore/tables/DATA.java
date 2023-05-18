@@ -8,8 +8,8 @@ import team.floracore.common.storage.misc.floracore.*;
 import java.sql.*;
 import java.util.*;
 
-public class Data extends AbstractFloraCoreTable {
-    public static final String SELECT = "SELECT * FROM '{prefix}data' WHERE uuid=?";
+public class DATA extends AbstractFloraCoreTable {
+    public static final String SELECT = "SELECT * FROM '{prefix}data' WHERE uuid=? LIMIT 100";
     public static final String DELETE_ALL = "DELETE FROM '{prefix}data' WHERE uuid=?";
     public static final String DELETE_TYPE = "DELETE FROM '{prefix}data' WHERE uuid=? AND type=?";
     public static final String DELETE_ID = "DELETE FROM '{prefix}data' WHERE id=?";
@@ -23,7 +23,7 @@ public class Data extends AbstractFloraCoreTable {
     private String value;
     private long expiry;
 
-    public Data(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, DataType type, String key, String value, long expiry) {
+    public DATA(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, DataType type, String key, String value, long expiry) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;
@@ -37,7 +37,7 @@ public class Data extends AbstractFloraCoreTable {
         return id;
     }
 
-    public UUID getUuid() {
+    public UUID getUniqueId() {
         return uuid;
     }
 

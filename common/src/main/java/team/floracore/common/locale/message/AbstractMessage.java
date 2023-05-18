@@ -15,6 +15,10 @@ public abstract interface AbstractMessage {
     TextComponent CLOSE_BRACKET = Component.text(')');
     TextComponent FULL_STOP = Component.text('.');
     TextComponent ARROW = Component.text('➤');
+    TextComponent ARROW_LIGHT = Component.text(">");
+    TextComponent CIRCLE = Component.text('●');
+    TextComponent COLON = Component.text(':');
+    TextComponent HORIZONTAL_LINE = text("------------------------------------------------------");
 
     Component PREFIX_COMPONENT = text()
             // [FC]

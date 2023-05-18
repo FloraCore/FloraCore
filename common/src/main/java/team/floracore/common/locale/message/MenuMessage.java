@@ -85,7 +85,7 @@ public interface MenuMessage extends AbstractMessage {
 
     Args0 COMMAND_REPORTS_GUI_PROCESSED = () -> OPEN_BRACKET.append(translatable()
             // (已处理)
-            .key("floracore.command.misc.reports.gui.processed")).append(CLOSE_BRACKET).color(BLACK);
+            .key("floracore.command.misc.reports.gui.processed")).append(CLOSE_BRACKET).color(DARK_AQUA);
 
     Args0 COMMAND_REPORTS_GUI_MAIN_TITLE = () -> translatable()
             // 举报列表

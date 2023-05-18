@@ -7,15 +7,15 @@ import team.floracore.common.storage.misc.floracore.*;
 import java.sql.*;
 import java.util.*;
 
-public class Players extends AbstractFloraCoreTable {
-    public static final String SELECT = "SELECT * FROM '{prefix}players' WHERE uuid=?";
-    public static final String SELECT_NAME = "SELECT * FROM '{prefix}players' WHERE name=?";
-    public static final String DELETE = "DELETE FROM '{prefix}players' WHERE uuid=?";
-    private static final String UPDATE_NAME = "UPDATE '{prefix}players' SET name=? WHERE uuid=?";
-    private static final String UPDATE_LAST_LOGIN_IP = "UPDATE '{prefix}players' SET lastLoginIp=? WHERE uuid=?";
-    private static final String UPDATE_LAST_LOGIN_TIME = "UPDATE '{prefix}players' SET lastLoginTime=? WHERE uuid=?";
-    private static final String UPDATE_PLAY_TIME = "UPDATE '{prefix}players' SET playTime=? WHERE uuid=?";
-    private static final String INSERT = "INSERT INTO '{prefix}players' (uuid, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
+public class PLAYER extends AbstractFloraCoreTable {
+    public static final String SELECT = "SELECT * FROM '{prefix}player' WHERE uuid=?";
+    public static final String SELECT_NAME = "SELECT * FROM '{prefix}player' WHERE name=?";
+    public static final String DELETE = "DELETE FROM '{prefix}player' WHERE uuid=?";
+    private static final String UPDATE_NAME = "UPDATE '{prefix}player' SET name=? WHERE uuid=?";
+    private static final String UPDATE_LAST_LOGIN_IP = "UPDATE '{prefix}player' SET lastLoginIp=? WHERE uuid=?";
+    private static final String UPDATE_LAST_LOGIN_TIME = "UPDATE '{prefix}player' SET lastLoginTime=? WHERE uuid=?";
+    private static final String UPDATE_PLAY_TIME = "UPDATE '{prefix}player' SET playTime=? WHERE uuid=?";
+    private static final String INSERT = "INSERT INTO '{prefix}player' (uuid, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
     private final int id;
     private final UUID uuid;
@@ -26,7 +26,7 @@ public class Players extends AbstractFloraCoreTable {
     private long lastLoginTime;
     private long playTime;
 
-    public Players(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String loginIp) {
+    public PLAYER(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String loginIp) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;
@@ -39,7 +39,7 @@ public class Players extends AbstractFloraCoreTable {
         this.playTime = 0;
     }
 
-    public Players(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String firstLoginIp, String lastLoginIp, long firstLoginTime, long lastLoginTime, long playTime) {
+    public PLAYER(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String firstLoginIp, String lastLoginIp, long firstLoginTime, long lastLoginTime, long playTime) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;
@@ -55,7 +55,7 @@ public class Players extends AbstractFloraCoreTable {
         return id;
     }
 
-    public UUID getUuid() {
+    public UUID getUniqueId() {
         return uuid;
     }
 

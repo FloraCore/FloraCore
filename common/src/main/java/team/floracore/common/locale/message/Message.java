@@ -105,10 +105,6 @@ public interface Message extends AbstractMessage {
             // {0} 的数据信息:
             .key("floracore.command.generic.data.info.title").color(AQUA).args(text(target)));
 
-    Args1<String> PLAYER_NOT_FOUND = id -> AbstractMessage.prefixed(translatable()
-            // 无法找到 {0} 这名玩家
-            .key("floracore.command.misc.loading.error.player-not-found").color(RED).args(text(id, DARK_RED)).append(FULL_STOP));
-
     Args4<String, String, String, Long> DATA_ENTRY = (type, key, value, expiry) -> {
         Instant instant = Instant.ofEpochMilli(expiry);
         Instant now = Instant.now();
@@ -429,7 +425,7 @@ public interface Message extends AbstractMessage {
                                 OPEN_BRACKET.append(translatable(targetOnlineStatus ? "floracore.command.misc.online" : "floracore.command.misc.offline")).append(CLOSE_BRACKET).color(targetOnlineStatus ? GREEN : RED)))
                 .build();
         if (targetOnlineStatus) {
-            infoLine = infoLine.append(newline()).append(ARROW).append(space()).append(translatable().key("floracore.command.misc.check-tp").color(YELLOW).decoration(UNDERLINED, true));
+            infoLine = infoLine.append(newline()).append(ARROW).append(space()).append(MiscMessage.CLICK_TP.decoration(UNDERLINED, true));
         }
         HoverEvent<Component> hoverEvent = HoverEvent.showText(infoLine);
         ClickEvent clickEvent = ClickEvent.runCommand("/report-tp " + target);
@@ -476,5 +472,4 @@ public interface Message extends AbstractMessage {
     Args1<String> COMMAND_LANGUAGE_CHANGE_SUCCESS = (language) -> translatable()
             // 你已成功将你的显示语言更改为 {0} !
             .key("floracore.command.language.change.success").args(text(language, GREEN)).color(AQUA).build();
-
 }

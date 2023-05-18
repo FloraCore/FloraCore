@@ -2,6 +2,7 @@ package team.floracore.common.storage.implementation;
 
 import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.sql.connection.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -29,11 +30,11 @@ public interface StorageImplementation {
      * 此方法慎用，未经过缓存，频繁使用易使负载过大。
      * 若不存在，则返回null。
      */
-    Players selectPlayers(String name);
+    PLAYER selectPlayer(String name);
 
-    Players selectPlayers(UUID uuid);
+    PLAYER selectPlayer(UUID uuid);
 
-    void deletePlayers(UUID u);
+    void deletePlayer(UUID u);
 
     /**
      * 虽然名称是插入数据，但是并不是简单的插入数据。
@@ -43,16 +44,16 @@ public interface StorageImplementation {
      *
      * @return Data数据。
      */
-    Data insertData(UUID uuid, DataType type, String key, String value, long expiry);
+    DATA insertData(UUID uuid, DataType type, String key, String value, long expiry);
 
-    List<Data> selectData(UUID uuid);
+    List<DATA> selectData(UUID uuid);
 
     /**
      * 如果无该记录，则返回Null。
      */
-    Data getSpecifiedData(UUID uuid, DataType type, String key);
+    DATA getSpecifiedData(UUID uuid, DataType type, String key);
 
-    List<Data> getSpecifiedTypeData(UUID uuid, DataType type);
+    List<DATA> getSpecifiedTypeData(UUID uuid, DataType type);
 
     void deleteDataAll(UUID uuid);
 
@@ -62,26 +63,32 @@ public interface StorageImplementation {
 
     void deleteDataID(int id);
 
-    Servers selectServers(String name);
+    SERVER selectServer(String name);
 
-    List<Chat> selectChat(String name);
+    List<CHAT> selectChat(String name, ChatType type);
 
-    Chat selectChatWithStartTime(String name, long startTime);
+    CHAT selectChatWithStartTime(String name, ChatType type, long startTime);
 
-    Chat selectChatWithID(int id);
+    CHAT selectChatWithID(int id);
 
-    void insertChat(String name, long startTime);
+    void insertChat(String name, ChatType type, long startTime);
 
-    List<Report> getReports();
+    List<REPORT> getReports();
 
-    List<Report> selectReports(UUID uuid);
+    List<REPORT> selectReports(UUID uuid);
 
-    Report selectReport(UUID uuid);
+    REPORT selectReport(UUID uuid);
 
     /**
      * @return 返回未处理的举报；若无，则返回null。
      */
-    Report getUnprocessedReports(UUID uuid);
+    REPORT getUnprocessedReports(UUID uuid);
 
     void addReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<ReportDataChatRecord> chat);
+
+    PARTY selectParty(UUID uuid);
+
+    PARTY selectEffectiveParty(UUID uuid);
+
+    void insertParty(UUID uuid, UUID leader, long createTime, int chat);
 }

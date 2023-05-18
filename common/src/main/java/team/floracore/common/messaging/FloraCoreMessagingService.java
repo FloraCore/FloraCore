@@ -8,8 +8,9 @@ import org.bukkit.scheduler.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.event.message.*;
 import org.floracore.api.messenger.*;
-import org.floracore.api.messenger.message.*;
+import org.floracore.api.messenger.message.Message;
 import org.floracore.api.messenger.message.type.*;
+import team.floracore.common.locale.message.*;
 import team.floracore.common.messaging.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
@@ -124,11 +125,86 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         });
     }
 
+    @Override
+    public void pushChatMessage(UUID receiver, ChatMessage.ChatMessageType type, String[] parameters) {
+        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
+            UUID requestId = generatePingId();
+            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            ChatMessageImpl chatMessage = new ChatMessageImpl(requestId, receiver, type, parameters);
+            this.messenger.sendOutgoingMessage(chatMessage);
+            if (dispatchMessageReceiveEvent(chatMessage)) {
+                chat(chatMessage);
+            }
+        });
+    }
+
     public void notifyStaffReport(String reporter, String reportedUser, String reporterServer, String reportedUserServer, String reason, boolean playerOnlineStatus, boolean targetOnlineStatus) {
         for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission("floracore.report.staff")) {
+            if (onlinePlayer.hasPermission("floracore.socialsystems.staff")) {
                 Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
                 team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_BROADCAST.send(s, reporter, reportedUser, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
+            }
+        }
+    }
+
+    public void chat(ChatMessage chatMsg) {
+        Player player = Bukkit.getPlayer(chatMsg.getReceiver());
+        String[] parameters = chatMsg.getParameters();
+        switch (chatMsg.getType()) {
+            case STAFF:
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    if (onlinePlayer.hasPermission("floracore.chat.staff")) {
+                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
+                        UUID su1 = UUID.fromString(parameters[0]);
+                        String sn1 = getPlayerName(su1);
+                        String mess = parameters[1];
+                        SocialSystemsMessage.COMMAND_MISC_STAFF_CHAT.send(s, sn1, mess);
+                    }
+                }
+                break;
+            case BLOGGER:
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    if (onlinePlayer.hasPermission("floracore.chat.blogger")) {
+                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
+                        UUID su1 = UUID.fromString(parameters[0]);
+                        String sn1 = getPlayerName(su1);
+                        String mess = parameters[1];
+                        SocialSystemsMessage.COMMAND_MISC_BLOGGER_CHAT.send(s, sn1, mess);
+                    }
+                }
+                break;
+            case BUILDER:
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    if (onlinePlayer.hasPermission("floracore.chat.builder")) {
+                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
+                        UUID su1 = UUID.fromString(parameters[0]);
+                        String sn1 = getPlayerName(su1);
+                        String mess = parameters[1];
+                        SocialSystemsMessage.COMMAND_MISC_BUILDER_CHAT.send(s, sn1, mess);
+                    }
+                }
+                break;
+            case ADMIN:
+                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                    if (onlinePlayer.hasPermission("floracore.chat.admin")) {
+                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
+                        UUID su1 = UUID.fromString(parameters[0]);
+                        String sn1 = getPlayerName(su1);
+                        String mess = parameters[1];
+                        SocialSystemsMessage.COMMAND_MISC_ADMIN_CHAT.send(s, sn1, mess);
+                    }
+                }
+                break;
+        }
+        if (player != null) {
+            Sender sender = plugin.getSenderFactory().wrap(player);
+            switch (chatMsg.getType()) {
+                case PARTY:
+                    UUID su1 = UUID.fromString(parameters[0]);
+                    String sn1 = getPlayerName(su1);
+                    String mess = parameters[1];
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_CHAT.send(sender, sn1, mess);
+                    break;
             }
         }
     }
@@ -165,8 +241,50 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters[0]);
                     team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
                     break;
+                case PARTY_ACCEPT:
+                    UUID su1 = UUID.fromString(parameters[0]);
+                    String sn1 = getPlayerName(su1);
+                    UUID pu = UUID.fromString(parameters[1]);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_ACCEPT.send(sender, sn1, pu);
+                    break;
+                case PARTY_INVITE:
+                    UUID su = UUID.fromString(parameters[0]);
+                    UUID tu1 = UUID.fromString(parameters[1]);
+                    String sn = getPlayerName(su);
+                    String tn = getPlayerName(tu1);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE.send(sender, sn, tn);
+                    break;
+                case PARTY_INVITE_EXPIRED:
+                    UUID tu2 = UUID.fromString(parameters[0]);
+                    String target = getPlayerName(tu2);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_EXPIRED.send(sender, target);
+                    break;
+                case PARTY_DISBAND:
+                    UUID s = UUID.fromString(parameters[0]);
+                    String sn2 = getPlayerName(s);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_DISBAND.send(sender, sn2);
+                    break;
+                case PARTY_JOINED:
+                    UUID s1 = UUID.fromString(parameters[0]);
+                    String sn3 = getPlayerName(s1);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_JOIN.send(sender, sn3);
+                    break;
+                case PARTY_KICK:
+                    UUID s3 = UUID.fromString(parameters[0]);
+                    String sn4 = getPlayerName(s3);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_KICK.send(sender, sn4);
+                    break;
+                case PARTY_BE_KICKED:
+                    UUID s4 = UUID.fromString(parameters[0]);
+                    String sn5 = getPlayerName(s4);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_BE_KICKED.send(sender, sn5);
+                    break;
+                case PARTY_LEAVE:
+                    UUID s5 = UUID.fromString(parameters[0]);
+                    String sn6 = getPlayerName(s5);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_LEAVE.send(sender, sn6);
+                    break;
             }
-            team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
         }
     }
 
@@ -240,6 +358,8 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             case TeleportMessageImpl.TYPE:
                 decoded = TeleportMessageImpl.decode(content, id);
                 break;
+            case ChatMessageImpl.TYPE:
+                decoded = ChatMessageImpl.decode(content, id);
             default:
                 // gracefully return if we just don't recognise the type
                 return false;
@@ -306,6 +426,9 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     }
                 }, 0L, 20L).getTaskId();
             }
+        } else if (message instanceof ChatMessage) {
+            ChatMessage chatMsg = (ChatMessage) message;
+            chat(chatMsg);
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }

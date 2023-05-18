@@ -9,10 +9,10 @@ import team.floracore.common.util.gson.*;
 import java.sql.*;
 import java.util.*;
 
-public class Report extends AbstractFloraCoreTable {
-    public static final String SELECT = "SELECT * FROM '{prefix}report'";
-    public static final String SELECT_REPORTED_UUID = "SELECT * FROM '{prefix}report' WHERE reported=?";
-    public static final String SELECT_UUID = "SELECT * FROM '{prefix}report' WHERE uuid=?";
+public class REPORT extends AbstractFloraCoreTable {
+    public static final String SELECT = "SELECT * FROM '{prefix}report' LIMIT 300";
+    public static final String SELECT_REPORTED_UUID = "SELECT * FROM '{prefix}report' WHERE reported=? LIMIT 100";
+    public static final String SELECT_UUID = "SELECT * FROM '{prefix}report' WHERE uuid=? LIMIT 100";
     public static final String DELETE = "DELETE FROM '{prefix}report' WHERE uuid=?";
     private static final String UPDATE_REPORTERS = "UPDATE '{prefix}report' SET reporters=? WHERE uuid=?";
     private static final String UPDATE_REASONS = "UPDATE '{prefix}report' SET reasons=? WHERE uuid=?";
@@ -30,7 +30,7 @@ public class Report extends AbstractFloraCoreTable {
     private ReportStatus status;
     private Long conclusionTime;
 
-    public Report(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, List<UUID> reporters, UUID reported, List<String> reasons, long reportTime, ReportStatus status, Long conclusionTime, List<ReportDataChatRecord> chat) {
+    public REPORT(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, List<UUID> reporters, UUID reported, List<String> reasons, long reportTime, ReportStatus status, Long conclusionTime, List<ReportDataChatRecord> chat) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;
@@ -47,7 +47,7 @@ public class Report extends AbstractFloraCoreTable {
         return id;
     }
 
-    public UUID getUuid() {
+    public UUID getUniqueId() {
         return uuid;
     }
 

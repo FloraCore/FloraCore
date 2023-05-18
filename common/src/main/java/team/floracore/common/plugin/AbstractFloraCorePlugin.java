@@ -133,17 +133,17 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.storage = storageFactory.getInstance();
         this.messagingService = provideMessagingFactory().getInstance();
         Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getPlugin(), () -> {
-            Servers servers = storage.getImplementation().selectServers(getServerName());
-            if (servers == null) {
+            SERVER server = storage.getImplementation().selectServer(getServerName());
+            if (server == null) {
                 ServerType serverType = configuration.get(ConfigKeys.SERVER_TYPE);
-                servers = new Servers(this, storage.getImplementation(), -1, getServerName(), serverType, serverType.isAutoSync1(), serverType.isAutoSync2(), System.currentTimeMillis());
+                server = new SERVER(this, storage.getImplementation(), -1, getServerName(), serverType, serverType.isAutoSync1(), serverType.isAutoSync2(), System.currentTimeMillis());
                 try {
-                    servers.init();
+                    server.init();
                 } catch (SQLException e) {
                     throw new RuntimeException("服务器数据初始化失败！");
                 }
             } else {
-                servers.setLastActiveTime(System.currentTimeMillis());
+                server.setLastActiveTime(System.currentTimeMillis());
             }
         }, 0, 20 * 60 * 10);
 

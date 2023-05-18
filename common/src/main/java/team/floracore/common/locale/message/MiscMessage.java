@@ -15,6 +15,55 @@ public interface MiscMessage extends AbstractMessage {
             // [公告]
             .color(GRAY).append(text('[')).append(text().decoration(BOLD, true).append(translatable("floracore.command.misc.server.broadcast.prefix").color(AQUA))).append(text(']')).build();
 
+    Component PREFIX_PARTY = text()
+            // 组队 >
+            .append(translatable("floracore.command.misc.party.prefix", BLUE)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+
+    Component PREFIX_PARTY_LIGHT = text()
+            // 组队
+            .append(translatable("floracore.command.misc.party.prefix", BLUE)).build();
+
+    Component PREFIX_STAFF = text()
+            // 员工 >
+            .append(translatable("floracore.command.misc.staff.prefix", AQUA)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+
+    Component PREFIX_STAFF_LIGHT = text()
+            // 员工
+            .append(translatable("floracore.command.misc.staff.prefix", AQUA)).build();
+
+    Component PREFIX_BLOGGER = text()
+            // 博主 >
+            .append(translatable("floracore.command.misc.blogger.prefix", GOLD)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+
+    Component PREFIX_BLOGGER_LIGHT = text()
+            // 博主
+            .append(translatable("floracore.command.misc.blogger.prefix", GOLD)).build();
+
+    Component PREFIX_BUILDER = text()
+            // 建筑组 >
+            .append(translatable("floracore.command.misc.builder.prefix", DARK_AQUA)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+
+    Component PREFIX_BUILDER_LIGHT = text()
+            // 建筑组
+            .append(translatable("floracore.command.misc.builder.prefix", DARK_AQUA)).build();
+
+    Component PREFIX_ADMIN = text()
+            // 管理 >
+            .append(translatable("floracore.command.misc.admin.prefix", RED)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+
+    Component PREFIX_ADMIN_LIGHT = text()
+            // 管理
+            .append(translatable("floracore.command.misc.admin.prefix", RED)).build();
+
+    Component PREFIX_ALL_LIGHT = text()
+            // 管理
+            .append(translatable("floracore.command.misc.all.prefix", WHITE)).build();
+
+    Component CLICK_TP = text().append(translatable("floracore.command.misc.click-tp", YELLOW)).build();
+    Component CLICK_JOIN = text().append(translatable("floracore.command.misc.click-join", GOLD)).build();
+
+    Args0 PARTY_HORIZONTAL_LINE = () -> HORIZONTAL_LINE.decoration(STRIKETHROUGH, true).color(BLUE);
+
     Args1<FloraCoreBootstrap> STARTUP_BANNER = bootstrap -> {
         // FloraCore v{} is Running.
         Component infoLine1 = text()
@@ -111,7 +160,7 @@ public interface MiscMessage extends AbstractMessage {
 
     Args0 NO_PERMISSION_FOR_SUBCOMMANDS = () -> AbstractMessage.prefixed(translatable()
             // 你没有权限使用任何子命令
-            .key("floracore.commandsystem.no-permission-subcommands").color(RED).append(FULL_STOP));
+            .key("floracore.commandsystem.no-permission-subcommands").color(RED));
 
     Args0 COMMAND_CURRENT_SERVER_FORBIDDEN = () -> AbstractMessage.prefixed(translatable()
             // 你不能在当前服务器使用此命令!
@@ -163,9 +212,13 @@ public interface MiscMessage extends AbstractMessage {
             // {0} 不是有效的数字
             .key("floracore.command.misc.invalid-number")
             // {0}
-            .args(text(number)).color(RED));
+            .args(text(number, DARK_RED)).color(RED));
 
-    Args0 CHECK_TP = () -> translatable("floracore.command.misc.check-tp", YELLOW);
+    Args1<String> COMMAND_MISC_INVALID_FORMAT = (format) -> AbstractMessage.prefixed(translatable()
+            // {0} 不是有效的格式
+            .key("floracore.command.misc.invalid-format")
+            // {0}
+            .args(text(format, DARK_RED)).color(RED));
 
     Args0 COMMAND_MISC_GUI_PREVIOUS_PAGE = () -> translatable()
             // 上一页
@@ -182,5 +235,9 @@ public interface MiscMessage extends AbstractMessage {
     Args1<Integer> COMMAND_MISC_GUI_TURN_TO_PAGE = (page) -> translatable()
             // 转到第 {0} 页
             .key("floracore.command.misc.gui.turn-to-page").args(text(page)).color(GRAY).build();
+
+    Args1<String> PLAYER_NOT_FOUND = id -> AbstractMessage.prefixed(translatable()
+            // 无法找到 {0} 这名玩家
+            .key("floracore.command.misc.loading.error.player-not-found").color(RED).args(text(id, DARK_RED)).append(FULL_STOP));
 
 }

@@ -1,6 +1,8 @@
 package team.floracore.common.api.implementation;
 
 import com.github.benmanes.caffeine.cache.*;
+import org.bukkit.*;
+import org.bukkit.entity.*;
 import org.floracore.api.data.*;
 import org.floracore.api.player.*;
 import team.floracore.common.plugin.*;
@@ -11,21 +13,21 @@ import java.util.concurrent.*;
 
 public class ApiPlayer implements PlayerAPI {
     private final FloraCorePlugin plugin;
-    AsyncCache<UUID, Players> playersCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
-    AsyncCache<String, Players> playersRecordCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    AsyncCache<UUID, PLAYER> playersCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    AsyncCache<String, PLAYER> playersRecordCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
 
     public ApiPlayer(FloraCorePlugin plugin) {
         this.plugin = plugin;
     }
 
-    public Players getPlayers(UUID uuid) {
-        CompletableFuture<Players> players = playersCache.get(uuid, u -> plugin.getStorage().getImplementation().selectPlayers(u));
+    public PLAYER getPlayers(UUID uuid) {
+        CompletableFuture<PLAYER> players = playersCache.get(uuid, u -> plugin.getStorage().getImplementation().selectPlayer(u));
         playersCache.put(uuid, players);
         return players.join();
     }
 
-    public Players getPlayers(String name) {
-        CompletableFuture<Players> players = playersRecordCache.get(name, n -> plugin.getStorage().getImplementation().selectPlayers(n));
+    public PLAYER getPlayers(String name) {
+        CompletableFuture<PLAYER> players = playersRecordCache.get(name, n -> plugin.getStorage().getImplementation().selectPlayer(n));
         playersRecordCache.put(name, players);
         return players.join();
     }
@@ -37,16 +39,16 @@ public class ApiPlayer implements PlayerAPI {
 
     @Override
     public UUID getPlayerRecordUUID(String name) {
-        Players players = getPlayers(name);
+        PLAYER players = getPlayers(name);
         if (players == null) {
             return null;
         }
-        return players.getUuid();
+        return players.getUniqueId();
     }
 
     @Override
     public String getPlayerRecordName(UUID uuid) {
-        Players players = getPlayers(uuid);
+        PLAYER players = getPlayers(uuid);
         if (players == null) {
             return null;
         }
@@ -55,6 +57,10 @@ public class ApiPlayer implements PlayerAPI {
 
     @Override
     public boolean isOnline(UUID uuid) {
+        Player p = Bukkit.getPlayer(uuid);
+        if (p != null) {
+            return true;
+        }
         String status = plugin.getApiProvider().getDataAPI().getSpecifiedDataValue(uuid, DataType.FUNCTION, "online-status");
         if (status == null) {
             return false;

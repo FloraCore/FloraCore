@@ -16,6 +16,7 @@ import team.floracore.common.command.*;
 import team.floracore.common.config.*;
 import team.floracore.common.locale.data.*;
 import team.floracore.common.locale.message.*;
+import team.floracore.common.locale.translation.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.implementation.*;
@@ -71,6 +72,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     @CommandDescription("将你的昵称修改为一个指定的昵称")
     @CommandPermission("floracore.command.nick.custom")
     public void nickSpecifiedName(final @NotNull Player p, final @Argument("name") String name) {
+        UUID uuid = p.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         if (whetherServerEnableAutoSync2()) {
             MiscMessage.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
@@ -78,7 +80,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         }
         Audience target = getPlugin().getBukkitAudiences().player(p);
         performNick(p, "rank0", "random", name, true);
-        target.openBook(getFinishPage("rank0", name));
+        target.openBook(getFinishPage("rank0", name, uuid));
     }
 
     @CommandMethod("unnick")
@@ -90,7 +92,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             MiscMessage.COMMAND_CURRENT_SERVER_FORBIDDEN.send(sender);
             return;
         }
-        Data statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
+        DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
             performUnNick(p);
             Message.COMMAND_UNNICK_SUCCESS.send(sender);
@@ -131,7 +133,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             switch (page) {
                 case 0:
                     // start page
-                    target.openBook(getStartPage());
+                    target.openBook(getStartPage(uuid));
                     break;
                 case 1:
                     // rank page
@@ -152,17 +154,17 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                         bookNick(p, 6, rank, skin, name, nickname);
                     } else {
                         if (name.equalsIgnoreCase("random") && custom) {
-                            target.openBook(getRandomPage(rank, skin));
+                            target.openBook(getRandomPage(rank, skin, uuid));
                             return;
                         }
                         if (name.equalsIgnoreCase("reuse")) {
-                            Data data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
+                            DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
                             nickname = (data != null) ? data.getValue() : getPlugin().getNamesRepository().getRandomNameProperty().getName();
                         } else if (name.equalsIgnoreCase("random") && !custom) {
                             nickname = getPlugin().getNamesRepository().getRandomNameProperty().getName();
                         }
                         performNick(p, rank, skin, nickname, true);
-                        target.openBook(getFinishPage(ranks_prefix.get(rank), nickname));
+                        target.openBook(getFinishPage(ranks_prefix.get(rank), nickname, uuid));
                     }
                     break;
                 case 5:
@@ -173,7 +175,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                                 MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
                             } else {
                                 performNick(p, rank, skin, nickname, true);
-                                target.openBook(getFinishPage(ranks_prefix.get(rank), nickname));
+                                target.openBook(getFinishPage(ranks_prefix.get(rank), nickname, uuid));
                             }
                         } else {
                             MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
@@ -193,7 +195,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                         int nameLengthMin = Math.min(3, 16), nameLengthMax = Math.max(16, 1);
                         if (!(i.isEmpty()) && (i.length() <= nameLengthMax) && (i.length() >= nameLengthMin)) {
                             performNick(p, rank, skin, i, true);
-                            target.openBook(getFinishPage(ranks_prefix.get(rank), i));
+                            target.openBook(getFinishPage(ranks_prefix.get(rank), i, uuid));
                         }
                     }, Arrays.asList(line1, line2, line3, line4), uuid, getPlugin().getBootstrap().getPlugin());
                     signGUIAPI.open();
@@ -207,15 +209,15 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
 
     private void performUnNick(Player p) {
         UUID uuid = p.getUniqueId();
-        Data statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
+        DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         // 获取是否已经Nick
         if (!whetherServerEnableAutoSync2()) {
             nickedPlayers.remove(uuid);
         }
         // 清除数据库Nick状态
         getAsyncExecutor().execute(() -> {
-            Data rankData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.rank");
-            Data lpPrefixData = getStorageImplementation().getSpecifiedData(uuid, DataType.STAGING_DATA, "luckperms.prefix");
+            DATA rankData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.rank");
+            DATA lpPrefixData = getStorageImplementation().getSpecifiedData(uuid, DataType.STAGING_DATA, "luckperms.prefix");
             if (statusData != null) {
                 getStorageImplementation().deleteDataID(statusData.getId());
             }
@@ -238,7 +240,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     private void performNick(Player p, String rank, String skin, String name, boolean typeNick) {
         UUID uuid = p.getUniqueId();
         // 获取是否已经Nick
-        Data statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
+        DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
             performUnNick(p);
         }
@@ -365,36 +367,44 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
     }
 
-    private Book getStartPage() {
+    private Book getStartPage(UUID uuid) {
         Component bookTitle = text("FloraCore Nick StartPage");
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_1.build(), space(),
+        Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_1.build(), uuid);
+        Component line2 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_2.build(), uuid);
+        Component line3 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_3.build(), uuid);
+        Component accept = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_ACCEPT_TEXT.build(), uuid);
+        Component component = join(joinConfig, line1, space(),
                 // line 2
-                BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_2.build(),
+                line2,
                 // line 3
-                BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_3.build(), space(),
+                line3, space(),
                 // accept
-                BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_ACCEPT_TEXT.build()).asComponent();
+                accept).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
 
     private Book getRankPage(Player player) {
+        UUID uuid = player.getUniqueId();
         Component bookTitle = text("FloraCore Nick RankPage");
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_1.build(),
+        Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_1.build(), uuid);
+        Component line2 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_2.build(), uuid);
+        Component component = join(joinConfig, line1,
                 // line 2
-                BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_2.build(), space()).asComponent();
+                line2, space()).asComponent();
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
         for (Map.Entry<String, String> entry : ranks.entrySet()) {
             String rankName = entry.getKey();
             String rankPermission = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION).get(rankName);
             if (player.hasPermission(rankPermission)) {
-                component = join(joinConfig, component, BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_RANK.build(rankName, entry.getValue()));
+                Component rank = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_RANK.build(rankName, entry.getValue()));
+                component = join(joinConfig, component, rank);
             }
         }
         bookPages.add(component);
@@ -407,18 +417,23 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_LINE_1.build(), space(),
+        Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_LINE_1.build(), uuid);
+        Component normal = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_NORMAL.build(rank), uuid);
+        Component classic = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_STEVE_ALEX.build(rank), uuid);
+        Component random = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_RANDOM.build(rank), uuid);
+        Component component = join(joinConfig, line1, space(),
                 // normal skin
-                BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_NORMAL.build(rank),
+                normal,
                 // steve / alex skin
-                BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_STEVE_ALEX.build(rank),
+                classic,
                 // random skin
-                BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_RANDOM.build(rank)).asComponent();
+                random).asComponent();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        Data data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
+        DATA data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
         if (data != null) {
             // reuse skin
-            component = join(joinConfig, component, BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_REUSE.build(rank, data.getValue()));
+            Component reuse = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_REUSE.build(rank, data.getValue()), uuid);
+            component = join(joinConfig, component, reuse);
         }
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
@@ -430,51 +445,64 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1.build(), space(),
+        Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1.build(), uuid);
+        Component random = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM.build(rank, skin), uuid);
+        Component component = join(joinConfig, line1, space(),
                 // random name
-                BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM.build(rank, skin)).asComponent();
-        Data data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
+                random).asComponent();
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
         if (data != null) {
             // reuse name
-            component = join(joinConfig, component, BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_REUSE.build(rank, skin, data.getValue()));
+            Component reuse = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_REUSE.build(rank, skin, data.getValue()), uuid);
+            component = join(joinConfig, component, reuse);
         }
         if (player.hasPermission("floracore.command.nick.custom")) {
-            component = join(joinConfig, component, BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_CUSTOM.build(rank, skin));
+            Component custom = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_CUSTOM.build(rank, skin), uuid);
+            component = join(joinConfig, component, custom);
         }
-        component = join(joinConfig, component, space(), BookMessage.COMMAND_MISC_NICK_BOOK_RESET.build());
+        Component reset = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RESET.build(), uuid);
+        component = join(joinConfig, component, space(), reset);
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
 
-    private Book getRandomPage(String rank, String skin) {
+    private Book getRandomPage(String rank, String skin, UUID uuid) {
         Component bookTitle = text("FloraCore Nick RandomPage");
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
         String nickname = getPlugin().getNamesRepository().getRandomNameProperty().getName();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_LINE_1.build(),
+        Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_LINE_1.build(), uuid);
+        Component name = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_NAME.build(nickname), uuid);
+        Component use = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_USE_NAME.build(rank, skin, nickname), uuid);
+        Component again = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_TRY_AGAIN.build(rank, skin), uuid);
+        Component custom = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_CUSTOM.build(rank, skin), uuid);
+        Component component = join(joinConfig, line1,
                 // name
-                BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_NAME.build(nickname), space(),
+                name, space(),
                 // use
-                BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_USE_NAME.build(rank, skin, nickname),
+                use,
                 // try
-                BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_TRY_AGAIN.build(rank, skin), space(),
+                again, space(),
                 // custom
-                BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_CUSTOM.build(rank, skin)).asComponent();
+                custom).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
 
-    private Book getFinishPage(String rank, String name) {
+    private Book getFinishPage(String rank, String name, UUID uuid) {
         Component bookTitle = text("FloraCore Nick FinishPage");
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component component = join(joinConfig, BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1.build(), space(),
+        Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1.build(), uuid);
+        Component line2 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_2.build(rank, name), uuid);
+        Component reset = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RESET.build(), uuid);
+        Component component = join(joinConfig, line1, space(),
                 // line 2
-                BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_2.build(rank, name), space(),
-                // line 3
-                BookMessage.COMMAND_MISC_NICK_BOOK_RESET.build()).asComponent();
+                line2, space(),
+                // reset
+                reset).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
@@ -483,7 +511,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         UUID u = p.getUniqueId();
-        Data data = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.status");
+        DATA data = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.status");
         if (data != null) {
             String value = data.getValue();
             boolean nick = Boolean.parseBoolean(value);
@@ -491,9 +519,9 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
                 if (whetherServerEnableAutoSync2()) {
                     Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
                     Map<String, String> ranks_permission = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
-                    Data rankData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.rank");
-                    Data skinData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.skin");
-                    Data nameData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.name");
+                    DATA rankData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.rank");
+                    DATA skinData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.skin");
+                    DATA nameData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.name");
                     if (rankData != null && skinData != null && nameData != null) {
                         String rank = rankData.getValue();
                         String skin = skinData.getValue();

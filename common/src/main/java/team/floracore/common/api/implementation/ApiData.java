@@ -13,13 +13,13 @@ public class ApiData implements DataAPI {
         this.plugin = plugin;
     }
 
-    public Data getSpecifiedData(UUID uuid, DataType type, String key) {
+    public DATA getSpecifiedData(UUID uuid, DataType type, String key) {
         return plugin.getStorage().getImplementation().getSpecifiedData(uuid, type, key);
     }
 
     @Override
     public String getSpecifiedDataValue(UUID uuid, DataType type, String key) {
-        Data data = getSpecifiedData(uuid, type, key);
+        DATA data = getSpecifiedData(uuid, type, key);
         if (data == null) {
             return null;
         }
@@ -28,7 +28,7 @@ public class ApiData implements DataAPI {
 
     @Override
     public Long getSpecifiedDataExpiry(UUID uuid, DataType type, String key) {
-        Data data = getSpecifiedData(uuid, type, key);
+        DATA data = getSpecifiedData(uuid, type, key);
         if (data == null) {
             return null;
         }
@@ -37,7 +37,7 @@ public class ApiData implements DataAPI {
 
     @Override
     public Integer getSpecifiedDataID(UUID uuid, DataType type, String key) {
-        Data data = getSpecifiedData(uuid, type, key);
+        DATA data = getSpecifiedData(uuid, type, key);
         if (data == null) {
             return null;
         }
