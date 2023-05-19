@@ -649,7 +649,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             AtomicBoolean shouldCancel = new AtomicBoolean(false);
             final int[] taskId = new int[1];
             taskId[0] = scheduler.runTaskTimer(getPlugin().getBootstrap().getPlugin(), new Runnable() {
-                private int secondsElapsed = 2;
+                private int secondsElapsed = 1;
                 private boolean offlineNotification = false;
 
                 public void run() {
@@ -660,7 +660,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                     List<UUID> members = party.getMembers();
                     if (shouldCancel.get() || online) {
                         // 取消任务
-                        if (online){
+                        if (online && offlineNotification) {
                             getPlugin().getMessagingService().ifPresent(service -> {
                                 members.forEach(member -> {
                                     service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_OFFLINE_RE_ONLINE, Collections.singletonList(uuid.toString()));

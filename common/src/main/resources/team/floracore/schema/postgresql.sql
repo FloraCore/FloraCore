@@ -68,3 +68,9 @@ CREATE TABLE IF NOT EXISTS "{prefix}party"
     chat        INT         NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS "{prefix}online"
+(
+    uuid       VARCHAR(36) NOT NULL,
+    status     BOOLEAN     NOT NULL,
+    serverName VARCHAR(16) NOT NULL
+);

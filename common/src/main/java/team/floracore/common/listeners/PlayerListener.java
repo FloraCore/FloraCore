@@ -48,7 +48,13 @@ public class PlayerListener extends AbstractFloraCoreListener {
         UUID uuid = p.getUniqueId();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         getPlugin().getBootstrap().getScheduler().async().execute(() -> {
-            storageImplementation.insertData(uuid, DataType.FUNCTION, "online-status", "true", 0);
+            ONLINE online = storageImplementation.selectOnline(uuid);
+            if (online == null) {
+                storageImplementation.insertOnline(uuid, true, getPlugin().getServerName());
+            } else {
+                online.setServerName(getPlugin().getServerName());
+                online.setStatusTrue();
+            }
             storageImplementation.insertData(uuid, DataType.FUNCTION, "server-status", getPlugin().getServerName(), 0);
         });
     }
@@ -59,7 +65,12 @@ public class PlayerListener extends AbstractFloraCoreListener {
         UUID uuid = p.getUniqueId();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         getPlugin().getBootstrap().getScheduler().async().execute(() -> {
-            storageImplementation.insertData(uuid, DataType.FUNCTION, "online-status", "false", 0);
+            ONLINE online = storageImplementation.selectOnline(uuid);
+            if (online == null) {
+                storageImplementation.insertOnline(uuid, false, getPlugin().getServerName());
+            } else {
+                online.setStatusFalse(getPlugin().getServerName());
+            }
         });
     }
 }

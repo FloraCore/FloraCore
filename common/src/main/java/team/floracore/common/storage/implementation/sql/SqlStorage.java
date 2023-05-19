@@ -597,4 +597,36 @@ public class SqlStorage implements StorageImplementation {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public ONLINE selectOnline(UUID uuid) {
+        ONLINE online;
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(ONLINE.SELECT))) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        boolean status = rs.getBoolean("status");
+                        String serverName = rs.getString("serverName");
+                        online = new ONLINE(plugin, this, uuid, status, serverName);
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return online;
+    }
+
+    @Override
+    public void insertOnline(UUID uuid, boolean status, String serverName) {
+        ONLINE online = new ONLINE(plugin, this, uuid, status, serverName);
+        try {
+            online.init();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
