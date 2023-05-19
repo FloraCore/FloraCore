@@ -126,7 +126,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
     }
 
     @Override
-    public void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, String[] parameters) {
+    public void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, List<String> parameters) {
         this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
             UUID requestId = generatePingId();
             this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
@@ -139,7 +139,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
     }
 
     @Override
-    public void pushChatMessage(UUID receiver, ChatMessage.ChatMessageType type, String[] parameters) {
+    public void pushChatMessage(UUID receiver, ChatMessage.ChatMessageType type, List<String> parameters) {
         this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
             UUID requestId = generatePingId();
             this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
@@ -162,15 +162,15 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
 
     public void chat(ChatMessage chatMsg) {
         Player player = Bukkit.getPlayer(chatMsg.getReceiver());
-        String[] parameters = chatMsg.getParameters();
+        List<String> parameters = chatMsg.getParameters();
         switch (chatMsg.getType()) {
             case STAFF:
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (onlinePlayer.hasPermission("floracore.chat.staff")) {
                         Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        UUID su1 = UUID.fromString(parameters[0]);
+                        UUID su1 = UUID.fromString(parameters.get(0));
                         String sn1 = getPlayerName(su1);
-                        String mess = parameters[1];
+                        String mess = parameters.get(1);
                         SocialSystemsMessage.COMMAND_MISC_STAFF_CHAT.send(s, sn1, mess);
                     }
                 }
@@ -179,9 +179,9 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (onlinePlayer.hasPermission("floracore.chat.blogger")) {
                         Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        UUID su1 = UUID.fromString(parameters[0]);
+                        UUID su1 = UUID.fromString(parameters.get(0));
                         String sn1 = getPlayerName(su1);
-                        String mess = parameters[1];
+                        String mess = parameters.get(1);
                         SocialSystemsMessage.COMMAND_MISC_BLOGGER_CHAT.send(s, sn1, mess);
                     }
                 }
@@ -190,9 +190,9 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (onlinePlayer.hasPermission("floracore.chat.builder")) {
                         Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        UUID su1 = UUID.fromString(parameters[0]);
+                        UUID su1 = UUID.fromString(parameters.get(0));
                         String sn1 = getPlayerName(su1);
-                        String mess = parameters[1];
+                        String mess = parameters.get(1);
                         SocialSystemsMessage.COMMAND_MISC_BUILDER_CHAT.send(s, sn1, mess);
                     }
                 }
@@ -201,9 +201,9 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (onlinePlayer.hasPermission("floracore.chat.admin")) {
                         Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        UUID su1 = UUID.fromString(parameters[0]);
+                        UUID su1 = UUID.fromString(parameters.get(0));
                         String sn1 = getPlayerName(su1);
-                        String mess = parameters[1];
+                        String mess = parameters.get(1);
                         SocialSystemsMessage.COMMAND_MISC_ADMIN_CHAT.send(s, sn1, mess);
                     }
                 }
@@ -213,9 +213,9 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             Sender sender = plugin.getSenderFactory().wrap(player);
             switch (chatMsg.getType()) {
                 case PARTY:
-                    UUID su1 = UUID.fromString(parameters[0]);
+                    UUID su1 = UUID.fromString(parameters.get(0));
                     String sn1 = getPlayerName(su1);
-                    String mess = parameters[1];
+                    String mess = parameters.get(1);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_CHAT.send(sender, sn1, mess);
                     break;
             }
@@ -224,13 +224,13 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
 
     public void notice(NoticeMessage noticeMsg) {
         Player player = Bukkit.getPlayer(noticeMsg.getReceiver());
-        String[] parameters = noticeMsg.getParameters();
+        List<String> parameters = noticeMsg.getParameters();
         switch (noticeMsg.getType()) {
             case REPORT_STAFF_ACCEPTED:
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (onlinePlayer.hasPermission("floracore.report.staff")) {
                         Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_ACCEPTED.send(s, parameters[0], parameters[1]);
+                        team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_ACCEPTED.send(s, parameters.get(0), parameters.get(1));
                     }
                 }
                 break;
@@ -238,7 +238,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                     if (onlinePlayer.hasPermission("floracore.report.staff")) {
                         Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_PROCESSED.send(s, parameters[0], parameters[1]);
+                        team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_PROCESSED.send(s, parameters.get(0), parameters.get(1));
                     }
                 }
                 break;
@@ -247,53 +247,53 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             Sender sender = plugin.getSenderFactory().wrap(player);
             switch (noticeMsg.getType()) {
                 case REPORT_ACCEPTED:
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters[0]);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters.get(0));
                     team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
                     break;
                 case REPORT_PROCESSED:
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters[0]);
+                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters.get(0));
                     team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
                     break;
                 case PARTY_ACCEPT:
-                    UUID su1 = UUID.fromString(parameters[0]);
+                    UUID su1 = UUID.fromString(parameters.get(0));
                     String sn1 = getPlayerName(su1);
-                    UUID pu = UUID.fromString(parameters[1]);
+                    UUID pu = UUID.fromString(parameters.get(1));
                     SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_ACCEPT.send(sender, sn1, pu);
                     break;
                 case PARTY_INVITE:
-                    UUID su = UUID.fromString(parameters[0]);
-                    UUID tu1 = UUID.fromString(parameters[1]);
+                    UUID su = UUID.fromString(parameters.get(0));
+                    UUID tu1 = UUID.fromString(parameters.get(1));
                     String sn = getPlayerName(su);
                     String tn = getPlayerName(tu1);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE.send(sender, sn, tn);
                     break;
                 case PARTY_INVITE_EXPIRED:
-                    UUID tu2 = UUID.fromString(parameters[0]);
+                    UUID tu2 = UUID.fromString(parameters.get(0));
                     String target = getPlayerName(tu2);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_EXPIRED.send(sender, target);
                     break;
                 case PARTY_DISBAND:
-                    UUID s = UUID.fromString(parameters[0]);
+                    UUID s = UUID.fromString(parameters.get(0));
                     String sn2 = getPlayerName(s);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_DISBAND.send(sender, sn2);
                     break;
                 case PARTY_JOINED:
-                    UUID s1 = UUID.fromString(parameters[0]);
+                    UUID s1 = UUID.fromString(parameters.get(0));
                     String sn3 = getPlayerName(s1);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_JOIN.send(sender, sn3);
                     break;
                 case PARTY_KICK:
-                    UUID s3 = UUID.fromString(parameters[0]);
+                    UUID s3 = UUID.fromString(parameters.get(0));
                     String sn4 = getPlayerName(s3);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_KICK.send(sender, sn4);
                     break;
                 case PARTY_BE_KICKED:
-                    UUID s4 = UUID.fromString(parameters[0]);
+                    UUID s4 = UUID.fromString(parameters.get(0));
                     String sn5 = getPlayerName(s4);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_BE_KICKED.send(sender, sn5);
                     break;
                 case PARTY_LEAVE:
-                    UUID s5 = UUID.fromString(parameters[0]);
+                    UUID s5 = UUID.fromString(parameters.get(0));
                     String sn6 = getPlayerName(s5);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_LEAVE.send(sender, sn6);
                     break;
@@ -373,6 +373,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 break;
             case ChatMessageImpl.TYPE:
                 decoded = ChatMessageImpl.decode(content, id);
+                break;
             default:
                 // gracefully return if we just don't recognise the type
                 return false;

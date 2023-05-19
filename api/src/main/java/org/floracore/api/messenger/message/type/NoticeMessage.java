@@ -2,6 +2,7 @@ package org.floracore.api.messenger.message.type;
 
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.message.*;
+import org.jetbrains.annotations.*;
 
 import java.util.*;
 
@@ -25,7 +26,7 @@ public interface NoticeMessage extends Message {
      *
      * @return 参数
      */
-    @NonNull String[] getParameters();
+    @NotNull List<String> getParameters();
 
     /**
      * 通知类型

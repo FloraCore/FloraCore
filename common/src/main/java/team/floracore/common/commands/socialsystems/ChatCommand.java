@@ -164,7 +164,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                         getAsyncExecutor().execute(() -> {
                             getPlugin().getMessagingService().ifPresent(service -> {
                                 for (UUID member : members) {
-                                    service.pushChatMessage(member, ChatMessage.ChatMessageType.PARTY, new String[]{uuid.toString(), message});
+                                    service.pushChatMessage(member, ChatMessage.ChatMessageType.PARTY, Arrays.asList(uuid.toString(), message));
                                 }
                             });
                         });
@@ -177,7 +177,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                     }
                     getAsyncExecutor().execute(() -> {
                         getPlugin().getMessagingService().ifPresent(service -> {
-                            service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.ADMIN, new String[]{uuid.toString(), message});
+                            service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.ADMIN, Arrays.asList(uuid.toString(), message));
                         });
                     });
                     break;
@@ -188,7 +188,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                     }
                     getAsyncExecutor().execute(() -> {
                         getPlugin().getMessagingService().ifPresent(service -> {
-                            service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.STAFF, new String[]{uuid.toString(), message});
+                            service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.STAFF, Arrays.asList(uuid.toString(), message));
                         });
                     });
                     break;
@@ -199,7 +199,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                     }
                     getAsyncExecutor().execute(() -> {
                         getPlugin().getMessagingService().ifPresent(service -> {
-                            service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.BLOGGER, new String[]{uuid.toString(), message});
+                            service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.BLOGGER, Arrays.asList(uuid.toString(), message));
                         });
                     });
                     break;
@@ -210,7 +210,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                     }
                     getAsyncExecutor().execute(() -> {
                         getPlugin().getMessagingService().ifPresent(service -> {
-                            service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.BUILDER, new String[]{uuid.toString(), message});
+                            service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.BUILDER, Arrays.asList(uuid.toString(), message));
                         });
                     });
                     break;

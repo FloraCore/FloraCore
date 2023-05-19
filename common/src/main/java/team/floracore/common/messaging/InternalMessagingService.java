@@ -28,7 +28,7 @@ public interface InternalMessagingService {
 
     void pushConnectServer(UUID recipient, String serverName);
 
-    void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, String[] parameters);
+    void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, List<String> parameters);
 
-    void pushChatMessage(UUID receiver, ChatMessage.ChatMessageType type, String[] parameters);
+    void pushChatMessage(UUID receiver, ChatMessage.ChatMessageType type, List<String> parameters);
 }

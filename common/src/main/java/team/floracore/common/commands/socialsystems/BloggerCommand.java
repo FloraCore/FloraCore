@@ -23,7 +23,7 @@ public class BloggerCommand extends AbstractFloraCoreCommand {
         UUID uuid = player.getUniqueId();
         getAsyncExecutor().execute(() -> {
             getPlugin().getMessagingService().ifPresent(service -> {
-                service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.BLOGGER, new String[]{uuid.toString(), message});
+                service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.BLOGGER, Arrays.asList(uuid.toString(), message));
             });
         });
     }

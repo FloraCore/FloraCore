@@ -1,11 +1,13 @@
 package team.floracore.common.messaging.message;
 
 import com.google.gson.*;
+import com.google.gson.reflect.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.message.type.*;
 import team.floracore.common.messaging.*;
 import team.floracore.common.util.gson.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 public class ChatMessageImpl extends AbstractMessage implements ChatMessage {
@@ -13,9 +15,9 @@ public class ChatMessageImpl extends AbstractMessage implements ChatMessage {
 
     private final UUID receiver;
     private final ChatMessageType type;
-    private final String[] parameters;
+    private final List<String> parameters;
 
-    public ChatMessageImpl(UUID id, UUID receiver, ChatMessageType type, String[] parameters) {
+    public ChatMessageImpl(UUID id, UUID receiver, ChatMessageType type, List<String> parameters) {
         super(id);
         this.receiver = receiver;
         this.type = type;
@@ -36,10 +38,12 @@ public class ChatMessageImpl extends AbstractMessage implements ChatMessage {
                 .map(ChatMessageType::valueOf)
                 .orElseThrow(() -> new IllegalStateException("Incoming message has no type argument: " + content));
 
-        String[] parameters = Optional.ofNullable(content.getAsJsonObject().get("parameters"))
+        Type type1 = new TypeToken<List<String>>() {
+        }.getType();
+        String p = Optional.ofNullable(content.getAsJsonObject().get("parameters"))
                 .map(JsonElement::getAsString)
-                .map(str -> str.split(","))
                 .orElseThrow(() -> new IllegalStateException("Incoming message has no parameters argument: " + content));
+        List<String> parameters = GsonProvider.normal().fromJson(p, type1);
 
         return new ChatMessageImpl(id, receiver, type, parameters);
     }
@@ -49,7 +53,7 @@ public class ChatMessageImpl extends AbstractMessage implements ChatMessage {
         return FloraCoreMessagingService.encodeMessageAsString(TYPE, getId(),
                 new JObject().add("receiver", this.receiver.toString())
                         .add("type", this.type.toString())
-                        .add("parameters", Arrays.toString(this.parameters)).toJson()
+                        .add("parameters", GsonProvider.normal().toJson(this.parameters)).toJson()
         );
     }
 
@@ -64,7 +68,7 @@ public class ChatMessageImpl extends AbstractMessage implements ChatMessage {
     }
 
     @Override
-    public @NonNull String[] getParameters() {
+    public @NonNull List<String> getParameters() {
         return this.parameters;
     }
 }

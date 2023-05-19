@@ -314,9 +314,9 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                         getPlugin().getMessagingService().ifPresent(service -> {
                             String reported = getPlayerRecordName(report.getReported());
                             for (UUID reporter : report.getReporters()) {
-                                service.pushNoticeMessage(reporter, NoticeMessage.NoticeType.REPORT_ACCEPTED, new String[]{reported});
+                                service.pushNoticeMessage(reporter, NoticeMessage.NoticeType.REPORT_ACCEPTED, Collections.singletonList(reported));
                             }
-                            service.pushNoticeMessage(UUID.randomUUID(), NoticeMessage.NoticeType.REPORT_STAFF_ACCEPTED, new String[]{resultRns, reported});
+                            service.pushNoticeMessage(UUID.randomUUID(), NoticeMessage.NoticeType.REPORT_STAFF_ACCEPTED, Arrays.asList(resultRns, reported));
                         });
                     }));
                     break;
@@ -336,9 +336,9 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                         getPlugin().getMessagingService().ifPresent(service -> {
                             String reported = getPlayerRecordName(report.getReported());
                             for (UUID reporter : report.getReporters()) {
-                                service.pushNoticeMessage(reporter, NoticeMessage.NoticeType.REPORT_PROCESSED, new String[]{reported});
+                                service.pushNoticeMessage(reporter, NoticeMessage.NoticeType.REPORT_PROCESSED, Collections.singletonList(reported));
                             }
-                            service.pushNoticeMessage(UUID.randomUUID(), NoticeMessage.NoticeType.REPORT_STAFF_PROCESSED, new String[]{resultRns, reported});
+                            service.pushNoticeMessage(UUID.randomUUID(), NoticeMessage.NoticeType.REPORT_STAFF_PROCESSED, Arrays.asList(resultRns, reported));
                         });
                     }));
                     break;

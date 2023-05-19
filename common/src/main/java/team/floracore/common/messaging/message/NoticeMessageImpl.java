@@ -1,11 +1,15 @@
 package team.floracore.common.messaging.message;
 
 import com.google.gson.*;
+import com.google.gson.reflect.*;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.message.type.*;
+import org.jetbrains.annotations.*;
 import team.floracore.common.messaging.*;
 import team.floracore.common.util.gson.*;
 
+import java.lang.reflect.*;
 import java.util.*;
 
 public class NoticeMessageImpl extends AbstractMessage implements NoticeMessage {
@@ -13,9 +17,9 @@ public class NoticeMessageImpl extends AbstractMessage implements NoticeMessage 
 
     private final UUID receiver;
     private final NoticeType type;
-    private final String[] parameters;
+    private final List<String> parameters;
 
-    public NoticeMessageImpl(UUID id, UUID receiver, NoticeType type, String[] parameters) {
+    public NoticeMessageImpl(UUID id, UUID receiver, NoticeType type, List<String> parameters) {
         super(id);
         this.receiver = receiver;
         this.type = type;
@@ -36,10 +40,12 @@ public class NoticeMessageImpl extends AbstractMessage implements NoticeMessage 
                 .map(NoticeType::valueOf)
                 .orElseThrow(() -> new IllegalStateException("Incoming message has no type argument: " + content));
 
-        String[] parameters = Optional.ofNullable(content.getAsJsonObject().get("parameters"))
+        Type type1 = new TypeToken<List<String>>() {
+        }.getType();
+        String p = Optional.ofNullable(content.getAsJsonObject().get("parameters"))
                 .map(JsonElement::getAsString)
-                .map(str -> str.split(","))
                 .orElseThrow(() -> new IllegalStateException("Incoming message has no parameters argument: " + content));
+        List<String> parameters = GsonProvider.normal().fromJson(p, type1);
 
         return new NoticeMessageImpl(id, receiver, type, parameters);
     }
@@ -49,7 +55,7 @@ public class NoticeMessageImpl extends AbstractMessage implements NoticeMessage 
         return FloraCoreMessagingService.encodeMessageAsString(TYPE, getId(),
                 new JObject().add("receiver", this.receiver.toString())
                         .add("type", this.type.toString())
-                        .add("parameters", Arrays.toString(this.parameters)).toJson()
+                        .add("parameters", GsonProvider.normal().toJson(this.parameters)).toJson()
         );
     }
 
@@ -64,7 +70,7 @@ public class NoticeMessageImpl extends AbstractMessage implements NoticeMessage 
     }
 
     @Override
-    public @NonNull String[] getParameters() {
+    public @NotNull List<String> getParameters() {
         return this.parameters;
     }
 }

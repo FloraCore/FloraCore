@@ -23,7 +23,7 @@ public class BuilderCommand extends AbstractFloraCoreCommand {
         UUID uuid = player.getUniqueId();
         getAsyncExecutor().execute(() -> {
             getPlugin().getMessagingService().ifPresent(service -> {
-                service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.BUILDER, new String[]{uuid.toString(), message});
+                service.pushChatMessage(UUID.randomUUID(), ChatMessage.ChatMessageType.BUILDER, Arrays.asList(uuid.toString(), message));
             });
         });
     }

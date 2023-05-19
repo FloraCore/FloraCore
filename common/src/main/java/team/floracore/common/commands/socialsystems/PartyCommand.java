@@ -103,14 +103,14 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                     // 邀请已过期
                     getStorageImplementation().deleteDataID(inviteData.getId());
                     getPlugin().getMessagingService().ifPresent(service -> {
-                        service.pushNoticeMessage(uuid, NoticeMessage.NoticeType.PARTY_INVITE_EXPIRED, new String[]{ut.toString()});
+                        service.pushNoticeMessage(uuid, NoticeMessage.NoticeType.PARTY_INVITE_EXPIRED, Collections.singletonList(ut.toString()));
                     });
                 }
             }, 1, TimeUnit.MINUTES);
             getAsyncExecutor().execute(() -> getPlugin().getMessagingService().ifPresent(service -> {
-                service.pushNoticeMessage(ut, NoticeMessage.NoticeType.PARTY_ACCEPT, new String[]{uuid.toString(), partyUUID.toString()});
+                service.pushNoticeMessage(ut, NoticeMessage.NoticeType.PARTY_ACCEPT, Arrays.asList(uuid.toString(), partyUUID.toString()));
                 for (UUID member : members) {
-                    service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_INVITE, new String[]{uuid.toString(), ut.toString()});
+                    service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_INVITE, Arrays.asList(uuid.toString(), ut.toString()));
                 }
             }));
         } else {
@@ -141,7 +141,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 getAsyncExecutor().execute(() -> {
                     getPlugin().getMessagingService().ifPresent(service -> {
                         for (UUID member : members) {
-                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_DISBAND, new String[]{uuid.toString()});
+                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_DISBAND, Collections.singletonList(uuid.toString()));
                         }
                     });
                 });
@@ -184,9 +184,9 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                     getPlugin().getMessagingService().ifPresent(service -> {
                         members.remove(ut);
                         party.setMembers(members);
-                        service.pushNoticeMessage(ut, NoticeMessage.NoticeType.PARTY_BE_KICKED, new String[]{uuid.toString()});
+                        service.pushNoticeMessage(ut, NoticeMessage.NoticeType.PARTY_BE_KICKED, Collections.singletonList(uuid.toString()));
                         members.forEach(member -> {
-                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_KICK, new String[]{ut.toString()});
+                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_KICK, Collections.singletonList(ut.toString()));
                         });
                     });
                 });
@@ -222,9 +222,9 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             }
             getAsyncExecutor().execute(() -> {
                 getPlugin().getMessagingService().ifPresent(service -> {
-                    service.pushNoticeMessage(uuid, NoticeMessage.NoticeType.PARTY_LEAVE, new String[]{uuid.toString()});
+                    service.pushNoticeMessage(uuid, NoticeMessage.NoticeType.PARTY_LEAVE, Collections.singletonList(uuid.toString()));
                     members.forEach(member -> {
-                        service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_LEAVE, new String[]{uuid.toString()});
+                        service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_LEAVE, Collections.singletonList(uuid.toString()));
                     });
                 });
             });
@@ -262,7 +262,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                             DATA od = getStorageImplementation().getSpecifiedData(offlineMember, DataType.SOCIAL_SYSTEMS, "party");
                             getStorageImplementation().deleteDataID(od.getId());
                             newMembers.forEach(member -> {
-                                service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_KICK, new String[]{offlineMember.toString()});
+                                service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_KICK, Collections.singletonList(offlineMember.toString()));
                             });
                         });
                     });
@@ -303,7 +303,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 getAsyncExecutor().execute(() -> {
                     getPlugin().getMessagingService().ifPresent(service -> {
                         for (UUID member : members) {
-                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_JOINED, new String[]{uuid.toString()});
+                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_JOINED, Collections.singletonList(uuid.toString()));
                         }
                     });
                 });
@@ -346,7 +346,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             getAsyncExecutor().execute(() -> {
                 getPlugin().getMessagingService().ifPresent(service -> {
                     for (UUID member : members) {
-                        service.pushChatMessage(member, ChatMessage.ChatMessageType.PARTY, new String[]{uuid.toString(), message});
+                        service.pushChatMessage(member, ChatMessage.ChatMessageType.PARTY, Arrays.asList(uuid.toString(), message));
                     }
                 });
             });
