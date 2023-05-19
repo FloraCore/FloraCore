@@ -402,7 +402,6 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
         });
     }
 
-    // TODO 待测试命令：/party transfer
     @CommandMethod("party|p transfer <target>")
     public void transfer(@NotNull Player s, @NotNull @Argument("target") String target) {
         UUID senderUUID = s.getUniqueId();

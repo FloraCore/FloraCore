@@ -381,6 +381,9 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
             case ChatMessageImpl.TYPE:
                 decoded = ChatMessageImpl.decode(content, id);
                 break;
+            case ConnectServerMessageImpl.TYPE:
+                decoded = ConnectServerMessageImpl.decode(content, id);
+                break;
             default:
                 // gracefully return if we just don't recognise the type
                 return false;
