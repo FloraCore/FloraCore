@@ -192,8 +192,10 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                     return;
                 }
                 if (leader.equals(ut) || moderators.contains(ut)) {
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_KICK_NOT_PERMISSION.send(sender, target);
-                    return;
+                    if (!leader.equals(uuid)) {
+                        SocialSystemsMessage.COMMAND_MISC_PARTY_KICK_NOT_PERMISSION.send(sender, target);
+                        return;
+                    }
                 }
                 DATA td = getStorageImplementation().getSpecifiedData(ut, DataType.SOCIAL_SYSTEMS, "party");
                 getStorageImplementation().deleteDataID(td.getId());
@@ -267,11 +269,18 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                     getPlugin().getMessagingService().ifPresent(service -> {
                         List<UUID> newMembers = members.stream()
                                 .filter(this::isOnline)
+                                .filter(u -> !u.equals(leader)) // 排除离线玩家是Leader的情况
                                 .collect(Collectors.toList());
 
                         List<UUID> offlineMembers = members.stream()
                                 .filter(member -> !isOnline(member))
+                                .filter(u -> !u.equals(leader)) // 排除离线玩家是Leader的情况
                                 .collect(Collectors.toList());
+
+                        if (offlineMembers.isEmpty()) {
+                            SocialSystemsMessage.COMMAND_MISC_PARTY_KICKOFFLINE_NO_MEMBERS_AVAILABLE.send(sender);
+                            return;
+                        }
 
                         party.setMembers(newMembers);
 
@@ -651,7 +660,15 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                     List<UUID> members = party.getMembers();
                     if (shouldCancel.get() || online) {
                         // 取消任务
+                        if (online){
+                            getPlugin().getMessagingService().ifPresent(service -> {
+                                members.forEach(member -> {
+                                    service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_OFFLINE_RE_ONLINE, Collections.singletonList(uuid.toString()));
+                                });
+                            });
+                        }
                         scheduler.cancelTask(taskId[0]);
+                        shouldCancel.set(true);
                         return;
                     }
                     if (!offlineNotification) {
@@ -699,7 +716,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                     }
                     secondsElapsed++;
                 }
-            }, 30L, 20L).getTaskId();
+            }, 20L, 20L).getTaskId();
         }
     }
 

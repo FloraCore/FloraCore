@@ -231,9 +231,9 @@ public interface SocialSystemsMessage extends AbstractMessage {
                         .key("floracore.command.misc.party.offline.leader").append(FULL_STOP)
                         // {}
                         .args(text(target, GRAY), text(5, RED)).color(AQUA).build(),
-                translatable().key("floracore.command.misc.party.offline.leader.transfer.1").append(FULL_STOP)
-                        .append(translatable("floracore.command.misc.party.offline.leader.transfer.2")).append(FULL_STOP)
-                        .append(translatable("floracore.command.misc.party.offline.leader.transfer.3")).append(FULL_STOP)
+                translatable().key("floracore.command.misc.party.offline.leader.transfer.1").color(GRAY).append(FULL_STOP)
+                        .append(translatable("floracore.command.misc.party.offline.leader.transfer.2")).color(GRAY).append(FULL_STOP)
+                        .append(translatable("floracore.command.misc.party.offline.leader.transfer.3")).color(GRAY).append(FULL_STOP)
                         .color(AQUA).build()
                 , MiscMessage.PARTY_HORIZONTAL_LINE.build()
         );
@@ -270,6 +270,17 @@ public interface SocialSystemsMessage extends AbstractMessage {
                         .key("floracore.command.misc.party.offline").append(FULL_STOP)
                         // {}
                         .args(text(target, GRAY), text(5, RED)).color(AQUA).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build()
+        );
+    };
+
+    Args1<String> COMMAND_MISC_PARTY_OFFLINE_RE_ONLINE = (target) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // {0} 已恢复连接
+                        .key("floracore.command.misc.party.offline.re-online").append(FULL_STOP)
+                        // {}
+                        .args(text(target, GRAY)).color(AQUA).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build()
         );
     };
@@ -343,6 +354,15 @@ public interface SocialSystemsMessage extends AbstractMessage {
                         .key("floracore.command.misc.party.kick.no-permission")
                         // {}
                         .args(text(target, DARK_RED)).color(RED).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
+    };
+
+    Args0 COMMAND_MISC_PARTY_KICKOFFLINE_NO_MEMBERS_AVAILABLE = () -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(),
+                translatable()
+                        // 组队中没有符合条件的成员离线!
+                        .key("floracore.command.misc.party.kickoffline.no-members-available").color(RED).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
 

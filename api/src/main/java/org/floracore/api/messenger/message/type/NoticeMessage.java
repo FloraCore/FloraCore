@@ -81,6 +81,7 @@ public interface NoticeMessage extends Message {
         PARTY_OFFLINE_LEADER,
         PARTY_OFFLINE,
         PARTY_OFFLINE_KICK,
+        PARTY_OFFLINE_RE_ONLINE,
         PARTY_OFFLINE_TRANSFER,
         PARTY_DEMOTE,
     }
