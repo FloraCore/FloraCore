@@ -265,7 +265,7 @@ public interface Message extends AbstractMessage {
 
     Args2<String, Float> COMMAND_FOOD_SET_FROM_SATURATION = (from, value) -> AbstractMessage.prefixed(translatable().key("floracore.command.food.set.from.saturation").color(AQUA).args(text(from).color(GREEN), text(value).color(GREEN)));
 
-    Args0 COMMAND_FOOD_SET_INVALIDVALUE = () -> AbstractMessage.prefixed(translatable().key("floracore.command.food.set.invalidvalue").color(RED));
+    Args0 COMMAND_FOOD_SET_INVALID_VALUE = () -> AbstractMessage.prefixed(translatable().key("floracore.command.food.set.invalid-value").color(RED));
 
     Args2<String, String> COMMAND_HASPERMISSION_YES = (target, permission) -> AbstractMessage.prefixed(translatable().key("floracore.command.haspermission.yes").color(AQUA).args(text(target).color(GREEN), text(permission)).color(GREEN));
 
@@ -344,15 +344,15 @@ public interface Message extends AbstractMessage {
 
     Args1<String> COMMAND_ITEMFLAG_NOITEM_OTHER = target -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.noitem.other").color(RED).args(text(target).color(GREEN)));
 
-    Args0 COMMAND_ITEMFLAG_UNSUPPORTEDITEM = () -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.unsupporteditem").color(RED));
+    Args0 COMMAND_ITEMFLAG_UNSUPPORTED_ITEM = () -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.unsupported-item").color(RED));
 
-    Args1<String> COMMAND_ITEMFLAG_ALREADYHAS_SELF = flag -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.alreadyhas.self").color(RED).args(text(flag).color(GREEN)));
+    Args1<String> COMMAND_ITEMFLAG_ALREADY_HAS_SELF = flag -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.already-has.self").color(RED).args(text(flag).color(GREEN)));
 
-    Args2<String, String> COMMAND_ITEMFLAG_ALREADYHAS_OTHER = (target, flag) -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.alreadyhas.other").color(RED).args(text(target).color(GREEN), text(flag).color(GREEN)));
+    Args2<String, String> COMMAND_ITEMFLAG_ALREADY_HAS_OTHER = (target, flag) -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.already-has.other").color(RED).args(text(target).color(GREEN), text(flag).color(GREEN)));
 
-    Args1<String> COMMAND_ITEMFLAG_HASNO_SELF = flag -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.hasno.self").color(RED).args(text(flag).color(GREEN)));
+    Args1<String> COMMAND_ITEMFLAG_HAS_NO_SELF = flag -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.has-no.self").color(RED).args(text(flag).color(GREEN)));
 
-    Args2<String, String> COMMAND_ITEMFLAG_HASNO_OTHER = (target, flag) -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.hasno.other").color(RED).args(text(target).color(GREEN), text(flag).color(GREEN)));
+    Args2<String, String> COMMAND_ITEMFLAG_HAS_NO_OTHER = (target, flag) -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.has-no.other").color(RED).args(text(target).color(GREEN), text(flag).color(GREEN)));
 
     Args1<String> COMMAND_ITEMFLAG_ADD_SELF = flag -> AbstractMessage.prefixed(translatable().key("floracore.command.itemflag.add.self").color(AQUA).args(text(flag).color(GREEN)));
 
@@ -376,7 +376,7 @@ public interface Message extends AbstractMessage {
 
     Args1<String> COMMAND_ITEMNAME_NOITEM_OTHER = player -> AbstractMessage.prefixed(translatable().key("floracore.command.itemname.noitem.other").color(RED).args(text(player).color(GREEN)));
 
-    Args0 COMMAND_ITEMNAME_UNSUPPORTEDITEM = () -> AbstractMessage.prefixed(translatable().key("floracore.command.itemname.unsupporteditem").color(RED));
+    Args0 COMMAND_ITEMNAME_UNSUPPORTED_ITEM = () -> AbstractMessage.prefixed(translatable().key("floracore.command.itemname.unsupported-item").color(RED));
 
     Args1<String> COMMAND_ITEMNAME_SET_SELF = name -> AbstractMessage.prefixed(translatable().key("floracore.command.itemname.set.self").color(AQUA).args(text(name).color(GREEN)));
 
@@ -394,7 +394,7 @@ public interface Message extends AbstractMessage {
 
     Args1<String> COMMAND_GIVE_ITEM_NODATA = itemKey -> AbstractMessage.prefixed(translatable().key("floracore.command.give.item.nodata").color(RED).args(text(itemKey).color(YELLOW)));
 
-    Args0 COMMAND_GIVE_ITEM_NBTSYTAXEXCEPTION = () -> AbstractMessage.prefixed(translatable().key("floracore.command.give.item.nbtsyntaxexception").color(RED));
+    Args0 COMMAND_GIVE_ITEM_NBT_SYNTAX_EXCEPTION = () -> AbstractMessage.prefixed(translatable().key("floracore.command.give.item.nbt-syntax-exception").color(RED));
 
     Args2<String, String> COMMAND_GIVE_ITEM_GIVEN = (item, player) -> AbstractMessage.prefixed(translatable().key("floracore.command.give.item.given").color(AQUA).args(
             text(item).color(WHITE),

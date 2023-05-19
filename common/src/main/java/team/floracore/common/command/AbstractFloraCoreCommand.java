@@ -28,6 +28,8 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     private final AsyncCache<String, SERVER> serversCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     private final Executor asyncExecutor;
 
+    public final String EMPTY_DESCRIPTION = "%empty%";
+
     public AbstractFloraCoreCommand(FloraCorePlugin plugin) {
         this.plugin = plugin;
         this.storageImplementation = plugin.getStorage().getImplementation();

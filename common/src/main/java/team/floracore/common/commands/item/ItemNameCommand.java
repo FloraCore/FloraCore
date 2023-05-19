@@ -125,7 +125,7 @@ public class ItemNameCommand extends AbstractFloraCoreCommand {
         }
         @Nullable ItemMeta meta = item.getItemMeta();
         if (meta == null) { // 物品没有meta
-            Message.COMMAND_ITEMNAME_UNSUPPORTEDITEM.send(sender);
+            Message.COMMAND_ITEMNAME_UNSUPPORTED_ITEM.send(sender);
             return Optional.empty();
         }
         return Optional.of(item);

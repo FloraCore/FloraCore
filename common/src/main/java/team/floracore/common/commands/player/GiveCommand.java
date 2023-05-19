@@ -76,7 +76,7 @@ public class GiveCommand extends AbstractFloraCoreCommand {
                 } catch (InvocationTargetException e) {
                     if ("com.mojang.brigadier.exceptions.CommandSyntaxException".equals(e.getCause().getClass().getName())) {
                         // NBT标签语法错误
-                        Message.COMMAND_GIVE_ITEM_NBTSYTAXEXCEPTION.send(sender);
+                        Message.COMMAND_GIVE_ITEM_NBT_SYNTAX_EXCEPTION.send(sender);
                         return;
                     }
                     throw new RuntimeException(e);
@@ -107,7 +107,7 @@ public class GiveCommand extends AbstractFloraCoreCommand {
                 } catch (InvocationTargetException ex) {
                     if (ReflectionWrapper.getNMSClassName("MojangsonParseException").equals(ex.getCause().getClass().getName())) {
                         // NBT标签语法错误
-                        Message.COMMAND_GIVE_ITEM_NBTSYTAXEXCEPTION.send(sender);
+                        Message.COMMAND_GIVE_ITEM_NBT_SYNTAX_EXCEPTION.send(sender);
                         return;
                     }
                     throw new RuntimeException(ex);

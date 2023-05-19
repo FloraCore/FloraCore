@@ -98,7 +98,7 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
             ItemMeta meta = item.getItemMeta();
             //noinspection DataFlowIssue 已经检查过不会为null了
             if (meta.getItemFlags().contains(flag)) {
-                Message.COMMAND_ITEMFLAG_ALREADYHAS_SELF.send(sender, flag.name());
+                Message.COMMAND_ITEMFLAG_ALREADY_HAS_SELF.send(sender, flag.name());
                 return;
             }
             meta.addItemFlags(flag);
@@ -118,7 +118,7 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
             Sender targetSender = getPlugin().getSenderFactory().wrap(target);
             //noinspection DataFlowIssue 已经检查过不会为null了
             if (meta.getItemFlags().contains(flag)) {
-                Message.COMMAND_ITEMFLAG_ALREADYHAS_OTHER.send(sender, target.getName(), flag.name());
+                Message.COMMAND_ITEMFLAG_ALREADY_HAS_OTHER.send(sender, target.getName(), flag.name());
                 return;
             }
             meta.addItemFlags(flag);
@@ -155,7 +155,7 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
             ItemMeta meta = item.getItemMeta();
             //noinspection DataFlowIssue 已经检查过不会为null了
             if (!meta.getItemFlags().contains(flag)) {
-                Message.COMMAND_ITEMFLAG_HASNO_SELF.send(sender, flag.name());
+                Message.COMMAND_ITEMFLAG_HAS_NO_SELF.send(sender, flag.name());
                 return;
             }
             meta.removeItemFlags(flag);
@@ -175,7 +175,7 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
             Sender targetSender = getPlugin().getSenderFactory().wrap(target);
             //noinspection DataFlowIssue 已经检查过不会为null了
             if (!meta.getItemFlags().contains(flag)) {
-                Message.COMMAND_ITEMFLAG_HASNO_OTHER.send(sender, target.getName(), flag.name());
+                Message.COMMAND_ITEMFLAG_HAS_NO_OTHER.send(sender, target.getName(), flag.name());
                 return;
             }
             meta.removeItemFlags(flag);
@@ -207,7 +207,7 @@ public class ItemFlagCommand extends AbstractFloraCoreCommand {
         }
         @Nullable ItemMeta meta = item.getItemMeta();
         if (meta == null) { // 物品没有meta
-            Message.COMMAND_ITEMFLAG_UNSUPPORTEDITEM.send(sender);
+            Message.COMMAND_ITEMFLAG_UNSUPPORTED_ITEM.send(sender);
             return Optional.empty();
         }
         return Optional.of(item);

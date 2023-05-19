@@ -62,7 +62,7 @@ public interface MiscMessage extends AbstractMessage {
     Component CLICK_TP = text().append(translatable("floracore.command.misc.click-tp", YELLOW)).build();
     Component CLICK_JOIN = text().append(translatable("floracore.command.misc.click-join", YELLOW)).build();
 
-    Args0 PARTY_HORIZONTAL_LINE = () -> HORIZONTAL_LINE.decoration(STRIKETHROUGH, true).color(BLUE);
+    Args0 PARTY_HORIZONTAL_LINE = () -> HORIZONTAL_LINES.decoration(STRIKETHROUGH, true).color(BLUE);
 
     Args1<FloraCoreBootstrap> STARTUP_BANNER = bootstrap -> {
         // FloraCore v{} is Running.

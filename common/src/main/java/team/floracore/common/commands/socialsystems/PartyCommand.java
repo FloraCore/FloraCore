@@ -1,9 +1,12 @@
 package team.floracore.common.commands.socialsystems;
 
+import cloud.commandframework.*;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.processing.*;
 import cloud.commandframework.annotations.specifier.*;
+import net.kyori.adventure.text.*;
 import org.bukkit.*;
+import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
@@ -13,6 +16,7 @@ import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.floracore.api.messenger.message.type.*;
 import org.jetbrains.annotations.*;
+import team.floracore.common.command.CommandManager;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
@@ -26,23 +30,28 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
 import java.util.stream.*;
 
+import static net.kyori.adventure.text.Component.*;
+
 @CommandContainer
-@CommandDescription("组队是一个社交系统。玩家可以与其他玩家一起游玩")
+@CommandDescription("floracore.command.description.party")
 @CommandPermission("floracore.socialsystems.party")
 public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
-    public PartyCommand(FloraCorePlugin plugin) {
+    private final CommandManager commandManager;
+
+    public PartyCommand(FloraCorePlugin plugin, CommandManager commandManager) {
         super(plugin);
+        this.commandManager = commandManager;
         plugin.getListenerManager().registerListener(this);
     }
 
     @CommandMethod("party|p <target>")
-    @CommandDescription("Invites the player to your party, creating one in the process if one is not already formed")
+    @CommandDescription(EMPTY_DESCRIPTION)
     public void invite(final @NonNull Player player, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {
         invite1(player, target);
     }
 
     @CommandMethod("party|p invite <target>")
-    @CommandDescription("Invites the player to your party, creating one in the process if one is not already formed")
+    @CommandDescription("floracore.command.description.party.invite")
     public void invite1(final @NonNull Player player, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
@@ -134,7 +143,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("party|p disband")
-    @CommandDescription("Disbands the party")
+    @CommandDescription("floracore.command.description.party.disband")
     public void disband(final @NonNull Player player) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
@@ -172,13 +181,13 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("party|p remove <target>")
-    @CommandDescription("Removes the player from your party")
+    @CommandDescription("floracore.command.description.party.remove")
     public void remove(final @NonNull Player player, final @NonNull @Argument("target") String target) {
         kick(player, target);
     }
 
     @CommandMethod("party|p kick <target>")
-    @CommandDescription("Removes the player from your party")
+    @CommandDescription(EMPTY_DESCRIPTION)
     public void kick(final @NonNull Player player, final @NonNull @Argument("target") String target) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
@@ -226,7 +235,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("party|p leave")
-    @CommandDescription("Leaves the current party")
+    @CommandDescription("floracore.command.description.party.leave")
     public void leave(final @NonNull Player player) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
@@ -263,7 +272,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("party|p kickoffline")
-    @CommandDescription("Kicks offline players from the party")
+    @CommandDescription("floracore.command.description.party.kickoffline")
     public void kickoffline(final @NonNull Player player) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
@@ -312,7 +321,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("party|p accept <uuid>")
-    @CommandDescription("Accepts a party invite from the player")
+    @CommandDescription("floracore.command.description.party.accept")
     public void accept(final @NonNull Player player, final @NonNull @Argument("uuid") String pu) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
@@ -355,7 +364,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("party|p list")
-    @CommandDescription("Lists the members of your party")
+    @CommandDescription("floracore.command.description.party.list")
     public void list(final @NonNull Player player) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
@@ -373,7 +382,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("party|p chat <message>")
-    @CommandDescription("让你在组队频道中发言")
+    @CommandDescription("floracore.command.description.party.chat")
     public void chat(final @NonNull Player player, final @NonNull @Argument("message") @Greedy String message) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
@@ -395,7 +404,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("party|p warp")
-    @CommandDescription("Teleports the members of your party to the server you're in - This only works in pre-game lobbies and server lobbies")
+    @CommandDescription("floracore.command.description.party.warp")
     public void warp(final @NonNull Player player) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
@@ -439,6 +448,26 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
         }
     }
 
+    @CommandMethod("party|p help")
+    @CommandDescription("floracore.command.description.party.help")
+    public void help(final @NonNull Player player) {
+        CommandHelpHandler.HelpTopic<CommandSender> partyCmds = this.commandManager.getManager().createCommandHelpHandler().queryHelp(player, "party");
+        CommandHelpHandler.MultiHelpTopic<CommandSender> subCmds = (CommandHelpHandler.MultiHelpTopic<CommandSender>) partyCmds;
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        Component helpComponent = HelpMessage.HELP_PARTY_TITLE.build();
+        Sender sender = getPlugin().getSenderFactory().wrap(player);
+        for (String childSuggestion : subCmds.getChildSuggestions()) {
+            CommandHelpHandler.HelpTopic<CommandSender> subCmd = this.commandManager.getManager().createCommandHelpHandler().queryHelp(player, childSuggestion);
+            CommandHelpHandler.VerboseHelpTopic<CommandSender> subCmdInfo = (CommandHelpHandler.VerboseHelpTopic<CommandSender>) subCmd;
+            String description = subCmdInfo.getDescription();
+            if (!description.equalsIgnoreCase(EMPTY_DESCRIPTION)) {
+                helpComponent = Component.join(joinConfig, helpComponent, HelpMessage.HELP_PARTY_SUB_COMMAND.build(childSuggestion, description));
+            }
+        }
+        helpComponent = Component.join(joinConfig, helpComponent, MiscMessage.PARTY_HORIZONTAL_LINE.build());
+        sender.sendMessage(helpComponent);
+    }
+
     public String getPlayerListString(UUID partyUUID, UUID self) {
         PARTY party = getStorageImplementation().selectParty(partyUUID);
         List<String> rns = new ArrayList<>();
@@ -475,7 +504,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("party|p transfer <target>")
-    @CommandDescription("Promotes a party member to party leader.")
+    @CommandDescription("floracore.command.description.party.transfer")
     public void transfer(@NotNull Player s, @NotNull @Argument("target") String target) {
         UUID senderUUID = s.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(s);
@@ -524,7 +553,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("party|p demote <target>")
-    @CommandDescription("Demotes a party moderator to a party member.")
+    @CommandDescription("floracore.command.description.party.demote")
     public void demote(@NotNull Player s, @NotNull @Argument("target") String target) {
         UUID senderUUID = s.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(s);
@@ -575,7 +604,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("party|p promote <target>")
-    @CommandDescription("Promotes a party member to either party moderator or party leader.")
+    @CommandDescription("floracore.command.description.party.promote")
     public void promote(@NotNull Player s, @NotNull @Argument("target") String target) {
         UUID senderUUID = s.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(s);
