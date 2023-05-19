@@ -18,6 +18,7 @@ public class ApiChat implements ChatAPI {
     private final FloraCorePlugin plugin;
     private final ChatManager chatManager;
     AsyncCache<UUID, List<DATA>> chatDataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    AsyncCache<UUID, List<DATA>> partyDataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
 
     public ApiChat(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -31,6 +32,12 @@ public class ApiChat implements ChatAPI {
     public List<DATA> getPlayerChatData(UUID uuid) {
         CompletableFuture<List<DATA>> data = chatDataCache.get(uuid, u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.CHAT));
         chatDataCache.put(uuid, data);
+        return data.join();
+    }
+
+    public List<DATA> getPlayerPartyData(UUID uuid) {
+        CompletableFuture<List<DATA>> data = partyDataCache.get(uuid, u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.SOCIAL_SYSTEMS_PARTY_HISTORY));
+        partyDataCache.put(uuid, data);
         return data.join();
     }
 
@@ -51,6 +58,24 @@ public class ApiChat implements ChatAPI {
             Type type = new TypeToken<DataChatRecord>() {
             }.getType();
             DataChatRecord records = GsonProvider.normal().fromJson(value, type);
+            ret.add(records);
+        }
+        return ret.stream()
+                .sorted(Comparator.comparingLong(DataChatRecord::getJoinTime).reversed())
+                .limit(number)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DataChatRecord> getPlayerChatRecentParty(UUID uuid, int number) {
+        List<DATA> i = getPlayerPartyData(uuid);
+        List<DataChatRecord> ret = new ArrayList<>();
+        for (DATA data : i) {
+            String value = data.getValue();
+            if (value.isEmpty()) {
+                continue;
+            }
+            DataChatRecord records = new DataChatRecord(Integer.parseInt(value), 0, System.currentTimeMillis());
             ret.add(records);
         }
         return ret.stream()

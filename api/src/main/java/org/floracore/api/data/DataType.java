@@ -27,6 +27,7 @@ public enum DataType {
      * 社交系统
      */
     SOCIAL_SYSTEMS("social-systems"),
+    SOCIAL_SYSTEMS_PARTY_HISTORY("social-systems-party-history"),
     /**
      * 社交系统-Party邀请
      */

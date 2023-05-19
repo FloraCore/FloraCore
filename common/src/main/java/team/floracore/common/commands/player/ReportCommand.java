@@ -174,6 +174,11 @@ public class ReportCommand extends AbstractFloraCoreCommand {
             DataChatRecord d = new DataChatRecord(id, cm1.getJoinTime(), time);
             c.add(new ReportDataChatRecord(reporter, d));
         }
+        List<ReportDataChatRecord> c1 = chatAPI.getPlayerChatRecentParty(reporter, 3)
+                .stream()
+                .map(dataChatRecord -> new ReportDataChatRecord(reporter, dataChatRecord))
+                .collect(Collectors.toList());
+        c.addAll(c1);
         return c;
     }
 

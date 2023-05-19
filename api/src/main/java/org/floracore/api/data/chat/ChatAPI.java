@@ -15,4 +15,6 @@ public interface ChatAPI {
     UUID getPlayerChatUUID(UUID uuid);
 
     List<DataChatRecord> getPlayerChatUUIDRecent(UUID uuid, int number);
+
+    List<DataChatRecord> getPlayerChatRecentParty(UUID uuid, int number);
 }

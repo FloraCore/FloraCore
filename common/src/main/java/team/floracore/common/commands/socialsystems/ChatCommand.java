@@ -13,6 +13,7 @@ import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import org.floracore.api.messenger.message.type.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
@@ -168,6 +169,13 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
                                     service.pushChatMessage(member, ChatMessage.ChatMessageType.PARTY, Arrays.asList(uuid.toString(), message));
                                 }
                             });
+                            int chatID = party.getChat();
+                            CHAT chat = getStorageImplementation().selectChatWithID(chatID);
+                            List<ChatRecord> chatRecords = chat.getRecords();
+                            int id = chat.getRecords().size() + 1;
+                            ChatRecord chatRecord = new ChatRecord(id, uuid, message, System.currentTimeMillis());
+                            chatRecords.add(chatRecord);
+                            chat.setRecords(chatRecords);
                         });
                     }
                     break;

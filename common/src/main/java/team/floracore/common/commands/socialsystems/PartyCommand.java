@@ -75,6 +75,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             int chatID = chat.getId();
             getStorageImplementation().insertParty(partyUUID, leader, createTime, chatID);
             getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "party", partyUUID.toString(), 0);
+            getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS_PARTY_HISTORY, String.valueOf(System.currentTimeMillis()), partyUUID.toString(), 0);
         } else {
             partyUUID = UUID.fromString(data.getValue());
             PARTY party = getStorageImplementation().selectEffectiveParty(partyUUID);
@@ -167,6 +168,9 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
         List<UUID> members = party.getMembers();
         long disbandTime = System.currentTimeMillis();
         party.setDisbandTime(disbandTime);
+        int chatID = party.getChat();
+        CHAT chat = getStorageImplementation().selectChatWithID(chatID);
+        chat.setEndTime(disbandTime);
         getAsyncExecutor().execute(() -> {
             getPlugin().getMessagingService().ifPresent(service -> {
                 for (UUID member : members) {
@@ -348,6 +352,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 party.setMembers(members);
                 getStorageImplementation().deleteDataID(inviteData.getId());
                 getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "party", partyUUID.toString(), 0);
+                getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS_PARTY_HISTORY, String.valueOf(System.currentTimeMillis()), partyUUID.toString(), 0);
                 getAsyncExecutor().execute(() -> {
                     getPlugin().getMessagingService().ifPresent(service -> {
                         for (UUID member : members) {
@@ -399,6 +404,13 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                         service.pushChatMessage(member, ChatMessage.ChatMessageType.PARTY, Arrays.asList(uuid.toString(), message));
                     }
                 });
+                int chatID = party.getChat();
+                CHAT chat = getStorageImplementation().selectChatWithID(chatID);
+                List<ChatRecord> chatRecords = chat.getRecords();
+                int id = chat.getRecords().size() + 1;
+                ChatRecord chatRecord = new ChatRecord(id, uuid, message, System.currentTimeMillis());
+                chatRecords.add(chatRecord);
+                chat.setRecords(chatRecords);
             });
         }
     }
