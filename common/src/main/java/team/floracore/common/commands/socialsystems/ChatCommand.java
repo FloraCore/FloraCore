@@ -33,6 +33,7 @@ public class ChatCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     @CommandMethod("chat <type>")
+    @CommandDescription("Switches you to the <type> chat channel")
     public void chat(final @NonNull Player player, final @NonNull @Argument(value = "type", suggestions = "type") @Greedy String type) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);

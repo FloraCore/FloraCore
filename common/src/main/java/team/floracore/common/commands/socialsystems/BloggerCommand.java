@@ -19,6 +19,7 @@ public class BloggerCommand extends AbstractFloraCoreCommand {
     }
 
     @CommandMethod("blogger chat <message>")
+    @CommandDescription("让你在博主频道中发言")
     public void chat(final @NonNull Player player, final @NonNull @Argument("message") @Greedy String message) {
         UUID uuid = player.getUniqueId();
         getAsyncExecutor().execute(() -> {

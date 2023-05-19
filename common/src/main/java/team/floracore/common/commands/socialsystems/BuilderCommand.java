@@ -19,6 +19,7 @@ public class BuilderCommand extends AbstractFloraCoreCommand {
     }
 
     @CommandMethod("builder chat <message>")
+    @CommandDescription("让你在建筑组频道中发言")
     public void chat(final @NonNull Player player, final @NonNull @Argument("message") @Greedy String message) {
         UUID uuid = player.getUniqueId();
         getAsyncExecutor().execute(() -> {
