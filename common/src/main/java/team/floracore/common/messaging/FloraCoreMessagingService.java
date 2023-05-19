@@ -304,6 +304,16 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     String sn8 = getPlayerName(s7);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_TRANSFERED.send(sender, sn7, sn8);
                     break;
+                case PARTY_WARP_LEADER:
+                    UUID s8 = UUID.fromString(parameters.get(0));
+                    String sn9 = getPlayerName(s8);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_LEADER.send(sender, sn9);
+                    break;
+                case PARTY_WARP_MODERATOR:
+                    UUID s9 = UUID.fromString(parameters.get(0));
+                    String sn10 = getPlayerName(s9);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_MODERATOR.send(sender, sn10);
+                    break;
             }
         }
     }

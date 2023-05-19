@@ -15,6 +15,7 @@ import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.*;
 
 import java.util.*;
 import java.util.concurrent.*;
@@ -372,16 +373,45 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_NOT_ENOUGH_PEOPLE.send(sender);
                 return;
             }
-            if (leader.equals(uuid)) {
-                // TODO warp
-                partyWarp(party, getPlugin().getServerName());
-            } else if (moderators.contains(uuid)) {
-                // TODO warp
-                partyWarp(party, getPlugin().getServerName());
+            if (leader.equals(uuid) || moderators.contains(uuid)) {
+                String i = getPlayerListString(party, uuid);
+                if (party.getMembers().size() - 1 > 3) {
+                    i = i + "...";
+                }
+                SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_SUCCESS.send(sender, i);
+                getAsyncExecutor().execute(() -> {
+                    getPlugin().getMessagingService().ifPresent(service -> {
+                        for (UUID member : members) {
+                            if (member.equals(uuid)) {
+                                continue;
+                            }
+                            if (leader.equals(uuid)) {
+                                service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_WARP_LEADER, Collections.singletonList(uuid.toString()));
+                            } else if (moderators.contains(uuid)) {
+                                service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_WARP_MODERATOR, Collections.singletonList(uuid.toString()));
+                            }
+                        }
+                        getPlugin().getBootstrap().getScheduler().asyncLater(() -> partyWarp(party, getPlugin().getServerName()), 1, TimeUnit.SECONDS);
+                    });
+                });
             } else {
                 MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
             }
         }
+    }
+
+    public String getPlayerListString(PARTY party, UUID self) {
+        List<String> rns = new ArrayList<>();
+        for (UUID member : party.getMembers()) {
+            String name = getPlayerRecordName(member);
+            if (member.equals(self)) {
+                continue;
+            }
+            if (name != null) {
+                rns.add(name);
+            }
+        }
+        return StringUtil.joinList(rns, 3);
     }
 
     public void partyWarp(PARTY party, String serverName) {

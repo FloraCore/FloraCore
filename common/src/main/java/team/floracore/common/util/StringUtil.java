@@ -23,4 +23,18 @@ public final class StringUtil {
         Objects.requireNonNull(string);
         return string.replaceAll("§.", ""); // 正则替换
     }
+
+    public static String joinList(List<String> list, int number) {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < Math.min(list.size(), number); i++) {
+            if (i > 0) {
+                sb.append(", ");
+            }
+            sb.append(list.get(i));
+        }
+        if (list.size() > number) {
+            sb.append(", ...");
+        }
+        return sb.toString();
+    }
 }

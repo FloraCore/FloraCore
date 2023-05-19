@@ -53,20 +53,6 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         }, 3, TimeUnit.SECONDS);
     }
 
-    public static String joinList(List<String> list, int number) {
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < Math.min(list.size(), number); i++) {
-            if (i > 0) {
-                sb.append(", ");
-            }
-            sb.append(list.get(i));
-        }
-        if (list.size() > number) {
-            sb.append(", ...");
-        }
-        return sb.toString();
-    }
-
     @CommandMethod("report-tp <target>")
     @CommandPermission("floracore.command.report.staff")
     public void reportTeleport(final @NotNull Player sender, final @Argument("target") String target) {
@@ -487,7 +473,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 rns.add(name);
             }
         }
-        return joinList(rns, 3);
+        return StringUtil.joinList(rns, 3);
     }
 
     private void supplementaryMenu(InventoryContents contents) {
@@ -530,7 +516,7 @@ public class ReportCommand extends AbstractFloraCoreCommand {
         }
         boolean online = isOnline(report.getReported());
         lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(reported, online), uuid));
-        String resultReason = joinList(report.getReasons(), 2);
+        String resultReason = StringUtil.joinList(report.getReasons(), 2);
         lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REASON.build(resultReason), uuid));
         return lore;
     }
