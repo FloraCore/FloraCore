@@ -10,6 +10,7 @@ import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
+import org.floracore.api.server.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -110,6 +111,11 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     @Override
     public boolean whetherServerEnableAutoSync2() {
         return getServer().isAutoSync2();
+    }
+
+    @Override
+    public ServerType getServerType() {
+        return getServer().getType();
     }
 
     @Override

@@ -5,6 +5,7 @@ import cloud.commandframework.annotations.processing.*;
 import cloud.commandframework.annotations.specifier.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
+import org.bukkit.event.player.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
@@ -477,6 +478,31 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                     });
                 });
             });
+        }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+        if (data != null) {
+            UUID partyUUID = UUID.fromString(data.getValue());
+            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            UUID leader = party.getLeader();
+            List<UUID> members = party.getMembers();
+            if (members.size() == 1) {
+                return;
+            }
+            if (!leader.equals(uuid)) {
+                return;
+            }
+            switch (getServerType()) {
+                case GAME:
+                case NORMAL:
+                    partyWarp(party, getPlugin().getServerName());
+                    break;
+            }
         }
     }
 }

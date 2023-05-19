@@ -4,6 +4,7 @@ import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
 import org.bukkit.command.*;
 import org.checkerframework.checker.nullness.qual.*;
+import org.floracore.api.server.*;
 import team.floracore.common.storage.implementation.*;
 
 import java.util.*;
@@ -25,6 +26,8 @@ public interface FloraCoreCommand {
     boolean whetherServerEnableAutoSync1();
 
     boolean whetherServerEnableAutoSync2();
+
+    ServerType getServerType();
 
     StorageImplementation getStorageImplementation();
 
