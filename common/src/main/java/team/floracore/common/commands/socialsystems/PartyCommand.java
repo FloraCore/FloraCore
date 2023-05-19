@@ -460,6 +460,12 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
         }
     }
 
+    @CommandMethod("party|p")
+    @CommandDescription(EMPTY_DESCRIPTION)
+    public void help1(final @NonNull Player player) {
+        help(player);
+    }
+
     @CommandMethod("party|p help")
     @CommandDescription("floracore.command.description.party.help")
     public void help(final @NonNull Player player) {

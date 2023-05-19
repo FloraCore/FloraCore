@@ -84,7 +84,7 @@ public class ApiChat implements ChatAPI {
             }
             UUID partyUUID = UUID.fromString(value);
             PARTY party = getPlayerPartyData(partyUUID);
-            DataChatRecord records = new DataChatRecord(party.getChat(), 0, System.currentTimeMillis());
+            DataChatRecord records = new DataChatRecord(party.getChat(), party.getCreateTime(), System.currentTimeMillis());
             ret.add(records);
         }
         return ret.stream()
