@@ -3,9 +3,11 @@ package team.floracore.common.commands.socialsystems;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.processing.*;
 import cloud.commandframework.annotations.specifier.*;
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
+import org.bukkit.scheduler.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
@@ -20,6 +22,7 @@ import team.floracore.common.util.*;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
 import java.util.stream.*;
 
 @CommandContainer
@@ -138,21 +141,29 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 return;
             }
             if (leader.equals(uuid)) {
-                long disbandTime = System.currentTimeMillis();
-                party.setDisbandTime(disbandTime);
-                getAsyncExecutor().execute(() -> {
-                    getPlugin().getMessagingService().ifPresent(service -> {
-                        for (UUID member : members) {
-                            DATA md = getStorageImplementation().getSpecifiedData(member, DataType.SOCIAL_SYSTEMS, "party");
-                            getStorageImplementation().deleteDataID(md.getId());
-                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_DISBAND, Collections.singletonList(uuid.toString()));
-                        }
-                    });
-                });
+                disband(partyUUID, uuid);
             } else {
                 MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
             }
         }
+    }
+
+    public void disband(UUID partyUUID, UUID dissolved) {
+        PARTY party = getStorageImplementation().selectParty(partyUUID);
+        List<UUID> members = party.getMembers();
+        long disbandTime = System.currentTimeMillis();
+        party.setDisbandTime(disbandTime);
+        getAsyncExecutor().execute(() -> {
+            getPlugin().getMessagingService().ifPresent(service -> {
+                for (UUID member : members) {
+                    DATA md = getStorageImplementation().getSpecifiedData(member, DataType.SOCIAL_SYSTEMS, "party");
+                    getStorageImplementation().deleteDataID(md.getId());
+                    if (dissolved != null) {
+                        service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_DISBAND, Collections.singletonList(dissolved.toString()));
+                    }
+                }
+            });
+        });
     }
 
     @CommandMethod("party|p kick <target>")
@@ -375,7 +386,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 return;
             }
             if (leader.equals(uuid) || moderators.contains(uuid)) {
-                String i = getPlayerListString(party, uuid);
+                String i = getPlayerListString(party.getUniqueId(), uuid);
                 if (party.getMembers().size() - 1 > 3) {
                     i = i + "...";
                 }
@@ -392,7 +403,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                                 service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_WARP_MODERATOR, Collections.singletonList(uuid.toString()));
                             }
                         }
-                        getPlugin().getBootstrap().getScheduler().asyncLater(() -> partyWarp(party, getPlugin().getServerName()), 1, TimeUnit.SECONDS);
+                        getPlugin().getBootstrap().getScheduler().asyncLater(() -> partyWarp(party.getUniqueId(), getPlugin().getServerName()), 1, TimeUnit.SECONDS);
                     });
                 });
             } else {
@@ -401,9 +412,11 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
         }
     }
 
-    public String getPlayerListString(PARTY party, UUID self) {
+    public String getPlayerListString(UUID partyUUID, UUID self) {
+        PARTY party = getStorageImplementation().selectParty(partyUUID);
         List<String> rns = new ArrayList<>();
-        for (UUID member : party.getMembers()) {
+        List<UUID> members = party.getMembers();
+        for (UUID member : members) {
             String name = getPlayerRecordName(member);
             if (member.equals(self)) {
                 continue;
@@ -415,7 +428,8 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
         return StringUtil.joinList(rns, 3);
     }
 
-    public void partyWarp(PARTY party, String serverName) {
+    public void partyWarp(UUID partyUUID, String serverName) {
+        PARTY party = getStorageImplementation().selectParty(partyUUID);
         List<UUID> members = party.getMembers();
         getAsyncExecutor().execute(() -> {
             getPlugin().getMessagingService().ifPresent(service -> {
@@ -500,9 +514,99 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             switch (getServerType()) {
                 case GAME:
                 case NORMAL:
-                    partyWarp(party, getPlugin().getServerName());
+                    partyWarp(party.getUniqueId(), getPlugin().getServerName());
                     break;
             }
         }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+        if (data != null) {
+            UUID partyUUID = UUID.fromString(data.getValue());
+            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
+            AtomicBoolean shouldCancel = new AtomicBoolean(false);
+            final int[] taskId = new int[1];
+            taskId[0] = scheduler.runTaskTimer(getPlugin().getBootstrap().getPlugin(), new Runnable() {
+                private int secondsElapsed = 2;
+                private boolean offlineNotification = false;
+
+                public void run() {
+                    boolean online = isOnline(uuid);
+                    PARTY party = getStorageImplementation().selectParty(partyUUID);
+                    UUID leader = party.getLeader();
+                    List<UUID> moderators = party.getModerators();
+                    List<UUID> members = party.getMembers();
+                    if (shouldCancel.get() || online) {
+                        // 取消任务
+                        scheduler.cancelTask(taskId[0]);
+                        return;
+                    }
+                    if (!offlineNotification) {
+                        getPlugin().getMessagingService().ifPresent(service -> {
+                            members.forEach(member -> {
+                                if (leader.equals(uuid)) {
+                                    service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_OFFLINE_LEADER, Collections.singletonList(uuid.toString()));
+                                } else {
+                                    service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_OFFLINE, Collections.singletonList(uuid.toString()));
+                                }
+                            });
+                        });
+                        offlineNotification = true;
+                    }
+                    // 如果超过5分钟未上线
+                    if (secondsElapsed >= 300) {
+                        moderators.remove(uuid);
+                        party.setModerators(moderators);
+                        members.remove(uuid);
+                        party.setMembers(members);
+                        shouldCancel.set(true);
+                        DATA od = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+                        getStorageImplementation().deleteDataID(od.getId());
+                        // 执行队伍队长转移。
+                        if (leader.equals(uuid)) {
+                            UUID newLeader = findNewLeader(moderators, members);
+                            if (newLeader == null) {
+                                // 解散队伍
+                                disband(partyUUID, null);
+                                return;
+                            }
+                            party.setLeader(newLeader);
+                            getPlugin().getMessagingService().ifPresent(service -> {
+                                members.forEach(member -> {
+                                    service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_OFFLINE_TRANSFER, Arrays.asList(uuid.toString(), newLeader.toString()));
+                                });
+                            });
+                        } else {
+                            getPlugin().getMessagingService().ifPresent(service -> {
+                                members.forEach(member -> {
+                                    service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_OFFLINE_KICK, Collections.singletonList(uuid.toString()));
+                                });
+                            });
+                        }
+                    }
+                    secondsElapsed++;
+                }
+            }, 30L, 20L).getTaskId();
+        }
+    }
+
+    private UUID findNewLeader(List<UUID> moderators, List<UUID> members) {
+        for (UUID moderator : moderators) {
+            if (isOnline(moderator)) {
+                return moderator;
+            }
+        }
+        for (UUID member : members) {
+            if (isOnline(member)) {
+                return member;
+            }
+        }
+
+        return null;
     }
 }

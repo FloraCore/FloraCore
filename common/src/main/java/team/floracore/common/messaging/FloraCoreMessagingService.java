@@ -314,6 +314,28 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     String sn10 = getPlayerName(s9);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_MODERATOR.send(sender, sn10);
                     break;
+                case PARTY_OFFLINE_LEADER:
+                    UUID s10 = UUID.fromString(parameters.get(0));
+                    String sn11 = getPlayerName(s10);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_OFFLINE_LEADER.send(sender, sn11);
+                    break;
+                case PARTY_OFFLINE:
+                    UUID s11 = UUID.fromString(parameters.get(0));
+                    String sn12 = getPlayerName(s11);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_OFFLINE.send(sender, sn12);
+                    break;
+                case PARTY_OFFLINE_KICK:
+                    UUID s12 = UUID.fromString(parameters.get(0));
+                    String sn13 = getPlayerName(s12);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_OFFLINE_KICK.send(sender, sn13);
+                    break;
+                case PARTY_OFFLINE_TRANSFER:
+                    UUID s13 = UUID.fromString(parameters.get(0));
+                    String sn14 = getPlayerName(s13);
+                    UUID s14 = UUID.fromString(parameters.get(1));
+                    String sn15 = getPlayerName(s14);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_OFFLINE_TRANSFER.send(sender, sn14, sn15);
+                    break;
             }
         }
     }
@@ -436,7 +458,6 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 final int[] taskId = new int[1];
                 taskId[0] = scheduler.runTaskTimer(plugin.getBootstrap().getPlugin(), new Runnable() {
                     private int secondsElapsed = 0;
-
                     public void run() {
                         Player sender = Bukkit.getPlayer(su);
                         Player recipient = Bukkit.getPlayer(ru);
