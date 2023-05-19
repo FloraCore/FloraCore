@@ -24,6 +24,9 @@ public class PARTY extends AbstractFloraCoreTable {
     private final int chat;
     private UUID leader;
     private List<UUID> moderators;
+    /**
+     * 包括leader、moderators和members
+     */
     private List<UUID> members;
     private String settings;
     private long disbandTime;
