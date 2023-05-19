@@ -1,6 +1,7 @@
 package team.floracore.common.locale.message;
 
 import net.kyori.adventure.text.*;
+import org.floracore.api.data.chat.*;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
@@ -122,6 +123,19 @@ public interface MenuMessage extends AbstractMessage {
     Args0 COMMAND_MISC_CHAT = () -> translatable()
             // 聊天记录
             .key("floracore.command.misc.chat").decoration(BOLD, true).decoration(UNDERLINED, true).color(BLACK).build();
+
+    Args1<ChatType> COMMAND_MISC_CHAT_TYPE = (type) -> {
+        Component component = OPEN_BRACKET;
+        switch (type) {
+            case PARTY:
+                component = component.append(text("PARTY")).append(CLOSE_BRACKET).color(BLUE);
+                break;
+            default:
+                component = component.append(text("SERVER")).append(CLOSE_BRACKET).color(GRAY);
+                break;
+        }
+        return component;
+    };
 
     Args0 COMMAND_LANGUAGE_TITLE = () -> translatable()
             // 切换你的显示语言

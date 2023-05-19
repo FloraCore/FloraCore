@@ -166,17 +166,17 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     private List<ReportDataChatRecord> getPlayerChatUUIDRecent(UUID reporter, long time, ChatAPI chatAPI, ChatManager chatManager) {
         List<ReportDataChatRecord> c = chatAPI.getPlayerChatUUIDRecent(reporter, 3)
                 .stream()
-                .map(dataChatRecord -> new ReportDataChatRecord(reporter, dataChatRecord))
+                .map(dataChatRecord -> new ReportDataChatRecord(reporter, ChatType.SERVER, dataChatRecord))
                 .collect(Collectors.toList());
         ChatManager.MapPlayerRecord cm1 = chatManager.getMapPlayerRecord(reporter);
         if (cm1 != null) {
             int id = chatManager.getChat().getId();
             DataChatRecord d = new DataChatRecord(id, cm1.getJoinTime(), time);
-            c.add(new ReportDataChatRecord(reporter, d));
+            c.add(new ReportDataChatRecord(reporter, ChatType.SERVER, d));
         }
         List<ReportDataChatRecord> c1 = chatAPI.getPlayerChatRecentParty(reporter, 3)
                 .stream()
-                .map(dataChatRecord -> new ReportDataChatRecord(reporter, dataChatRecord))
+                .map(dataChatRecord -> new ReportDataChatRecord(reporter, ChatType.PARTY, dataChatRecord))
                 .collect(Collectors.toList());
         c.addAll(c1);
         return c;
@@ -551,9 +551,10 @@ public class ReportCommand extends AbstractFloraCoreCommand {
                 break;
             }
         }
+        ChatType chatType = reportDataChatRecord.getChatType();
         List<ChatRecord> filteredRecords = records.subList(startIndex, endIndex);
         Component main = join(joinConfig,
-                TranslationManager.render(MenuMessage.COMMAND_MISC_CHAT.build(), uuid),
+                TranslationManager.render(MenuMessage.COMMAND_MISC_CHAT.build().append(Component.space()).append(MenuMessage.COMMAND_MISC_CHAT_TYPE.build(chatType)), uuid),
                 space(),
                 TranslationManager.render(BookMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_1.build(filteredRecords.size()), uuid),
                 space(),
