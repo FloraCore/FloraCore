@@ -132,7 +132,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
                         // 你将 {0} 传送到你的服务器
                         .key("floracore.command.misc.party.warp.success").color(AQUA)
-                        .args(text(members, GREEN))
+                        .args(text(members, GRAY))
                         .append(FULL_STOP).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
@@ -142,7 +142,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
                         // 组队管理员 {0} 召集你到其所在的服务器
                         .key("floracore.command.misc.party.warp.moderator").color(AQUA)
-                        .args(text(moderator, GREEN))
+                        .args(text(moderator, GRAY))
                         .append(FULL_STOP).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
@@ -152,7 +152,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
                         // 组队队长 {0} 召集你到其所在的服务器
                         .key("floracore.command.misc.party.warp.leader").color(AQUA)
-                        .args(text(leader, GREEN))
+                        .args(text(leader, GRAY))
                         .append(FULL_STOP).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
@@ -175,13 +175,50 @@ public interface SocialSystemsMessage extends AbstractMessage {
         );
     };
 
-    Args2<String, String> COMMAND_MISC_PARTY_TRANSFER_TRANSFERED = (sender, target) -> {
+    Args2<String, String> COMMAND_MISC_PARTY_PROMOTE_LEADER = (sender, target) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
-                        // 组队队长 {0} 已将队长转让给 {1}
-                        .key("floracore.command.misc.party.transfer.transfered").color(AQUA)
+                        // {0} 已将 {1} 提拔为组队队长，{0} 现在为组队管理员
+                        .key("floracore.command.misc.party.promote.leader").color(AQUA)
+                        .append(FULL_STOP)
+                        // {}
+                        .args(text(sender, GRAY), text(target, GRAY))
+                        .build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build()
+        );
+    };
+
+    Args2<String, String> COMMAND_MISC_PARTY_PROMOTE_MODERATOR = (sender, target) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // {0} 已将 {1} 提拔为组队管理员
+                        .key("floracore.command.misc.party.promote.moderator").color(AQUA)
                         // {}
                         .args(text(sender, GREEN), text(target, DARK_GREEN))
+                        .build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build()
+        );
+    };
+
+    Args2<String, String> COMMAND_MISC_PARTY_DEMOTE = (sender, target) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // {0} 已将 {1} 降职为普通成员
+                        .key("floracore.command.misc.party.demote").color(RED)
+                        // {}
+                        .args(text(sender, GRAY), text(target, GRAY))
+                        .build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build()
+        );
+    };
+
+    Args1<String> COMMAND_MISC_PARTY_DEMOTE_ALREADY_IN = (target) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // {0} 已经是普通成员
+                        .key("floracore.command.misc.party.demote.already-in").color(RED)
+                        // {}
+                        .args(text(target, GRAY))
                         .build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build()
         );
@@ -193,7 +230,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
                         // 组队队长 {0} 已断开连接，若 {1} 分钟内未重新连接则移出组队
                         .key("floracore.command.misc.party.offline.leader").append(FULL_STOP)
                         // {}
-                        .args(text(target, GREEN), text(5, RED)).color(AQUA).build(),
+                        .args(text(target, GRAY), text(5, RED)).color(AQUA).build(),
                 translatable().key("floracore.command.misc.party.offline.leader.transfer.1").append(FULL_STOP)
                         .append(translatable("floracore.command.misc.party.offline.leader.transfer.2")).append(FULL_STOP)
                         .append(translatable("floracore.command.misc.party.offline.leader.transfer.3")).append(FULL_STOP)
@@ -208,7 +245,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
                         // 由于 {0} 已断开连接，且 {1} 分钟内未重新连接，现已将队长转让给 {2}
                         .key("floracore.command.misc.party.offline.transfer").color(AQUA)
                         // {}
-                        .args(text(offlinePlayer, GREEN), text(5, RED), text(target, DARK_GREEN))
+                        .args(text(offlinePlayer, GRAY), text(5, RED), text(target, GRAY))
                         .build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build()
         );
@@ -220,7 +257,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
                         // 由于 {0} 已断开连接，且 {1} 分钟内未重新连接，现已将其移出组队
                         .key("floracore.command.misc.party.offline.kick").append(FULL_STOP).color(AQUA)
                         // {}
-                        .args(text(target, GREEN), text(5, RED))
+                        .args(text(target, GRAY), text(5, RED))
                         .build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build()
         );
@@ -232,7 +269,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
                         // {0} 已断开连接，若 {1} 分钟内未重新连接则移出组队
                         .key("floracore.command.misc.party.offline").append(FULL_STOP)
                         // {}
-                        .args(text(target, GREEN), text(5, RED)).color(AQUA).build(),
+                        .args(text(target, GRAY), text(5, RED)).color(AQUA).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build()
         );
     };

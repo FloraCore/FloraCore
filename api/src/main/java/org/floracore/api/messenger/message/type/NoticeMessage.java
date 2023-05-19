@@ -76,10 +76,12 @@ public interface NoticeMessage extends Message {
         /**
          * 队长转让给了另一名玩家
          */
-        PARTY_TRANSFER,
+        PARTY_PROMOTE_LEADER,
+        PARTY_PROMOTE_MODERATOR,
         PARTY_OFFLINE_LEADER,
         PARTY_OFFLINE,
         PARTY_OFFLINE_KICK,
         PARTY_OFFLINE_TRANSFER,
+        PARTY_DEMOTE,
     }
 }

@@ -297,12 +297,12 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     String sn6 = getPlayerName(s5);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_LEAVE.send(sender, sn6);
                     break;
-                case PARTY_TRANSFER:
+                case PARTY_PROMOTE_LEADER:
                     UUID s6 = UUID.fromString(parameters.get(0));
                     UUID s7 = UUID.fromString(parameters.get(1));
                     String sn7 = getPlayerName(s6);
                     String sn8 = getPlayerName(s7);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_TRANSFERED.send(sender, sn7, sn8);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_PROMOTE_LEADER.send(sender, sn7, sn8);
                     break;
                 case PARTY_WARP_LEADER:
                     UUID s8 = UUID.fromString(parameters.get(0));
@@ -335,6 +335,20 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     UUID s14 = UUID.fromString(parameters.get(1));
                     String sn15 = getPlayerName(s14);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_OFFLINE_TRANSFER.send(sender, sn14, sn15);
+                    break;
+                case PARTY_DEMOTE:
+                    UUID s15 = UUID.fromString(parameters.get(0));
+                    String sn16 = getPlayerName(s15);
+                    UUID s16 = UUID.fromString(parameters.get(1));
+                    String sn17 = getPlayerName(s16);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_DEMOTE.send(sender, sn16, sn17);
+                    break;
+                case PARTY_PROMOTE_MODERATOR:
+                    UUID s17 = UUID.fromString(parameters.get(0));
+                    String sn18 = getPlayerName(s17);
+                    UUID s18 = UUID.fromString(parameters.get(1));
+                    String sn19 = getPlayerName(s18);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_PROMOTE_MODERATOR.send(sender, sn18, sn19);
                     break;
             }
         }
@@ -458,6 +472,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 final int[] taskId = new int[1];
                 taskId[0] = scheduler.runTaskTimer(plugin.getBootstrap().getPlugin(), new Runnable() {
                     private int secondsElapsed = 0;
+
                     public void run() {
                         Player sender = Bukkit.getPlayer(su);
                         Player recipient = Bukkit.getPlayer(ru);

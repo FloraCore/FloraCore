@@ -142,11 +142,6 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             UUID partyUUID = UUID.fromString(data.getValue());
             PARTY party = getStorageImplementation().selectParty(partyUUID);
             UUID leader = party.getLeader();
-            List<UUID> members = party.getMembers();
-            if (!members.contains(uuid)) {
-                SocialSystemsMessage.COMMAND_MISC_PARTY_TARGET_NOT_IN.send(sender);
-                return;
-            }
             if (leader.equals(uuid)) {
                 disband(partyUUID, uuid);
             } else {
@@ -495,8 +490,114 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                     moderators.add(senderUUID); // 将发送者设为管理员
                     party.setModerators(moderators); // 更新管理员列表数据
                     members.forEach(member -> {
-                        service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_TRANSFER, Arrays.asList(senderUUID.toString(), targetUUID.toString()));
+                        service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_PROMOTE_LEADER, Arrays.asList(senderUUID.toString(), targetUUID.toString()));
                     });
+                });
+            });
+        }
+    }
+
+    @CommandMethod("party|p demote <target>")
+    public void demote(@NotNull Player s, @NotNull @Argument("target") String target) {
+        UUID senderUUID = s.getUniqueId();
+        Sender sender = getPlugin().getSenderFactory().wrap(s);
+        DATA data = getStorageImplementation().getSpecifiedData(senderUUID, DataType.SOCIAL_SYSTEMS, "party");
+        if (data == null) {
+            SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+        } else {
+            UUID partyUUID = UUID.fromString(data.getValue());
+            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            UUID leaderUUID = party.getLeader();
+            UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            List<UUID> members = party.getMembers();
+            List<UUID> moderators = party.getModerators();
+            if (members.size() == 1) {
+                SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_NOT_ENOUGH_PEOPLE.send(sender);
+                return;
+            }
+            if (!senderUUID.equals(leaderUUID)) { // 发送者不是队长，无权限转让
+                SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_NO_PERMISSION.send(sender);
+                return;
+            }
+            if (targetUUID == null) { // 目标玩家不存在
+                MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
+                return;
+            }
+            if (targetUUID.equals(senderUUID)) { // 准备转让给自己
+                SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_SELF.send(sender);
+                return;
+            }
+            if (!members.contains(targetUUID)) {
+                SocialSystemsMessage.COMMAND_MISC_PARTY_TARGET_NOT_IN.send(sender);
+                return;
+            }
+            if (moderators.contains(targetUUID)) {
+                getAsyncExecutor().execute(() -> {
+                    getPlugin().getMessagingService().ifPresent(service -> {
+                        moderators.remove(targetUUID); // 目标不再是管理员
+                        party.setModerators(moderators); // 更新管理员列表数据
+                        members.forEach(member -> {
+                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_DEMOTE, Arrays.asList(senderUUID.toString(), targetUUID.toString()));
+                        });
+                    });
+                });
+            } else {
+                SocialSystemsMessage.COMMAND_MISC_PARTY_DEMOTE_ALREADY_IN.send(sender, target);
+            }
+        }
+    }
+
+    @CommandMethod("party|p promote <target>")
+    public void promote(@NotNull Player s, @NotNull @Argument("target") String target) {
+        UUID senderUUID = s.getUniqueId();
+        Sender sender = getPlugin().getSenderFactory().wrap(s);
+        DATA data = getStorageImplementation().getSpecifiedData(senderUUID, DataType.SOCIAL_SYSTEMS, "party");
+        if (data == null) {
+            SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+        } else {
+            UUID partyUUID = UUID.fromString(data.getValue());
+            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            UUID leaderUUID = party.getLeader();
+            UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            List<UUID> members = party.getMembers();
+            List<UUID> moderators = party.getModerators();
+            if (members.size() == 1) {
+                SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_NOT_ENOUGH_PEOPLE.send(sender);
+                return;
+            }
+            if (!senderUUID.equals(leaderUUID)) { // 发送者不是队长，无权限转让
+                SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_NO_PERMISSION.send(sender);
+                return;
+            }
+            if (targetUUID == null) { // 目标玩家不存在
+                MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
+                return;
+            }
+            if (targetUUID.equals(senderUUID)) { // 准备转让给自己
+                SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_SELF.send(sender);
+                return;
+            }
+            if (!members.contains(targetUUID)) {
+                SocialSystemsMessage.COMMAND_MISC_PARTY_TARGET_NOT_IN.send(sender);
+                return;
+            }
+            getAsyncExecutor().execute(() -> {
+                getPlugin().getMessagingService().ifPresent(service -> {
+                    if (moderators.contains(targetUUID)) {
+                        party.setLeader(targetUUID); // 更新目标为队长
+                        moderators.remove(targetUUID); // 目标不再是管理员
+                        moderators.add(senderUUID); // 将发送者设为管理员
+                        party.setModerators(moderators); // 更新管理员列表数据
+                        members.forEach(member -> {
+                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_PROMOTE_LEADER, Arrays.asList(senderUUID.toString(), targetUUID.toString()));
+                        });
+                    } else {
+                        moderators.add(targetUUID);
+                        party.setModerators(moderators);
+                        members.forEach(member -> {
+                            service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_PROMOTE_MODERATOR, Arrays.asList(senderUUID.toString(), targetUUID.toString()));
+                        });
+                    }
                 });
             });
         }
