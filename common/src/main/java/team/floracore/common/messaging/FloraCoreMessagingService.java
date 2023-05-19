@@ -298,8 +298,8 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     SocialSystemsMessage.COMMAND_MISC_PARTY_LEAVE.send(sender, sn6);
                     break;
                 case PARTY_TRANSFER:
-                    UUID s6 = UUID.fromString(parameters[0]);
-                    UUID s7 = UUID.fromString(parameters[1]);
+                    UUID s6 = UUID.fromString(parameters.get(0));
+                    UUID s7 = UUID.fromString(parameters.get(1));
                     String sn7 = getPlayerName(s6);
                     String sn8 = getPlayerName(s7);
                     SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_TRANSFERED.send(sender, sn7, sn8);

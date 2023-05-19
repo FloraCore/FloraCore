@@ -9,7 +9,7 @@ import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.floracore.api.messenger.message.type.*;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.*;
 import team.floracore.common.command.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
@@ -138,10 +138,11 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             if (leader.equals(uuid)) {
                 long disbandTime = System.currentTimeMillis();
                 party.setDisbandTime(disbandTime);
-                getStorageImplementation().deleteDataID(data.getId());
                 getAsyncExecutor().execute(() -> {
                     getPlugin().getMessagingService().ifPresent(service -> {
                         for (UUID member : members) {
+                            DATA md = getStorageImplementation().getSpecifiedData(member, DataType.SOCIAL_SYSTEMS, "party");
+                            getStorageImplementation().deleteDataID(md.getId());
                             service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_DISBAND, Collections.singletonList(uuid.toString()));
                         }
                     });
@@ -414,6 +415,11 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             PARTY party = getStorageImplementation().selectParty(partyUUID);
             UUID leaderUUID = party.getLeader();
             UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            List<UUID> members = party.getMembers();
+            if (members.size() == 1) {
+                SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_NOT_ENOUGH_PEOPLE.send(sender);
+                return;
+            }
             if (!senderUUID.equals(leaderUUID)) { // 发送者不是队长，无权限转让
                 SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_NO_PERMISSION.send(sender);
                 return;
@@ -426,6 +432,10 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_SELF.send(sender);
                 return;
             }
+            if (!members.contains(targetUUID)) {
+                SocialSystemsMessage.COMMAND_MISC_PARTY_TARGET_NOT_IN.send(sender);
+                return;
+            }
             getAsyncExecutor().execute(() -> {
                 getPlugin().getMessagingService().ifPresent(service -> {
                     List<UUID> moderators = party.getModerators();
@@ -433,9 +443,8 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                     moderators.remove(targetUUID); // 目标不再是管理员
                     moderators.add(senderUUID); // 将发送者设为管理员
                     party.setModerators(moderators); // 更新管理员列表数据
-                    List<UUID> members = party.getMembers();
                     members.forEach(member -> {
-                        service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_TRANSFER, new String[]{senderUUID.toString(), targetUUID.toString()});
+                        service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_TRANSFER, Arrays.asList(senderUUID.toString(), targetUUID.toString()));
                     });
                 });
             });
