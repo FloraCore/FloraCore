@@ -20,6 +20,7 @@ import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 import team.floracore.common.util.*;
 
+import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.*;
@@ -101,7 +102,13 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_HAS_BEEN_INVITED.send(sender);
                 return;
             }
-            getStorageImplementation().insertData(ut, DataType.SOCIAL_SYSTEMS_PARTY_INVITE, partyUUID.toString(), uuid.toString(), 0);
+            Duration d = Duration.ofSeconds(65);
+            // 将当前时间加上时间差
+            Instant newTime = Instant.now().plus(d);
+            // 将结果转换为时间戳
+            long expiry = newTime.toEpochMilli();
+            // 为了防止处理意外，设置65秒后自毁。
+            getStorageImplementation().insertData(ut, DataType.SOCIAL_SYSTEMS_PARTY_INVITE, partyUUID.toString(), uuid.toString(), expiry);
             getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
                 // 获取目标玩家是否接受，如果未接受，则发送邀请玩家过期信息
                 DATA inviteData = getStorageImplementation().getSpecifiedData(ut, DataType.SOCIAL_SYSTEMS_PARTY_INVITE, partyUUID.toString());
