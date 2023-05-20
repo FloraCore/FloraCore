@@ -1,36 +1,49 @@
 package team.floracore.common.commands.socialsystems;
 
-import cloud.commandframework.*;
-import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.processing.*;
-import cloud.commandframework.annotations.specifier.*;
-import net.kyori.adventure.text.*;
-import org.bukkit.*;
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.bukkit.event.player.*;
-import org.bukkit.scheduler.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.floracore.api.data.*;
-import org.floracore.api.data.chat.*;
-import org.floracore.api.messenger.message.type.*;
-import org.jetbrains.annotations.*;
+import cloud.commandframework.CommandHelpHandler;
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.processing.CommandContainer;
+import cloud.commandframework.annotations.specifier.Greedy;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.floracore.api.data.DataType;
+import org.floracore.api.data.chat.ChatRecord;
+import org.floracore.api.data.chat.ChatType;
+import org.floracore.api.messenger.message.type.ChatMessage;
+import org.floracore.api.messenger.message.type.NoticeMessage;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.common.command.AbstractFloraCoreCommand;
 import team.floracore.common.command.CommandManager;
-import team.floracore.common.command.*;
-import team.floracore.common.locale.message.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
-import team.floracore.common.util.*;
+import team.floracore.common.locale.message.HelpMessage;
+import team.floracore.common.locale.message.MiscMessage;
+import team.floracore.common.locale.message.SocialSystemsMessage;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.storage.misc.floracore.tables.CHAT;
+import team.floracore.common.storage.misc.floracore.tables.DATA;
+import team.floracore.common.storage.misc.floracore.tables.PARTY;
+import team.floracore.common.util.StringUtil;
 
-import java.time.*;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
-import java.util.stream.*;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
-import static net.kyori.adventure.text.Component.*;
+import static net.kyori.adventure.text.Component.newline;
 
 @CommandContainer
 @CommandDescription("floracore.command.description.party")
@@ -175,7 +188,9 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             getPlugin().getMessagingService().ifPresent(service -> {
                 for (UUID member : members) {
                     DATA md = getStorageImplementation().getSpecifiedData(member, DataType.SOCIAL_SYSTEMS, "party");
-                    getStorageImplementation().deleteDataID(md.getId());
+                    if (md != null) {
+                        getStorageImplementation().deleteDataID(md.getId());
+                    }
                     if (dissolved != null) {
                         service.pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_DISBAND, Collections.singletonList(dissolved.toString()));
                     }
@@ -275,7 +290,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
         }
     }
 
-    @CommandMethod("party|p kickoffline")
+    /*@CommandMethod("party|p kickoffline")
     @CommandDescription("floracore.command.description.party.kickoffline")
     public void kickoffline(final @NonNull Player player) {
         UUID uuid = player.getUniqueId();
@@ -293,13 +308,11 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 getAsyncExecutor().execute(() -> {
                     getPlugin().getMessagingService().ifPresent(service -> {
                         List<UUID> newMembers = members.stream()
-                                .filter(this::isOnline)
-                                .filter(u -> !u.equals(leader)) // 排除离线玩家是Leader的情况
+                                .filter(this::isOnline || u.equals(leader))
                                 .collect(Collectors.toList());
 
                         List<UUID> offlineMembers = members.stream()
-                                .filter(member -> !isOnline(member))
-                                .filter(u -> !u.equals(leader)) // 排除离线玩家是Leader的情况
+                                .filter(member -> !isOnline(member) && !member.equals(leader))
                                 .collect(Collectors.toList());
 
                         if (offlineMembers.isEmpty()) {
@@ -322,7 +335,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
             }
         }
-    }
+    }*/
 
     @CommandMethod("party|p accept <uuid>")
     @CommandDescription("floracore.command.description.party.accept")
@@ -458,12 +471,6 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
             }
         }
-    }
-
-    @CommandMethod("party|p")
-    @CommandDescription(EMPTY_DESCRIPTION)
-    public void help1(final @NonNull Player player) {
-        help(player);
     }
 
     @CommandMethod("party|p help")
