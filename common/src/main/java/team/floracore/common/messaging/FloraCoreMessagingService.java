@@ -1,25 +1,32 @@
 package team.floracore.common.messaging;
 
-import com.google.gson.*;
-import de.myzelyam.api.vanish.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.scheduler.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.floracore.api.event.message.*;
-import org.floracore.api.messenger.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import de.myzelyam.api.vanish.VanishAPI;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.floracore.api.event.message.MessageReceiveEvent;
+import org.floracore.api.messenger.IncomingMessageConsumer;
+import org.floracore.api.messenger.Messenger;
+import org.floracore.api.messenger.MessengerProvider;
 import org.floracore.api.messenger.message.Message;
 import org.floracore.api.messenger.message.type.*;
-import team.floracore.common.locale.message.*;
+import team.floracore.common.locale.message.SocialSystemsMessage;
 import team.floracore.common.messaging.message.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.util.*;
-import team.floracore.common.util.gson.*;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.util.ExpiringSet;
+import team.floracore.common.util.gson.GsonProvider;
+import team.floracore.common.util.gson.JObject;
 
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class FloraCoreMessagingService implements InternalMessagingService, IncomingMessageConsumer {
     private final FloraCorePlugin plugin;
@@ -475,7 +482,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
                 AtomicBoolean shouldCancel = new AtomicBoolean(false);
                 final int[] taskId = new int[1];
-                taskId[0] = scheduler.runTaskTimer(plugin.getBootstrap().getPlugin(), new Runnable() {
+                taskId[0] = scheduler.runTaskTimerAsynchronously(plugin.getBootstrap().getPlugin(), new Runnable() {
                     private int secondsElapsed = 0;
 
                     public void run() {

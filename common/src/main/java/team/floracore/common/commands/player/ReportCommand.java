@@ -1,39 +1,58 @@
 package team.floracore.common.commands.player;
 
-import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.specifier.*;
-import de.myzelyam.api.vanish.*;
-import net.kyori.adventure.audience.*;
-import net.kyori.adventure.inventory.*;
-import net.kyori.adventure.text.*;
-import net.kyori.adventure.text.format.*;
-import org.bukkit.*;
-import org.bukkit.enchantments.*;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
-import org.floracore.api.commands.report.*;
-import org.floracore.api.data.*;
-import org.floracore.api.data.chat.*;
-import org.floracore.api.messenger.message.type.*;
-import org.jetbrains.annotations.*;
-import team.floracore.common.command.*;
-import team.floracore.common.inevntory.*;
-import team.floracore.common.inevntory.content.*;
-import team.floracore.common.locale.data.chat.*;
-import team.floracore.common.locale.message.*;
-import team.floracore.common.locale.translation.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
-import team.floracore.common.util.*;
-import team.floracore.common.util.builder.*;
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Greedy;
+import de.myzelyam.api.vanish.VanishAPI;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.inventory.Book;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+import org.floracore.api.commands.report.ReportDataChatRecord;
+import org.floracore.api.commands.report.ReportStatus;
+import org.floracore.api.data.DataType;
+import org.floracore.api.data.chat.ChatAPI;
+import org.floracore.api.data.chat.ChatRecord;
+import org.floracore.api.data.chat.ChatType;
+import org.floracore.api.data.chat.DataChatRecord;
+import org.floracore.api.messenger.message.type.NoticeMessage;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.common.command.AbstractFloraCoreCommand;
+import team.floracore.common.inevntory.ClickableItem;
+import team.floracore.common.inevntory.SmartInventory;
+import team.floracore.common.inevntory.content.InventoryContents;
+import team.floracore.common.inevntory.content.Pagination;
+import team.floracore.common.locale.data.chat.ChatManager;
+import team.floracore.common.locale.message.BookMessage;
+import team.floracore.common.locale.message.MenuMessage;
+import team.floracore.common.locale.message.Message;
+import team.floracore.common.locale.message.MiscMessage;
+import team.floracore.common.locale.translation.TranslationManager;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.storage.misc.floracore.tables.CHAT;
+import team.floracore.common.storage.misc.floracore.tables.DATA;
+import team.floracore.common.storage.misc.floracore.tables.REPORT;
+import team.floracore.common.util.DurationFormatter;
+import team.floracore.common.util.StringUtil;
+import team.floracore.common.util.builder.ItemBuilder;
 
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static net.kyori.adventure.text.Component.*;
-import static team.floracore.common.util.ReflectionWrapper.*;
+import static team.floracore.common.util.ReflectionWrapper.getVersion;
+import static team.floracore.common.util.ReflectionWrapper.isVersionGreaterThanOrEqual;
 
 /**
  * Report命令
@@ -148,18 +167,20 @@ public class ReportCommand extends AbstractFloraCoreCommand {
     }
 
     private void createReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
-        getPlugin().getMessagingService().ifPresent(service -> {
-            UUID uuid = UUID.randomUUID();
-            long time = System.currentTimeMillis();
-            List<ReportDataChatRecord> chat = new ArrayList<>();
-            ChatAPI chatAPI = getPlugin().getApiProvider().getChatAPI();
-            ChatManager chatManager = getPlugin().getChatManager();
-            List<ReportDataChatRecord> c1 = getPlayerChatUUIDRecent(reporter, time, chatAPI, chatManager);
-            List<ReportDataChatRecord> c2 = getPlayerChatUUIDRecent(reportedUser, time, chatAPI, chatManager);
-            chat.addAll(c1);
-            chat.addAll(c2);
-            getStorageImplementation().addReport(uuid, reporter, reportedUser, reason, time, chat);
-            service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
+        getAsyncExecutor().execute(() -> {
+            getPlugin().getMessagingService().ifPresent(service -> {
+                UUID uuid = UUID.randomUUID();
+                long time = System.currentTimeMillis();
+                List<ReportDataChatRecord> chat = new ArrayList<>();
+                ChatAPI chatAPI = getPlugin().getApiProvider().getChatAPI();
+                ChatManager chatManager = getPlugin().getChatManager();
+                List<ReportDataChatRecord> c1 = getPlayerChatUUIDRecent(reporter, time, chatAPI, chatManager);
+                List<ReportDataChatRecord> c2 = getPlayerChatUUIDRecent(reportedUser, time, chatAPI, chatManager);
+                chat.addAll(c1);
+                chat.addAll(c2);
+                getStorageImplementation().addReport(uuid, reporter, reportedUser, reason, time, chat);
+                service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
+            });
         });
     }
 

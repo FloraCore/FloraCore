@@ -1,19 +1,21 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.bukkit.event.player.*;
-import org.floracore.api.data.*;
-import org.jetbrains.annotations.*;
-import team.floracore.common.command.*;
-import team.floracore.common.locale.message.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.floracore.api.data.DataType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import team.floracore.common.command.AbstractFloraCoreCommand;
+import team.floracore.common.locale.message.Message;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.storage.misc.floracore.tables.DATA;
 
-import java.util.*;
+import java.util.UUID;
 
 /**
  * Fly命令
@@ -31,10 +33,12 @@ public class FlyCommand extends AbstractFloraCoreCommand implements Listener {
     public void self(final @NotNull Player s) {
         boolean old = s.getAllowFlight();
         s.setAllowFlight(!old);
-        if (whetherServerEnableAutoSync1()) {
-            UUID uuid = s.getUniqueId();
-            getStorageImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
-        }
+        getAsyncExecutor().execute(() -> {
+            if (whetherServerEnableAutoSync1()) {
+                UUID uuid = s.getUniqueId();
+                getStorageImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
+            }
+        });
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Message.COMMAND_FLY.send(sender, !old, s.getDisplayName());
     }
@@ -45,10 +49,12 @@ public class FlyCommand extends AbstractFloraCoreCommand implements Listener {
     public void other(final @NotNull CommandSender s, final @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
         boolean old = target.getAllowFlight();
         target.setAllowFlight(!old);
-        if (whetherServerEnableAutoSync1()) {
-            UUID uuid = target.getUniqueId();
-            getStorageImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
-        }
+        getAsyncExecutor().execute(() -> {
+            if (whetherServerEnableAutoSync1()) {
+                UUID uuid = target.getUniqueId();
+                getStorageImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
+            }
+        });
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Sender targetSender = getPlugin().getSenderFactory().wrap(target);
         Message.COMMAND_FLY.send(sender, !old, target.getDisplayName());

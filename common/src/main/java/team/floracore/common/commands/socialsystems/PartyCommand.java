@@ -82,13 +82,15 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             leader = player.getUniqueId();
             members.add(leader);
             long createTime = System.currentTimeMillis();
-            // 创建Chat
-            getStorageImplementation().insertChat(partyUUID.toString(), ChatType.PARTY, createTime);
-            CHAT chat = getStorageImplementation().selectChatWithStartTime(partyUUID.toString(), ChatType.PARTY, createTime);
-            int chatID = chat.getId();
-            getStorageImplementation().insertParty(partyUUID, leader, createTime, chatID);
-            getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "party", partyUUID.toString(), 0);
-            getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS_PARTY_HISTORY, String.valueOf(System.currentTimeMillis()), partyUUID.toString(), 0);
+            getAsyncExecutor().execute(() -> {
+                // 创建Chat
+                getStorageImplementation().insertChat(partyUUID.toString(), ChatType.PARTY, createTime);
+                CHAT chat = getStorageImplementation().selectChatWithStartTime(partyUUID.toString(), ChatType.PARTY, createTime);
+                int chatID = chat.getId();
+                getStorageImplementation().insertParty(partyUUID, leader, createTime, chatID);
+                getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "party", partyUUID.toString(), 0);
+                getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS_PARTY_HISTORY, String.valueOf(System.currentTimeMillis()), partyUUID.toString(), 0);
+            });
         } else {
             partyUUID = UUID.fromString(data.getValue());
             PARTY party = getStorageImplementation().selectEffectiveParty(partyUUID);
@@ -179,12 +181,12 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     public void disband(UUID partyUUID, UUID dissolved) {
         PARTY party = getStorageImplementation().selectParty(partyUUID);
         List<UUID> members = party.getMembers();
-        long disbandTime = System.currentTimeMillis();
-        party.setDisbandTime(disbandTime);
-        int chatID = party.getChat();
-        CHAT chat = getStorageImplementation().selectChatWithID(chatID);
-        chat.setEndTime(disbandTime);
         getAsyncExecutor().execute(() -> {
+            long disbandTime = System.currentTimeMillis();
+            party.setDisbandTime(disbandTime);
+            int chatID = party.getChat();
+            CHAT chat = getStorageImplementation().selectChatWithID(chatID);
+            chat.setEndTime(disbandTime);
             getPlugin().getMessagingService().ifPresent(service -> {
                 for (UUID member : members) {
                     DATA md = getStorageImplementation().getSpecifiedData(member, DataType.SOCIAL_SYSTEMS, "party");
@@ -235,9 +237,9 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                         return;
                     }
                 }
-                DATA td = getStorageImplementation().getSpecifiedData(ut, DataType.SOCIAL_SYSTEMS, "party");
-                getStorageImplementation().deleteDataID(td.getId());
                 getAsyncExecutor().execute(() -> {
+                    DATA td = getStorageImplementation().getSpecifiedData(ut, DataType.SOCIAL_SYSTEMS, "party");
+                    getStorageImplementation().deleteDataID(td.getId());
                     getPlugin().getMessagingService().ifPresent(service -> {
                         members.remove(ut);
                         party.setMembers(members);
@@ -271,7 +273,6 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             }
             List<UUID> moderators = party.getModerators();
             List<UUID> members = party.getMembers();
-            getStorageImplementation().deleteDataID(data.getId());
             members.remove(uuid);
             party.setMembers(members);
             if (moderators.contains(uuid)) {
@@ -279,6 +280,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 party.setModerators(moderators);
             }
             getAsyncExecutor().execute(() -> {
+                getStorageImplementation().deleteDataID(data.getId());
                 getPlugin().getMessagingService().ifPresent(service -> {
                     service.pushNoticeMessage(uuid, NoticeMessage.NoticeType.PARTY_LEAVE, Collections.singletonList(uuid.toString()));
                     members.forEach(member -> {
@@ -290,7 +292,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
         }
     }
 
-    /*@CommandMethod("party|p kickoffline")
+    @CommandMethod("party|p kickoffline")
     @CommandDescription("floracore.command.description.party.kickoffline")
     public void kickoffline(final @NonNull Player player) {
         UUID uuid = player.getUniqueId();
@@ -308,7 +310,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 getAsyncExecutor().execute(() -> {
                     getPlugin().getMessagingService().ifPresent(service -> {
                         List<UUID> newMembers = members.stream()
-                                .filter(this::isOnline || u.equals(leader))
+                                .filter(member -> isOnline(member) || member.equals(leader))
                                 .collect(Collectors.toList());
 
                         List<UUID> offlineMembers = members.stream()
@@ -335,7 +337,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
                 MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
             }
         }
-    }*/
+    }
 
     @CommandMethod("party|p accept <uuid>")
     @CommandDescription("floracore.command.description.party.accept")
@@ -510,9 +512,9 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
     }
 
     public void partyWarp(UUID partyUUID, String serverName) {
-        PARTY party = getStorageImplementation().selectParty(partyUUID);
-        List<UUID> members = party.getMembers();
         getAsyncExecutor().execute(() -> {
+            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            List<UUID> members = party.getMembers();
             getPlugin().getMessagingService().ifPresent(service -> {
                 for (UUID member : members) {
                     String serverNow;
@@ -721,7 +723,7 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             BukkitScheduler scheduler = Bukkit.getServer().getScheduler();
             AtomicBoolean shouldCancel = new AtomicBoolean(false);
             final int[] taskId = new int[1];
-            taskId[0] = scheduler.runTaskTimer(getPlugin().getBootstrap().getPlugin(), new Runnable() {
+            taskId[0] = scheduler.runTaskTimerAsynchronously(getPlugin().getBootstrap().getPlugin(), new Runnable() {
                 private int secondsElapsed = 1;
                 private boolean offlineNotification = false;
 
