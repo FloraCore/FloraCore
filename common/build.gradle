@@ -16,6 +16,7 @@ repositories {
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
     maven { url 'https://repo.codemc.org/repository/maven-releases/' }
     maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.kryptonmc.org/releases' }
 }
 
 dependencies {
@@ -37,6 +38,7 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
     compileOnly 'net.skinsrestorer:skinsrestorer-api:14.2.10'
     compileOnly 'com.github.LeonMangler:PremiumVanishAPI:2.7.11-2'
+    compileOnly 'me.neznamy:tab-api:3.2.4'
     compileOnly fileTree(dir: '../libs', includes: ['*jar'])
 
     api 'net.kyori:adventure-api:4.13.0'

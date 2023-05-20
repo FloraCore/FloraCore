@@ -28,4 +28,9 @@ public class StaffCommand extends AbstractFloraCoreCommand {
             });
         });
     }
+
+    @CommandMethod("staffchat|sc <message>")
+    public void staffChat(final @NonNull Player player, final @NonNull @Argument("message") @Greedy String message) {
+        chat(player, message);
+    }
 }

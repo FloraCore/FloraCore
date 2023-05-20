@@ -8,6 +8,7 @@ depend:
   - LuckPerms
 softdepend:
   - PremiumVanish
+  - TAB
 permissions:
   floracore.admin:
     default: op

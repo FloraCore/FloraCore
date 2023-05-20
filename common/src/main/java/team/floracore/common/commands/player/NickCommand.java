@@ -1,6 +1,7 @@
 package team.floracore.common.commands.player;
 
 import cloud.commandframework.annotations.*;
+import me.neznamy.tab.api.*;
 import net.kyori.adventure.audience.*;
 import net.kyori.adventure.inventory.*;
 import net.kyori.adventure.text.*;
@@ -322,6 +323,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     public void changePlayer(Player p, String name) {
         getAsyncExecutor().execute(() -> {
             String on = p.getName();
+            UUID uuid = p.getUniqueId();
             Object NMSPlayer = invokeMethod(getHandle, p);
             Class<?> action = getInnerClass(getNMSClass("PacketPlayOutPlayerInfo"), "EnumPlayerInfoAction");
             Object ps = Array.newInstance(NMSPlayer.getClass(), 1);
@@ -345,7 +347,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             setFieldValue(getField(getNMSClass("PlayerList"), "playersByName"), pl, players);
             pack = newInstance(getConstructor(getNMSClass("PacketPlayOutPlayerInfo"), action, ps.getClass()), Enum.valueOf((Class) action, "ADD_PLAYER"), ps);
             sendPacketToAllPlayers(pack);
-            invokeMethod(getMethod(NMSPlayer.getClass(), "updateAbilities"), NMSPlayer);
+            /*invokeMethod(getMethod(NMSPlayer.getClass(), "updateAbilities"), NMSPlayer);
             Location l = p.getLocation();
             pack = newInstance(getConstructor(getNMSClass("PacketPlayOutPosition"), double.class, double.class, double.class, float.class, float.class, Set.class), l.getX(), l.getY(), l.getZ(), l.getYaw(), l.getPitch(), new HashSet<Enum<?>>());
             sendPacketToAllPlayersWhich(pack, p2 -> p2 == p || p2.equals(p));
@@ -365,7 +367,11 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
             pack = newInstance(getConstructor(getNMSClass("PacketPlayOutEntityEquipment"), int.class, int.class, getNMSClass("ItemStack")), p.getEntityId(), 1, invokeMethod(getMethod(getCraftBukkitClass("inventory.CraftItemStack"), "asNMSCopy", ItemStack.class), null, p.getInventory().getBoots()));
             sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
             pack = newInstance(getConstructor(getNMSClass("PacketPlayOutNamedEntitySpawn"), getNMSClass("EntityHuman")), NMSPlayer);
-            sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));
+            sendPacketToAllPlayersWhich(pack, p2 -> p2 != p && !p2.equals(p) && p2.canSee(p));*/
+            if (getPlugin().isPluginInstalled("TAB")) {
+                TabPlayer tabPlayer = TabAPI.getInstance().getPlayer(uuid);
+                TabAPI.getInstance().getTablistFormatManager().setName(tabPlayer, name);
+            }
         });
     }
 
@@ -509,7 +515,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         UUID u = p.getUniqueId();
@@ -554,9 +560,7 @@ public class NickCommand extends AbstractFloraCoreCommand implements Listener {
     public void onQuit(PlayerQuitEvent e) {
         Player p = e.getPlayer();
         UUID u = p.getUniqueId();
-        if (whetherServerEnableAutoSync2()) {
-
-        } else {
+        if (!whetherServerEnableAutoSync2()) {
             nickedPlayers.remove(u);
         }
     }

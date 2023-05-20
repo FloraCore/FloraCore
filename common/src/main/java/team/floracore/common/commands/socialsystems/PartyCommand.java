@@ -1,49 +1,36 @@
 package team.floracore.common.commands.socialsystems;
 
-import cloud.commandframework.CommandHelpHandler;
-import cloud.commandframework.annotations.Argument;
-import cloud.commandframework.annotations.CommandDescription;
-import cloud.commandframework.annotations.CommandMethod;
-import cloud.commandframework.annotations.CommandPermission;
-import cloud.commandframework.annotations.processing.CommandContainer;
-import cloud.commandframework.annotations.specifier.Greedy;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.JoinConfiguration;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.floracore.api.data.DataType;
-import org.floracore.api.data.chat.ChatRecord;
-import org.floracore.api.data.chat.ChatType;
-import org.floracore.api.messenger.message.type.ChatMessage;
-import org.floracore.api.messenger.message.type.NoticeMessage;
-import org.jetbrains.annotations.NotNull;
-import team.floracore.common.command.AbstractFloraCoreCommand;
+import cloud.commandframework.*;
+import cloud.commandframework.annotations.*;
+import cloud.commandframework.annotations.processing.*;
+import cloud.commandframework.annotations.specifier.*;
+import net.kyori.adventure.text.*;
+import org.bukkit.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.bukkit.event.*;
+import org.bukkit.event.player.*;
+import org.bukkit.scheduler.*;
+import org.checkerframework.checker.nullness.qual.*;
+import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
+import org.floracore.api.messenger.message.type.*;
+import org.jetbrains.annotations.*;
 import team.floracore.common.command.CommandManager;
-import team.floracore.common.locale.message.HelpMessage;
-import team.floracore.common.locale.message.MiscMessage;
-import team.floracore.common.locale.message.SocialSystemsMessage;
-import team.floracore.common.plugin.FloraCorePlugin;
-import team.floracore.common.sender.Sender;
-import team.floracore.common.storage.misc.floracore.tables.CHAT;
-import team.floracore.common.storage.misc.floracore.tables.DATA;
-import team.floracore.common.storage.misc.floracore.tables.PARTY;
-import team.floracore.common.util.StringUtil;
+import team.floracore.common.command.*;
+import team.floracore.common.locale.message.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
+import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.*;
 
-import java.time.Duration;
-import java.time.Instant;
+import java.time.*;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.*;
+import java.util.stream.*;
 
-import static net.kyori.adventure.text.Component.newline;
+import static net.kyori.adventure.text.Component.*;
 
 @CommandContainer
 @CommandDescription("floracore.command.description.party")
@@ -399,6 +386,11 @@ public class PartyCommand extends AbstractFloraCoreCommand implements Listener {
             List<UUID> members = party.getMembers();
             SocialSystemsMessage.COMMAND_MISC_PARTY_LIST.send(sender, leader, moderators, members);
         }
+    }
+
+    @CommandMethod("partychat|pc <message>")
+    public void partyChat(final @NonNull Player player, final @NonNull @Argument("message") @Greedy String message) {
+        chat(player, message);
     }
 
     @CommandMethod("party|p chat <message>")

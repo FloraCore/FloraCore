@@ -19,7 +19,7 @@ public abstract interface AbstractMessage {
     TextComponent CIRCLE = Component.text('●');
     TextComponent COLON = Component.text(':');
     TextComponent HORIZONTAL_LINE = Component.text('-');
-    TextComponent HORIZONTAL_LINES = text("------------------------------------------------------");
+    TextComponent HORIZONTAL_LINES = text("-----------------------------------------------------");
 
     Component PREFIX_COMPONENT = text()
             // [FC]
