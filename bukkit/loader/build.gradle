@@ -29,7 +29,7 @@ shadowJar {
     archiveFileName = "FloraCore-${rootProject.version}.jar"
 
     from {
-        project(':plugin').tasks.shadowJar.archiveFile
+        project(':bukkit').tasks.shadowJar.archiveFile
     }
 }
 

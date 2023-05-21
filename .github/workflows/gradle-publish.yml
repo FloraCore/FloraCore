@@ -45,8 +45,9 @@ jobs:
             api/build/libs
             common/build/libs
             common/loader-utils/build/libs
-            plugin/build/libs
-            plugin/loader/build/libs
+            bukkit/build/libs
+            bukkit/loader/build/libs
+            libs/
   release:
     name: Download back the built plugins and release them
     needs: build
