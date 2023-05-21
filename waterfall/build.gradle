@@ -1,0 +1,44 @@
+plugins {
+    id "java"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
+}
+
+group 'team.floracore'
+version rootProject.version
+
+repositories {
+    mavenCentral()
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+}
+
+dependencies {
+    implementation project(':common')
+    compileOnly project(':common:loader-utils')
+    compileOnly 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
+}
+
+
+shadowJar {
+    archiveFileName = 'floracore-waterfall.jarinjar'
+
+    dependencies {
+        include(dependency('team.floracore:.*'))
+    }
+
+    relocate 'org.mariadb.jdbc', 'team.floracore.lib.mariadb'
+    relocate 'com.mysql', 'team.floracore.lib.mysql'
+    relocate 'org.postgresql', 'team.floracore.lib.postgresql'
+    relocate 'com.zaxxer.hikari', 'team.floracore.lib.hikari'
+    relocate 'redis.clients.jedis', 'team.floracore.lib.jedis'
+    relocate 'org.apache.commons.pool2', 'team.floracore.lib.commonspool2'
+    relocate 'okhttp3', 'team.floracore.lib.okhttp3'
+    relocate 'okio', 'team.floracore.lib.okio'
+}
+
+artifacts {
+    archives shadowJar
+}
+
+javadoc {
+    options.encoding = "UTF-8"
+}
