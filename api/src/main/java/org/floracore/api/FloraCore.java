@@ -3,12 +3,8 @@ package org.floracore.api;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
-import org.floracore.api.messaging.*;
-import org.floracore.api.messenger.*;
 import org.floracore.api.platform.*;
 import org.floracore.api.player.*;
-
-import java.util.*;
 
 /**
  * The FloraCore API.
@@ -62,29 +58,6 @@ public interface FloraCore {
      * @return 聊天API
      */
     ChatAPI getChatAPI();
-
-
-    /**
-     * Gets the {@link MessagingService}, used to dispatch updates throughout a
-     * network of servers running the plugin.
-     *
-     * <p>Not all instances of LuckPerms will have a messaging service setup and
-     * configured.</p>
-     *
-     * @return the messaging service instance, if present.
-     */
-    @NonNull Optional<MessagingService> getMessagingService();
-
-
-    /**
-     * Registers a {@link MessengerProvider} for use by the platform.
-     *
-     * <p>Note that the mere action of registering a provider doesn't
-     * necessarily mean that it will be used.</p>
-     *
-     * @param messengerProvider the messenger provider.
-     */
-    void registerMessengerProvider(@NonNull MessengerProvider messengerProvider);
 
     /**
      * Gets the {@link Platform}, which represents the server platform the

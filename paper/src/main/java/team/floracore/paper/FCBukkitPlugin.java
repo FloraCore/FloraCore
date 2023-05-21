@@ -4,12 +4,10 @@ import org.bukkit.entity.*;
 import org.bukkit.plugin.java.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
-import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.paper.config.*;
 import team.floracore.paper.listener.*;
-import team.floracore.paper.messaging.*;
 
 import java.util.*;
 import java.util.stream.*;
@@ -54,11 +52,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
-    protected MessagingFactory<?> provideMessagingFactory() {
-        return new BukkitMessagingFactory(this);
-    }
-
-    @Override
     public FCBukkitBootstrap getBootstrap() {
         return this.bootstrap;
     }
@@ -71,6 +64,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         return listenerManager;
     }
 
+    @Override
     public String getServerName() {
         return getConfiguration().get(PaperConfigKeys.SERVER_NAME);
     }
