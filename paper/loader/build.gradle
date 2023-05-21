@@ -27,10 +27,10 @@ processResources {
 }
 
 shadowJar {
-    archiveFileName = "FloraCore-Bukkit-${rootProject.version}.jar"
+    archiveFileName = "FloraCore-Paper-${rootProject.version}.jar"
 
     from {
-        project(':bukkit').tasks.shadowJar.archiveFile
+        project(':paper').tasks.shadowJar.archiveFile
     }
 }
 

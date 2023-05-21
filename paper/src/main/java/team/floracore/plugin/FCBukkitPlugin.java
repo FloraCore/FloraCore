@@ -1,16 +1,18 @@
 package team.floracore.plugin;
 
-import org.bukkit.entity.*;
-import org.bukkit.plugin.java.*;
-import team.floracore.common.config.generic.adapter.*;
-import team.floracore.common.dependencies.*;
-import team.floracore.common.messaging.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
-import team.floracore.plugin.messaging.*;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
+import team.floracore.common.dependencies.Dependency;
+import team.floracore.common.messaging.MessagingFactory;
+import team.floracore.common.plugin.AbstractFloraCorePlugin;
+import team.floracore.common.sender.Sender;
+import team.floracore.plugin.messaging.BukkitMessagingFactory;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * FloraCore implementation for the Bukkit API.

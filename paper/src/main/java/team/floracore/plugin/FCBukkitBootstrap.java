@@ -1,22 +1,25 @@
 package team.floracore.plugin;
 
-import org.bukkit.*;
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import org.bukkit.plugin.java.*;
-import org.checkerframework.checker.nullness.qual.*;
-import team.floracore.common.commands.player.*;
-import team.floracore.common.loader.*;
-import team.floracore.common.plugin.bootstrap.*;
-import team.floracore.common.plugin.classpath.*;
-import team.floracore.common.plugin.logging.*;
+import org.bukkit.Server;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import team.floracore.common.commands.player.EnderChestCommand;
+import team.floracore.common.loader.LoaderBootstrap;
+import team.floracore.common.plugin.bootstrap.BootstrappedWithLoader;
+import team.floracore.common.plugin.bootstrap.FloraCoreBootstrap;
+import team.floracore.common.plugin.classpath.ClassPathAppender;
+import team.floracore.common.plugin.classpath.JarInJarClassPathAppender;
+import team.floracore.common.plugin.logging.JavaPluginLogger;
+import team.floracore.common.plugin.logging.PluginLogger;
 
-import java.lang.reflect.*;
-import java.nio.file.*;
-import java.time.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.logging.*;
+import java.lang.reflect.Method;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.logging.Logger;
 
 /**
  * Bootstrap plugin for FloraCore running on Bukkit.
