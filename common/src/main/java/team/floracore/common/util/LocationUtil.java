@@ -1,13 +1,12 @@
 package team.floracore.common.util;
 
-import org.bukkit.*;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.World;
 
 import java.util.*;
 
-import static team.floracore.common.util.ReflectionWrapper.*;
-
 public final class LocationUtil {
-    public static final boolean MORDEN = isVersionGreaterThan(getVersion(), "v1_17_R1");
     public static final int RADIUS = 3;
     public static final Vector3D[] VOLUME;
     // Water types used for TRANSPARENT_MATERIALS and is-water-safe config option
@@ -128,8 +127,8 @@ public final class LocationUtil {
             throw new Exception();
         }
         final World world = loc.getWorld();
-        final int worldMinY = MORDEN ? world.getMinHeight() : 0;
-        final int worldLogicalY = MORDEN ? world.getLogicalHeight() : (world.getEnvironment() == World.Environment.NETHER ? 128 : 256);
+        final int worldMinY = 0;
+        final int worldLogicalY = world.getEnvironment() == World.Environment.NETHER ? 128 : 256;
         final int worldMaxY = loc.getBlockY() < worldLogicalY ? worldLogicalY : world.getMaxHeight();
         int x = loc.getBlockX();
         int y = (int) Math.round(loc.getY());

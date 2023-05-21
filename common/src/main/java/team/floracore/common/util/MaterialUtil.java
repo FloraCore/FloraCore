@@ -151,18 +151,6 @@ public final class MaterialUtil {
         return 0;
     }
 
-    public static void setDamage(final ItemStack stack, final int damage) {
-        if (PRE_FLATTENING) {
-            stack.setDurability((short) damage);
-        } else {
-            if (stack.getItemMeta() instanceof Damageable) {
-                final Damageable damageable = (Damageable) stack.getItemMeta();
-                damageable.setDamage(damage);
-                stack.setItemMeta(damageable);
-            }
-        }
-    }
-
     public static Material convertFromLegacy(final int id, final byte damage) {
         for (final Material material : EnumSet.allOf(Material.class)) {
             if (material.getId() == id) {

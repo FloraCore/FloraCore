@@ -8,18 +8,19 @@ version rootProject.version
 
 repositories {
     mavenCentral()
-    maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+    maven { url 'https://oss.sonatype.org/content/groups/public/' }
 }
 
 dependencies {
     implementation project(':common')
     compileOnly project(':common:loader-utils')
-    compileOnly 'org.spigotmc:spigot-api:1.19.4-R0.1-SNAPSHOT'
+    compileOnly 'com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT'
 }
 
 
 shadowJar {
-    archiveFileName = 'floracore-bukkit.jarinjar'
+    archiveFileName = 'floracore-paper.jarinjar'
 
     dependencies {
         include(dependency('team.floracore:.*'))
