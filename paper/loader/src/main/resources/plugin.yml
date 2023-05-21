@@ -2,7 +2,7 @@ name: FloraCore
 version: ${version}
 description: A basic plugin with rich functions
 website: https://github.com/FloraCore/FloraCore
-main: team.floracore.plugin.loader.BukkitLoaderPlugin
+main: team.floracore.paper.loader.BukkitLoaderPlugin
 depend:
   - ProtocolLib
   - LuckPerms
