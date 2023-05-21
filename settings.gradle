@@ -8,4 +8,3 @@ include 'bukkit:loader'
 findProject(':bukkit:loader')?.name = 'loader'
 include 'common:loader-utils'
 findProject(':common:loader-utils')?.name = 'loader-utils'
-

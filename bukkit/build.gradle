@@ -19,7 +19,7 @@ dependencies {
 
 
 shadowJar {
-    archiveFileName = 'floracore-plugin.jarinjar'
+    archiveFileName = 'floracore-bukkit.jarinjar'
 
     dependencies {
         include(dependency('team.floracore:.*'))
@@ -37,19 +37,6 @@ shadowJar {
 
 artifacts {
     archives shadowJar
-}
-
-processResources {
-    def props = [version: project.parent.version]
-    inputs.properties props
-    filteringCharset 'UTF-8'
-    filesMatching('plugin.yml') {
-        expand props
-    }
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.encoding = "UTF-8"
 }
 
 javadoc {
