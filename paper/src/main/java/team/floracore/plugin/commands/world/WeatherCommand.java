@@ -48,9 +48,9 @@ public class WeatherCommand extends AbstractFloraCoreCommand {
         world.setStorm(isStorm);
         if (time != null) {
             world.setWeatherDuration(Integer.parseInt(time) * 20);
-            Message.COMMAND_WEATHER_TIME.send(sender, world, component, time);
+            Message.COMMAND_WEATHER_TIME.send(sender, world.getName(), component, time);
         } else {
-            Message.COMMAND_WEATHER_NORMAL.send(sender, world, component);
+            Message.COMMAND_WEATHER_NORMAL.send(sender, world.getName(), component);
         }
     }
 

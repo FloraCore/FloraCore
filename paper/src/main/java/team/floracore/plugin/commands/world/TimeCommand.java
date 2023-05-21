@@ -102,7 +102,7 @@ public class TimeCommand extends AbstractFloraCoreCommand {
         }
 
         for (final World world : worlds) {
-            Message.COMMAND_TIME_WORLD_CURRENT.send(sender, world, Message.DURATION_FORMAT.build(world.getTime()));
+            Message.COMMAND_TIME_WORLD_CURRENT.send(sender, world.getName(), Message.DURATION_FORMAT.build(world.getTime()));
         }
     }
 

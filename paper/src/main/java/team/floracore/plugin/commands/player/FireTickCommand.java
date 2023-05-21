@@ -4,9 +4,9 @@ import cloud.commandframework.annotations.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
-import team.floracore.common.command.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.sender.*;
+import team.floracore.common.util.*;
 import team.floracore.plugin.*;
 import team.floracore.plugin.command.*;
 
@@ -34,7 +34,7 @@ public class FireTickCommand extends AbstractFloraCoreCommand {
                 ((Player) s).setFireTicks(time * 20);
                 Message.COMMAND_FIRETICK_SELF.send(sender, time);
             } else {
-                SenderUtil.sendMustBePlayer(sender, s.getClass());
+                SenderUtil.sendMustBe(sender, s.getClass(), Player.class);
             }
         } else {
             target.setFireTicks(time * 20);

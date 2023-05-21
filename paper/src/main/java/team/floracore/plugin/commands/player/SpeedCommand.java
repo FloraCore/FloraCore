@@ -6,12 +6,11 @@ import cloud.commandframework.context.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
-import team.floracore.common.command.*;
-import team.floracore.common.config.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.sender.*;
 import team.floracore.plugin.*;
 import team.floracore.plugin.command.*;
+import team.floracore.plugin.config.*;
 
 import javax.annotation.Nullable;
 import java.util.*;
@@ -77,7 +76,7 @@ public class SpeedCommand extends AbstractFloraCoreCommand {
         final float defaultSpeed = speedType == SpeedType.FLY ? 0.1f : 0.2f;
         float maxSpeed = 1f;
         if (!isBypass) {
-            maxSpeed = (speedType == SpeedType.FLY ? getPlugin().getConfiguration().get(ConfigKeys.SPEED_MAX_FLY_SPEED) : getPlugin().getConfiguration().get(ConfigKeys.SPEED_MAX_WALK_SPEED)).floatValue();
+            maxSpeed = (speedType == SpeedType.FLY ? getPlugin().getConfiguration().get(PaperConfigKeys.SPEED_MAX_FLY_SPEED) : getPlugin().getConfiguration().get(PaperConfigKeys.SPEED_MAX_WALK_SPEED)).floatValue();
         }
 
         if (userSpeed < 1f) {

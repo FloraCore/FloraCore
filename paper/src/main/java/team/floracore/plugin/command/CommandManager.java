@@ -14,7 +14,6 @@ import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.plugin.*;
-import team.floracore.plugin.commands.item.*;
 import team.floracore.plugin.commands.misc.FloraCoreCommand;
 import team.floracore.plugin.commands.player.*;
 import team.floracore.plugin.commands.server.*;
@@ -120,18 +119,18 @@ public class CommandManager {
         this.annotationParser.parse(new GameModeCommand(plugin));
         // this.annotationParser.parse(new GiveCommand(plugin));
         this.annotationParser.parse(new HasPermissionCommand(plugin));
-        this.annotationParser.parse(new HatCommand(plugin));
-        this.annotationParser.parse(new HealCommand(plugin));
+        // this.annotationParser.parse(new HatCommand(plugin));
+        // this.annotationParser.parse(new HealCommand(plugin));
         this.annotationParser.parse(new InvSeeCommand(plugin));
-        this.annotationParser.parse(new MaxHealthCommand(plugin));
+        // this.annotationParser.parse(new MaxHealthCommand(plugin));
         // this.annotationParser.parse(new NickCommand(plugin)); // TODO 命令测试中 未测试：Rank设置 未完善：Skin设置 (目前已经将Rank设置和Skin设置移除)
         this.annotationParser.parse(new OPListCommand(plugin));
-        this.annotationParser.parse(new PingCommand(plugin));
+        // this.annotationParser.parse(new PingCommand(plugin));
         this.annotationParser.parse(new RealNameCommand(plugin));
         // this.annotationParser.parse(new ReportCommand(plugin)); // TODO 命令已完成基本测试
         this.annotationParser.parse(new SpeedCommand(plugin));
         this.annotationParser.parse(new SuicideCommand(plugin));
-        this.annotationParser.parse(new TopCommand(plugin));
+        // this.annotationParser.parse(new TopCommand(plugin));
 
         // server
         this.annotationParser.parse(new BroadCastCommand(plugin));
@@ -151,6 +150,6 @@ public class CommandManager {
         this.annotationParser.parse(new WeatherCommand(plugin));
 
         // item
-        this.annotationParser.parse(new ItemFlagCommand(plugin)); // TODO 未测试
+        // this.annotationParser.parse(new ItemFlagCommand(plugin)); // TODO 未测试
     }
 }

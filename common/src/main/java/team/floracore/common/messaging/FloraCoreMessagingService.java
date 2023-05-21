@@ -207,7 +207,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 }
             }
         } else {*/
-            throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
+        throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         // }
     }
 

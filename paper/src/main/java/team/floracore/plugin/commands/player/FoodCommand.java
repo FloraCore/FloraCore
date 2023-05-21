@@ -4,9 +4,9 @@ import cloud.commandframework.annotations.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
-import team.floracore.common.command.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.sender.*;
+import team.floracore.common.util.*;
 import team.floracore.plugin.*;
 import team.floracore.plugin.command.*;
 
@@ -28,7 +28,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
         if (target == null) { // 目标为空，则目标为自己
             // 目标为自己时，发送者必须是玩家
             if (!(s instanceof Player)) { // 不是玩家
-                SenderUtil.sendMustBePlayer(sender, s.getClass()); // 告知不予执行
+                SenderUtil.sendMustBe(sender, s.getClass(), Player.class); // 告知不予执行
                 return;
             }
             Player player = (Player) s;
@@ -55,7 +55,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
         if (target == null) { // 目标为空，则目标为自己
             // 目标为自己时，发送者必须是玩家
             if (!(s instanceof Player)) { // 不是玩家
-                SenderUtil.sendMustBePlayer(sender, s.getClass()); // 告知不予执行
+                SenderUtil.sendMustBe(sender, s.getClass(), Player.class); // 告知不予执行
                 return;
             }
             Player player = (Player) s;
@@ -85,7 +85,7 @@ public class FoodCommand extends AbstractFloraCoreCommand {
         if (target == null) { // 目标为空，则目标为自己
             // 目标为自己时，发送者必须是玩家
             if (!(s instanceof Player)) { // 不是玩家
-                SenderUtil.sendMustBePlayer(sender, s.getClass()); // 告知不予执行
+                SenderUtil.sendMustBe(sender, s.getClass(), Player.class); // 告知不予执行
                 return;
             }
             Player player = (Player) s;

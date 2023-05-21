@@ -4,9 +4,9 @@ import cloud.commandframework.annotations.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
-import team.floracore.common.command.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.sender.*;
+import team.floracore.common.util.*;
 import team.floracore.plugin.*;
 import team.floracore.plugin.command.*;
 
@@ -55,7 +55,7 @@ public class AirCommand extends AbstractFloraCoreCommand {
                 Message.COMMAND_AIR_SET_MAX_SELF.send(sender, value); // 告知设置成功
                 return;
             }
-            SenderUtil.sendMustBePlayer(sender, s.getClass());
+            SenderUtil.sendMustBe(sender, s.getClass(), Player.class);
         } else { // 指定target
             if (SenderUtil.sendIfNoPermission(sender, "floracore.command.air.set.max.other")) {
                 return;
@@ -85,7 +85,7 @@ public class AirCommand extends AbstractFloraCoreCommand {
                 Message.COMMAND_AIR_SET_REMAINING_SELF.send(sender, value); // 告知设置成功
                 return;
             }
-            SenderUtil.sendMustBePlayer(sender, s.getClass());
+            SenderUtil.sendMustBe(sender, s.getClass(), Player.class);
         } else { // 指定target
             if (SenderUtil.sendIfNoPermission(sender, "floracore.command.air.set.remaining.other")) {
                 return;

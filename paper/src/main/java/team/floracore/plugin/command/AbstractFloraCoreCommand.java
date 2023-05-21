@@ -23,12 +23,11 @@ import java.util.concurrent.*;
 import java.util.stream.*;
 
 public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
+    public final String EMPTY_DESCRIPTION = "%empty%";
     private final FCBukkitPlugin plugin;
     private final StorageImplementation storageImplementation;
     private final AsyncCache<String, SERVER> serversCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     private final Executor asyncExecutor;
-
-    public final String EMPTY_DESCRIPTION = "%empty%";
 
     public AbstractFloraCoreCommand(FCBukkitPlugin plugin) {
         this.plugin = plugin;

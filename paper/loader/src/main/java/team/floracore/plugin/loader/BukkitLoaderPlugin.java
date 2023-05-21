@@ -1,8 +1,7 @@
 package team.floracore.plugin.loader;
 
-import org.bukkit.plugin.java.JavaPlugin;
-import team.floracore.common.loader.JarInJarClassLoader;
-import team.floracore.common.loader.LoaderBootstrap;
+import org.bukkit.plugin.java.*;
+import team.floracore.common.loader.*;
 
 public class BukkitLoaderPlugin extends JavaPlugin {
     private static final String JAR_NAME = "floracore-plugin.jarinjar";
