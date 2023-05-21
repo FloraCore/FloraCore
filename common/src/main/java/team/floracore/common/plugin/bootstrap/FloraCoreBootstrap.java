@@ -1,6 +1,7 @@
 package team.floracore.common.plugin.bootstrap;
 
 import org.checkerframework.checker.nullness.qual.*;
+import org.floracore.api.platform.*;
 import team.floracore.common.plugin.classpath.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.plugin.scheduler.*;
@@ -63,6 +64,12 @@ public interface FloraCoreBootstrap {
      */
     Instant getStartupTime();
 
+    /**
+     * Gets the platform type this instance of LuckPerms is running on.
+     *
+     * @return the platform type
+     */
+    Platform.Type getType();
 
     /**
      * Gets the plugins main data storage directory

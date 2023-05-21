@@ -6,7 +6,9 @@ import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.floracore.api.messaging.*;
 import org.floracore.api.messenger.*;
+import org.floracore.api.platform.*;
 import org.floracore.api.player.*;
+import org.jetbrains.annotations.*;
 import team.floracore.common.api.implementation.*;
 import team.floracore.common.config.*;
 import team.floracore.common.messaging.*;
@@ -23,16 +25,18 @@ public class FloraCoreApiProvider implements FloraCore {
 
     private final FloraCorePlugin plugin;
 
-    private final DataAPI dataAPI;
+    private final ApiData dataAPI;
 
-    private final PlayerAPI playerAPI;
-    private final ChatAPI chatAPI;
+    private final ApiPlayer playerAPI;
+    private final ApiChat chatAPI;
+    private final ApiPlatform platform;
 
     public FloraCoreApiProvider(FloraCorePlugin plugin) {
         this.plugin = plugin;
         this.dataAPI = new ApiData(plugin);
         this.playerAPI = new ApiPlayer(plugin);
         this.chatAPI = new ApiChat(plugin);
+        this.platform = new ApiPlatform(plugin);
     }
 
     public void ensureApiWasLoadedByPlugin() {
@@ -84,6 +88,12 @@ public class FloraCoreApiProvider implements FloraCore {
         return this.chatAPI;
     }
 
+    @NotNull
+    @Override
+    public ApiPlatform getPlatform() {
+        return platform;
+    }
+
     @Override
     public void registerMessengerProvider(@NonNull MessengerProvider messengerProvider) {
         if (this.plugin.getConfiguration().get(ConfigKeys.MESSAGING_SERVICE).equals("custom")) {
@@ -94,5 +104,10 @@ public class FloraCoreApiProvider implements FloraCore {
     @Override
     public @NonNull Optional<MessagingService> getMessagingService() {
         return this.plugin.getMessagingService().map(ApiMessagingService::new);
+    }
+
+    @Override
+    public @NonNull PluginMetadata getPluginMetadata() {
+        return this.platform;
     }
 }

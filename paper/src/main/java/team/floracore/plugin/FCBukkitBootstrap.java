@@ -5,6 +5,7 @@ import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.bukkit.plugin.java.*;
 import org.checkerframework.checker.nullness.qual.*;
+import org.floracore.api.platform.*;
 import team.floracore.common.loader.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.classpath.*;
@@ -213,5 +214,10 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
             return plugin.getName();
         }
         return null;
+    }
+
+    @Override
+    public Platform.Type getType() {
+        return Platform.Type.BUKKIT;
     }
 }

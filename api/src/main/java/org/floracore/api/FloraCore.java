@@ -5,6 +5,7 @@ import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.floracore.api.messaging.*;
 import org.floracore.api.messenger.*;
+import org.floracore.api.platform.*;
 import org.floracore.api.player.*;
 
 import java.util.*;
@@ -84,4 +85,20 @@ public interface FloraCore {
      * @param messengerProvider the messenger provider.
      */
     void registerMessengerProvider(@NonNull MessengerProvider messengerProvider);
+
+    /**
+     * Gets the {@link Platform}, which represents the server platform the
+     * plugin is running on.
+     *
+     * @return the platform
+     */
+    @NonNull Platform getPlatform();
+
+    /**
+     * Gets the {@link PluginMetadata}, responsible for providing metadata about
+     * the FloraCore plugin currently running.
+     *
+     * @return the plugin metadata
+     */
+    @NonNull PluginMetadata getPluginMetadata();
 }
