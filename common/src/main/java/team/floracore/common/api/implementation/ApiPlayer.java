@@ -1,8 +1,6 @@
 package team.floracore.common.api.implementation;
 
 import com.github.benmanes.caffeine.cache.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
 import org.floracore.api.player.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -56,11 +54,6 @@ public class ApiPlayer implements PlayerAPI {
 
     @Override
     public boolean isOnline(UUID uuid) {
-        Player p = Bukkit.getPlayer(uuid);
-        if (p != null) {
-            return true;
-        }
-        // TODO 在线状态设置修改
         ONLINE online = plugin.getStorage().getImplementation().selectOnline(uuid);
         if (online == null) {
             return false;

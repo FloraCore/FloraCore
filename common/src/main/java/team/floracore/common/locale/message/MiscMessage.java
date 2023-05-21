@@ -8,7 +8,6 @@ import java.util.*;
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 import static net.kyori.adventure.text.format.TextDecoration.*;
-import static team.floracore.common.util.ReflectionWrapper.*;
 
 public interface MiscMessage extends AbstractMessage {
     Component PREFIX_BROADCAST = text()
@@ -72,9 +71,7 @@ public interface MiscMessage extends AbstractMessage {
                 // v{}
                 .append(text("v" + bootstrap.getVersion(), AQUA)).append(space())
                 // Running
-                .append(text("is Running on", DARK_GRAY)).append(space())
-                // server version
-                .append(text(getVersion(), DARK_GRAY)).build();
+                .append(text("is Running", DARK_GRAY)).append(space()).build();
 
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
 

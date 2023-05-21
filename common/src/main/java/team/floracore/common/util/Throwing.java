@@ -1,7 +1,6 @@
 package team.floracore.common.util;
 
 public interface Throwing {
-
     @FunctionalInterface
     interface Runnable {
         void run() throws Exception;

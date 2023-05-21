@@ -5,9 +5,6 @@ import java.nio.charset.*;
 import java.util.*;
 
 public final class SchemaReader {
-    private SchemaReader() {
-    }
-
     public static List<String> getStatements(InputStream is) throws IOException {
         List<String> queries = new LinkedList<>();
 

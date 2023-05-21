@@ -2,7 +2,6 @@ package team.floracore.common.locale.message;
 
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.event.*;
-import org.bukkit.*;
 import org.floracore.api.data.*;
 import team.floracore.common.util.*;
 
@@ -41,21 +40,21 @@ public interface Message extends AbstractMessage {
             // {0} 不是合法的天气类型
             .key("floracore.command.weather.nosuch").color(RED).args(text(weather).color(GREEN)).append(FULL_STOP));
 
-    Args2<World, Component> COMMAND_WEATHER_NORMAL = (world, weather) -> AbstractMessage.prefixed(translatable()
+    Args2<String, Component> COMMAND_WEATHER_NORMAL = (world, weather) -> AbstractMessage.prefixed(translatable()
             // 你将 {0} 的天气设为 {1}
-            .key("floracore.command.weather.normal").color(AQUA).args(text(world.getName()).color(GREEN), weather.color(GREEN)).append(FULL_STOP));
+            .key("floracore.command.weather.normal").color(AQUA).args(text(world).color(GREEN), weather.color(GREEN)).append(FULL_STOP));
 
-    Args3<World, Component, String> COMMAND_WEATHER_TIME = (world, weather, time) -> AbstractMessage.prefixed(translatable()
+    Args3<String, Component, String> COMMAND_WEATHER_TIME = (world, weather, time) -> AbstractMessage.prefixed(translatable()
             // 你将 {0} 的天气设为 {1}，持续 {2} 秒
-            .key("floracore.command.weather.time").color(AQUA).args(text(world.getName()).color(GREEN), weather.color(GREEN), text(time).color(GREEN)).append(FULL_STOP));
+            .key("floracore.command.weather.time").color(AQUA).args(text(world).color(GREEN), weather.color(GREEN), text(time).color(GREEN)).append(FULL_STOP));
 
     Args1<Long> DURATION_FORMAT = (ticks) -> translatable()
             // {0} 或 {1}（或 {2} ）
             .key("floracore.duration.format").color(RED).args(text(DescParseTickFormat.format24(ticks)).color(GREEN), text(DescParseTickFormat.format12(ticks)).color(GREEN), text(DescParseTickFormat.formatTicks(ticks)).color(GREEN)).build();
 
-    Args2<World, Component> COMMAND_TIME_WORLD_CURRENT = (world, time) -> AbstractMessage.prefixed(translatable()
+    Args2<String, Component> COMMAND_TIME_WORLD_CURRENT = (world, time) -> AbstractMessage.prefixed(translatable()
             // 当前 {0} 的时间是 {1}
-            .key("floracore.command.time.world.current").color(AQUA).args(text(world.getName()).color(GREEN), time));
+            .key("floracore.command.time.world.current").color(AQUA).args(text(world).color(GREEN), time));
 
     Args2<String, Component> COMMAND_TIME_SET = (world, time) -> AbstractMessage.prefixed(translatable()
             // {0} 的时间被设置为 {1}

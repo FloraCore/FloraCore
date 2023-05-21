@@ -1,6 +1,5 @@
 package team.floracore.common.api;
 
-import org.bukkit.plugin.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.*;
 import org.floracore.api.data.*;
@@ -8,13 +7,12 @@ import org.floracore.api.data.chat.*;
 import org.floracore.api.messaging.*;
 import org.floracore.api.messenger.*;
 import org.floracore.api.player.*;
-import org.floracore.api.server.*;
 import team.floracore.common.api.implementation.*;
 import team.floracore.common.config.*;
 import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.plugin.bootstrap.*;
-import team.floracore.common.plugin.logging.PluginLogger;
+import team.floracore.common.plugin.logging.*;
 
 import java.util.*;
 
@@ -72,11 +70,6 @@ public class FloraCoreApiProvider implements FloraCore {
     }
 
     @Override
-    public ServerType getServerType() {
-        return plugin.getConfiguration().get(ConfigKeys.SERVER_TYPE);
-    }
-
-    @Override
     public DataAPI getDataAPI() {
         return this.dataAPI;
     }
@@ -96,11 +89,6 @@ public class FloraCoreApiProvider implements FloraCore {
         if (this.plugin.getConfiguration().get(ConfigKeys.MESSAGING_SERVICE).equals("custom")) {
             this.plugin.setMessagingService(new FloraCoreMessagingService(this.plugin, messengerProvider));
         }
-    }
-
-    @Override
-    public Plugin getPlugin() {
-        return this.plugin.getBootstrap().getPlugin();
     }
 
     @Override

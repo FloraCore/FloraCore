@@ -1,7 +1,5 @@
 package team.floracore.common.plugin.bootstrap;
 
-import org.bukkit.*;
-import org.bukkit.plugin.java.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.common.plugin.classpath.*;
 import team.floracore.common.plugin.logging.*;
@@ -91,10 +89,6 @@ public interface FloraCoreBootstrap {
      * @return true if the user is online
      */
     boolean isPlayerOnline(UUID uniqueId);
-
-    JavaPlugin getPlugin();
-
-    Server getServer();
 
     /**
      * Gets a bundled resource file from the jar

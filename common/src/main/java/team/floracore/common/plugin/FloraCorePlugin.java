@@ -1,23 +1,17 @@
 package team.floracore.common.plugin;
 
-import com.comphenix.protocol.*;
-import net.kyori.adventure.platform.bukkit.*;
 import okhttp3.*;
 import team.floracore.common.api.*;
-import team.floracore.common.command.*;
 import team.floracore.common.config.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
-import team.floracore.common.listener.*;
 import team.floracore.common.locale.data.*;
-import team.floracore.common.locale.data.chat.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.bootstrap.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.*;
-import team.floracore.common.util.*;
 
 import java.util.*;
 import java.util.stream.*;
@@ -47,26 +41,6 @@ public interface FloraCorePlugin {
     DependencyManager getDependencyManager();
 
     /**
-     * Gets the command manager
-     *
-     * @return the command manager
-     */
-    CommandManager getCommandManager();
-
-    /**
-     * Gets the Listener manager
-     *
-     * @return the listener manager
-     */
-    ListenerManager getListenerManager();
-
-    BukkitAudiences getBukkitAudiences();
-
-    ProtocolManager getProtocolManager();
-
-    BukkitSenderFactory getSenderFactory();
-
-    /**
      * Gets the plugin's configuration
      *
      * @return the plugin config
@@ -88,7 +62,6 @@ public interface FloraCorePlugin {
      * @return a {@link java.util.List} of senders online on the platform
      */
     Stream<Sender> getOnlineSenders();
-
 
     /**
      * Gets the console.
@@ -130,17 +103,13 @@ public interface FloraCorePlugin {
      */
     TranslationRepository getTranslationRepository();
 
-    String getServerName();
-
     DataManager getDataManager();
-
-    ChatManager getChatManager();
-
-    BungeeUtil getBungeeUtil();
 
     Map<String, List<String>> getLoadedPlugins();
 
     boolean isPluginInstalled(String name);
 
     boolean isPluginInstalled(String name, String author);
+
+    String getServerName();
 }

@@ -7,14 +7,11 @@ version rootProject.version
 
 repositories {
     mavenCentral()
-    maven { url 'https://repo.papermc.io/repository/maven-public/' }
-    maven { url 'https://oss.sonatype.org/content/groups/public/' }
 }
 
 dependencies {
     compileOnly 'org.checkerframework:checker-qual:3.32.0'
     compileOnly 'org.jetbrains:annotations:24.0.1'
-    compileOnly 'com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT'
 }
 
 tasks.withType(JavaCompile).configureEach {

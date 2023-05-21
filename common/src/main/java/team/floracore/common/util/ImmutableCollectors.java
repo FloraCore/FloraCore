@@ -1,6 +1,3 @@
-/**
- * 不可变的收集器。
- */
 package team.floracore.common.util;
 
 import com.google.common.collect.*;
@@ -10,6 +7,9 @@ import java.util.*;
 import java.util.function.*;
 import java.util.stream.*;
 
+/**
+ * 不可变的收集器。
+ */
 public final class ImmutableCollectors {
     private static final Collector<Object, ImmutableList.Builder<Object>, ImmutableList<Object>> LIST = Collector.of(ImmutableList.Builder::new, ImmutableList.Builder::add, (l, r) -> l.addAll(r.build()), ImmutableList.Builder::build);
     private static final Collector<Object, ImmutableSet.Builder<Object>, ImmutableSet<Object>> SET = Collector.of(ImmutableSet.Builder::new, ImmutableSet.Builder::add, (l, r) -> l.addAll(r.build()), ImmutableSet.Builder::build);

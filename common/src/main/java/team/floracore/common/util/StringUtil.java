@@ -5,9 +5,6 @@ import org.jetbrains.annotations.*;
 import java.util.*;
 
 public final class StringUtil {
-    private StringUtil() {
-    }
-
     public static @NotNull String parseColour(@NotNull String string) {
         Objects.requireNonNull(string);
         return string.replace("&", "§").replace("§§", "&");

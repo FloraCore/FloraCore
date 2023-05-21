@@ -15,7 +15,12 @@ repositories {
 dependencies {
     implementation project(':common')
     compileOnly project(':common:loader-utils')
+    compileOnly fileTree(dir: './libs', includes: ['*jar'])
+
     compileOnly 'com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT'
+    compileOnly 'cloud.commandframework:cloud-paper:1.8.3'
+    compileOnly 'net.kyori:adventure-platform-bukkit:4.3.0'
+    compileOnly 'net.luckperms:api:5.4'
 }
 
 

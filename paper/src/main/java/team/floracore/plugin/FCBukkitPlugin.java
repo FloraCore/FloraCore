@@ -1,27 +1,30 @@
 package team.floracore.plugin;
 
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.java.JavaPlugin;
-import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
-import team.floracore.common.dependencies.Dependency;
-import team.floracore.common.messaging.MessagingFactory;
-import team.floracore.common.plugin.AbstractFloraCorePlugin;
-import team.floracore.common.sender.Sender;
-import team.floracore.plugin.messaging.BukkitMessagingFactory;
+import org.bukkit.entity.*;
+import org.bukkit.plugin.java.*;
+import team.floracore.common.config.generic.adapter.*;
+import team.floracore.common.dependencies.*;
+import team.floracore.common.messaging.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
+import team.floracore.plugin.config.*;
+import team.floracore.plugin.listener.*;
+import team.floracore.plugin.messaging.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Stream;
+import java.util.*;
+import java.util.stream.*;
 
 /**
  * FloraCore implementation for the Bukkit API.
  */
 public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private final FCBukkitBootstrap bootstrap;
+    private final ListenerManager listenerManager;
+    private BukkitSenderFactory senderFactory;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
+        this.listenerManager = new ListenerManager(this);
     }
 
     private static boolean classExists(String className) {
@@ -60,10 +63,35 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         return this.bootstrap;
     }
 
+    public JavaPlugin getLoader() {
+        return this.bootstrap.getLoader();
+    }
+
+    public ListenerManager getListenerManager() {
+        return listenerManager;
+    }
+
+    public String getServerName() {
+        return getConfiguration().get(PaperConfigKeys.SERVER_NAME);
+    }
+
+    @Override
+    protected ConfigurationAdapter provideConfigurationAdapter() {
+        return new BukkitConfigAdapter(this, resolveConfig("config.yml").toFile());
+    }
+
+    @Override
+    protected void setupSenderFactory() {
+        this.senderFactory = new BukkitSenderFactory(this);
+    }
+
     @Override
     public Stream<Sender> getOnlineSenders() {
         List<Player> players = new ArrayList<>(this.bootstrap.getServer().getOnlinePlayers());
-        return Stream.concat(Stream.of(getConsoleSender()), players.stream().map(p -> getSenderFactory().wrap(p)));
+        return Stream.concat(
+                Stream.of(getConsoleSender()),
+                players.stream().map(p -> getSenderFactory().wrap(p))
+        );
     }
 
     @Override
@@ -71,12 +99,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         return getSenderFactory().wrap(this.bootstrap.getConsole());
     }
 
-    public JavaPlugin getLoader() {
-        return this.bootstrap.getLoader();
-    }
-
-    @Override
-    protected ConfigurationAdapter provideConfigurationAdapter() {
-        return new BukkitConfigAdapter(this, resolveConfig("config.yml").toFile());
+    public BukkitSenderFactory getSenderFactory() {
+        return this.senderFactory;
     }
 }

@@ -1,41 +1,26 @@
 package team.floracore.common.plugin;
 
-import com.comphenix.protocol.*;
-import net.kyori.adventure.platform.bukkit.*;
 import okhttp3.*;
-import org.bukkit.*;
-import org.bukkit.plugin.*;
-import org.floracore.api.server.*;
 import team.floracore.common.api.*;
-import team.floracore.common.command.*;
 import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.extension.*;
-import team.floracore.common.inevntory.*;
-import team.floracore.common.listener.*;
 import team.floracore.common.locale.data.*;
-import team.floracore.common.locale.data.chat.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.messaging.*;
-import team.floracore.common.plugin.logging.PluginLogger;
-import team.floracore.common.sender.*;
+import team.floracore.common.plugin.logging.*;
 import team.floracore.common.storage.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
-import team.floracore.common.util.*;
 import team.floracore.common.util.github.*;
 
 import java.io.*;
 import java.nio.file.*;
-import java.sql.*;
 import java.time.*;
 import java.util.*;
 import java.util.concurrent.*;
-import java.util.stream.*;
 
 public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
-    private static InventoryManager inventoryManager;
     // Active plugins on the server
     private final Map<String, List<String>> loadedPlugins = new HashMap<>();
     // init during load
@@ -48,20 +33,9 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private Storage storage;
     private InternalMessagingService messagingService = null;
     private SimpleExtensionManager extensionManager;
-    private BukkitAudiences bukkitAudiences;
-    private CommandManager commandManager;
-    private ListenerManager listenerManager;
     private OkHttpClient httpClient;
     private TranslationRepository translationRepository;
     private NamesRepository namesRepository;
-    private BukkitSenderFactory senderFactory;
-    private ProtocolManager protocolManager;
-    private ChatManager chatManager;
-    private BungeeUtil bungeeUtil;
-
-    public static InventoryManager getInventoryManager() {
-        return inventoryManager;
-    }
 
     /**
      * Performs the initial actions to load the plugin
@@ -81,11 +55,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     public final void onEnable() {
-        this.bungeeUtil = new BungeeUtil(this);
-        this.bukkitAudiences = BukkitAudiences.create(getBootstrap().getPlugin());
-
         // load the sender factory instance
-        this.senderFactory = new BukkitSenderFactory(this);
+        setupSenderFactory();
 
         // send the startup banner
         MiscMessage.STARTUP_BANNER.send(getConsoleSender(), getBootstrap());
@@ -132,30 +103,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // initialise storage
         this.storage = storageFactory.getInstance();
         this.messagingService = provideMessagingFactory().getInstance();
-        Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getPlugin(), () -> {
-            SERVER server = storage.getImplementation().selectServer(getServerName());
-            if (server == null) {
-                ServerType serverType = configuration.get(ConfigKeys.SERVER_TYPE);
-                server = new SERVER(this, storage.getImplementation(), -1, getServerName(), serverType, serverType.isAutoSync1(), serverType.isAutoSync2(), System.currentTimeMillis());
-                try {
-                    server.init();
-                } catch (SQLException e) {
-                    throw new RuntimeException("服务器数据初始化失败！");
-                }
-            } else {
-                server.setLastActiveTime(System.currentTimeMillis());
-            }
-        }, 0, 20 * 60 * 10);
-
-        getLogger().info("Loading framework...");
-        protocolManager = ProtocolLibrary.getProtocolManager();
-        this.listenerManager = new ListenerManager(this);
-        this.commandManager = new CommandManager(this);
-        this.chatManager = new ChatManager(this);
-
-        getLogger().info("Loading inventory manager...");
-        inventoryManager = new InventoryManager(getBootstrap().getPlugin());
-        inventoryManager.init();
 
         // register with the FC API
         this.apiProvider = new FloraCoreApiProvider(this);
@@ -166,11 +113,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.extensionManager = new SimpleExtensionManager(this);
         this.extensionManager.loadExtensions(getBootstrap().getConfigDirectory().resolve("extensions"));
 
-        // Cache loaded plugins
-        getBootstrap().getScheduler().async().execute(() -> Stream.of(Bukkit.getPluginManager().getPlugins())
-                .filter(Plugin::isEnabled)
-                .forEach(currentPlugin -> loadedPlugins.put(currentPlugin.getName(), currentPlugin.getDescription().getAuthors())));
-
         Duration timeTaken = Duration.between(getBootstrap().getStartupTime(), Instant.now());
         getLogger().info("Successfully enabled. (took " + timeTaken.toMillis() + "ms)");
     }
@@ -180,8 +122,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // cancel delayed/repeating tasks
         getBootstrap().getScheduler().shutdownScheduler();
-
-        getChatManager().shutdown();
 
         // close messaging service
         if (this.messagingService != null) {
@@ -212,6 +152,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     protected abstract ConfigurationAdapter provideConfigurationAdapter();
+
+    protected abstract void setupSenderFactory();
 
     protected Path resolveConfig(String fileName) {
         Path configFile = getBootstrap().getConfigDirectory().resolve(fileName);
@@ -276,33 +218,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     @Override
-    public CommandManager getCommandManager() {
-        return this.commandManager;
-    }
-
-    @Override
-    public BukkitAudiences getBukkitAudiences() {
-        return this.bukkitAudiences;
-    }
-
-    @Override
-    public ProtocolManager getProtocolManager() {
-        return protocolManager;
-    }
-
-    @Override
-    public BukkitSenderFactory getSenderFactory() {
-        return senderFactory;
-    }
-
-    @Override
     public FloraCoreConfiguration getConfiguration() {
         return this.configuration;
-    }
-
-    @Override
-    public ListenerManager getListenerManager() {
-        return this.listenerManager;
     }
 
     @Override
@@ -352,23 +269,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     @Override
-    public String getServerName() {
-        return configuration.get(ConfigKeys.SERVER_NAME);
-    }
-
-    @Override
     public DataManager getDataManager() {
         return dataManager;
-    }
-
-    @Override
-    public ChatManager getChatManager() {
-        return chatManager;
-    }
-
-    @Override
-    public BungeeUtil getBungeeUtil() {
-        return bungeeUtil;
     }
 
     @Override

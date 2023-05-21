@@ -1,13 +1,11 @@
 package org.floracore.api;
 
-import org.bukkit.plugin.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.floracore.api.messaging.*;
 import org.floracore.api.messenger.*;
 import org.floracore.api.player.*;
-import org.floracore.api.server.*;
 
 import java.util.*;
 
@@ -42,13 +40,6 @@ public interface FloraCore {
      * @return the server name
      */
     String getServerName();
-
-    /**
-     * 获取服务器的类型
-     *
-     * @return 服务器的类型
-     */
-    ServerType getServerType();
 
     /**
      * 获取数据API
@@ -93,6 +84,4 @@ public interface FloraCore {
      * @param messengerProvider the messenger provider.
      */
     void registerMessengerProvider(@NonNull MessengerProvider messengerProvider);
-
-    Plugin getPlugin();
 }

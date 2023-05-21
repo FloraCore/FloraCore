@@ -1,32 +1,15 @@
 package team.floracore.common.messaging;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import de.myzelyam.api.vanish.VanishAPI;
-import org.bukkit.Bukkit;
-import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.checkerframework.checker.nullness.qual.NonNull;
-import org.checkerframework.checker.nullness.qual.Nullable;
-import org.floracore.api.event.message.MessageReceiveEvent;
-import org.floracore.api.messenger.IncomingMessageConsumer;
-import org.floracore.api.messenger.Messenger;
-import org.floracore.api.messenger.MessengerProvider;
-import org.floracore.api.messenger.message.Message;
-import org.floracore.api.messenger.message.type.*;
-import team.floracore.common.locale.message.SocialSystemsMessage;
-import team.floracore.common.messaging.message.*;
-import team.floracore.common.plugin.FloraCorePlugin;
-import team.floracore.common.sender.Sender;
-import team.floracore.common.util.ExpiringSet;
-import team.floracore.common.util.gson.GsonProvider;
-import team.floracore.common.util.gson.JObject;
+import com.google.gson.*;
+import org.checkerframework.checker.nullness.qual.*;
+import org.floracore.api.messenger.*;
+import org.floracore.api.messenger.message.*;
+import team.floracore.common.plugin.*;
+import team.floracore.common.util.*;
+import team.floracore.common.util.gson.*;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class FloraCoreMessagingService implements InternalMessagingService, IncomingMessageConsumer {
     private final FloraCorePlugin plugin;
@@ -83,289 +66,6 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         return uuid;
     }
 
-    public boolean dispatchMessageReceiveEvent(org.floracore.api.messenger.message.Message message) {
-        MessageReceiveEvent event = new MessageReceiveEvent(plugin.getApiProvider(), message);
-        Bukkit.getPluginManager().callEvent(event);
-        return !event.isCancelled();
-    }
-
-    @Override
-    public void pushReport(UUID reporter, UUID reportedUser, String reporterServer, String reportedUserServer, String reason) {
-        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
-            UUID requestId = generatePingId();
-            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
-            ReportMessageImpl reportMessage = new ReportMessageImpl(requestId, reporter, reportedUser, reporterServer, reportedUserServer, reason);
-            this.messenger.sendOutgoingMessage(reportMessage);
-            if (dispatchMessageReceiveEvent(reportMessage)) {
-                String player = getPlayerName(reporter);
-                String target = getPlayerName(reportedUser);
-                boolean playerOnlineStatus = isPlayerOnline(reporter);
-                boolean targetOnlineStatus = isPlayerOnline(reportedUser);
-                notifyStaffReport(player, target, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
-            }
-        });
-    }
-
-    @Override
-    public void pushTeleport(UUID sender, UUID recipient, String serverName) {
-        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
-            UUID requestId = generatePingId();
-            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
-            TeleportMessageImpl teleportMessage = new TeleportMessageImpl(requestId, sender, recipient, serverName);
-            this.messenger.sendOutgoingMessage(teleportMessage);
-            /*if (dispatchMessageReceiveEvent(teleportMessage)) {
-
-            }*/
-        });
-    }
-
-    @Override
-    public void pushConnectServer(UUID recipient, String serverName) {
-        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
-            UUID requestId = generatePingId();
-            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
-            ConnectServerMessageImpl connectServerMessage = new ConnectServerMessageImpl(requestId, recipient, serverName);
-            this.messenger.sendOutgoingMessage(connectServerMessage);
-            /*if (dispatchMessageReceiveEvent(connectServerMessage)) {
-
-            }*/
-        });
-    }
-
-    @Override
-    public void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, List<String> parameters) {
-        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
-            UUID requestId = generatePingId();
-            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
-            NoticeMessageImpl noticeMessage = new NoticeMessageImpl(requestId, receiver, type, parameters);
-            this.messenger.sendOutgoingMessage(noticeMessage);
-            if (dispatchMessageReceiveEvent(noticeMessage)) {
-                notice(noticeMessage);
-            }
-        });
-    }
-
-    @Override
-    public void pushChatMessage(UUID receiver, ChatMessage.ChatMessageType type, List<String> parameters) {
-        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
-            UUID requestId = generatePingId();
-            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
-            ChatMessageImpl chatMessage = new ChatMessageImpl(requestId, receiver, type, parameters);
-            this.messenger.sendOutgoingMessage(chatMessage);
-            if (dispatchMessageReceiveEvent(chatMessage)) {
-                chat(chatMessage);
-            }
-        });
-    }
-
-    public void notifyStaffReport(String reporter, String reportedUser, String reporterServer, String reportedUserServer, String reason, boolean playerOnlineStatus, boolean targetOnlineStatus) {
-        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-            if (onlinePlayer.hasPermission("floracore.socialsystems.staff")) {
-                Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_BROADCAST.send(s, reporter, reportedUser, reporterServer, reportedUserServer, reason, playerOnlineStatus, targetOnlineStatus);
-            }
-        }
-    }
-
-    public void chat(ChatMessage chatMsg) {
-        Player player = Bukkit.getPlayer(chatMsg.getReceiver());
-        List<String> parameters = chatMsg.getParameters();
-        switch (chatMsg.getType()) {
-            case STAFF:
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if (onlinePlayer.hasPermission("floracore.chat.staff")) {
-                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        UUID su1 = UUID.fromString(parameters.get(0));
-                        String sn1 = getPlayerName(su1);
-                        String mess = parameters.get(1);
-                        SocialSystemsMessage.COMMAND_MISC_STAFF_CHAT.send(s, sn1, mess);
-                    }
-                }
-                break;
-            case BLOGGER:
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if (onlinePlayer.hasPermission("floracore.chat.blogger")) {
-                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        UUID su1 = UUID.fromString(parameters.get(0));
-                        String sn1 = getPlayerName(su1);
-                        String mess = parameters.get(1);
-                        SocialSystemsMessage.COMMAND_MISC_BLOGGER_CHAT.send(s, sn1, mess);
-                    }
-                }
-                break;
-            case BUILDER:
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if (onlinePlayer.hasPermission("floracore.chat.builder")) {
-                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        UUID su1 = UUID.fromString(parameters.get(0));
-                        String sn1 = getPlayerName(su1);
-                        String mess = parameters.get(1);
-                        SocialSystemsMessage.COMMAND_MISC_BUILDER_CHAT.send(s, sn1, mess);
-                    }
-                }
-                break;
-            case ADMIN:
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if (onlinePlayer.hasPermission("floracore.chat.admin")) {
-                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        UUID su1 = UUID.fromString(parameters.get(0));
-                        String sn1 = getPlayerName(su1);
-                        String mess = parameters.get(1);
-                        SocialSystemsMessage.COMMAND_MISC_ADMIN_CHAT.send(s, sn1, mess);
-                    }
-                }
-                break;
-        }
-        if (player != null) {
-            Sender sender = plugin.getSenderFactory().wrap(player);
-            switch (chatMsg.getType()) {
-                case PARTY:
-                    UUID su1 = UUID.fromString(parameters.get(0));
-                    String sn1 = getPlayerName(su1);
-                    String mess = parameters.get(1);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_CHAT.send(sender, sn1, mess);
-                    break;
-            }
-        }
-    }
-
-    public void notice(NoticeMessage noticeMsg) {
-        Player player = Bukkit.getPlayer(noticeMsg.getReceiver());
-        List<String> parameters = noticeMsg.getParameters();
-        switch (noticeMsg.getType()) {
-            case REPORT_STAFF_ACCEPTED:
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if (onlinePlayer.hasPermission("floracore.report.staff")) {
-                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_ACCEPTED.send(s, parameters.get(0), parameters.get(1));
-                    }
-                }
-                break;
-            case REPORT_STAFF_PROCESSED:
-                for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                    if (onlinePlayer.hasPermission("floracore.report.staff")) {
-                        Sender s = plugin.getSenderFactory().wrap(onlinePlayer);
-                        team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_STAFF_PROCESSED.send(s, parameters.get(0), parameters.get(1));
-                    }
-                }
-                break;
-        }
-        if (player != null) {
-            Sender sender = plugin.getSenderFactory().wrap(player);
-            switch (noticeMsg.getType()) {
-                case REPORT_ACCEPTED:
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters.get(0));
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
-                    break;
-                case REPORT_PROCESSED:
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters.get(0));
-                    team.floracore.common.locale.message.Message.COMMAND_MISC_REPORT_THANKS.send(sender);
-                    break;
-                case PARTY_ACCEPT:
-                    UUID su1 = UUID.fromString(parameters.get(0));
-                    String sn1 = getPlayerName(su1);
-                    UUID pu = UUID.fromString(parameters.get(1));
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_ACCEPT.send(sender, sn1, pu);
-                    break;
-                case PARTY_INVITE:
-                    UUID su = UUID.fromString(parameters.get(0));
-                    UUID tu1 = UUID.fromString(parameters.get(1));
-                    String sn = getPlayerName(su);
-                    String tn = getPlayerName(tu1);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE.send(sender, sn, tn);
-                    break;
-                case PARTY_INVITE_EXPIRED:
-                    UUID tu2 = UUID.fromString(parameters.get(0));
-                    String target = getPlayerName(tu2);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_EXPIRED.send(sender, target);
-                    break;
-                case PARTY_DISBAND:
-                    UUID s = UUID.fromString(parameters.get(0));
-                    String sn2 = getPlayerName(s);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_DISBAND.send(sender, sn2);
-                    break;
-                case PARTY_JOINED:
-                    UUID s1 = UUID.fromString(parameters.get(0));
-                    String sn3 = getPlayerName(s1);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_JOIN.send(sender, sn3);
-                    break;
-                case PARTY_KICK:
-                    UUID s3 = UUID.fromString(parameters.get(0));
-                    String sn4 = getPlayerName(s3);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_KICK.send(sender, sn4);
-                    break;
-                case PARTY_BE_KICKED:
-                    UUID s4 = UUID.fromString(parameters.get(0));
-                    String sn5 = getPlayerName(s4);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_BE_KICKED.send(sender, sn5);
-                    break;
-                case PARTY_LEAVE:
-                    UUID s5 = UUID.fromString(parameters.get(0));
-                    String sn6 = getPlayerName(s5);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_LEAVE.send(sender, sn6);
-                    break;
-                case PARTY_PROMOTE_LEADER:
-                    UUID s6 = UUID.fromString(parameters.get(0));
-                    UUID s7 = UUID.fromString(parameters.get(1));
-                    String sn7 = getPlayerName(s6);
-                    String sn8 = getPlayerName(s7);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_PROMOTE_LEADER.send(sender, sn7, sn8);
-                    break;
-                case PARTY_WARP_LEADER:
-                    UUID s8 = UUID.fromString(parameters.get(0));
-                    String sn9 = getPlayerName(s8);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_LEADER.send(sender, sn9);
-                    break;
-                case PARTY_WARP_MODERATOR:
-                    UUID s9 = UUID.fromString(parameters.get(0));
-                    String sn10 = getPlayerName(s9);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_MODERATOR.send(sender, sn10);
-                    break;
-                case PARTY_OFFLINE_LEADER:
-                    UUID s10 = UUID.fromString(parameters.get(0));
-                    String sn11 = getPlayerName(s10);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_OFFLINE_LEADER.send(sender, sn11);
-                    break;
-                case PARTY_OFFLINE:
-                    UUID s11 = UUID.fromString(parameters.get(0));
-                    String sn12 = getPlayerName(s11);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_OFFLINE.send(sender, sn12);
-                    break;
-                case PARTY_OFFLINE_KICK:
-                    UUID s12 = UUID.fromString(parameters.get(0));
-                    String sn13 = getPlayerName(s12);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_OFFLINE_KICK.send(sender, sn13);
-                    break;
-                case PARTY_OFFLINE_TRANSFER:
-                    UUID s13 = UUID.fromString(parameters.get(0));
-                    String sn14 = getPlayerName(s13);
-                    UUID s14 = UUID.fromString(parameters.get(1));
-                    String sn15 = getPlayerName(s14);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_OFFLINE_TRANSFER.send(sender, sn14, sn15);
-                    break;
-                case PARTY_DEMOTE:
-                    UUID s15 = UUID.fromString(parameters.get(0));
-                    String sn16 = getPlayerName(s15);
-                    UUID s16 = UUID.fromString(parameters.get(1));
-                    String sn17 = getPlayerName(s16);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_DEMOTE.send(sender, sn16, sn17);
-                    break;
-                case PARTY_PROMOTE_MODERATOR:
-                    UUID s17 = UUID.fromString(parameters.get(0));
-                    String sn18 = getPlayerName(s17);
-                    UUID s18 = UUID.fromString(parameters.get(1));
-                    String sn19 = getPlayerName(s18);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_PROMOTE_MODERATOR.send(sender, sn18, sn19);
-                    break;
-                case PARTY_OFFLINE_RE_ONLINE:
-                    UUID s19 = UUID.fromString(parameters.get(0));
-                    String sn20 = getPlayerName(s19);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_OFFLINE_RE_ONLINE.send(sender, sn20);
-                    break;
-            }
-        }
-    }
-
     @Override
     public boolean consumeIncomingMessage(@NonNull Message message) {
         Objects.requireNonNull(message, "message");
@@ -374,14 +74,14 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         }
 
         // determine if the message can be handled by us
-        boolean valid = message instanceof ReportMessage;
+        //boolean valid = message instanceof;
 
         // instead of throwing an exception here, just return false
         // it means an instance of LP can gracefully handle messages it doesn't
         // "understand" yet. (sent from an instance running a newer version, etc)
-        if (!valid) {
-            return false;
-        }
+        //if (!valid) {
+        //    return false;
+        //}
 
         processIncomingMessage(message);
         return true;
@@ -427,21 +127,6 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         // decode message
         org.floracore.api.messenger.message.Message decoded;
         switch (type) {
-            case ReportMessageImpl.TYPE:
-                decoded = ReportMessageImpl.decode(content, id);
-                break;
-            case NoticeMessageImpl.TYPE:
-                decoded = NoticeMessageImpl.decode(content, id);
-                break;
-            case TeleportMessageImpl.TYPE:
-                decoded = TeleportMessageImpl.decode(content, id);
-                break;
-            case ChatMessageImpl.TYPE:
-                decoded = ChatMessageImpl.decode(content, id);
-                break;
-            case ConnectServerMessageImpl.TYPE:
-                decoded = ConnectServerMessageImpl.decode(content, id);
-                break;
             default:
                 // gracefully return if we just don't recognise the type
                 return false;
@@ -449,12 +134,12 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         }
 
         // consume the message
-        processIncomingMessage(decoded);
-        return true;
+        //processIncomingMessage(decoded);
+        //return true;
     }
 
     private void processIncomingMessage(org.floracore.api.messenger.message.Message message) {
-        if (!dispatchMessageReceiveEvent(message)) {
+        /*if (!dispatchMessageReceiveEvent(message)) {
             return;
         }
 
@@ -521,9 +206,9 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                     plugin.getBungeeUtil().connect(rp, serverName);
                 }
             }
-        } else {
+        } else {*/
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
-        }
+        // }
     }
 
     private String getPlayerName(UUID uuid) {

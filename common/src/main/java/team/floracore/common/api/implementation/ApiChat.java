@@ -4,7 +4,6 @@ import com.github.benmanes.caffeine.cache.*;
 import com.google.gson.reflect.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
-import team.floracore.common.locale.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 import team.floracore.common.util.gson.*;
@@ -16,14 +15,12 @@ import java.util.stream.*;
 
 public class ApiChat implements ChatAPI {
     private final FloraCorePlugin plugin;
-    private final ChatManager chatManager;
     AsyncCache<UUID, List<DATA>> chatDataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     AsyncCache<UUID, List<DATA>> partyDataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     AsyncCache<UUID, PARTY> partyCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
 
     public ApiChat(FloraCorePlugin plugin) {
         this.plugin = plugin;
-        this.chatManager = plugin.getChatManager();
     }
 
     public FloraCorePlugin getPlugin() {
@@ -46,11 +43,6 @@ public class ApiChat implements ChatAPI {
         CompletableFuture<PARTY> data = partyCache.get(uuid, u -> plugin.getStorage().getImplementation().selectParty(u));
         partyCache.put(uuid, data);
         return data.join();
-    }
-
-    @Override
-    public UUID getPlayerChatUUID(UUID uuid) {
-        return chatManager.getPlayerChatUUID(uuid);
     }
 
     @Override
