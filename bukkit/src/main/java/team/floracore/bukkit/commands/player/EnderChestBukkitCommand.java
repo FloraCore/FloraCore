@@ -21,13 +21,13 @@ import java.util.*;
  */
 @CommandDescription("打开末影箱")
 @CommandPermission("floracore.command.enderchest")
-public class EnderChestCommand extends AbstractFloraCoreCommand implements Listener {
+public class EnderChestBukkitCommand extends FloraCoreBukkitCommand implements Listener {
     /**
      * 对应玩家禁止修改的内容
      */
     public static final Map<UUID, Inventory> READONLY_MAP = new HashMap<>();
 
-    public EnderChestCommand(FCBukkitPlugin plugin) {
+    public EnderChestBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
         plugin.getListenerManager().registerListener(this);
     }

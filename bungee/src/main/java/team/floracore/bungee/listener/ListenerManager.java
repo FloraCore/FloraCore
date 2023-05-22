@@ -1,28 +1,27 @@
-package team.floracore.bukkit.listener;
+package team.floracore.bungee.listener;
 
-import org.bukkit.event.*;
-import org.bukkit.plugin.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.listeners.*;
+import net.md_5.bungee.api.plugin.*;
+import team.floracore.bungee.*;
+import team.floracore.bungee.listeners.*;
 import team.floracore.common.plugin.*;
 
 public class ListenerManager {
-    private final FCBukkitPlugin plugin;
+    private final FCBungeePlugin plugin;
 
-    public ListenerManager(FCBukkitPlugin plugin) {
+    public ListenerManager(FCBungeePlugin plugin) {
         this.plugin = plugin;
         // Create the Listeners
         this.constructListeners();
     }
 
     public PluginManager getPluginManager() {
-        return plugin.getBootstrap().getServer().getPluginManager();
+        return plugin.getBootstrap().getProxy().getPluginManager();
     }
 
     private void constructListeners() {
         PluginManager pm = getPluginManager();
         Plugin p = plugin.getBootstrap().getLoader();
-        pm.registerEvents(new PlayerListener(plugin), p);
+        pm.registerListener(p, new PlayerListener(plugin));
     }
 
     public FloraCorePlugin getPlugin() {
@@ -32,6 +31,6 @@ public class ListenerManager {
     public void registerListener(Listener listener) {
         PluginManager pm = getPluginManager();
         Plugin p = plugin.getBootstrap().getLoader();
-        pm.registerEvents(listener, p);
+        pm.registerListener(p, listener);
     }
 }

@@ -19,8 +19,8 @@ import java.util.*;
  */
 @CommandDescription("检查玩家是否拥有目标权限")
 @CommandPermission("floracore.command.haspermission")
-public class HasPermissionCommand extends AbstractFloraCoreCommand {
-    public HasPermissionCommand(FCBukkitPlugin plugin) {
+public class HasPermissionBukkitCommand extends FloraCoreBukkitCommand {
+    public HasPermissionBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

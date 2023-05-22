@@ -15,8 +15,8 @@ import team.floracore.common.util.*;
  */
 @CommandDescription("获取或设置氧气值")
 @CommandPermission("floracore.command.air")
-public class AirCommand extends AbstractFloraCoreCommand {
-    public AirCommand(FCBukkitPlugin plugin) {
+public class AirBukkitCommand extends FloraCoreBukkitCommand {
+    public AirBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

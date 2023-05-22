@@ -1,15 +1,19 @@
 package team.floracore.bukkit;
 
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.plugin.java.*;
+import org.floracore.api.server.*;
 import team.floracore.bukkit.command.*;
-import team.floracore.bukkit.config.*;
 import team.floracore.bukkit.listener.*;
+import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
+import team.floracore.common.storage.misc.floracore.tables.*;
 
+import java.sql.*;
 import java.util.*;
 import java.util.stream.*;
 
@@ -66,11 +70,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
-    public String getServerName() {
-        return getConfiguration().get(PaperConfigKeys.SERVER_NAME);
-    }
-
-    @Override
     protected ConfigurationAdapter provideConfigurationAdapter() {
         return new BukkitConfigAdapter(this, resolveConfig("config.yml").toFile());
     }
@@ -82,6 +81,22 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     @Override
     protected void setupFramework() {
+        Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getLoader(), () -> {
+            SERVER server = getStorage().getImplementation().selectServer(getServerName());
+            System.out.println(getServerName());
+            if (server == null) {
+                ServerType serverType = getConfiguration().get(ConfigKeys.SERVER_TYPE);
+                server = new SERVER(this, getStorage().getImplementation(), -1, getServerName(), serverType, serverType.isAutoSync1(), serverType.isAutoSync2(), System.currentTimeMillis());
+                try {
+                    server.init();
+                } catch (SQLException e) {
+                    throw new RuntimeException();
+                }
+            } else {
+                server.setLastActiveTime(System.currentTimeMillis());
+            }
+        }, 0, 20 * 60 * 10);
+
         this.listenerManager = new ListenerManager(this);
         this.commandManager = new CommandManager(this);
     }

@@ -1,10 +1,9 @@
-package team.floracore.bukkit.listeners;
+package team.floracore.bungee.listeners;
 
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.bukkit.event.player.*;
-import org.floracore.api.data.*;
-import team.floracore.bukkit.listener.*;
+import net.md_5.bungee.api.connection.*;
+import net.md_5.bungee.api.event.*;
+import net.md_5.bungee.event.*;
+import team.floracore.bungee.listener.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -12,16 +11,17 @@ import team.floracore.common.storage.misc.floracore.tables.*;
 import java.sql.*;
 import java.util.*;
 
-public class PlayerListener extends FloraCoreBukkitListener {
+public class PlayerListener extends FloraCoreBungeeListener {
     public PlayerListener(FloraCorePlugin plugin) {
         super(plugin);
     }
 
     @EventHandler
-    public void onLogin(AsyncPlayerPreLoginEvent e) {
-        UUID u = e.getUniqueId();
-        String name = e.getName();
-        String ip = e.getAddress().getHostAddress();
+    public void onLogin(PostLoginEvent e) {
+        ProxiedPlayer player = e.getPlayer();
+        UUID u = player.getUniqueId();
+        String name = player.getName();
+        String ip = player.getSocketAddress().toString();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         // 初始化玩家数据
         PLAYER p = storageImplementation.selectPlayer(u);
@@ -38,13 +38,12 @@ public class PlayerListener extends FloraCoreBukkitListener {
             long currentTime = System.currentTimeMillis();
             p.setLastLoginTime(currentTime);
         }
-        // 清除过期数据
         storageImplementation.deleteDataExpired(u);
     }
 
     @EventHandler
-    public void onJoin(PlayerJoinEvent e) {
-        Player p = e.getPlayer();
+    public void onJoin(PostLoginEvent e) {
+        ProxiedPlayer p = e.getPlayer();
         UUID uuid = p.getUniqueId();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         getPlugin().getBootstrap().getScheduler().async().execute(() -> {
@@ -55,13 +54,12 @@ public class PlayerListener extends FloraCoreBukkitListener {
                 online.setServerName(getPlugin().getServerName());
                 online.setStatusTrue();
             }
-            storageImplementation.insertData(uuid, DataType.FUNCTION, "server-status", getPlugin().getServerName(), 0);
         });
     }
 
     @EventHandler
-    public void onQuit(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
+    public void onQuit(PlayerDisconnectEvent e) {
+        ProxiedPlayer p = e.getPlayer();
         UUID uuid = p.getUniqueId();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
         getPlugin().getBootstrap().getScheduler().async().execute(() -> {

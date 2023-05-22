@@ -1,9 +1,8 @@
-package team.floracore.bukkit.listener;
+package team.floracore.common.listener;
 
-import org.bukkit.event.*;
 import team.floracore.common.plugin.*;
 
-public abstract class AbstractFloraCoreListener implements FloraCoreListener, Listener {
+public abstract class AbstractFloraCoreListener implements FloraCoreListener {
     private final FloraCorePlugin plugin;
 
     public AbstractFloraCoreListener(FloraCorePlugin plugin) {

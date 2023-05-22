@@ -15,8 +15,8 @@ import team.floracore.common.util.*;
  */
 @CommandDescription("设置玩家着火时间")
 @CommandPermission("floracore.command.firetick")
-public class FireTickCommand extends AbstractFloraCoreCommand {
-    public FireTickCommand(FCBukkitPlugin plugin) {
+public class FireTickBukkitCommand extends FloraCoreBukkitCommand {
+    public FireTickBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

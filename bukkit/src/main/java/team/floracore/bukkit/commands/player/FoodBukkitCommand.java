@@ -15,8 +15,8 @@ import team.floracore.common.util.*;
  */
 @CommandDescription("设置玩家的饥饿度")
 @CommandPermission("floracore.command.food")
-public class FoodCommand extends AbstractFloraCoreCommand {
-    public FoodCommand(FCBukkitPlugin plugin) {
+public class FoodBukkitCommand extends FloraCoreBukkitCommand {
+    public FoodBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

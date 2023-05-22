@@ -16,8 +16,8 @@ import java.util.*;
  */
 @CommandDescription("列出本服所有拥有OP权限的玩家")
 @CommandPermission("floracore.command.oplist")
-public class OPListCommand extends AbstractFloraCoreCommand {
-    public OPListCommand(FCBukkitPlugin plugin) {
+public class OPListBukkitCommand extends FloraCoreBukkitCommand {
+    public OPListBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

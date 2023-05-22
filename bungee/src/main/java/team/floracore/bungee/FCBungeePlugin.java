@@ -1,7 +1,7 @@
 package team.floracore.bungee;
 
 import net.md_5.bungee.api.plugin.*;
-import team.floracore.bungee.config.*;
+import team.floracore.bungee.listener.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.plugin.*;
@@ -16,6 +16,7 @@ import java.util.stream.*;
 public class FCBungeePlugin extends AbstractFloraCorePlugin {
     private final FCBungeeBootstrap bootstrap;
     private BungeeSenderFactory senderFactory;
+    private ListenerManager listenerManager;
 
     public FCBungeePlugin(FCBungeeBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -49,6 +50,10 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
         return this.bootstrap.getLoader();
     }
 
+    public ListenerManager getListenerManager() {
+        return listenerManager;
+    }
+
     @Override
     protected ConfigurationAdapter provideConfigurationAdapter() {
         return new BungeeConfigAdapter(this, resolveConfig("config.yml").toFile());
@@ -61,7 +66,7 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 
     @Override
     protected void setupFramework() {
-
+        this.listenerManager = new ListenerManager(this);
     }
 
     @Override
@@ -75,11 +80,6 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     @Override
     public Sender getConsoleSender() {
         return this.senderFactory.wrap(this.bootstrap.getProxy().getConsole());
-    }
-
-    @Override
-    public String getServerName() {
-        return getConfiguration().get(WaterfallConfigKeys.SERVER_NAME);
     }
 
     public BungeeSenderFactory getSenderFactory() {

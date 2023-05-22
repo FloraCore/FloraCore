@@ -13,8 +13,8 @@ import team.floracore.bukkit.locale.message.commands.*;
  */
 @CommandPermission("floracore.command.feed")
 @CommandDescription("喂饱一名玩家")
-public class FeedCommand extends AbstractFloraCoreCommand {
-    public FeedCommand(FCBukkitPlugin plugin) {
+public class FeedBukkitCommand extends FloraCoreBukkitCommand {
+    public FeedBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

@@ -24,8 +24,8 @@ import java.util.*;
  */
 @CommandPermission("floracore.command.time")
 @CommandDescription("世界时间设置和显示")
-public class TimeCommand extends AbstractFloraCoreCommand {
-    public TimeCommand(FCBukkitPlugin plugin) {
+public class TimeBukkitCommand extends FloraCoreBukkitCommand {
+    public TimeBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

@@ -16,6 +16,7 @@ public enum ServerType {
      * 游戏类型
      */
     GAME("game", false, true),
+    BUNGEECORD("bungeecord", false, false),
     /**
      * 未知的类型
      */

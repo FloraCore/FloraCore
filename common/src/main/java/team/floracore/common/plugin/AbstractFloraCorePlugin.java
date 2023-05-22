@@ -207,6 +207,11 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     }
 
     @Override
+    public String getServerName() {
+        return getConfiguration().get(ConfigKeys.SERVER_NAME);
+    }
+
+    @Override
     public TranslationRepository getTranslationRepository() {
         return this.translationRepository;
     }

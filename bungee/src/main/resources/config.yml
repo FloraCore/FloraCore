@@ -116,6 +116,8 @@ messaging-service: auto
 # 如果FloraCore应该自动安装翻译包并定期更新它们。
 auto-install-translations: true
 
-server-name: Waterfall
+server:
+  name: "global"
+  type: "bungeecord"
 
 check-update: true

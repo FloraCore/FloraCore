@@ -16,8 +16,8 @@ import java.util.*;
  */
 @CommandPermission("floracore.command.realname")
 @CommandDescription("获取指定玩家的真实昵称")
-public class RealNameCommand extends AbstractFloraCoreCommand {
-    public RealNameCommand(FCBukkitPlugin plugin) {
+public class RealNameBukkitCommand extends FloraCoreBukkitCommand {
+    public RealNameBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

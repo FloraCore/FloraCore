@@ -8,8 +8,8 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
-import team.floracore.bukkit.config.*;
 import team.floracore.bukkit.locale.message.commands.*;
+import team.floracore.common.config.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.sender.*;
 
@@ -21,8 +21,8 @@ import java.util.*;
  */
 @CommandPermission("floracore.command.speed")
 @CommandDescription("设置玩家的指定类型的速度")
-public class SpeedCommand extends AbstractFloraCoreCommand {
-    public SpeedCommand(FCBukkitPlugin plugin) {
+public class SpeedBukkitCommand extends FloraCoreBukkitCommand {
+    public SpeedBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
@@ -77,7 +77,7 @@ public class SpeedCommand extends AbstractFloraCoreCommand {
         final float defaultSpeed = speedType == SpeedType.FLY ? 0.1f : 0.2f;
         float maxSpeed = 1f;
         if (!isBypass) {
-            maxSpeed = (speedType == SpeedType.FLY ? getPlugin().getConfiguration().get(PaperConfigKeys.SPEED_MAX_FLY_SPEED) : getPlugin().getConfiguration().get(PaperConfigKeys.SPEED_MAX_WALK_SPEED)).floatValue();
+            maxSpeed = (speedType == SpeedType.FLY ? getPlugin().getConfiguration().get(ConfigKeys.SPEED_MAX_FLY_SPEED) : getPlugin().getConfiguration().get(ConfigKeys.SPEED_MAX_WALK_SPEED)).floatValue();
         }
 
         if (userSpeed < 1f) {

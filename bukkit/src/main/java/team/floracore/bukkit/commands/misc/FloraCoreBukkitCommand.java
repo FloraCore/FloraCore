@@ -14,7 +14,6 @@ import org.floracore.api.data.*;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
-import team.floracore.bukkit.command.*;
 import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.http.*;
 import team.floracore.common.locale.message.*;
@@ -35,11 +34,11 @@ import java.util.stream.*;
 @CommandContainer
 @CommandPermission("floracore.admin")
 @CommandDescription("FloraCore插件的主命令")
-public class FloraCoreCommand extends AbstractFloraCoreCommand {
+public class FloraCoreBukkitCommand extends team.floracore.bukkit.command.FloraCoreBukkitCommand {
     private final AsyncCache<UUID, List<DATA>> dataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     private final AsyncCache<String, UUID> uuidCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
 
-    public FloraCoreCommand(FCBukkitPlugin plugin) {
+    public FloraCoreBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
