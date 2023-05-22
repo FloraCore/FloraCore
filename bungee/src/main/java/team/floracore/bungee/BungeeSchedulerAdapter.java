@@ -1,4 +1,4 @@
-package team.floracore.waterfall;
+package team.floracore.bungee;
 
 import net.md_5.bungee.api.scheduler.*;
 import team.floracore.common.plugin.scheduler.*;

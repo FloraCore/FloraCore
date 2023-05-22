@@ -1,4 +1,4 @@
-package team.floracore.waterfall.config;
+package team.floracore.bungee.config;
 
 import team.floracore.common.config.generic.*;
 import team.floracore.common.config.generic.key.*;

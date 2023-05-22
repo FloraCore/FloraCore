@@ -2,5 +2,5 @@ name: FloraCore
 version: ${version}
 description: A basic plugin with rich functions
 website: https://github.com/FloraCore/FloraCore
-main: team.floracore.waterfall.loader.WaterfallLoaderPlugin
+main: team.floracore.bungee.loader.BungeeLoaderPlugin
 softDepends: [ "RedisBungee" ]

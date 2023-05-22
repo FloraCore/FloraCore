@@ -1,4 +1,4 @@
-package team.floracore.waterfall;
+package team.floracore.bungee;
 
 import net.md_5.bungee.config.*;
 import team.floracore.common.config.generic.adapter.*;

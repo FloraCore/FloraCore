@@ -14,6 +14,7 @@ repositories {
 dependencies {
     implementation project(':common')
     compileOnly project(':common:loader-utils')
+    compileOnly fileTree(dir: '../libs', includes: ['*jar'])
     compileOnly fileTree(dir: './libs', includes: ['*jar'])
 
     compileOnly 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
@@ -25,7 +26,7 @@ dependencies {
 
 
 shadowJar {
-    archiveFileName = 'floracore-waterfall.jarinjar'
+    archiveFileName = 'floracore-bungee.jarinjar'
 
     dependencies {
         include(dependency('team.floracore:.*'))

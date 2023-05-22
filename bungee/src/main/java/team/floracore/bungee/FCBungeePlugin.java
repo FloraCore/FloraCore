@@ -1,11 +1,11 @@
-package team.floracore.waterfall;
+package team.floracore.bungee;
 
 import net.md_5.bungee.api.plugin.*;
+import team.floracore.bungee.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
-import team.floracore.waterfall.config.*;
 
 import java.util.*;
 import java.util.stream.*;

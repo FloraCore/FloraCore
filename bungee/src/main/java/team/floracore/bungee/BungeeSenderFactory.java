@@ -1,4 +1,4 @@
-package team.floracore.waterfall;
+package team.floracore.bungee;
 
 import net.kyori.adventure.platform.bungeecord.*;
 import net.kyori.adventure.text.*;

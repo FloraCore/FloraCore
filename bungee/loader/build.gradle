@@ -26,10 +26,10 @@ processResources {
 }
 
 shadowJar {
-    archiveFileName = "FloraCore-Waterfall-${rootProject.version}.jar"
+    archiveFileName = "FloraCore-Bungee-${rootProject.version}.jar"
 
     from {
-        project(':waterfall').tasks.shadowJar.archiveFile
+        project(':bungee').tasks.shadowJar.archiveFile
     }
 }
 

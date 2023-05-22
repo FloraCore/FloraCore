@@ -1,15 +1,15 @@
-package team.floracore.waterfall.loader;
+package team.floracore.bungee.loader;
 
 import net.md_5.bungee.api.plugin.*;
 import team.floracore.common.loader.*;
 
-public class WaterfallLoaderPlugin extends Plugin {
-    private static final String JAR_NAME = "floracore-waterfall.jarinjar";
-    private static final String BOOTSTRAP_CLASS = "team.floracore.waterfall.FCBungeeBootstrap";
+public class BungeeLoaderPlugin extends Plugin {
+    private static final String JAR_NAME = "floracore-bungee.jarinjar";
+    private static final String BOOTSTRAP_CLASS = "team.floracore.bungee.FCBungeeBootstrap";
 
     private final LoaderBootstrap plugin;
 
-    public WaterfallLoaderPlugin() {
+    public BungeeLoaderPlugin() {
         JarInJarClassLoader loader = new JarInJarClassLoader(getClass().getClassLoader(), JAR_NAME);
         this.plugin = loader.instantiatePlugin(BOOTSTRAP_CLASS, Plugin.class, this);
     }
