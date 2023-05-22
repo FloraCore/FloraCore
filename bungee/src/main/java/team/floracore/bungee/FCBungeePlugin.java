@@ -1,6 +1,7 @@
 package team.floracore.bungee;
 
 import net.md_5.bungee.api.plugin.*;
+import team.floracore.bungee.command.*;
 import team.floracore.bungee.listener.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
@@ -17,6 +18,7 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     private final FCBungeeBootstrap bootstrap;
     private BungeeSenderFactory senderFactory;
     private ListenerManager listenerManager;
+    private CommandManager commandManager;
 
     public FCBungeePlugin(FCBungeeBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -54,6 +56,10 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
         return listenerManager;
     }
 
+    public CommandManager getCommandManager() {
+        return commandManager;
+    }
+
     @Override
     protected ConfigurationAdapter provideConfigurationAdapter() {
         return new BungeeConfigAdapter(this, resolveConfig("config.yml").toFile());
@@ -67,6 +73,7 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     @Override
     protected void setupFramework() {
         this.listenerManager = new ListenerManager(this);
+        this.commandManager = new CommandManager(this);
     }
 
     @Override
