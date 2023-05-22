@@ -9,7 +9,7 @@ import org.floracore.api.data.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
-import team.floracore.common.locale.message.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
@@ -38,7 +38,7 @@ public class FlyCommand extends AbstractFloraCoreCommand implements Listener {
             }
         });
         Sender sender = getPlugin().getSenderFactory().wrap(s);
-        Message.COMMAND_FLY.send(sender, !old, s.getDisplayName());
+        PlayerCommandMessage.COMMAND_FLY.send(sender, !old, s.getDisplayName());
     }
 
     @CommandMethod("fly <target>")
@@ -55,9 +55,9 @@ public class FlyCommand extends AbstractFloraCoreCommand implements Listener {
         });
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Sender targetSender = getPlugin().getSenderFactory().wrap(target);
-        Message.COMMAND_FLY.send(sender, !old, target.getDisplayName());
+        PlayerCommandMessage.COMMAND_FLY.send(sender, !old, target.getDisplayName());
         if (silent == null || !silent) {
-            Message.COMMAND_FLY_FROM.send(targetSender, !old, sender.getDisplayName());
+            PlayerCommandMessage.COMMAND_FLY_FROM.send(targetSender, !old, sender.getDisplayName());
         }
     }
 

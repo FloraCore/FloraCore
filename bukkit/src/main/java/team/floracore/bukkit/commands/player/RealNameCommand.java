@@ -5,7 +5,7 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
-import team.floracore.common.locale.message.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
@@ -28,6 +28,6 @@ public class RealNameCommand extends AbstractFloraCoreCommand {
         PLAYER ps = getStorageImplementation().selectPlayer(tu);
         String name = target.getDisplayName();
         String realName = ps.getName();
-        Message.COMMAND_REALNAME_SUCCESS.send(sender, name, realName);
+        PlayerCommandMessage.COMMAND_REALNAME_SUCCESS.send(sender, name, realName);
     }
 }

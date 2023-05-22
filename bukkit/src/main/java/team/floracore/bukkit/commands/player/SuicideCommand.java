@@ -7,7 +7,7 @@ import org.bukkit.event.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
-import team.floracore.common.locale.message.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.sender.*;
 
 @CommandPermission("floracore.command.suicide")
@@ -25,10 +25,10 @@ public class SuicideCommand extends AbstractFloraCoreCommand {
         getPlugin().getListenerManager().getPluginManager().callEvent(ede);
         ede.getEntity().setLastDamageCause(ede);
         p.setHealth(0);
-        Message.COMMAND_SUICIDE.send(sender);
+        PlayerCommandMessage.COMMAND_SUICIDE.send(sender);
         for (Player player : Bukkit.getOnlinePlayers()) {
             Sender s2 = getPlugin().getSenderFactory().wrap(player);
-            Message.COMMAND_SUICIDE_BROADCAST.send(s2, p.getDisplayName());
+            PlayerCommandMessage.COMMAND_SUICIDE_BROADCAST.send(s2, p.getDisplayName());
         }
     }
 }

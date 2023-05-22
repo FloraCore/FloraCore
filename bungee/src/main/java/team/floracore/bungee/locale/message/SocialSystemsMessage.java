@@ -1,8 +1,9 @@
-package team.floracore.common.locale.message;
+package team.floracore.bungee.locale.message;
 
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.event.*;
 import org.floracore.api.*;
+import team.floracore.common.locale.message.*;
 
 import java.util.*;
 

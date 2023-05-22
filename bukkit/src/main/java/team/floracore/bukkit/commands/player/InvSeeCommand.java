@@ -5,7 +5,7 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
-import team.floracore.common.locale.message.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.sender.*;
 
 /**
@@ -22,10 +22,10 @@ public class InvSeeCommand extends AbstractFloraCoreCommand {
     public void invsee(final @NotNull Player s, final @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         if (s.getUniqueId() == target.getUniqueId()) {
-            Message.COMMAND_INVSEE_SELF.send(sender);
+            PlayerCommandMessage.COMMAND_INVSEE_SELF.send(sender);
             return;
         }
         s.openInventory(target.getInventory());
-        Message.COMMAND_INVSEE.send(sender, target.getDisplayName());
+        PlayerCommandMessage.COMMAND_INVSEE.send(sender, target.getDisplayName());
     }
 }

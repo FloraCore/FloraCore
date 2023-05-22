@@ -6,7 +6,7 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
-import team.floracore.common.locale.message.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.*;
 
@@ -25,8 +25,8 @@ public class AirCommand extends AbstractFloraCoreCommand {
     @CommandDescription("获取自己的氧气值（单位：ticks）")
     public void getSelf(@NotNull Player s) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
-        Message.COMMAND_AIR_GET_REMAINING_SELF.send(sender, s.getRemainingAir()); // 返回剩余氧气值
-        Message.COMMAND_AIR_GET_MAX_SELF.send(sender, s.getMaximumAir()); // 返回最大氧气值
+        PlayerCommandMessage.COMMAND_AIR_GET_REMAINING_SELF.send(sender, s.getRemainingAir()); // 返回剩余氧气值
+        PlayerCommandMessage.COMMAND_AIR_GET_MAX_SELF.send(sender, s.getMaximumAir()); // 返回最大氧气值
     }
 
     @CommandMethod("air get <target>")
@@ -34,8 +34,8 @@ public class AirCommand extends AbstractFloraCoreCommand {
     @CommandDescription("获取目标的氧气值（单位：ticks）")
     public void getOther(@NotNull CommandSender s, @NotNull @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
-        Message.COMMAND_AIR_GET_REMAINING_OTHER.send(sender, target.getName(), target.getRemainingAir()); // 返回剩余氧气值
-        Message.COMMAND_AIR_GET_MAX_OTHER.send(sender, target.getName(), target.getMaximumAir()); // 返回最大氧气值
+        PlayerCommandMessage.COMMAND_AIR_GET_REMAINING_OTHER.send(sender, target.getName(), target.getRemainingAir()); // 返回剩余氧气值
+        PlayerCommandMessage.COMMAND_AIR_GET_MAX_OTHER.send(sender, target.getName(), target.getMaximumAir()); // 返回最大氧气值
     }
 
     @CommandMethod("air setmax <value> [target]")
@@ -52,7 +52,7 @@ public class AirCommand extends AbstractFloraCoreCommand {
             if (s instanceof Player) {
                 Player player = (Player) s;
                 player.setMaximumAir(value); // 设置最大氧气
-                Message.COMMAND_AIR_SET_MAX_SELF.send(sender, value); // 告知设置成功
+                PlayerCommandMessage.COMMAND_AIR_SET_MAX_SELF.send(sender, value); // 告知设置成功
                 return;
             }
             SenderUtil.sendMustBe(sender, s.getClass(), Player.class);
@@ -61,9 +61,9 @@ public class AirCommand extends AbstractFloraCoreCommand {
                 return;
             }
             target.setMaximumAir(value);
-            Message.COMMAND_AIR_SET_MAX_OTHER.send(sender, target.getName(), value); // 告知设置成功
+            PlayerCommandMessage.COMMAND_AIR_SET_MAX_OTHER.send(sender, target.getName(), value); // 告知设置成功
             if (silent == null || !silent) { // 非静音模式
-                Message.COMMAND_AIR_SET_MAX_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
+                PlayerCommandMessage.COMMAND_AIR_SET_MAX_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
             }
         }
     }
@@ -82,7 +82,7 @@ public class AirCommand extends AbstractFloraCoreCommand {
             if (s instanceof Player) {
                 Player player = (Player) s;
                 player.setRemainingAir(value); // 设置剩余氧气
-                Message.COMMAND_AIR_SET_REMAINING_SELF.send(sender, value); // 告知设置成功
+                PlayerCommandMessage.COMMAND_AIR_SET_REMAINING_SELF.send(sender, value); // 告知设置成功
                 return;
             }
             SenderUtil.sendMustBe(sender, s.getClass(), Player.class);
@@ -91,9 +91,9 @@ public class AirCommand extends AbstractFloraCoreCommand {
                 return;
             }
             target.setRemainingAir(value);
-            Message.COMMAND_AIR_SET_REMAINING_OTHER.send(sender, target.getName(), value); // 告知设置成功
+            PlayerCommandMessage.COMMAND_AIR_SET_REMAINING_OTHER.send(sender, target.getName(), value); // 告知设置成功
             if (silent == null || !silent) { // 非静音模式
-                Message.COMMAND_AIR_SET_REMAINING_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
+                PlayerCommandMessage.COMMAND_AIR_SET_REMAINING_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
             }
         }
     }

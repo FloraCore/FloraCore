@@ -9,6 +9,7 @@ import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
 import team.floracore.bukkit.config.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.sender.*;
 
@@ -53,9 +54,9 @@ public class SpeedCommand extends AbstractFloraCoreCommand {
                         break;
                 }
                 if (!(silent != null && silent)) {
-                    Message.COMMAND_SPEED_OTHER.send(sender, p.getDisplayName(), speedType == SpeedType.FLY ? Message.COMMAND_MISC_SPEED_FLY.build() : Message.COMMAND_MISC_SPEED_WALK.build(), String.valueOf(speed));
+                    PlayerCommandMessage.COMMAND_SPEED_OTHER.send(sender, p.getDisplayName(), speedType == SpeedType.FLY ? PlayerCommandMessage.COMMAND_MISC_SPEED_FLY.build() : PlayerCommandMessage.COMMAND_MISC_SPEED_WALK.build(), String.valueOf(speed));
                 }
-                Message.COMMAND_SPEED.send(sender, target.getDisplayName(), speedType == SpeedType.FLY ? Message.COMMAND_MISC_SPEED_FLY.build() : Message.COMMAND_MISC_SPEED_WALK.build(), String.valueOf(speed));
+                PlayerCommandMessage.COMMAND_SPEED.send(sender, target.getDisplayName(), speedType == SpeedType.FLY ? PlayerCommandMessage.COMMAND_MISC_SPEED_FLY.build() : PlayerCommandMessage.COMMAND_MISC_SPEED_WALK.build(), String.valueOf(speed));
             } else {
                 switch (speedType) {
                     case FLY:
@@ -65,10 +66,10 @@ public class SpeedCommand extends AbstractFloraCoreCommand {
                         p.setWalkSpeed(getRealMoveSpeed(speed, speedType, isBypass));
                         break;
                 }
-                Message.COMMAND_SPEED.send(sender, p.getDisplayName(), speedType == SpeedType.FLY ? Message.COMMAND_MISC_SPEED_FLY.build() : Message.COMMAND_MISC_SPEED_WALK.build(), String.valueOf(speed));
+                PlayerCommandMessage.COMMAND_SPEED.send(sender, p.getDisplayName(), speedType == SpeedType.FLY ? PlayerCommandMessage.COMMAND_MISC_SPEED_FLY.build() : PlayerCommandMessage.COMMAND_MISC_SPEED_WALK.build(), String.valueOf(speed));
             }
         } catch (IllegalArgumentException e) {
-            Message.COMMAND_SPEED_NO_SUCH.send(sender, type);
+            PlayerCommandMessage.COMMAND_SPEED_NO_SUCH.send(sender, type);
         }
     }
 

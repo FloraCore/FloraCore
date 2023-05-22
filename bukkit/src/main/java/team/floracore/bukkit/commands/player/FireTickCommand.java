@@ -6,7 +6,7 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
-import team.floracore.common.locale.message.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.*;
 
@@ -32,15 +32,15 @@ public class FireTickCommand extends AbstractFloraCoreCommand {
         if (target == null) { // 指定自己
             if (s instanceof Player) {
                 ((Player) s).setFireTicks(time * 20);
-                Message.COMMAND_FIRETICK_SELF.send(sender, time);
+                PlayerCommandMessage.COMMAND_FIRETICK_SELF.send(sender, time);
             } else {
                 SenderUtil.sendMustBe(sender, s.getClass(), Player.class);
             }
         } else {
             target.setFireTicks(time * 20);
-            Message.COMMAND_FIRETICK_OTHER.send(sender, target.getName(), time);
+            PlayerCommandMessage.COMMAND_FIRETICK_OTHER.send(sender, target.getName(), time);
             if (silent == null || !silent) {
-                Message.COMMAND_FIRETICK_FROM.send(getPlugin().getSenderFactory().wrap(target), sender.getName(), time);
+                PlayerCommandMessage.COMMAND_FIRETICK_FROM.send(getPlugin().getSenderFactory().wrap(target), sender.getName(), time);
             }
         }
     }

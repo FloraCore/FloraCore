@@ -11,6 +11,7 @@ import org.bukkit.entity.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.sender.*;
 
@@ -42,15 +43,15 @@ public class WeatherCommand extends AbstractFloraCoreCommand {
             isStorm = true;
             component = MiscMessage.COMMAND_MISC_WEATHER_STORM.build();
         } else {
-            Message.COMMAND_WEATHER_NOSUCH.send(sender, weather);
+            WorldCommandMessage.COMMAND_WEATHER_NOSUCH.send(sender, weather);
             return;
         }
         world.setStorm(isStorm);
         if (time != null) {
             world.setWeatherDuration(Integer.parseInt(time) * 20);
-            Message.COMMAND_WEATHER_TIME.send(sender, world.getName(), component, time);
+            WorldCommandMessage.COMMAND_WEATHER_TIME.send(sender, world.getName(), component, time);
         } else {
-            Message.COMMAND_WEATHER_NORMAL.send(sender, world.getName(), component);
+            WorldCommandMessage.COMMAND_WEATHER_NORMAL.send(sender, world.getName(), component);
         }
     }
 

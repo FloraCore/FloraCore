@@ -1,7 +1,8 @@
-package team.floracore.common.locale.message;
+package team.floracore.bukkit.locale.message;
 
 import net.kyori.adventure.text.*;
 import org.floracore.api.data.chat.*;
+import team.floracore.common.locale.message.*;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;

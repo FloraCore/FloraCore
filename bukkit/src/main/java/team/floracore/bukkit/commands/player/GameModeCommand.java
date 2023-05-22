@@ -9,6 +9,7 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.exception.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.sender.*;
@@ -33,7 +34,7 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
         try {
             gameMode = parseGamemode(mode); // 解析游戏模式
         } catch (NoSuchTypeException ex) {
-            Message.COMMAND_GAMEMODE_NOSUCH.send(sender, mode);
+            PlayerCommandMessage.COMMAND_GAMEMODE_NOSUCH.send(sender, mode);
             return;
         }
         boolean own = target == null;
@@ -58,40 +59,40 @@ public class GameModeCommand extends AbstractFloraCoreCommand {
             switch (gameMode) {
                 case SURVIVAL:
                     if (setGameModeIfPermissionOrSendMessage(sender, GameMode.SURVIVAL, t, "floracore.command.gamemode.survival")) {
-                        Message.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_SURVIVAL.build(), t.getDisplayName());
+                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_SURVIVAL.build(), t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) { // 若非静音模式，则发送消息
-                                Message.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_SURVIVAL.build(), sender.getDisplayName());
+                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_SURVIVAL.build(), sender.getDisplayName());
                             }
                         }
                     }
                     break;
                 case CREATIVE:
                     if (setGameModeIfPermissionOrSendMessage(sender, GameMode.CREATIVE, t, "floracore.command.gamemode.creative")) {
-                        Message.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_CREATIVE.build(), t.getDisplayName());
+                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_CREATIVE.build(), t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) {
-                                Message.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_CREATIVE.build(), sender.getDisplayName());
+                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_CREATIVE.build(), sender.getDisplayName());
                             }
                         }
                     }
                     break;
                 case ADVENTURE:
                     if (setGameModeIfPermissionOrSendMessage(sender, GameMode.ADVENTURE, t, "floracore.command.gamemode.adventure")) {
-                        Message.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_ADVENTURE.build(), t.getDisplayName());
+                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_ADVENTURE.build(), t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) {
-                                Message.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_ADVENTURE.build(), sender.getDisplayName());
+                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_ADVENTURE.build(), sender.getDisplayName());
                             }
                         }
                     }
                     break;
                 case SPECTATOR:
                     if (setGameModeIfPermissionOrSendMessage(sender, GameMode.SPECTATOR, t, "floracore.command.gamemode.spectator")) {
-                        Message.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_SPECTATOR.build(), t.getDisplayName());
+                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_SPECTATOR.build(), t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) {
-                                Message.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_SPECTATOR.build(), sender.getDisplayName());
+                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_SPECTATOR.build(), sender.getDisplayName());
                             }
                         }
                     }

@@ -32,8 +32,6 @@ public class CommandManager {
 
     public CommandManager(FCBukkitPlugin plugin) {
         this.plugin = plugin;
-        // 异步
-        // final Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> executionCoordinatorFunction = AsynchronousCommandExecutionCoordinator.<CommandSender>builder().build();
         final Function<CommandTree<CommandSender>, CommandExecutionCoordinator<CommandSender>> executionCoordinatorFunction = CommandExecutionCoordinator.simpleCoordinator();
         final Function<CommandSender, CommandSender> mapperFunction = Function.identity();
         try {
@@ -63,9 +61,9 @@ public class CommandManager {
                 // This will allow you to decorate commands with descriptions
                 .with(CommandMeta.DESCRIPTION, p.get(StandardParameters.DESCRIPTION, "无描述")).build();
         this.annotationParser = new AnnotationParser<>(
-                /* Manager */ this.manager,
-                /* Command sender type */ CommandSender.class,
-                /* Mapper for command meta instances */ commandMetaFunction);
+                this.manager,
+                CommandSender.class,
+                commandMetaFunction);
 
         // 命令语法错误自定义
         this.manager.registerExceptionHandler(InvalidSyntaxException.class, (context, exception) -> {

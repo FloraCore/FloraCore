@@ -10,7 +10,7 @@ import org.bukkit.inventory.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
-import team.floracore.common.locale.message.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.*;
 
@@ -46,7 +46,7 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
         if (!(s instanceof Player)) {
             // 当发送者不是玩家时，target和for都不能为空
             if (target == null || for_ == null) {
-                Message.COMMAND_ENDERCHEST_NOT_PLAYER.send(sender);
+                PlayerCommandMessage.COMMAND_ENDERCHEST_NOT_PLAYER.send(sender);
                 return;
             }
         }
@@ -57,10 +57,10 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
             Player player = (Player) s;
             Inventory inventory = player.getEnderChest();
             player.openInventory(inventory);
-            Message.COMMAND_ENDERCHEST_OPEN_SELF.send(sender);
+            PlayerCommandMessage.COMMAND_ENDERCHEST_OPEN_SELF.send(sender);
             if ((readonly != null && readonly) || !player.hasPermission("floracore.command.enderchest.edit")) { // 禁止修改
                 READONLY_MAP.put(player.getUniqueId(), inventory);
-                Message.COMMAND_ENDERCHEST_READONLY_TO.send(sender);
+                PlayerCommandMessage.COMMAND_ENDERCHEST_READONLY_TO.send(sender);
             }
         } else if (for_ == null) { // 1个参数，为命令发送者打开末影箱主人的末影箱
             if (SenderUtil.sendIfNoPermission(sender, "floracore.command.enderchest.other")) {
@@ -69,10 +69,10 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
             Player player = (Player) s;
             Inventory inventory = target.getEnderChest();
             player.openInventory(inventory);
-            Message.COMMAND_ENDERCHEST_OPEN_OTHER.send(sender, target.getName());
+            PlayerCommandMessage.COMMAND_ENDERCHEST_OPEN_OTHER.send(sender, target.getName());
             if ((readonly != null && readonly) || !player.hasPermission("floracore.command.enderchest.edit")) { // 禁止修改
                 READONLY_MAP.put(player.getUniqueId(), inventory);
-                Message.COMMAND_ENDERCHEST_READONLY_TO.send(sender);
+                PlayerCommandMessage.COMMAND_ENDERCHEST_READONLY_TO.send(sender);
             }
         } else { // 2个参数，为打开目标打开末影箱主人的末影箱
             if (SenderUtil.sendIfNoPermission(sender, "floracore.command.enderchest.other") ||
@@ -81,13 +81,13 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
             }
             Inventory inventory = target.getEnderChest();
             for_.openInventory(inventory);
-            Message.COMMAND_ENDERCHEST_OPEN_FOR.send(sender, target.getName(), for_.getName());
+            PlayerCommandMessage.COMMAND_ENDERCHEST_OPEN_FOR.send(sender, target.getName(), for_.getName());
             if (silent == null || !silent) { // 不是静音模式，告诉打开目标
-                Message.COMMAND_ENDERCHEST_OPEN_FROM.send(sender, s.getName(), target.getName());
+                PlayerCommandMessage.COMMAND_ENDERCHEST_OPEN_FROM.send(sender, s.getName(), target.getName());
             }
             if ((readonly != null && readonly) || !for_.hasPermission("floracore.command.enderchest.edit")) { // 禁止修改
                 READONLY_MAP.put(for_.getUniqueId(), inventory);
-                Message.COMMAND_ENDERCHEST_READONLY_TO.send(sender);
+                PlayerCommandMessage.COMMAND_ENDERCHEST_READONLY_TO.send(sender);
             }
         }
     }
@@ -108,7 +108,7 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
         }
         if (cancel) {
             event.setCancelled(true);
-            Message.COMMAND_ENDERCHEST_READONLY_FROM.send(getPlugin().getSenderFactory().wrap(player));
+            PlayerCommandMessage.COMMAND_ENDERCHEST_READONLY_FROM.send(getPlugin().getSenderFactory().wrap(player));
         }
     }
 
@@ -121,7 +121,7 @@ public class EnderChestCommand extends AbstractFloraCoreCommand implements Liste
         Inventory inventory = READONLY_MAP.get(player.getUniqueId());
         if (Objects.equals(event.getInventory(), inventory)) { // 禁止修改这个物品栏
             event.setCancelled(true);
-            Message.COMMAND_ENDERCHEST_READONLY_FROM.send(getPlugin().getSenderFactory().wrap(player));
+            PlayerCommandMessage.COMMAND_ENDERCHEST_READONLY_FROM.send(getPlugin().getSenderFactory().wrap(player));
         }
     }
 

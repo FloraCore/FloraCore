@@ -1,18 +1,16 @@
-package team.floracore.common.locale.message;
+package team.floracore.bukkit.locale.message.commands;
 
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.event.*;
-import org.floracore.api.data.*;
-import team.floracore.common.util.*;
+import team.floracore.common.locale.message.*;
 
-import java.time.*;
 import java.util.*;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 import static net.kyori.adventure.text.format.TextDecoration.*;
 
-public interface Message extends AbstractMessage {
+public interface PlayerCommandMessage extends AbstractMessage {
     Args2<Boolean, String> COMMAND_FLY = (status, target) -> AbstractMessage.prefixed(translatable()
             // {1} 的飞行模式被设置为 {0}
             .key("floracore.command.fly").color(AQUA)
@@ -35,35 +33,6 @@ public interface Message extends AbstractMessage {
     Args1<String> COMMAND_GAMEMODE_NOSUCH = (mode) -> AbstractMessage.prefixed(translatable()
             // {0} 不是合法的游戏模式
             .key("floracore.command.gamemode.nosuch").color(RED).args(text(mode).color(GREEN)).append(FULL_STOP));
-
-    Args1<String> COMMAND_WEATHER_NOSUCH = (weather) -> AbstractMessage.prefixed(translatable()
-            // {0} 不是合法的天气类型
-            .key("floracore.command.weather.nosuch").color(RED).args(text(weather).color(GREEN)).append(FULL_STOP));
-
-    Args2<String, Component> COMMAND_WEATHER_NORMAL = (world, weather) -> AbstractMessage.prefixed(translatable()
-            // 你将 {0} 的天气设为 {1}
-            .key("floracore.command.weather.normal").color(AQUA).args(text(world).color(GREEN), weather.color(GREEN)).append(FULL_STOP));
-
-    Args3<String, Component, String> COMMAND_WEATHER_TIME = (world, weather, time) -> AbstractMessage.prefixed(translatable()
-            // 你将 {0} 的天气设为 {1}，持续 {2} 秒
-            .key("floracore.command.weather.time").color(AQUA).args(text(world).color(GREEN), weather.color(GREEN), text(time).color(GREEN)).append(FULL_STOP));
-
-    Args1<Long> DURATION_FORMAT = (ticks) -> translatable()
-            // {0} 或 {1}（或 {2} ）
-            .key("floracore.duration.format").color(RED).args(text(DescParseTickFormat.format24(ticks)).color(GREEN), text(DescParseTickFormat.format12(ticks)).color(GREEN), text(DescParseTickFormat.formatTicks(ticks)).color(GREEN)).build();
-
-    Args2<String, Component> COMMAND_TIME_WORLD_CURRENT = (world, time) -> AbstractMessage.prefixed(translatable()
-            // 当前 {0} 的时间是 {1}
-            .key("floracore.command.time.world.current").color(AQUA).args(text(world).color(GREEN), time));
-
-    Args2<String, Component> COMMAND_TIME_SET = (world, time) -> AbstractMessage.prefixed(translatable()
-            // {0} 的时间被设置为 {1}
-            .key("floracore.command.time.set").color(AQUA).args(text(world).color(GREEN), time));
-
-    Args2<String, Component> COMMAND_TIME_ADD = (world, time) -> AbstractMessage.prefixed(translatable()
-            // {0} 的时间已被 {1} 快进
-            .key("floracore.command.time.add").color(AQUA).args(text(world).color(GREEN), time));
-
     Args0 COMMAND_HAT_ARMOR = () -> AbstractMessage.prefixed(translatable()
             // 你无法将这个物品当做帽子戴上!
             .key("floracore.command.hat.armor").color(RED));
@@ -95,59 +64,6 @@ public interface Message extends AbstractMessage {
     Args1<String> COMMAND_INVSEE = (target) -> AbstractMessage.prefixed(translatable()
             // 你打开了 {0} 的物品栏
             .key("floracore.command.invsee").color(AQUA).args(text(target).color(GREEN)).append(FULL_STOP));
-
-    Args1<String> DATA_NONE = target -> AbstractMessage.prefixed(translatable()
-            // {0} 无记录的数据
-            .key("floracore.command.generic.data.none").color(AQUA).args(text(target)).append(FULL_STOP));
-
-    Args1<String> DATA_HEADER = target -> AbstractMessage.prefixed(translatable()
-            // {0} 的数据信息:
-            .key("floracore.command.generic.data.info.title").color(AQUA).args(text(target)));
-
-    Args4<String, String, String, Long> DATA_ENTRY = (type, key, value, expiry) -> {
-        Instant instant = Instant.ofEpochMilli(expiry);
-        Instant now = Instant.now();
-        Duration timeElapsed = Duration.between(now, instant);
-        return AbstractMessage.prefixed(text().append(text(type, GREEN)).append(space()).append(text("->", AQUA)).append(space()).append(text(key, AQUA)).append(text(" - ", WHITE)).append(text().color(WHITE).append(text('\'')).append(text(value)).append(text('\''))).apply(builder -> {
-            if (expiry > 0) {
-                builder.append(space());
-                builder.append(text().color(DARK_GRAY).append(OPEN_BRACKET).append(translatable()
-                        // 过期时间
-                        .key("floracore.command.generic.info.expires-in").color(GRAY).append(space()).append(text().color(AQUA).append(DurationFormatter.CONCISE.format(timeElapsed)))).append(CLOSE_BRACKET));
-            }
-        }));
-    };
-
-    Args2<Component, String> SERVER_DATA_ENTRY = (key, value) -> AbstractMessage.prefixed(text().append(key.color(GREEN)).append(space()).append(text("->", AQUA)).append(space()).append(text(value, WHITE)).apply(builder -> {
-    }));
-    Args2<Component, Component> SERVER_DATA_ENTRY_1 = (key, value) -> AbstractMessage.prefixed(text().append(key.color(GREEN)).append(space()).append(text("->", AQUA)).append(space()).append(value.color(WHITE)).apply(builder -> {
-    }));
-
-    Args3<String, String, String> SET_DATA_SUCCESS = (key, value, target) -> AbstractMessage.prefixed(translatable()
-            // 成功将 {2} 的数据键 {0} 设置为 {1}
-            .key("floracore.command.generic.data.set").color(GREEN).args(text().color(WHITE).append(text('\'')).append(text(key)).append(text('\'')), text().color(WHITE).append(text('\'')).append(AbstractMessage.formatColoredValue(value)).append(text('\'')), text().color(AQUA).append(text(target))).append(FULL_STOP));
-
-    Args4<String, String, String, Duration> SET_DATA_TEMP_SUCCESS = (key, value, target, duration) -> AbstractMessage.prefixed(translatable()
-            // 成功中将 {2} 的数据键 {0} 设置为 {1}, 有效期\: {3}
-            .key("floracore.command.generic.data.set-temp").color(GREEN).args(text().color(WHITE).append(text('\'')).append(text(key)).append(text('\'')), text().color(WHITE).append(text('\'')).append(AbstractMessage.formatColoredValue(value)).append(text('\'')), text().color(AQUA).append(text(target)), text().color(AQUA).append(DurationFormatter.LONG.format(duration))).append(FULL_STOP));
-
-    Args2<String, String> DOESNT_HAVE_DATA = (target, key) -> AbstractMessage.prefixed(translatable()
-            // {0} 没有设置数据键 {1}
-            .key("floracore.command.generic.data.doesnt-have").color(RED).args(text().color(AQUA).append(text(target)), text().color(WHITE).append(text('\'')).append(text(key)).append(text('\''))).append(FULL_STOP));
-
-    Args2<String, String> UNSET_DATA_SUCCESS = (key, target) -> AbstractMessage.prefixed(translatable()
-            // 成功中为 {1} 取消设置数据键 {0}
-            .key("floracore.command.generic.data.unset").color(GREEN).args(text().color(WHITE).append(text('\'')).append(text(key)).append(text('\'')), text().color(AQUA).append(text(target))).append(FULL_STOP));
-
-    Args2<String, DataType> DATA_CLEAR_SUCCESS = (target, type) -> AbstractMessage.prefixed(translatable()
-            // {0} 的数据({1})已被清除
-            .key("floracore.command.generic.data.clear").color(GREEN)
-            // target
-            .args(text().color(AQUA).append(text(target)),
-                    // type
-                    text().color(WHITE).append(OPEN_BRACKET).append(text(type == null ? "*" : type.getName())).append(CLOSE_BRACKET))
-            // .
-            .append(FULL_STOP));
 
     Args0 COMMAND_TELEPORT_TOP = () -> AbstractMessage.prefixed(translatable()
             // 已传送到顶部
@@ -399,8 +315,6 @@ public interface Message extends AbstractMessage {
             text(item).color(WHITE),
             text(player).color(GREEN)
     ));
-
-    Args1<String> COMMAND_BROADCAST = contents -> text().append(MiscMessage.PREFIX_BROADCAST).append(space()).append(AbstractMessage.formatColoredValue(contents)).build();
 
     Args1<String> COMMAND_MISC_REPORT_NOTICE_ACCEPTED = target -> AbstractMessage.prefixed(translatable().key("floracore.command.misc.report.notice.accepted").color(AQUA).args(text(target).color(RED)));
 

@@ -8,6 +8,7 @@ import org.bukkit.command.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.sender.*;
 
@@ -32,7 +33,7 @@ public class HasPermissionCommand extends AbstractFloraCoreCommand {
             MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
             return;
         }
-        (hasPermission(ut, permission) ? Message.COMMAND_HASPERMISSION_YES : Message.COMMAND_HASPERMISSION_NO).send(sender, target, permission);
+        (hasPermission(ut, permission) ? PlayerCommandMessage.COMMAND_HASPERMISSION_YES : PlayerCommandMessage.COMMAND_HASPERMISSION_NO).send(sender, target, permission);
     }
 
     @Suggestions("permission_list")

@@ -6,7 +6,7 @@ import org.bukkit.entity.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
-import team.floracore.common.locale.message.*;
+import team.floracore.bukkit.locale.message.commands.*;
 
 /**
  * Feed命令
@@ -22,7 +22,7 @@ public class FeedCommand extends AbstractFloraCoreCommand {
     @CommandDescription("喂饱您自己")
     public void self(@NotNull Player s) {
         feed(s);
-        Message.COMMAND_FEED_SELF.send(getPlugin().getSenderFactory().wrap(s));
+        PlayerCommandMessage.COMMAND_FEED_SELF.send(getPlugin().getSenderFactory().wrap(s));
     }
 
     @CommandMethod("feed <target>")
@@ -30,9 +30,9 @@ public class FeedCommand extends AbstractFloraCoreCommand {
     @CommandPermission("floracore.command.feed.other")
     public void other(@NotNull CommandSender s, @NotNull @Argument("target") Player target, @Nullable @Flag("silent") Boolean silent) {
         feed(target);
-        Message.COMMAND_FEED_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName());
+        PlayerCommandMessage.COMMAND_FEED_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName());
         if (silent == null || !silent) {
-            Message.COMMAND_FEED_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName());
+            PlayerCommandMessage.COMMAND_FEED_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName());
         }
     }
 

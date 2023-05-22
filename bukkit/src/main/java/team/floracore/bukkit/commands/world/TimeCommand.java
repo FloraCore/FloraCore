@@ -12,6 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
+import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.util.*;
@@ -63,7 +64,7 @@ public class TimeCommand extends AbstractFloraCoreCommand {
                 w.setTime(t + (24000) + timeTick);
                 joiner.add(w.getName());
             }
-            Message.COMMAND_TIME_SET.send(sender, joiner.toString(), Message.DURATION_FORMAT.build(timeTick));
+            WorldCommandMessage.COMMAND_TIME_SET.send(sender, joiner.toString(), MiscMessage.DURATION_FORMAT.build(timeTick));
         }
     }
 
@@ -90,19 +91,19 @@ public class TimeCommand extends AbstractFloraCoreCommand {
                 w.setTime(t + timeTick);
                 joiner.add(w.getName());
             }
-            Message.COMMAND_TIME_ADD.send(sender, joiner.toString(), Message.DURATION_FORMAT.build(timeTick));
+            WorldCommandMessage.COMMAND_TIME_ADD.send(sender, joiner.toString(), MiscMessage.DURATION_FORMAT.build(timeTick));
         }
     }
 
     private void getWorldsTime(final Sender sender, final Collection<World> worlds) {
         if (worlds.size() == 1) {
             final Iterator<World> iter = worlds.iterator();
-            Message.DURATION_FORMAT.send(sender, iter.next().getTime());
+            MiscMessage.DURATION_FORMAT.send(sender, iter.next().getTime());
             return;
         }
 
         for (final World world : worlds) {
-            Message.COMMAND_TIME_WORLD_CURRENT.send(sender, world.getName(), Message.DURATION_FORMAT.build(world.getTime()));
+            WorldCommandMessage.COMMAND_TIME_WORLD_CURRENT.send(sender, world.getName(), MiscMessage.DURATION_FORMAT.build(world.getTime()));
         }
     }
 
