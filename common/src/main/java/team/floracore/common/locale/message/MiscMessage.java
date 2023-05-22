@@ -71,7 +71,8 @@ public interface MiscMessage extends AbstractMessage {
                 // v{}
                 .append(text("v" + bootstrap.getVersion(), AQUA)).append(space())
                 // Running
-                .append(text("is Running", DARK_GRAY)).append(space()).build();
+                .append(text("Running on", DARK_GRAY)).append(space())
+                .append(text(bootstrap.getType().getFriendlyName(), YELLOW)).build();
 
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
 

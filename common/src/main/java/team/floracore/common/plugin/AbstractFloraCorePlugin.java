@@ -101,6 +101,9 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // initialise storage
         this.storage = storageFactory.getInstance();
 
+        getLogger().info("Loading framework...");
+        setupFramework();
+
         // register with the FC API
         this.apiProvider = new FloraCoreApiProvider(this);
         this.apiProvider.ensureApiWasLoadedByPlugin();
@@ -145,6 +148,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     protected abstract ConfigurationAdapter provideConfigurationAdapter();
 
     protected abstract void setupSenderFactory();
+
+    protected abstract void setupFramework();
 
     protected Path resolveConfig(String fileName) {
         Path configFile = getBootstrap().getConfigDirectory().resolve(fileName);

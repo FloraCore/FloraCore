@@ -6,6 +6,7 @@ import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
+import team.floracore.paper.command.*;
 import team.floracore.paper.config.*;
 import team.floracore.paper.listener.*;
 
@@ -17,12 +18,12 @@ import java.util.stream.*;
  */
 public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private final FCBukkitBootstrap bootstrap;
-    private final ListenerManager listenerManager;
+    private ListenerManager listenerManager;
+    private CommandManager commandManager;
     private BukkitSenderFactory senderFactory;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
-        this.listenerManager = new ListenerManager(this);
     }
 
     private static boolean classExists(String className) {
@@ -77,6 +78,12 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     @Override
     protected void setupSenderFactory() {
         this.senderFactory = new BukkitSenderFactory(this);
+    }
+
+    @Override
+    protected void setupFramework() {
+        this.listenerManager = new ListenerManager(this);
+        this.commandManager = new CommandManager(this);
     }
 
     @Override

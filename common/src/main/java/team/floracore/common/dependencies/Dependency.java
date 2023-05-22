@@ -20,6 +20,7 @@ public enum Dependency {
     ADVENTURE_PLATFORM_FACET("net.kyori", "adventure-platform-facet", "4.3.0", "IPjm2zTXIqSszL7cybbALo7ms8q5NQsGqz0cCwuLRU8="),
     ADVENTURE_PLATFORM_BUKKIT("net.kyori", "adventure-platform-bukkit", "4.3.0", "Eh8BQf0ORHTty0Av3ru5hO1mycbnhSAISdhfx77uQNk="),
     ADVENTURE_PLATFORM_BUNGEECORD("net.kyori", "adventure-platform-bungeecord", "4.3.0", "C3hcnfV+7Y0Ol2HFFcM0+iX8GaBCOx+2PgQJfhmNOp8="),
+    ADVENTURE_TEXT_SERIALIZER_BUNGEECORD("net.kyori", "adventure-text-serializer-bungeecord", "4.3.0", "4bw3bG3HohAAFgFXNc5MzFNNKya/WrgqrHUcUDIFbDk="),
     ADVENTURE_TEXT_SERIALIZER_LEGACY("net.kyori", "adventure-text-serializer-legacy", "4.13.0", "cgnbnTGuHC+U7QPYsUlliYvnE6RS+IL9VBsMLVT1ji0="),
     ADVENTURE_TEXT_SERIALIZER_GSON("net.kyori", "adventure-text-serializer-gson", "4.13.0", "QS1osu88MCbj7Q1Ror57jIHtHx6V3IieYYWS0LRe/QM="),
     ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL("net.kyori", "adventure-text-serializer-gson-legacy-impl", "4.13.0", "3xpIU4vdGNkD1Y+eWJWOKulcBXaAuqXT5YfXenZLEvM="),

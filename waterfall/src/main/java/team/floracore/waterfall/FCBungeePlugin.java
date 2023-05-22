@@ -35,6 +35,7 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     protected Set<Dependency> getGlobalDependencies() {
         Set<Dependency> dependencies = super.getGlobalDependencies();
         dependencies.add(Dependency.ADVENTURE_PLATFORM_BUNGEECORD);
+        dependencies.add(Dependency.ADVENTURE_TEXT_SERIALIZER_BUNGEECORD);
         dependencies.add(Dependency.CLOUD_BUNGEE);
         return dependencies;
     }
@@ -56,6 +57,11 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     @Override
     protected void setupSenderFactory() {
         this.senderFactory = new BungeeSenderFactory(this);
+    }
+
+    @Override
+    protected void setupFramework() {
+
     }
 
     @Override
