@@ -1,0 +1,135 @@
+name: FloraCore
+version: ${version}
+description: A basic plugin with rich functions
+website: https://github.com/FloraCore/FloraCore
+main: team.floracore.bukkit.loader.BukkitLoaderPlugin
+depend:
+  - ProtocolLib
+  - LuckPerms
+softdepend:
+  - PremiumVanish
+  - TAB
+permissions:
+  floracore.admin:
+    default: op
+  floracore.command.air.*:
+    default: op
+    children:
+      floracore.command.air: true
+      floracore.command.air.get: true
+      floracore.command.air.get.other: true
+      floracore.command.air.set.max: true
+      floracore.command.air.set.max.other: true
+      floracore.command.air.set.remaining: true
+      floracore.command.air.set.remaining.other: true
+  floracore.command.enderchest.*:
+    default: op
+    children:
+      floracore.command.enderchest: true
+      floracore.command.enderchest.edit: true
+      floracore.command.enderchest.other: true
+      floracore.command.enderchest.for: true
+  floracore.command.feed.*:
+    default: op
+    children:
+      floracore.command.feed: true
+      floracore.command.feed.other: true
+  floracore.command.firetick.*:
+    default: op
+    children:
+      floracore.command.firetick: true
+      floracore.command.firetick.other: true
+  floracore.command.fly.*:
+    default: op
+    children:
+      floracore.command.fly: true
+      floracore.command.fly.other: true
+  floracore.command.food.*:
+    default: op
+    children:
+      floracore.command.food: true
+      floracore.command.food.get: true
+      floracore.command.food.get.other: true
+      floracore.command.food.set.nutrition: true
+      floracore.command.food.set.nutrition.other: true
+      floracore.command.food.set.saturation: true
+      floracore.command.food.set.saturation.other: true
+  floracore.command.gamemode:
+    default: op
+    children:
+      floracore.command.gamemode.survival: true
+      floracore.command.gamemode.creative: true
+      floracore.command.gamemode.adventure: true
+      floracore.command.gamemode.spectator: true
+  floracore.command.give:
+    default: op
+  floracore.command.haspermission.*:
+    default: op
+  floracore.command.hat:
+    default: op
+  floracore.command.heal.*:
+    default: op
+    children:
+      floracore.command.heal: true
+      floracore.command.heal.other: true
+  floracore.command.invsee:
+    default: op
+  floracore.command.maxhealth.*:
+    default: op
+    children:
+      floracore.command.maxhealth: true
+      floracore.command.maxhealth.get: true
+      floracore.command.maxhealth.get.other: true
+      floracore.command.maxhealth.set: true
+      floracore.command.maxhealth.set.other: true
+  floracore.command.nick.*:
+    default: op
+    children:
+      floracore.command.nick: true
+      floracore.command.nick.custom: true
+  floracore.command.oplist:
+    default: op
+  floracore.command.ping.*:
+    default: op
+    children:
+      floracore.command.ping: true
+      floracore.command.ping.other: true
+  floracore.command.realname:
+    default: op
+  floracore.command.report.*:
+    default: op
+    children:
+      floracore.command.report: true
+      floracore.command.report.staff: true
+      floracore.command.report.admin: true
+      floracore.command.report.bypass: true
+  floracore.command.speed.*:
+    default: op
+    children:
+      floracore.command.speed: true
+      floracore.command.speed.other: true
+      floracore.command.speed.bypass: false
+  floracore.command.suicide:
+    default: op
+  floracore.command.top:
+    default: op
+  floracore.command.broadcast:
+    default: op
+  floracore.socialsystems.*:
+    default: op
+    children:
+      floracore.socialsystems.admin: true
+      floracore.socialsystems.blogger: true
+      floracore.socialsystems.builder: true
+      floracore.socialsystems.chat: true
+      floracore.socialsystems.friend: true
+      floracore.socialsystems.guild: true
+      floracore.socialsystems.party: true
+      floracore.socialsystems.staff: true
+  floracore.command.time.*:
+    default: op
+    children:
+      floracore.command.time.set: true
+      floracore.command.time.add: true
+  floracore.command.weather:
+    default: op
