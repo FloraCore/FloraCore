@@ -14,6 +14,7 @@ import org.floracore.api.data.*;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
+import team.floracore.bukkit.command.*;
 import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.common.http.*;
 import team.floracore.common.locale.message.*;
@@ -33,85 +34,85 @@ import java.util.stream.*;
  */
 @CommandContainer
 @CommandPermission("floracore.admin")
-@CommandDescription("FloraCore插件的主命令")
-public class FloraCoreBukkitCommand extends team.floracore.bukkit.command.FloraCoreBukkitCommand {
+@CommandDescription("floracore.command.description.floracore")
+public class FloraCoreCommand extends FloraCoreBukkitCommand {
     private final AsyncCache<UUID, List<DATA>> dataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     private final AsyncCache<String, UUID> uuidCache = Caffeine.newBuilder().expireAfterWrite(10, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
 
-    public FloraCoreBukkitCommand(FCBukkitPlugin plugin) {
+    public FloraCoreCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("fc|floracore reload")
-    @CommandDescription("插件配置文件重载")
+    @CommandDescription("floracore.command.description.floracore.reload")
     public void reload(final @NonNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         getPlugin().getConfiguration().reload();
-        MiscCommandMessage.RELOAD_CONFIG_SUCCESS.send(s);
+        CommonCommandMessage.RELOAD_CONFIG_SUCCESS.send(s);
     }
 
     @CommandMethod("fc|floracore translations")
-    @CommandDescription("插件翻译列表")
+    @CommandDescription("floracore.command.description.floracore.translations")
     public void translations(final @NonNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        MiscCommandMessage.TRANSLATIONS_SEARCHING.send(s);
+        CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
 
         List<TranslationRepository.LanguageInfo> availableTranslations;
         try {
             availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
         } catch (IOException | UnsuccessfulRequestException e) {
-            MiscCommandMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
+            CommonCommandMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
             getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
             return;
         }
 
-        MiscCommandMessage.INSTALLED_TRANSLATIONS.send(s, getPlugin().getTranslationManager().getInstalledLocales().stream().map(Locale::toLanguageTag).sorted().collect(Collectors.toList()));
+        CommonCommandMessage.INSTALLED_TRANSLATIONS.send(s, getPlugin().getTranslationManager().getInstalledLocales().stream().map(Locale::toLanguageTag).sorted().collect(Collectors.toList()));
 
-        MiscCommandMessage.AVAILABLE_TRANSLATIONS_HEADER.send(s);
-        availableTranslations.stream().sorted(Comparator.comparing(language -> language.locale().toLanguageTag())).forEach(language -> MiscCommandMessage.AVAILABLE_TRANSLATIONS_ENTRY.send(s, language.locale().toLanguageTag(), TranslationManager.localeDisplayName(language.locale()), language.progress(), language.contributors()));
+        CommonCommandMessage.AVAILABLE_TRANSLATIONS_HEADER.send(s);
+        availableTranslations.stream().sorted(Comparator.comparing(language -> language.locale().toLanguageTag())).forEach(language -> CommonCommandMessage.AVAILABLE_TRANSLATIONS_ENTRY.send(s, language.locale().toLanguageTag(), TranslationManager.localeDisplayName(language.locale()), language.progress(), language.contributors()));
         s.sendMessage(AbstractMessage.prefixed(Component.empty()));
-        MiscCommandMessage.TRANSLATIONS_DOWNLOAD_PROMPT.send(s);
+        CommonCommandMessage.TRANSLATIONS_DOWNLOAD_PROMPT.send(s);
     }
 
     @CommandMethod("fc|floracore translations install")
-    @CommandDescription("安装插件翻译列表")
+    @CommandDescription("floracore.command.description.floracore.translations.install")
     public void installTranslations(final @NonNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        MiscCommandMessage.TRANSLATIONS_SEARCHING.send(s);
+        CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
 
         List<TranslationRepository.LanguageInfo> availableTranslations;
         try {
             availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
         } catch (IOException | UnsuccessfulRequestException e) {
-            MiscCommandMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
+            CommonCommandMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
             getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
             return;
         }
-        MiscCommandMessage.TRANSLATIONS_INSTALLING.send(s);
+        CommonCommandMessage.TRANSLATIONS_INSTALLING.send(s);
         getPlugin().getTranslationRepository().downloadAndInstallTranslations(availableTranslations, s, true);
-        MiscCommandMessage.TRANSLATIONS_INSTALL_COMPLETE.send(s);
+        CommonCommandMessage.TRANSLATIONS_INSTALL_COMPLETE.send(s);
     }
 
     @CommandMethod("fc|floracore server <target>")
-    @CommandDescription("获取服务器的数据")
+    @CommandDescription("floracore.command.description.floracore.server")
     public void server(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
         if (server == null) {
-            MiscCommandMessage.DATA_NONE.send(s, target);
+            CommonCommandMessage.DATA_NONE.send(s, target);
         } else {
             Component on = Component.translatable("floracore.command.misc.on");
             Component off = Component.translatable("floracore.command.misc.off");
-            MiscCommandMessage.DATA_HEADER.send(s, target);
-            MiscCommandMessage.SERVER_DATA_ENTRY.send(s, MiscMessage.COMMAND_SERVER_DATA_TYPE.build(), server.getType().getName());
-            MiscCommandMessage.SERVER_DATA_ENTRY_1.send(s, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_1.build(), server.isAutoSync1() ? on : off);
-            MiscCommandMessage.SERVER_DATA_ENTRY_1.send(s, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_2.build(), server.isAutoSync2() ? on : off);
-            MiscCommandMessage.SERVER_DATA_ENTRY.send(s, MiscMessage.COMMAND_SERVER_DATA_ACTIVE_TIME.build(), DurationFormatter.getTimeFromTimestamp(server.getLastActiveTime()));
+            CommonCommandMessage.DATA_HEADER.send(s, target);
+            CommonCommandMessage.SERVER_DATA_ENTRY.send(s, MiscMessage.COMMAND_SERVER_DATA_TYPE.build(), server.getType().getName());
+            CommonCommandMessage.SERVER_DATA_ENTRY_1.send(s, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_1.build(), server.isAutoSync1() ? on : off);
+            CommonCommandMessage.SERVER_DATA_ENTRY_1.send(s, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_2.build(), server.isAutoSync2() ? on : off);
+            CommonCommandMessage.SERVER_DATA_ENTRY.send(s, MiscMessage.COMMAND_SERVER_DATA_ACTIVE_TIME.build(), DurationFormatter.getTimeFromTimestamp(server.getLastActiveTime()));
         }
     }
 
     @CommandMethod("fc|floracore server <target> set autosync1 <value>")
-    @CommandDescription("设置服务器Sync1的数据")
+    @CommandDescription("floracore.command.description.floracore.server.set.autosync1")
     public void serverSet1(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target, final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
@@ -126,7 +127,7 @@ public class FloraCoreBukkitCommand extends team.floracore.bukkit.command.FloraC
     }
 
     @CommandMethod("fc|floracore server <target> set autosync2 <value>")
-    @CommandDescription("设置服务器Sync2的数据")
+    @CommandDescription("floracore.command.description.floracore.server.set.autosync2")
     public void serverSet2(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target, final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
@@ -146,7 +147,7 @@ public class FloraCoreBukkitCommand extends team.floracore.bukkit.command.FloraC
     }
 
     @CommandMethod("fc|floracore data <target> <type>")
-    @CommandDescription("获取玩家存储的数据")
+    @CommandDescription("floracore.command.description.floracore.data")
     public void data(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, @Argument("type") DataType type) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
@@ -174,9 +175,9 @@ public class FloraCoreBukkitCommand extends team.floracore.bukkit.command.FloraC
         List<DATA> all = ldf.join();
         List<DATA> ret = all.parallelStream().filter(data -> data.getType() == type).collect(Collectors.toList());
         if (ret.isEmpty()) {
-            MiscCommandMessage.DATA_NONE.send(s, target);
+            CommonCommandMessage.DATA_NONE.send(s, target);
         } else {
-            MiscCommandMessage.DATA_HEADER.send(s, target);
+            CommonCommandMessage.DATA_HEADER.send(s, target);
             for (DATA data : ret) {
                 MiscCommandMessage.DATA_ENTRY.send(s, data.getType().getName(), data.getKey(), data.getValue(), data.getExpiry());
             }
@@ -184,7 +185,7 @@ public class FloraCoreBukkitCommand extends team.floracore.bukkit.command.FloraC
     }
 
     @CommandMethod("fc|floracore data <target> set <key> <value>")
-    @CommandDescription("设置玩家自定义的数据")
+    @CommandDescription("floracore.command.description.floracore.data.set")
     public void dataSet(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key, final @NonNull @Argument("value") String value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
@@ -213,7 +214,7 @@ public class FloraCoreBukkitCommand extends team.floracore.bukkit.command.FloraC
     }
 
     @CommandMethod("fc|floracore data <target> unset <key>")
-    @CommandDescription("删除玩家存储的自定义数据")
+    @CommandDescription("floracore.command.description.floracore.data.unset")
     public void dataUnSet(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
@@ -247,7 +248,7 @@ public class FloraCoreBukkitCommand extends team.floracore.bukkit.command.FloraC
     }
 
     @CommandMethod("fc|floracore data <target> settemp <key> <value> <duration>")
-    @CommandDescription("临时设置玩家自定义的数据")
+    @CommandDescription("floracore.command.description.floracore.data.settemp")
     public void dataSetTemp(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key, final @NonNull @Argument("value") String value, final @NonNull @Argument("duration") String duration) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
@@ -289,7 +290,7 @@ public class FloraCoreBukkitCommand extends team.floracore.bukkit.command.FloraC
     }
 
     @CommandMethod("fc|floracore data <target> clear")
-    @CommandDescription("清空玩家存储的数据")
+    @CommandDescription("floracore.command.description.floracore.data.clear")
     public void dataClear(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @Nullable @Flag("type") DataType type) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);

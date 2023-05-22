@@ -9,6 +9,7 @@ import cloud.commandframework.execution.*;
 import cloud.commandframework.meta.*;
 import net.md_5.bungee.api.*;
 import team.floracore.bungee.*;
+import team.floracore.bungee.commands.misc.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
@@ -85,5 +86,7 @@ public class CommandManager {
     }
 
     public void constructCommands() {
+        // misc
+        this.annotationParser.parse(new FloraCoreCommand(plugin));
     }
 }
