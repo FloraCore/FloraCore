@@ -1,10 +1,10 @@
 package team.floracore.common.util;
 
 import com.google.common.collect.*;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.*;
-import org.objectweb.asm.tree.*;
 import team.floracore.common.util.wrapper.*;
+import team.floracore.lib.asm.Type;
+import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.tree.*;
 
 import java.lang.reflect.*;
 import java.util.*;

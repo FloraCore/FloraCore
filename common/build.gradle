@@ -58,8 +58,6 @@ dependencies {
 
     api 'io.github.karlatemp:unsafe-accessor:1.7.0'
     api 'com.opencsv:opencsv:5.7.1'
-    api 'org.ow2.asm:asm:9.5'
-    api 'org.ow2.asm:asm-commons:9.5'
     api 'net.bytebuddy:byte-buddy-agent:1.14.4'
 }
 

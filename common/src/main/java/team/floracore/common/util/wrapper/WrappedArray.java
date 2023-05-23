@@ -1,8 +1,8 @@
 package team.floracore.common.util.wrapper;
 
-import org.objectweb.asm.*;
-import org.objectweb.asm.tree.*;
 import team.floracore.common.util.*;
+import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.tree.*;
 
 import java.lang.reflect.*;
 

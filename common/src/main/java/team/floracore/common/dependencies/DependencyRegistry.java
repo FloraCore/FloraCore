@@ -66,7 +66,6 @@ public class DependencyRegistry {
             // relocated.
             case ASM:
             case ASM_COMMONS:
-            case ASM_TREE:
             case JAR_RELOCATOR:
             case H2_DRIVER:
             case H2_DRIVER_LEGACY:

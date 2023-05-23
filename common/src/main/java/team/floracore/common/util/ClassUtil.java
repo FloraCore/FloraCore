@@ -3,9 +3,9 @@ package team.floracore.common.util;
 import com.google.common.collect.*;
 import io.github.karlatemp.unsafeaccessor.*;
 import net.bytebuddy.agent.*;
-import org.objectweb.asm.*;
-import org.objectweb.asm.tree.*;
 import team.floracore.common.util.wrapper.*;
+import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.tree.*;
 
 import javax.tools.*;
 import java.io.*;

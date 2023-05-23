@@ -2,11 +2,11 @@ package team.floracore.common.util.wrapper;
 
 import com.google.common.collect.*;
 import io.github.karlatemp.unsafeaccessor.*;
-import org.objectweb.asm.Type;
-import org.objectweb.asm.*;
-import org.objectweb.asm.tree.*;
 import team.floracore.common.util.Optional;
 import team.floracore.common.util.*;
+import team.floracore.lib.asm.Type;
+import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.tree.*;
 
 import java.io.*;
 import java.lang.annotation.*;
