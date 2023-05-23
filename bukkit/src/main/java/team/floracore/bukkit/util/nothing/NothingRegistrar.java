@@ -3,6 +3,7 @@ package team.floracore.bukkit.util.nothing;
 
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.util.module.*;
+import team.floracore.bukkit.util.wrappednms.*;
 import team.floracore.common.util.*;
 import team.floracore.common.util.nothing.*;
 
@@ -35,6 +36,11 @@ public class NothingRegistrar extends AbsModule implements IRegistrar<Class<? ex
 	@Override
 	public void onEnable() {
 		Nothing.init();
+
+		reg(NmsEntity.class);
+		// reg(NmsEntityFishingHook.class);
+		reg(NmsNetworkManager.class);
+		// reg(NmsRecipeItemStack.class);
 	}
 
 	@Override
