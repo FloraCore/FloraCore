@@ -9,9 +9,9 @@ import java.util.*;
 
 @WrappedBukkitClass(@VersionName(value = "nms.RegistrySimple", maxVer = 13))
 public interface NmsRegistrySimpleV_13 extends WrappedBukkitObject {
-	@WrappedBukkitFieldAccessor(@VersionName("c"))
-	Map<Object, Object> getMap();
+    @WrappedBukkitFieldAccessor(@VersionName("c"))
+    Map<Object, Object> getMap();
 
-	@WrappedBukkitMethod(@VersionName("get"))
-	WrappedObject get(WrappedObject key);
+    @WrappedBukkitMethod(@VersionName("get"))
+    WrappedObject get(WrappedObject key);
 }

@@ -10,5 +10,5 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface WrappedBukkitClass {
-	VersionName[] value();
+    VersionName[] value();
 }

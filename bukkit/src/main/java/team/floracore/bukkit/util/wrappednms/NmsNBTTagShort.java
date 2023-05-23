@@ -7,18 +7,18 @@ import team.floracore.common.util.wrapper.*;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagShort", maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagShort", minVer = 17)})
 public interface NmsNBTTagShort extends NmsNBTTag {
-	static NmsNBTTagShort newInstance(short value) {
-		return WrappedObject.getStatic(NmsNBTTagShort.class).staticNewInstance(value);
-	}
+    static NmsNBTTagShort newInstance(short value) {
+        return WrappedObject.getStatic(NmsNBTTagShort.class).staticNewInstance(value);
+    }
 
-	@WrappedConstructor
-	NmsNBTTagShort staticNewInstance(short value);
+    @WrappedConstructor
+    NmsNBTTagShort staticNewInstance(short value);
 
-	@WrappedBukkitMethod({@VersionName("asShort"), @VersionName(maxVer = 17, value = "f"), @VersionName(minVer = 17, value = "g")})
-	short getValue();
+    @WrappedBukkitMethod({@VersionName("asShort"), @VersionName(maxVer = 17, value = "f"), @VersionName(minVer = 17, value = "g")})
+    short getValue();
 
-	@Override
-	default JsonPrimitive toJson() {
-		return new JsonPrimitive(getValue());
-	}
+    @Override
+    default JsonPrimitive toJson() {
+        return new JsonPrimitive(getValue());
+    }
 }
