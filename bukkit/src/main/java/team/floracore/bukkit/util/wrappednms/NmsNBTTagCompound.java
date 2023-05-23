@@ -1,7 +1,6 @@
 package team.floracore.bukkit.util.wrappednms;
 
 import com.google.gson.*;
-import org.bukkit.*;
 import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.*;
@@ -49,10 +48,6 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
     default NmsNBTTagCompound set(String key, NmsNBTBase value) {
         getMap().put(key, value.getRaw());
         return this;
-    }
-
-    default NmsNBTTagCompound set(String key, NamespacedKey value) {
-        return set(key, NmsNBTTagString.newInstance(value.toString()));
     }
 
     default NmsNBTTagCompound set(String key, String value) {
@@ -182,10 +177,6 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
                 }
             }
         }
-    }
-
-    default NamespacedKey getNamespacedKey(String key) {
-        return NmsMinecraftKey.newInstance(getString(key)).toBukkit();
     }
 
     default NmsNBTTagCompound getCompound(String key) {

@@ -3,10 +3,8 @@ package team.floracore.bukkit.util.itemstack;
 import com.google.common.collect.*;
 import com.google.gson.*;
 import org.bukkit.*;
-import org.bukkit.enchantments.*;
 import org.bukkit.inventory.*;
 import org.bukkit.material.*;
-import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.wrappednms.*;
 import team.floracore.bukkit.util.wrappedobc.*;
 import team.floracore.bukkit.util.wrapper.*;
@@ -182,10 +180,6 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return ObcItemStack.asBukkitCopy(nms);
     }
 
-    public static String getTranslateKey(ItemStack is) {
-        return toNms(is).getTranslateKey();
-    }
-
     public static boolean isAir(ItemStack is) {
         return is == null || is.getType() == Material.AIR || is.getAmount() < 1;
     }
@@ -335,68 +329,6 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
             return hasTag() && (tag().containsKey("Enchantments"));
         else
             return hasTag() && (tag().containsKey("ench"));
-    }
-
-    @SuppressWarnings("deprecation")
-    public Map<Enchantment, Short> getEnchants() {
-        Map<Enchantment, Short> r = new HashMap<>();
-        if (BukkitWrapper.v13) {
-            List<NmsNBTTagCompound> t = TypeUtil.cast(tag().getList("Enchantments").values());
-            if (t == null)
-                return null;
-            t.forEach(n ->
-            {
-                String[] key = n.getString("id").split(":");
-                r.put(EnchantUtil.getEnchant(key.length > 1 ? new NamespacedKey(key[0], key[1]) : new NamespacedKey("minecraft", key[0])), n.getShort("lvl"));
-            });
-        } else {
-            List<NmsNBTTagCompound> t = TypeUtil.cast(tag().getList("ench").values());
-            if (t == null)
-                return null;
-            t.forEach(n ->
-            {
-                r.put(Enchantment.getById(n.getShort("id")), n.getShort("lvl"));
-            });
-        }
-        return r;
-    }
-
-    @SuppressWarnings("deprecation")
-    public ItemStackBuilder setEnchants(Map<Enchantment, Short> enchants) {
-        if (BukkitWrapper.v13) {
-            NmsNBTTagList t = NmsNBTTagList.newInstance();
-            enchants.forEach((e, l) ->
-            {
-                NmsNBTTagCompound tt = NmsNBTTagCompound.newInstance();
-                tt.getMap().put("id", NmsNBTTagString.newInstance(EnchantUtil.getEnchantId(e)).getRaw());
-                tt.getMap().put("lvl", NmsNBTTagShort.newInstance(l).getRaw());
-                t.add(tt);
-            });
-            tag().set("Enchantments", t);
-        } else {
-            NmsNBTTagList t = NmsNBTTagList.newInstance();
-            enchants.forEach((e, l) ->
-            {
-                t.add(NmsNBTTagCompound.newInstance().set("id", NmsNBTTagShort.newInstance((short) e.getId())).set("lvl", NmsNBTTagShort.newInstance(l)));
-            });
-            tag().set("ench", t);
-        }
-        return this;
-    }
-
-    @SuppressWarnings("deprecation")
-    public ItemStackBuilder addEnchant(Enchantment enchant, short lvl) {
-        NmsNBTTagCompound tag = tag();
-        if (BukkitWrapper.v13) {
-            if (!tag.containsKey("Enchantments"))
-                tag.set("Enchantments", NmsNBTTagList.newInstance());
-            tag.getList("Enchantments").add(NmsNBTTagCompound.newInstance().set("id", NmsNBTTagString.newInstance(EnchantUtil.getEnchantId(enchant))).set("lvl", NmsNBTTagShort.newInstance(lvl)));
-        } else {
-            if (!tag.containsKey("ench"))
-                tag.set("ench", NmsNBTTagList.newInstance());
-            tag.getList("ench").add(NmsNBTTagCompound.newInstance().set("id", NmsNBTTagShort.newInstance((short) enchant.getId())).set("lvl", NmsNBTTagShort.newInstance(lvl)));
-        }
-        return this;
     }
 
     public int getHideFlags() {

@@ -60,12 +60,6 @@ public interface NmsItemStack extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor({@VersionName("tag"), @VersionName(value = "@0", minVer = 17)})
     NmsItemStack setTag(NmsNBTTagCompound tag);
 
-    default String getTranslateKey() {
-        if (getItem().isNull())
-            return NmsItem.fromId("air").getTranslateKey(this);
-        return getItem().getTranslateKey(this);
-    }
-
     @WrappedBukkitMethod({@VersionName("cloneItemStack"), @VersionName(value = "m", minVer = 18, maxVer = 18.2f), @VersionName(value = "n", minVer = 18.2f, maxVer = 19), @VersionName(value = "o", minVer = 19)})
     NmsItemStack cloneItemStack();
 }

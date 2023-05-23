@@ -4,8 +4,6 @@ import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.*;
 
-import java.util.*;
-
 @WrappedBukkitClass({@VersionName(value = "nms.Item", maxVer = 17), @VersionName(value = "net.minecraft.world.item.Item", minVer = 17)})
 public interface NmsItem extends WrappedBukkitObject {
     static NmsRegistryMaterials getRegistryV_13() {
@@ -41,48 +39,15 @@ public interface NmsItem extends WrappedBukkitObject {
         return getKey().toString();
     }
 
-    @WrappedBukkitMethod(@VersionName(value = "b", maxVer = 13))
-    String getNameV_13(NmsItemStack is);
+    @WrappedBukkitMethod(@VersionName(value = "b", minVer = 12, maxVer = 13))
+    String getNameV12_13(NmsItemStack is);
+
+    @WrappedBukkitFieldAccessor(@VersionName(value = "name", minVer = 8))
+    String getNameV8(NmsItemStack is);
 
     @WrappedBukkitFieldAccessor({@VersionName("maxStackSize"), @VersionName(value = "c", minVer = 17, maxVer = 18.2f), @VersionName(value = "d", minVer = 18.2f)})
     int getMaxStackSize();
 
     @WrappedBukkitFieldAccessor({@VersionName("maxStackSize"), @VersionName(value = "c", minVer = 17, maxVer = 18.2f), @VersionName(value = "d", minVer = 18.2f)})
     NmsItem setMaxStackSize(int count);
-
-    @WrappedBukkitMethod(@VersionName(value = "a", maxVer = 13))
-    String getTranslateKey0V_13(NmsItemStack is);
-
-    default String getTranslateKeyV_13(NmsItemStack is) {
-        //return getTranslateKey0V_13(is)+".name";
-        Map<String, String> last = NmsLocaleI18nV_13.getLang().getMapV_13();
-        try {
-            String[] key = {null};
-            NmsLocaleI18nV_13.getLang().setMapV_13(new AbstractMap<String, String>() {
-                @Override
-                public Set<Entry<String, String>> entrySet() {
-                    return null;
-                }
-
-                @Override
-                public String get(Object k) {
-                    return key[0] = (String) k;
-                }
-            });
-            getNameV_13(is);
-            return key[0];
-        } finally {
-            NmsLocaleI18nV_13.getLang().setMapV_13(last);
-        }
-    }
-
-    @WrappedBukkitMethod({@VersionName(value = "h", minVer = 13, maxVer = 14), @VersionName(value = "f", minVer = 14, maxVer = 17), @VersionName(value = "j", minVer = 17)})
-    String getTranslateKeyV13(NmsItemStack is);
-
-    default String getTranslateKey(NmsItemStack is) {
-        if (BukkitWrapper.v13)
-            return getTranslateKeyV13(is);
-        else
-            return getTranslateKeyV_13(is);
-    }
 }

@@ -1,13 +1,7 @@
 package team.floracore.bukkit.util.itemstack;
 
-import org.bukkit.*;
-import org.bukkit.enchantments.*;
 import org.bukkit.inventory.*;
-import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.wrappednms.*;
-import team.floracore.bukkit.util.wrapper.*;
-
-import java.util.*;
 
 public class EnchantedBookBuilder extends ItemStackBuilder {
     public static final String id = "minecraft:enchanted_book";
@@ -28,67 +22,8 @@ public class EnchantedBookBuilder extends ItemStackBuilder {
         super(is);
     }
 
-    @SuppressWarnings("deprecation")
-    public ItemStackBuilder setStoredEnchants(Map<Enchantment, Short> enchants) {
-        if (BukkitWrapper.v13) {
-            NmsNBTTagList t = NmsNBTTagList.newInstance();
-            enchants.forEach((e, l) ->
-            {
-                t.add(NmsNBTTagCompound.newInstance().set("StoredEnchantments", NmsNBTTagString.newInstance(EnchantUtil.getEnchantId(e))).set("lvl", NmsNBTTagShort.newInstance(l)));
-            });
-            tag().set("Enchantments", t);
-        } else {
-            NmsNBTTagList t = NmsNBTTagList.newInstance();
-            enchants.forEach((e, l) ->
-            {
-                t.add(NmsNBTTagCompound.newInstance().set("StoredEnchantments", NmsNBTTagShort.newInstance((short) e.getId())).set("lvl", NmsNBTTagShort.newInstance(l)));
-            });
-            tag().set("ench", t);
-        }
-        return this;
-    }
-
     public boolean hasStoredEnchant() {
         return hasTag() && tag().containsKey("StoredEnchantments");
-    }
-
-    @SuppressWarnings("deprecation")
-    public Map<Enchantment, Short> getStoredEnchants() {
-        Map<Enchantment, Short> r = new HashMap<>();
-        if (BukkitWrapper.v13) {
-            List<NmsNBTTagCompound> t = tag().getList("StoredEnchantments").values(NmsNBTTagCompound.class);
-            if (t == null)
-                return null;
-            t.forEach(n ->
-            {
-                String[] key = n.getString("id").split(":");
-                r.put(EnchantUtil.getEnchant(key.length > 1 ? new NamespacedKey(key[0], key[1]) : new NamespacedKey("minecraft", key[0])), n.getShort("lvl"));
-            });
-        } else {
-            List<NmsNBTTagCompound> t = tag().getList("StoredEnchantments").values(NmsNBTTagCompound.class);
-            if (t == null)
-                return null;
-            t.forEach(n ->
-            {
-                r.put(Enchantment.getById(n.getShort("id")), n.getShort("lvl"));
-            });
-        }
-        return r;
-    }
-
-    @SuppressWarnings("deprecation")
-    public ItemStackBuilder addStoredEnchant(Enchantment enchant, short lvl) {
-        NmsNBTTagCompound tag = tag();
-        if (BukkitWrapper.v13) {
-            if (!tag.containsKey("StoredEnchantments"))
-                tag.set("StoredEnchantments", NmsNBTTagList.newInstance());
-            tag.getList("StoredEnchantments").add(NmsNBTTagCompound.newInstance().set("id", NmsNBTTagString.newInstance(EnchantUtil.getEnchantId(enchant))).set("lvl", NmsNBTTagShort.newInstance(lvl)));
-        } else {
-            if (!tag.containsKey("StoredEnchantments"))
-                tag.set("StoredEnchantments", NmsNBTTagList.newInstance());
-            tag.getList("StoredEnchantments").add(NmsNBTTagCompound.newInstance().set("id", NmsNBTTagShort.newInstance((short) enchant.getId())).set("lvl", NmsNBTTagShort.newInstance(lvl)));
-        }
-        return this;
     }
 
     public boolean isStoredEnchantsHide() {

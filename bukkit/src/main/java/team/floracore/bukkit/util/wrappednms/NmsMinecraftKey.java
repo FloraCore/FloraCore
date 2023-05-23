@@ -1,6 +1,5 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import org.bukkit.*;
 import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.*;
@@ -17,16 +16,13 @@ public interface NmsMinecraftKey extends WrappedBukkitObject {
         return WrappedObject.getStatic(NmsMinecraftKey.class).staticNewInstance(s);
     }
 
-    static NmsMinecraftKey newInstance(NamespacedKey key) {
-        return newInstance(key.getNamespace(), key.getKey());
-    }
-
     static NmsMinecraftKey random() {
         return NmsMinecraftKey.newInstance("mzlib", UUID.randomUUID().toString().replace("-", ""));
     }
 
-    @WrappedConstructor
-    NmsMinecraftKey staticNewInstance(String namespace, String key);
+    default NmsMinecraftKey staticNewInstance(String namespace, String key) {
+        return staticNewInstance(namespace + ":" + key);
+    }
 
     @WrappedConstructor
     NmsMinecraftKey staticNewInstance(String s);
@@ -36,9 +32,4 @@ public interface NmsMinecraftKey extends WrappedBukkitObject {
 
     @WrappedBukkitFieldAccessor(@VersionName({"key", "@1"}))
     String getKey();
-
-    @SuppressWarnings("deprecation")
-    default NamespacedKey toBukkit() {
-        return new NamespacedKey(getNamespace(), getKey());
-    }
 }
