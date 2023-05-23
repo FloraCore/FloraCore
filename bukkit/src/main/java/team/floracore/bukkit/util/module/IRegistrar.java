@@ -1,0 +1,33 @@
+package team.floracore.bukkit.util.module;
+
+
+import team.floracore.common.util.*;
+
+import java.util.*;
+
+public interface IRegistrar<T> {
+	List<IRegistrar<?>> registers = new LinkedList<>();
+
+	static <T> List<IRegistrar<T>> getRegistrars(Class<? extends T> type) {
+		List<IRegistrar<T>> r = new LinkedList<>();
+		for (IRegistrar<?> v : registers) {
+			if (v.getType().isAssignableFrom(type)) {
+				r.add(TypeUtil.cast(v));
+			}
+		}
+		return r;
+	}
+
+	Class<T> getType();
+
+	default boolean register(IModule module, T obj) {
+		return register(obj);
+	}
+
+	@Deprecated
+	default boolean register(T obj) {
+		throw new UnsupportedOperationException();
+	}
+
+	void unregister(T obj);
+}

@@ -83,7 +83,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     protected void setupFramework() {
         Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getLoader(), () -> {
             SERVER server = getStorage().getImplementation().selectServer(getServerName());
-            System.out.println(getServerName());
             if (server == null) {
                 ServerType serverType = getConfiguration().get(ConfigKeys.SERVER_TYPE);
                 server = new SERVER(this, getStorage().getImplementation(), -1, getServerName(), serverType, serverType.isAutoSync1(), serverType.isAutoSync2(), System.currentTimeMillis());

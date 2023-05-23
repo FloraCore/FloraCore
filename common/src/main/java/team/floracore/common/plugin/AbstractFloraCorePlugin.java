@@ -5,6 +5,7 @@ import team.floracore.common.api.*;
 import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
+import team.floracore.common.dependencies.relocation.*;
 import team.floracore.common.extension.*;
 import team.floracore.common.locale.data.*;
 import team.floracore.common.locale.message.*;
@@ -41,6 +42,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     public final void onLoad() {
         // load dependencies
         this.dependencyManager = createDependencyManager();
+        // download the required dependencies for remapping
+        this.dependencyManager.loadDependencies(RelocationHandler.DEPENDENCIES);
         this.dependencyManager.loadDependencies(getGlobalDependencies());
 
         // load translations
@@ -174,6 +177,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
     protected Set<Dependency> getGlobalDependencies() {
         Set<Dependency> ret = EnumSet.of(Dependency.ADVENTURE, Dependency.ADVENTURE_NBT);
+        ret.add(Dependency.BYTE_BUDDY_AGENT);
         ret.add(Dependency.ADVENTURE_KEY);
         ret.add(Dependency.ADVENTURE_PLATFORM_API);
         ret.add(Dependency.ADVENTURE_PLATFORM_FACET);

@@ -21,7 +21,7 @@ import java.util.logging.*;
  * Bootstrap plugin for FloraCore running on Bukkit.
  */
 public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, BootstrappedWithLoader {
-    private final Plugin loader;
+    public static Plugin loader;
 
     /**
      * The plugin logger
@@ -56,7 +56,7 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
     private boolean incompatibleVersion = false;
 
     public FCBungeeBootstrap(Plugin loader) {
-        this.loader = loader;
+        FCBungeeBootstrap.loader = loader;
 
         this.logger = new JavaPluginLogger(loader.getLogger());
         this.schedulerAdapter = new BungeeSchedulerAdapter(this);
@@ -77,11 +77,11 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
     @Override
     public Plugin getLoader() {
-        return this.loader;
+        return loader;
     }
 
     public ProxyServer getProxy() {
-        return this.loader.getProxy();
+        return loader.getProxy();
     }
 
     @Override

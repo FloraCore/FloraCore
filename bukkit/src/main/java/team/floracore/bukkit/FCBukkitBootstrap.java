@@ -23,7 +23,7 @@ import java.util.logging.*;
  * Bootstrap plugin for FloraCore running on Bukkit.
  */
 public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, BootstrappedWithLoader {
-    private final JavaPlugin loader;
+    public static JavaPlugin loader;
 
     /**
      * The plugin logger
@@ -63,7 +63,7 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
     private boolean incompatibleVersion = false;
 
     public FCBukkitBootstrap(JavaPlugin loader) {
-        this.loader = loader;
+        FCBukkitBootstrap.loader = loader;
 
         this.logger = new JavaPluginLogger(loader.getLogger());
         this.schedulerAdapter = new BukkitSchedulerAdapter(this);
@@ -85,11 +85,11 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
     @Override
     public JavaPlugin getLoader() {
-        return this.loader;
+        return loader;
     }
 
     public Server getServer() {
-        return this.loader.getServer();
+        return loader.getServer();
     }
 
     @Override

@@ -22,8 +22,6 @@ public class RelocationHandler {
     public RelocationHandler(DependencyManager dependencyManager) {
         ClassLoader classLoader = null;
         try {
-            // download the required dependencies for remapping
-            dependencyManager.loadDependencies(DEPENDENCIES);
             // get a classloader containing the required dependencies as sources
             classLoader = dependencyManager.obtainClassLoaderWith(DEPENDENCIES);
 
