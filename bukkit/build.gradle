@@ -36,6 +36,7 @@ shadowJar {
         include(dependency('team.floracore:.*'))
     }
 
+    relocate 'org.objectweb.asm', 'team.floracore.lib.asm'
     relocate 'org.mariadb.jdbc', 'team.floracore.lib.mariadb'
     relocate 'com.mysql', 'team.floracore.lib.mysql'
     relocate 'org.postgresql', 'team.floracore.lib.postgresql'

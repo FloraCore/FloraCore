@@ -55,10 +55,6 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
 		return set(key, NmsNBTTagString.newInstance(value.toString()));
 	}
 
-	default NmsNBTTagCompound set(String key, NmsRecipeItemStack value) {
-		return set(key, NmsNBTTagList.newInstance(value));
-	}
-
 	default NmsNBTTagCompound set(String key, String value) {
 		return set(key, NmsNBTTagString.newInstance(value));
 	}

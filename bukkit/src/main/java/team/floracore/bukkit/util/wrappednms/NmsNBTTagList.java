@@ -1,14 +1,11 @@
 package team.floracore.bukkit.util.wrappednms;
 
 import com.google.gson.*;
-import org.bukkit.inventory.*;
 import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.itemstack.*;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.*;
 
 import java.util.*;
-import java.util.stream.*;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagList", maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagList", minVer = 17)})
 public interface NmsNBTTagList extends NmsNBTTag {
@@ -38,16 +35,6 @@ public interface NmsNBTTagList extends NmsNBTTag {
 			r.add(NmsNBTTag.wrapValue(v));
 		});
 		return r;
-	}
-
-	static NmsNBTTagList newInstance(NmsRecipeItemStack value) {
-		return NmsNBTTagList.newInstance(value == null ? new ArrayList<>() : value.getChoices().stream().map(is -> NmsNBTTagCompound.newInstance().set("raw", new ItemStackBuilder(is).save())).collect(Collectors.toList()));
-	}
-
-	default NmsRecipeItemStack toRecipeItemStack() {
-		if (this.size() == 0)
-			return NmsRecipeItemStack.air();
-		return NmsRecipeItemStack.hybrid(this.values(NmsNBTTagCompound.class).stream().map(n -> new ItemStackBuilder(n.getCompound("raw")).get()).toArray(ItemStack[]::new));
 	}
 
 	@WrappedConstructor

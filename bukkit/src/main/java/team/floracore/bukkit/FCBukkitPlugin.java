@@ -6,6 +6,8 @@ import org.bukkit.plugin.java.*;
 import org.floracore.api.server.*;
 import team.floracore.bukkit.command.*;
 import team.floracore.bukkit.listener.*;
+import team.floracore.bukkit.util.*;
+import team.floracore.bukkit.util.module.*;
 import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
@@ -81,6 +83,10 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     @Override
     protected void setupFramework() {
+        RegistrarRegistrar.instance.load();
+        ListenerRegistrar.instance.load();
+        IModule.ModuleModule.instance.load();
+
         Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getLoader(), () -> {
             SERVER server = getStorage().getImplementation().selectServer(getServerName());
             if (server == null) {

@@ -25,6 +25,9 @@ public class RelocationHandler {
             // get a classloader containing the required dependencies as sources
             classLoader = dependencyManager.obtainClassLoaderWith(DEPENDENCIES);
 
+            // download the required dependencies for remapping
+            dependencyManager.loadDependencies(DEPENDENCIES);
+
             // load the relocator class
             Class<?> jarRelocatorClass = classLoader.loadClass(JAR_RELOCATOR_CLASS);
 
