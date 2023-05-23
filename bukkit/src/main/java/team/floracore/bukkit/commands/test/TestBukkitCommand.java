@@ -14,9 +14,11 @@ import net.luckperms.api.model.user.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
+import team.floracore.bukkit.util.itemstack.*;
 
 import java.util.*;
 
@@ -190,5 +192,12 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
             String pPrefix = user.getCachedData().getMetaData().getPrefix();
             player.sendMessage(pPrefix);
         }
+    }
+
+    @CommandMethod("test item a1")
+    public void itemA1(final @NonNull Player player){
+        ItemStackBuilder isb = ItemStackBuilder.whiteStainedGlassPane();
+        ItemStack itemStack = isb.get();
+        player.getInventory().setItem(1,itemStack);
     }
 }
