@@ -11,30 +11,30 @@ public interface NmsItemStack extends WrappedBukkitObject {
         return WrappedObject.getStatic(NmsItemStack.class).staticFromNbtV13(nbt);
     }
 
-    static NmsItemStack newInstanceV_13(NmsNBTTagCompound nbt) {
-        return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV_13(nbt);
+    static NmsItemStack newInstanceV12_13(NmsNBTTagCompound nbt) {
+        return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV12_13(nbt);
     }
 
     static NmsItemStack fromNbt(NmsNBTTagCompound nbt) {
         if (BukkitWrapper.v13)
             return fromNbtV13(nbt);
         else
-            return newInstanceV_13(nbt);
+            return newInstanceV12_13(nbt);
     }
 
     static NmsItemStack newInstance(NmsItem item, int count) {
         if (BukkitWrapper.v13)
             return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV13(item.cast(NmsIMaterialV13.class), count);
         else
-            return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV_13(item, count);
+            return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV12_13(item, count);
     }
 
     static NmsItemStack newInstance(NmsItem item) {
         return newInstance(item, 1);
     }
 
-    @WrappedBukkitConstructor(maxVer = 13)
-    NmsItemStack staticNewInstanceV_13(NmsItem item, int count);
+    @WrappedBukkitConstructor(minVer = 12, maxVer = 13)
+    NmsItemStack staticNewInstanceV12_13(NmsItem item, int count);
 
     @WrappedBukkitConstructor(minVer = 13)
     NmsItemStack staticNewInstanceV13(NmsIMaterialV13 item, int count);
@@ -42,8 +42,8 @@ public interface NmsItemStack extends WrappedBukkitObject {
     @WrappedBukkitMethod(@VersionName(value = {"fromCompound", "a"}, minVer = 13))
     NmsItemStack staticFromNbtV13(NmsNBTTagCompound nbt);
 
-    @WrappedBukkitConstructor(maxVer = 13)
-    NmsItemStack staticNewInstanceV_13(NmsNBTTagCompound nbt);
+    @WrappedBukkitConstructor(minVer = 12, maxVer = 13)
+    NmsItemStack staticNewInstanceV12_13(NmsNBTTagCompound nbt);
 
     @WrappedMethod({"save", "b"})
     NmsNBTTagCompound save(NmsNBTTagCompound nbt);
