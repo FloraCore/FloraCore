@@ -60,7 +60,7 @@ public interface BookMessage extends AbstractMessage {
             // 想要恢复平常状态,请输入{0}
             .key("floracore.command.misc.nick.book.reset")
             // {0}
-            .args(text("/unnick").decoration(BOLD, true)).append(FULL_STOP).color(BLACK).build();
+            .args(text("/nick reset").decoration(BOLD, true)).append(FULL_STOP).color(BLACK).build();
 
     Args2<String, String> COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM = (rank, skin) -> {
         ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin + " random");
@@ -99,6 +99,10 @@ public interface BookMessage extends AbstractMessage {
     Args0 COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1 = () -> translatable()
             // 你已经完成了你的昵称的设置!
             .key("floracore.command.misc.nick.book.finish-page.line.1").color(BLACK).build();
+
+    Args0 COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1_MESSAGE = () -> translatable()
+            // 你已经完成了你的昵称的设置!
+            .key("floracore.command.misc.nick.book.finish-page.line.1").color(AQUA).build();
 
     Args2<String, String> COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_2 = (rank, name) -> {
         Component r = AbstractMessage.formatColoredValue(rank + " " + name);

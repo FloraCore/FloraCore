@@ -81,6 +81,13 @@ public interface PlayerCommandMessage extends AbstractMessage {
             // 你当前未处于昵称状态！
             .key("floracore.command.unnick.not-in").color(RED));
 
+    Args0 COMMAND_MISC_NICK_ALREADY_NICKED = () -> translatable()
+            // 你已经修改了昵称,若要继续使用该功能,请输入{0}以恢复到平常状态
+            .key("floracore.command.misc.nick.already-nicked")
+            // {0}
+            .args(text("/nick reset", DARK_RED).decoration(BOLD, true)).append(FULL_STOP).color(RED).build();
+
+
     Args1<Integer> COMMAND_AIR_GET_SELF_MAX = value -> AbstractMessage.prefixed(translatable().key("floracore.command.air.get.self.max").color(AQUA).args(text(value)).color(GREEN));
 
     Args1<Integer> COMMAND_AIR_GET_SELF_REMAINING = value -> AbstractMessage.prefixed(translatable().key("floracore.command.air.get.self.remaining").color(AQUA).args(text(value)).color(GREEN));

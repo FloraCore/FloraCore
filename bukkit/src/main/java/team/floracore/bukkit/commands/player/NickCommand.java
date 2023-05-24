@@ -65,7 +65,8 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         Audience target = getPlugin().getSenderFactory().getAudiences().player(p);
         DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
-            performUnNick(p);
+            PlayerCommandMessage.COMMAND_MISC_NICK_ALREADY_NICKED.send(sender);
+            return;
         }
         performNick(p, "rank0", "random", name, true);
         target.openBook(getFinishPage("rank0", name, uuid));
@@ -85,6 +86,12 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         }
     }
 
+    @CommandMethod("nick reset")
+    @CommandDescription("取消你的昵称")
+    public void nickReset(final @NotNull Player p) {
+        unNick(p);
+    }
+
     @CommandMethod("book-nick <page> [rank] [skin] [name] [nickname]")
     @CommandDescription("根据页面召唤Nick书本")
     public void bookNick(final @NotNull Player p, final @Argument("page") Integer page, final @Argument("rank") String rank, final @Argument("skin") String skin, final @Argument("name") String name, @Argument("nickname") String nickname) {
@@ -98,7 +105,8 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         boolean custom = p.hasPermission("floracore.command.nick.custom");
         DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
-            performUnNick(p);
+            PlayerCommandMessage.COMMAND_MISC_NICK_ALREADY_NICKED.send(sender);
+            return;
         }
         if (rank != null) {
             if (ranks.containsKey(rank)) {
@@ -160,6 +168,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                             } else {
                                 performNick(p, rank, skin, nickname, true);
                                 target.openBook(getFinishPage(ranks_prefix.get(rank), nickname, uuid));
+                                BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1_MESSAGE.send(sender);
                             }
                         } else {
                             MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
