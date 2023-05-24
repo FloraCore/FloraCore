@@ -7,4 +7,7 @@ import team.floracore.bukkit.util.wrapper.*;
 public interface NmsEntityPlayer extends NmsEntityHuman {
     @WrappedBukkitFieldAccessor({@VersionName("playerConnection"), @VersionName(minVer = 17, value = "b")})
     NmsPlayerConnection getPlayerConnection();
+
+    @WrappedBukkitFieldAccessor(@VersionName("ping"))
+    int getPing();
 }
