@@ -26,6 +26,10 @@ public class TranslationManager {
      * The default locale used by FloraCore messages
      */
     public static final Locale DEFAULT_LOCALE = Locale.SIMPLIFIED_CHINESE;
+    public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build();
     private static final AsyncCache<UUID, Locale> localeCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
     private final FloraCorePlugin plugin;
     private final Set<Locale> installed = ConcurrentHashMap.newKeySet();
@@ -33,10 +37,6 @@ public class TranslationManager {
     private final Path repositoryTranslationsDirectory;
     private final Path customTranslationsDirectory;
     private TranslationRegistry registry;
-    public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
-            .hexColors()
-            .useUnusualXRepeatedCharacterHexFormat()
-            .build();
 
     public TranslationManager(FloraCorePlugin plugin) {
         this.plugin = plugin;

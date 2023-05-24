@@ -117,7 +117,7 @@ public class CommandManager {
         this.annotationParser.parse(new GameModeBukkitCommand(plugin));
         // this.annotationParser.parse(new GiveCommand(plugin));
         this.annotationParser.parse(new HasPermissionBukkitCommand(plugin));
-        // this.annotationParser.parse(new HatCommand(plugin));
+        this.annotationParser.parse(new HatCommand(plugin));
         // this.annotationParser.parse(new HealCommand(plugin));
         this.annotationParser.parse(new InvSeeBukkitCommand(plugin));
         // this.annotationParser.parse(new MaxHealthCommand(plugin));
@@ -128,7 +128,7 @@ public class CommandManager {
         // this.annotationParser.parse(new ReportCommand(plugin)); // TODO 命令已完成基本测试
         this.annotationParser.parse(new SpeedBukkitCommand(plugin));
         this.annotationParser.parse(new SuicideBukkitCommand(plugin));
-        // this.annotationParser.parse(new TopCommand(plugin));
+        this.annotationParser.parse(new TopCommand(plugin));
 
         // server
         this.annotationParser.parse(new BroadCastBukkitCommand(plugin));
