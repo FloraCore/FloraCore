@@ -114,6 +114,20 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
 		return false;
 	}
 
+	public static void sendPacket(Player receiver, NmsPacket packet) {
+		if (BukkitWrapper.version >= 12) {
+			WrappedObject.wrap(ObcEntity.class, receiver).getHandle().cast(NmsEntityPlayer.class).getPlayerConnection().getNetworkManager().sendPacket(packet);
+		} else {
+			WrappedObject.wrap(ObcEntity.class, receiver).getHandle().cast(NmsEntityPlayer.class).getPlayerConnection().sendPacket(packet);
+		}
+	}
+
+	public static void sendPacketToAllPlayers(NmsPacket packet) {
+		for (Player po : Bukkit.getOnlinePlayers()) {
+			sendPacket(po, packet);
+		}
+	}
+
 	@Override
 	public Class<PacketListener> getType() {
 		return PacketListener.class;
@@ -161,20 +175,6 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
 	public static class ReceiveListener<T extends NmsPacket> extends PacketListener<T> {
 		public ReceiveListener(EventPriority priority, Class<T> type, TriConsumer<Player, T, Ref<Boolean>> listener) {
 			super(priority, type, listener);
-		}
-	}
-
-	public static void sendPacket(Player receiver, NmsPacket packet) {
-		if (BukkitWrapper.version >= 12) {
-			WrappedObject.wrap(ObcEntity.class, receiver).getHandle().cast(NmsEntityPlayer.class).getPlayerConnection().getNetworkManager().sendPacket(packet);
-		} else {
-			WrappedObject.wrap(ObcEntity.class, receiver).getHandle().cast(NmsEntityPlayer.class).getPlayerConnection().sendPacket(packet);
-		}
-	}
-
-	public static void sendPacketToAllPlayers(NmsPacket packet) {
-		for (Player po : Bukkit.getOnlinePlayers()) {
-			sendPacket(po, packet);
 		}
 	}
 }

@@ -8,9 +8,9 @@ import team.floracore.common.util.wrapper.*;
 
 @WrappedBukkitClass(@VersionName("obc.inventory.CraftInventory"))
 public interface ObcInventory extends WrappedBukkitObject {
-	@WrappedMethod("getInventory")
-	NmsIInventory getNms();
+    @WrappedMethod("getInventory")
+    NmsIInventory getNms();
 
-	@Override
-	Inventory getRaw();
+    @Override
+    Inventory getRaw();
 }

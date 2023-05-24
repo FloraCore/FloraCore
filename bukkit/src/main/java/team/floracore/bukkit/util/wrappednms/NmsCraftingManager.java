@@ -33,6 +33,7 @@ public interface NmsCraftingManager extends WrappedBukkitObject {
 		else
 			addRecipeV_13(key, recipe);
 	}
+
 	static Map<Object, Object> getBlastingRecipesV13() {
 		if (BukkitWrapper.v13)
 			return NmsMinecraftServer.getServer().getCraftingManagerV13().getRecipesV14().get(NmsRecipesV14.blasting());

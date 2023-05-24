@@ -121,7 +121,7 @@ public class CommandManager {
         // this.annotationParser.parse(new HealCommand(plugin));
         this.annotationParser.parse(new InvSeeBukkitCommand(plugin));
         // this.annotationParser.parse(new MaxHealthCommand(plugin));
-        // this.annotationParser.parse(new NickCommand(plugin)); // TODO 命令测试中 未测试：Rank设置 未完善：Skin设置 (目前已经将Rank设置和Skin设置移除)
+        this.annotationParser.parse(new NickCommand(plugin)); // TODO 命令测试中 未测试：Rank设置 未完善：Skin设置 (目前已经将Rank设置和Skin设置移除)
         this.annotationParser.parse(new OPListBukkitCommand(plugin));
         // this.annotationParser.parse(new PingCommand(plugin));
         this.annotationParser.parse(new RealNameBukkitCommand(plugin));

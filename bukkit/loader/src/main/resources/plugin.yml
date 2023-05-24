@@ -4,7 +4,6 @@ description: A basic plugin with rich functions
 website: https://github.com/FloraCore/FloraCore
 main: team.floracore.bukkit.loader.BukkitLoaderPlugin
 depend:
-  - ProtocolLib
   - LuckPerms
 softdepend:
   - PremiumVanish

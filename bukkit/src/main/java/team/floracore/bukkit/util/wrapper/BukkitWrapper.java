@@ -27,11 +27,11 @@ public class BukkitWrapper {
     public static String MCProtocolVersion = Bukkit.getServer().getClass().getPackage().getName().replace("org.bukkit.craftbukkit.", "");
 
     static {
-        v8 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server.v1_8_R3.Entity"));
         v17 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server." + MCProtocolVersion + ".MinecraftServer"));
         v13 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server." + MCProtocolVersion + ".ItemStack").getDeclaredField("damage"));
         MCVersion = Bukkit.getBukkitVersion().split("-")[0];
         version = Float.parseFloat(BukkitWrapper.MCVersion.split("\\.", 2)[1]);
+        v8 = version < 9;
     }
 
     public static boolean inVersion(VersionName v) {

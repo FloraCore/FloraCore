@@ -15,11 +15,6 @@ public enum DataType {
      */
     FUNCTION("function"),
     /**
-     * 暂存储的数据
-     * 例如：LuckPerms的Prefix
-     */
-    STAGING_DATA("staging-data"),
-    /**
      * 聊天记录
      */
     CHAT("chat"),
