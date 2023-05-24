@@ -93,7 +93,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
 
     @CommandMethod("book-nick <page> [rank] [skin] [name] [nickname]")
     @CommandDescription("根据页面召唤Nick书本")
-    public void bookNick(final @NotNull Player p, final @Argument("page") Integer page, final @Argument("rank") String rank, final @Argument("skin") String skin, final @Argument("name") String name, @Argument("nickname") String nickname) {
+    public void bookNick(final @NotNull Player p, final @Argument("page") Integer page, final @Argument("rank") String rank, final @Argument("skin") SkinType skin, final @Argument("name") String name, @Argument("nickname") String nickname) {
         UUID uuid = p.getUniqueId();
         Audience target = getPlugin().getSenderFactory().getAudiences().player(p);
         Sender sender = getPlugin().getSenderFactory().wrap(p);
@@ -137,11 +137,11 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                 case 3:
                     // name page
                     Component sc = null;
-                    if (skin.equalsIgnoreCase("steve-alex")) {
+                    if (skin == SkinType.STEVE_ALEX) {
                         sc = BookMessage.COMMAND_MISC_NICK_SKIN_STEVE_ALEX.build();
-                    } else if (skin.equalsIgnoreCase("random")) {
+                    } else if (skin == SkinType.RANDOM) {
                         sc = BookMessage.COMMAND_MISC_NICK_SKIN_RANDOM.build();
-                    } else if (skin.equalsIgnoreCase("reuse")) {
+                    } else if (skin == SkinType.REUSE) {
                         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
                         if (data != null) {
                             sc = BookMessage.COMMAND_MISC_NICK_SKIN_REUSE.build(data.getValue());
@@ -166,7 +166,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                         } else if (name.equalsIgnoreCase("random") && !custom) {
                             nickname = getPlugin().getNamesRepository().getRandomNameProperty().getName();
                         }
-                        performNick(p, rank, skin, nickname, true);
+                        performNick(p, rank, skin.name(), nickname, true);
                         target.openBook(getFinishPage(ranks_prefix.get(rank), nickname, uuid));
                     }
                     break;
@@ -177,7 +177,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                             if (nickname == null) {
                                 MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
                             } else {
-                                performNick(p, rank, skin, nickname, true);
+                                performNick(p, rank, skin.name(), nickname, true);
                                 target.openBook(getFinishPage(ranks_prefix.get(rank), nickname, uuid));
                                 BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1_MESSAGE.send(sender);
                             }
@@ -360,7 +360,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
 
-    private Book getNamePage(Player player, String rank, String skin) {
+    private Book getNamePage(Player player, String rank, SkinType skin) {
         UUID uuid = player.getUniqueId();
         Component bookTitle = text("FloraCore Nick NamePage");
         Component bookAuthor = text("FloraCore");
@@ -387,7 +387,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
 
-    private Book getRandomPage(String rank, String skin, UUID uuid) {
+    private Book getRandomPage(String rank, SkinType skin, UUID uuid) {
         Component bookTitle = text("FloraCore Nick RandomPage");
         Component bookAuthor = text("FloraCore");
         Collection<Component> bookPages = new ArrayList<>();
@@ -463,5 +463,12 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                 }
             }
         }
+    }
+
+    public enum SkinType {
+        NORMAL,
+        STEVE_ALEX,
+        RANDOM,
+        REUSE
     }
 }

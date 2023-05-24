@@ -73,7 +73,7 @@ public interface PlayerCommandMessage extends AbstractMessage {
             // 你的皮肤已设置为 {0} !
             .key("floracore.command.nick.setup.skin")
             // {}
-            .args(skin).color(AQUA));
+            .args(skin.color(GREEN)).color(AQUA));
 
     Args0 COMMAND_UNNICK_SUCCESS = () -> AbstractMessage.prefixed(translatable()
             // 你的昵称已移除！

@@ -2,6 +2,7 @@ package team.floracore.bukkit.locale.message;
 
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.event.*;
+import team.floracore.bukkit.commands.player.*;
 import team.floracore.common.locale.message.*;
 
 import java.util.*;
@@ -19,8 +20,8 @@ public interface BookMessage extends AbstractMessage {
             // {0}
             .key("floracore.command.misc.nick.book.random-page.name").args(text(name).decoration(BOLD, true)).color(BLACK).build();
 
-    Args3<String, String, String> COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_USE_NAME = (rank, skin, name) -> {
-        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 5 " + rank + " " + skin + " random " + name);
+    Args3<String, NickCommand.SkinType, String> COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_USE_NAME = (rank, skin, name) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 5 " + rank + " " + skin.name() + " random " + name);
         HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
                 // 点击以使用这个昵称
                 .key("floracore.command.misc.nick.book.random-page.use-name.hover").color(WHITE).build());
@@ -29,8 +30,8 @@ public interface BookMessage extends AbstractMessage {
                 .key("floracore.command.misc.nick.book.random-page.use-name").hoverEvent(hoverEvent).clickEvent(clickEvent).decoration(UNDERLINED, true).color(GREEN).build());
     };
 
-    Args2<String, String> COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_TRY_AGAIN = (rank, skin) -> {
-        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin + " random");
+    Args2<String, NickCommand.SkinType> COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_TRY_AGAIN = (rank, skin) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin.name() + " random");
         HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
                 // 点击这里生成另一个昵称
                 .key("floracore.command.misc.nick.book.random-page.try-again.hover").color(WHITE).build());
@@ -39,8 +40,8 @@ public interface BookMessage extends AbstractMessage {
                 .key("floracore.command.misc.nick.book.random-page.try-again").hoverEvent(hoverEvent).clickEvent(clickEvent).decoration(UNDERLINED, true).color(RED).build());
     };
 
-    Args2<String, String> COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_CUSTOM = (rank, skin) -> {
-        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin + " custom");
+    Args2<String, NickCommand.SkinType> COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_CUSTOM = (rank, skin) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin.name() + " custom");
         HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
                 // 点击这里以输入自定义昵称
                 .key("floracore.command.misc.nick.book.random-page.custom.hover").color(WHITE).build());
@@ -62,8 +63,8 @@ public interface BookMessage extends AbstractMessage {
             // {0}
             .args(text("/nick reset").decoration(BOLD, true)).append(FULL_STOP).color(BLACK).build();
 
-    Args2<String, String> COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM = (rank, skin) -> {
-        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin + " random");
+    Args2<String, NickCommand.SkinType> COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM = (rank, skin) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin.name() + " random");
         HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
                 // 点击这里以使用随机昵称
                 .key("floracore.command.misc.nick.book.name-page.name.random.hover").color(WHITE).build());
@@ -72,8 +73,8 @@ public interface BookMessage extends AbstractMessage {
                 .key("floracore.command.misc.nick.book.name-page.name.random").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
     };
 
-    Args2<String, String> COMMAND_MISC_NICK_BOOK_NAME_PAGE_CUSTOM = (rank, skin) -> {
-        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin + " custom");
+    Args2<String, NickCommand.SkinType> COMMAND_MISC_NICK_BOOK_NAME_PAGE_CUSTOM = (rank, skin) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin.name() + " custom");
         HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
                 // 使用自定义昵称
                 .key("floracore.command.misc.nick.book.name-page.name.custom.hover").color(WHITE).build());
@@ -82,8 +83,8 @@ public interface BookMessage extends AbstractMessage {
                 .key("floracore.command.misc.nick.book.name-page.name.custom").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
     };
 
-    Args3<String, String, String> COMMAND_MISC_NICK_BOOK_NAME_PAGE_REUSE = (rank, skin, reuse) -> {
-        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin + " reuse");
+    Args3<String, NickCommand.SkinType, String> COMMAND_MISC_NICK_BOOK_NAME_PAGE_REUSE = (rank, skin, reuse) -> {
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 4 " + rank + " " + skin.name() + " reuse");
         HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
                 // 再次使用"{0}"
                 .key("floracore.command.misc.nick.book.name-page.name.reuse.hover")
@@ -231,7 +232,7 @@ public interface BookMessage extends AbstractMessage {
 
     Args0 COMMAND_MISC_NICK_SKIN_STEVE_ALEX = () -> translatable().key("floracore.command.misc.nick.book.skin-page.skin.steve-alex").build();
     Args0 COMMAND_MISC_NICK_SKIN_RANDOM = () -> translatable().key("floracore.command.misc.nick.book.skin-page.skin.random").build();
-    Args0 COMMAND_MISC_NICK_SKIN_NORMAL = () -> translatable().key("floracore.command.misc.nick.book.skin-page.skin.normal").build();
+    Args0 COMMAND_MISC_NICK_SKIN_NORMAL = () -> translatable().key("floracore.command.misc.nick.book.skin-page.skin.normal.pure").build();
     Args1<String> COMMAND_MISC_NICK_SKIN_REUSE = (skin) -> translatable().key("floracore.command.misc.nick.book.skin-page.skin.reuse.pure").args(text(skin)).build();
 
     Args1<String> COMMAND_MISC_NICK_BOOK_SKIN_PAGE_RANDOM = (rank) -> {
