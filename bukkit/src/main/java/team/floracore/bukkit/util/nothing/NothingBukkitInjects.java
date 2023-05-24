@@ -5,5 +5,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.METHOD)
 public @interface NothingBukkitInjects {
-	NothingBukkitInject[] value();
+    NothingBukkitInject[] value();
 }
