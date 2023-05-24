@@ -7,6 +7,8 @@ import org.bukkit.event.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.util.module.*;
 import team.floracore.bukkit.util.wrappednms.*;
+import team.floracore.bukkit.util.wrappedobc.*;
+import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.*;
 import team.floracore.common.util.wrapper.*;
 
@@ -158,6 +160,14 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
 	public static class ReceiveListener<T extends NmsPacket> extends PacketListener<T> {
 		public ReceiveListener(EventPriority priority, Class<T> type, TriConsumer<Player, T, Ref<Boolean>> listener) {
 			super(priority, type, listener);
+		}
+	}
+
+	public static void sendPacket(Player receiver, NmsPacket packet) {
+		if (BukkitWrapper.version >= 12) {
+			WrappedObject.wrap(ObcEntity.class, receiver).getHandle().cast(NmsEntityPlayer.class).getPlayerConnection().getNetworkManager().sendPacket(packet);
+		} else {
+			WrappedObject.wrap(ObcEntity.class, receiver).getHandle().cast(NmsEntityPlayer.class).getPlayerConnection().sendPacket(packet);
 		}
 	}
 }

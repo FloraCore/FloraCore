@@ -1,5 +1,6 @@
 package team.floracore.bukkit.util.wrappednms;
 
+import io.netty.util.concurrent.*;
 import org.bukkit.entity.*;
 import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.nothing.*;
@@ -29,4 +30,20 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
 
     @WrappedBukkitMethod({@VersionName(minVer = 12, value = "sendPacket"), @VersionName(minVer = 18, value = "a")})
     void sendPacket(NmsPacket packet);
+
+    @WrappedBukkitFieldAccessor({@VersionName("packetListener"), @VersionName(maxVer = 13, value = "m"), @VersionName(minVer = 17, maxVer = 18.2f, value = "m"), @VersionName(value = "o", minVer = 18.2f, maxVer = 19), @VersionName(value = "o", minVer = 19)})
+    NmsPacketListener getPacketListener();
+
+    @NothingBukkitInject(name = @VersionName(minVer = 8, maxVer = 12, value = "handle"), args = {NmsPacket.class}, location = NothingLocation.FRONT)
+    @NothingBukkitInject(name = @VersionName(minVer = 12, maxVer = 13, value = "sendPacket"), args = {NmsPacket.class}, location = NothingLocation.FRONT)
+    @NothingBukkitInject(name = @VersionName(maxVer = 13, value = "a"), args = {NmsPacket.class, GenericFutureListener[].class}, location = NothingLocation.FRONT)
+    @NothingBukkitInject(name = {@VersionName(minVer = 13, value = "sendPacket", maxVer = 19.1f), @VersionName(minVer = 18, value = "a", maxVer = 19.1f)}, args = {NmsPacket.class, GenericFutureListener.class}, location = NothingLocation.FRONT)
+    @NothingBukkitInject(name = @VersionName(value = {"sendPacket", "a"}, minVer = 19.1f), args = {NmsPacket.class, NmsPacketSendListener.class}, location = NothingLocation.FRONT)
+    default Optional<Void> sendPacketBefore(@LocalVar(1) NmsPacket packet) {
+        if (this.getPacketListener().is(NmsPlayerConnection.class)) {
+            if (ProtocolUtil.onPacketSend((Player) this.getPacketListener().cast(NmsPlayerConnection.class).getPlayer().getBukkitEntity(), packet))
+                return Nothing.doReturn(null);
+        }
+        return Nothing.doContinue();
+    }
 }

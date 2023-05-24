@@ -11,4 +11,7 @@ public interface NmsPlayerConnection extends NmsPacketListener {
 
 	@WrappedBukkitFieldAccessor({@VersionName("player"), @VersionName(minVer = 17, value = "b", maxVer = 19), @VersionName(value = "c", minVer = 19, maxVer = 19.4f), @VersionName(value = "@0", minVer = 19.4f)})
 	NmsEntityPlayer getPlayer();
+
+	@WrappedBukkitMethod(@VersionName(minVer = 8, maxVer = 12, value = "sendPacket"))
+	void sendPacket(NmsPacket packet);
 }

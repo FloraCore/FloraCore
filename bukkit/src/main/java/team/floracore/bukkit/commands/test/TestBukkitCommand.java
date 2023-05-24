@@ -216,5 +216,6 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
         WrappedGameProfile wgp = neh.getGameProfile();
         wgp.setName(name);
         player.setDisplayName(name);
+        player.setPlayerListName(null);
     }
 }
