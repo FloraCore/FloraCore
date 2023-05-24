@@ -19,6 +19,8 @@ import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
 import team.floracore.bukkit.util.itemstack.*;
+import team.floracore.bukkit.util.wrappedmojang.*;
+import team.floracore.bukkit.util.wrappednms.*;
 
 import java.util.*;
 
@@ -195,9 +197,24 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("test item a1")
-    public void itemA1(final @NonNull Player player){
+    public void itemA1(final @NonNull Player player) {
         ItemStackBuilder isb = ItemStackBuilder.whiteStainedGlassPane();
         ItemStack itemStack = isb.get();
-        player.getInventory().setItem(1,itemStack);
+        player.getInventory().setItem(1, itemStack);
+    }
+
+    @CommandMethod("test nms a1")
+    public void nmsA1(final @NonNull Player player) {
+        NmsEntityHuman neh = NmsEntityHuman.fromBukkit(player);
+        WrappedGameProfile wgp = neh.getGameProfile();
+        System.out.println(wgp.getName());
+    }
+
+    @CommandMethod("test nms a2 <name>")
+    public void nmsA2(final @NonNull Player player, final @NonNull @Argument("name") String name) {
+        NmsEntityHuman neh = NmsEntityHuman.fromBukkit(player);
+        WrappedGameProfile wgp = neh.getGameProfile();
+        wgp.setName(name);
+        player.setDisplayName(name);
     }
 }

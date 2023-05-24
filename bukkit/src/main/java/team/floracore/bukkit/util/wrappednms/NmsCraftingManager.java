@@ -33,25 +33,6 @@ public interface NmsCraftingManager extends WrappedBukkitObject {
 		else
 			addRecipeV_13(key, recipe);
 	}
-
-	//	static List<KeyedFurnaceRecipe> getFurnaceRecipes()
-//	{
-//		if(BukkitWrapper.v13)
-//			return getSmeltingRecipesV13().entrySet().stream().map(e->WrappedObject.wrap(NmsFurnaceRecipeV13.class,e.getValue())).map(r->new KeyedFurnaceRecipe((FurnaceRecipe) r.toBukkitRecipe())).collect(Collectors.toList());
-//		else
-//			return NmsRecipesFurnaceV_13.getBukkitRecipes();
-//	}
-//	static void removeFurnaceRecipe(NamespacedKey key)
-//	{
-//		if(BukkitWrapper.v13)
-//			removeRecipe(getSmeltingRecipesV13(),key);
-//		else
-//			getFurnaceRecipes().forEach(r->
-//			{
-//				if(r.getKey().equals(key))
-//					NmsRecipesFurnaceV_13.unregRecipe(r.recipe.getInput());
-//			});
-//	}
 	static Map<Object, Object> getBlastingRecipesV13() {
 		if (BukkitWrapper.v13)
 			return NmsMinecraftServer.getServer().getCraftingManagerV13().getRecipesV14().get(NmsRecipesV14.blasting());

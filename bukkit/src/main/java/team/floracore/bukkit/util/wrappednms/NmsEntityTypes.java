@@ -38,17 +38,4 @@ public interface NmsEntityTypes extends WrappedBukkitObject {
 
 	@WrappedBukkitMethod(@VersionName(value = "b", maxVer = 13))
 	String staticGetNameV_13(NmsEntity entity);
-
-	@WrappedBukkitMethod(@VersionName(value = "g", minVer = 17))
-	String getTranslateKeyV17();
-
-	@WrappedBukkitMethod({@VersionName(value = "d", minVer = 13, maxVer = 14), @VersionName(value = "f", minVer = 14, maxVer = 17)})
-	String getTranslateKeyV13_17();
-
-	default String getTranslateKeyV13() {
-		if (BukkitWrapper.v17)
-			return getTranslateKeyV17();
-		else
-			return getTranslateKeyV13_17();
-	}
 }

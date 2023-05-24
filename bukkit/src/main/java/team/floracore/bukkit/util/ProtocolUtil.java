@@ -7,7 +7,6 @@ import org.bukkit.event.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.util.module.*;
 import team.floracore.bukkit.util.wrappednms.*;
-import team.floracore.bukkit.util.wrappedobc.*;
 import team.floracore.common.util.*;
 import team.floracore.common.util.wrapper.*;
 
@@ -110,15 +109,6 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
 			return cancelled.get();
 		}
 		return false;
-	}
-
-	public static void forceSendPacket(Player receiver, NmsPacket packet) {
-		forcePackets.add(packet.getRaw());
-		sendPacket(receiver, packet);
-	}
-
-	public static void sendPacket(Player receiver, NmsPacket packet) {
-		WrappedObject.wrap(ObcEntity.class, receiver).getHandle().cast(NmsEntityPlayer.class).getPlayerConnection().getNetworkManager().sendPacket(packet);
 	}
 
 	@Override

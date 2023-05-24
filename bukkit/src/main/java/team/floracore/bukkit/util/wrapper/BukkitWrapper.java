@@ -9,6 +9,10 @@ import java.util.*;
 
 public class BukkitWrapper {
     /**
+     * MC1.8
+     */
+    public static final boolean v8;
+    /**
      * MC1.13及以后
      * 进行了扁平化
      */
@@ -23,6 +27,7 @@ public class BukkitWrapper {
     public static String MCProtocolVersion = Bukkit.getServer().getClass().getPackage().getName().replace("org.bukkit.craftbukkit.", "");
 
     static {
+        v8 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server.v1_8_R3.Entity"));
         v17 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server." + MCProtocolVersion + ".MinecraftServer"));
         v13 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server." + MCProtocolVersion + ".ItemStack").getDeclaredField("damage"));
         MCVersion = Bukkit.getBukkitVersion().split("-")[0];

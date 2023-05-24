@@ -1,28 +1,14 @@
 package team.floracore.bukkit.util.wrappednms;
 
 import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.*;
-import team.floracore.bukkit.*;
 import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.entity.*;
-import team.floracore.bukkit.util.module.*;
 import team.floracore.bukkit.util.wrappedobc.*;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.*;
 
 @WrappedBukkitClass({@VersionName(value = "nms.Slot", maxVer = 17), @VersionName(value = "net.minecraft.world.inventory.Slot", minVer = 17)})
 public interface NmsSlot extends WrappedBukkitObject {
-	static NmsSlot get(HumanEntity player, int rawSlot) {
-		if (rawSlot < 0)
-			return null;
-		return NmsEntityHuman.fromBukkit(player).getOpenContainer().getSlot(rawSlot);
-	}
-
-	static NmsSlot getClickedSlot(InventoryClickEvent event) {
-		return get(event.getWhoClicked(), event.getRawSlot());
-	}
 
 	@WrappedBukkitMethod({@VersionName("isAllowed"), @VersionName(minVer = 18, value = "a")})
 	boolean isAllowed(NmsItemStack item);
@@ -88,24 +74,4 @@ public interface NmsSlot extends WrappedBukkitObject {
 
 	@WrappedBukkitMethod({@VersionName("set"), @VersionName(minVer = 18, value = "d")})
 	void set(NmsItemStack item);
-
-	class Module extends AbsModule {
-		public static Module instance = new Module();
-
-		public Module() {
-			super(FCBukkitBootstrap.loader);
-		}
-
-		@EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-		public void onInventoryClick(InventoryClickEvent event) {
-			if (event.getWhoClicked() instanceof Player) {
-				NmsContainer c = PlayerUtil.getOpenContainer((Player) event.getWhoClicked());
-				if (event.getRawSlot() >= 0 && event.getRawSlot() < c.getSlots().size() && !c.getSlot(event.getRawSlot()).isAllowed(event.getWhoClicked())) {
-					for (HumanEntity p : event.getInventory().getViewers())
-						if (p instanceof Player)
-							((Player) p).updateInventory();
-				}
-			}
-		}
-	}
 }
