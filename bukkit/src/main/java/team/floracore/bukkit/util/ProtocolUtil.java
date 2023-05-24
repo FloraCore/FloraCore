@@ -2,6 +2,7 @@ package team.floracore.bukkit.util;
 
 import com.google.common.collect.*;
 import org.apache.logging.log4j.util.*;
+import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import team.floracore.bukkit.*;
@@ -168,6 +169,12 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
 			WrappedObject.wrap(ObcEntity.class, receiver).getHandle().cast(NmsEntityPlayer.class).getPlayerConnection().getNetworkManager().sendPacket(packet);
 		} else {
 			WrappedObject.wrap(ObcEntity.class, receiver).getHandle().cast(NmsEntityPlayer.class).getPlayerConnection().sendPacket(packet);
+		}
+	}
+
+	public static void sendPacketToAllPlayers(NmsPacket packet) {
+		for (Player po : Bukkit.getOnlinePlayers()) {
+			sendPacket(po, packet);
 		}
 	}
 }

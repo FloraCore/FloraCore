@@ -18,9 +18,12 @@ import org.bukkit.inventory.*;
 import org.checkerframework.checker.nullness.qual.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
+import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.itemstack.*;
 import team.floracore.bukkit.util.wrappedmojang.*;
 import team.floracore.bukkit.util.wrappednms.*;
+import team.floracore.bukkit.util.wrappedobc.*;
+import team.floracore.common.util.wrapper.*;
 
 import java.util.*;
 
@@ -212,10 +215,16 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("test nms a2 <name>")
     public void nmsA2(final @NonNull Player player, final @NonNull @Argument("name") String name) {
-        NmsEntityHuman neh = NmsEntityHuman.fromBukkit(player);
-        WrappedGameProfile wgp = neh.getGameProfile();
+        NmsEntityPlayer nep = WrappedObject.wrap(ObcEntity.class, player).getHandle().cast(NmsEntityPlayer.class);
+        NmsEnumPlayerInfoAction removePlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).REMOVE_PLAYER();
+        NmsPacketPlayOutPlayerInfo removePacket = NmsPacketPlayOutPlayerInfo.newInstance(removePlayer, Collections.singletonList(nep.getRaw()));
+        ProtocolUtil.sendPacketToAllPlayers(removePacket);
+        WrappedGameProfile wgp = nep.getGameProfile();
         wgp.setName(name);
         player.setDisplayName(name);
         player.setPlayerListName(null);
+        NmsEnumPlayerInfoAction addPlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).ADD_PLAYER();
+        NmsPacketPlayOutPlayerInfo addPacket = NmsPacketPlayOutPlayerInfo.newInstance(addPlayer, Collections.singletonList(nep.getRaw()));
+        ProtocolUtil.sendPacketToAllPlayers(addPacket);
     }
 }
