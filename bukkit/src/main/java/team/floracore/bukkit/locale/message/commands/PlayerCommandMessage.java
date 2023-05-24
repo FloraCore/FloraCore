@@ -69,9 +69,11 @@ public interface PlayerCommandMessage extends AbstractMessage {
             // 已传送到顶部
             .key("floracore.command.teleport.top").color(AQUA)).append(FULL_STOP);
 
-    Args0 COMMAND_NICK_SETUP_SKIN = () -> AbstractMessage.prefixed(translatable()
-            // 你已拥有皮肤了!
-            .key("floracore.command.nick.setup.skin").color(AQUA));
+    Args1<Component> COMMAND_NICK_SETUP_SKIN = (skin) -> AbstractMessage.prefixed(translatable()
+            // 你的皮肤已设置为 {0} !
+            .key("floracore.command.nick.setup.skin")
+            // {}
+            .args(skin).color(AQUA));
 
     Args0 COMMAND_UNNICK_SUCCESS = () -> AbstractMessage.prefixed(translatable()
             // 你的昵称已移除！

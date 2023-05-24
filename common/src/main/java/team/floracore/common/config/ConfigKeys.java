@@ -81,7 +81,6 @@ public class ConfigKeys {
 
     public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK = notReloadable(mapKey("commands.nick.rank"));
     public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK_PREFIX = notReloadable(mapKey("commands.nick.rank-prefix"));
-    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_SIGN = notReloadable(mapKey("commands.nick.sign"));
 
     public static final ConfigKey<Double> SPEED_MAX_FLY_SPEED = notReloadable(key(c -> {
         final double maxSpeed = c.getDouble("commands.speed.max-fly-speed", 0.8);

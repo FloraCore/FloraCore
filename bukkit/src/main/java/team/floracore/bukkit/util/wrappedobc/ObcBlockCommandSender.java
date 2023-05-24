@@ -7,6 +7,6 @@ import team.floracore.common.util.wrapper.*;
 
 @WrappedBukkitClass(@VersionName("obc.command.CraftBlockCommandSender"))
 public interface ObcBlockCommandSender extends WrappedBukkitObject {
-	@WrappedMethod(value = "getTileEntity")
-	NmsICommandListener getTileEntity();
+    @WrappedMethod(value = "getTileEntity")
+    NmsICommandListener getTileEntity();
 }

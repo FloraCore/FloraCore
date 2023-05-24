@@ -229,6 +229,11 @@ public interface BookMessage extends AbstractMessage {
                 .key("floracore.command.misc.nick.book.skin-page.skin.steve-alex").hoverEvent(hoverEvent).clickEvent(clickEvent).color(BLACK).build());
     };
 
+    Args0 COMMAND_MISC_NICK_SKIN_STEVE_ALEX = () -> translatable().key("floracore.command.misc.nick.book.skin-page.skin.steve-alex").build();
+    Args0 COMMAND_MISC_NICK_SKIN_RANDOM = () -> translatable().key("floracore.command.misc.nick.book.skin-page.skin.random").build();
+    Args0 COMMAND_MISC_NICK_SKIN_NORMAL = () -> translatable().key("floracore.command.misc.nick.book.skin-page.skin.normal").build();
+    Args1<String> COMMAND_MISC_NICK_SKIN_REUSE = (skin) -> translatable().key("floracore.command.misc.nick.book.skin-page.skin.reuse.pure").args(text(skin)).build();
+
     Args1<String> COMMAND_MISC_NICK_BOOK_SKIN_PAGE_RANDOM = (rank) -> {
         ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 3 " + rank + " random");
         HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()

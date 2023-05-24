@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.*;
 import com.google.common.collect.*;
 import net.kyori.adventure.key.*;
 import net.kyori.adventure.text.*;
+import net.kyori.adventure.text.serializer.legacy.*;
 import net.kyori.adventure.translation.*;
 import net.kyori.adventure.util.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
@@ -32,6 +33,10 @@ public class TranslationManager {
     private final Path repositoryTranslationsDirectory;
     private final Path customTranslationsDirectory;
     private TranslationRegistry registry;
+    public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build();
 
     public TranslationManager(FloraCorePlugin plugin) {
         this.plugin = plugin;

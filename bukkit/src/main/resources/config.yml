@@ -139,11 +139,6 @@ commands:
       rank3: "&b[MVP]"
       rank4: "&b[MVP&c+&b]"
       rank5: "&6[MVP&c++&6]"
-    sign:
-      line1: ""
-      line2: "^^^^^^^^^^^^^^^"
-      line3: "Enter your"
-      line4: "nickname here"
   speed:
     max-fly-speed: 0.8
     max-walk-speed: 0.8

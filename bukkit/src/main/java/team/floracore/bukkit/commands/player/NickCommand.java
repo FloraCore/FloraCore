@@ -26,7 +26,6 @@ import team.floracore.common.config.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.sender.*;
-import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 import team.floracore.common.util.wrapper.*;
 
@@ -101,7 +100,6 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
         Map<String, String> ranks_permission = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
         Map<String, String> ranks_prefix = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PREFIX);
-        Map<String, String> sign = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_SIGN);
         boolean custom = p.hasPermission("floracore.command.nick.custom");
         DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
@@ -138,7 +136,20 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                     break;
                 case 3:
                     // name page
-                    PlayerCommandMessage.COMMAND_NICK_SETUP_SKIN.send(sender);
+                    Component sc = null;
+                    if (skin.equalsIgnoreCase("steve-alex")) {
+                        sc = BookMessage.COMMAND_MISC_NICK_SKIN_STEVE_ALEX.build();
+                    } else if (skin.equalsIgnoreCase("random")) {
+                        sc = BookMessage.COMMAND_MISC_NICK_SKIN_RANDOM.build();
+                    } else if (skin.equalsIgnoreCase("reuse")) {
+                        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
+                        if (data != null) {
+                            sc = BookMessage.COMMAND_MISC_NICK_SKIN_REUSE.build(data.getValue());
+                        }
+                    } else {
+                        sc = BookMessage.COMMAND_MISC_NICK_SKIN_NORMAL.build();
+                    }
+                    PlayerCommandMessage.COMMAND_NICK_SETUP_SKIN.send(sender, sc);
                     target.openBook(getNamePage(p, rank, skin));
                     break;
                 case 4:
@@ -179,10 +190,13 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                     break;
                 case 6:
                     // custom page
-                    String line1 = sign.get("line" + 1);
-                    String line2 = sign.get("line" + 2);
-                    String line3 = sign.get("line" + 3);
-                    String line4 = sign.get("line" + 4);
+                    String line1 = "";
+                    Component l2c = TranslationManager.render(SignMessage.COMMAND_MISC_NICK_SIGN_LINE_2.build(), uuid);
+                    Component l3c = TranslationManager.render(SignMessage.COMMAND_MISC_NICK_SIGN_LINE_3.build(), uuid);
+                    Component l4c = TranslationManager.render(SignMessage.COMMAND_MISC_NICK_SIGN_LINE_4.build(), uuid);
+                    String line2 = TranslationManager.SERIALIZER.serialize(l2c);
+                    String line3 = TranslationManager.SERIALIZER.serialize(l3c);
+                    String line4 = TranslationManager.SERIALIZER.serialize(l4c);
                     /*SignGUIAPI signGUIAPI = new SignGUIAPI(event -> {
                         String i = event.getLines().get(0);
                         int nameLengthMin = Math.min(3, 16), nameLengthMax = Math.max(16, 1);
@@ -336,8 +350,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                 classic,
                 // random skin
                 random).asComponent();
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        DATA data = storageImplementation.getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
         if (data != null) {
             // reuse skin
             Component reuse = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_REUSE.build(rank, data.getValue()), uuid);
