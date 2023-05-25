@@ -221,7 +221,7 @@ public interface BookMessage extends AbstractMessage {
     };
 
     Args1<String> COMMAND_MISC_NICK_BOOK_SKIN_PAGE_STEVE_ALEX = (rank) -> {
-        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 3 " + rank + " steve-alex");
+        ClickEvent clickEvent = ClickEvent.runCommand("/book-nick 3 " + rank + " steve_alex");
         HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
                 // 点击这里以使用Steve/Alex的皮肤
                 .key("floracore.command.misc.nick.book.skin-page.skin.steve-alex.hover").color(WHITE).build());

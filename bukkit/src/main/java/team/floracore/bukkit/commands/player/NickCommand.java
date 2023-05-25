@@ -19,6 +19,7 @@ import team.floracore.bukkit.command.*;
 import team.floracore.bukkit.locale.message.*;
 import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.bukkit.util.*;
+import team.floracore.bukkit.util.signgui.*;
 import team.floracore.bukkit.util.wrappedmojang.*;
 import team.floracore.bukkit.util.wrappednms.*;
 import team.floracore.bukkit.util.wrappedobc.*;
@@ -30,6 +31,7 @@ import team.floracore.common.storage.misc.floracore.tables.*;
 import team.floracore.common.util.wrapper.*;
 
 import java.util.*;
+import java.util.concurrent.*;
 
 import static net.kyori.adventure.text.Component.*;
 
@@ -40,6 +42,7 @@ import static net.kyori.adventure.text.Component.*;
 @CommandDescription("修改玩家的昵称")
 public class NickCommand extends FloraCoreBukkitCommand implements Listener {
     private final LuckPerms luckPerms;
+    private final ConcurrentHashMap<UUID, NmsBlockPosition> signBP = new ConcurrentHashMap<>();
 
     public NickCommand(FCBukkitPlugin plugin) {
         super(plugin);
@@ -191,21 +194,59 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                 case 6:
                     // custom page
                     String line1 = "";
+                    String l1j = NmsIChatBaseComponent.NmsChatSerializer.getJson(line1);
+                    NmsIChatBaseComponent il1 = NmsIChatBaseComponent.NmsChatSerializer.jsonToComponent(l1j);
                     Component l2c = TranslationManager.render(SignMessage.COMMAND_MISC_NICK_SIGN_LINE_2.build(), uuid);
                     Component l3c = TranslationManager.render(SignMessage.COMMAND_MISC_NICK_SIGN_LINE_3.build(), uuid);
                     Component l4c = TranslationManager.render(SignMessage.COMMAND_MISC_NICK_SIGN_LINE_4.build(), uuid);
                     String line2 = TranslationManager.SERIALIZER.serialize(l2c);
+                    /*String l2j = NmsIChatBaseComponent.NmsChatSerializer.getJson(line2);
+                    NmsIChatBaseComponent il2 = NmsIChatBaseComponent.NmsChatSerializer.jsonToComponent(l2j);*/
                     String line3 = TranslationManager.SERIALIZER.serialize(l3c);
+                    /*String l3j = NmsIChatBaseComponent.NmsChatSerializer.getJson(line3);
+                    NmsIChatBaseComponent il3 = NmsIChatBaseComponent.NmsChatSerializer.jsonToComponent(l3j);*/
                     String line4 = TranslationManager.SERIALIZER.serialize(l4c);
-                    /*SignGUIAPI signGUIAPI = new SignGUIAPI(event -> {
+                    /*String l4j = NmsIChatBaseComponent.NmsChatSerializer.getJson(line4);
+                    NmsIChatBaseComponent il4 = NmsIChatBaseComponent.NmsChatSerializer.jsonToComponent(l4j);
+                    World world = p.getWorld();
+                    Location location = p.getLocation().add(0, 10,0);
+                    NmsBlockPosition nbp = NmsBlockPosition.newInstance(location);
+                    NmsPacketPlayOutOpenSignEditor openSignEditorPacket = NmsPacketPlayOutOpenSignEditor.newInstance(nbp);
+                    NmsWorld nw = WrappedObject.wrap(ObcWorld.class, world).getHandle();
+                    NmsIChatBaseComponentArray nicbc = NmsIChatBaseComponentArray.newInstance(4);
+                    nicbc.set(0, il1);
+                    nicbc.set(1, il2);
+                    nicbc.set(2, il3);
+                    nicbc.set(3, il4);
+                    NmsPacketPlayOutUpdateSign updateSignPacket = NmsPacketPlayOutUpdateSign.newInstance(nw, nbp, nicbc);
+                    ItemStack itemStack = ItemStackBuilder.sign().get();
+                    Material material = itemStack.getType();
+                    location.getBlock().setType(material);
+                    ProtocolUtil.sendPacket(p, updateSignPacket);
+                    ProtocolUtil.sendPacket(p, openSignEditorPacket);
+                    ProtocolUtil.instance.register(new ProtocolUtil.ReceiveListener(EventPriority.NORMAL, NmsPacketPlayInUpdateSign.class, (player, packet, cancelled) -> {
+                        NmsPacketPlayInUpdateSign sign = (NmsPacketPlayInUpdateSign) packet;
+                        NmsIChatBaseComponentArray lines = sign.getIChatBaseComponents();
+                        System.out.println(NmsIChatBaseComponent.NmsChatSerializer.toJson(lines.get(0)));
+                    }));*/
+                    SignGUIAPI signGUIAPI = new SignGUIAPI(event -> {
                         String i = event.getLines().get(0);
-                        int nameLengthMin = Math.min(3, 16), nameLengthMax = Math.max(16, 1);
-                        if (!(i.isEmpty()) && (i.length() <= nameLengthMax) && (i.length() >= nameLengthMin)) {
-                            performNick(p, rank, skin, i, true);
+                        int nameLengthMin = 3;
+                        int nameLengthMax = 16;
+                        if (i.contains(" ")) {
+                            // 名字包含空格
+                        } else if (i.length() < nameLengthMin || i.length() > nameLengthMax) {
+                            // 名字长度不符合要求
+                        } else if (!i.matches("[a-zA-Z0-9_]+")) {
+                            // 名字不符合Minecraft命名规则
+                        } else {
+                            // 执行相应操作
+                            performNick(p, rank, skin.name(), i, true);
                             target.openBook(getFinishPage(ranks_prefix.get(rank), i, uuid));
                         }
-                    }, Arrays.asList(line1, line2, line3, line4), uuid, getPlugin().getBootstrap().getPlugin());
-                    signGUIAPI.open();*/
+
+                    }, Arrays.asList(line1, line2, line3, line4), uuid, getPlugin().getLoader());
+                    signGUIAPI.open();
                     break;
             }
         } catch (Throwable e) {
@@ -277,16 +318,18 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         NmsEnumPlayerInfoAction addPlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).ADD_PLAYER();
         NmsPacketPlayOutPlayerInfo addPacket = NmsPacketPlayOutPlayerInfo.newInstance(addPlayer, Collections.singletonList(nep.getRaw()));
         ProtocolUtil.sendPacketToAllPlayers(addPacket);
-        if (getPlugin().getLoader().getServer().getPluginManager().getPlugin("TAB") != null) {
-            TabPlayer tp = TabAPI.getInstance().getPlayer(uuid);
-            TablistFormatManager tfm = TabAPI.getInstance().getTablistFormatManager();
-            tfm.setName(tp, name);
-            TeamManager tm = TabAPI.getInstance().getTeamManager();
-            if (tm instanceof UnlimitedNametagManager) {
-                UnlimitedNametagManager unm = (UnlimitedNametagManager) tm;
-                unm.setName(tp, name);
+        getAsyncExecutor().execute(() -> {
+            if (getPlugin().getLoader().getServer().getPluginManager().getPlugin("TAB") != null) {
+                TabPlayer tp = TabAPI.getInstance().getPlayer(uuid);
+                TablistFormatManager tfm = TabAPI.getInstance().getTablistFormatManager();
+                tfm.setName(tp, name);
+                TeamManager tm = TabAPI.getInstance().getTeamManager();
+                if (tm instanceof UnlimitedNametagManager) {
+                    UnlimitedNametagManager unm = (UnlimitedNametagManager) tm;
+                    unm.setName(tp, name);
+                }
             }
-        }
+        });
     }
 
     private Book getStartPage(UUID uuid) {
