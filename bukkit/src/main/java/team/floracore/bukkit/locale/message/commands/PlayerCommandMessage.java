@@ -394,4 +394,16 @@ public interface PlayerCommandMessage extends AbstractMessage {
     Args1<String> COMMAND_LANGUAGE_CHANGE_SUCCESS = (language) -> translatable()
             // 你已成功将你的显示语言更改为 {0} !
             .key("floracore.command.language.change.success").args(text(language, GREEN)).color(AQUA).build();
+
+    Args0 COMMAND_MISC_NICK_NAME_ILLEGAL_SPACE = () -> AbstractMessage.prefixed(translatable()
+            // 请确保你输入的昵称内不含空格
+            .key("floracore.command.misc.nick.name.illegal.space").append(FULL_STOP).color(RED));
+
+    Args0 COMMAND_MISC_NICK_NAME_ILLEGAL_LENGTH = () -> AbstractMessage.prefixed(translatable()
+            // 请确保昵称长度在3到16个字符之间
+            .key("floracore.command.misc.nick.name.illegal.length").append(FULL_STOP).color(RED));
+
+    Args0 COMMAND_MISC_NICK_NAME_ILLEGAL_CHARACTER = () -> AbstractMessage.prefixed(translatable()
+            // 你输入的昵称不符合Minecraft的命名规则
+            .key("floracore.command.misc.nick.name.illegal.character").append(FULL_STOP).color(RED));
 }

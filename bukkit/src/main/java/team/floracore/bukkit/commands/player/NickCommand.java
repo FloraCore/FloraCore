@@ -66,12 +66,15 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         Audience target = getPlugin().getSenderFactory().getAudiences().player(p);
         DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
+        Map<String, String> ranks_prefix = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PREFIX);
         if (statusData != null && Boolean.parseBoolean(statusData.getValue())) {
             PlayerCommandMessage.COMMAND_MISC_NICK_ALREADY_NICKED.send(sender);
             return;
         }
-        performNick(p, "rank0", "random", name, true);
-        target.openBook(getFinishPage("rank0", name, uuid));
+        if (checkNicknameLegitimacy(p, name)) {
+            performNick(p, "rank0", "random", name, true);
+            target.openBook(getFinishPage(ranks_prefix.get("rank0"), name, uuid));
+        }
     }
 
     @CommandMethod("unnick")
@@ -231,16 +234,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                     }));*/
                     SignGUIAPI signGUIAPI = new SignGUIAPI(event -> {
                         String i = event.getLines().get(0);
-                        int nameLengthMin = 3;
-                        int nameLengthMax = 16;
-                        if (i.contains(" ")) {
-                            // 名字包含空格
-                        } else if (i.length() < nameLengthMin || i.length() > nameLengthMax) {
-                            // 名字长度不符合要求
-                        } else if (!i.matches("[a-zA-Z0-9_]+")) {
-                            // 名字不符合Minecraft命名规则
-                        } else {
-                            // 执行相应操作
+                        if (checkNicknameLegitimacy(p, i)) {
                             performNick(p, rank, skin.name(), i, true);
                             target.openBook(getFinishPage(ranks_prefix.get(rank), i, uuid));
                         }
@@ -252,6 +246,28 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         } catch (Throwable e) {
             e.printStackTrace();
             MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(sender);
+        }
+    }
+
+    public boolean checkNicknameLegitimacy(Player p, String name) {
+        Sender sender = getPlugin().getSenderFactory().wrap(p);
+        int nameLengthMin = 3;
+        int nameLengthMax = 16;
+        if (name.contains(" ")) {
+            // 名字包含空格
+            PlayerCommandMessage.COMMAND_MISC_NICK_NAME_ILLEGAL_SPACE.send(sender);
+            return false;
+        } else if (name.length() < nameLengthMin || name.length() > nameLengthMax) {
+            // 名字长度不符合要求
+            PlayerCommandMessage.COMMAND_MISC_NICK_NAME_ILLEGAL_LENGTH.send(sender);
+            return false;
+        } else if (!name.matches("[a-zA-Z0-9_]+")) {
+            // 名字不符合Minecraft命名规则
+            PlayerCommandMessage.COMMAND_MISC_NICK_NAME_ILLEGAL_CHARACTER.send(sender);
+            return false;
+        } else {
+            // 执行相应操作
+            return true;
         }
     }
 
