@@ -30,6 +30,15 @@ FC的框架是基于[LuckPerms](https://luckperms.net/)(下称LP)，进行了少
 
 FC为了优雅的实现反射，采用了[MzLib](https://github.com/BugCleanser/MzLib_old)
 
+# [MzLibAgent](./libs/MzLibAgent.jar)
+
+在Docker容器等地方运行可能会报错并提示你安装MzLibAgent
+
+MzLibAgent不是一个Bukki插件，请按照以下步骤安装：
+- 下载MzLibAgent.jar并移动到你的服务端文件夹内（与核心同一目录）
+- 在服务端的启动参数内添加JVM参数-javaagent:MzLibAgent.jar(需添加在参数-jar之前)
+- 安装完成后重启服务端即可
+
 # Wiki
 
 本插件的Wiki见[Wiki](https://github.com/FloraCore/FloraCore/wiki)
