@@ -5,6 +5,7 @@ import org.bukkit.entity.*;
 import org.bukkit.plugin.java.*;
 import org.floracore.api.server.*;
 import team.floracore.bukkit.command.*;
+import team.floracore.bukkit.inevntory.*;
 import team.floracore.bukkit.listener.*;
 import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.module.*;
@@ -24,6 +25,7 @@ import java.util.stream.*;
  * FloraCore implementation for the Bukkit API.
  */
 public class FCBukkitPlugin extends AbstractFloraCorePlugin {
+    private static InventoryManager inventoryManager;
     private final FCBukkitBootstrap bootstrap;
     private ListenerManager listenerManager;
     private CommandManager commandManager;
@@ -82,8 +84,34 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         this.senderFactory = new BukkitSenderFactory(this);
     }
 
+    public static InventoryManager getInventoryManager() {
+        return inventoryManager;
+    }
+
+    @Override
+    public Stream<Sender> getOnlineSenders() {
+        List<Player> players = new ArrayList<>(this.bootstrap.getServer().getOnlinePlayers());
+        return Stream.concat(
+                Stream.of(getConsoleSender()),
+                players.stream().map(p -> getSenderFactory().wrap(p))
+        );
+    }
+
+    @Override
+    public Sender getConsoleSender() {
+        return getSenderFactory().wrap(this.bootstrap.getConsole());
+    }
+
+    public BukkitSenderFactory getSenderFactory() {
+        return this.senderFactory;
+    }
+
     @Override
     protected void setupFramework() {
+        getLogger().info("Loading inventory manager...");
+        inventoryManager = new InventoryManager(getLoader());
+        inventoryManager.init();
+
         RegistrarRegistrar.instance.load();
         ListenerRegistrar.instance.load();
         IModule.ModuleModule.instance.load();
@@ -106,23 +134,5 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
         this.listenerManager = new ListenerManager(this);
         this.commandManager = new CommandManager(this);
-    }
-
-    @Override
-    public Stream<Sender> getOnlineSenders() {
-        List<Player> players = new ArrayList<>(this.bootstrap.getServer().getOnlinePlayers());
-        return Stream.concat(
-                Stream.of(getConsoleSender()),
-                players.stream().map(p -> getSenderFactory().wrap(p))
-        );
-    }
-
-    @Override
-    public Sender getConsoleSender() {
-        return getSenderFactory().wrap(this.bootstrap.getConsole());
-    }
-
-    public BukkitSenderFactory getSenderFactory() {
-        return this.senderFactory;
     }
 }
