@@ -87,6 +87,7 @@ permissions:
     children:
       floracore.command.nick: true
       floracore.command.nick.custom: true
+      floracore.command.nick.admin: true
   floracore.command.oplist:
     default: op
   floracore.command.ping.*:

@@ -267,7 +267,11 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
             return false;
         } else {
             // 执行相应操作
-            return true;
+            if (p.hasPermission("floracore.command.nick.admin")) {
+                return true;
+            } else {
+                return getStorageImplementation().selectPlayer(name) != null;
+            }
         }
     }
 
