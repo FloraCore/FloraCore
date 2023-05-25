@@ -24,6 +24,7 @@ import team.floracore.bukkit.util.wrappedmojang.*;
 import team.floracore.bukkit.util.wrappednms.*;
 import team.floracore.bukkit.util.wrappedobc.*;
 import team.floracore.common.config.*;
+import team.floracore.common.locale.data.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.locale.translation.*;
 import team.floracore.common.sender.*;
@@ -291,6 +292,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
             luckPerms.getUserManager().saveUser(user);
         }
         // TODO 重置皮肤
+
         // 清除数据库Nick状态
         getAsyncExecutor().execute(() -> {
             DATA rankData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.rank");
@@ -308,7 +310,43 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PREFIX);
         // 修改玩家信息
         resetName(p, name);
-        // TODO 设置皮肤
+        // 设置皮肤
+        String skinName;
+        if (typeNick) {
+            if (skin.equalsIgnoreCase("normal")) {
+                skinName = uuid.toString();
+            } else if (skin.equalsIgnoreCase("steve_alex")) {
+                Random random = new Random();
+                int randomNum = random.nextInt(2);
+                skinName = randomNum == 0 ? "Steve" : "Alex";
+            } else {
+                skinName = getPlugin().getNamesRepository().getRandomNameProperty().getName();
+            }
+        } else {
+            skinName = skin;
+        }
+        try {
+            // 判断是否为Normal，如果为Normal则不进行操作
+            UUID i = UUID.fromString(skinName);
+        } catch (IllegalArgumentException exception) {
+            NamesRepository.NameProperty selectedSkin;
+            // 不是Normal
+            // 判断是不是Steve/Alex
+            if (skinName.equalsIgnoreCase("Steve")) {
+                selectedSkin = getPlugin().getNamesRepository().getSteveProperty();
+            } else if (skinName.equalsIgnoreCase("Alex")) {
+                selectedSkin = getPlugin().getNamesRepository().getAlexProperty();
+            } else {
+                selectedSkin = getPlugin().getNamesRepository().getNameProperty(skinName);
+            }
+            if (selectedSkin != null) {
+                // 设置玩家皮肤
+                    /*getAsyncExecutor().execute(() -> {
+                        IProperty iProperty = skinsRestorerAPI.createPlatformProperty(selectedSkin.getName(), selectedSkin.getValue(), selectedSkin.getSignature());
+                        skinsRestorerAPI.applySkin(new PlayerWrapper(p), iProperty);
+                    });*/
+            }
+        }
         // 设置Rank
         User user = luckPerms.getUserManager().getUser(uuid);
         if (user != null) {
@@ -316,9 +354,9 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
             user.data().add(node);
             luckPerms.getUserManager().saveUser(user);
         }
-
         // 设置数据库Nick状态
         getAsyncExecutor().execute(() -> {
+            getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.skin", skinName, 0);
             getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.name", name, 0);
             getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.rank", rank, 0);
             getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.status", String.valueOf(true), 0);
@@ -416,8 +454,13 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
         if (data != null) {
             // reuse skin
-            Component reuse = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_REUSE.build(rank, data.getValue()), uuid);
-            component = join(joinConfig, component, reuse);
+            String skin = data.getValue();
+            try {
+                UUID i = UUID.fromString(skin);
+            } catch (IllegalArgumentException ignored) {
+                Component reuse = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_REUSE.build(rank, skin), uuid);
+                component = join(joinConfig, component, reuse);
+            }
         }
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
