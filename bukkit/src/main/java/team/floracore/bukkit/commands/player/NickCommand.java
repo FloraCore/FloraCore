@@ -376,7 +376,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         NmsEnumPlayerInfoAction addPlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).ADD_PLAYER();
         NmsPacketPlayOutPlayerInfo addPacket = NmsPacketPlayOutPlayerInfo.newInstance(addPlayer, Collections.singletonList(nep.getRaw()));
         ProtocolUtil.sendPacketToAllPlayers(addPacket);
-        getAsyncExecutor().execute(() -> {
+        getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
             if (getPlugin().getLoader().getServer().getPluginManager().getPlugin("TAB") != null) {
                 TabPlayer tp = TabAPI.getInstance().getPlayer(uuid);
                 TablistFormatManager tfm = TabAPI.getInstance().getTablistFormatManager();
@@ -387,7 +387,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                     unm.setName(tp, name);
                 }
             }
-        });
+        }, 300, TimeUnit.MILLISECONDS);
     }
 
     private Book getStartPage(UUID uuid) {
@@ -534,7 +534,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         UUID u = p.getUniqueId();

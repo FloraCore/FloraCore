@@ -71,7 +71,7 @@ public interface NmsNBTTagList extends NmsNBTTag {
         return this;
     }
 
-    @WrappedBukkitMethod({@VersionName(maxVer = 13, value = "i"), @VersionName(value = "get", minVer = 13, maxVer = 18), @VersionName(minVer = 18, value = "k")})
+    @WrappedBukkitMethod({@VersionName(minVer = 8, maxVer = 12, value = "g"), @VersionName(minVer = 12, maxVer = 13, value = "i"), @VersionName(value = "get", minVer = 13, maxVer = 18), @VersionName(minVer = 18, value = "k")})
     NmsNBTBase get(int index);
 
     default <T extends NmsNBTBase> T get(int index, Class<T> type) {
@@ -95,7 +95,7 @@ public interface NmsNBTTagList extends NmsNBTTag {
         return getList().remove(nbt.getRaw());
     }
 
-    @WrappedBukkitMethod({@VersionName("remove"), @VersionName(minVer = 18, value = "c")})
+    @WrappedBukkitMethod({@VersionName(minVer = 8, value = "a"), @VersionName(minVer = 12, value = "remove"), @VersionName(minVer = 18, value = "c")})
     NmsNBTBase remove(int index);
 
     default <T extends WrappedObject> T remove(int index, Class<T> type) {
