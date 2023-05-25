@@ -43,7 +43,9 @@ public interface NmsIRegistry extends WrappedBukkitObject {
 
     static NmsRegistryMaterials getEntityTypesV13() {
         if (BukkitWrapper.version < 14) {
-            return WrappedObject.getStatic(NmsIRegistry.class).staticGetEntityTypesV13_14().cast(NmsRegistryMaterials.class);
+            return WrappedObject.getStatic(NmsIRegistry.class)
+                                .staticGetEntityTypesV13_14()
+                                .cast(NmsRegistryMaterials.class);
         } else if (BukkitWrapper.version < 19.3f) {
             return WrappedObject.getStatic(NmsIRegistry.class).staticGetEntityTypesV14_193();
         } else {

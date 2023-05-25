@@ -12,7 +12,9 @@ import java.util.*;
  * Handles class runtime relocation of packages in downloaded dependencies
  */
 public class RelocationHandler {
-    public static final Set<Dependency> DEPENDENCIES = EnumSet.of(Dependency.ASM, Dependency.ASM_COMMONS, Dependency.JAR_RELOCATOR);
+    public static final Set<Dependency> DEPENDENCIES = EnumSet.of(Dependency.ASM,
+            Dependency.ASM_COMMONS,
+            Dependency.JAR_RELOCATOR);
     private static final String JAR_RELOCATOR_CLASS = "me.lucko.jarrelocator.JarRelocator";
     private static final String JAR_RELOCATOR_RUN_METHOD = "run";
 

@@ -38,8 +38,12 @@ public class FoodBukkitCommand extends FloraCoreBukkitCommand {
             if (SenderUtil.sendIfNoPermission(sender, "floracore.command.food.get.other")) { // 玩家没有特定权限
                 return;
             }
-            PlayerCommandMessage.COMMAND_FOOD_GET_OTHER_NUTRITION.send(sender, target.getName(), target.getFoodLevel()); // 返回饥饿值
-            PlayerCommandMessage.COMMAND_FOOD_GET_OTHER_SATURATION.send(sender, target.getName(), target.getSaturation()); // 返回饱和度
+            PlayerCommandMessage.COMMAND_FOOD_GET_OTHER_NUTRITION.send(sender,
+                    target.getName(),
+                    target.getFoodLevel()); // 返回饥饿值
+            PlayerCommandMessage.COMMAND_FOOD_GET_OTHER_SATURATION.send(sender,
+                    target.getName(),
+                    target.getSaturation()); // 返回饱和度
         }
     }
 
@@ -71,7 +75,9 @@ public class FoodBukkitCommand extends FloraCoreBukkitCommand {
             target.setFoodLevel(value);
             PlayerCommandMessage.COMMAND_FOOD_SET_OTHER_NUTRITION.send(sender, target.getName(), value); // 告知设置成功
             if (silent == null || !silent) { // 非静音模式
-                PlayerCommandMessage.COMMAND_FOOD_SET_FROM_NUTRITION.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
+                PlayerCommandMessage.COMMAND_FOOD_SET_FROM_NUTRITION.send(getPlugin().getSenderFactory().wrap(target),
+                        s.getName(),
+                        value); // 告知被设置
             }
         }
     }
@@ -104,7 +110,9 @@ public class FoodBukkitCommand extends FloraCoreBukkitCommand {
             target.setSaturation(value);
             PlayerCommandMessage.COMMAND_FOOD_SET_OTHER_SATURATION.send(sender, target.getName(), value); // 告知设置成功
             if (silent == null || !silent) { // 非静音模式
-                PlayerCommandMessage.COMMAND_FOOD_SET_FROM_SATURATION.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
+                PlayerCommandMessage.COMMAND_FOOD_SET_FROM_SATURATION.send(getPlugin().getSenderFactory().wrap(target),
+                        s.getName(),
+                        value); // 告知被设置
             }
         }
     }

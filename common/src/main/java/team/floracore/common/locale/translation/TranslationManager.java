@@ -27,10 +27,13 @@ public class TranslationManager {
      */
     public static final Locale DEFAULT_LOCALE = Locale.SIMPLIFIED_CHINESE;
     public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
-            .hexColors()
-            .useUnusualXRepeatedCharacterHexFormat()
-            .build();
-    private static final AsyncCache<UUID, Locale> localeCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+                                                                                        .hexColors()
+                                                                                        .useUnusualXRepeatedCharacterHexFormat()
+                                                                                        .build();
+    private static final AsyncCache<UUID, Locale> localeCache = Caffeine.newBuilder()
+                                                                        .expireAfterWrite(3, TimeUnit.SECONDS)
+                                                                        .maximumSize(10000)
+                                                                        .buildAsync();
     private final FloraCorePlugin plugin;
     private final Set<Locale> installed = ConcurrentHashMap.newKeySet();
     private final Path translationsDirectory;
@@ -72,7 +75,9 @@ public class TranslationManager {
 
     public static Component render(Component component, @NotNull UUID uuid) {
         CompletableFuture<Locale> lf = localeCache.get(uuid, u -> {
-            String value = FloraCoreProvider.get().getDataAPI().getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
+            String value = FloraCoreProvider.get()
+                                            .getDataAPI()
+                                            .getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
             if (value != null) {
                 return parseLocale(value);
             }
@@ -173,7 +178,8 @@ public class TranslationManager {
         // try registering the locale without a country code - if we don't already have a registration for that
         loaded.forEach((locale, bundle) -> {
             Locale localeWithoutCountry = new Locale(locale.getLanguage());
-            if (!locale.equals(localeWithoutCountry) && !localeWithoutCountry.equals(DEFAULT_LOCALE) && this.installed.add(localeWithoutCountry)) {
+            if (!locale.equals(localeWithoutCountry) && !localeWithoutCountry.equals(DEFAULT_LOCALE) && this.installed.add(
+                    localeWithoutCountry)) {
                 try {
                     this.registry.registerAll(localeWithoutCountry, bundle, false);
                 } catch (IllegalArgumentException e) {
@@ -222,6 +228,8 @@ public class TranslationManager {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean isAdventureDuplicatesException(Exception e) {
-        return e instanceof IllegalArgumentException && (e.getMessage().startsWith("Invalid key") || e.getMessage().startsWith("Translation already exists"));
+        return e instanceof IllegalArgumentException && (e.getMessage().startsWith("Invalid key") || e.getMessage()
+                                                                                                      .startsWith(
+                                                                                                              "Translation already exists"));
     }
 }

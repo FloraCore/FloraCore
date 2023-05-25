@@ -180,7 +180,8 @@ public class Inventories {
                 emptySlots.add(i);
             } else {
                 for (final ItemStack newItem : items) {
-                    if (invItem.getAmount() < Math.max(maxStack, invItem.getMaxStackSize()) && invItem.isSimilar(newItem)) {
+                    if (invItem.getAmount() < Math.max(maxStack,
+                            invItem.getMaxStackSize()) && invItem.isSimilar(newItem)) {
                         partialSlots.computeIfAbsent(newItem, k -> new ArrayList<>()).add(i);
                     }
                 }

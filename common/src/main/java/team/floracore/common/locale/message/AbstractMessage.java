@@ -23,7 +23,11 @@ public abstract interface AbstractMessage {
 
     Component PREFIX_COMPONENT = text()
             // [FC]
-            .color(GRAY).append(text('[')).append(text().decoration(BOLD, true).append(text('F', AQUA)).append(text('C', YELLOW))).append(text(']')).build();
+            .color(GRAY)
+            .append(text('['))
+            .append(text().decoration(BOLD, true).append(text('F', AQUA)).append(text('C', YELLOW)))
+            .append(text(']'))
+            .build();
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();

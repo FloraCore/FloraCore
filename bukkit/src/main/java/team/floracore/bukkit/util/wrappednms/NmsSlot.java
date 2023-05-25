@@ -25,7 +25,8 @@ public interface NmsSlot extends WrappedBukkitObject {
     boolean isAllowed(NmsEntityHuman player);
 
     default void onVisit(HumanEntity player, ItemStack item) {
-        onVisit(WrappedObject.wrap(ObcEntity.class, player).getHandle().cast(NmsEntityHuman.class), ObcItemStack.asNMSCopy(item));
+        onVisit(WrappedObject.wrap(ObcEntity.class, player).getHandle().cast(NmsEntityHuman.class),
+                ObcItemStack.asNMSCopy(item));
     }
 
     @WrappedBukkitMethod(@VersionName("a"))

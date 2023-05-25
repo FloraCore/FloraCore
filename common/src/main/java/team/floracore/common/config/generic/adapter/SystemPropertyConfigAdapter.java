@@ -21,7 +21,9 @@ public class SystemPropertyConfigAdapter extends StringBasedConfigurationAdapter
 
         String value = System.getProperty(key);
         if (value != null) {
-            this.plugin.getLogger().info("Resolved configuration value from system property: " + key + " = " + (path.contains("password") ? "*****" : value));
+            this.plugin.getLogger()
+                       .info("Resolved configuration value from system property: " + key + " = " + (path.contains(
+                               "password") ? "*****" : value));
         }
         return value;
     }

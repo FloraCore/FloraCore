@@ -76,7 +76,8 @@ public final class TypeUtil {
             throwException(e2);
         }
         e.printStackTrace(p);
-        return (e instanceof Error ? "§4" : "§e") + new String(m.toByteArray(), StandardCharsets.UTF_8).replace("\r", "").replace("\t", "  ");
+        return (e instanceof Error ? "§4" : "§e") + new String(m.toByteArray(), StandardCharsets.UTF_8).replace("\r",
+                "").replace("\t", "  ");
     }
 
     @Deprecated
@@ -98,7 +99,10 @@ public final class TypeUtil {
                 valueType = Object.class;
             }
             if (WrappedObject.class.isAssignableFrom(tar)) {
-                valueCode = ClassUtil.getName(WrappedObject.class) + ".wrap(" + ClassUtil.getName(tar) + ".class," + codeCast(Object.class, valueCode, valueType) + ")";
+                valueCode = ClassUtil.getName(WrappedObject.class) + ".wrap(" + ClassUtil.getName(tar) + ".class," + codeCast(
+                        Object.class,
+                        valueCode,
+                        valueType) + ")";
                 valueType = tar;
             }
         }

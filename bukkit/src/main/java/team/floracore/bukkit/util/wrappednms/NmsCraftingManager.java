@@ -80,7 +80,10 @@ public interface NmsCraftingManager extends WrappedBukkitObject {
     WrappedObject2ObjectLinkedOpenHashMapV13 getRecipes0V13_14();
 
     static Map<Object, Object> getRecipesV_13() {
-        return WrappedObject.wrap(NmsCraftingManager.class, null).getRecipes0V_13().cast(NmsRegistrySimpleV_13.class).getMap();
+        return WrappedObject.wrap(NmsCraftingManager.class, null)
+                            .getRecipes0V_13()
+                            .cast(NmsRegistrySimpleV_13.class)
+                            .getMap();
     }
 
     @WrappedBukkitFieldAccessor({@VersionName(minVer = 14, value = "recipes"), @VersionName(minVer = 17, value = "@0")})
@@ -117,7 +120,10 @@ public interface NmsCraftingManager extends WrappedBukkitObject {
 
     static Map<Object, Object> getCampfireCookingRecipesV13() {
         if (BukkitWrapper.v13) {
-            return NmsMinecraftServer.getServer().getCraftingManagerV13().getRecipesV14().get(NmsRecipesV14.campfireCooking());
+            return NmsMinecraftServer.getServer()
+                                     .getCraftingManagerV13()
+                                     .getRecipesV14()
+                                     .get(NmsRecipesV14.campfireCooking());
         } else {
             return getRecipesV_13();
         }
@@ -141,7 +147,10 @@ public interface NmsCraftingManager extends WrappedBukkitObject {
 
     static Map<Object, Object> getStonecuttingRecipesV13() {
         if (BukkitWrapper.v13) {
-            return NmsMinecraftServer.getServer().getCraftingManagerV13().getRecipesV14().get(NmsRecipesV14.stonecutting());
+            return NmsMinecraftServer.getServer()
+                                     .getCraftingManagerV13()
+                                     .getRecipesV14()
+                                     .get(NmsRecipesV14.stonecutting());
         } else {
             return getRecipesV_13();
         }

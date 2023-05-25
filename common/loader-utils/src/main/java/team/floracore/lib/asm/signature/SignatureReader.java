@@ -33,6 +33,7 @@ public class SignatureReader {
      * @param signature        a string containing the signature that must be parsed.
      * @param startOffset      index of the first character of the signature to parsed.
      * @param signatureVisitor the visitor that must visit this signature.
+     *
      * @return the index of the first character after the parsed signature.
      */
     private static int parseType(
@@ -120,7 +121,9 @@ public class SignatureReader {
                                     // Extends or Super TypeArgument. Use offset + 1 to skip the '+' or '-'.
                                     offset =
                                             parseType(
-                                                    signature, offset + 1, signatureVisitor.visitTypeArgument(currentChar));
+                                                    signature,
+                                                    offset + 1,
+                                                    signatureVisitor.visitTypeArgument(currentChar));
                                     break;
                                 default:
                                     // Instanceof TypeArgument. The '=' is implicit.

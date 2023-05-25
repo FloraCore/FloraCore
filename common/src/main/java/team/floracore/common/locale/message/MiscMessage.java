@@ -11,11 +11,19 @@ import static net.kyori.adventure.text.format.TextDecoration.*;
 public interface MiscMessage extends AbstractMessage {
     Component PREFIX_BROADCAST = text()
             // [公告]
-            .color(GRAY).append(text('[')).append(text().decoration(BOLD, true).append(translatable("floracore.command.misc.server.broadcast.prefix").color(AQUA))).append(text(']')).build();
+            .color(GRAY)
+            .append(text('['))
+            .append(text().decoration(BOLD, true)
+                          .append(translatable("floracore.command.misc.server.broadcast.prefix").color(AQUA)))
+            .append(text(']'))
+            .build();
 
     Component PREFIX_PARTY = text()
             // 组队 >
-            .append(translatable("floracore.command.misc.party.prefix", BLUE)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+            .append(translatable("floracore.command.misc.party.prefix", BLUE))
+            .append(space())
+            .append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY))
+            .build();
 
     Component PREFIX_PARTY_LIGHT = text()
             // 组队
@@ -23,7 +31,10 @@ public interface MiscMessage extends AbstractMessage {
 
     Component PREFIX_STAFF = text()
             // 员工 >
-            .append(translatable("floracore.command.misc.staff.prefix", AQUA)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+            .append(translatable("floracore.command.misc.staff.prefix", AQUA))
+            .append(space())
+            .append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY))
+            .build();
 
     Component PREFIX_STAFF_LIGHT = text()
             // 员工
@@ -31,7 +42,10 @@ public interface MiscMessage extends AbstractMessage {
 
     Component PREFIX_BLOGGER = text()
             // 博主 >
-            .append(translatable("floracore.command.misc.blogger.prefix", GOLD)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+            .append(translatable("floracore.command.misc.blogger.prefix", GOLD))
+            .append(space())
+            .append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY))
+            .build();
 
     Component PREFIX_BLOGGER_LIGHT = text()
             // 博主
@@ -39,7 +53,10 @@ public interface MiscMessage extends AbstractMessage {
 
     Component PREFIX_BUILDER = text()
             // 建筑组 >
-            .append(translatable("floracore.command.misc.builder.prefix", DARK_AQUA)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+            .append(translatable("floracore.command.misc.builder.prefix", DARK_AQUA))
+            .append(space())
+            .append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY))
+            .build();
 
     Component PREFIX_BUILDER_LIGHT = text()
             // 建筑组
@@ -47,7 +64,10 @@ public interface MiscMessage extends AbstractMessage {
 
     Component PREFIX_ADMIN = text()
             // 管理 >
-            .append(translatable("floracore.command.misc.admin.prefix", RED)).append(space()).append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY)).build();
+            .append(translatable("floracore.command.misc.admin.prefix", RED))
+            .append(space())
+            .append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY))
+            .build();
 
     Component PREFIX_ADMIN_LIGHT = text()
             // 管理
@@ -84,14 +104,24 @@ public interface MiscMessage extends AbstractMessage {
 
     Args1<String> TRANSLATIONS_DOWNLOAD_ERROR = name -> AbstractMessage.prefixed(text()
             // 无法下载 {0} 的翻译
-            .color(RED).append(translatable("floracore.command.translations.download-error", text(name, DARK_RED))).append(FULL_STOP).append(space())
+            .color(RED)
+            .append(translatable("floracore.command.translations.download-error", text(name, DARK_RED)))
+            .append(FULL_STOP)
+            .append(space())
             // 检查控制台是否有错误
-            .append(translatable("floracore.command.misc.check-console-for-errors")).append(FULL_STOP));
+            .append(translatable("floracore.command.misc.check-console-for-errors"))
+            .append(FULL_STOP));
 
-    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE = bootstrap -> AbstractMessage.prefixed(text("Checking FloraCore version information...").color(AQUA));
-    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE_NEWEST = bootstrap -> AbstractMessage.prefixed(text("The current version of FloraCore is the latest version!").color(GREEN));
-    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE_FAILED = bootstrap -> AbstractMessage.prefixed(text("FloraCore version check failed!").color(RED));
-    Args2<FloraCoreBootstrap, String> STARTUP_CHECKING_UPDATE_OUTDATED = (bootstrap, version) -> AbstractMessage.prefixed(text("The current FloraCore version is outdated! Latest version: ").color(RED).append(text("v" + version).color(DARK_AQUA)));
+    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE = bootstrap -> AbstractMessage.prefixed(text(
+            "Checking FloraCore version information...").color(AQUA));
+    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE_NEWEST = bootstrap -> AbstractMessage.prefixed(text(
+            "The current version of FloraCore is the latest version!").color(GREEN));
+    Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE_FAILED = bootstrap -> AbstractMessage.prefixed(text(
+            "FloraCore version check failed!").color(RED));
+    Args2<FloraCoreBootstrap, String> STARTUP_CHECKING_UPDATE_OUTDATED = (bootstrap, version) -> AbstractMessage.prefixed(
+            text("The current FloraCore version is outdated! Latest version: ").color(RED)
+                                                                               .append(text("v" + version).color(
+                                                                                       DARK_AQUA)));
 
     Args0 NO_PERMISSION_FOR_SUBCOMMANDS = () -> AbstractMessage.prefixed(translatable()
             // 你没有权限使用任何子命令
@@ -107,11 +137,18 @@ public interface MiscMessage extends AbstractMessage {
 
     Args1<String> COMMAND_INVALID_COMMAND_SYNTAX = correctSyntax -> AbstractMessage.prefixed(text()
             // 命令语法错误，您可能想要输入：{0}
-            .color(RED).append(translatable("floracore.commandsystem.invalid-command-syntax", text(correctSyntax, DARK_AQUA))).append(FULL_STOP));
+            .color(RED)
+            .append(translatable("floracore.commandsystem.invalid-command-syntax", text(correctSyntax, DARK_AQUA)))
+            .append(FULL_STOP));
 
-    Args2<String, String> COMMAND_INVALID_COMMAND_SENDER = (commandSender, requiredSender) -> AbstractMessage.prefixed(text()
-            // {0} 不允许执行该命令，必须由 {1} 执行
-            .color(RED).append(translatable("floracore.commandsystem.invalid-command-sender", text(commandSender), text(requiredSender))).append(FULL_STOP));
+    Args2<String, String> COMMAND_INVALID_COMMAND_SENDER = (commandSender, requiredSender) -> AbstractMessage.prefixed(
+            text()
+                    // {0} 不允许执行该命令，必须由 {1} 执行
+                    .color(RED)
+                    .append(translatable("floracore.commandsystem.invalid-command-sender",
+                            text(commandSender),
+                            text(requiredSender)))
+                    .append(FULL_STOP));
 
     Args0 COMMAND_SERVER_DATA_TYPE = () -> translatable("floracore.command.server.data.type");
     Args0 COMMAND_SERVER_DATA_AUTO_SYNC_1 = () -> translatable("floracore.command.server.data.autosync.1");
@@ -173,10 +210,18 @@ public interface MiscMessage extends AbstractMessage {
 
     Args1<String> PLAYER_NOT_FOUND = id -> AbstractMessage.prefixed(translatable()
             // 无法找到 {0} 这名玩家
-            .key("floracore.command.misc.loading.error.player-not-found").color(RED).args(text(id, DARK_RED)).append(FULL_STOP));
+            .key("floracore.command.misc.loading.error.player-not-found")
+            .color(RED)
+            .args(text(id, DARK_RED))
+            .append(FULL_STOP));
 
     Args1<Long> DURATION_FORMAT = (ticks) -> translatable()
             // {0} 或 {1}（或 {2} ）
-            .key("floracore.duration.format").color(RED).args(text(DescParseTickFormat.format24(ticks)).color(GREEN), text(DescParseTickFormat.format12(ticks)).color(GREEN), text(DescParseTickFormat.formatTicks(ticks)).color(GREEN)).build();
+            .key("floracore.duration.format")
+            .color(RED)
+            .args(text(DescParseTickFormat.format24(ticks)).color(GREEN),
+                    text(DescParseTickFormat.format12(ticks)).color(GREEN),
+                    text(DescParseTickFormat.formatTicks(ticks)).color(GREEN))
+            .build();
 
 }

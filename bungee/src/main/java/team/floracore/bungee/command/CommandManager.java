@@ -39,13 +39,17 @@ public class CommandManager {
             plugin.getBootstrap().getProxy().stop();
         }
         // Use contains to filter suggestions instead of default startsWith
-        this.manager.commandSuggestionProcessor(new FilteringCommandSuggestionProcessor<>(FilteringCommandSuggestionProcessor.Filter.<CommandSender>contains(true).andTrimBeforeLastSpace()));
+        this.manager.commandSuggestionProcessor(new FilteringCommandSuggestionProcessor<>(
+                FilteringCommandSuggestionProcessor.Filter.<CommandSender>contains(true).andTrimBeforeLastSpace()));
 
         // Create the annotation parser. This allows you to define commands using methods annotated with
         // @CommandMethod
         final Function<ParserParameters, CommandMeta> commandMetaFunction = p -> CommandMeta.simple()
-                // This will allow you to decorate commands with descriptions
-                .with(CommandMeta.DESCRIPTION, p.get(StandardParameters.DESCRIPTION, "NONE")).build();
+                                                                                            // This will allow you to decorate commands with descriptions
+                                                                                            .with(CommandMeta.DESCRIPTION,
+                                                                                                    p.get(StandardParameters.DESCRIPTION,
+                                                                                                            "NONE"))
+                                                                                            .build();
         this.annotationParser = new AnnotationParser<>(
                 this.manager,
                 CommandSender.class,
@@ -66,7 +70,9 @@ public class CommandManager {
         // 类型错误
         this.manager.registerExceptionHandler(InvalidCommandSenderException.class, (context, exception) -> {
             Sender sender = plugin.getSenderFactory().wrap(context);
-            MiscMessage.COMMAND_INVALID_COMMAND_SENDER.send(sender, context.getClass().getSimpleName(), exception.getRequiredSender().getSimpleName());
+            MiscMessage.COMMAND_INVALID_COMMAND_SENDER.send(sender,
+                    context.getClass().getSimpleName(),
+                    exception.getRequiredSender().getSimpleName());
         });
 
         // Create the commands

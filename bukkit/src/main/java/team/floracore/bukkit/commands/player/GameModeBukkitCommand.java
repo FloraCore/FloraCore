@@ -61,48 +61,78 @@ public class GameModeBukkitCommand extends FloraCoreBukkitCommand {
             }
             switch (gameMode) {
                 case SURVIVAL:
-                    if (setGameModeIfPermissionOrSendMessage(sender, GameMode.SURVIVAL, t, "floracore.command.gamemode.survival")) {
-                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_SURVIVAL.build(), t.getDisplayName());
+                    if (setGameModeIfPermissionOrSendMessage(sender,
+                            GameMode.SURVIVAL,
+                            t,
+                            "floracore.command.gamemode.survival")) {
+                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender,
+                                MiscMessage.COMMAND_MISC_GAMEMODE_SURVIVAL.build(),
+                                t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) { // 若非静音模式，则发送消息
-                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_SURVIVAL.build(), sender.getDisplayName());
+                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts,
+                                        MiscMessage.COMMAND_MISC_GAMEMODE_SURVIVAL.build(),
+                                        sender.getDisplayName());
                             }
                         }
                     }
                     break;
                 case CREATIVE:
-                    if (setGameModeIfPermissionOrSendMessage(sender, GameMode.CREATIVE, t, "floracore.command.gamemode.creative")) {
-                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_CREATIVE.build(), t.getDisplayName());
+                    if (setGameModeIfPermissionOrSendMessage(sender,
+                            GameMode.CREATIVE,
+                            t,
+                            "floracore.command.gamemode.creative")) {
+                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender,
+                                MiscMessage.COMMAND_MISC_GAMEMODE_CREATIVE.build(),
+                                t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) {
-                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_CREATIVE.build(), sender.getDisplayName());
+                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts,
+                                        MiscMessage.COMMAND_MISC_GAMEMODE_CREATIVE.build(),
+                                        sender.getDisplayName());
                             }
                         }
                     }
                     break;
                 case ADVENTURE:
-                    if (setGameModeIfPermissionOrSendMessage(sender, GameMode.ADVENTURE, t, "floracore.command.gamemode.adventure")) {
-                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_ADVENTURE.build(), t.getDisplayName());
+                    if (setGameModeIfPermissionOrSendMessage(sender,
+                            GameMode.ADVENTURE,
+                            t,
+                            "floracore.command.gamemode.adventure")) {
+                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender,
+                                MiscMessage.COMMAND_MISC_GAMEMODE_ADVENTURE.build(),
+                                t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) {
-                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_ADVENTURE.build(), sender.getDisplayName());
+                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts,
+                                        MiscMessage.COMMAND_MISC_GAMEMODE_ADVENTURE.build(),
+                                        sender.getDisplayName());
                             }
                         }
                     }
                     break;
                 case SPECTATOR:
-                    if (setGameModeIfPermissionOrSendMessage(sender, GameMode.SPECTATOR, t, "floracore.command.gamemode.spectator")) {
-                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender, MiscMessage.COMMAND_MISC_GAMEMODE_SPECTATOR.build(), t.getDisplayName());
+                    if (setGameModeIfPermissionOrSendMessage(sender,
+                            GameMode.SPECTATOR,
+                            t,
+                            "floracore.command.gamemode.spectator")) {
+                        PlayerCommandMessage.COMMAND_GAMEMODE.send(sender,
+                                MiscMessage.COMMAND_MISC_GAMEMODE_SPECTATOR.build(),
+                                t.getDisplayName());
                         if (!own) {
                             if (silent == null || !silent) {
-                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts, MiscMessage.COMMAND_MISC_GAMEMODE_SPECTATOR.build(), sender.getDisplayName());
+                                PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts,
+                                        MiscMessage.COMMAND_MISC_GAMEMODE_SPECTATOR.build(),
+                                        sender.getDisplayName());
                             }
                         }
                     }
                     break;
             }
         } else {
-            MiscMessage.COMMAND_INVALID_COMMAND_SENDER.send(sender, CommandSender.class.getSimpleName(), Player.class.getSimpleName());
+            MiscMessage.COMMAND_INVALID_COMMAND_SENDER.send(sender,
+                    CommandSender.class.getSimpleName(),
+                    Player.class.getSimpleName());
         }
     }
 
@@ -136,6 +166,7 @@ public class GameModeBukkitCommand extends FloraCoreBukkitCommand {
      * @param gameMode        游戏模式
      * @param target          需要设置游戏模式的目标玩家
      * @param permission      权限节点
+     *
      * @return 是否拥有权限并成功设置
      */
     private boolean setGameModeIfPermissionOrSendMessage(@NotNull Sender messageReceiver,

@@ -11,7 +11,9 @@ public final class SenderUtil {
      * @param sender 命令发送者
      */
     public static void sendMustBe(@NotNull Sender sender, @NotNull Class<?> currentType, @NotNull Class<?> objectives) {
-        MiscMessage.COMMAND_INVALID_COMMAND_SENDER.send(sender, currentType.getSimpleName(), objectives.getSimpleName());
+        MiscMessage.COMMAND_INVALID_COMMAND_SENDER.send(sender,
+                currentType.getSimpleName(),
+                objectives.getSimpleName());
     }
 
     /**
@@ -19,6 +21,7 @@ public final class SenderUtil {
      *
      * @param sender     命令发送者
      * @param permission 权限节点
+     *
      * @return 若没有权限节点，返回true
      */
     public static boolean sendIfNoPermission(Sender sender, String permission) {

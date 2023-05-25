@@ -25,6 +25,7 @@ public final class FloraCoreProvider {
      * <p>This method will never return null.</p>
      *
      * @return an instance of the FloraCore API
+     *
      * @throws IllegalStateException if the API is not loaded yet
      */
     public static @NonNull FloraCore get() {

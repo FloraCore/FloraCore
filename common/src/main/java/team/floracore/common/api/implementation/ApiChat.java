@@ -15,9 +15,18 @@ import java.util.stream.*;
 
 public class ApiChat implements ChatAPI {
     private final FloraCorePlugin plugin;
-    AsyncCache<UUID, List<DATA>> chatDataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
-    AsyncCache<UUID, List<DATA>> partyDataCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
-    AsyncCache<UUID, PARTY> partyCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    AsyncCache<UUID, List<DATA>> chatDataCache = Caffeine.newBuilder()
+                                                         .expireAfterWrite(3, TimeUnit.SECONDS)
+                                                         .maximumSize(10000)
+                                                         .buildAsync();
+    AsyncCache<UUID, List<DATA>> partyDataCache = Caffeine.newBuilder()
+                                                          .expireAfterWrite(3, TimeUnit.SECONDS)
+                                                          .maximumSize(10000)
+                                                          .buildAsync();
+    AsyncCache<UUID, PARTY> partyCache = Caffeine.newBuilder()
+                                                 .expireAfterWrite(3, TimeUnit.SECONDS)
+                                                 .maximumSize(10000)
+                                                 .buildAsync();
 
     public ApiChat(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -42,13 +51,14 @@ public class ApiChat implements ChatAPI {
             ret.add(records);
         }
         return ret.stream()
-                .sorted(Comparator.comparingLong(DataChatRecord::getJoinTime).reversed())
-                .limit(number)
-                .collect(Collectors.toList());
+                  .sorted(Comparator.comparingLong(DataChatRecord::getJoinTime).reversed())
+                  .limit(number)
+                  .collect(Collectors.toList());
     }
 
     public List<DATA> getPlayerChatData(UUID uuid) {
-        CompletableFuture<List<DATA>> data = chatDataCache.get(uuid, u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.CHAT));
+        CompletableFuture<List<DATA>> data = chatDataCache.get(uuid,
+                u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.CHAT));
         chatDataCache.put(uuid, data);
         return data.join();
     }
@@ -64,23 +74,29 @@ public class ApiChat implements ChatAPI {
             }
             UUID partyUUID = UUID.fromString(value);
             PARTY party = getPlayerPartyData(partyUUID);
-            DataChatRecord records = new DataChatRecord(party.getChat(), party.getCreateTime(), System.currentTimeMillis());
+            DataChatRecord records = new DataChatRecord(party.getChat(),
+                    party.getCreateTime(),
+                    System.currentTimeMillis());
             ret.add(records);
         }
         return ret.stream()
-                .sorted(Comparator.comparingLong(DataChatRecord::getJoinTime).reversed())
-                .limit(number)
-                .collect(Collectors.toList());
+                  .sorted(Comparator.comparingLong(DataChatRecord::getJoinTime).reversed())
+                  .limit(number)
+                  .collect(Collectors.toList());
     }
 
     public List<DATA> getPlayerPartyChatData(UUID uuid) {
-        CompletableFuture<List<DATA>> data = partyDataCache.get(uuid, u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.SOCIAL_SYSTEMS_PARTY_HISTORY));
+        CompletableFuture<List<DATA>> data = partyDataCache.get(uuid,
+                u -> plugin.getStorage()
+                           .getImplementation()
+                           .getSpecifiedTypeData(u, DataType.SOCIAL_SYSTEMS_PARTY_HISTORY));
         partyDataCache.put(uuid, data);
         return data.join();
     }
 
     public PARTY getPlayerPartyData(UUID uuid) {
-        CompletableFuture<PARTY> data = partyCache.get(uuid, u -> plugin.getStorage().getImplementation().selectParty(u));
+        CompletableFuture<PARTY> data = partyCache.get(uuid,
+                u -> plugin.getStorage().getImplementation().selectParty(u));
         partyCache.put(uuid, data);
         return data.join();
     }

@@ -46,7 +46,10 @@ public abstract class AbstractJavaScheduler implements SchedulerAdapter {
 
     @Override
     public SchedulerTask asyncRepeating(Runnable task, long interval, TimeUnit unit) {
-        ScheduledFuture<?> future = this.scheduler.scheduleAtFixedRate(() -> this.worker.execute(task), interval, interval, unit);
+        ScheduledFuture<?> future = this.scheduler.scheduleAtFixedRate(() -> this.worker.execute(task),
+                interval,
+                interval,
+                unit);
         return () -> future.cancel(false);
     }
 
@@ -68,7 +71,8 @@ public abstract class AbstractJavaScheduler implements SchedulerAdapter {
         this.worker.shutdown();
         try {
             if (!this.worker.awaitTermination(1, TimeUnit.MINUTES)) {
-                this.bootstrap.getPluginLogger().severe("Timed out waiting for the FloraCore worker thread pool to terminate");
+                this.bootstrap.getPluginLogger()
+                              .severe("Timed out waiting for the FloraCore worker thread pool to terminate");
                 reportRunningTasks(thread -> thread.getName().startsWith("floracore-worker-"));
             }
         } catch (InterruptedException e) {
@@ -79,9 +83,10 @@ public abstract class AbstractJavaScheduler implements SchedulerAdapter {
     private void reportRunningTasks(Predicate<Thread> predicate) {
         Thread.getAllStackTraces().forEach((thread, stack) -> {
             if (predicate.test(thread)) {
-                this.bootstrap.getPluginLogger().warn("Thread " + thread.getName() + " is blocked, and may be the reason for the slow shutdown!\n" +
-                        Arrays.stream(stack).map(el -> "  " + el).collect(Collectors.joining("\n"))
-                );
+                this.bootstrap.getPluginLogger()
+                              .warn("Thread " + thread.getName() + " is blocked, and may be the reason for the slow shutdown!\n" +
+                                      Arrays.stream(stack).map(el -> "  " + el).collect(Collectors.joining("\n"))
+                              );
             }
         });
     }
@@ -101,7 +106,8 @@ public abstract class AbstractJavaScheduler implements SchedulerAdapter {
     private final class ExceptionHandler implements UncaughtExceptionHandler {
         @Override
         public void uncaughtException(Thread t, Throwable e) {
-            AbstractJavaScheduler.this.bootstrap.getPluginLogger().warn("Thread " + t.getName() + " threw an uncaught exception", e);
+            AbstractJavaScheduler.this.bootstrap.getPluginLogger()
+                                                .warn("Thread " + t.getName() + " threw an uncaught exception", e);
         }
     }
 }

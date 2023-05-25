@@ -6,7 +6,8 @@ import java.util.*;
 
 public final class NumberUtil {
     private static final DecimalFormat twoDPlaces = new DecimalFormat("#,###.##");
-    private static final DecimalFormat currencyFormat = new DecimalFormat("#0.00", DecimalFormatSymbols.getInstance(Locale.US));
+    private static final DecimalFormat currencyFormat = new DecimalFormat("#0.00",
+            DecimalFormatSymbols.getInstance(Locale.US));
 
     // This field is likely to be modified in com.earth2me.essentials.Settings when loading currency format.
     // This ensures that we can supply a constant formatting.

@@ -9,7 +9,8 @@ public interface NmsPacketPlayOutUpdateSign extends NmsPacket {
     static NmsPacketPlayOutUpdateSign newInstance(NmsWorld world,
                                                   NmsBlockPosition blockPosition,
                                                   NmsIChatBaseComponentArray iChatBaseComponents) {
-        return WrappedObject.getStatic(NmsPacketPlayOutUpdateSign.class).staticNewInstance(world, blockPosition, iChatBaseComponents);
+        return WrappedObject.getStatic(NmsPacketPlayOutUpdateSign.class)
+                            .staticNewInstance(world, blockPosition, iChatBaseComponents);
     }
 
     @WrappedBukkitConstructor

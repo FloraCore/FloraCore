@@ -34,8 +34,12 @@ public class AirBukkitCommand extends FloraCoreBukkitCommand {
     @CommandDescription("获取目标的氧气值（单位：ticks）")
     public void getOther(@NotNull CommandSender s, @NotNull @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
-        PlayerCommandMessage.COMMAND_AIR_GET_REMAINING_OTHER.send(sender, target.getName(), target.getRemainingAir()); // 返回剩余氧气值
-        PlayerCommandMessage.COMMAND_AIR_GET_MAX_OTHER.send(sender, target.getName(), target.getMaximumAir()); // 返回最大氧气值
+        PlayerCommandMessage.COMMAND_AIR_GET_REMAINING_OTHER.send(sender,
+                target.getName(),
+                target.getRemainingAir()); // 返回剩余氧气值
+        PlayerCommandMessage.COMMAND_AIR_GET_MAX_OTHER.send(sender,
+                target.getName(),
+                target.getMaximumAir()); // 返回最大氧气值
     }
 
     @CommandMethod("air setmax <value> [target]")
@@ -63,7 +67,9 @@ public class AirBukkitCommand extends FloraCoreBukkitCommand {
             target.setMaximumAir(value);
             PlayerCommandMessage.COMMAND_AIR_SET_MAX_OTHER.send(sender, target.getName(), value); // 告知设置成功
             if (silent == null || !silent) { // 非静音模式
-                PlayerCommandMessage.COMMAND_AIR_SET_MAX_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
+                PlayerCommandMessage.COMMAND_AIR_SET_MAX_FROM.send(getPlugin().getSenderFactory().wrap(target),
+                        s.getName(),
+                        value); // 告知被设置
             }
         }
     }
@@ -93,7 +99,9 @@ public class AirBukkitCommand extends FloraCoreBukkitCommand {
             target.setRemainingAir(value);
             PlayerCommandMessage.COMMAND_AIR_SET_REMAINING_OTHER.send(sender, target.getName(), value); // 告知设置成功
             if (silent == null || !silent) { // 非静音模式
-                PlayerCommandMessage.COMMAND_AIR_SET_REMAINING_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName(), value); // 告知被设置
+                PlayerCommandMessage.COMMAND_AIR_SET_REMAINING_FROM.send(getPlugin().getSenderFactory().wrap(target),
+                        s.getName(),
+                        value); // 告知被设置
             }
         }
     }

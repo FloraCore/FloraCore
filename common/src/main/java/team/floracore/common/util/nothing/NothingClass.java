@@ -42,7 +42,8 @@ public class NothingClass {
             Map<MethodNode, NothingMethod> nothingMethods = new HashMap<>();
             for (Class<? extends Nothing> n : installedNothings) {
                 for (Method m : n.getDeclaredMethods()) {
-                    NothingInject[] is = TypeUtil.<Nothing, Object>cast(WrappedObject.getStatic(TypeUtil.cast(n))).getInjects(m);
+                    NothingInject[] is = TypeUtil.<Nothing, Object>cast(WrappedObject.getStatic(TypeUtil.cast(n)))
+                                                 .getInjects(m);
                     if (is != null) {
                         for (NothingInject i : is) {
                             Class<?>[] args = i.args();

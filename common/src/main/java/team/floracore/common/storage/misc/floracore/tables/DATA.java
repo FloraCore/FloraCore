@@ -63,7 +63,8 @@ public class DATA extends AbstractFloraCoreTable {
     public void setValue(String value) {
         this.value = value;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_VALUE))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_VALUE))) {
                 ps.setString(1, value);
                 ps.setString(2, uuid.toString());
                 ps.setString(3, type.getName());
@@ -82,7 +83,8 @@ public class DATA extends AbstractFloraCoreTable {
     public void setExpiry(long expiry) {
         this.expiry = expiry;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_EXPIRY))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_EXPIRY))) {
                 ps.setLong(1, expiry);
                 ps.setString(2, uuid.toString());
                 ps.setString(3, type.getName());
@@ -97,7 +99,8 @@ public class DATA extends AbstractFloraCoreTable {
     @Override
     public void init() throws SQLException {
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(INSERT))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(INSERT))) {
                 ps.setString(1, uuid.toString());
                 ps.setString(2, type.getName());
                 ps.setString(3, key);

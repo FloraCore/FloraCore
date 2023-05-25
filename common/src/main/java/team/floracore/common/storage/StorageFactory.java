@@ -51,13 +51,17 @@ public class StorageFactory {
             case SQLITE:
                 return new SqlStorage(
                         this.plugin,
-                        new SqliteConnectionFactory(this.plugin.getBootstrap().getDataDirectory().resolve("floracore-sqlite.db")),
+                        new SqliteConnectionFactory(this.plugin.getBootstrap()
+                                                               .getDataDirectory()
+                                                               .resolve("floracore-sqlite.db")),
                         this.plugin.getConfiguration().get(ConfigKeys.SQL_TABLE_PREFIX)
                 );
             case H2:
                 return new SqlStorage(
                         this.plugin,
-                        new H2ConnectionFactory(this.plugin.getBootstrap().getDataDirectory().resolve("floracore-h2-v2")),
+                        new H2ConnectionFactory(this.plugin.getBootstrap()
+                                                           .getDataDirectory()
+                                                           .resolve("floracore-h2-v2")),
                         this.plugin.getConfiguration().get(ConfigKeys.SQL_TABLE_PREFIX)
                 );
             case POSTGRESQL:

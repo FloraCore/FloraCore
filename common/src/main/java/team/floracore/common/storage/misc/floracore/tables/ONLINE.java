@@ -41,7 +41,8 @@ public class ONLINE extends AbstractFloraCoreTable {
     public void setServerName(String serverName) {
         this.serverName = serverName;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_SERVER_NAME))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_SERVER_NAME))) {
                 ps.setString(1, serverName);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -58,7 +59,8 @@ public class ONLINE extends AbstractFloraCoreTable {
     public void setStatusTrue() {
         this.status = true;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_STATUS_TRUE))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_STATUS_TRUE))) {
                 ps.setBoolean(1, true);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -71,7 +73,8 @@ public class ONLINE extends AbstractFloraCoreTable {
     public void setStatusFalse(String serverName) {
         this.status = true;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_STATUS_FALSE))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_STATUS_FALSE))) {
                 ps.setBoolean(1, false);
                 ps.setString(2, uuid.toString());
                 ps.setString(3, serverName);
@@ -85,7 +88,8 @@ public class ONLINE extends AbstractFloraCoreTable {
     @Override
     public void init() throws SQLException {
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(INSERT))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(INSERT))) {
                 ps.setString(1, uuid.toString());
                 ps.setBoolean(2, status);
                 ps.setString(3, serverName);

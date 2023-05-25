@@ -98,7 +98,8 @@ public class SimpleExtensionManager implements ExtensionManager, AutoCloseable {
             throw new RuntimeException(e);
         }
 
-        this.plugin.getLogger().info("Loading extension: " + extensionClass.getName() + " (" + path.getFileName().toString() + ")");
+        this.plugin.getLogger()
+                   .info("Loading extension: " + extensionClass.getName() + " (" + path.getFileName().toString() + ")");
 
         Extension extension = null;
 

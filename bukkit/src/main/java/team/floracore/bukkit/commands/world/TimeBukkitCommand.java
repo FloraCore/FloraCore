@@ -79,7 +79,9 @@ public class TimeBukkitCommand extends FloraCoreBukkitCommand {
         }
 
         for (final World world : worlds) {
-            WorldCommandMessage.COMMAND_TIME_WORLD_CURRENT.send(sender, world.getName(), MiscMessage.DURATION_FORMAT.build(world.getTime()));
+            WorldCommandMessage.COMMAND_TIME_WORLD_CURRENT.send(sender,
+                    world.getName(),
+                    MiscMessage.DURATION_FORMAT.build(world.getTime()));
         }
     }
 
@@ -109,7 +111,9 @@ public class TimeBukkitCommand extends FloraCoreBukkitCommand {
                 w.setTime(t + (24000) + timeTick);
                 joiner.add(w.getName());
             }
-            WorldCommandMessage.COMMAND_TIME_SET.send(sender, joiner.toString(), MiscMessage.DURATION_FORMAT.build(timeTick));
+            WorldCommandMessage.COMMAND_TIME_SET.send(sender,
+                    joiner.toString(),
+                    MiscMessage.DURATION_FORMAT.build(timeTick));
         }
     }
 
@@ -137,7 +141,9 @@ public class TimeBukkitCommand extends FloraCoreBukkitCommand {
                 w.setTime(t + timeTick);
                 joiner.add(w.getName());
             }
-            WorldCommandMessage.COMMAND_TIME_ADD.send(sender, joiner.toString(), MiscMessage.DURATION_FORMAT.build(timeTick));
+            WorldCommandMessage.COMMAND_TIME_ADD.send(sender,
+                    joiner.toString(),
+                    MiscMessage.DURATION_FORMAT.build(timeTick));
         }
     }
 

@@ -35,12 +35,19 @@ public class HasPermissionBukkitCommand extends FloraCoreBukkitCommand {
             MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
             return;
         }
-        (hasPermission(ut, permission) ? PlayerCommandMessage.COMMAND_HASPERMISSION_YES : PlayerCommandMessage.COMMAND_HASPERMISSION_NO).send(sender, target, permission);
+        (hasPermission(ut,
+                permission) ? PlayerCommandMessage.COMMAND_HASPERMISSION_YES : PlayerCommandMessage.COMMAND_HASPERMISSION_NO).send(
+                sender,
+                target,
+                permission);
     }
 
     @Suggestions("permission_list")
     public @NotNull List<String> getPermissionList(@NotNull CommandContext<CommandSender> sender,
                                                    @NotNull String input) {
-        return Bukkit.getPluginManager().getPermissions().stream().collect(ArrayList::new, (list, element) -> list.add(element.getName()), ArrayList::addAll);
+        return Bukkit.getPluginManager()
+                     .getPermissions()
+                     .stream()
+                     .collect(ArrayList::new, (list, element) -> list.add(element.getName()), ArrayList::addAll);
     }
 }

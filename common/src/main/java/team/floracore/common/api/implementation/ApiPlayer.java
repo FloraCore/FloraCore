@@ -10,8 +10,14 @@ import java.util.concurrent.*;
 
 public class ApiPlayer implements PlayerAPI {
     private final FloraCorePlugin plugin;
-    AsyncCache<UUID, PLAYER> playersCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
-    AsyncCache<String, PLAYER> playersRecordCache = Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS).maximumSize(10000).buildAsync();
+    AsyncCache<UUID, PLAYER> playersCache = Caffeine.newBuilder()
+                                                    .expireAfterWrite(3, TimeUnit.SECONDS)
+                                                    .maximumSize(10000)
+                                                    .buildAsync();
+    AsyncCache<String, PLAYER> playersRecordCache = Caffeine.newBuilder()
+                                                            .expireAfterWrite(3, TimeUnit.SECONDS)
+                                                            .maximumSize(10000)
+                                                            .buildAsync();
 
     public ApiPlayer(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -23,7 +29,8 @@ public class ApiPlayer implements PlayerAPI {
     }
 
     public PLAYER getPlayers(String name) {
-        CompletableFuture<PLAYER> players = playersRecordCache.get(name, n -> plugin.getStorage().getImplementation().selectPlayer(n));
+        CompletableFuture<PLAYER> players = playersRecordCache.get(name,
+                n -> plugin.getStorage().getImplementation().selectPlayer(n));
         playersRecordCache.put(name, players);
         return players.join();
     }
@@ -47,7 +54,8 @@ public class ApiPlayer implements PlayerAPI {
     }
 
     public PLAYER getPlayers(UUID uuid) {
-        CompletableFuture<PLAYER> players = playersCache.get(uuid, u -> plugin.getStorage().getImplementation().selectPlayer(u));
+        CompletableFuture<PLAYER> players = playersCache.get(uuid,
+                u -> plugin.getStorage().getImplementation().selectPlayer(u));
         playersCache.put(uuid, players);
         return players.join();
     }

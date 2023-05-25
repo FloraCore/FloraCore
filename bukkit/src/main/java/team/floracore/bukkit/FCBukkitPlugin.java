@@ -94,7 +94,14 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
             SERVER server = getStorage().getImplementation().selectServer(getServerName());
             if (server == null) {
                 ServerType serverType = getConfiguration().get(ConfigKeys.SERVER_TYPE);
-                server = new SERVER(this, getStorage().getImplementation(), -1, getServerName(), serverType, serverType.isAutoSync1(), serverType.isAutoSync2(), System.currentTimeMillis());
+                server = new SERVER(this,
+                        getStorage().getImplementation(),
+                        -1,
+                        getServerName(),
+                        serverType,
+                        serverType.isAutoSync1(),
+                        serverType.isAutoSync2(),
+                        System.currentTimeMillis());
                 try {
                     server.init();
                 } catch (SQLException e) {

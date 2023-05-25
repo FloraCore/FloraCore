@@ -20,6 +20,7 @@ public abstract class URLClassLoaderAccess {
      * Creates a {@link URLClassLoaderAccess} for the given class loader.
      *
      * @param classLoader the class loader
+     *
      * @return the access object
      */
     public static URLClassLoaderAccess create(URLClassLoader classLoader) {
@@ -33,7 +34,8 @@ public abstract class URLClassLoaderAccess {
     private static void throwError(Throwable cause) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("FloraCore is unable to inject into the plugin URLClassLoader.\n" +
                 "You may be able to fix this problem by adding the following command-line argument " +
-                "directly after the 'java' command in your start script: \n'--add-opens java.base/java.lang=ALL-UNNAMED'", cause);
+                "directly after the 'java' command in your start script: \n'--add-opens java.base/java.lang=ALL-UNNAMED'",
+                cause);
     }
 
     /**

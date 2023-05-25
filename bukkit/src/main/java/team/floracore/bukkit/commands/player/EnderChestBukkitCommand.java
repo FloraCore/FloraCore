@@ -102,7 +102,8 @@ public class EnderChestBukkitCommand extends FloraCoreBukkitCommand implements L
         Inventory clickedInventory = event.getClickedInventory();
         boolean cancel = false;
         if (readOnlyInventory != null) {
-            if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || readOnlyInventory.equals(clickedInventory)) {
+            if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY || readOnlyInventory.equals(
+                    clickedInventory)) {
                 cancel = true;
             }
         }

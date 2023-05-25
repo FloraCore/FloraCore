@@ -25,6 +25,7 @@ public class ClassUtil {
      * 得到一个类的所有父类（除了Object.class）
      *
      * @param clazz 一根类
+     *
      * @return 这个类的所有父类（除了Object.class）
      */
     public static List<Class<?>> getSuperClasses(Class<?> clazz) {
@@ -36,6 +37,7 @@ public class ClassUtil {
      *
      * @param clazz 过滤这个类的父类
      * @param l     过滤这个类的真子类
+     *
      * @return 一个类的父类 交 另一个类的真子类
      */
     public static <E, T> List<Class<? extends E>> getSuperClasses(Class<T> clazz, Class<E> l) {
@@ -155,7 +157,9 @@ public class ClassUtil {
 
     public static MethodHandle unreflect(Constructor<?> constructor) {
         try {
-            return Root.getTrusted().findConstructor(constructor.getDeclaringClass(), MethodType.methodType(void.class, constructor.getParameterTypes()));
+            return Root.getTrusted()
+                       .findConstructor(constructor.getDeclaringClass(),
+                               MethodType.methodType(void.class, constructor.getParameterTypes()));
         } catch (Throwable e) {
             throw TypeUtil.throwException(e);
         }
@@ -166,7 +170,10 @@ public class ClassUtil {
             if (Modifier.isStatic(method.getModifiers())) {
                 return unreflectSpecial(method);
             } else {
-                return Root.getTrusted().findVirtual(method.getDeclaringClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
+                return Root.getTrusted()
+                           .findVirtual(method.getDeclaringClass(),
+                                   method.getName(),
+                                   MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
             }
         } catch (Throwable e) {
             throw TypeUtil.throwException(e);
@@ -176,9 +183,16 @@ public class ClassUtil {
     public static MethodHandle unreflectSpecial(Method method) {
         try {
             if (Modifier.isStatic(method.getModifiers())) {
-                return Root.getTrusted().findStatic(method.getDeclaringClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
+                return Root.getTrusted()
+                           .findStatic(method.getDeclaringClass(),
+                                   method.getName(),
+                                   MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
             } else {
-                return Root.getTrusted().findSpecial(method.getDeclaringClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()), method.getDeclaringClass());
+                return Root.getTrusted()
+                           .findSpecial(method.getDeclaringClass(),
+                                   method.getName(),
+                                   MethodType.methodType(method.getReturnType(), method.getParameterTypes()),
+                                   method.getDeclaringClass());
             }
         } catch (Throwable e) {
             throw TypeUtil.throwException(e);
@@ -271,16 +285,30 @@ public class ClassUtil {
                 if (c == null) {
                     SimpleLoader cl = new SimpleLoader(clazz.getClassLoader());
                     ClassNode cn = new ClassNode();
-                    cn.visit(Opcodes.V1_8, Modifier.PUBLIC, AsmUtil.getType("mz.lib.implgen." + clazz.getName()), null, AsmUtil.getType(Object.class), new String[]{AsmUtil.getType(clazz)});
-                    MethodVisitor m = cn.visitMethod(Modifier.PUBLIC, "<init>", AsmUtil.getDesc(new Class[0], void.class), null, new String[0]);
+                    cn.visit(Opcodes.V1_8,
+                            Modifier.PUBLIC,
+                            AsmUtil.getType("mz.lib.implgen." + clazz.getName()),
+                            null,
+                            AsmUtil.getType(Object.class),
+                            new String[]{AsmUtil.getType(clazz)});
+                    MethodVisitor m = cn.visitMethod(Modifier.PUBLIC,
+                            "<init>",
+                            AsmUtil.getDesc(new Class[0], void.class),
+                            null,
+                            new String[0]);
                     m.visitCode();
                     m.visitVarInsn(Opcodes.ALOAD, 0);
-                    m.visitMethodInsn(Opcodes.INVOKESPECIAL, AsmUtil.getType(Object.class), "<init>", AsmUtil.getDesc(new Class[0], void.class), false);
+                    m.visitMethodInsn(Opcodes.INVOKESPECIAL,
+                            AsmUtil.getType(Object.class),
+                            "<init>",
+                            AsmUtil.getDesc(new Class[0], void.class),
+                            false);
                     m.visitInsn(Opcodes.RETURN);
                     m.visitEnd();
                     ClassWriter cw = new ClassWriter(ClassWriter.COMPUTE_MAXS | ClassWriter.COMPUTE_FRAMES);
                     cn.accept(cw);
-                    c = Root.getTrusted().unreflectConstructor(loadClass(cn.name, cw.toByteArray(), cl).getDeclaredConstructor());
+                    c = Root.getTrusted()
+                            .unreflectConstructor(loadClass(cn.name, cw.toByteArray(), cl).getDeclaredConstructor());
                     synchronized (ClassUtil.class) {
                         WeakHashMap<Class<?>, MethodHandle> t = new WeakHashMap<>(constructorsCache);
                         t.put(clazz, c);
@@ -305,10 +333,13 @@ public class ClassUtil {
             try {
                 try {
                     try {
-                        getAgentInstrumentation().redefineClasses(new ClassDefinition(Class.forName(className.replace('/', '.'), false, classLoader), bs));
+                        getAgentInstrumentation().redefineClasses(new ClassDefinition(Class.forName(className.replace(
+                                '/',
+                                '.'), false, classLoader), bs));
                         return Class.forName(className.replace('/', '.'), false, classLoader);
                     } catch (VerifyError e) {
-                        try (FileOutputStream fos = new FileOutputStream(new File(className.replace('/', '.') + ".class"))) {
+                        try (FileOutputStream fos = new FileOutputStream(new File(className.replace('/',
+                                '.') + ".class"))) {
                             fos.write(bs);
                         }
                         throw e;
@@ -325,7 +356,9 @@ public class ClassUtil {
     public static Instrumentation getAgentInstrumentation() {
         if (agentInstrumentation == null) {
             try {
-                agentInstrumentation = (Instrumentation) Class.forName("mz.lib.InstrumentationGetter", false, sysClassLoader).getDeclaredField("instrumentation").get(null);
+                agentInstrumentation = (Instrumentation) Class.forName("mz.lib.InstrumentationGetter",
+                        false,
+                        sysClassLoader).getDeclaredField("instrumentation").get(null);
             } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignore) {
                 try {
                     try {
@@ -344,8 +377,11 @@ public class ClassUtil {
                     {
                         Class.forName(className, false, ClassLoader.getSystemClassLoader());
                     }) instanceof ClassNotFoundException) {
-                        byte[] bs = FileUtil.readInputStream(ClassUtil.class.getClassLoader().getResourceAsStream(className.replace('.', '/') + ".class"));
-                        Root.getUnsafe().defineClass(className, bs, 0, bs.length, ClassLoader.getSystemClassLoader(), null);
+                        byte[] bs = FileUtil.readInputStream(ClassUtil.class.getClassLoader()
+                                                                            .getResourceAsStream(className.replace('.',
+                                                                                    '/') + ".class"));
+                        Root.getUnsafe()
+                            .defineClass(className, bs, 0, bs.length, ClassLoader.getSystemClassLoader(), null);
                     }
                     Class<?> clazz = Class.forName(className, true, ClassLoader.getSystemClassLoader());
                     agentInstrumentation = TypeUtil.cast(clazz.getField("agentInstrumentation").get(null));
@@ -374,7 +410,8 @@ public class ClassUtil {
         List<T> r = new ArrayList<>();
         for (Class<?> c : getSuperClasses(method.getDeclaringClass())) {
             try {
-                r.addAll(Lists.newArrayList(c.getDeclaredMethod(method.getName(), method.getParameterTypes()).getDeclaredAnnotationsByType(annType)));
+                r.addAll(Lists.newArrayList(c.getDeclaredMethod(method.getName(), method.getParameterTypes())
+                                             .getDeclaredAnnotationsByType(annType)));
             } catch (NoSuchMethodException ignored) {
             }
         }
@@ -389,7 +426,9 @@ public class ClassUtil {
         try {
             for (Field f : c.getDeclaredFields()) {
                 if (!Modifier.isStatic(f.getModifiers())) {
-                    Root.getTrusted().findSetter(c, f.getName(), f.getType()).invoke(tar, Root.getTrusted().unreflectGetter(f).invoke(src));
+                    Root.getTrusted()
+                        .findSetter(c, f.getName(), f.getType())
+                        .invoke(tar, Root.getTrusted().unreflectGetter(f).invoke(src));
                 }
             }
             if (c.getSuperclass() != null) {

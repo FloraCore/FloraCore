@@ -77,7 +77,8 @@ public class PARTY extends AbstractFloraCoreTable {
     public void setDisbandTime(long disbandTime) {
         this.disbandTime = disbandTime;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_DISBAND_TIME))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_DISBAND_TIME))) {
                 ps.setLong(1, disbandTime);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -94,7 +95,8 @@ public class PARTY extends AbstractFloraCoreTable {
     public void setSettings(String settings) {
         this.settings = settings;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_SETTINGS))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_SETTINGS))) {
                 ps.setString(1, settings);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -111,7 +113,8 @@ public class PARTY extends AbstractFloraCoreTable {
     public void setLeader(UUID leader) {
         this.leader = leader;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_LEADER))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_LEADER))) {
                 ps.setString(1, leader.toString());
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -129,7 +132,8 @@ public class PARTY extends AbstractFloraCoreTable {
         this.members = members;
         String membersJson = GsonProvider.normal().toJson(members);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_MEMBERS))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_MEMBERS))) {
                 ps.setString(1, membersJson);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -147,7 +151,8 @@ public class PARTY extends AbstractFloraCoreTable {
         this.moderators = moderators;
         String moderatorsJson = GsonProvider.normal().toJson(moderators);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_MODERATORS))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_MODERATORS))) {
                 ps.setString(1, moderatorsJson);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -162,7 +167,8 @@ public class PARTY extends AbstractFloraCoreTable {
         String moderatorsJson = GsonProvider.normal().toJson(moderators);
         String membersJson = GsonProvider.normal().toJson(members);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(INSERT))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(INSERT))) {
                 ps.setString(1, uuid.toString());
                 ps.setString(2, leader.toString());
                 ps.setString(3, moderatorsJson);

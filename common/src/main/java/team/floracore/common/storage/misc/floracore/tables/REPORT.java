@@ -68,7 +68,8 @@ public class REPORT extends AbstractFloraCoreTable {
     public void setConclusionTime(Long conclusionTime) {
         this.conclusionTime = conclusionTime;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_CONCLUSION_TIME))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_CONCLUSION_TIME))) {
                 ps.setLong(1, conclusionTime);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -89,7 +90,8 @@ public class REPORT extends AbstractFloraCoreTable {
     public void setStatus(ReportStatus status) {
         this.status = status;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_STATUS))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_STATUS))) {
                 ps.setString(1, status.name());
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -111,7 +113,8 @@ public class REPORT extends AbstractFloraCoreTable {
         this.reporters = reporters;
         String reportersJson = GsonProvider.normal().toJson(reporters);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_REPORTERS))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_REPORTERS))) {
                 ps.setString(1, reportersJson);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -133,7 +136,8 @@ public class REPORT extends AbstractFloraCoreTable {
         this.reasons = reasons;
         String reasonsJson = GsonProvider.normal().toJson(reasons);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(UPDATE_REASONS))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(UPDATE_REASONS))) {
                 ps.setString(1, reasonsJson);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -149,7 +153,8 @@ public class REPORT extends AbstractFloraCoreTable {
         String reportersJson = GsonProvider.normal().toJson(reporters);
         String reasonsJson = GsonProvider.normal().toJson(reasons);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
-            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor().apply(INSERT))) {
+            try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
+                                                                                              .apply(INSERT))) {
                 ps.setString(1, uuid.toString());
                 ps.setString(2, reportersJson);
                 ps.setString(3, reported.toString());

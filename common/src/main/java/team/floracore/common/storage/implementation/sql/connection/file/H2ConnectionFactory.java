@@ -28,7 +28,11 @@ public class H2ConnectionFactory extends FlatfileConnectionFactory {
         ClassLoader classLoader = plugin.getDependencyManager().obtainClassLoaderWith(EnumSet.of(Dependency.H2_DRIVER));
         try {
             Class<?> connectionClass = classLoader.loadClass("org.h2.jdbc.JdbcConnection");
-            this.connectionConstructor = connectionClass.getConstructor(String.class, Properties.class, String.class, Object.class, boolean.class);
+            this.connectionConstructor = connectionClass.getConstructor(String.class,
+                    Properties.class,
+                    String.class,
+                    Object.class,
+                    boolean.class);
         } catch (ReflectiveOperationException e) {
             throw new RuntimeException(e);
         }
@@ -36,22 +40,28 @@ public class H2ConnectionFactory extends FlatfileConnectionFactory {
         try {
             new MigrateH2ToVersion2(plugin, super.getWriteFile().getParent()).run(this);
         } catch (Exception e) {
-            plugin.getLogger().warn("Something went wrong whilst upgrading the FloraCore database. Please report this on GitHub.", e);
+            plugin.getLogger()
+                  .warn("Something went wrong whilst upgrading the FloraCore database. Please report this on GitHub.",
+                          e);
         }
     }
 
     @Override
     public Function<String, String> getStatementProcessor() {
         return s -> s.replace('\'', '`')
-                .replace("LIKE", "ILIKE")
-                .replace("value", "`value`")
-                .replace("``value``", "`value`");
+                     .replace("LIKE", "ILIKE")
+                     .replace("value", "`value`")
+                     .replace("``value``", "`value`");
     }
 
     @Override
     protected Connection createConnection(Path file) throws SQLException {
         try {
-            return (Connection) this.connectionConstructor.newInstance("jdbc:h2:" + file.toString(), new Properties(), null, null, false);
+            return (Connection) this.connectionConstructor.newInstance("jdbc:h2:" + file.toString(),
+                    new Properties(),
+                    null,
+                    null,
+                    false);
         } catch (ReflectiveOperationException e) {
             if (e.getCause() instanceof SQLException) {
                 throw (SQLException) e.getCause();
@@ -91,7 +101,8 @@ public class H2ConnectionFactory extends FlatfileConnectionFactory {
 
             Path tempMigrationFile = this.directory.resolve("floracore-h2-migration.sql");
 
-            this.plugin.getLogger().warn("[DB Upgrade] Found an old (v1) H2 database file. FloraCore will now attempt to upgrade it to v2 (this is a one time operation).");
+            this.plugin.getLogger()
+                       .warn("[DB Upgrade] Found an old (v1) H2 database file. FloraCore will now attempt to upgrade it to v2 (this is a one time operation).");
 
             this.plugin.getLogger().info("[DB Upgrade] Stage 1: Exporting the old database to an intermediary file...");
             Constructor<?> constructor = getConnectionConstructor();
@@ -101,7 +112,8 @@ public class H2ConnectionFactory extends FlatfileConnectionFactory {
                 }
             }
 
-            this.plugin.getLogger().info("[DB Upgrade] Stage 2: Importing the intermediary file into the new database...");
+            this.plugin.getLogger()
+                       .info("[DB Upgrade] Stage 2: Importing the intermediary file into the new database...");
             try (Connection c = newFactory.getConnection()) {
                 try (Statement stmt = c.createStatement()) {
                     stmt.execute(String.format("RUNSCRIPT FROM '%s'", tempMigrationFile));
@@ -117,7 +129,8 @@ public class H2ConnectionFactory extends FlatfileConnectionFactory {
 
         private Constructor<?> getConnectionConstructor() {
             this.plugin.getDependencyManager().loadDependencies(Collections.singleton(Dependency.H2_DRIVER_LEGACY));
-            ClassLoader classLoader = this.plugin.getDependencyManager().obtainClassLoaderWith(EnumSet.of(Dependency.H2_DRIVER_LEGACY));
+            ClassLoader classLoader = this.plugin.getDependencyManager()
+                                                 .obtainClassLoaderWith(EnumSet.of(Dependency.H2_DRIVER_LEGACY));
             try {
                 Class<?> connectionClass = classLoader.loadClass("org.h2.jdbc.JdbcConnection");
                 return connectionClass.getConstructor(String.class, Properties.class);

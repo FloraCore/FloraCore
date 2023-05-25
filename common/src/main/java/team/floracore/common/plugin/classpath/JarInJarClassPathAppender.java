@@ -11,7 +11,8 @@ public class JarInJarClassPathAppender implements ClassPathAppender {
 
     public JarInJarClassPathAppender(ClassLoader classLoader) {
         if (!(classLoader instanceof JarInJarClassLoader)) {
-            throw new IllegalArgumentException("Loader is not a JarInJarClassLoader: " + classLoader.getClass().getName());
+            throw new IllegalArgumentException("Loader is not a JarInJarClassLoader: " + classLoader.getClass()
+                                                                                                    .getName());
         }
         this.classLoader = (JarInJarClassLoader) classLoader;
     }

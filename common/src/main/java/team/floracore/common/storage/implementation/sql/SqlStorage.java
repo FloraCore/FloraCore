@@ -28,7 +28,8 @@ public class SqlStorage implements StorageImplementation {
     public SqlStorage(FloraCorePlugin plugin, ConnectionFactory connectionFactory, String tablePrefix) {
         this.plugin = plugin;
         this.connectionFactory = connectionFactory;
-        this.statementProcessor = connectionFactory.getStatementProcessor().compose(s -> s.replace("{prefix}", tablePrefix));
+        this.statementProcessor = connectionFactory.getStatementProcessor()
+                                                   .compose(s -> s.replace("{prefix}", tablePrefix));
     }
 
     @Override
@@ -60,13 +61,17 @@ public class SqlStorage implements StorageImplementation {
     private void applySchema() throws IOException, SQLException {
         List<String> statements;
 
-        String schemaFileName = "team/floracore/schema/" + this.connectionFactory.getImplementationName().toLowerCase(Locale.ROOT) + ".sql";
+        String schemaFileName = "team/floracore/schema/" + this.connectionFactory.getImplementationName()
+                                                                                 .toLowerCase(Locale.ROOT) + ".sql";
         try (InputStream is = this.plugin.getBootstrap().getResourceStream(schemaFileName)) {
             if (is == null) {
                 throw new IOException("Couldn't locate schema file for " + this.connectionFactory.getImplementationName());
             }
 
-            statements = SchemaReader.getStatements(is).stream().map(this.statementProcessor).collect(Collectors.toList());
+            statements = SchemaReader.getStatements(is)
+                                     .stream()
+                                     .map(this.statementProcessor)
+                                     .collect(Collectors.toList());
         }
 
         try (Connection connection = this.connectionFactory.getConnection()) {
@@ -124,7 +129,16 @@ public class SqlStorage implements StorageImplementation {
                         long firstLoginTime = rs.getLong("firstLoginTime");
                         long lastLoginTime = rs.getLong("lastLoginTime");
                         long playTime = rs.getLong("playTime");
-                        player = new PLAYER(plugin, this, id, UUID.fromString(uuid), name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
+                        player = new PLAYER(plugin,
+                                this,
+                                id,
+                                UUID.fromString(uuid),
+                                name,
+                                firstLoginIp,
+                                lastLoginIp,
+                                firstLoginTime,
+                                lastLoginTime,
+                                playTime);
                     } else {
                         return null;
                     }
@@ -151,7 +165,16 @@ public class SqlStorage implements StorageImplementation {
                         long firstLoginTime = rs.getLong("firstLoginTime");
                         long lastLoginTime = rs.getLong("lastLoginTime");
                         long playTime = rs.getLong("playTime");
-                        player = new PLAYER(plugin, this, id, uuid, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
+                        player = new PLAYER(plugin,
+                                this,
+                                id,
+                                uuid,
+                                name,
+                                firstLoginIp,
+                                lastLoginIp,
+                                firstLoginTime,
+                                lastLoginTime,
+                                playTime);
                     } else {
                         return null;
                     }
@@ -302,7 +325,14 @@ public class SqlStorage implements StorageImplementation {
                         boolean autoSync1 = rs.getBoolean("autoSync1");
                         boolean autoSync2 = rs.getBoolean("autoSync2");
                         long lastActiveTime = rs.getLong("lastActiveTime");
-                        server = new SERVER(plugin, this, id, name, ServerType.parse(type), autoSync1, autoSync2, lastActiveTime);
+                        server = new SERVER(plugin,
+                                this,
+                                id,
+                                name,
+                                ServerType.parse(type),
+                                autoSync1,
+                                autoSync2,
+                                lastActiveTime);
                     } else {
                         return null;
                     }
@@ -431,7 +461,17 @@ public class SqlStorage implements StorageImplementation {
                         Type type3 = new TypeToken<List<ReportDataChatRecord>>() {
                         }.getType();
                         List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type3);
-                        ret.add(new REPORT(plugin, this, id, uuid, reporters, reported, reasons, reportTime, status, conclusionTime, records));
+                        ret.add(new REPORT(plugin,
+                                this,
+                                id,
+                                uuid,
+                                reporters,
+                                reported,
+                                reasons,
+                                reportTime,
+                                status,
+                                conclusionTime,
+                                records));
                     }
                 }
             }
@@ -467,7 +507,17 @@ public class SqlStorage implements StorageImplementation {
                         Type type3 = new TypeToken<List<ReportDataChatRecord>>() {
                         }.getType();
                         List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type3);
-                        ret.add(new REPORT(plugin, this, id, uuid1, reporters, reported, reasons, reportTime, status, conclusionTime, records));
+                        ret.add(new REPORT(plugin,
+                                this,
+                                id,
+                                uuid1,
+                                reporters,
+                                reported,
+                                reasons,
+                                reportTime,
+                                status,
+                                conclusionTime,
+                                records));
                     }
                 }
             }
@@ -502,7 +552,17 @@ public class SqlStorage implements StorageImplementation {
                         Type type3 = new TypeToken<List<ReportDataChatRecord>>() {
                         }.getType();
                         List<ReportDataChatRecord> records = GsonProvider.normal().fromJson(recordsJson, type3);
-                        return new REPORT(plugin, this, id, uuid1, reporters, reported, reasons, reportTime, status, conclusionTime, records);
+                        return new REPORT(plugin,
+                                this,
+                                id,
+                                uuid1,
+                                reporters,
+                                reported,
+                                reasons,
+                                reportTime,
+                                status,
+                                conclusionTime,
+                                records);
                     } else {
                         return null;
                     }
@@ -533,7 +593,17 @@ public class SqlStorage implements StorageImplementation {
                           List<ReportDataChatRecord> chat) {
         REPORT report = getUnprocessedReports(reported);
         if (getUnprocessedReports(reported) == null) {
-            report = new REPORT(plugin, this, -1, uuid, Collections.singletonList(reporter), reported, Collections.singletonList(reason), reportTime, ReportStatus.WAITING, null, chat);
+            report = new REPORT(plugin,
+                    this,
+                    -1,
+                    uuid,
+                    Collections.singletonList(reporter),
+                    reported,
+                    Collections.singletonList(reason),
+                    reportTime,
+                    ReportStatus.WAITING,
+                    null,
+                    chat);
             try {
                 report.init();
             } catch (SQLException e) {
@@ -570,7 +640,17 @@ public class SqlStorage implements StorageImplementation {
                         long createTime = rs.getLong("createTime");
                         long disbandTime = rs.getLong("disbandTime");
                         int chat = rs.getInt("chat");
-                        return new PARTY(plugin, this, id, uuid, leader, moderators, members, settings, createTime, disbandTime, chat);
+                        return new PARTY(plugin,
+                                this,
+                                id,
+                                uuid,
+                                leader,
+                                moderators,
+                                members,
+                                settings,
+                                createTime,
+                                disbandTime,
+                                chat);
                     } else {
                         return null;
                     }
@@ -593,7 +673,17 @@ public class SqlStorage implements StorageImplementation {
 
     @Override
     public void insertParty(UUID uuid, UUID leader, long createTime, int chat) {
-        PARTY party = new PARTY(plugin, this, -1, uuid, leader, Collections.emptyList(), Collections.singletonList(leader), "", createTime, -1, chat);
+        PARTY party = new PARTY(plugin,
+                this,
+                -1,
+                uuid,
+                leader,
+                Collections.emptyList(),
+                Collections.singletonList(leader),
+                "",
+                createTime,
+                -1,
+                chat);
         try {
             party.init();
         } catch (SQLException e) {

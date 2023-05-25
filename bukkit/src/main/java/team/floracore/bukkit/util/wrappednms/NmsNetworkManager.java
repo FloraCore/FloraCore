@@ -23,7 +23,9 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
     static Optional<Void> beforeReceivePacketV13(@LocalVar(0) NmsPacket packet,
                                                  @LocalVar(1) NmsPacketListener listener) {
         if (listener.is(NmsPlayerConnection.class)) {
-            if (ProtocolUtil.onPacketReceive((Player) listener.cast(NmsPlayerConnection.class).getPlayer().getBukkitEntity(), packet)) {
+            if (ProtocolUtil.onPacketReceive((Player) listener.cast(NmsPlayerConnection.class)
+                                                              .getPlayer()
+                                                              .getBukkitEntity(), packet)) {
                 return Nothing.doReturn(null);
             }
         }
@@ -40,7 +42,10 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
     @NothingBukkitInject(name = @VersionName(value = {"sendPacket", "a"}, minVer = 19.1f), args = {NmsPacket.class, NmsPacketSendListener.class}, location = NothingLocation.FRONT)
     default Optional<Void> sendPacketBefore(@LocalVar(1) NmsPacket packet) {
         if (this.getPacketListener().is(NmsPlayerConnection.class)) {
-            if (ProtocolUtil.onPacketSend((Player) this.getPacketListener().cast(NmsPlayerConnection.class).getPlayer().getBukkitEntity(), packet)) {
+            if (ProtocolUtil.onPacketSend((Player) this.getPacketListener()
+                                                       .cast(NmsPlayerConnection.class)
+                                                       .getPlayer()
+                                                       .getBukkitEntity(), packet)) {
                 return Nothing.doReturn(null);
             }
         }

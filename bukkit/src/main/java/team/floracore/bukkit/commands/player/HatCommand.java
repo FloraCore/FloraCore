@@ -38,7 +38,9 @@ public class HatCommand extends FloraCoreBukkitCommand {
             PlayerCommandMessage.COMMAND_HAT_ARMOR.send(sender);
             return;
         }
-        if (BukkitWrapper.version >= 9 && head != null && head.getEnchantments().containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission("floracore.command.hat.ignore-binding")) {
+        if (BukkitWrapper.version >= 9 && head != null && head.getEnchantments()
+                                                              .containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission(
+                "floracore.command.hat.ignore-binding")) {
             PlayerCommandMessage.COMMAND_HAT_CURSE.send(sender);
             return;
         }
@@ -55,7 +57,9 @@ public class HatCommand extends FloraCoreBukkitCommand {
         final ItemStack head = inv.getHelmet();
         if (head == null || head.getType() == Material.AIR) {
             PlayerCommandMessage.COMMAND_HAT_EMPTY.send(sender);
-        } else if (BukkitWrapper.version >= 9 && head.getEnchantments().containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission("floracore.command.hat.ignore-binding")) {
+        } else if (BukkitWrapper.version >= 9 && head.getEnchantments()
+                                                     .containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission(
+                "floracore.command.hat.ignore-binding")) {
             PlayerCommandMessage.COMMAND_HAT_CURSE.send(sender);
         } else {
             final ItemStack air = new ItemStack(Material.AIR);

@@ -84,7 +84,8 @@ public class ChestInventoryOpener implements InventoryOpener {
             String objectToString =
                     o.getClass().getName() + '@' + Integer.toHexString(System.identityHashCode(o));
             // Logger is created inline with fixed name to avoid forcing Proguard to create another class.
-            Logger.getLogger("com.google.common.base.Strings").log(WARNING, "Exception during lenientFormat for " + objectToString, e);
+            Logger.getLogger("com.google.common.base.Strings")
+                  .log(WARNING, "Exception during lenientFormat for " + objectToString, e);
             return "<" + objectToString + " threw " + e.getClass().getName() + ">";
         }
     }

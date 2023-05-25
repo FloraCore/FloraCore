@@ -12,7 +12,10 @@ public interface CommonCommandMessage extends AbstractMessage {
             // 已重新加载配置文件
             .key("floracore.command.reload-config.success").color(GREEN).append(FULL_STOP).append(space())
             // 某些选项仅在服务器重新启动后才应用
-            .append(text().color(GRAY).append(OPEN_BRACKET).append(translatable("floracore.command.reload-config.restart-note")).append(CLOSE_BRACKET)));
+            .append(text().color(GRAY)
+                          .append(OPEN_BRACKET)
+                          .append(translatable("floracore.command.reload-config.restart-note"))
+                          .append(CLOSE_BRACKET)));
 
     Args0 TRANSLATIONS_SEARCHING = () -> AbstractMessage.prefixed(translatable()
             // 正在搜索可用的翻译, 请稍候...
@@ -32,26 +35,39 @@ public interface CommonCommandMessage extends AbstractMessage {
             // list
             .append(AbstractMessage.formatStringList(locales)));
 
-    Args4<String, String, Integer, List<String>> AVAILABLE_TRANSLATIONS_ENTRY = (tag, name, percentComplete, contributors) -> AbstractMessage.prefixed(text()
-            // - {} ({}) - 已翻译{}% - 由 {}
-            .color(GRAY).append(text('-')).append(space()).append(text(tag, AQUA)).append(space()).append(OPEN_BRACKET)
-            // 语种
-            .append(text(name, WHITE)).append(CLOSE_BRACKET).append(text(" - "))
-            // 翻译进度
-            .append(translatable("floracore.command.translations.percent-translated", text(percentComplete, GREEN))).apply(builder -> {
-                if (!contributors.isEmpty()) {
-                    builder.append(text(" - "));
-                    builder.append(translatable("floracore.command.translations.translations-by"));
-                    builder.append(space());
-                    builder.append(AbstractMessage.formatStringList(contributors));
-                }
-            }));
+    Args4<String, String, Integer, List<String>> AVAILABLE_TRANSLATIONS_ENTRY = (tag, name, percentComplete, contributors) -> AbstractMessage.prefixed(
+            text()
+                    // - {} ({}) - 已翻译{}% - 由 {}
+                    .color(GRAY)
+                    .append(text('-'))
+                    .append(space())
+                    .append(text(tag, AQUA))
+                    .append(space())
+                    .append(OPEN_BRACKET)
+                    // 语种
+                    .append(text(name, WHITE))
+                    .append(CLOSE_BRACKET)
+                    .append(text(" - "))
+                    // 翻译进度
+                    .append(translatable("floracore.command.translations.percent-translated",
+                            text(percentComplete, GREEN)))
+                    .apply(builder -> {
+                        if (!contributors.isEmpty()) {
+                            builder.append(text(" - "));
+                            builder.append(translatable("floracore.command.translations.translations-by"));
+                            builder.append(space());
+                            builder.append(AbstractMessage.formatStringList(contributors));
+                        }
+                    }));
 
     Args0 TRANSLATIONS_DOWNLOAD_PROMPT = () -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, AbstractMessage.prefixed(translatable()
                 // 使用 {0} 下载并安装由社区提供的翻译的最新版本
-                .key("floracore.command.translations.download-prompt").color(AQUA).args(text("/fc translations install", GREEN)).append(FULL_STOP)), AbstractMessage.prefixed(translatable()
+                .key("floracore.command.translations.download-prompt")
+                .color(AQUA)
+                .args(text("/fc translations install", GREEN))
+                .append(FULL_STOP)), AbstractMessage.prefixed(translatable()
                 // 请注意, 此操作将会覆盖您对这些语言做出的任何更改
                 .key("floracore.command.translations.download-override-warning").color(GRAY).append(FULL_STOP)));
     };
@@ -75,8 +91,23 @@ public interface CommonCommandMessage extends AbstractMessage {
             // {0} 的数据信息:
             .key("floracore.command.generic.data.info.title").color(AQUA).args(text(target)));
 
-    Args2<Component, String> SERVER_DATA_ENTRY = (key, value) -> AbstractMessage.prefixed(text().append(key.color(GREEN)).append(space()).append(text("->", AQUA)).append(space()).append(text(value, WHITE)).apply(builder -> {
-    }));
-    Args2<Component, Component> SERVER_DATA_ENTRY_1 = (key, value) -> AbstractMessage.prefixed(text().append(key.color(GREEN)).append(space()).append(text("->", AQUA)).append(space()).append(value.color(WHITE)).apply(builder -> {
-    }));
+    Args2<Component, String> SERVER_DATA_ENTRY = (key, value) -> AbstractMessage.prefixed(text().append(key.color(GREEN))
+                                                                                                .append(space())
+                                                                                                .append(text("->",
+                                                                                                        AQUA))
+                                                                                                .append(space())
+                                                                                                .append(text(value,
+                                                                                                        WHITE))
+                                                                                                .apply(builder -> {
+                                                                                                }));
+    Args2<Component, Component> SERVER_DATA_ENTRY_1 = (key, value) -> AbstractMessage.prefixed(text().append(key.color(
+                                                                                                             GREEN))
+                                                                                                     .append(space())
+                                                                                                     .append(text("->",
+                                                                                                             AQUA))
+                                                                                                     .append(space())
+                                                                                                     .append(value.color(
+                                                                                                             WHITE))
+                                                                                                     .apply(builder -> {
+                                                                                                     }));
 }

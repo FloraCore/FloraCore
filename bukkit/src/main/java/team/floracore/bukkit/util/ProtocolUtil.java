@@ -26,7 +26,9 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
     }
 
     public static void unregListener(TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>> listener) {
-        for (Map<Class<?>, List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>>> ls : Lists.newArrayList(sendListeners, receiveListeners)) {
+        for (Map<Class<?>, List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>>> ls : Lists.newArrayList(
+                sendListeners,
+                receiveListeners)) {
             ls.forEach((t, i) ->
             {
                 i.remove(listener);
@@ -40,7 +42,8 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
         }
         if (sendListeners.containsKey(packet.getRaw().getClass())) {
             Ref<Boolean> cancelled = new Ref<>(false);
-            List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = sendListeners.get(packet.getRaw().getClass());
+            List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = sendListeners.get(
+                    packet.getRaw().getClass());
             for (EventPriority p : EventPriority.values()) {
                 l.get(p.ordinal()).forEach((c, t) ->
                 {
@@ -61,7 +64,8 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
     public static boolean onPacketReceive(Player sender, NmsPacket packet) {
         if (receiveListeners.containsKey(packet.getRaw().getClass())) {
             Ref<Boolean> cancelled = new Ref<>(false);
-            List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = receiveListeners.get(packet.getRaw().getClass());
+            List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = receiveListeners.get(
+                    packet.getRaw().getClass());
             for (EventPriority p : EventPriority.values()) {
                 l.get(p.ordinal()).forEach((c, t) ->
                 {
@@ -87,9 +91,18 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
 
     public static void sendPacket(Player receiver, NmsPacket packet) {
         if (BukkitWrapper.version >= 12) {
-            WrappedObject.wrap(ObcEntity.class, receiver).getHandle().cast(NmsEntityPlayer.class).getPlayerConnection().getNetworkManager().sendPacket(packet);
+            WrappedObject.wrap(ObcEntity.class, receiver)
+                         .getHandle()
+                         .cast(NmsEntityPlayer.class)
+                         .getPlayerConnection()
+                         .getNetworkManager()
+                         .sendPacket(packet);
         } else {
-            WrappedObject.wrap(ObcEntity.class, receiver).getHandle().cast(NmsEntityPlayer.class).getPlayerConnection().sendPacket(packet);
+            WrappedObject.wrap(ObcEntity.class, receiver)
+                         .getHandle()
+                         .cast(NmsEntityPlayer.class)
+                         .getPlayerConnection()
+                         .sendPacket(packet);
         }
     }
 
@@ -113,7 +126,8 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
     public static <T extends NmsPacket> void regSendListener(EventPriority priority,
                                                              Class<T> type,
                                                              TriConsumer<Player, T, Ref<Boolean>> listener) {
-        List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = sendListeners.get(WrappedObject.getRawClass(type));
+        List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = sendListeners.get(
+                WrappedObject.getRawClass(type));
         if (l == null) {
             l = new ArrayList<>(EventPriority.values().length);
             for (int i = 0; i < EventPriority.values().length; i++) {
@@ -127,7 +141,8 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
     public static <T extends NmsPacket> void regReceiveListener(EventPriority priority,
                                                                 Class<T> type,
                                                                 TriConsumer<Player, T, Ref<Boolean>> listener) {
-        List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = receiveListeners.get(WrappedObject.getRawClass(type));
+        List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = receiveListeners.get(
+                WrappedObject.getRawClass(type));
         if (l == null) {
             l = new ArrayList<>();
             for (int i = 0; i < EventPriority.values().length; i++) {
@@ -152,7 +167,8 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
     public static <T extends NmsPacket> void unregSendListener(EventPriority priority,
                                                                Class<T> type,
                                                                TriConsumer<Player, T, Ref<Boolean>> listener) {
-        List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = sendListeners.get(WrappedObject.getRawClass(type));
+        List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = sendListeners.get(
+                WrappedObject.getRawClass(type));
         if (l != null) {
             l.remove(listener);
         }
@@ -161,7 +177,8 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
     public static <T extends NmsPacket> void unregReceiveListener(EventPriority priority,
                                                                   Class<T> type,
                                                                   TriConsumer<Player, T, Ref<Boolean>> listener) {
-        List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = receiveListeners.get(WrappedObject.getRawClass(type));
+        List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l = receiveListeners.get(
+                WrappedObject.getRawClass(type));
         if (l != null) {
             l.remove(listener);
         }

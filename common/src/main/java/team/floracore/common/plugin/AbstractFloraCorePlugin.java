@@ -91,7 +91,11 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // load configuration
         getLogger().info("Loading configuration...");
         ConfigurationAdapter configFileAdapter = provideConfigurationAdapter();
-        this.configuration = new FloraCoreConfiguration(this, new MultiConfigurationAdapter(this, new SystemPropertyConfigAdapter(this), new EnvironmentVariableConfigAdapter(this), configFileAdapter));
+        this.configuration = new FloraCoreConfiguration(this,
+                new MultiConfigurationAdapter(this,
+                        new SystemPropertyConfigAdapter(this),
+                        new EnvironmentVariableConfigAdapter(this),
+                        configFileAdapter));
 
         // check update
         if (this.configuration.get(ConfigKeys.CHECK_UPDATE)) {
@@ -100,7 +104,9 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
                     MiscMessage.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
                     String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
                     if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
-                        MiscMessage.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(), getBootstrap(), leastReleaseTagVersion);
+                        MiscMessage.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(),
+                                getBootstrap(),
+                                leastReleaseTagVersion);
                     } else {
                         MiscMessage.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());
                     }
@@ -125,7 +131,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // now the configuration is loaded, we can create a storage factory and load initial dependencies
         StorageFactory storageFactory = new StorageFactory(this);
-        this.dependencyManager.loadStorageDependencies(storageFactory.getRequiredTypes(), getConfiguration().get(ConfigKeys.REDIS_ENABLED));
+        this.dependencyManager.loadStorageDependencies(storageFactory.getRequiredTypes(),
+                getConfiguration().get(ConfigKeys.REDIS_ENABLED));
 
         // initialise storage
         this.storage = storageFactory.getInstance();

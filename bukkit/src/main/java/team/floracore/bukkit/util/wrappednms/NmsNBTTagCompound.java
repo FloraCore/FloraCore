@@ -20,7 +20,8 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
             r.loadV_15(s, 128, NmsNBTReadLimiter.newInstance(Long.MAX_VALUE));
             return r;
         } else {
-            return getTypeV15().read(s, 128, NmsNBTReadLimiter.newInstance(Long.MAX_VALUE)).cast(NmsNBTTagCompound.class);
+            return getTypeV15().read(s, 128, NmsNBTReadLimiter.newInstance(Long.MAX_VALUE))
+                               .cast(NmsNBTTagCompound.class);
         }
     }
 

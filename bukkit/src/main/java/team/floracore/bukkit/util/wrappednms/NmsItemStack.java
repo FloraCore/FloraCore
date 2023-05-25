@@ -34,7 +34,8 @@ public interface NmsItemStack extends WrappedBukkitObject {
 
     static NmsItemStack newInstance(NmsItem item, int count) {
         if (BukkitWrapper.v13) {
-            return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV13(item.cast(NmsIMaterialV13.class), count);
+            return WrappedObject.getStatic(NmsItemStack.class)
+                                .staticNewInstanceV13(item.cast(NmsIMaterialV13.class), count);
         } else {
             return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV12_13(item, count);
         }

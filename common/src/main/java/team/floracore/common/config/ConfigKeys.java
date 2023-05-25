@@ -23,7 +23,9 @@ public class ConfigKeys {
     /**
      * If FloraCore should automatically install translation bundles and periodically update them.
      */
-    public static final ConfigKey<Boolean> AUTO_INSTALL_TRANSLATIONS = notReloadable(booleanKey("auto-install-translations", true));
+    public static final ConfigKey<Boolean> AUTO_INSTALL_TRANSLATIONS = notReloadable(booleanKey(
+            "auto-install-translations",
+            true));
 
     /**
      * The database settings, username, password, etc. for use by any database
@@ -34,9 +36,19 @@ public class ConfigKeys {
         int maxLifetime = c.getInteger("data.pool-settings.maximum-lifetime", 1800000);
         int keepAliveTime = c.getInteger("data.pool-settings.keepalive-time", 0);
         int connectionTimeout = c.getInteger("data.pool-settings.connection-timeout", 5000);
-        Map<String, String> props = ImmutableMap.copyOf(c.getStringMap("data.pool-settings.properties", ImmutableMap.of()));
+        Map<String, String> props = ImmutableMap.copyOf(c.getStringMap("data.pool-settings.properties",
+                ImmutableMap.of()));
 
-        return new StorageCredentials(c.getString("data.address", null), c.getString("data.database", null), c.getString("data.username", null), c.getString("data.password", null), maxPoolSize, minIdle, maxLifetime, keepAliveTime, connectionTimeout, props);
+        return new StorageCredentials(c.getString("data.address", null),
+                c.getString("data.database", null),
+                c.getString("data.username", null),
+                c.getString("data.password", null),
+                maxPoolSize,
+                minIdle,
+                maxLifetime,
+                keepAliveTime,
+                connectionTimeout,
+                props);
     }));
     /**
      * The prefix for any SQL tables
@@ -47,12 +59,15 @@ public class ConfigKeys {
     /**
      * The name of the storage method being used
      */
-    public static final ConfigKey<StorageType> STORAGE_METHOD = notReloadable(key(c -> StorageType.parse(c.getString("storage-method", "h2"), StorageType.H2)));
+    public static final ConfigKey<StorageType> STORAGE_METHOD = notReloadable(key(c -> StorageType.parse(c.getString(
+            "storage-method",
+            "h2"), StorageType.H2)));
 
     /**
      * The name of the messaging service in use, or "none" if not enabled
      */
-    public static final ConfigKey<String> MESSAGING_SERVICE = notReloadable(lowercaseStringKey("messaging-service", "auto"));
+    public static final ConfigKey<String> MESSAGING_SERVICE = notReloadable(lowercaseStringKey("messaging-service",
+            "auto"));
 
     /**
      * If redis messaging is enabled
@@ -79,10 +94,12 @@ public class ConfigKeys {
      */
     public static final ConfigKey<Boolean> REDIS_SSL = notReloadable(booleanKey("redis.ssl", false));
 
-    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK_PERMISSION = notReloadable(mapKey("commands.nick.rank-permission"));
+    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK_PERMISSION = notReloadable(mapKey(
+            "commands.nick.rank-permission"));
 
     public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK = notReloadable(mapKey("commands.nick.rank"));
-    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK_PREFIX = notReloadable(mapKey("commands.nick.rank-prefix"));
+    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK_PREFIX = notReloadable(mapKey(
+            "commands.nick.rank-prefix"));
 
     public static final ConfigKey<Double> SPEED_MAX_FLY_SPEED = notReloadable(key(c -> {
         final double maxSpeed = c.getDouble("commands.speed.max-fly-speed", 0.8);
@@ -95,7 +112,9 @@ public class ConfigKeys {
     }));
 
     public static final ConfigKey<String> SERVER_NAME = notReloadable(stringKey("server.name", "unknown"));
-    public static final ConfigKey<ServerType> SERVER_TYPE = notReloadable(key(c -> ServerType.parse(c.getString("server.type", "unknown"), ServerType.UNKNOWN)));
+    public static final ConfigKey<ServerType> SERVER_TYPE = notReloadable(key(c -> ServerType.parse(c.getString(
+            "server.type",
+            "unknown"), ServerType.UNKNOWN)));
 
     public static final ConfigKey<Boolean> CHECK_UPDATE = notReloadable(booleanKey("check-update", true));
     /**

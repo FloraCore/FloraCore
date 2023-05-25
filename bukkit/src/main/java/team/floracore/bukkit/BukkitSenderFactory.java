@@ -52,7 +52,9 @@ public class BukkitSenderFactory extends SenderFactory<FCBukkitPlugin, CommandSe
             this.audiences.sender(sender).sendMessage(message);
         } else {
             Component finalMessage = message;
-            getPlugin().getBootstrap().getScheduler().executeSync(() -> this.audiences.sender(sender).sendMessage(finalMessage));
+            getPlugin().getBootstrap()
+                       .getScheduler()
+                       .executeSync(() -> this.audiences.sender(sender).sendMessage(finalMessage));
         }
     }
 
