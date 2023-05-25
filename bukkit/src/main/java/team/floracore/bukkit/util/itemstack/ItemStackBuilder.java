@@ -2,6 +2,8 @@ package team.floracore.bukkit.util.itemstack;
 
 import com.google.common.collect.*;
 import com.google.gson.*;
+import net.kyori.adventure.text.*;
+import net.kyori.adventure.text.serializer.legacy.*;
 import org.bukkit.*;
 import org.bukkit.inventory.*;
 import org.bukkit.material.*;
@@ -16,6 +18,10 @@ import java.util.function.*;
 import java.util.stream.*;
 
 public class ItemStackBuilder implements Supplier<ItemStack> {
+    public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build();
     public ObcItemStack item;
 
     public ItemStackBuilder(ObcItemStack obc) {
@@ -398,6 +404,10 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return r;
     }
 
+    public ItemStackBuilder setName(Component component) {
+        return setName(SERIALIZER.serialize(component));
+    }
+
     public ItemStackBuilder setName(String name) {
         if (BukkitWrapper.v13) {
             name = ObcChatMessage.fromStringOrNullToJSONV13(name);
@@ -423,7 +433,7 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return new ArrayList<>();
     }
 
-    public ItemStackBuilder setLore(List<String> lore) {
+    public ItemStackBuilder setLoreString(List<String> lore) {
         if (BukkitWrapper.version >= 14)
             lore = lore.stream().map(l -> l == null || l.length() == 0 ? "{\"text\":\"\"}" : ObcChatMessage.fromStringOrNullToJSONV13(l)).map(l -> setDefaultNonItalic(new JsonParser().parse(l).getAsJsonObject()).toString()).collect(Collectors.toList());
         if (lore.isEmpty())
@@ -433,8 +443,16 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return this;
     }
 
-    public ItemStackBuilder setLore(String... lore) {
-        return setLore(Lists.newArrayList(lore));
+    public ItemStackBuilder setLore(List<Component> lore) {
+        List<String> ret = new ArrayList<>();
+        for (Component component : lore) {
+            ret.add(SERIALIZER.serialize(component));
+        }
+        return setLoreString(ret);
+    }
+
+    public ItemStackBuilder setLoreString(String... lore) {
+        return setLoreString(Lists.newArrayList(lore));
     }
 
     public NmsNBTTagCompound save() {
@@ -456,7 +474,7 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
     public ItemStackBuilder addLore(String... lore) {
         List<String> l = getLore();
         l.addAll(Lists.newArrayList(lore));
-        setLore(l);
+        setLoreString(l);
         return this;
     }
 }

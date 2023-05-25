@@ -105,7 +105,7 @@ public class CommandManager {
 
         // misc
         this.annotationParser.parse(new FloraCoreCommand(plugin));
-        // this.annotationParser.parse(new LanguageCommand(plugin));
+        this.annotationParser.parse(new LanguageCommand(plugin));
 
         // player
         this.annotationParser.parse(new AirBukkitCommand(plugin));

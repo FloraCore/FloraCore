@@ -49,4 +49,8 @@ public interface MiscCommandMessage extends AbstractMessage {
                     text().color(WHITE).append(OPEN_BRACKET).append(text(type == null ? "*" : type.getName())).append(CLOSE_BRACKET))
             // .
             .append(FULL_STOP));
+
+    Args1<String> COMMAND_LANGUAGE_CHANGE_SUCCESS = (language) -> translatable()
+            // 你已成功将你的显示语言更改为 {0} !
+            .key("floracore.command.language.change.success").args(text(language, GREEN)).color(AQUA).build();
 }

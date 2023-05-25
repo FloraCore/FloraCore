@@ -391,10 +391,6 @@ public interface PlayerCommandMessage extends AbstractMessage {
             // 这名玩家的数据异常!
             .key("floracore.command.report.abnormal").color(RED));
 
-    Args1<String> COMMAND_LANGUAGE_CHANGE_SUCCESS = (language) -> translatable()
-            // 你已成功将你的显示语言更改为 {0} !
-            .key("floracore.command.language.change.success").args(text(language, GREEN)).color(AQUA).build();
-
     Args0 COMMAND_MISC_NICK_NAME_ILLEGAL_SPACE = () -> AbstractMessage.prefixed(translatable()
             // 请确保你输入的昵称内不含空格
             .key("floracore.command.misc.nick.name.illegal.space").append(FULL_STOP).color(RED));
