@@ -31,7 +31,17 @@ public class PARTY extends AbstractFloraCoreTable {
     private String settings;
     private long disbandTime;
 
-    public PARTY(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, UUID leader, List<UUID> moderators, List<UUID> members, String settings, long createTime, long disbandTime, int chat) {
+    public PARTY(FloraCorePlugin plugin,
+                 StorageImplementation storageImplementation,
+                 int id,
+                 UUID uuid,
+                 UUID leader,
+                 List<UUID> moderators,
+                 List<UUID> members,
+                 String settings,
+                 long createTime,
+                 long disbandTime,
+                 int chat) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;

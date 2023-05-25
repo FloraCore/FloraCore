@@ -99,7 +99,9 @@ public class JarInJarClassLoader extends URLClassLoader {
      * @param <T>              the type of the loader plugin
      * @return the instantiated bootstrap plugin
      */
-    public <T> LoaderBootstrap instantiatePlugin(String bootstrapClass, Class<T> loaderPluginType, T loaderPlugin) throws LoadingException {
+    public <T> LoaderBootstrap instantiatePlugin(String bootstrapClass,
+                                                 Class<T> loaderPluginType,
+                                                 T loaderPlugin) throws LoadingException {
         Class<? extends LoaderBootstrap> plugin;
         try {
             plugin = loadClass(bootstrapClass).asSubclass(LoaderBootstrap.class);

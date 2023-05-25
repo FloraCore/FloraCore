@@ -28,7 +28,12 @@ public class MariaDbConnectionFactory extends HikariConnectionFactory {
     }
 
     @Override
-    protected void configureDatabase(HikariConfig config, String address, String port, String databaseName, String username, String password) {
+    protected void configureDatabase(HikariConfig config,
+                                     String address,
+                                     String port,
+                                     String databaseName,
+                                     String username,
+                                     String password) {
         config.setDataSourceClassName("org.mariadb.jdbc.MariaDbDataSource");
         config.addDataSourceProperty("serverName", address);
         config.addDataSourceProperty("port", port);

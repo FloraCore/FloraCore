@@ -44,7 +44,9 @@ public class FlyBukkitCommand extends FloraCoreBukkitCommand implements Listener
     @CommandMethod("fly <target>")
     @CommandPermission("floracore.command.fly.other")
     @CommandDescription("为别人开启飞行状态")
-    public void other(final @NotNull CommandSender s, final @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
+    public void other(final @NotNull CommandSender s,
+                      final @Argument("target") Player target,
+                      final @Nullable @Flag("silent") Boolean silent) {
         boolean old = target.getAllowFlight();
         target.setAllowFlight(!old);
         getAsyncExecutor().execute(() -> {

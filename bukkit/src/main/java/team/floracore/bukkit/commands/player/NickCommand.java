@@ -257,7 +257,12 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
 
     @CommandMethod("book-nick <page> [rank] [skin] [name] [nickname]")
     @CommandDescription("根据页面召唤Nick书本")
-    public void bookNick(final @NotNull Player p, final @Argument("page") Integer page, final @Argument("rank") String rank, final @Argument("skin") SkinType skin, final @Argument("name") String name, @Argument("nickname") String nickname) {
+    public void bookNick(final @NotNull Player p,
+                         final @Argument("page") Integer page,
+                         final @Argument("rank") String rank,
+                         final @Argument("skin") SkinType skin,
+                         final @Argument("name") String name,
+                         @Argument("nickname") String nickname) {
         UUID uuid = p.getUniqueId();
         Audience target = getPlugin().getSenderFactory().getAudiences().player(p);
         Sender sender = getPlugin().getSenderFactory().wrap(p);

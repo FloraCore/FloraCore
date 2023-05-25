@@ -64,8 +64,12 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
-    protected ConfigurationAdapter provideConfigurationAdapter() {
-        return new BungeeConfigAdapter(this, resolveConfig("config.yml").toFile());
+    protected Set<Dependency> getGlobalDependencies() {
+        Set<Dependency> dependencies = super.getGlobalDependencies();
+        dependencies.add(Dependency.ADVENTURE_PLATFORM_BUNGEECORD);
+        dependencies.add(Dependency.ADVENTURE_TEXT_SERIALIZER_BUNGEECORD);
+        dependencies.add(Dependency.CLOUD_BUNGEE);
+        return dependencies;
     }
 
     @Override
@@ -74,18 +78,14 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
-    protected void setupFramework() {
-        this.listenerManager = new ListenerManager(this);
-        this.commandManager = new CommandManager(this);
+    protected ConfigurationAdapter provideConfigurationAdapter() {
+        return new BungeeConfigAdapter(this, resolveConfig("config.yml").toFile());
     }
 
     @Override
-    protected Set<Dependency> getGlobalDependencies() {
-        Set<Dependency> dependencies = super.getGlobalDependencies();
-        dependencies.add(Dependency.ADVENTURE_PLATFORM_BUNGEECORD);
-        dependencies.add(Dependency.ADVENTURE_TEXT_SERIALIZER_BUNGEECORD);
-        dependencies.add(Dependency.CLOUD_BUNGEE);
-        return dependencies;
+    protected void setupFramework() {
+        this.listenerManager = new ListenerManager(this);
+        this.commandManager = new CommandManager(this);
     }
 
     public BungeeSenderFactory getSenderFactory() {

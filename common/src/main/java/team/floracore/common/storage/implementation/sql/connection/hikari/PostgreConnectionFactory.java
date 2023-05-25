@@ -27,7 +27,12 @@ public class PostgreConnectionFactory extends HikariConnectionFactory {
     }
 
     @Override
-    protected void configureDatabase(HikariConfig config, String address, String port, String databaseName, String username, String password) {
+    protected void configureDatabase(HikariConfig config,
+                                     String address,
+                                     String port,
+                                     String databaseName,
+                                     String username,
+                                     String password) {
         config.setDataSourceClassName("org.postgresql.ds.PGSimpleDataSource");
         config.addDataSourceProperty("serverName", address);
         config.addDataSourceProperty("portNumber", port);

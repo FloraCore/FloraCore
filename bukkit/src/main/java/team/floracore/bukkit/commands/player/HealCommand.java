@@ -32,7 +32,9 @@ public class HealCommand extends FloraCoreBukkitCommand {
     @CommandMethod("heal <target>")
     @CommandDescription("治疗其他玩家")
     @CommandPermission("floracore.command.heal.other")
-    public void other(@NotNull CommandSender s, @NotNull @Argument("target") Player target, @Nullable @Flag("silent") Boolean silent) {
+    public void other(@NotNull CommandSender s,
+                      @NotNull @Argument("target") Player target,
+                      @Nullable @Flag("silent") Boolean silent) {
         heal(target);
         PlayerCommandMessage.COMMAND_HEAL_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName());
         if (silent == null || !silent) {

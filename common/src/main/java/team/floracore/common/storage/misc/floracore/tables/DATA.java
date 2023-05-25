@@ -23,7 +23,14 @@ public class DATA extends AbstractFloraCoreTable {
     private String value;
     private long expiry;
 
-    public DATA(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, DataType type, String key, String value, long expiry) {
+    public DATA(FloraCorePlugin plugin,
+                StorageImplementation storageImplementation,
+                int id,
+                UUID uuid,
+                DataType type,
+                String key,
+                String value,
+                long expiry) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;

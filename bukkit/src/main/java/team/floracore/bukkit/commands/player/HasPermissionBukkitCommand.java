@@ -26,7 +26,9 @@ public class HasPermissionBukkitCommand extends FloraCoreBukkitCommand {
 
     @CommandDescription("检查玩家是否拥有目标权限")
     @CommandMethod("haspermission <target> <permission>")
-    public void execute(@NotNull CommandSender s, @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target, @NotNull @Argument(value = "permission", suggestions = "permission_list") String permission) {
+    public void execute(@NotNull CommandSender s,
+                        @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
+                        @NotNull @Argument(value = "permission", suggestions = "permission_list") String permission) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
         if (ut == null) {
@@ -37,7 +39,8 @@ public class HasPermissionBukkitCommand extends FloraCoreBukkitCommand {
     }
 
     @Suggestions("permission_list")
-    public @NotNull List<String> getPermissionList(@NotNull CommandContext<CommandSender> sender, @NotNull String input) {
+    public @NotNull List<String> getPermissionList(@NotNull CommandContext<CommandSender> sender,
+                                                   @NotNull String input) {
         return Bukkit.getPluginManager().getPermissions().stream().collect(ArrayList::new, (list, element) -> list.add(element.getName()), ArrayList::addAll);
     }
 }

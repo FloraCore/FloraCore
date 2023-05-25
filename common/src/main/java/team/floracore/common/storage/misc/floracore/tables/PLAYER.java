@@ -26,7 +26,12 @@ public class PLAYER extends AbstractFloraCoreTable {
     private long lastLoginTime;
     private long playTime;
 
-    public PLAYER(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String loginIp) {
+    public PLAYER(FloraCorePlugin plugin,
+                  StorageImplementation storageImplementation,
+                  int id,
+                  UUID uuid,
+                  String name,
+                  String loginIp) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;
@@ -39,7 +44,16 @@ public class PLAYER extends AbstractFloraCoreTable {
         this.playTime = 0;
     }
 
-    public PLAYER(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, String name, String firstLoginIp, String lastLoginIp, long firstLoginTime, long lastLoginTime, long playTime) {
+    public PLAYER(FloraCorePlugin plugin,
+                  StorageImplementation storageImplementation,
+                  int id,
+                  UUID uuid,
+                  String name,
+                  String firstLoginIp,
+                  String lastLoginIp,
+                  long firstLoginTime,
+                  long lastLoginTime,
+                  long playTime) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;

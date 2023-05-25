@@ -19,7 +19,11 @@ public class ONLINE extends AbstractFloraCoreTable {
     private boolean status;
     private String serverName;
 
-    public ONLINE(FloraCorePlugin plugin, StorageImplementation storageImplementation, UUID uuid, boolean status, String serverName) {
+    public ONLINE(FloraCorePlugin plugin,
+                  StorageImplementation storageImplementation,
+                  UUID uuid,
+                  boolean status,
+                  String serverName) {
         super(plugin, storageImplementation);
         this.uuid = uuid;
         this.status = status;

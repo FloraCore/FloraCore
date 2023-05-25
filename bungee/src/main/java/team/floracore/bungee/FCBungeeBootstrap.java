@@ -138,6 +138,10 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
     // provide information about the plugin
 
+    public ProxyServer getProxy() {
+        return loader.getProxy();
+    }
+
     @Override
     public void onLoad() {
         if (checkIncompatibleVersion()) {
@@ -179,10 +183,6 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         } finally {
             this.enableLatch.countDown();
         }
-    }
-
-    public ProxyServer getProxy() {
-        return loader.getProxy();
     }
 
     @Override

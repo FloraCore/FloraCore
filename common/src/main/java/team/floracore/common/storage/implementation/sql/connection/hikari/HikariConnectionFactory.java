@@ -128,7 +128,12 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
      * @param username     the database username
      * @param password     the database password
      */
-    protected abstract void configureDatabase(HikariConfig config, String address, String port, String databaseName, String username, String password);
+    protected abstract void configureDatabase(HikariConfig config,
+                                              String address,
+                                              String port,
+                                              String databaseName,
+                                              String username,
+                                              String password);
 
     /**
      * Allows the connection factory instance to override certain properties before they are set.

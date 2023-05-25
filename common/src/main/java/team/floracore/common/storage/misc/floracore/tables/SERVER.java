@@ -24,7 +24,14 @@ public class SERVER extends AbstractFloraCoreTable {
     private boolean autoSync2;
     private long lastActiveTime;
 
-    public SERVER(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, String name, ServerType type, boolean autoSync1, boolean autoSync2, long lastActiveTime) {
+    public SERVER(FloraCorePlugin plugin,
+                  StorageImplementation storageImplementation,
+                  int id,
+                  String name,
+                  ServerType type,
+                  boolean autoSync1,
+                  boolean autoSync2,
+                  long lastActiveTime) {
         super(plugin, storageImplementation);
         this.id = id;
         this.name = name;

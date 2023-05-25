@@ -27,12 +27,14 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
     }
 
     @Suggestions("onlinePlayers")
-    public @NonNull List<String> getOnlinePlayers(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+    public @NonNull List<String> getOnlinePlayers(final @NonNull CommandContext<CommandSender> sender,
+                                                  final @NonNull String input) {
         return plugin.getOnlineSenders().sorted(Comparator.comparing(Sender::getDisplayName)).map(Sender::getDisplayName).collect(Collectors.toList());
     }
 
     @Suggestions("worlds")
-    public @NonNull List<String> getWorlds(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+    public @NonNull List<String> getWorlds(final @NonNull CommandContext<CommandSender> sender,
+                                           final @NonNull String input) {
         final List<String> worlds = Lists.newArrayList();
         for (final World world : plugin.getBootstrap().getServer().getWorlds()) {
             worlds.add(world.getName());
@@ -41,7 +43,8 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
     }
 
     @Suggestions("worlds-all")
-    public @NonNull List<String> getWorldsWithAll(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+    public @NonNull List<String> getWorldsWithAll(final @NonNull CommandContext<CommandSender> sender,
+                                                  final @NonNull String input) {
         final List<String> worlds = Lists.newArrayList();
         for (final World world : plugin.getBootstrap().getServer().getWorlds()) {
             worlds.add(world.getName());
@@ -51,7 +54,8 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
     }
 
     @Suggestions("commonDurations")
-    public @NonNull List<String> getCommonDurations(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+    public @NonNull List<String> getCommonDurations(final @NonNull CommandContext<CommandSender> sender,
+                                                    final @NonNull String input) {
         return ImmutableList.of("1", "60", "600", "3600", "86400");
     }
 

@@ -153,7 +153,9 @@ public class TranslationRepository {
      * @param sender       the sender to report progress to
      * @param updateStatus if the status file should be updated
      */
-    public void downloadAndInstallTranslations(List<LanguageInfo> languages, @Nullable Sender sender, boolean updateStatus) {
+    public void downloadAndInstallTranslations(List<LanguageInfo> languages,
+                                               @Nullable Sender sender,
+                                               boolean updateStatus) {
         TranslationManager manager = this.plugin.getTranslationManager();
         Path translationsDirectory = manager.getRepositoryTranslationsDirectory();
 

@@ -68,7 +68,10 @@ public class Inventories {
         return stack == null || MaterialUtil.isAir(stack.getType());
     }
 
-    public static boolean hasSpace(final Player player, final int maxStack, final boolean includeArmor, ItemStack... items) {
+    public static boolean hasSpace(final Player player,
+                                   final int maxStack,
+                                   final boolean includeArmor,
+                                   ItemStack... items) {
         items = normalizeItems(cloneItems(items));
         final InventoryData inventoryData = parseInventoryData(player.getInventory(), items, maxStack, includeArmor);
 
@@ -159,7 +162,10 @@ public class Inventories {
         return clonedItems;
     }
 
-    private static InventoryData parseInventoryData(final Inventory inventory, final ItemStack[] items, final int maxStack, final boolean includeArmor) {
+    private static InventoryData parseInventoryData(final Inventory inventory,
+                                                    final ItemStack[] items,
+                                                    final int maxStack,
+                                                    final boolean includeArmor) {
         final ItemStack[] inventoryContents = inventory.getContents();
         final List<Integer> emptySlots = new ArrayList<>();
         final HashMap<ItemStack, List<Integer>> partialSlots = new HashMap<>();
@@ -230,7 +236,10 @@ public class Inventories {
         return addItem(player, 0, false, items);
     }
 
-    public static Map<Integer, ItemStack> addItem(final Player player, final int maxStack, final boolean allowArmor, ItemStack... items) {
+    public static Map<Integer, ItemStack> addItem(final Player player,
+                                                  final int maxStack,
+                                                  final boolean allowArmor,
+                                                  ItemStack... items) {
         items = normalizeItems(cloneItems(items));
         final Map<Integer, ItemStack> leftover = new HashMap<>();
         final InventoryData inventoryData = parseInventoryData(player.getInventory(), items, maxStack, allowArmor);
@@ -310,7 +319,9 @@ public class Inventories {
         removeItems(player, itemStack -> itemStack.equals(toRemove), includeArmor);
     }
 
-    public static int removeItems(final Player player, final Predicate<ItemStack> removePredicate, final boolean includeArmor) {
+    public static int removeItems(final Player player,
+                                  final Predicate<ItemStack> removePredicate,
+                                  final boolean includeArmor) {
         int removedAmount = 0;
         final ItemStack[] items = player.getInventory().getContents();
         for (int i = 0; i < items.length; i++) {

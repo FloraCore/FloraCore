@@ -95,7 +95,8 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore server <target>")
     @CommandDescription("floracore.command.description.floracore.server")
-    public void server(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target) {
+    public void server(final @NonNull CommandSender sender,
+                       final @NonNull @Argument(value = "target", suggestions = "servers") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
         if (server == null) {
@@ -113,7 +114,9 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore server <target> set autosync1 <value>")
     @CommandDescription("floracore.command.description.floracore.server.set.autosync1")
-    public void serverSet1(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target, final @Argument("value") boolean value) {
+    public void serverSet1(final @NonNull CommandSender sender,
+                           final @NonNull @Argument(value = "target", suggestions = "servers") String target,
+                           final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
         if (server == null) {
@@ -128,7 +131,9 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore server <target> set autosync2 <value>")
     @CommandDescription("floracore.command.description.floracore.server.set.autosync2")
-    public void serverSet2(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target, final @Argument("value") boolean value) {
+    public void serverSet2(final @NonNull CommandSender sender,
+                           final @NonNull @Argument(value = "target", suggestions = "servers") String target,
+                           final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
         if (server == null) {
@@ -148,7 +153,9 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore data <target> <type>")
     @CommandDescription("floracore.command.description.floracore.data")
-    public void data(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, @Argument("type") DataType type) {
+    public void data(final @NonNull CommandSender sender,
+                     final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
+                     @Argument("type") DataType type) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
@@ -186,7 +193,10 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore data <target> set <key> <value>")
     @CommandDescription("floracore.command.description.floracore.data.set")
-    public void dataSet(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key, final @NonNull @Argument("value") String value) {
+    public void dataSet(final @NonNull CommandSender sender,
+                        final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
+                        final @NonNull @Argument("key") String key,
+                        final @NonNull @Argument("value") String value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
@@ -215,7 +225,9 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore data <target> unset <key>")
     @CommandDescription("floracore.command.description.floracore.data.unset")
-    public void dataUnSet(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key) {
+    public void dataUnSet(final @NonNull CommandSender sender,
+                          final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
+                          final @NonNull @Argument("key") String key) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
@@ -249,7 +261,11 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore data <target> settemp <key> <value> <duration>")
     @CommandDescription("floracore.command.description.floracore.data.settemp")
-    public void dataSetTemp(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @NonNull @Argument("key") String key, final @NonNull @Argument("value") String value, final @NonNull @Argument("duration") String duration) {
+    public void dataSetTemp(final @NonNull CommandSender sender,
+                            final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
+                            final @NonNull @Argument("key") String key,
+                            final @NonNull @Argument("value") String value,
+                            final @NonNull @Argument("duration") String duration) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
@@ -291,7 +307,9 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore data <target> clear")
     @CommandDescription("floracore.command.description.floracore.data.clear")
-    public void dataClear(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target, final @Nullable @Flag("type") DataType type) {
+    public void dataClear(final @NonNull CommandSender sender,
+                          final @NonNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
+                          final @Nullable @Flag("type") DataType type) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {

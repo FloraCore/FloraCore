@@ -525,7 +525,12 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public void addReport(UUID uuid, UUID reporter, UUID reported, String reason, long reportTime, List<ReportDataChatRecord> chat) {
+    public void addReport(UUID uuid,
+                          UUID reporter,
+                          UUID reported,
+                          String reason,
+                          long reportTime,
+                          List<ReportDataChatRecord> chat) {
         REPORT report = getUnprocessedReports(reported);
         if (getUnprocessedReports(reported) == null) {
             report = new REPORT(plugin, this, -1, uuid, Collections.singletonList(reporter), reported, Collections.singletonList(reason), reportTime, ReportStatus.WAITING, null, chat);

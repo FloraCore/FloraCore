@@ -35,7 +35,11 @@ public class SpeedBukkitCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("speed <speed> <type> [target]")
     @CommandDescription("设置你（或指定玩家）的指定类型的速度")
-    public void speedAdvance(final @NotNull Player p, final @Argument(value = "speed", suggestions = "speeds") float speed, final @Argument(value = "type", suggestions = "types") String type, final @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
+    public void speedAdvance(final @NotNull Player p,
+                             final @Argument(value = "speed", suggestions = "speeds") float speed,
+                             final @Argument(value = "type", suggestions = "types") String type,
+                             final @Argument("target") Player target,
+                             final @Nullable @Flag("silent") Boolean silent) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         try {
             final SpeedType speedType = SpeedType.parseSpeedType(type);

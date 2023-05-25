@@ -92,7 +92,8 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      * 这是命令参数的推荐内容，必须搭配@Argument注解使用，详情使用看test_c2_a1_qu函数。
      */
     @Suggestions("test_c2_a1_sug")
-    public @NonNull List<String> test_c2_a1_sug(final @NonNull CommandContext<CommandSender> ctx, final @NonNull String input) {
+    public @NonNull List<String> test_c2_a1_sug(final @NonNull CommandContext<CommandSender> ctx,
+                                                final @NonNull String input) {
         List<String> ret = new ArrayList<>();
         ret.add("测试命令1");
         ret.add("测试命令2");
@@ -106,7 +107,8 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      */
     @CommandMethod("test c2 a1 [query]")
     @CommandDescription("测试c2命令")
-    public void test_c2_a1_qu(final @NonNull CommandSender sender, final @Argument(value = "query", suggestions = "test_c2_a1_sug") @Greedy String query) {
+    public void test_c2_a1_qu(final @NonNull CommandSender sender,
+                              final @Argument(value = "query", suggestions = "test_c2_a1_sug") @Greedy String query) {
         sender.sendMessage("我是c2中的a1命令，你选择的query是" + query);
     }
 

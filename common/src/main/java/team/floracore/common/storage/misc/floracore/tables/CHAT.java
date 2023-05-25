@@ -25,7 +25,11 @@ public class CHAT extends AbstractFloraCoreTable {
     private List<ChatRecord> records;
     private long endTime;
 
-    public CHAT(FloraCorePlugin plugin, StorageImplementation storageImplementation, String name, ChatType type, long startTime) {
+    public CHAT(FloraCorePlugin plugin,
+                StorageImplementation storageImplementation,
+                String name,
+                ChatType type,
+                long startTime) {
         super(plugin, storageImplementation);
         this.id = -1;
         this.name = name;
@@ -34,7 +38,14 @@ public class CHAT extends AbstractFloraCoreTable {
         this.startTime = startTime;
     }
 
-    public CHAT(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, String name, ChatType type, List<ChatRecord> records, long startTime, long endTime) {
+    public CHAT(FloraCorePlugin plugin,
+                StorageImplementation storageImplementation,
+                int id,
+                String name,
+                ChatType type,
+                List<ChatRecord> records,
+                long startTime,
+                long endTime) {
         super(plugin, storageImplementation);
         this.id = id;
         this.name = name;

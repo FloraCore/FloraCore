@@ -61,13 +61,22 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
-    protected ConfigurationAdapter provideConfigurationAdapter() {
-        return new BukkitConfigAdapter(this, resolveConfig("config.yml").toFile());
+    protected Set<Dependency> getGlobalDependencies() {
+        Set<Dependency> dependencies = super.getGlobalDependencies();
+        dependencies.add(Dependency.ADVENTURE_PLATFORM_BUKKIT);
+        dependencies.add(Dependency.CLOUD_BUKKIT);
+        dependencies.add(Dependency.CLOUD_PAPER);
+        return dependencies;
     }
 
     @Override
     protected void setupSenderFactory() {
         this.senderFactory = new BukkitSenderFactory(this);
+    }
+
+    @Override
+    protected ConfigurationAdapter provideConfigurationAdapter() {
+        return new BukkitConfigAdapter(this, resolveConfig("config.yml").toFile());
     }
 
     @Override
@@ -98,15 +107,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
         this.listenerManager = new ListenerManager(this);
         this.commandManager = new CommandManager(this);
-    }
-
-    @Override
-    protected Set<Dependency> getGlobalDependencies() {
-        Set<Dependency> dependencies = super.getGlobalDependencies();
-        dependencies.add(Dependency.ADVENTURE_PLATFORM_BUKKIT);
-        dependencies.add(Dependency.CLOUD_BUKKIT);
-        dependencies.add(Dependency.CLOUD_PAPER);
-        return dependencies;
     }
 
     public JavaPlugin getLoader() {

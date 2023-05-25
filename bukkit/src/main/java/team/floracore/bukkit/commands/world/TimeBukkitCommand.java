@@ -86,7 +86,9 @@ public class TimeBukkitCommand extends FloraCoreBukkitCommand {
     @CommandMethod("time set <time>")
     @CommandPermission("floracore.command.time.set")
     @CommandDescription("设置当前（或指定）世界的时间")
-    public void setTime(final @NotNull CommandSender s, final @NotNull @Argument(value = "time", suggestions = "timeNames") String time, final @Nullable @Flag(value = "world", suggestions = "worlds-all") String world) {
+    public void setTime(final @NotNull CommandSender s,
+                        final @NotNull @Argument(value = "time", suggestions = "timeNames") String time,
+                        final @Nullable @Flag(value = "world", suggestions = "worlds-all") String world) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         final long timeTick;
         final Set<World> worlds;
@@ -114,7 +116,9 @@ public class TimeBukkitCommand extends FloraCoreBukkitCommand {
     @CommandMethod("time add <time>")
     @CommandPermission("floracore.command.time.add")
     @CommandDescription("快进当前（或指定）世界的时间")
-    public void addTime(final @NotNull CommandSender s, final @NotNull @Argument(value = "time", suggestions = "timeNumbers") String time, final @Nullable @Flag(value = "world", suggestions = "worlds-all") String world) {
+    public void addTime(final @NotNull CommandSender s,
+                        final @NotNull @Argument(value = "time", suggestions = "timeNumbers") String time,
+                        final @Nullable @Flag(value = "world", suggestions = "worlds-all") String world) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         final long timeTick;
         final Set<World> worlds;
@@ -138,12 +142,14 @@ public class TimeBukkitCommand extends FloraCoreBukkitCommand {
     }
 
     @Suggestions("timeNames")
-    public @NonNull List<String> getTimeNames(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+    public @NonNull List<String> getTimeNames(final @NonNull CommandContext<CommandSender> sender,
+                                              final @NonNull String input) {
         return ImmutableList.of("sunrise", "day", "morning", "noon", "afternoon", "sunset", "night", "midnight");
     }
 
     @Suggestions("timeNumbers")
-    public @NonNull List<String> getTimeNumbers(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+    public @NonNull List<String> getTimeNumbers(final @NonNull CommandContext<CommandSender> sender,
+                                                final @NonNull String input) {
         return ImmutableList.of("1000", "2000", "3000", "4000", "5000");
     }
 }

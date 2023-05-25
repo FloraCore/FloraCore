@@ -84,7 +84,8 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee server <target>")
     @CommandDescription("floracore.command.description.floracore.server")
-    public void server(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target) {
+    public void server(final @NonNull CommandSender sender,
+                       final @NonNull @Argument(value = "target", suggestions = "servers") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
         if (server == null) {
@@ -102,7 +103,9 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee server <target> set autosync1 <value>")
     @CommandDescription("floracore.command.description.floracore.server.set.autosync1")
-    public void serverSet1(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target, final @Argument("value") boolean value) {
+    public void serverSet1(final @NonNull CommandSender sender,
+                           final @NonNull @Argument(value = "target", suggestions = "servers") String target,
+                           final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
         if (server == null) {
@@ -117,7 +120,9 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee server <target> set autosync2 <value>")
     @CommandDescription("floracore.command.description.floracore.server.set.autosync2")
-    public void serverSet2(final @NonNull CommandSender sender, final @NonNull @Argument(value = "target", suggestions = "servers") String target, final @Argument("value") boolean value) {
+    public void serverSet2(final @NonNull CommandSender sender,
+                           final @NonNull @Argument(value = "target", suggestions = "servers") String target,
+                           final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
         if (server == null) {

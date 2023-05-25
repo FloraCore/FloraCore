@@ -33,7 +33,9 @@ public class FeedBukkitCommand extends FloraCoreBukkitCommand {
     @CommandMethod("feed <target>")
     @CommandDescription("喂饱目标玩家")
     @CommandPermission("floracore.command.feed.other")
-    public void other(@NotNull CommandSender s, @NotNull @Argument("target") Player target, @Nullable @Flag("silent") Boolean silent) {
+    public void other(@NotNull CommandSender s,
+                      @NotNull @Argument("target") Player target,
+                      @Nullable @Flag("silent") Boolean silent) {
         feed(target);
         PlayerCommandMessage.COMMAND_FEED_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName());
         if (silent == null || !silent) {

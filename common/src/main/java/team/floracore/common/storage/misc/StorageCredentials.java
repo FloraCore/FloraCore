@@ -15,7 +15,16 @@ public class StorageCredentials {
     private final int connectionTimeout;
     private final Map<String, String> properties;
 
-    public StorageCredentials(String address, String database, String username, String password, int maxPoolSize, int minIdleConnections, int maxLifetime, int keepAliveTime, int connectionTimeout, Map<String, String> properties) {
+    public StorageCredentials(String address,
+                              String database,
+                              String username,
+                              String password,
+                              int maxPoolSize,
+                              int minIdleConnections,
+                              int maxLifetime,
+                              int keepAliveTime,
+                              int connectionTimeout,
+                              Map<String, String> properties) {
         this.address = address;
         this.database = database;
         this.username = username;

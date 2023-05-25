@@ -30,7 +30,17 @@ public class REPORT extends AbstractFloraCoreTable {
     private ReportStatus status;
     private Long conclusionTime;
 
-    public REPORT(FloraCorePlugin plugin, StorageImplementation storageImplementation, int id, UUID uuid, List<UUID> reporters, UUID reported, List<String> reasons, long reportTime, ReportStatus status, Long conclusionTime, List<ReportDataChatRecord> chat) {
+    public REPORT(FloraCorePlugin plugin,
+                  StorageImplementation storageImplementation,
+                  int id,
+                  UUID uuid,
+                  List<UUID> reporters,
+                  UUID reported,
+                  List<String> reasons,
+                  long reportTime,
+                  ReportStatus status,
+                  Long conclusionTime,
+                  List<ReportDataChatRecord> chat) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;

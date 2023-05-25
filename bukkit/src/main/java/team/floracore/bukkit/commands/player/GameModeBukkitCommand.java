@@ -28,7 +28,10 @@ public class GameModeBukkitCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("gm|gamemode <mode> [target]")
     @CommandDescription("设置游戏模式")
-    public void gamemode(final @NotNull CommandSender s, final @NotNull @Argument(value = "mode", suggestions = "gamemodes") String mode, final @Nullable @Argument("target") Player target, final @Nullable @Flag("silent") Boolean silent) {
+    public void gamemode(final @NotNull CommandSender s,
+                         final @NotNull @Argument(value = "mode", suggestions = "gamemodes") String mode,
+                         final @Nullable @Argument("target") Player target,
+                         final @Nullable @Flag("silent") Boolean silent) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         GameMode gameMode;
         try {
@@ -135,7 +138,10 @@ public class GameModeBukkitCommand extends FloraCoreBukkitCommand {
      * @param permission      权限节点
      * @return 是否拥有权限并成功设置
      */
-    private boolean setGameModeIfPermissionOrSendMessage(@NotNull Sender messageReceiver, @NotNull GameMode gameMode, @NotNull Player target, @NotNull String permission) {
+    private boolean setGameModeIfPermissionOrSendMessage(@NotNull Sender messageReceiver,
+                                                         @NotNull GameMode gameMode,
+                                                         @NotNull Player target,
+                                                         @NotNull String permission) {
         if (messageReceiver.hasPermission(permission)) {
             target.setGameMode(gameMode);
             return true;

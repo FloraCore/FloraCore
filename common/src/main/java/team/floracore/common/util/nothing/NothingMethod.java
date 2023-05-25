@@ -181,7 +181,8 @@ public class NothingMethod {
         }
     }
 
-    public InsnList injectNode(Method method, Map<Class<? extends Annotation>, BiFunction<Annotation, Class<?>, InsnList>> argNodeParsers) {
+    public InsnList injectNode(Method method,
+                               Map<Class<? extends Annotation>, BiFunction<Annotation, Class<?>, InsnList>> argNodeParsers) {
         InsnList r = new InsnList();
         List<Class<? extends WrappedObject>> argsWrappers = new ArrayList<>();
         if (!Modifier.isStatic(method.getModifiers())) {

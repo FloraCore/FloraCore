@@ -29,7 +29,10 @@ public class WeatherBukkitCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("weather <weather> [time]")
     @CommandDescription("设置天气状态并指定持续时间")
-    public void weather(final @NonNull Player p, final @NonNull @Argument(value = "weather", suggestions = "weather") String weather, final @Argument(value = "time", suggestions = "commonDurations") String time, @Flag("world") World world) {
+    public void weather(final @NonNull Player p,
+                        final @NonNull @Argument(value = "weather", suggestions = "weather") String weather,
+                        final @Argument(value = "time", suggestions = "commonDurations") String time,
+                        @Flag("world") World world) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         if (world == null) {
             world = p.getWorld();
@@ -56,7 +59,8 @@ public class WeatherBukkitCommand extends FloraCoreBukkitCommand {
     }
 
     @Suggestions("weather")
-    public @NonNull List<String> getWeather(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
+    public @NonNull List<String> getWeather(final @NonNull CommandContext<CommandSender> sender,
+                                            final @NonNull String input) {
         return ImmutableList.of("storm", "sun");
     }
 }
