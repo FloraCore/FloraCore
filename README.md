@@ -17,19 +17,18 @@ FloraCore(下称FC)是一个基于Minecraft/Bukkit的开源基础插件
 取名为FloraCore的原因是，它可以准确地表达该插件的主要功能和核心特点，同时也能与两个主要开发者([@冬花ice](https://github.com/flowerinsnowdh)
 和[@花花](https://github.com/xLikeWATCHDOG/))的网名“花”相呼应。此外，该名字简单易记，同时也具有一定的高级感和专业感，适合作为一个基础插件的名称。
 
-本插件只支持Bukkit，不支持其它任何版本（包括但不限于BungeeCord、Bukkit-Legacy）。
+本插件支持Bukkit和BungeeCord，其中Bukkit支持1.8以上的所有版本。 
 
 # 框架
 
-FC的框架是基于[LuckPerms](https://luckperms.net/)(下称LP)
-，进行了少数修改。保留了以下功能，用法几乎一致，可以在LP的相关[Wiki](https://luckperms.net/wiki)中进行查看用法。
+FC的框架是基于[LuckPerms](https://luckperms.net/)(下称LP)，进行了少数修改。保留了以下功能，用法几乎一致，可以在LP的相关[Wiki](https://luckperms.net/wiki)中进行查看用法。
 
 - 依赖的下载和加载 ([Wiki](https://luckperms.net/wiki/Extensions))
 - 配置文件的加载及其用法 ([GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/config))
 - 数据库的加载及其用法 ([GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/storage))
 - 拓展的加载及其用法 ([GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/extension))
 
-FC的GUI框架是基于[Triumph GUI](https://triumphteam.dev/library/triumph-gui/gui)(下称TG)，由于BaseGui类在FC中无法正常获取Plugin，因此在FC中，我们决定将TG克隆到FC中，并解决相应的问题。
+FC为了优雅的实现反射，采用了[MzLib](https://github.com/BugCleanser/MzLib_old)
 
 # Wiki
 

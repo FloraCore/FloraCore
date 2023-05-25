@@ -18,6 +18,8 @@ import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
  * to function a bit like an enum, but with generics.</p>
  */
 public class ConfigKeys {
+    public static final ConfigKey<Boolean> BUNGEECORD = notReloadable(booleanKey("bungeecord", false));
+
     /**
      * If FloraCore should automatically install translation bundles and periodically update them.
      */
