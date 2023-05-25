@@ -28,6 +28,7 @@ public interface DependencyManager extends AutoCloseable {
      * Obtains an isolated classloader containing the given dependencies.
      *
      * @param dependencies the dependencies
+     *
      * @return the classloader
      */
     ClassLoader obtainClassLoaderWith(Set<Dependency> dependencies);

@@ -47,6 +47,7 @@ public class LocalVariablesSorter extends MethodVisitor {
      * @param access        access flags of the adapted method.
      * @param descriptor    the method's descriptor (see {@link Type}).
      * @param methodVisitor the method visitor to which this adapter delegates calls.
+     *
      * @throws IllegalStateException if a subclass calls this constructor.
      */
     public LocalVariablesSorter(
@@ -283,6 +284,7 @@ public class LocalVariablesSorter extends MethodVisitor {
      * Constructs a new local variable of the given type.
      *
      * @param type the type of the local variable to be created.
+     *
      * @return the identifier of the newly created local variable.
      */
     public int newLocal(final Type type) {

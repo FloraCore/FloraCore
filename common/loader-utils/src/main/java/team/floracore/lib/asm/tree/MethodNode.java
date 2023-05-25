@@ -183,6 +183,7 @@ public class MethodNode extends MethodVisitor {
      * @param signature  the method's signature. May be {@literal null}.
      * @param exceptions the internal names of the method's exception classes (see {@link
      *                   Type#getInternalName()}). May be {@literal null}.
+     *
      * @throws IllegalStateException If a subclass calls this constructor.
      */
     public MethodNode(
@@ -547,6 +548,7 @@ public class MethodNode extends MethodVisitor {
      * associations between labels and label nodes.
      *
      * @param label a Label.
+     *
      * @return the LabelNode corresponding to label.
      */
     protected LabelNode getLabelNode(final Label label) {

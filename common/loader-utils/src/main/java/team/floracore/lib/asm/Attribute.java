@@ -47,6 +47,7 @@ public class Attribute {
      * @param symbolTable    where the constants used in the attributes must be stored.
      * @param accessFlags    some field, method or class access flags.
      * @param signatureIndex the constant pool index of a field, method of class signature.
+     *
      * @return the size of all the attributes in bytes. This size includes the size of the attribute
      * headers.
      */
@@ -156,6 +157,7 @@ public class Attribute {
      *                            account here.
      * @param labels              the labels of the method's code, or {@literal null} if the attribute to be read
      *                            is not a Code attribute.
+     *
      * @return a <i>new</i> {@link Attribute} object corresponding to the specified bytes.
      */
     protected Attribute read(
@@ -192,6 +194,7 @@ public class Attribute {
      * attribute_length) per attribute. Also adds the attribute type names to the constant pool.
      *
      * @param symbolTable where the constants used in the attributes must be stored.
+     *
      * @return the size of all the attributes in this attribute list. This size includes the size of
      * the attribute headers.
      */
@@ -219,6 +222,7 @@ public class Attribute {
      *                    -1 if they are not Code attributes.
      * @param maxLocals   the maximum number of local variables of the method corresponding to these
      *                    Code attributes, or -1 if they are not Code attribute.
+     *
      * @return the size of all the attributes in this attribute list. This size includes the size of
      * the attribute headers.
      */
@@ -256,6 +260,7 @@ public class Attribute {
      *                    -1 if this attribute is not a Code attribute.
      * @param maxLocals   the maximum number of local variables of the method corresponding to this code
      *                    attribute, or -1 if this attribute is not a Code attribute.
+     *
      * @return the byte array form of this attribute.
      */
     protected ByteVector write(

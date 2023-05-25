@@ -119,6 +119,7 @@ public class Textifier extends Printer {
      * <p>Usage: Textifier [-nodebug] &lt;binary class name or class file name &gt;
      *
      * @param args the command line arguments.
+     *
      * @throws IOException if the class cannot be found, or if an IOException occurs.
      */
     public static void main(final String[] args) throws IOException {
@@ -133,6 +134,7 @@ public class Textifier extends Printer {
      * @param args   the command line arguments.
      * @param output where to print the result.
      * @param logger where to log errors.
+     *
      * @throws IOException if the class cannot be found, or if an IOException occurs.
      */
     static void main(final String[] args, final PrintWriter output, final PrintWriter logger)
@@ -1327,6 +1329,7 @@ public class Textifier extends Printer {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
+     *
      * @return a visitor to visit the annotation values.
      */
     public Textifier visitTypeAnnotation(
@@ -1449,6 +1452,7 @@ public class Textifier extends Printer {
      *
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
+     *
      * @return a visitor to visit the annotation values.
      */
     // DontCheck(OverloadMethodsDeclarationOrder): overloads are semantically different.
@@ -1465,6 +1469,7 @@ public class Textifier extends Printer {
      * Creates and adds to {@link #text} a new {@link Textifier}, followed by the given string.
      *
      * @param endText the text to add to {@link #text} after the textifier. May be {@literal null}.
+     *
      * @return the newly created {@link Textifier}.
      */
     private Textifier addNewTextifier(final String endText) {

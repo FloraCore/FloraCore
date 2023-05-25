@@ -45,6 +45,7 @@ public interface SchedulerAdapter {
      * @param task  the task
      * @param delay the delay
      * @param unit  the unit of delay
+     *
      * @return the resultant task instance
      */
     SchedulerTask asyncLater(Runnable task, long delay, TimeUnit unit);
@@ -55,6 +56,7 @@ public interface SchedulerAdapter {
      * @param task     the task
      * @param interval the interval
      * @param unit     the unit of interval
+     *
      * @return the resultant task instance
      */
     SchedulerTask asyncRepeating(Runnable task, long interval, TimeUnit unit);

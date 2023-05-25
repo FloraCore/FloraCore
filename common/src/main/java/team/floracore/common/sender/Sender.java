@@ -55,6 +55,7 @@ public interface Sender {
      * Check if the Sender has a permission.
      *
      * @param permission the permission to check for
+     *
      * @return true if the sender has the permission
      */
     boolean hasPermission(String permission);

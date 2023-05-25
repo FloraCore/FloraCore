@@ -89,6 +89,7 @@ final class Handler {
      * @param firstHandler the beginning of a Handler list. May be {@literal null}.
      * @param start        the start of the range to be removed.
      * @param end          the end of the range to be removed. Maybe {@literal null}.
+     *
      * @return the exception handler list with the start-end range removed.
      */
     static Handler removeRange(final Handler firstHandler, final Label start, final Label end) {
@@ -129,6 +130,7 @@ final class Handler {
      * begins with the given element. <i>This includes the exception_table_length field.</i>
      *
      * @param firstHandler the beginning of a Handler list. May be {@literal null}.
+     *
      * @return the size in bytes of the exception_table_length and exception_table structures.
      */
     static int getExceptionTableSize(final Handler firstHandler) {
@@ -139,6 +141,7 @@ final class Handler {
      * Returns the number of elements of the Handler list that begins with the given element.
      *
      * @param firstHandler the beginning of a Handler list. May be {@literal null}.
+     *
      * @return the number of elements of the Handler list that begins with 'handler'.
      */
     static int getExceptionTableLength(final Handler firstHandler) {

@@ -82,6 +82,7 @@ final class SmallSet<T> extends AbstractSet<T> {
      * Returns the union of this set and of the given set.
      *
      * @param otherSet another small set.
+     *
      * @return the union of this set and of otherSet.
      */
     Set<T> union(final SmallSet<T> otherSet) {

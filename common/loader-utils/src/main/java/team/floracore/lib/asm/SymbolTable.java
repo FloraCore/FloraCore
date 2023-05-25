@@ -465,6 +465,7 @@ final class SymbolTable {
      *
      * @param majorVersion a major ClassFile version number.
      * @param className    an internal class name.
+     *
      * @return the constant pool index of a new or already existing Symbol with the given class name.
      */
     int setMajorVersionAndClassName(final int majorVersion, final String className) {
@@ -478,6 +479,7 @@ final class SymbolTable {
      * constant pool already contains a similar item.
      *
      * @param value the internal name of a class.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantClass(final String value) {
@@ -494,6 +496,7 @@ final class SymbolTable {
      *              Symbol#CONSTANT_PACKAGE_TAG}.
      * @param value an internal class name, an arbitrary string, a method descriptor, a module or a
      *              package name, depending on tag.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     private Symbol addConstantUtf8Reference(final int tag, final String value) {
@@ -513,6 +516,7 @@ final class SymbolTable {
      * Returns the list of entries which can potentially have the given hash code.
      *
      * @param hashCode a {@link Entry#hashCode} value.
+     *
      * @return the list of entries which can potentially have the given hash code. The list is stored
      * via the {@link Entry#next} field.
      */
@@ -525,6 +529,7 @@ final class SymbolTable {
      * constant pool already contains a similar item.
      *
      * @param value a string.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     int addConstantUtf8(final String value) {
@@ -549,6 +554,7 @@ final class SymbolTable {
      * #entries} array index) as much as possible, with reasonable memory usage.
      *
      * @param entry an Entry (which must not already be contained in {@link #entries}).
+     *
      * @return the given entry
      */
     private Entry put(final Entry entry) {
@@ -640,6 +646,7 @@ final class SymbolTable {
      * @param value the value of the constant to be added to the constant pool. This parameter must be
      *              an {@link Integer}, {@link Byte}, {@link Character}, {@link Short}, {@link Boolean}, {@link
      *              Float}, {@link Long}, {@link Double}, {@link String}, {@link Type} or {@link Handle}.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstant(final Object value) {
@@ -698,6 +705,7 @@ final class SymbolTable {
      * @param owner      the internal name of a class.
      * @param name       a field name.
      * @param descriptor a field descriptor.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantFieldref(final String owner, final String name, final String descriptor) {
@@ -712,6 +720,7 @@ final class SymbolTable {
      * @param name        a method name.
      * @param descriptor  a method descriptor.
      * @param isInterface whether owner is an interface or not.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantMethodref(
@@ -730,6 +739,7 @@ final class SymbolTable {
      * @param owner      the internal name of a class.
      * @param name       a field or method name.
      * @param descriptor a field or method descriptor.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     private Entry addConstantMemberReference(
@@ -756,6 +766,7 @@ final class SymbolTable {
      * constant pool already contains a similar item.
      *
      * @param value a string.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantString(final String value) {
@@ -767,6 +778,7 @@ final class SymbolTable {
      * constant pool already contains a similar item.
      *
      * @param value an int.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantInteger(final int value) {
@@ -778,6 +790,7 @@ final class SymbolTable {
      * constant pool already contains a similar item.
      *
      * @param value a float.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantFloat(final float value) {
@@ -790,6 +803,7 @@ final class SymbolTable {
      *
      * @param tag   one of {@link Symbol#CONSTANT_INTEGER_TAG} or {@link Symbol#CONSTANT_FLOAT_TAG}.
      * @param value an int or float.
+     *
      * @return a constant pool constant with the given tag and primitive values.
      */
     private Symbol addConstantIntegerOrFloat(final int tag, final int value) {
@@ -810,6 +824,7 @@ final class SymbolTable {
      * constant pool already contains a similar item.
      *
      * @param value a long.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantLong(final long value) {
@@ -821,6 +836,7 @@ final class SymbolTable {
      * constant pool already contains a similar item.
      *
      * @param value a double.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantDouble(final double value) {
@@ -833,6 +849,7 @@ final class SymbolTable {
      *
      * @param tag   one of {@link Symbol#CONSTANT_LONG_TAG} or {@link Symbol#CONSTANT_DOUBLE_TAG}.
      * @param value a long or double.
+     *
      * @return a constant pool constant with the given tag and primitive values.
      */
     private Symbol addConstantLongOrDouble(final int tag, final long value) {
@@ -856,6 +873,7 @@ final class SymbolTable {
      *
      * @param name       a field or method name.
      * @param descriptor a field or method descriptor.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     int addConstantNameAndType(final String name, final String descriptor) {
@@ -891,6 +909,7 @@ final class SymbolTable {
      * @param name          a field or method name.
      * @param descriptor    a field or method descriptor.
      * @param isInterface   whether owner is an interface or not.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantMethodHandle(
@@ -930,6 +949,7 @@ final class SymbolTable {
      * constant pool already contains a similar item.
      *
      * @param methodDescriptor a method descriptor.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantMethodType(final String methodDescriptor) {
@@ -949,6 +969,7 @@ final class SymbolTable {
      * @param descriptor               a field descriptor.
      * @param bootstrapMethodHandle    a bootstrap method handle.
      * @param bootstrapMethodArguments the bootstrap method arguments.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantDynamic(
@@ -970,6 +991,7 @@ final class SymbolTable {
      * @param descriptor               a method descriptor.
      * @param bootstrapMethodHandle    a bootstrap method handle.
      * @param bootstrapMethodArguments the bootstrap method arguments.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantInvokeDynamic(
@@ -992,6 +1014,7 @@ final class SymbolTable {
      * @param descriptor           a field descriptor for CONSTANT_DYNAMIC_TAG) or a method descriptor for
      *                             CONSTANT_INVOKE_DYNAMIC_TAG.
      * @param bootstrapMethodIndex the index of a bootstrap method in the BootstrapMethods attribute.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     private Symbol addConstantDynamicOrInvokeDynamicReference(
@@ -1019,6 +1042,7 @@ final class SymbolTable {
      * constant pool already contains a similar item.
      *
      * @param moduleName a fully qualified name (using dots) of a module.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantModule(final String moduleName) {
@@ -1030,6 +1054,7 @@ final class SymbolTable {
      * constant pool already contains a similar item.
      *
      * @param packageName the internal name of a package.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addConstantPackage(final String packageName) {
@@ -1046,6 +1071,7 @@ final class SymbolTable {
      *
      * @param bootstrapMethodHandle    a bootstrap method handle.
      * @param bootstrapMethodArguments the bootstrap method arguments.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     Symbol addBootstrapMethod(
@@ -1103,6 +1129,7 @@ final class SymbolTable {
      * @param offset   the offset of the last bootstrap method in {@link #bootstrapMethods}, in bytes.
      * @param length   the length of this bootstrap method in {@link #bootstrapMethods}, in bytes.
      * @param hashCode the hash code of this bootstrap method.
+     *
      * @return a new or already existing Symbol with the given value.
      */
     private Symbol addBootstrapMethod(final int offset, final int length, final int hashCode) {
@@ -1132,6 +1159,7 @@ final class SymbolTable {
      * Returns the type table element whose index is given.
      *
      * @param typeIndex a type table index.
+     *
      * @return the type table element whose index is given.
      */
     Symbol getType(final int typeIndex) {
@@ -1145,6 +1173,7 @@ final class SymbolTable {
      * @param value          an internal class name.
      * @param bytecodeOffset the bytecode offset of the NEW instruction that created this {@link
      *                       Frame#ITEM_UNINITIALIZED} type value.
+     *
      * @return the index of a new or already existing type Symbol with the given value.
      */
     int addUninitializedType(final String value, final int bytecodeOffset) {
@@ -1172,6 +1201,7 @@ final class SymbolTable {
      *
      * @param entry a {@link Symbol#TYPE_TAG} or {@link Symbol#UNINITIALIZED_TYPE_TAG} type symbol.
      *              The index of this Symbol must be equal to the current value of {@link #typeCount}.
+     *
      * @return the index in {@link #typeTable} where the given type was added, which is also equal to
      * entry's index by hypothesis.
      */
@@ -1196,6 +1226,7 @@ final class SymbolTable {
      *                        table.
      * @param typeTableIndex2 another {@link Symbol#TYPE_TAG} type, specified by its index in the type
      *                        table.
+     *
      * @return the index of a new or already existing {@link Symbol#TYPE_TAG} type Symbol,
      * corresponding to the common super class of the given types.
      */
@@ -1224,6 +1255,7 @@ final class SymbolTable {
      * contains a similar type.
      *
      * @param value an internal class name.
+     *
      * @return the index of a new or already existing type Symbol with the given value.
      */
     int addType(final String value) {

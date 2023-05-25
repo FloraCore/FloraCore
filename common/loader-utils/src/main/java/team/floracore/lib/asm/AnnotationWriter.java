@@ -106,6 +106,7 @@ final class AnnotationWriter extends AnnotationVisitor {
      * @param previousAnnotation the previously visited annotation of the
      *                           Runtime[In]Visible[Type]Annotations attribute to which this annotation belongs, or
      *                           {@literal null} in other cases (e.g. nested or array annotations).
+     *
      * @return a new {@link AnnotationWriter} for the given annotation descriptor.
      */
     static AnnotationWriter create(
@@ -136,6 +137,7 @@ final class AnnotationWriter extends AnnotationVisitor {
      * @param previousAnnotation the previously visited annotation of the
      *                           Runtime[In]Visible[Type]Annotations attribute to which this annotation belongs, or
      *                           {@literal null} in other cases (e.g. nested or array annotations).
+     *
      * @return a new {@link AnnotationWriter} for the given type annotation reference and descriptor.
      */
     static AnnotationWriter create(
@@ -177,6 +179,7 @@ final class AnnotationWriter extends AnnotationVisitor {
      * @param lastRuntimeInvisibleTypeAnnotation The last runtime invisible type annotation of a
      *                                           field, method or class field. The previous ones can be accessed with the {@link
      *                                           #previousAnnotation} field. May be {@literal null}.
+     *
      * @return the size in bytes of a Runtime[In]Visible[Type]Annotations attribute containing the
      * given annotations and all their predecessors. This includes the size of the
      * attribute_name_index and attribute_length fields.
@@ -216,6 +219,7 @@ final class AnnotationWriter extends AnnotationVisitor {
      * to the constant pool of the class (if not null).
      *
      * @param attributeName one of "Runtime[In]Visible[Type]Annotations", or {@literal null}.
+     *
      * @return the size in bytes of a Runtime[In]Visible[Type]Annotations attribute containing this
      * annotation and all its predecessors. This includes the size of the attribute_name_index and
      * attribute_length fields.
@@ -321,6 +325,7 @@ final class AnnotationWriter extends AnnotationVisitor {
      *                                element).
      * @param annotableParameterCount the number of elements in annotationWriters to take into account
      *                                (elements [0..annotableParameterCount[ are taken into account).
+     *
      * @return the size in bytes of a Runtime[In]VisibleParameterAnnotations attribute corresponding
      * to the given sub-array of AnnotationWriter lists. This includes the size of the
      * attribute_name_index and attribute_length fields.

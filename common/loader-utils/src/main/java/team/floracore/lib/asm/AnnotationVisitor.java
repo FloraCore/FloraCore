@@ -103,6 +103,7 @@ public abstract class AnnotationVisitor {
      *
      * @param name       the value name.
      * @param descriptor the class descriptor of the nested annotation class.
+     *
      * @return a visitor to visit the actual nested annotation value, or {@literal null} if this
      * visitor is not interested in visiting this nested annotation. <i>The nested annotation
      * value must be fully visited before calling other methods on this annotation visitor</i>.
@@ -120,6 +121,7 @@ public abstract class AnnotationVisitor {
      * visit}. This is what {@link ClassReader} does for non empty arrays of primitive values.
      *
      * @param name the value name.
+     *
      * @return a visitor to visit the actual array value elements, or {@literal null} if this visitor
      * is not interested in visiting these values. The 'name' parameters passed to the methods of
      * this visitor are ignored. <i>All the array values must be visited before calling other
