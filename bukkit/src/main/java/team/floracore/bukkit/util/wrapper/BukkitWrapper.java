@@ -34,10 +34,6 @@ public class BukkitWrapper {
         v8 = version < 9;
     }
 
-    public static boolean inVersion(VersionName v) {
-        return version >= v.minVer() && version < v.maxVer();
-    }
-
     public static boolean inVersion(WrappedBukkitConstructor v) {
         return version >= v.minVer() && version < v.maxVer();
     }
@@ -45,20 +41,26 @@ public class BukkitWrapper {
     public static String[] inVersion(VersionName[] name) {
         List<String> r = new ArrayList<>();
         for (VersionName v : name) {
-            if (inVersion(v))
+            if (inVersion(v)) {
                 r.addAll(Lists.newArrayList(v.value()));
+            }
+        }
+        return r.toArray(new String[0]);
+    }
+
+    public static boolean inVersion(VersionName v) {
+        return version >= v.minVer() && version < v.maxVer();
+    }
+
+    public static String[] cov(String[] clName) {
+        List<String> r = new ArrayList<>();
+        for (String c : clName) {
+            r.add(cov(c));
         }
         return r.toArray(new String[0]);
     }
 
     public static String cov(String clName) {
         return clName.replace("nms.", "net.minecraft.server." + MCProtocolVersion + ".").replace("obc.", "org.bukkit.craftbukkit." + MCProtocolVersion + ".");
-    }
-
-    public static String[] cov(String[] clName) {
-        List<String> r = new ArrayList<>();
-        for (String c : clName)
-            r.add(cov(c));
-        return r.toArray(new String[0]);
     }
 }

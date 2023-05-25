@@ -34,8 +34,9 @@ public class RegistrarRegistrar extends AbsModule implements IRegistrar<IRegistr
 
     @Override
     public void reg(Object obj) {
-        if (obj == this)
+        if (obj == this) {
             return;
+        }
         super.reg(obj);
     }
 }

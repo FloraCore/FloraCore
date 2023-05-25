@@ -1,6 +1,5 @@
 package team.floracore.bukkit.util.module;
 
-
 import team.floracore.common.util.*;
 
 import java.util.*;

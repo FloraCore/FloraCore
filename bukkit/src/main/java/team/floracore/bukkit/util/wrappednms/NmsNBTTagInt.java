@@ -14,11 +14,11 @@ public interface NmsNBTTagInt extends NmsNBTTag {
     @WrappedConstructor
     NmsNBTTagInt staticNewInstance(int value);
 
-    @WrappedBukkitFieldAccessor(@VersionName("@0"))
-    int getValue();
-
     @Override
     default JsonPrimitive toJson() {
         return new JsonPrimitive(getValue());
     }
+
+    @WrappedBukkitFieldAccessor(@VersionName("@0"))
+    int getValue();
 }

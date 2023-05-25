@@ -53,6 +53,32 @@ public class NamesRepository {
         });
     }
 
+    private void clearDirectory(Path directory, Predicate<Path> predicate) {
+        try {
+            Files.list(directory).filter(predicate).forEach(p -> {
+                try {
+                    Files.delete(p);
+                } catch (IOException e) {
+                    // ignore
+                }
+            });
+        } catch (IOException e) {
+            // ignore
+        }
+    }
+
+    private void refresh() {
+        long lastRefresh = readLastRefreshTime();
+        long timeSinceLastRefresh = System.currentTimeMillis() - lastRefresh;
+
+        if (timeSinceLastRefresh <= CACHE_MAX_AGE) {
+            return;
+        }
+
+        // perform a refresh!
+        downloadNames(true);
+    }
+
     public void loadNamesCSVData() throws IOException, CsvValidationException {
         Path filePath = getNamesCSVFile();
         int expectedSize = 10000; // 设置预期数据行数
@@ -69,16 +95,21 @@ public class NamesRepository {
         }
     }
 
-    private void refresh() {
-        long lastRefresh = readLastRefreshTime();
-        long timeSinceLastRefresh = System.currentTimeMillis() - lastRefresh;
+    private long readLastRefreshTime() {
+        Path statusFile = getRepositoryStatusFile();
 
-        if (timeSinceLastRefresh <= CACHE_MAX_AGE) {
-            return;
+        if (Files.exists(statusFile)) {
+            try (BufferedReader reader = Files.newBufferedReader(statusFile, StandardCharsets.UTF_8)) {
+                JsonObject status = GsonProvider.normal().fromJson(reader, JsonObject.class);
+                if (status.has("lastRefresh")) {
+                    return status.get("lastRefresh").getAsLong();
+                }
+            } catch (Exception e) {
+                // ignore
+            }
         }
 
-        // perform a refresh!
-        downloadNames(true);
+        return 0L;
     }
 
     public void downloadNames(boolean updateStatus) {
@@ -103,6 +134,25 @@ public class NamesRepository {
         manager.reload();
     }
 
+    public Path getNamesCSVFile() {
+        return this.plugin.getDataManager().getDataDirectory().resolve("names.csv");
+    }
+
+    public Path getRepositoryStatusFile() {
+        return this.plugin.getDataManager().getDataDirectory().resolve("status.json");
+    }
+
+    private void writeLastRefreshTime() {
+        Path statusFile = getRepositoryStatusFile();
+        try (BufferedWriter writer = Files.newBufferedWriter(statusFile, StandardCharsets.UTF_8)) {
+            JsonObject status = new JsonObject();
+            status.add("lastRefresh", new JsonPrimitive(System.currentTimeMillis()));
+            GsonProvider.prettyPrinting().toJson(status, writer);
+        } catch (IOException e) {
+            // ignore
+        }
+    }
+
     public NameProperty getRandomNameProperty() {
         if (nameProperty.isEmpty()) {
             return null;
@@ -118,48 +168,6 @@ public class NamesRepository {
         return nameProperty.get(name);
     }
 
-    private void writeLastRefreshTime() {
-        Path statusFile = getRepositoryStatusFile();
-        try (BufferedWriter writer = Files.newBufferedWriter(statusFile, StandardCharsets.UTF_8)) {
-            JsonObject status = new JsonObject();
-            status.add("lastRefresh", new JsonPrimitive(System.currentTimeMillis()));
-            GsonProvider.prettyPrinting().toJson(status, writer);
-        } catch (IOException e) {
-            // ignore
-        }
-    }
-
-    private long readLastRefreshTime() {
-        Path statusFile = getRepositoryStatusFile();
-
-        if (Files.exists(statusFile)) {
-            try (BufferedReader reader = Files.newBufferedReader(statusFile, StandardCharsets.UTF_8)) {
-                JsonObject status = GsonProvider.normal().fromJson(reader, JsonObject.class);
-                if (status.has("lastRefresh")) {
-                    return status.get("lastRefresh").getAsLong();
-                }
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-
-        return 0L;
-    }
-
-    private void clearDirectory(Path directory, Predicate<Path> predicate) {
-        try {
-            Files.list(directory).filter(predicate).forEach(p -> {
-                try {
-                    Files.delete(p);
-                } catch (IOException e) {
-                    // ignore
-                }
-            });
-        } catch (IOException e) {
-            // ignore
-        }
-    }
-
     public NameProperty getSteveProperty() {
         String value = "ewogICJ0aW1lc3RhbXAiIDogMTY4MjMzMDg1NjU1NiwKICAicHJvZmlsZUlkIiA6ICJkZTFlMTRiZjFmMmQ0MGY1OWZlMzI4ZTU5ZjkzMDljMiIsCiAgInByb2ZpbGVOYW1lIiA6ICJGcmVlZG9tRGFQdWciLAogICJzaWduYXR1cmVSZXF1aXJlZCIgOiB0cnVlLAogICJ0ZXh0dXJlcyIgOiB7CiAgICAiU0tJTiIgOiB7CiAgICAgICJ1cmwiIDogImh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTY1ZDJjOGE0ZjI4M2JkMWNkZjhkMjE2MjcyNDVjMjFiMTEwNTU3MjM5ZWUxMWI2ZGM0ZjY3Y2EwYTViOWIzYyIKICAgIH0KICB9Cn0=";
         String signature = "daTubyLTq2QvhOXfLzqSGoELandwx3I2JHlXrmYdxlyHdv46ywYPsUhY1VNLIB0krRAA/8R82q2iNbcRIWBR4OmNVGKUALVc2jBurZstFYuanoW9fEYTR0BqxWMR6XzfzE5X83uT56EmTEXH4SpRuxTw21Pm7IXQcFcuG+/rb91djrOWQ+5xQsj4T/CGMlaw/WjwpF9PtqtjVkdmcIJ4OM6pYTWdvTShEjKEByAW2Sl1pklshSqu4kl+zHbHaXyF3ec/fA84IKmJQx6y5ypzA2E3PfptwTsUCbA1I9lvNVE1KNdUuZBGty+AZ7RHohveKUyh7/2wL4CuboWMNc9vAWHIeWz0uX9sqZRQSwRW78qpvdubcBM9IzEw6hfbekn4S8jidKe42Jb6dCsVop50Uqm36vrr5nQf321Hl1MtBaKxWjFGD1Uhj6I2rMMi40zOGzkhLFhoM0povKtL4Wi/bxabMGRbHBSWD+LHfJjf1wDV5GlT11QyPdVTi6vSIv3x3jN/LOSqCBuqKxz1ojLMKT1LVthY8HPjXqqJnDI0UmI0c9qDGDe5/oBvX7IHyCz1OBdy6iJ54ucNrs02eKBTgwhFVTXlnuLyBKmca/ZpuyNVZ3sRO3drET80iM2GlrgTJYA7DzfQnPgyyAHHDqyqZT+ksLVATjRzLtaPeJ9tM+Y=";
@@ -171,15 +179,6 @@ public class NamesRepository {
         String signature = "Rzvbti/OFMHzbFe3jRD0SfFfR1jyZFhwWB7zct+JQNO0Z4+AdaES9lE2oPV0HI2Y8KPJHgvnsmYI2bHaGhi4nyZO5ExrBHZbooG52RpEpAatCY506HbG15B52ZDy01BTwnZIkN/bN96IfeCoz/28W/il2fxoEt//fRp8tcW3nmLp6r0zBBIm2U789/EZqynPvGneZPcI52CdrhSi8tYL7F7nt2Gb2LdR0e+TJchVJy5gXQBxKTwNcJ9OOWvaANfysbyXiGHitdKNZL4UPZ41xGsTluqI3gFrbAR6kdaPOOffP1cx1+hnzDddKVDfRnOvEsKJuz4SBDYcJVLshyWA2OvA7iKmBVkwR+eg7tbxTZciSyLvTkAziKvvnhQKXCWjJlMHtJLsJ/Ici2iZ0NjDlv4w4vCc2SqfOipY+oUJneqYtRwAop1Zl4/JrZsC5KHT709DF7gBfos9gro+l9O7cgdT0BIwnqiYcT8sImrXj1mRU0y5qjXm/UbugjxDHWfB6VkevA+uu2GiluE7iBcj7FUGiQl1g3CYGqMAfYCqkqmkYqIEPyqWAoYMEg2Tkm0hJXxUqWWfH+7zHkRXKdGz2+gwCde9gNZj1rrA5yxLdjzMB7VXjpNC92g/brV51cAQFakUkagWTVtHOP/w85dr6zRb5FV7uiR7z1L647cJlpQ=";
         return new NameProperty("Alex", value, signature);
     }
-
-    public Path getRepositoryStatusFile() {
-        return this.plugin.getDataManager().getDataDirectory().resolve("status.json");
-    }
-
-    public Path getNamesCSVFile() {
-        return this.plugin.getDataManager().getDataDirectory().resolve("names.csv");
-    }
-
 
     public static class NameProperty {
         private final String name;

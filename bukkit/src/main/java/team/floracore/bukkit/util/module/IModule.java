@@ -18,8 +18,9 @@ public interface IModule extends Listener {
 
     static <T extends IModule> T enable(Class<T> interfase) {
         synchronized (IModule.class) {
-            if (!interfase.isInterface())
+            if (!interfase.isInterface()) {
                 throw new IllegalArgumentException("Arg interfase must be a interface");
+            }
             T r = ClassUtil.newInstance(interfase);
             r.enable();
             return r;
@@ -58,11 +59,11 @@ public interface IModule extends Listener {
 
     Plugin getPlugin();
 
-    Set<IModule> getDepends();
-
     default void depend(IModule m) {
         getDepends().add(m);
     }
+
+    Set<IModule> getDepends();
 
     default Set<IModule> getAllDepends() {
         Set<IModule> r = new HashSet<>(getDepends());
@@ -81,8 +82,6 @@ public interface IModule extends Listener {
 
     default void onDisable() {
     }
-
-    Map<IRegistrar<?>, List<Object>> getRegisteredObjects();
 
     Ref<Boolean> getEnabledRef();
 
@@ -104,8 +103,9 @@ public interface IModule extends Listener {
                     list.add(obj);
                 }
             }
-            if (reged == 0)
+            if (reged == 0) {
                 FCBukkitBootstrap.loader.getLogger().warning("The object can't be reged: " + obj);
+            }
         }
     }
 
@@ -114,18 +114,22 @@ public interface IModule extends Listener {
             for (Map.Entry<IRegistrar<?>, List<Object>> e : getRegisteredObjects().entrySet()) {
                 if (e.getValue().remove(obj)) {
                     e.getKey().unregister(TypeUtil.cast(obj));
-                    if (e.getValue().isEmpty())
+                    if (e.getValue().isEmpty()) {
                         getRegisteredObjects().remove(e.getKey());
+                    }
                     return;
                 }
             }
         }
     }
 
+    Map<IRegistrar<?>, List<Object>> getRegisteredObjects();
+
     default void enable() {
         synchronized (this) {
-            if (isEnabled())
+            if (isEnabled()) {
                 return;
+            }
             ModuleEnableEvent event = new ModuleEnableEvent(this);
             Bukkit.getPluginManager().callEvent(event);
             if (event.isCancelled()) {
@@ -141,8 +145,9 @@ public interface IModule extends Listener {
 
     default void disable() {
         synchronized (this) {
-            if (!isEnabled())
+            if (!isEnabled()) {
                 return;
+            }
             ModuleDisableEvent event = new ModuleDisableEvent(this);
             Bukkit.getPluginManager().callEvent(event);
             if (event.isCancelled()) {
@@ -151,8 +156,9 @@ public interface IModule extends Listener {
             }
             for (List<IModule> t : modules.values()) {
                 for (IModule m : new LinkedList<>(t)) {
-                    if (m.isEnabled() && m.getDepends().contains(this))
+                    if (m.isEnabled() && m.getDepends().contains(this)) {
                         m.disable();
+                    }
                 }
             }
             for (Map.Entry<IRegistrar<?>, List<Object>> e : getRegisteredObjects().entrySet()) {
@@ -180,8 +186,9 @@ public interface IModule extends Listener {
 
     default void load0() {
         synchronized (this) {
-            if (isLoaded())
+            if (isLoaded()) {
                 return;
+            }
             for (IModule depend : this.getDepends()) {
                 depend.load();
             }
@@ -209,12 +216,14 @@ public interface IModule extends Listener {
     default void unload() {
         synchronized (this) {
             List<IModule> ms = modules.get(this.getPlugin());
-            if (ms == null || !isLoaded())
+            if (ms == null || !isLoaded()) {
                 return;
+            }
             this.disable();
             ms.remove(this);
-            if (ms.isEmpty())
+            if (ms.isEmpty()) {
                 modules.remove(this.getPlugin());
+            }
         }
     }
 
@@ -227,10 +236,11 @@ public interface IModule extends Listener {
 
         @EventHandler
         void onPluginDisable(PluginDisableEvent event) {
-            if (event.getPlugin() == FCBukkitBootstrap.loader)
+            if (event.getPlugin() == FCBukkitBootstrap.loader) {
                 IModule.unloadAll();
-            else
+            } else {
                 IModule.unloadModules(event.getPlugin());
+            }
         }
     }
 }

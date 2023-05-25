@@ -521,21 +521,6 @@ public class MethodNode extends MethodVisitor {
         // Nothing to do.
     }
 
-    /**
-     * Returns the LabelNode corresponding to the given Label. Creates a new LabelNode if necessary.
-     * The default implementation of this method uses the {@link Label#info} field to store
-     * associations between labels and label nodes.
-     *
-     * @param label a Label.
-     * @return the LabelNode corresponding to label.
-     */
-    protected LabelNode getLabelNode(final Label label) {
-        if (!(label.info instanceof LabelNode)) {
-            label.info = new LabelNode();
-        }
-        return (LabelNode) label.info;
-    }
-
     private LabelNode[] getLabelNodes(final Label[] labels) {
         LabelNode[] labelNodes = new LabelNode[labels.length];
         for (int i = 0, n = labels.length; i < n; ++i) {
@@ -554,6 +539,21 @@ public class MethodNode extends MethodVisitor {
             labelNodes[i] = o;
         }
         return labelNodes;
+    }
+
+    /**
+     * Returns the LabelNode corresponding to the given Label. Creates a new LabelNode if necessary.
+     * The default implementation of this method uses the {@link Label#info} field to store
+     * associations between labels and label nodes.
+     *
+     * @param label a Label.
+     * @return the LabelNode corresponding to label.
+     */
+    protected LabelNode getLabelNode(final Label label) {
+        if (!(label.info instanceof LabelNode)) {
+            label.info = new LabelNode();
+        }
+        return (LabelNode) label.info;
     }
 
     // -----------------------------------------------------------------------------------------------

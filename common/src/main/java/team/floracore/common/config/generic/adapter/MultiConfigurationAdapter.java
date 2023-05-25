@@ -12,6 +12,10 @@ public class MultiConfigurationAdapter implements ConfigurationAdapter {
     private final FloraCorePlugin plugin;
     private final List<ConfigurationAdapter> adapters;
 
+    public MultiConfigurationAdapter(FloraCorePlugin plugin, ConfigurationAdapter... adapters) {
+        this(plugin, ImmutableList.copyOf(adapters));
+    }
+
     /**
      * Creates a {@link team.floracore.common.config.generic.adapter.MultiConfigurationAdapter}.
      *
@@ -25,10 +29,6 @@ public class MultiConfigurationAdapter implements ConfigurationAdapter {
     public MultiConfigurationAdapter(FloraCorePlugin plugin, List<ConfigurationAdapter> adapters) {
         this.plugin = plugin;
         this.adapters = ImmutableList.copyOf(adapters).reverse();
-    }
-
-    public MultiConfigurationAdapter(FloraCorePlugin plugin, ConfigurationAdapter... adapters) {
-        this(plugin, ImmutableList.copyOf(adapters));
     }
 
     @Override

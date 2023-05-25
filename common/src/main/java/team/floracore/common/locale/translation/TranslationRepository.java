@@ -42,6 +42,41 @@ public class TranslationRepository {
         return getTranslationsMetadata().languages;
     }
 
+    private MetadataResponse getTranslationsMetadata() throws IOException, UnsuccessfulRequestException {
+        Request request = new Request.Builder().header("User-Agent", "floracore").url(TRANSLATIONS_INFO_ENDPOINT).build();
+
+        JsonObject jsonResponse;
+        try (Response response = abstractHttpClient.makeHttpRequest(request)) {
+            try (ResponseBody responseBody = response.body()) {
+                if (responseBody == null) {
+                    throw new RuntimeException("No response");
+                }
+
+                try (InputStream inputStream = new LimitedInputStream(responseBody.byteStream(), MAX_BUNDLE_SIZE)) {
+                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+                        jsonResponse = GsonProvider.normal().fromJson(reader, JsonObject.class);
+                    }
+                }
+            }
+        }
+
+        List<LanguageInfo> languages = new ArrayList<>();
+        for (Map.Entry<String, JsonElement> language : jsonResponse.get("languages").getAsJsonObject().entrySet()) {
+            languages.add(new LanguageInfo(language.getKey(), language.getValue().getAsJsonObject()));
+        }
+        languages.removeIf(language -> language.progress() <= 0);
+
+        if (languages.size() >= 100) {
+            // just a precaution: if more than 100 languages have been
+            // returned then the metadata server is doing something silly
+            throw new IOException("More than 100 languages - cancelling download");
+        }
+
+        long cacheMaxAge = jsonResponse.get("cacheMaxAge").getAsLong();
+
+        return new MetadataResponse(cacheMaxAge, languages);
+    }
+
     public void scheduleRefreshRepeating() {
         this.plugin.getBootstrap().getScheduler().asyncRepeating(this::scheduleRefresh, 1, TimeUnit.HOURS);
     }
@@ -66,6 +101,20 @@ public class TranslationRepository {
         });
     }
 
+    private void clearDirectory(Path directory, Predicate<Path> predicate) {
+        try {
+            Files.list(directory).filter(predicate).forEach(p -> {
+                try {
+                    Files.delete(p);
+                } catch (IOException e) {
+                    // ignore
+                }
+            });
+        } catch (IOException e) {
+            // ignore
+        }
+    }
+
     private void refresh() throws Exception {
         long lastRefresh = readLastRefreshTime();
         long timeSinceLastRefresh = System.currentTimeMillis() - lastRefresh;
@@ -80,18 +129,21 @@ public class TranslationRepository {
         downloadAndInstallTranslations(metadata.languages, null, true);
     }
 
-    private void clearDirectory(Path directory, Predicate<Path> predicate) {
-        try {
-            Files.list(directory).filter(predicate).forEach(p -> {
-                try {
-                    Files.delete(p);
-                } catch (IOException e) {
-                    // ignore
+    private long readLastRefreshTime() {
+        Path statusFile = this.plugin.getTranslationManager().getRepositoryStatusFile();
+
+        if (Files.exists(statusFile)) {
+            try (BufferedReader reader = Files.newBufferedReader(statusFile, StandardCharsets.UTF_8)) {
+                JsonObject status = GsonProvider.normal().fromJson(reader, JsonObject.class);
+                if (status.has("lastRefresh")) {
+                    return status.get("lastRefresh").getAsLong();
                 }
-            });
-        } catch (IOException e) {
-            // ignore
+            } catch (Exception e) {
+                // ignore
+            }
         }
+
+        return 0L;
     }
 
     /**
@@ -154,58 +206,6 @@ public class TranslationRepository {
         }
     }
 
-    private long readLastRefreshTime() {
-        Path statusFile = this.plugin.getTranslationManager().getRepositoryStatusFile();
-
-        if (Files.exists(statusFile)) {
-            try (BufferedReader reader = Files.newBufferedReader(statusFile, StandardCharsets.UTF_8)) {
-                JsonObject status = GsonProvider.normal().fromJson(reader, JsonObject.class);
-                if (status.has("lastRefresh")) {
-                    return status.get("lastRefresh").getAsLong();
-                }
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-
-        return 0L;
-    }
-
-    private MetadataResponse getTranslationsMetadata() throws IOException, UnsuccessfulRequestException {
-        Request request = new Request.Builder().header("User-Agent", "floracore").url(TRANSLATIONS_INFO_ENDPOINT).build();
-
-        JsonObject jsonResponse;
-        try (Response response = abstractHttpClient.makeHttpRequest(request)) {
-            try (ResponseBody responseBody = response.body()) {
-                if (responseBody == null) {
-                    throw new RuntimeException("No response");
-                }
-
-                try (InputStream inputStream = new LimitedInputStream(responseBody.byteStream(), MAX_BUNDLE_SIZE)) {
-                    try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
-                        jsonResponse = GsonProvider.normal().fromJson(reader, JsonObject.class);
-                    }
-                }
-            }
-        }
-
-        List<LanguageInfo> languages = new ArrayList<>();
-        for (Map.Entry<String, JsonElement> language : jsonResponse.get("languages").getAsJsonObject().entrySet()) {
-            languages.add(new LanguageInfo(language.getKey(), language.getValue().getAsJsonObject()));
-        }
-        languages.removeIf(language -> language.progress() <= 0);
-
-        if (languages.size() >= 100) {
-            // just a precaution: if more than 100 languages have been
-            // returned then the metadata server is doing something silly
-            throw new IOException("More than 100 languages - cancelling download");
-        }
-
-        long cacheMaxAge = jsonResponse.get("cacheMaxAge").getAsLong();
-
-        return new MetadataResponse(cacheMaxAge, languages);
-    }
-
     private static final class MetadataResponse {
         private final long cacheMaxAge;
         private final List<LanguageInfo> languages;
@@ -264,12 +264,6 @@ public class TranslationRepository {
             this.limit = limit;
         }
 
-        private void checkLimit() throws IOException {
-            if (this.count > this.limit) {
-                throw new IOException("Limit exceeded");
-            }
-        }
-
         @Override
         public int read() throws IOException {
             int res = super.read();
@@ -278,6 +272,12 @@ public class TranslationRepository {
                 checkLimit();
             }
             return res;
+        }
+
+        private void checkLimit() throws IOException {
+            if (this.count > this.limit) {
+                throw new IOException("Limit exceeded");
+            }
         }
 
         @Override

@@ -5,11 +5,11 @@ import team.floracore.common.util.*;
 import java.util.*;
 
 public interface IFutureEvent {
-    List<TypeUtil.Runnable> getTasks();
-
     default void doAfter(TypeUtil.Runnable task) {
         getTasks().add(task);
     }
+
+    List<TypeUtil.Runnable> getTasks();
 
     /**
      * Triggered after the event occurs or is cancelled

@@ -36,11 +36,6 @@ public final class AbstractSender<T> implements Sender {
     }
 
     @Override
-    public UUID getUniqueId() {
-        return this.uniqueId;
-    }
-
-    @Override
     public String getName() {
         return this.name;
     }
@@ -48,6 +43,11 @@ public final class AbstractSender<T> implements Sender {
     @Override
     public String getDisplayName() {
         return this.displayName;
+    }
+
+    @Override
+    public UUID getUniqueId() {
+        return this.uniqueId;
     }
 
     @Override
@@ -76,15 +76,19 @@ public final class AbstractSender<T> implements Sender {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (o == this) return true;
-        if (!(o instanceof AbstractSender)) return false;
-        final AbstractSender<?> that = (AbstractSender<?>) o;
-        return this.getUniqueId().equals(that.getUniqueId());
+    public int hashCode() {
+        return this.uniqueId.hashCode();
     }
 
     @Override
-    public int hashCode() {
-        return this.uniqueId.hashCode();
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (!(o instanceof AbstractSender)) {
+            return false;
+        }
+        final AbstractSender<?> that = (AbstractSender<?>) o;
+        return this.getUniqueId().equals(that.getUniqueId());
     }
 }

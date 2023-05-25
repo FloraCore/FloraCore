@@ -25,6 +25,11 @@ public class LabelNode extends AbstractInsnNode {
         return LABEL;
     }
 
+    @Override
+    public void accept(final MethodVisitor methodVisitor) {
+        methodVisitor.visitLabel(getLabel());
+    }
+
     /**
      * Returns the label encapsulated by this node. A new label is created and associated with this
      * node if it was created without an encapsulated label.
@@ -36,11 +41,6 @@ public class LabelNode extends AbstractInsnNode {
             value = new Label();
         }
         return value;
-    }
-
-    @Override
-    public void accept(final MethodVisitor methodVisitor) {
-        methodVisitor.visitLabel(getLabel());
     }
 
     @Override

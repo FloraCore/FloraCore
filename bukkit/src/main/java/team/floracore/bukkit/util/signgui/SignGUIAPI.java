@@ -35,16 +35,22 @@ public final class SignGUIAPI {
 
     public void open() {
         Player player = Bukkit.getPlayer(uuid);
-        if (player == null) return;
+        if (player == null) {
+            return;
+        }
         this.listener = new LeaveListener();
         int x_start = player.getLocation().getBlockX();
         int y_start = 255;
         int z_start = player.getLocation().getBlockZ();
         Material material = Material.getMaterial("WALL_SIGN");
-        if (material == null) material = Material.OAK_WALL_SIGN;
+        if (material == null) {
+            material = Material.OAK_WALL_SIGN;
+        }
         while (!player.getWorld().getBlockAt(x_start, y_start, z_start).getType().equals(Material.AIR) && !player.getWorld().getBlockAt(x_start, y_start, z_start).getType().equals(material)) {
             y_start--;
-            if (y_start == 1) return;
+            if (y_start == 1) {
+                return;
+            }
         }
         player.getWorld().getBlockAt(x_start, y_start, z_start).setType(material);
         this.sign = (Sign) player.getWorld().getBlockAt(x_start, y_start, z_start).getState();

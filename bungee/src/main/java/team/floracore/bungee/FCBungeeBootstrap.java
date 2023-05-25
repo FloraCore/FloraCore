@@ -66,22 +66,9 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
     // provide adapters
 
-    private static boolean checkIncompatibleVersion() {
-        try {
-            Class.forName("com.google.gson.JsonElement");
-            return false;
-        } catch (ClassNotFoundException e) {
-            return true;
-        }
-    }
-
     @Override
     public Plugin getLoader() {
         return loader;
-    }
-
-    public ProxyServer getProxy() {
-        return loader.getProxy();
     }
 
     @Override
@@ -94,60 +81,9 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         return this.schedulerAdapter;
     }
 
-    // lifecycle
-
     @Override
     public ClassPathAppender getClassPathAppender() {
         return this.classPathAppender;
-    }
-
-    @Override
-    public void onLoad() {
-        if (checkIncompatibleVersion()) {
-            this.incompatibleVersion = true;
-            return;
-        }
-        try {
-            this.plugin.onLoad();
-        } finally {
-            this.loadLatch.countDown();
-        }
-    }
-
-    @Override
-    public void onEnable() {
-        if (this.incompatibleVersion) {
-            Logger logger = this.loader.getLogger();
-            logger.severe("----------------------------------------------------------------------");
-            logger.severe("Your server version is not compatible with this build of FloraCore. :(");
-            logger.severe("----------------------------------------------------------------------");
-            getProxy().stop();
-            return;
-        }
-
-        this.serverStarting = true;
-        this.serverStopping = false;
-        this.startTime = Instant.now();
-        try {
-            this.plugin.onEnable();
-        } finally {
-            this.enableLatch.countDown();
-        }
-    }
-
-    @Override
-    public void onDisable() {
-        if (this.incompatibleVersion) {
-            return;
-        }
-
-        this.serverStopping = true;
-        this.plugin.onDisable();
-    }
-
-    @Override
-    public CountDownLatch getEnableLatch() {
-        return this.enableLatch;
     }
 
     @Override
@@ -155,14 +91,11 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         return this.loadLatch;
     }
 
-    public boolean isServerStarting() {
-        return this.serverStarting;
-    }
+    // lifecycle
 
-    // provide information about the plugin
-
-    public boolean isServerStopping() {
-        return this.serverStopping;
+    @Override
+    public CountDownLatch getEnableLatch() {
+        return this.enableLatch;
     }
 
     @Override
@@ -173,6 +106,11 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
     @Override
     public Instant getStartupTime() {
         return this.startTime;
+    }
+
+    @Override
+    public Platform.Type getType() {
+        return Platform.Type.BUNGEECORD;
     }
 
     @Override
@@ -198,8 +136,70 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         return null;
     }
 
+    // provide information about the plugin
+
     @Override
-    public Platform.Type getType() {
-        return Platform.Type.BUNGEECORD;
+    public void onLoad() {
+        if (checkIncompatibleVersion()) {
+            this.incompatibleVersion = true;
+            return;
+        }
+        try {
+            this.plugin.onLoad();
+        } finally {
+            this.loadLatch.countDown();
+        }
+    }
+
+    private static boolean checkIncompatibleVersion() {
+        try {
+            Class.forName("com.google.gson.JsonElement");
+            return false;
+        } catch (ClassNotFoundException e) {
+            return true;
+        }
+    }
+
+    @Override
+    public void onEnable() {
+        if (this.incompatibleVersion) {
+            Logger logger = this.loader.getLogger();
+            logger.severe("----------------------------------------------------------------------");
+            logger.severe("Your server version is not compatible with this build of FloraCore. :(");
+            logger.severe("----------------------------------------------------------------------");
+            getProxy().stop();
+            return;
+        }
+
+        this.serverStarting = true;
+        this.serverStopping = false;
+        this.startTime = Instant.now();
+        try {
+            this.plugin.onEnable();
+        } finally {
+            this.enableLatch.countDown();
+        }
+    }
+
+    public ProxyServer getProxy() {
+        return loader.getProxy();
+    }
+
+    @Override
+    public void onDisable() {
+        if (this.incompatibleVersion) {
+            return;
+        }
+
+        this.serverStopping = true;
+        this.plugin.onDisable();
+    }
+
+    public boolean isServerStarting() {
+        return this.serverStarting;
+    }
+
+    public boolean isServerStopping() {
+        return this.serverStopping;
     }
 }

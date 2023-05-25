@@ -74,22 +74,13 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
     // provide adapters
 
-    private static boolean checkIncompatibleVersion() {
-        try {
-            Class.forName("com.google.gson.JsonElement");
-            return false;
-        } catch (ClassNotFoundException e) {
-            return true;
-        }
+    public Server getServer() {
+        return loader.getServer();
     }
 
     @Override
     public JavaPlugin getLoader() {
         return loader;
-    }
-
-    public Server getServer() {
-        return loader.getServer();
     }
 
     @Override
@@ -102,11 +93,62 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         return this.schedulerAdapter;
     }
 
-    // lifecycle
-
     @Override
     public ClassPathAppender getClassPathAppender() {
         return this.classPathAppender;
+    }
+
+    // lifecycle
+
+    @Override
+    public CountDownLatch getLoadLatch() {
+        return this.loadLatch;
+    }
+
+    @Override
+    public CountDownLatch getEnableLatch() {
+        return this.enableLatch;
+    }
+
+    @Override
+    public String getVersion() {
+        return this.loader.getDescription().getVersion();
+    }
+
+    @Override
+    public Instant getStartupTime() {
+        return this.startTime;
+    }
+
+    @Override
+    public Platform.Type getType() {
+        return Platform.Type.BUKKIT;
+    }
+
+    @Override
+    public Path getDataDirectory() {
+        return this.loader.getDataFolder().toPath().toAbsolutePath();
+    }
+
+    @Override
+    public boolean isPlayerOnline(UUID uniqueId) {
+        Player player = getServer().getPlayer(uniqueId);
+        return player != null && player.isOnline();
+    }
+
+    // provide information about the plugin
+
+    @Override
+    public @Nullable String identifyClassLoader(ClassLoader classLoader) throws ReflectiveOperationException {
+        Class<?> pluginClassLoaderClass = Class.forName("org.bukkit.plugin.java.PluginClassLoader");
+        if (pluginClassLoaderClass.isInstance(classLoader)) {
+            Method getPluginMethod = pluginClassLoaderClass.getDeclaredMethod("getPlugin");
+            getPluginMethod.setAccessible(true);
+
+            JavaPlugin plugin = (JavaPlugin) getPluginMethod.invoke(classLoader);
+            return plugin.getName();
+        }
+        return null;
     }
 
     @Override
@@ -119,6 +161,15 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
             this.plugin.onLoad();
         } finally {
             this.loadLatch.countDown();
+        }
+    }
+
+    private static boolean checkIncompatibleVersion() {
+        try {
+            Class.forName("com.google.gson.JsonElement");
+            return false;
+        } catch (ClassNotFoundException e) {
+            return true;
         }
     }
 
@@ -158,66 +209,15 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         EnderChestBukkitCommand.READONLY_MAP.clear();
     }
 
-    @Override
-    public CountDownLatch getEnableLatch() {
-        return this.enableLatch;
-    }
-
-    @Override
-    public CountDownLatch getLoadLatch() {
-        return this.loadLatch;
-    }
-
     public boolean isServerStarting() {
         return this.serverStarting;
     }
-
-    // provide information about the plugin
 
     public boolean isServerStopping() {
         return this.serverStopping;
     }
 
-    @Override
-    public String getVersion() {
-        return this.loader.getDescription().getVersion();
-    }
-
-    @Override
-    public Instant getStartupTime() {
-        return this.startTime;
-    }
-
-    @Override
-    public Path getDataDirectory() {
-        return this.loader.getDataFolder().toPath().toAbsolutePath();
-    }
-
-    @Override
-    public boolean isPlayerOnline(UUID uniqueId) {
-        Player player = getServer().getPlayer(uniqueId);
-        return player != null && player.isOnline();
-    }
-
     public ConsoleCommandSender getConsole() {
         return this.console;
-    }
-
-    @Override
-    public @Nullable String identifyClassLoader(ClassLoader classLoader) throws ReflectiveOperationException {
-        Class<?> pluginClassLoaderClass = Class.forName("org.bukkit.plugin.java.PluginClassLoader");
-        if (pluginClassLoaderClass.isInstance(classLoader)) {
-            Method getPluginMethod = pluginClassLoaderClass.getDeclaredMethod("getPlugin");
-            getPluginMethod.setAccessible(true);
-
-            JavaPlugin plugin = (JavaPlugin) getPluginMethod.invoke(classLoader);
-            return plugin.getName();
-        }
-        return null;
-    }
-
-    @Override
-    public Platform.Type getType() {
-        return Platform.Type.BUKKIT;
     }
 }

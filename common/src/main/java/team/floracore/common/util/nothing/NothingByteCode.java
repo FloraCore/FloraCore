@@ -1,6 +1,5 @@
 package team.floracore.common.util.nothing;
 
-
 import team.floracore.lib.asm.*;
 
 import java.lang.annotation.*;

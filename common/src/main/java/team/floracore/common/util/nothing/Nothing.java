@@ -23,8 +23,9 @@ public interface Nothing {
 
     static <T extends Nothing & WrappedObject> void install(Class<T> nothing) {
         Class<?> rc = WrappedObject.getRawClass(nothing);
-        if (!NothingClass.classes.containsKey(rc))
+        if (!NothingClass.classes.containsKey(rc)) {
             NothingClass.classes.put(rc, new NothingClass(rc));
+        }
         NothingClass.classes.get(rc).install(nothing);
     }
 
@@ -32,8 +33,9 @@ public interface Nothing {
         Class<?> rc = WrappedObject.getRawClass(nothing);
         if (NothingClass.classes.containsKey(rc)) {
             NothingClass.classes.get(rc).uninstall(nothing);
-            if (NothingClass.classes.get(rc).installedNothings.isEmpty())
+            if (NothingClass.classes.get(rc).installedNothings.isEmpty()) {
                 NothingClass.classes.remove(rc);
+            }
         }
     }
 
@@ -46,8 +48,9 @@ public interface Nothing {
     }
 
     static void uninstallAll() {
-        for (NothingClass nc : NothingClass.classes.values())
+        for (NothingClass nc : NothingClass.classes.values()) {
             nc.uninstallAll();
+        }
         NothingClass.classes.clear();
     }
 

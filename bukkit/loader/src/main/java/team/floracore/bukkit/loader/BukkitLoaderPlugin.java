@@ -20,13 +20,13 @@ public class BukkitLoaderPlugin extends JavaPlugin {
     }
 
     @Override
-    public void onEnable() {
-        this.plugin.onEnable();
+    public void onDisable() {
+        this.plugin.onDisable();
     }
 
     @Override
-    public void onDisable() {
-        this.plugin.onDisable();
+    public void onEnable() {
+        this.plugin.onEnable();
     }
 
 }

@@ -50,15 +50,6 @@ public final class NumberUtil {
         return str;
     }
 
-    public static boolean isInt(final String sInt) {
-        try {
-            Integer.parseInt(sInt);
-        } catch (final NumberFormatException e) {
-            return false;
-        }
-        return true;
-    }
-
     public static boolean isLong(final String sLong) {
         try {
             Long.parseLong(sLong);
@@ -73,6 +64,15 @@ public final class NumberUtil {
             return false;
         }
         return Integer.parseInt(sInt) > 0;
+    }
+
+    public static boolean isInt(final String sInt) {
+        try {
+            Integer.parseInt(sInt);
+        } catch (final NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 
     public static boolean isNumeric(final String sNum) {

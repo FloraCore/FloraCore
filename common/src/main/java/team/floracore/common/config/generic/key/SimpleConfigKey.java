@@ -20,11 +20,6 @@ public class SimpleConfigKey<T> implements ConfigKey<T> {
     }
 
     @Override
-    public T get(ConfigurationAdapter adapter) {
-        return this.function.apply(adapter);
-    }
-
-    @Override
     public int ordinal() {
         return this.ordinal;
     }
@@ -32,6 +27,11 @@ public class SimpleConfigKey<T> implements ConfigKey<T> {
     @Override
     public boolean reloadable() {
         return this.reloadable;
+    }
+
+    @Override
+    public T get(ConfigurationAdapter adapter) {
+        return this.function.apply(adapter);
     }
 
     public void setOrdinal(int ordinal) {

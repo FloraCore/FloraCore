@@ -14,7 +14,7 @@ public interface NothingBukkit extends Nothing {
         List<NothingInject> r = Lists.newArrayList(Nothing.super.getInjects(method));
         for (NothingBukkitInject inject : method.getDeclaredAnnotationsByType(NothingBukkitInject.class)) {
             String[] name = BukkitWrapper.inVersion(inject.name());
-            if (name.length > 0)
+            if (name.length > 0) {
                 r.add(new NothingInject() {
                     public Class<? extends Annotation> annotationType() {
                         return NothingInject.class;
@@ -80,6 +80,7 @@ public interface NothingBukkit extends Nothing {
                         return inject.optional();
                     }
                 });
+            }
         }
         return r.toArray(new NothingInject[0]);
     }

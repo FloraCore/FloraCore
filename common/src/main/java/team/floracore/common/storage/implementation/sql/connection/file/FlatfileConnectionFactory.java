@@ -28,14 +28,12 @@ abstract class FlatfileConnectionFactory implements ConnectionFactory {
         this.file = file;
     }
 
-    /**
-     * Creates a connection to the database.
-     *
-     * @param file the database file
-     * @return the connection
-     * @throws java.sql.SQLException if any error occurs
-     */
-    protected abstract Connection createConnection(Path file) throws SQLException;
+    @Override
+    public void shutdown() throws Exception {
+        if (this.connection != null) {
+            this.connection.shutdown();
+        }
+    }
 
     @Override
     public synchronized Connection getConnection() throws SQLException {
@@ -47,21 +45,14 @@ abstract class FlatfileConnectionFactory implements ConnectionFactory {
         return connection;
     }
 
-    @Override
-    public void shutdown() throws Exception {
-        if (this.connection != null) {
-            this.connection.shutdown();
-        }
-    }
-
     /**
-     * Gets the path of the file the database driver actually ends up writing to.
+     * Creates a connection to the database.
      *
-     * @return the write file
+     * @param file the database file
+     * @return the connection
+     * @throws java.sql.SQLException if any error occurs
      */
-    protected Path getWriteFile() {
-        return this.file;
-    }
+    protected abstract Connection createConnection(Path file) throws SQLException;
 
     protected void migrateOldDatabaseFile(String oldName) {
         Path oldFile = getWriteFile().getParent().resolve(oldName);
@@ -72,5 +63,14 @@ abstract class FlatfileConnectionFactory implements ConnectionFactory {
                 // ignore
             }
         }
+    }
+
+    /**
+     * Gets the path of the file the database driver actually ends up writing to.
+     *
+     * @return the write file
+     */
+    protected Path getWriteFile() {
+        return this.file;
     }
 }

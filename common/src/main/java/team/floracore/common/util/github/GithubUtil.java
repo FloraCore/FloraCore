@@ -12,6 +12,12 @@ public class GithubUtil {
     private static final String LATEST_RELEASE_ENDPOINT = "/releases/latest";
     private static final String ACCEPT_HEADER = "application/vnd.github.v3+json";
 
+    public static String getLeastReleaseTagVersion() throws IOException {
+        JsonObject latestRelease = getLatestRelease();
+        String tagName = latestRelease.get("tag_name").getAsString();
+        return tagName.startsWith("v") ? tagName.substring(1) : tagName;
+    }
+
     public static JsonObject getLatestRelease() throws IOException {
         URL url = new URL(GITHUB_API_BASE_URL + LATEST_RELEASE_ENDPOINT);
         HttpsURLConnection conn = (HttpsURLConnection) url.openConnection();
@@ -21,12 +27,6 @@ public class GithubUtil {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
             return GsonProvider.normal().fromJson(reader, JsonObject.class);
         }
-    }
-
-    public static String getLeastReleaseTagVersion() throws IOException {
-        JsonObject latestRelease = getLatestRelease();
-        String tagName = latestRelease.get("tag_name").getAsString();
-        return tagName.startsWith("v") ? tagName.substring(1) : tagName;
     }
 
     public static boolean isLatestVersion(String latestVersionString, String pluginVersionString) {

@@ -52,6 +52,16 @@ public class Frame<V extends Value> {
     private int maxStack;
 
     /**
+     * Constructs a copy of the given Frame.
+     *
+     * @param frame a frame.
+     */
+    public Frame(final Frame<? extends V> frame) {
+        this(frame.numLocals, frame.values.length - frame.numLocals);
+        init(frame); // NOPMD(ConstructorCallsOverridableMethod): can't fix for backward compatibility.
+    }
+
+    /**
      * Constructs a new frame with the given size.
      *
      * @param numLocals the number of local variables of the frame. Long and double values are
@@ -65,16 +75,6 @@ public class Frame<V extends Value> {
         this.numLocals = numLocals;
         this.numStack = 0;
         this.maxStack = maxStack >= 0 ? maxStack : MAX_STACK_SIZE;
-    }
-
-    /**
-     * Constructs a copy of the given Frame.
-     *
-     * @param frame a frame.
-     */
-    public Frame(final Frame<? extends V> frame) {
-        this(frame.numLocals, frame.values.length - frame.numLocals);
-        init(frame); // NOPMD(ConstructorCallsOverridableMethod): can't fix for backward compatibility.
     }
 
     /**
@@ -129,16 +129,6 @@ public class Frame<V extends Value> {
     }
 
     /**
-     * Returns the maximum number of local variables of this frame. Long and double values are
-     * represented with two variables.
-     *
-     * @return the maximum number of local variables of this frame.
-     */
-    public int getLocals() {
-        return numLocals;
-    }
-
-    /**
      * Returns the maximum number of elements in the operand stack of this frame. Long and double
      * values are represented with a single element.
      *
@@ -146,57 +136,6 @@ public class Frame<V extends Value> {
      */
     public int getMaxStackSize() {
         return maxStack;
-    }
-
-    /**
-     * Returns the value of the given local variable. Long and double values are represented with two
-     * variables.
-     *
-     * @param index a local variable index.
-     * @return the value of the given local variable.
-     * @throws IndexOutOfBoundsException if the variable does not exist.
-     */
-    public V getLocal(final int index) {
-        if (index >= numLocals) {
-            throw new IndexOutOfBoundsException("Trying to get an inexistant local variable " + index);
-        }
-        return values[index];
-    }
-
-    /**
-     * Sets the value of the given local variable. Long and double values are represented with two
-     * variables.
-     *
-     * @param index a local variable index.
-     * @param value the new value of this local variable.
-     * @throws IndexOutOfBoundsException if the variable does not exist.
-     */
-    public void setLocal(final int index, final V value) {
-        if (index >= numLocals) {
-            throw new IndexOutOfBoundsException("Trying to set an inexistant local variable " + index);
-        }
-        values[index] = value;
-    }
-
-    /**
-     * Returns the number of elements in the operand stack of this frame. Long and double values are
-     * represented with a single element.
-     *
-     * @return the number of elements in the operand stack of this frame.
-     */
-    public int getStackSize() {
-        return numStack;
-    }
-
-    /**
-     * Returns the value of the given operand stack slot.
-     *
-     * @param index the index of an operand stack slot.
-     * @return the value of the given operand stack slot.
-     * @throws IndexOutOfBoundsException if the operand stack slot does not exist.
-     */
-    public V getStack(final int index) {
-        return values[numLocals + index];
     }
 
     /**
@@ -215,38 +154,6 @@ public class Frame<V extends Value> {
      */
     public void clearStack() {
         numStack = 0;
-    }
-
-    /**
-     * Pops a value from the operand stack of this frame.
-     *
-     * @return the value that has been popped from the stack.
-     * @throws IndexOutOfBoundsException if the operand stack is empty.
-     */
-    public V pop() {
-        if (numStack == 0) {
-            throw new IndexOutOfBoundsException("Cannot pop operand off an empty stack.");
-        }
-        return values[numLocals + (--numStack)];
-    }
-
-    /**
-     * Pushes a value into the operand stack of this frame.
-     *
-     * @param value the value that must be pushed into the stack.
-     * @throws IndexOutOfBoundsException if the operand stack is full.
-     */
-    @SuppressWarnings("unchecked")
-    public void push(final V value) {
-        if (numLocals + numStack >= values.length) {
-            if (numLocals + numStack >= maxStack) {
-                throw new IndexOutOfBoundsException("Insufficient maximum stack size.");
-            }
-            V[] oldValues = values;
-            values = (V[]) new Value[2 * values.length];
-            System.arraycopy(oldValues, 0, values, 0, oldValues.length);
-        }
-        values[numLocals + (numStack++)] = value;
     }
 
     /**
@@ -616,6 +523,68 @@ public class Frame<V extends Value> {
         }
     }
 
+    /**
+     * Pushes a value into the operand stack of this frame.
+     *
+     * @param value the value that must be pushed into the stack.
+     * @throws IndexOutOfBoundsException if the operand stack is full.
+     */
+    @SuppressWarnings("unchecked")
+    public void push(final V value) {
+        if (numLocals + numStack >= values.length) {
+            if (numLocals + numStack >= maxStack) {
+                throw new IndexOutOfBoundsException("Insufficient maximum stack size.");
+            }
+            V[] oldValues = values;
+            values = (V[]) new Value[2 * values.length];
+            System.arraycopy(oldValues, 0, values, 0, oldValues.length);
+        }
+        values[numLocals + (numStack++)] = value;
+    }
+
+    /**
+     * Returns the value of the given local variable. Long and double values are represented with two
+     * variables.
+     *
+     * @param index a local variable index.
+     * @return the value of the given local variable.
+     * @throws IndexOutOfBoundsException if the variable does not exist.
+     */
+    public V getLocal(final int index) {
+        if (index >= numLocals) {
+            throw new IndexOutOfBoundsException("Trying to get an inexistant local variable " + index);
+        }
+        return values[index];
+    }
+
+    /**
+     * Pops a value from the operand stack of this frame.
+     *
+     * @return the value that has been popped from the stack.
+     * @throws IndexOutOfBoundsException if the operand stack is empty.
+     */
+    public V pop() {
+        if (numStack == 0) {
+            throw new IndexOutOfBoundsException("Cannot pop operand off an empty stack.");
+        }
+        return values[numLocals + (--numStack)];
+    }
+
+    /**
+     * Sets the value of the given local variable. Long and double values are represented with two
+     * variables.
+     *
+     * @param index a local variable index.
+     * @param value the new value of this local variable.
+     * @throws IndexOutOfBoundsException if the variable does not exist.
+     */
+    public void setLocal(final int index, final V value) {
+        if (index >= numLocals) {
+            throw new IndexOutOfBoundsException("Trying to set an inexistant local variable " + index);
+        }
+        values[index] = value;
+    }
+
     private boolean executeDupX2(
             final AbstractInsnNode insn, final V value1, final Interpreter<V> interpreter)
             throws AnalyzerException {
@@ -718,5 +687,36 @@ public class Frame<V extends Value> {
             stringBuilder.append(getStack(i).toString());
         }
         return stringBuilder.toString();
+    }
+
+    /**
+     * Returns the maximum number of local variables of this frame. Long and double values are
+     * represented with two variables.
+     *
+     * @return the maximum number of local variables of this frame.
+     */
+    public int getLocals() {
+        return numLocals;
+    }
+
+    /**
+     * Returns the number of elements in the operand stack of this frame. Long and double values are
+     * represented with a single element.
+     *
+     * @return the number of elements in the operand stack of this frame.
+     */
+    public int getStackSize() {
+        return numStack;
+    }
+
+    /**
+     * Returns the value of the given operand stack slot.
+     *
+     * @param index the index of an operand stack slot.
+     * @return the value of the given operand stack slot.
+     * @throws IndexOutOfBoundsException if the operand stack slot does not exist.
+     */
+    public V getStack(final int index) {
+        return values[numLocals + index];
     }
 }

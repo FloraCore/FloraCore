@@ -38,6 +38,10 @@ public enum DataType {
         this.name = name;
     }
 
+    public static DataType parse(String name) {
+        return parse(name, AUTO_SYNC);
+    }
+
     public static DataType parse(String name, DataType def) {
         for (DataType t : values()) {
             if (t.getName().equalsIgnoreCase(name)) {
@@ -45,10 +49,6 @@ public enum DataType {
             }
         }
         return def;
-    }
-
-    public static DataType parse(String name) {
-        return parse(name, AUTO_SYNC);
     }
 
     public String getName() {

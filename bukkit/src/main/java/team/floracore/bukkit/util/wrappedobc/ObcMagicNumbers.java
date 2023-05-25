@@ -12,12 +12,12 @@ public interface ObcMagicNumbers extends WrappedBukkitObject {
         return WrappedObject.getStatic(ObcMagicNumbers.class).staticGetItem(m);
     }
 
+    @WrappedMethod("getItem")
+    NmsItem staticGetItem(Material m);
+
     static Material getMaterial(NmsItem item) {
         return WrappedObject.getStatic(ObcMagicNumbers.class).staticGetMaterial(item);
     }
-
-    @WrappedMethod("getItem")
-    NmsItem staticGetItem(Material m);
 
     @WrappedMethod("getMaterial")
     Material staticGetMaterial(NmsItem item);

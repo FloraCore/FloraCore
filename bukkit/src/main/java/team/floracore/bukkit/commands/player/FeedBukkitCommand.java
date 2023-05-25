@@ -25,6 +25,11 @@ public class FeedBukkitCommand extends FloraCoreBukkitCommand {
         PlayerCommandMessage.COMMAND_FEED_SELF.send(getPlugin().getSenderFactory().wrap(s));
     }
 
+    private void feed(@NotNull Player player) {
+        player.setFoodLevel(20);
+        player.setSaturation(20.0F);
+    }
+
     @CommandMethod("feed <target>")
     @CommandDescription("喂饱目标玩家")
     @CommandPermission("floracore.command.feed.other")
@@ -34,10 +39,5 @@ public class FeedBukkitCommand extends FloraCoreBukkitCommand {
         if (silent == null || !silent) {
             PlayerCommandMessage.COMMAND_FEED_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName());
         }
-    }
-
-    private void feed(@NotNull Player player) {
-        player.setFoodLevel(20);
-        player.setSaturation(20.0F);
     }
 }

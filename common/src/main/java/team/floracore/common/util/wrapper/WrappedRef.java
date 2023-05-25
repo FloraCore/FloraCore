@@ -13,12 +13,12 @@ public class WrappedRef<T extends WrappedObject> extends Ref<T> {
     }
 
     @Override
-    public T get() {
-        return WrappedObject.wrap(wrapper, rr.get());
+    public void set(T obj) {
+        rr.set(obj.getRaw());
     }
 
     @Override
-    public void set(T obj) {
-        rr.set(obj.getRaw());
+    public T get() {
+        return WrappedObject.wrap(wrapper, rr.get());
     }
 }

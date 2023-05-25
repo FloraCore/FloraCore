@@ -16,8 +16,9 @@ public abstract class AbsModule extends Ref<Boolean> implements IModule {
         super(false);
         this.plugin = plugin;
         this.depends = Sets.newHashSet(depends);
-        if (this.getClass() != ListenerRegistrar.class && this.getClass() != RegistrarRegistrar.class)
+        if (this.getClass() != ListenerRegistrar.class && this.getClass() != RegistrarRegistrar.class) {
             this.depends.add(ListenerRegistrar.instance);
+        }
     }
 
     @Override

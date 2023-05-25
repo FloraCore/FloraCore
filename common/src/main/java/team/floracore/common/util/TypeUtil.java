@@ -13,21 +13,6 @@ public final class TypeUtil {
     public @Deprecated TypeUtil() {
     }
 
-    public static RuntimeException throwException(final Throwable e) {
-        TypeUtil.throwException0(e);
-        return TypeUtil.cast(null);
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <E extends Throwable> void throwException0(final Throwable e) throws E {
-        throw (E) e;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T, O> T cast(O o) {
-        return (T) o;
-    }
-
     public static boolean hasThrowable(Runnable runnable) {
         return getThrowable(runnable) != null;
     }
@@ -47,6 +32,21 @@ public final class TypeUtil {
         } catch (Throwable e) {
             throw throwException(e);
         }
+    }
+
+    public static RuntimeException throwException(final Throwable e) {
+        TypeUtil.throwException0(e);
+        return TypeUtil.cast(null);
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <E extends Throwable> void throwException0(final Throwable e) throws E {
+        throw (E) e;
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T, O> T cast(O o) {
+        return (T) o;
     }
 
     public static <T> T run(Function<T> func) {
@@ -89,8 +89,9 @@ public final class TypeUtil {
     }
 
     public static String codeCast(Class<?> tar, String valueCode, Class<?> valueType, boolean autoWrapObject) {
-        if (tar == valueType)
+        if (tar == valueType) {
             return valueCode;
+        }
         if (autoWrapObject) {
             if (WrappedObject.class.isAssignableFrom(valueType)) {
                 valueCode = "(" + valueCode + ").getRaw()";
@@ -102,120 +103,105 @@ public final class TypeUtil {
             }
         }
         if (tar.isPrimitive() && !valueType.isPrimitive()) {
-            if (tar == boolean.class)
+            if (tar == boolean.class) {
                 return "((Boolean)" + valueCode + ").booleanValue()";
-            else if (tar == char.class)
+            } else if (tar == char.class) {
                 return "((Character)" + valueCode + ").charValue()";
-            else if (tar == byte.class)
+            } else if (tar == byte.class) {
                 return "((Byte)" + valueCode + ").byteValue()";
-            else if (tar == short.class)
+            } else if (tar == short.class) {
                 return "((Short)" + valueCode + ").shortValue()";
-            else if (tar == int.class)
+            } else if (tar == int.class) {
                 return "((Integer)" + valueCode + ").intValue()";
-            else if (tar == long.class)
+            } else if (tar == long.class) {
                 return "((Long)" + valueCode + ").longValue()";
-            else if (tar == float.class)
+            } else if (tar == float.class) {
                 return "((Float)" + valueCode + ").floatValue()";
-            else if (tar == double.class)
+            } else if (tar == double.class) {
                 return "((Double)" + valueCode + ").doubleValue()";
-            else if (tar == void.class)
+            } else if (tar == void.class) {
                 return "";
+            }
             throw new IllegalArgumentException();
         } else if (valueType.isPrimitive() && !tar.isPrimitive()) {
-            if (valueType == boolean.class)
+            if (valueType == boolean.class) {
                 return "Boolean.valueOf(" + valueCode + ")";
-            else if (valueType == char.class)
+            } else if (valueType == char.class) {
                 return "Character.valueOf(" + valueCode + ")";
-            else if (valueType == byte.class)
+            } else if (valueType == byte.class) {
                 return "Byte.valueOf(" + valueCode + ")";
-            else if (valueType == short.class)
+            } else if (valueType == short.class) {
                 return "Short.valueOf(" + valueCode + ")";
-            else if (valueType == int.class)
+            } else if (valueType == int.class) {
                 return "Integer.valueOf(" + valueCode + ")";
-            else if (valueType == long.class)
+            } else if (valueType == long.class) {
                 return "Long.valueOf(" + valueCode + ")";
-            else if (valueType == float.class)
+            } else if (valueType == float.class) {
                 return "Float.valueOf(" + valueCode + ")";
-            else if (valueType == double.class)
+            } else if (valueType == double.class) {
                 return "Double.valueOf(" + valueCode + ")";
-            else if (valueType == void.class)
+            } else if (valueType == void.class) {
                 return "null";
+            }
             throw new IllegalArgumentException();
-        } else if (!(tar.isPrimitive() && valueType.isPrimitive()))
+        } else if (!(tar.isPrimitive() && valueType.isPrimitive())) {
             return "((" + ClassUtil.getName(tar) + ")" + valueCode + ")";
-        else
+        } else {
             return "";
+        }
     }
 
     public static String codeArgs(int length) {
         String[] args = new String[length];
-        for (int i = 0; i < args.length; i++)
+        for (int i = 0; i < args.length; i++) {
             args[i] = "$" + (i + 1);
+        }
         return StringUtil.mergeStrings(",", args);
     }
 
     public static String codeArgObjects(Class[] argTypes) {
         String[] args = new String[argTypes.length];
-        for (int i = 0; i < args.length; i++)
+        for (int i = 0; i < args.length; i++) {
             args[i] = codeCast(Object.class, "$" + (i + 1), argTypes[i]);
+        }
         return StringUtil.mergeStrings(",", args);
     }
 
     public static String codeArgsCast(Class[] target, Class[] source) {
         String[] args = new String[target.length];
-        for (int i = 0; i < args.length; i++)
+        for (int i = 0; i < args.length; i++) {
             args[i] = TypeUtil.codeCast(target[i], "$" + (i + 1), source[i]);
-        return StringUtil.mergeStrings(",", args);
-    }
-
-    public static <T> Class<T> toWrapper(Class<T> clazz) {
-        if (clazz.isPrimitive()) {
-            if (clazz == byte.class)
-                return (Class<T>) Byte.class;
-            else if (clazz == short.class)
-                return (Class<T>) Short.class;
-            else if (clazz == int.class)
-                return (Class<T>) Integer.class;
-            else if (clazz == long.class)
-                return (Class<T>) Long.class;
-            else if (clazz == float.class)
-                return (Class<T>) Float.class;
-            else if (clazz == double.class)
-                return (Class<T>) Double.class;
-            else if (clazz == boolean.class)
-                return (Class<T>) Boolean.class;
-            else if (clazz == char.class)
-                return (Class<T>) Character.class;
         }
-        return clazz;
+        return StringUtil.mergeStrings(",", args);
     }
 
     public static Class<?>[] toWrapper(Class<?>[] clazz) {
         Class<?>[] r = new Class[clazz.length];
-        for (int i = 0; i < r.length; i++)
+        for (int i = 0; i < r.length; i++) {
             r[i] = toWrapper(clazz[i]);
+        }
         return r;
     }
 
-    public static <T> Class<T> toPrimitive(Class<T> clazz) {
-        if (Serializable.class.isAssignableFrom(clazz)) {
-            if (Number.class.isAssignableFrom(clazz)) {
-                if (clazz == Integer.class)
-                    return (Class<T>) int.class;
-                else if (clazz == Float.class)
-                    return (Class<T>) float.class;
-                else if (clazz == Long.class)
-                    return (Class<T>) long.class;
-                else if (clazz == Short.class)
-                    return (Class<T>) short.class;
-                else if (clazz == Double.class)
-                    return (Class<T>) double.class;
-                else if (clazz == Byte.class)
-                    return (Class<T>) byte.class;
-            } else if (clazz == Boolean.class)
-                return (Class<T>) boolean.class;
-            else if (clazz == Character.class)
-                return (Class<T>) char.class;
+    public static <T> Class<T> toWrapper(Class<T> clazz) {
+        if (clazz.isPrimitive()) {
+            if (clazz == byte.class) {
+                return (Class<T>) Byte.class;
+            } else if (clazz == short.class) {
+                return (Class<T>) Short.class;
+            } else if (clazz == int.class) {
+                return (Class<T>) Integer.class;
+            } else if (clazz == long.class) {
+                return (Class<T>) Long.class;
+            } else if (clazz == float.class) {
+                return (Class<T>) Float.class;
+            } else if (clazz == double.class) {
+                return (Class<T>) Double.class;
+            } else if (clazz == boolean.class) {
+                return (Class<T>) Boolean.class;
+            } else if (clazz == char.class) {
+                return (Class<T>) Character.class;
+            }
         }
         return clazz;
     }
@@ -224,22 +210,23 @@ public final class TypeUtil {
         Class<?> componentType = array.getClass().getComponentType();
         if (componentType.isPrimitive()) {
             BiFunction<Object, Integer, Object> getter = null;
-            if (componentType == byte.class)
+            if (componentType == byte.class) {
                 getter = Array::getByte;
-            else if (componentType == short.class)
+            } else if (componentType == short.class) {
                 getter = Array::getShort;
-            else if (componentType == int.class)
+            } else if (componentType == int.class) {
                 getter = Array::getInt;
-            else if (componentType == long.class)
+            } else if (componentType == long.class) {
                 getter = Array::getLong;
-            else if (componentType == float.class)
+            } else if (componentType == float.class) {
                 getter = Array::getFloat;
-            else if (componentType == double.class)
+            } else if (componentType == double.class) {
                 getter = Array::getDouble;
-            else if (componentType == boolean.class)
+            } else if (componentType == boolean.class) {
                 getter = Array::getBoolean;
-            else if (componentType == char.class)
+            } else if (componentType == char.class) {
                 getter = Array::getChar;
+            }
 
             Object[] r = TypeUtil.cast(Array.newInstance(toWrapper(componentType), Array.getLength(array)));
             for (int i = 0; i < r.length; i++) {
@@ -255,22 +242,24 @@ public final class TypeUtil {
         if (!componentType.isPrimitive() && toPrimitive(componentType).isPrimitive()) {
             TriConsumer<Object, Integer, Object> setter = null;
             if (Number.class.isAssignableFrom(componentType)) {
-                if (componentType == Byte.class)
+                if (componentType == Byte.class) {
                     setter = (a, i, v) -> ((byte[]) a)[i] = (Byte) v;
-                else if (componentType == Short.class)
+                } else if (componentType == Short.class) {
                     setter = (a, i, v) -> ((short[]) a)[i] = (Short) v;
-                else if (componentType == Integer.class)
+                } else if (componentType == Integer.class) {
                     setter = (a, i, v) -> ((int[]) a)[i] = (Integer) v;
-                else if (componentType == Long.class)
+                } else if (componentType == Long.class) {
                     setter = (a, i, v) -> ((long[]) a)[i] = (Long) v;
-                else if (componentType == Float.class)
+                } else if (componentType == Float.class) {
                     setter = (a, i, v) -> ((float[]) a)[i] = (Float) v;
-                else if (componentType == Double.class)
+                } else if (componentType == Double.class) {
                     setter = (a, i, v) -> ((double[]) a)[i] = (Double) v;
-            } else if (componentType == Boolean.class)
+                }
+            } else if (componentType == Boolean.class) {
                 setter = (a, i, v) -> ((boolean[]) a)[i] = (Boolean) v;
-            else if (componentType == Character.class)
+            } else if (componentType == Character.class) {
                 setter = (a, i, v) -> ((char[]) a)[i] = (Character) v;
+            }
 
             Object r = Array.newInstance(toPrimitive(componentType), ((Object[]) array).length);
             for (int i = 0; i < ((Object[]) array).length; i++) {
@@ -279,6 +268,31 @@ public final class TypeUtil {
             return r;
         }
         return array;
+    }
+
+    public static <T> Class<T> toPrimitive(Class<T> clazz) {
+        if (Serializable.class.isAssignableFrom(clazz)) {
+            if (Number.class.isAssignableFrom(clazz)) {
+                if (clazz == Integer.class) {
+                    return (Class<T>) int.class;
+                } else if (clazz == Float.class) {
+                    return (Class<T>) float.class;
+                } else if (clazz == Long.class) {
+                    return (Class<T>) long.class;
+                } else if (clazz == Short.class) {
+                    return (Class<T>) short.class;
+                } else if (clazz == Double.class) {
+                    return (Class<T>) double.class;
+                } else if (clazz == Byte.class) {
+                    return (Class<T>) byte.class;
+                }
+            } else if (clazz == Boolean.class) {
+                return (Class<T>) boolean.class;
+            } else if (clazz == Character.class) {
+                return (Class<T>) char.class;
+            }
+        }
+        return clazz;
     }
 
     public static <T> T debug(T obj) {

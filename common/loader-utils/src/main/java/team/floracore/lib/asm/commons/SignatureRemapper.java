@@ -45,6 +45,69 @@ public class SignatureRemapper extends SignatureVisitor {
     }
 
     @Override
+    public void visitFormalTypeParameter(final String name) {
+        signatureVisitor.visitFormalTypeParameter(name);
+    }
+
+    @Override
+    public SignatureVisitor visitClassBound() {
+        signatureVisitor.visitClassBound();
+        return this;
+    }
+
+    @Override
+    public SignatureVisitor visitInterfaceBound() {
+        signatureVisitor.visitInterfaceBound();
+        return this;
+    }
+
+    @Override
+    public SignatureVisitor visitSuperclass() {
+        signatureVisitor.visitSuperclass();
+        return this;
+    }
+
+    @Override
+    public SignatureVisitor visitInterface() {
+        signatureVisitor.visitInterface();
+        return this;
+    }
+
+    @Override
+    public SignatureVisitor visitParameterType() {
+        signatureVisitor.visitParameterType();
+        return this;
+    }
+
+    @Override
+    public SignatureVisitor visitReturnType() {
+        signatureVisitor.visitReturnType();
+        return this;
+    }
+
+    @Override
+    public SignatureVisitor visitExceptionType() {
+        signatureVisitor.visitExceptionType();
+        return this;
+    }
+
+    @Override
+    public void visitBaseType(final char descriptor) {
+        signatureVisitor.visitBaseType(descriptor);
+    }
+
+    @Override
+    public void visitTypeVariable(final String name) {
+        signatureVisitor.visitTypeVariable(name);
+    }
+
+    @Override
+    public SignatureVisitor visitArrayType() {
+        signatureVisitor.visitArrayType();
+        return this;
+    }
+
+    @Override
     public void visitClassType(final String name) {
         classNames.add(name);
         signatureVisitor.visitClassType(remapper.mapType(name));
@@ -62,69 +125,6 @@ public class SignatureRemapper extends SignatureVisitor {
                         ? remappedOuter.length()
                         : remappedName.lastIndexOf('$') + 1;
         signatureVisitor.visitInnerClassType(remappedName.substring(index));
-    }
-
-    @Override
-    public void visitFormalTypeParameter(final String name) {
-        signatureVisitor.visitFormalTypeParameter(name);
-    }
-
-    @Override
-    public void visitTypeVariable(final String name) {
-        signatureVisitor.visitTypeVariable(name);
-    }
-
-    @Override
-    public SignatureVisitor visitArrayType() {
-        signatureVisitor.visitArrayType();
-        return this;
-    }
-
-    @Override
-    public void visitBaseType(final char descriptor) {
-        signatureVisitor.visitBaseType(descriptor);
-    }
-
-    @Override
-    public SignatureVisitor visitClassBound() {
-        signatureVisitor.visitClassBound();
-        return this;
-    }
-
-    @Override
-    public SignatureVisitor visitExceptionType() {
-        signatureVisitor.visitExceptionType();
-        return this;
-    }
-
-    @Override
-    public SignatureVisitor visitInterface() {
-        signatureVisitor.visitInterface();
-        return this;
-    }
-
-    @Override
-    public SignatureVisitor visitInterfaceBound() {
-        signatureVisitor.visitInterfaceBound();
-        return this;
-    }
-
-    @Override
-    public SignatureVisitor visitParameterType() {
-        signatureVisitor.visitParameterType();
-        return this;
-    }
-
-    @Override
-    public SignatureVisitor visitReturnType() {
-        signatureVisitor.visitReturnType();
-        return this;
-    }
-
-    @Override
-    public SignatureVisitor visitSuperclass() {
-        signatureVisitor.visitSuperclass();
-        return this;
     }
 
     @Override

@@ -184,7 +184,8 @@ public class SignatureReader {
                 // (note that currentChar is now the first character of the next TypeParameter, and that
                 // offset points to the second character), unless the character just after this
                 // TypeParameter signals the end of the TypeParameters.
-            } while (currentChar != '>');
+            }
+            while (currentChar != '>');
         } else {
             offset = 0;
         }

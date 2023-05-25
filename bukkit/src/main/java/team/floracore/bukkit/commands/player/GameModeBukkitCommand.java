@@ -103,6 +103,29 @@ public class GameModeBukkitCommand extends FloraCoreBukkitCommand {
         }
     }
 
+    private @NotNull GameMode parseGamemode(@NotNull String text) throws NoSuchTypeException {
+        switch (text.toLowerCase()) {
+            case "0":
+            case "survival":
+            case "s":
+                return GameMode.SURVIVAL;
+            case "1":
+            case "creative":
+            case "c":
+                return GameMode.CREATIVE;
+            case "2":
+            case "adventure":
+            case "a":
+                return GameMode.ADVENTURE;
+            case "3":
+            case "spectator":
+            case "sp":
+                return GameMode.SPECTATOR;
+            default:
+                throw new NoSuchTypeException(text);
+        }
+    }
+
     /**
      * 若`messageReceiver`拥有`permission`权限，将`target`的游戏模式设置为`gameMode`，否则发送没有权限消息给`messageReceiver`
      *
@@ -125,28 +148,5 @@ public class GameModeBukkitCommand extends FloraCoreBukkitCommand {
     @Suggestions("gamemodes")
     public List<String> getGameModes(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
         return new ArrayList<>(Arrays.asList("survival", "creative", "adventure", "spectator"));
-    }
-
-    private @NotNull GameMode parseGamemode(@NotNull String text) throws NoSuchTypeException {
-        switch (text.toLowerCase()) {
-            case "0":
-            case "survival":
-            case "s":
-                return GameMode.SURVIVAL;
-            case "1":
-            case "creative":
-            case "c":
-                return GameMode.CREATIVE;
-            case "2":
-            case "adventure":
-            case "a":
-                return GameMode.ADVENTURE;
-            case "3":
-            case "spectator":
-            case "sp":
-                return GameMode.SPECTATOR;
-            default:
-                throw new NoSuchTypeException(text);
-        }
     }
 }

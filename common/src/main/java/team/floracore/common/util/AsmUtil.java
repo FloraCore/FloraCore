@@ -12,16 +12,18 @@ import java.util.*;
 public class AsmUtil {
     public static FieldNode getFieldNode(ClassNode cn, String name) {
         for (FieldNode f : cn.fields) {
-            if (f.name.equals(name))
+            if (f.name.equals(name)) {
                 return f;
+            }
         }
         return null;
     }
 
     public static MethodNode getMethodNode(ClassNode clazz, String name, String desc) {
         for (MethodNode m : clazz.methods) {
-            if (Objects.equals(m.name, name) && Objects.equals(m.desc, desc))
+            if (Objects.equals(m.name, name) && Objects.equals(m.desc, desc)) {
                 return m;
+            }
         }
         return null;
     }
@@ -35,33 +37,35 @@ public class AsmUtil {
     }
 
     public static VarInsnNode varStoreNode(Class<?> type, int index) {
-        if (!type.isPrimitive())
+        if (!type.isPrimitive()) {
             return new VarInsnNode(Opcodes.ASTORE, index);
-        else if (type == boolean.class || type == byte.class || type == short.class || type == int.class)
+        } else if (type == boolean.class || type == byte.class || type == short.class || type == int.class) {
             return new VarInsnNode(Opcodes.ISTORE, index);
-        else if (type == long.class)
+        } else if (type == long.class) {
             return new VarInsnNode(Opcodes.LSTORE, index);
-        else if (type == float.class)
+        } else if (type == float.class) {
             return new VarInsnNode(Opcodes.FSTORE, index);
-        else if (type == double.class)
+        } else if (type == double.class) {
             return new VarInsnNode(Opcodes.DSTORE, index);
-        else
+        } else {
             throw new IllegalArgumentException("type: " + type);
+        }
     }
 
     public static VarInsnNode varLoadNode(Class<?> type, int index) {
-        if (!type.isPrimitive())
+        if (!type.isPrimitive()) {
             return new VarInsnNode(Opcodes.ALOAD, index);
-        else if (type == boolean.class || type == byte.class || type == short.class || type == int.class)
+        } else if (type == boolean.class || type == byte.class || type == short.class || type == int.class) {
             return new VarInsnNode(Opcodes.ILOAD, index);
-        else if (type == long.class)
+        } else if (type == long.class) {
             return new VarInsnNode(Opcodes.LLOAD, index);
-        else if (type == float.class)
+        } else if (type == float.class) {
             return new VarInsnNode(Opcodes.FLOAD, index);
-        else if (type == double.class)
+        } else if (type == double.class) {
             return new VarInsnNode(Opcodes.DLOAD, index);
-        else
+        } else {
             throw new IllegalArgumentException("type: " + type);
+        }
     }
 
     public static InsnList dupNode(Class<?> type) {
@@ -77,12 +81,92 @@ public class AsmUtil {
         }
     }
 
+    public static int getCategory(Class<?> clazz) {
+        if (clazz == null || clazz == void.class) {
+            return 0;
+        } else if (clazz == long.class || clazz == double.class) {
+            return 2;
+        } else {
+            return 1;
+        }
+    }
+
+    public static InsnList toList(AbstractInsnNode... nodes) {
+        InsnList r = new InsnList();
+        for (AbstractInsnNode node : nodes) {
+            r.add(node);
+        }
+        return r;
+    }
+
+    public static InsnList arrayLoadNode(Class<?> type, InsnList index) {
+        InsnList r = new InsnList();
+        r.add(index);
+        if (!type.isPrimitive()) {
+            r.add(new InsnNode(Opcodes.AALOAD));
+        } else if (type == byte.class) {
+            r.add(new InsnNode(Opcodes.BALOAD));
+        } else if (type == short.class) {
+            r.add(new InsnNode(Opcodes.SALOAD));
+        } else if (type == int.class) {
+            r.add(new InsnNode(Opcodes.IALOAD));
+        } else if (type == long.class) {
+            r.add(new InsnNode(Opcodes.LALOAD));
+        } else if (type == float.class) {
+            r.add(new InsnNode(Opcodes.FALOAD));
+        } else if (type == double.class) {
+            r.add(new InsnNode(Opcodes.DALOAD));
+        } else if (type == boolean.class) {
+            r.add(new InsnNode(Opcodes.BALOAD));
+        } else if (type == char.class) {
+            r.add(new InsnNode(Opcodes.CALOAD));
+        }
+        return r;
+    }
+
+    public static InsnList arrayNode(Class<?> type, InsnList... elements) {
+        return arrayNode(toList(ldcNode(elements.length)), type, elements);
+    }
+
+    public static InsnList arrayNode(InsnList length, Class<?> type, InsnList... elements) {
+        InsnList r = new InsnList();
+        r.add(length);
+        if (type.isPrimitive()) {
+            int t = 0;
+            if (type == byte.class) {
+                t = Opcodes.T_BYTE;
+            } else if (type == short.class) {
+                t = Opcodes.T_SHORT;
+            } else if (type == int.class) {
+                t = Opcodes.T_INT;
+            } else if (type == long.class) {
+                t = Opcodes.T_LONG;
+            } else if (type == float.class) {
+                t = Opcodes.T_FLOAT;
+            } else if (type == double.class) {
+                t = Opcodes.T_DOUBLE;
+            } else if (type == boolean.class) {
+                t = Opcodes.T_BOOLEAN;
+            } else if (type == char.class) {
+                t = Opcodes.T_CHAR;
+            }
+            r.add(new IntInsnNode(Opcodes.NEWARRAY, t));
+        } else {
+            r.add(new TypeInsnNode(Opcodes.ANEWARRAY, getType(type)));
+        }
+        for (int i = 0; i < elements.length; i++) {
+            r.add(new InsnNode(Opcodes.DUP));
+            r.add(arrayStoreNode(type, toList(ldcNode(i)), elements[i]));
+        }
+        return r;
+    }
+
     public static AbstractInsnNode ldcNode(Object obj) {
-        if (obj == null)
+        if (obj == null) {
             return new InsnNode(Opcodes.ACONST_NULL);
-        else if (obj instanceof Boolean)
+        } else if (obj instanceof Boolean) {
             return new InsnNode(((Boolean) obj) ? Opcodes.ICONST_1 : Opcodes.ICONST_0);
-        else if (obj instanceof Integer || obj instanceof Byte || obj instanceof Short)
+        } else if (obj instanceof Integer || obj instanceof Byte || obj instanceof Short) {
             switch (((Number) obj).intValue()) {
                 case -1:
                     return new InsnNode(Opcodes.ICONST_M1);
@@ -99,7 +183,7 @@ public class AsmUtil {
                 case 5:
                     return new InsnNode(Opcodes.ICONST_5);
             }
-        else if (obj instanceof Long) {
+        } else if (obj instanceof Long) {
             if ((Long) obj == 0) {
                 return new InsnNode(Opcodes.LCONST_0);
             } else if ((Long) obj == 1) {
@@ -119,137 +203,75 @@ public class AsmUtil {
             } else if ((Double) obj == 1) {
                 return new InsnNode(Opcodes.DCONST_1);
             }
-        } else if (obj instanceof Class)
+        } else if (obj instanceof Class) {
             return new LdcInsnNode(Type.getType((Class<?>) obj));
+        }
         return new LdcInsnNode(obj);
     }
 
-    public static int getCategory(Class<?> clazz) {
-        if (clazz == null || clazz == void.class)
-            return 0;
-        else if (clazz == long.class || clazz == double.class)
-            return 2;
-        else
-            return 1;
-    }
-
-    public static InsnList arrayLoadNode(Class<?> type, InsnList index) {
-        InsnList r = new InsnList();
-        r.add(index);
-        if (!type.isPrimitive())
-            r.add(new InsnNode(Opcodes.AALOAD));
-        else if (type == byte.class)
-            r.add(new InsnNode(Opcodes.BALOAD));
-        else if (type == short.class)
-            r.add(new InsnNode(Opcodes.SALOAD));
-        else if (type == int.class)
-            r.add(new InsnNode(Opcodes.IALOAD));
-        else if (type == long.class)
-            r.add(new InsnNode(Opcodes.LALOAD));
-        else if (type == float.class)
-            r.add(new InsnNode(Opcodes.FALOAD));
-        else if (type == double.class)
-            r.add(new InsnNode(Opcodes.DALOAD));
-        else if (type == boolean.class)
-            r.add(new InsnNode(Opcodes.BALOAD));
-        else if (type == char.class)
-            r.add(new InsnNode(Opcodes.CALOAD));
-        return r;
+    public static String getType(Class<?> clazz) {
+        return getType(clazz.getName());
     }
 
     public static InsnList arrayStoreNode(Class<?> type, InsnList index, InsnList value) {
         InsnList r = new InsnList();
         r.add(index);
         r.add(value);
-        if (!type.isPrimitive())
+        if (!type.isPrimitive()) {
             r.add(new InsnNode(Opcodes.AASTORE));
-        else if (type == byte.class)
+        } else if (type == byte.class) {
             r.add(new InsnNode(Opcodes.BASTORE));
-        else if (type == short.class)
+        } else if (type == short.class) {
             r.add(new InsnNode(Opcodes.SASTORE));
-        else if (type == int.class)
+        } else if (type == int.class) {
             r.add(new InsnNode(Opcodes.IASTORE));
-        else if (type == long.class)
+        } else if (type == long.class) {
             r.add(new InsnNode(Opcodes.LASTORE));
-        else if (type == float.class)
+        } else if (type == float.class) {
             r.add(new InsnNode(Opcodes.FASTORE));
-        else if (type == double.class)
+        } else if (type == double.class) {
             r.add(new InsnNode(Opcodes.DASTORE));
-        else if (type == boolean.class)
+        } else if (type == boolean.class) {
             r.add(new InsnNode(Opcodes.BASTORE));
-        else if (type == char.class)
+        } else if (type == char.class) {
             r.add(new InsnNode(Opcodes.CASTORE));
-        return r;
-    }
-
-    public static InsnList arrayNode(Class<?> type, InsnList... elements) {
-        return arrayNode(toList(ldcNode(elements.length)), type, elements);
-    }
-
-    public static InsnList arrayNode(InsnList length, Class<?> type, InsnList... elements) {
-        InsnList r = new InsnList();
-        r.add(length);
-        if (type.isPrimitive()) {
-            int t = 0;
-            if (type == byte.class)
-                t = Opcodes.T_BYTE;
-            else if (type == short.class)
-                t = Opcodes.T_SHORT;
-            else if (type == int.class)
-                t = Opcodes.T_INT;
-            else if (type == long.class)
-                t = Opcodes.T_LONG;
-            else if (type == float.class)
-                t = Opcodes.T_FLOAT;
-            else if (type == double.class)
-                t = Opcodes.T_DOUBLE;
-            else if (type == boolean.class)
-                t = Opcodes.T_BOOLEAN;
-            else if (type == char.class)
-                t = Opcodes.T_CHAR;
-            r.add(new IntInsnNode(Opcodes.NEWARRAY, t));
-        } else
-            r.add(new TypeInsnNode(Opcodes.ANEWARRAY, getType(type)));
-        for (int i = 0; i < elements.length; i++) {
-            r.add(new InsnNode(Opcodes.DUP));
-            r.add(arrayStoreNode(type, toList(ldcNode(i)), elements[i]));
         }
         return r;
     }
 
+    public static String getType(String className) {
+        return className.replace('.', '/');
+    }
+
     public static AbstractInsnNode returnNode(Class<?> type) {
         if (type.isPrimitive()) {
-            if (type == void.class)
+            if (type == void.class) {
                 return new InsnNode(Opcodes.RETURN);
-            else if (type == boolean.class || type == char.class || type == byte.class || type == short.class || type == int.class)
+            } else if (type == boolean.class || type == char.class || type == byte.class || type == short.class || type == int.class) {
                 return new InsnNode(Opcodes.IRETURN);
-            else if (type == float.class)
+            } else if (type == float.class) {
                 return new InsnNode(Opcodes.FRETURN);
-            else if (type == double.class)
+            } else if (type == double.class) {
                 return new InsnNode(Opcodes.DRETURN);
-            else if (type == long.class)
+            } else if (type == long.class) {
                 return new InsnNode(Opcodes.LRETURN);
-            else
+            } else {
                 throw new IllegalArgumentException("type: " + type);
-        } else
+            }
+        } else {
             return new InsnNode(Opcodes.ARETURN);
+        }
     }
 
     public static List<AbstractInsnNode> toList(InsnList nodes) {
         return Lists.newArrayList(nodes.toArray());
     }
 
-    public static InsnList toList(AbstractInsnNode... nodes) {
-        InsnList r = new InsnList();
-        for (AbstractInsnNode node : nodes)
-            r.add(node);
-        return r;
-    }
-
     public static InsnList mergeList(InsnList... nodes) {
         InsnList r = new InsnList();
-        for (InsnList ns : nodes)
+        for (InsnList ns : nodes) {
             r.add(ns);
+        }
         return r;
     }
 
@@ -267,70 +289,76 @@ public class AsmUtil {
 
     public static InsnList castNode(Class<?> tar, Class<?> src) {
         if (tar.isPrimitive()) {
-            if (tar == void.class)
+            if (tar == void.class) {
                 return popNode(src);
+            }
             if (src.isPrimitive()) {
                 if (src == boolean.class || src == byte.class || src == short.class || src == int.class) {
                     if (tar == boolean.class || tar == byte.class || tar == short.class || tar == int.class) {
-                        if (tar == byte.class && src != byte.class)
+                        if (tar == byte.class && src != byte.class) {
                             return toList(new InsnNode(Opcodes.I2B));
-                        else if (tar == short.class && src == int.class)
+                        } else if (tar == short.class && src == int.class) {
                             return toList(new InsnNode(Opcodes.I2S));
-                        else
+                        } else {
                             return new InsnList();
-                    } else if (tar == long.class)
+                        }
+                    } else if (tar == long.class) {
                         return toList(new InsnNode(Opcodes.I2L));
-                    else if (tar == float.class)
+                    } else if (tar == float.class) {
                         return toList(new InsnNode(Opcodes.I2F));
-                    else if (tar == double.class)
+                    } else if (tar == double.class) {
                         return toList(new InsnNode(Opcodes.I2D));
-                    else if (tar == char.class)
+                    } else if (tar == char.class) {
                         return toList(new InsnNode(Opcodes.I2C));
+                    }
                 } else if (src == long.class) {
-                    if (tar == boolean.class || tar == int.class)
+                    if (tar == boolean.class || tar == int.class) {
                         return toList(new InsnNode(Opcodes.L2I));
-                    else if (tar == byte.class)
+                    } else if (tar == byte.class) {
                         return toList(new InsnNode(Opcodes.L2I), new InsnNode(Opcodes.I2B));
-                    else if (tar == short.class)
+                    } else if (tar == short.class) {
                         return toList(new InsnNode(Opcodes.L2I), new InsnNode(Opcodes.I2S));
-                    else if (tar == long.class)
+                    } else if (tar == long.class) {
                         return new InsnList();
-                    else if (tar == float.class)
+                    } else if (tar == float.class) {
                         return toList(new InsnNode(Opcodes.L2F));
-                    else if (tar == double.class)
+                    } else if (tar == double.class) {
                         return toList(new InsnNode(Opcodes.L2D));
-                    else if (tar == char.class)
+                    } else if (tar == char.class) {
                         return toList(new InsnNode(Opcodes.L2I), new InsnNode(Opcodes.I2C));
+                    }
                 } else if (src == float.class) {
-                    if (tar == boolean.class || tar == int.class)
+                    if (tar == boolean.class || tar == int.class) {
                         return toList(new InsnNode(Opcodes.F2I));
-                    else if (tar == byte.class)
+                    } else if (tar == byte.class) {
                         return toList(new InsnNode(Opcodes.F2I), new InsnNode(Opcodes.I2B));
-                    else if (tar == short.class)
+                    } else if (tar == short.class) {
                         return toList(new InsnNode(Opcodes.F2I), new InsnNode(Opcodes.I2S));
-                    else if (tar == long.class)
+                    } else if (tar == long.class) {
                         return toList(new InsnNode(Opcodes.F2L));
-                    else if (tar == float.class)
+                    } else if (tar == float.class) {
                         return new InsnList();
-                    else if (tar == double.class)
+                    } else if (tar == double.class) {
                         return toList(new InsnNode(Opcodes.F2D));
-                    else if (tar == char.class)
+                    } else if (tar == char.class) {
                         return toList(new InsnNode(Opcodes.F2I), new InsnNode(Opcodes.I2C));
+                    }
                 } else if (src == double.class) {
-                    if (tar == boolean.class || tar == int.class)
+                    if (tar == boolean.class || tar == int.class) {
                         return toList(new InsnNode(Opcodes.D2I));
-                    else if (tar == byte.class)
+                    } else if (tar == byte.class) {
                         return toList(new InsnNode(Opcodes.D2I), new InsnNode(Opcodes.I2B));
-                    else if (tar == short.class)
+                    } else if (tar == short.class) {
                         return toList(new InsnNode(Opcodes.D2I), new InsnNode(Opcodes.I2S));
-                    else if (tar == long.class)
+                    } else if (tar == long.class) {
                         return toList(new InsnNode(Opcodes.D2L));
-                    else if (tar == float.class)
+                    } else if (tar == float.class) {
                         return toList(new InsnNode(Opcodes.D2F));
-                    else if (tar == double.class)
+                    } else if (tar == double.class) {
                         return new InsnList();
-                    else if (tar == char.class)
+                    } else if (tar == char.class) {
                         return toList(new InsnNode(Opcodes.D2I), new InsnNode(Opcodes.I2C));
+                    }
                 }
             } else if (TypeUtil.toPrimitive(src).isPrimitive()) {
                 InsnList r = toList(new MethodInsnNode(Opcodes.INVOKEVIRTUAL, getType(src), TypeUtil.toPrimitive(src).getName() + "Value", getDesc(new Class[0], TypeUtil.toPrimitive(src))));
@@ -345,46 +373,40 @@ public class AsmUtil {
             InsnList r = toList(new MethodInsnNode(Opcodes.INVOKESTATIC, getType(TypeUtil.toWrapper(src)), "valueOf", getDesc(new Class[]{src}, TypeUtil.toWrapper(src)), false));
             r.add(castNode(tar, TypeUtil.toWrapper(src)));
             return r;
-        } else if (tar.isAssignableFrom(src))
+        } else if (tar.isAssignableFrom(src)) {
             return new InsnList();
-        else
+        } else {
             return toList(new TypeInsnNode(Opcodes.CHECKCAST, getType(tar)));
+        }
         throw new IllegalArgumentException("tar: " + tar + ", src:" + src);
     }
 
-    public static String getType(String className) {
-        return className.replace('.', '/');
-    }
-
-    public static String getType(Class<?> clazz) {
-        return getType(clazz.getName());
-    }
-
     public static String getDesc(Class<?> clazz) {
-        if (clazz.isArray())
+        if (clazz.isArray()) {
             return "[" + getDesc(clazz.getComponentType());
-        else if (!clazz.isPrimitive())
+        } else if (!clazz.isPrimitive()) {
             return "L" + getType(clazz) + ";";
-        else if (clazz == void.class)
+        } else if (clazz == void.class) {
             return "V";
-        else if (clazz == byte.class)
+        } else if (clazz == byte.class) {
             return "B";
-        else if (clazz == short.class)
+        } else if (clazz == short.class) {
             return "S";
-        else if (clazz == int.class)
+        } else if (clazz == int.class) {
             return "I";
-        else if (clazz == long.class)
+        } else if (clazz == long.class) {
             return "J";
-        else if (clazz == float.class)
+        } else if (clazz == float.class) {
             return "F";
-        else if (clazz == double.class)
+        } else if (clazz == double.class) {
             return "D";
-        else if (clazz == char.class)
+        } else if (clazz == char.class) {
             return "C";
-        else if (clazz == boolean.class)
+        } else if (clazz == boolean.class) {
             return "Z";
-        else
+        } else {
             throw new IllegalArgumentException(clazz.getName());
+        }
     }
 
     public static String getDesc(Method method) {
@@ -397,8 +419,9 @@ public class AsmUtil {
 
     public static String getDesc(Class<?>[] argsTypes, Class<?> retType) {
         StringBuilder r = new StringBuilder("(");
-        for (Class<?> a : argsTypes)
+        for (Class<?> a : argsTypes) {
             r.append(getDesc(a));
+        }
         r.append(')');
         r.append(getDesc(retType));
         return r.toString();

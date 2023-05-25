@@ -69,7 +69,6 @@ public interface FloraCorePlugin {
      */
     Sender getConsoleSender();
 
-
     /**
      * Returns the class implementing the FloraCoreAPI on this platform.
      *

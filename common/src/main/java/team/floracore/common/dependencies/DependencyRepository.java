@@ -43,35 +43,17 @@ public enum DependencyRepository {
     }
 
     /**
-     * Opens a connection to the given {@code dependency}.
+     * Downloads the the {@code dependency} to the {@code file}, ensuring the
+     * downloaded bytes match the checksum.
      *
      * @param dependency the dependency to download
-     * @return the connection
-     * @throws java.io.IOException if unable to open a connection
-     */
-    protected URLConnection openConnection(Dependency dependency) throws IOException {
-        URL dependencyUrl = new URL(this.url + dependency.getMavenRepoPath());
-        return dependencyUrl.openConnection();
-    }
-
-    /**
-     * Downloads the raw bytes of the {@code dependency}.
-     *
-     * @param dependency the dependency to download
-     * @return the downloaded bytes
+     * @param file       the file to write to
      * @throws DependencyDownloadException if unable to download
      */
-    public byte[] downloadRaw(Dependency dependency) throws DependencyDownloadException {
+    public void download(Dependency dependency, Path file) throws DependencyDownloadException {
         try {
-            URLConnection connection = openConnection(dependency);
-            try (InputStream in = connection.getInputStream()) {
-                byte[] bytes = ByteStreams.toByteArray(in);
-                if (bytes.length == 0) {
-                    throw new DependencyDownloadException("Empty stream");
-                }
-                return bytes;
-            }
-        } catch (Exception e) {
+            Files.write(file, download(dependency));
+        } catch (IOException e) {
             throw new DependencyDownloadException(e);
         }
     }
@@ -99,19 +81,37 @@ public enum DependencyRepository {
     }
 
     /**
-     * Downloads the the {@code dependency} to the {@code file}, ensuring the
-     * downloaded bytes match the checksum.
+     * Downloads the raw bytes of the {@code dependency}.
      *
      * @param dependency the dependency to download
-     * @param file       the file to write to
+     * @return the downloaded bytes
      * @throws DependencyDownloadException if unable to download
      */
-    public void download(Dependency dependency, Path file) throws DependencyDownloadException {
+    public byte[] downloadRaw(Dependency dependency) throws DependencyDownloadException {
         try {
-            Files.write(file, download(dependency));
-        } catch (IOException e) {
+            URLConnection connection = openConnection(dependency);
+            try (InputStream in = connection.getInputStream()) {
+                byte[] bytes = ByteStreams.toByteArray(in);
+                if (bytes.length == 0) {
+                    throw new DependencyDownloadException("Empty stream");
+                }
+                return bytes;
+            }
+        } catch (Exception e) {
             throw new DependencyDownloadException(e);
         }
+    }
+
+    /**
+     * Opens a connection to the given {@code dependency}.
+     *
+     * @param dependency the dependency to download
+     * @return the connection
+     * @throws java.io.IOException if unable to open a connection
+     */
+    protected URLConnection openConnection(Dependency dependency) throws IOException {
+        URL dependencyUrl = new URL(this.url + dependency.getMavenRepoPath());
+        return dependencyUrl.openConnection();
     }
 
 }

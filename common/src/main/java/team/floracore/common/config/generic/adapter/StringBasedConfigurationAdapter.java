@@ -10,8 +10,6 @@ public abstract class StringBasedConfigurationAdapter implements ConfigurationAd
     private static final Splitter LIST_SPLITTER = Splitter.on(',');
     private static final Splitter.MapSplitter MAP_SPLITTER = Splitter.on(',').withKeyValueSeparator('=');
 
-    protected abstract @Nullable String resolveValue(String path);
-
     @Override
     public String getString(String path, String def) {
         String value = resolveValue(path);
@@ -21,6 +19,8 @@ public abstract class StringBasedConfigurationAdapter implements ConfigurationAd
 
         return value;
     }
+
+    protected abstract @Nullable String resolveValue(String path);
 
     @Override
     public int getInteger(String path, int def) {

@@ -8,17 +8,12 @@ import java.lang.reflect.*;
 
 @WrappedArrayClass(WrappedObject.class)
 public interface WrappedArray<T extends WrappedObject> extends WrappedObject {
+    default void set(int index, T element) {
+        getRaw()[index] = element.getRaw();
+    }
+
     @Override
     Object[] getRaw();
-
-    Class<T> getElementWrapper();
-
-    default Class<T> getElementWrapper(Class<? extends WrappedObject> wrapper) {
-        WrappedArrayClass ann = wrapper.getDeclaredAnnotation(WrappedArrayClass.class);
-        if (ann != null)
-            return TypeUtil.cast(ann.value());
-        return null;
-    }
 
     @Override
     default void apply(ClassNode cn, Class<? extends WrappedObject> wrapper) {
@@ -28,8 +23,21 @@ public interface WrappedArray<T extends WrappedObject> extends WrappedObject {
         cn.methods.add(mn);
     }
 
-    default void set(int index, T element) {
-        getRaw()[index] = element.getRaw();
+    default Class<T> getElementWrapper(Class<? extends WrappedObject> wrapper) {
+        WrappedArrayClass ann = wrapper.getDeclaredAnnotation(WrappedArrayClass.class);
+        if (ann != null) {
+            return TypeUtil.cast(ann.value());
+        }
+        return null;
+    }
+
+    @Override
+    default Class<?> getAnnotationClass(Class<? extends WrappedObject> wrapper) {
+        Class<T> ew = getElementWrapper(wrapper);
+        if (ew != null) {
+            return Array.newInstance(WrappedObject.getRawClass(ew), 0).getClass();
+        }
+        return null;
     }
 
     default int length() {
@@ -40,15 +48,9 @@ public interface WrappedArray<T extends WrappedObject> extends WrappedObject {
         return TypeUtil.cast(WrappedObject.wrap(getWrapper(), Array.newInstance(WrappedObject.getRawClass(getElementWrapper()), length)));
     }
 
+    Class<T> getElementWrapper();
+
     default T get(int index) {
         return WrappedObject.wrap(getElementWrapper(), getRaw()[index]);
-    }
-
-    @Override
-    default Class<?> getAnnotationClass(Class<? extends WrappedObject> wrapper) {
-        Class<T> ew = getElementWrapper(wrapper);
-        if (ew != null)
-            return Array.newInstance(WrappedObject.getRawClass(ew), 0).getClass();
-        return null;
     }
 }

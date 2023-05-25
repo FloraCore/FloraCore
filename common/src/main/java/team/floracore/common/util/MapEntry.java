@@ -14,6 +14,23 @@ public class MapEntry<K, V> implements Entry<K, V> {
     }
 
     @Override
+    public int hashCode() {
+        int keyHash = key == null ? 0 : key.hashCode();
+        int valueHash = value == null ? 0 : value.hashCode();
+        return keyHash + valueHash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Entry) {
+            Entry<?, ?> o = (Entry<?, ?>) obj;
+            return Objects.equal(this.getKey(), o.getKey()) && Objects.equal(this.getValue(), o.getValue());
+        } else {
+            return false;
+        }
+    }
+
+    @Override
     public K getKey() {
         return key;
     }
@@ -29,23 +46,7 @@ public class MapEntry<K, V> implements Entry<K, V> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof Entry) {
-            Entry<?, ?> o = (Entry<?, ?>) obj;
-            return Objects.equal(this.getKey(), o.getKey()) && Objects.equal(this.getValue(), o.getValue());
-        } else
-            return false;
-    }
-
-    @Override
     public String toString() {
         return key + ":" + value;
-    }
-
-    @Override
-    public int hashCode() {
-        int keyHash = key == null ? 0 : key.hashCode();
-        int valueHash = value == null ? 0 : value.hashCode();
-        return keyHash + valueHash;
     }
 }

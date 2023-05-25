@@ -45,18 +45,6 @@ public class SourceValue implements Value {
     /**
      * Constructs a new {@link SourceValue}.
      *
-     * @param size     the size of this value, in 32 bits words. This size is 1 for byte, boolean, char,
-     *                 short, int, float, object and array types, and 2 for long and double.
-     * @param insnNode an instruction that can produce this value.
-     */
-    public SourceValue(final int size, final AbstractInsnNode insnNode) {
-        this.size = size;
-        this.insns = new SmallSet<>(insnNode);
-    }
-
-    /**
-     * Constructs a new {@link SourceValue}.
-     *
      * @param size    the size of this value, in 32 bits words. This size is 1 for byte, boolean, char,
      *                short, int, float, object and array types, and 2 for long and double.
      * @param insnSet the instructions that can produce this value.
@@ -64,6 +52,18 @@ public class SourceValue implements Value {
     public SourceValue(final int size, final Set<AbstractInsnNode> insnSet) {
         this.size = size;
         this.insns = insnSet;
+    }
+
+    /**
+     * Constructs a new {@link SourceValue}.
+     *
+     * @param size     the size of this value, in 32 bits words. This size is 1 for byte, boolean, char,
+     *                 short, int, float, object and array types, and 2 for long and double.
+     * @param insnNode an instruction that can produce this value.
+     */
+    public SourceValue(final int size, final AbstractInsnNode insnNode) {
+        this.size = size;
+        this.insns = new SmallSet<>(insnNode);
     }
 
     /**
@@ -78,16 +78,16 @@ public class SourceValue implements Value {
     }
 
     @Override
+    public int hashCode() {
+        return insns.hashCode();
+    }
+
+    @Override
     public boolean equals(final Object value) {
         if (!(value instanceof SourceValue)) {
             return false;
         }
         SourceValue sourceValue = (SourceValue) value;
         return size == sourceValue.size && insns.equals(sourceValue.insns);
-    }
-
-    @Override
-    public int hashCode() {
-        return insns.hashCode();
     }
 }

@@ -26,10 +26,6 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
         this.plugin = plugin;
     }
 
-    public FCBukkitPlugin getPlugin() {
-        return plugin;
-    }
-
     @Suggestions("onlinePlayers")
     public @NonNull List<String> getOnlinePlayers(final @NonNull CommandContext<CommandSender> sender, final @NonNull String input) {
         return plugin.getOnlineSenders().sorted(Comparator.comparing(Sender::getDisplayName)).map(Sender::getDisplayName).collect(Collectors.toList());
@@ -59,6 +55,10 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
         return ImmutableList.of("1", "60", "600", "3600", "86400");
     }
 
+    public boolean whetherServerEnableAutoSync1() {
+        return getServer().isAutoSync1();
+    }
+
     public SERVER getServer() {
         String name = getPlugin().getServerName();
         CompletableFuture<SERVER> servers = serversCache.get(name, getStorageImplementation()::selectServer);
@@ -66,8 +66,8 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
         return servers.join();
     }
 
-    public boolean whetherServerEnableAutoSync1() {
-        return getServer().isAutoSync1();
+    public FCBukkitPlugin getPlugin() {
+        return plugin;
     }
 
     public boolean whetherServerEnableAutoSync2() {

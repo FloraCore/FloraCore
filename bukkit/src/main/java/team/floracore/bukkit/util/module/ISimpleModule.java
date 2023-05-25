@@ -6,9 +6,6 @@ import java.util.*;
 
 public interface ISimpleModule extends IModule {
     @Override
-    ModuleData getEnabledRef();
-
-    @Override
     default Plugin getPlugin() {
         return getEnabledRef().getPlugin();
     }
@@ -17,6 +14,9 @@ public interface ISimpleModule extends IModule {
     default Set<IModule> getDepends() {
         return getEnabledRef().getDepends();
     }
+
+    @Override
+    ModuleData getEnabledRef();
 
     @Override
     default Map<IRegistrar<?>, List<Object>> getRegisteredObjects() {

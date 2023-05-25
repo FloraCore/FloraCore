@@ -116,20 +116,20 @@ public final class MaterialUtil {
         return POTIONS.contains(material);
     }
 
-    public static boolean isSignPost(final Material material) {
-        return SIGN_POSTS.contains(material);
-    }
-
-    public static boolean isWallSign(final Material material) {
-        return WALL_SIGNS.contains(material);
-    }
-
     public static boolean isEditableBook(final Material material) {
         return EDITABLE_BOOKS.contains(material);
     }
 
     public static boolean isSign(final Material material) {
         return isSignPost(material) || isWallSign(material);
+    }
+
+    public static boolean isSignPost(final Material material) {
+        return SIGN_POSTS.contains(material);
+    }
+
+    public static boolean isWallSign(final Material material) {
+        return WALL_SIGNS.contains(material);
     }
 
     public static boolean isSkull(final Material material) {

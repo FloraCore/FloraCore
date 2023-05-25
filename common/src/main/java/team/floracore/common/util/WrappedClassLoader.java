@@ -1,6 +1,5 @@
 package team.floracore.common.util;
 
-
 import team.floracore.common.util.wrapper.*;
 
 @WrappedClass("java.lang.ClassLoader")

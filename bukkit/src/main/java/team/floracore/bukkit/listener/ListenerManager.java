@@ -15,14 +15,14 @@ public class ListenerManager {
         this.constructListeners();
     }
 
-    public PluginManager getPluginManager() {
-        return plugin.getBootstrap().getServer().getPluginManager();
-    }
-
     private void constructListeners() {
         PluginManager pm = getPluginManager();
         Plugin p = plugin.getBootstrap().getLoader();
         pm.registerEvents(new PlayerListener(plugin), p);
+    }
+
+    public PluginManager getPluginManager() {
+        return plugin.getBootstrap().getServer().getPluginManager();
     }
 
     public FloraCorePlugin getPlugin() {

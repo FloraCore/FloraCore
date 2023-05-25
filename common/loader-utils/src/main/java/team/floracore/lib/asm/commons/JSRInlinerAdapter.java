@@ -483,6 +483,25 @@ public class JSRInlinerAdapter extends MethodNode implements Opcodes {
         }
 
         /**
+         * Returns the clone of the given original label that is appropriate for use by a try/catch
+         * block or a variable annotation.
+         *
+         * @param labelNode a label of the original code.
+         * @return a clone of the given label for use by a try/catch block or a variable annotation in
+         * the inlined code.
+         */
+        LabelNode getClonedLabel(final LabelNode labelNode) {
+            return clonedLabels.get(labelNode);
+        }
+
+        @Override
+        public LabelNode get(final Object key) {
+            return getClonedLabelForJumpInsn((LabelNode) key);
+        }
+
+        // AbstractMap implementation
+
+        /**
          * Returns the clone of the given original label that is appropriate for use in a jump
          * instruction.
          *
@@ -495,28 +514,9 @@ public class JSRInlinerAdapter extends MethodNode implements Opcodes {
             return findOwner(instructions.indexOf(labelNode)).clonedLabels.get(labelNode);
         }
 
-        /**
-         * Returns the clone of the given original label that is appropriate for use by a try/catch
-         * block or a variable annotation.
-         *
-         * @param labelNode a label of the original code.
-         * @return a clone of the given label for use by a try/catch block or a variable annotation in
-         * the inlined code.
-         */
-        LabelNode getClonedLabel(final LabelNode labelNode) {
-            return clonedLabels.get(labelNode);
-        }
-
-        // AbstractMap implementation
-
         @Override
         public Set<Entry<LabelNode, LabelNode>> entrySet() {
             throw new UnsupportedOperationException();
-        }
-
-        @Override
-        public LabelNode get(final Object key) {
-            return getClonedLabelForJumpInsn((LabelNode) key);
         }
 
         @Override

@@ -10,26 +10,26 @@ import team.floracore.common.util.wrapper.*;
 @WrappedBukkitClass({@VersionName(value = "nms.Slot", maxVer = 17), @VersionName(value = "net.minecraft.world.inventory.Slot", minVer = 17)})
 public interface NmsSlot extends WrappedBukkitObject {
 
-    @WrappedBukkitMethod({@VersionName("isAllowed"), @VersionName(minVer = 18, value = "a")})
-    boolean isAllowed(NmsItemStack item);
-
     default boolean isAllowed(ItemStack item) {
         return isAllowed(ObcItemStack.asNMSCopy(item));
     }
 
     @WrappedBukkitMethod({@VersionName("isAllowed"), @VersionName(minVer = 18, value = "a")})
-    boolean isAllowed(NmsEntityHuman player);
+    boolean isAllowed(NmsItemStack item);
 
     default boolean isAllowed(HumanEntity player) {
         return isAllowed(WrappedObject.wrap(ObcEntity.class, player).getHandle().cast(NmsEntityHuman.class));
     }
 
-    @WrappedBukkitMethod(@VersionName("a"))
-    void onVisit(NmsEntityHuman player, NmsItemStack item);
+    @WrappedBukkitMethod({@VersionName("isAllowed"), @VersionName(minVer = 18, value = "a")})
+    boolean isAllowed(NmsEntityHuman player);
 
     default void onVisit(HumanEntity player, ItemStack item) {
         onVisit(WrappedObject.wrap(ObcEntity.class, player).getHandle().cast(NmsEntityHuman.class), ObcItemStack.asNMSCopy(item));
     }
+
+    @WrappedBukkitMethod(@VersionName("a"))
+    void onVisit(NmsEntityHuman player, NmsItemStack item);
 
     @WrappedBukkitFieldAccessor({@VersionName("index"), @VersionName(minVer = 17, value = "a")})
     int getIndex();
@@ -61,15 +61,15 @@ public interface NmsSlot extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor({@VersionName(maxVer = 14, value = "g"), @VersionName(minVer = 13, maxVer = 19, value = "f"), @VersionName(minVer = 19, value = "g")})
     NmsSlot setY(int y);
 
+    default ItemStack getBukkitItem() {
+        return ObcItemStack.asBukkitCopy(getItem());
+    }
+
     @WrappedBukkitMethod(value = {@VersionName("getItem"), @VersionName(minVer = 18, value = "e")})
     NmsItemStack getItem();
 
     default void setItem(ItemStack item) {
         set(ObcItemStack.asNMSCopy(item));
-    }
-
-    default ItemStack getBukkitItem() {
-        return ObcItemStack.asBukkitCopy(getItem());
     }
 
     @WrappedBukkitMethod({@VersionName("set"), @VersionName(minVer = 18, value = "d")})

@@ -14,11 +14,11 @@ public interface NmsNBTTagString extends NmsNBTTag {
     @WrappedConstructor
     NmsNBTTagString staticNewInstance(String value);
 
-    @WrappedFieldAccessor("@0")
-    String getValue();
-
     @Override
     default JsonPrimitive toJson() {
         return new JsonPrimitive(getValue());
     }
+
+    @WrappedFieldAccessor("@0")
+    String getValue();
 }

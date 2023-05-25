@@ -14,11 +14,11 @@ public interface NmsNBTTagFloat extends NmsNBTTag {
     @WrappedConstructor
     NmsNBTTagFloat staticNewInstance(float value);
 
-    @WrappedBukkitMethod({@VersionName("asFloat"), @VersionName(maxVer = 17, value = "i"), @VersionName(minVer = 17, value = "j")})
-    float getValue();
-
     @Override
     default JsonPrimitive toJson() {
         return new JsonPrimitive(getValue());
     }
+
+    @WrappedBukkitMethod({@VersionName("asFloat"), @VersionName(maxVer = 17, value = "i"), @VersionName(minVer = 17, value = "j")})
+    float getValue();
 }

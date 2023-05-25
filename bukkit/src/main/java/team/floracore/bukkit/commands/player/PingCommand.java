@@ -28,13 +28,6 @@ public class PingCommand extends FloraCoreBukkitCommand {
         PlayerCommandMessage.COMMAND_PING_SELF.send(getPlugin().getSenderFactory().wrap(s), getPing(s));
     }
 
-    @CommandMethod("ping <target>")
-    @CommandDescription("获取一名玩家的ping延迟")
-    @CommandPermission("floracore.command.ping.other")
-    public void other(@NotNull CommandSender s, @NotNull @Argument("target") Player target) {
-        PlayerCommandMessage.COMMAND_PING_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName(), getPing(target));
-    }
-
     public int getPing(@NotNull Player player) {
         if (BukkitWrapper.v17) {
             ObcPlayer op = WrappedObject.wrap(ObcPlayer.class, player);
@@ -42,5 +35,12 @@ public class PingCommand extends FloraCoreBukkitCommand {
         }
         NmsEntityPlayer nep = WrappedObject.wrap(ObcEntity.class, player).getHandle().cast(NmsEntityPlayer.class);
         return nep.getPing();
+    }
+
+    @CommandMethod("ping <target>")
+    @CommandDescription("获取一名玩家的ping延迟")
+    @CommandPermission("floracore.command.ping.other")
+    public void other(@NotNull CommandSender s, @NotNull @Argument("target") Player target) {
+        PlayerCommandMessage.COMMAND_PING_OTHER.send(getPlugin().getSenderFactory().wrap(s), target.getName(), getPing(target));
     }
 }

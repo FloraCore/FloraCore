@@ -8,20 +8,6 @@ import java.util.concurrent.*;
 public interface SchedulerAdapter {
 
     /**
-     * Gets an async executor instance
-     *
-     * @return an async executor instance
-     */
-    Executor async();
-
-    /**
-     * Gets a sync executor instance
-     *
-     * @return a sync executor instance
-     */
-    Executor sync();
-
-    /**
      * Executes a task async
      *
      * @param task the task
@@ -31,6 +17,13 @@ public interface SchedulerAdapter {
     }
 
     /**
+     * Gets an async executor instance
+     *
+     * @return an async executor instance
+     */
+    Executor async();
+
+    /**
      * Executes a task sync
      *
      * @param task the task
@@ -38,6 +31,13 @@ public interface SchedulerAdapter {
     default void executeSync(Runnable task) {
         sync().execute(task);
     }
+
+    /**
+     * Gets a sync executor instance
+     *
+     * @return a sync executor instance
+     */
+    Executor sync();
 
     /**
      * Executes the given task with a delay.

@@ -1,6 +1,5 @@
 package org.floracore.api.platform;
 
-
 import org.checkerframework.checker.nullness.qual.*;
 
 import java.time.*;

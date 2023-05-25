@@ -18,16 +18,6 @@ public class NonClosableConnection implements Connection {
         this.delegate.close();
     }
 
-    @Override
-    public final void close() throws SQLException {
-        // do nothing
-    }
-
-    @Override
-    public final boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return iface.isInstance(this.delegate) || this.delegate.isWrapperFor(iface);
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public final <T> T unwrap(Class<T> iface) throws SQLException {
@@ -35,6 +25,14 @@ public class NonClosableConnection implements Connection {
             return (T) this.delegate;
         }
         return this.delegate.unwrap(iface);
+    }    @Override
+    public final void close() throws SQLException {
+        // do nothing
+    }
+
+    @Override
+    public final boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return iface.isInstance(this.delegate) || this.delegate.isWrapperFor(iface);
     }
 
     // Forward to the delegate connection
@@ -57,6 +55,8 @@ public class NonClosableConnection implements Connection {
     public String nativeSQL(String sql) throws SQLException {
         return this.delegate.nativeSQL(sql);
     }
+
+
 
     @Override
     public boolean getAutoCommit() throws SQLException {

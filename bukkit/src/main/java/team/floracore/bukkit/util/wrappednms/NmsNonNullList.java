@@ -9,16 +9,24 @@ import java.util.stream.*;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NonNullList", maxVer = 17), @VersionName(value = "net.minecraft.core.NonNullList", minVer = 17)})
 public interface NmsNonNullList extends WrappedBukkitObject, Iterable<WrappedObject> {
+    static NmsNonNullList newInstance(List<? extends WrappedObject> list) {
+        NmsNonNullList r = newInstance();
+        for (WrappedObject e : list) {
+            r.add(e);
+        }
+        return r;
+    }
+
     static NmsNonNullList newInstance() {
         return WrappedObject.getStatic(NmsNonNullList.class).staticNewInstance();
     }
 
-    static NmsNonNullList newInstance(List<? extends WrappedObject> list) {
-        NmsNonNullList r = newInstance();
-        for (WrappedObject e : list)
-            r.add(e);
-        return r;
+    default void add(WrappedObject value) {
+        getRaw().add(value.getRaw());
     }
+
+    @WrappedBukkitMethod(@VersionName("a"))
+    NmsNonNullList staticNewInstance();
 
     @Override
     AbstractList<Object> getRaw();
@@ -33,10 +41,6 @@ public interface NmsNonNullList extends WrappedBukkitObject, Iterable<WrappedObj
 
     default void add(int i, WrappedObject value) {
         getRaw().add(i, value.getRaw());
-    }
-
-    default void add(WrappedObject value) {
-        getRaw().add(value.getRaw());
     }
 
     default Iterator<WrappedObject> iterator() {
@@ -72,7 +76,4 @@ public interface NmsNonNullList extends WrappedBukkitObject, Iterable<WrappedObj
     default <T extends WrappedObject> List<T> toList(Class<T> wrapper) {
         return getRaw().stream().map(i -> WrappedObject.wrap(wrapper, i)).collect(Collectors.toList());
     }
-
-    @WrappedBukkitMethod(@VersionName("a"))
-    NmsNonNullList staticNewInstance();
 }

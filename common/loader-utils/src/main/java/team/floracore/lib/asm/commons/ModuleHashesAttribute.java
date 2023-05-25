@@ -27,6 +27,14 @@ public final class ModuleHashesAttribute extends Attribute {
     public List<byte[]> hashes;
 
     /**
+     * Constructs an empty {@link ModuleHashesAttribute}. This object can be passed as a prototype to
+     * the {@link ClassReader#accept(ClassVisitor, Attribute[], int)} method.
+     */
+    public ModuleHashesAttribute() {
+        this(null, null, null);
+    }
+
+    /**
      * Constructs a new {@link ModuleHashesAttribute}.
      *
      * @param algorithm the name of the hashing algorithm.
@@ -39,14 +47,6 @@ public final class ModuleHashesAttribute extends Attribute {
         this.algorithm = algorithm;
         this.modules = modules;
         this.hashes = hashes;
-    }
-
-    /**
-     * Constructs an empty {@link ModuleHashesAttribute}. This object can be passed as a prototype to
-     * the {@link ClassReader#accept(ClassVisitor, Attribute[], int)} method.
-     */
-    public ModuleHashesAttribute() {
-        this(null, null, null);
     }
 
     @Override

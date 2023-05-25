@@ -18,19 +18,6 @@ public class DependencyChecksumTest {
 
     }
 
-    @ParameterizedTest
-    @EnumSource
-    public void getChecksumMatches(Dependency dependency) throws DependencyDownloadException {
-        byte[] hash = Dependency.createDigest().digest(DependencyRepository.MAVEN_CENTRAL_MIRROR.downloadRaw(dependency));
-        System.out.printf("Checking for dependency %s...%n", dependency.name());
-        if (dependency.checksumMatches(hash)) {
-            System.out.printf("Checking for dependency %s is OK!%n", dependency.name());
-        } else {
-            System.out.printf("Dependency %s new hash is %s%n", dependency.name(), Base64.getEncoder().encodeToString(hash));
-        }
-        assertTrue(dependency.checksumMatches(hash));
-    }
-
     /**
      * 之所以注释了，是因为编译的时候太慢了。
      */
@@ -43,6 +30,19 @@ public class DependencyChecksumTest {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    @ParameterizedTest
+    @EnumSource
+    public void getChecksumMatches(Dependency dependency) throws DependencyDownloadException {
+        byte[] hash = Dependency.createDigest().digest(DependencyRepository.MAVEN_CENTRAL_MIRROR.downloadRaw(dependency));
+        System.out.printf("Checking for dependency %s...%n", dependency.name());
+        if (dependency.checksumMatches(hash)) {
+            System.out.printf("Checking for dependency %s is OK!%n", dependency.name());
+        } else {
+            System.out.printf("Dependency %s new hash is %s%n", dependency.name(), Base64.getEncoder().encodeToString(hash));
+        }
+        assertTrue(dependency.checksumMatches(hash));
     }
 
 }

@@ -110,33 +110,6 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public PLAYER selectPlayer(UUID uuid) {
-        PLAYER player;
-        try (Connection c = this.connectionFactory.getConnection()) {
-            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(PLAYER.SELECT))) {
-                ps.setString(1, uuid.toString());
-                try (ResultSet rs = ps.executeQuery()) {
-                    if (rs.next()) {
-                        int id = rs.getInt("id");
-                        String name = rs.getString("name");
-                        String firstLoginIp = rs.getString("firstLoginIp");
-                        String lastLoginIp = rs.getString("lastLoginIp");
-                        long firstLoginTime = rs.getLong("firstLoginTime");
-                        long lastLoginTime = rs.getLong("lastLoginTime");
-                        long playTime = rs.getLong("playTime");
-                        player = new PLAYER(plugin, this, id, uuid, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
-                    } else {
-                        return null;
-                    }
-                }
-            }
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
-        return player;
-    }
-
-    @Override
     public PLAYER selectPlayer(String name) {
         PLAYER player;
         try (Connection c = this.connectionFactory.getConnection()) {
@@ -152,6 +125,33 @@ public class SqlStorage implements StorageImplementation {
                         long lastLoginTime = rs.getLong("lastLoginTime");
                         long playTime = rs.getLong("playTime");
                         player = new PLAYER(plugin, this, id, UUID.fromString(uuid), name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return player;
+    }
+
+    @Override
+    public PLAYER selectPlayer(UUID uuid) {
+        PLAYER player;
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(PLAYER.SELECT))) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    if (rs.next()) {
+                        int id = rs.getInt("id");
+                        String name = rs.getString("name");
+                        String firstLoginIp = rs.getString("firstLoginIp");
+                        String lastLoginIp = rs.getString("lastLoginIp");
+                        long firstLoginTime = rs.getLong("firstLoginTime");
+                        long lastLoginTime = rs.getLong("lastLoginTime");
+                        long playTime = rs.getLong("playTime");
+                        player = new PLAYER(plugin, this, id, uuid, name, firstLoginIp, lastLoginIp, firstLoginTime, lastLoginTime, playTime);
                     } else {
                         return null;
                     }
@@ -240,7 +240,6 @@ public class SqlStorage implements StorageImplementation {
         }
         return ret;
     }
-
 
     @Override
     public void deleteDataAll(UUID uuid) {
@@ -586,7 +585,6 @@ public class SqlStorage implements StorageImplementation {
             return party;
         }
     }
-
 
     @Override
     public void insertParty(UUID uuid, UUID leader, long createTime, int chat) {

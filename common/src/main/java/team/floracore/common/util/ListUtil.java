@@ -15,8 +15,9 @@ public final class ListUtil {
 
     public static <T> void addAllNonexistent(List<T> tar, List<? extends T> src) {
         for (T o : src) {
-            if (!tar.contains(o))
+            if (!tar.contains(o)) {
                 tar.add(o);
+            }
         }
     }
 
@@ -46,24 +47,6 @@ public final class ListUtil {
         } catch (Throwable e) {
             throw TypeUtil.throwException(e);
         }
-    }
-
-    public static byte[] toPrimitive(Byte[] original) {
-        int length = original.length;
-        byte[] dest = new byte[length];
-        for (int i = 0; i < length; i++) {
-            dest[i] = original[i];
-        }
-        return dest;
-    }
-
-    public static Byte[] toWrap(byte[] original) {
-        int length = original.length;
-        Byte[] dest = new Byte[length];
-        for (int i = 0; i < length; i++) {
-            dest[i] = original[i];
-        }
-        return dest;
     }
 
     public static <T> boolean toggle(List<? super T> list, T obj) {
@@ -98,6 +81,24 @@ public final class ListUtil {
         return toPrimitive(rbs.toArray(new Byte[0]));
     }
 
+    public static Byte[] toWrap(byte[] original) {
+        int length = original.length;
+        Byte[] dest = new Byte[length];
+        for (int i = 0; i < length; i++) {
+            dest[i] = original[i];
+        }
+        return dest;
+    }
+
+    public static byte[] toPrimitive(Byte[] original) {
+        int length = original.length;
+        byte[] dest = new byte[length];
+        for (int i = 0; i < length; i++) {
+            dest[i] = original[i];
+        }
+        return dest;
+    }
+
     @SafeVarargs
     public static <K, V> Map<K, V> toMap(Map.Entry<K, V>... entries) {
         return toMap(Lists.newArrayList(entries));
@@ -117,8 +118,9 @@ public final class ListUtil {
 
     public static boolean containsAny(Collection<?> list, Collection<?> l) {
         for (Object o : list) {
-            if (l.contains(o))
+            if (l.contains(o)) {
                 return true;
+            }
         }
         return false;
     }

@@ -73,6 +73,11 @@ public class CommandManager {
         this.constructCommands();
     }
 
+    public void constructCommands() {
+        // misc
+        this.annotationParser.parse(new FloraCoreCommand(plugin));
+    }
+
     public FloraCorePlugin getPlugin() {
         return plugin;
     }
@@ -83,10 +88,5 @@ public class CommandManager {
 
     public AnnotationParser<CommandSender> getAnnotationParser() {
         return annotationParser;
-    }
-
-    public void constructCommands() {
-        // misc
-        this.annotationParser.parse(new FloraCoreCommand(plugin));
     }
 }

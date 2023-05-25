@@ -41,6 +41,14 @@ public class H2ConnectionFactory extends FlatfileConnectionFactory {
     }
 
     @Override
+    public Function<String, String> getStatementProcessor() {
+        return s -> s.replace('\'', '`')
+                .replace("LIKE", "ILIKE")
+                .replace("value", "`value`")
+                .replace("``value``", "`value`");
+    }
+
+    @Override
     protected Connection createConnection(Path file) throws SQLException {
         try {
             return (Connection) this.connectionConstructor.newInstance("jdbc:h2:" + file.toString(), new Properties(), null, null, false);
@@ -57,14 +65,6 @@ public class H2ConnectionFactory extends FlatfileConnectionFactory {
         // h2 appends '.mv.db' to the end of the database name
         Path writeFile = super.getWriteFile();
         return writeFile.getParent().resolve(writeFile.getFileName().toString() + ".mv.db");
-    }
-
-    @Override
-    public Function<String, String> getStatementProcessor() {
-        return s -> s.replace('\'', '`')
-                .replace("LIKE", "ILIKE")
-                .replace("value", "`value`")
-                .replace("``value``", "`value`");
     }
 
     /**
@@ -134,6 +134,5 @@ public class H2ConnectionFactory extends FlatfileConnectionFactory {
             }
         }
     }
-
 
 }

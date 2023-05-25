@@ -1,6 +1,5 @@
 package team.floracore.bukkit.util.wrappednms;
 
-
 import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.wrapper.*;
 
@@ -17,8 +16,9 @@ public interface NmsRegistryID extends WrappedBukkitObject {
     default int[] getCV8_() {
         Integer[] t = getAV8_().values().parallelStream().toArray(Integer[]::new);
         int[] r = new int[t.length];
-        for (int i = 0; i < t.length; i++)
+        for (int i = 0; i < t.length; i++) {
             r[i] = t[i];
+        }
         return r;
 
     }

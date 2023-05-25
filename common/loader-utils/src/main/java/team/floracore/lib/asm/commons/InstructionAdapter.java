@@ -93,46 +93,6 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
-    /**
-     * Generates the instruction to create and push on the stack an array of the given type.
-     *
-     * @param methodVisitor the method visitor to use to generate the instruction.
-     * @param type          an array Type.
-     */
-    static void newarray(final MethodVisitor methodVisitor, final Type type) {
-        int arrayType;
-        switch (type.getSort()) {
-            case Type.BOOLEAN:
-                arrayType = Opcodes.T_BOOLEAN;
-                break;
-            case Type.CHAR:
-                arrayType = Opcodes.T_CHAR;
-                break;
-            case Type.BYTE:
-                arrayType = Opcodes.T_BYTE;
-                break;
-            case Type.SHORT:
-                arrayType = Opcodes.T_SHORT;
-                break;
-            case Type.INT:
-                arrayType = Opcodes.T_INT;
-                break;
-            case Type.FLOAT:
-                arrayType = Opcodes.T_FLOAT;
-                break;
-            case Type.LONG:
-                arrayType = Opcodes.T_LONG;
-                break;
-            case Type.DOUBLE:
-                arrayType = Opcodes.T_DOUBLE;
-                break;
-            default:
-                methodVisitor.visitTypeInsn(Opcodes.ANEWARRAY, type.getInternalName());
-                return;
-        }
-        methodVisitor.visitIntInsn(Opcodes.NEWARRAY, arrayType);
-    }
-
     @Override
     public void visitInsn(final int opcode) {
         switch (opcode) {
@@ -727,71 +687,32 @@ public class InstructionAdapter extends MethodVisitor {
         tableswitch(min, max, dflt, labels);
     }
 
-    // -----------------------------------------------------------------------------------------------
-
     @Override
     public void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels) {
         lookupswitch(dflt, keys, labels);
     }
+
+    // -----------------------------------------------------------------------------------------------
 
     @Override
     public void visitMultiANewArrayInsn(final String descriptor, final int numDimensions) {
         multianewarray(descriptor, numDimensions);
     }
 
-    /**
-     * Generates a nop instruction.
-     */
-    public void nop() {
-        mv.visitInsn(Opcodes.NOP);
+    public void multianewarray(final String descriptor, final int numDimensions) {
+        mv.visitMultiANewArrayInsn(descriptor, numDimensions);
     }
 
-    /**
-     * Generates the instruction to push the given value on the stack.
-     *
-     * @param value the constant to be pushed on the stack. This parameter must be an {@link Integer},
-     *              a {@link Float}, a {@link Long}, a {@link Double}, a {@link String}, a {@link Type} of
-     *              OBJECT or ARRAY sort for {@code .class} constants, for classes whose version is 49, a
-     *              {@link Type} of METHOD sort for MethodType, a {@link Handle} for MethodHandle constants,
-     *              for classes whose version is 51 or a {@link ConstantDynamic} for a constant dynamic for
-     *              classes whose version is 55.
-     */
-    public void aconst(final Object value) {
-        if (value == null) {
-            mv.visitInsn(Opcodes.ACONST_NULL);
-        } else {
-            mv.visitLdcInsn(value);
-        }
+    public void lookupswitch(final Label dflt, final int[] keys, final Label[] labels) {
+        mv.visitLookupSwitchInsn(dflt, keys, labels);
     }
 
-    /**
-     * Generates the instruction to push the given value on the stack.
-     *
-     * @param intValue the constant to be pushed on the stack.
-     */
-    public void iconst(final int intValue) {
-        if (intValue >= -1 && intValue <= 5) {
-            mv.visitInsn(Opcodes.ICONST_0 + intValue);
-        } else if (intValue >= Byte.MIN_VALUE && intValue <= Byte.MAX_VALUE) {
-            mv.visitIntInsn(Opcodes.BIPUSH, intValue);
-        } else if (intValue >= Short.MIN_VALUE && intValue <= Short.MAX_VALUE) {
-            mv.visitIntInsn(Opcodes.SIPUSH, intValue);
-        } else {
-            mv.visitLdcInsn(intValue);
-        }
+    public void tableswitch(final int min, final int max, final Label dflt, final Label... labels) {
+        mv.visitTableSwitchInsn(min, max, dflt, labels);
     }
 
-    /**
-     * Generates the instruction to push the given value on the stack.
-     *
-     * @param longValue the constant to be pushed on the stack.
-     */
-    public void lconst(final long longValue) {
-        if (longValue == 0L || longValue == 1L) {
-            mv.visitInsn(Opcodes.LCONST_0 + (int) longValue);
-        } else {
-            mv.visitLdcInsn(longValue);
-        }
+    public void iinc(final int varIndex, final int increment) {
+        mv.visitIincInsn(varIndex, increment);
     }
 
     /**
@@ -811,6 +732,19 @@ public class InstructionAdapter extends MethodVisitor {
     /**
      * Generates the instruction to push the given value on the stack.
      *
+     * @param longValue the constant to be pushed on the stack.
+     */
+    public void lconst(final long longValue) {
+        if (longValue == 0L || longValue == 1L) {
+            mv.visitInsn(Opcodes.LCONST_0 + (int) longValue);
+        } else {
+            mv.visitLdcInsn(longValue);
+        }
+    }
+
+    /**
+     * Generates the instruction to push the given value on the stack.
+     *
      * @param doubleValue the constant to be pushed on the stack.
      */
     public void dconst(final double doubleValue) {
@@ -819,6 +753,24 @@ public class InstructionAdapter extends MethodVisitor {
             mv.visitInsn(Opcodes.DCONST_0 + (int) doubleValue);
         } else {
             mv.visitLdcInsn(doubleValue);
+        }
+    }
+
+    /**
+     * Generates the instruction to push the given value on the stack.
+     *
+     * @param value the constant to be pushed on the stack. This parameter must be an {@link Integer},
+     *              a {@link Float}, a {@link Long}, a {@link Double}, a {@link String}, a {@link Type} of
+     *              OBJECT or ARRAY sort for {@code .class} constants, for classes whose version is 49, a
+     *              {@link Type} of METHOD sort for MethodType, a {@link Handle} for MethodHandle constants,
+     *              for classes whose version is 51 or a {@link ConstantDynamic} for a constant dynamic for
+     *              classes whose version is 55.
+     */
+    public void aconst(final Object value) {
+        if (value == null) {
+            mv.visitInsn(Opcodes.ACONST_NULL);
+        } else {
+            mv.visitLdcInsn(value);
         }
     }
 
@@ -849,16 +801,216 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitLdcInsn(constantDynamic);
     }
 
+    public void mark(final Label label) {
+        mv.visitLabel(label);
+    }
+
+    public void ifeq(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFEQ, label);
+    }
+
+    public void ifne(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFNE, label);
+    }
+
+    public void iflt(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFLT, label);
+    }
+
+    public void ifge(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFGE, label);
+    }
+
+    public void ifgt(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFGT, label);
+    }
+
+    public void ifle(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFLE, label);
+    }
+
+    public void ificmpeq(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPEQ, label);
+    }
+
+    public void ificmpne(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPNE, label);
+    }
+
+    public void ificmplt(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPLT, label);
+    }
+
+    public void ificmpge(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPGE, label);
+    }
+
+    public void ificmpgt(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPGT, label);
+    }
+
+    public void ificmple(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPLE, label);
+    }
+
+    public void ifacmpeq(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ACMPEQ, label);
+    }
+
+    public void ifacmpne(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ACMPNE, label);
+    }
+
+    public void goTo(final Label label) {
+        mv.visitJumpInsn(Opcodes.GOTO, label);
+    }
+
+    public void jsr(final Label label) {
+        mv.visitJumpInsn(Opcodes.JSR, label);
+    }
+
+    public void ifnull(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFNULL, label);
+    }
+
+    public void ifnonnull(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFNONNULL, label);
+    }
+
+    /**
+     * Generates the instruction to call the given dynamic method.
+     *
+     * @param name                     the method's name.
+     * @param descriptor               the method's descriptor (see {@link Type}).
+     * @param bootstrapMethodHandle    the bootstrap method.
+     * @param bootstrapMethodArguments the bootstrap method constant arguments. Each argument must be
+     *                                 an {@link Integer}, {@link Float}, {@link Long}, {@link Double}, {@link String}, {@link
+     *                                 Type}, {@link Handle} or {@link ConstantDynamic} value. This method is allowed to modify
+     *                                 the content of the array so a caller should expect that this array may change.
+     */
+    public void invokedynamic(
+            final String name,
+            final String descriptor,
+            final Handle bootstrapMethodHandle,
+            final Object[] bootstrapMethodArguments) {
+        mv.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments);
+    }
+
+    public void getstatic(final String owner, final String name, final String descriptor) {
+        mv.visitFieldInsn(Opcodes.GETSTATIC, owner, name, descriptor);
+    }
+
+    public void putstatic(final String owner, final String name, final String descriptor) {
+        mv.visitFieldInsn(Opcodes.PUTSTATIC, owner, name, descriptor);
+    }
+
+    public void getfield(final String owner, final String name, final String descriptor) {
+        mv.visitFieldInsn(Opcodes.GETFIELD, owner, name, descriptor);
+    }
+
+    public void putfield(final String owner, final String name, final String descriptor) {
+        mv.visitFieldInsn(Opcodes.PUTFIELD, owner, name, descriptor);
+    }
+
+    public void anew(final Type type) {
+        mv.visitTypeInsn(Opcodes.NEW, type.getInternalName());
+    }
+
+    public void checkcast(final Type type) {
+        mv.visitTypeInsn(Opcodes.CHECKCAST, type.getInternalName());
+    }
+
+    public void instanceOf(final Type type) {
+        mv.visitTypeInsn(Opcodes.INSTANCEOF, type.getInternalName());
+    }
+
     public void load(final int varIndex, final Type type) {
         mv.visitVarInsn(type.getOpcode(Opcodes.ILOAD), varIndex);
     }
 
-    public void aload(final Type type) {
-        mv.visitInsn(type.getOpcode(Opcodes.IALOAD));
-    }
-
     public void store(final int varIndex, final Type type) {
         mv.visitVarInsn(type.getOpcode(Opcodes.ISTORE), varIndex);
+    }
+
+    public void ret(final int varIndex) {
+        mv.visitVarInsn(Opcodes.RET, varIndex);
+    }
+
+    /**
+     * Generates the instruction to push the given value on the stack.
+     *
+     * @param intValue the constant to be pushed on the stack.
+     */
+    public void iconst(final int intValue) {
+        if (intValue >= -1 && intValue <= 5) {
+            mv.visitInsn(Opcodes.ICONST_0 + intValue);
+        } else if (intValue >= Byte.MIN_VALUE && intValue <= Byte.MAX_VALUE) {
+            mv.visitIntInsn(Opcodes.BIPUSH, intValue);
+        } else if (intValue >= Short.MIN_VALUE && intValue <= Short.MAX_VALUE) {
+            mv.visitIntInsn(Opcodes.SIPUSH, intValue);
+        } else {
+            mv.visitLdcInsn(intValue);
+        }
+    }
+
+    /**
+     * Generates the instruction to create and push on the stack an array of the given type.
+     *
+     * @param type an array Type.
+     */
+    public void newarray(final Type type) {
+        newarray(mv, type);
+    }
+
+    /**
+     * Generates the instruction to create and push on the stack an array of the given type.
+     *
+     * @param methodVisitor the method visitor to use to generate the instruction.
+     * @param type          an array Type.
+     */
+    static void newarray(final MethodVisitor methodVisitor, final Type type) {
+        int arrayType;
+        switch (type.getSort()) {
+            case Type.BOOLEAN:
+                arrayType = Opcodes.T_BOOLEAN;
+                break;
+            case Type.CHAR:
+                arrayType = Opcodes.T_CHAR;
+                break;
+            case Type.BYTE:
+                arrayType = Opcodes.T_BYTE;
+                break;
+            case Type.SHORT:
+                arrayType = Opcodes.T_SHORT;
+                break;
+            case Type.INT:
+                arrayType = Opcodes.T_INT;
+                break;
+            case Type.FLOAT:
+                arrayType = Opcodes.T_FLOAT;
+                break;
+            case Type.LONG:
+                arrayType = Opcodes.T_LONG;
+                break;
+            case Type.DOUBLE:
+                arrayType = Opcodes.T_DOUBLE;
+                break;
+            default:
+                methodVisitor.visitTypeInsn(Opcodes.ANEWARRAY, type.getInternalName());
+                return;
+        }
+        methodVisitor.visitIntInsn(Opcodes.NEWARRAY, arrayType);
+    }
+
+    /**
+     * Generates a nop instruction.
+     */
+    public void nop() {
+        mv.visitInsn(Opcodes.NOP);
+    }
+
+    public void aload(final Type type) {
+        mv.visitInsn(type.getOpcode(Opcodes.IALOAD));
     }
 
     public void astore(final Type type) {
@@ -949,10 +1101,6 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitInsn(type.getOpcode(Opcodes.IXOR));
     }
 
-    public void iinc(final int varIndex, final int increment) {
-        mv.visitIincInsn(varIndex, increment);
-    }
-
     /**
      * Generates the instruction to cast from the first given type to the other.
      *
@@ -975,100 +1123,8 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitInsn(type == Type.FLOAT_TYPE ? Opcodes.FCMPG : Opcodes.DCMPG);
     }
 
-    public void ifeq(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFEQ, label);
-    }
-
-    public void ifne(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFNE, label);
-    }
-
-    public void iflt(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFLT, label);
-    }
-
-    public void ifge(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFGE, label);
-    }
-
-    public void ifgt(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFGT, label);
-    }
-
-    public void ifle(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFLE, label);
-    }
-
-    public void ificmpeq(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPEQ, label);
-    }
-
-    public void ificmpne(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPNE, label);
-    }
-
-    public void ificmplt(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPLT, label);
-    }
-
-    public void ificmpge(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPGE, label);
-    }
-
-    public void ificmpgt(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPGT, label);
-    }
-
-    public void ificmple(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPLE, label);
-    }
-
-    public void ifacmpeq(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ACMPEQ, label);
-    }
-
-    public void ifacmpne(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ACMPNE, label);
-    }
-
-    public void goTo(final Label label) {
-        mv.visitJumpInsn(Opcodes.GOTO, label);
-    }
-
-    public void jsr(final Label label) {
-        mv.visitJumpInsn(Opcodes.JSR, label);
-    }
-
-    public void ret(final int varIndex) {
-        mv.visitVarInsn(Opcodes.RET, varIndex);
-    }
-
-    public void tableswitch(final int min, final int max, final Label dflt, final Label... labels) {
-        mv.visitTableSwitchInsn(min, max, dflt, labels);
-    }
-
-    public void lookupswitch(final Label dflt, final int[] keys, final Label[] labels) {
-        mv.visitLookupSwitchInsn(dflt, keys, labels);
-    }
-
     public void areturn(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IRETURN));
-    }
-
-    public void getstatic(final String owner, final String name, final String descriptor) {
-        mv.visitFieldInsn(Opcodes.GETSTATIC, owner, name, descriptor);
-    }
-
-    public void putstatic(final String owner, final String name, final String descriptor) {
-        mv.visitFieldInsn(Opcodes.PUTSTATIC, owner, name, descriptor);
-    }
-
-    public void getfield(final String owner, final String name, final String descriptor) {
-        mv.visitFieldInsn(Opcodes.GETFIELD, owner, name, descriptor);
-    }
-
-    public void putfield(final String owner, final String name, final String descriptor) {
-        mv.visitFieldInsn(Opcodes.PUTFIELD, owner, name, descriptor);
     }
 
     /**
@@ -1200,38 +1256,6 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, owner, name, descriptor, true);
     }
 
-    /**
-     * Generates the instruction to call the given dynamic method.
-     *
-     * @param name                     the method's name.
-     * @param descriptor               the method's descriptor (see {@link Type}).
-     * @param bootstrapMethodHandle    the bootstrap method.
-     * @param bootstrapMethodArguments the bootstrap method constant arguments. Each argument must be
-     *                                 an {@link Integer}, {@link Float}, {@link Long}, {@link Double}, {@link String}, {@link
-     *                                 Type}, {@link Handle} or {@link ConstantDynamic} value. This method is allowed to modify
-     *                                 the content of the array so a caller should expect that this array may change.
-     */
-    public void invokedynamic(
-            final String name,
-            final String descriptor,
-            final Handle bootstrapMethodHandle,
-            final Object[] bootstrapMethodArguments) {
-        mv.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments);
-    }
-
-    public void anew(final Type type) {
-        mv.visitTypeInsn(Opcodes.NEW, type.getInternalName());
-    }
-
-    /**
-     * Generates the instruction to create and push on the stack an array of the given type.
-     *
-     * @param type an array Type.
-     */
-    public void newarray(final Type type) {
-        newarray(mv, type);
-    }
-
     public void arraylength() {
         mv.visitInsn(Opcodes.ARRAYLENGTH);
     }
@@ -1240,35 +1264,11 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitInsn(Opcodes.ATHROW);
     }
 
-    public void checkcast(final Type type) {
-        mv.visitTypeInsn(Opcodes.CHECKCAST, type.getInternalName());
-    }
-
-    public void instanceOf(final Type type) {
-        mv.visitTypeInsn(Opcodes.INSTANCEOF, type.getInternalName());
-    }
-
     public void monitorenter() {
         mv.visitInsn(Opcodes.MONITORENTER);
     }
 
     public void monitorexit() {
         mv.visitInsn(Opcodes.MONITOREXIT);
-    }
-
-    public void multianewarray(final String descriptor, final int numDimensions) {
-        mv.visitMultiANewArrayInsn(descriptor, numDimensions);
-    }
-
-    public void ifnull(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFNULL, label);
-    }
-
-    public void ifnonnull(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFNONNULL, label);
-    }
-
-    public void mark(final Label label) {
-        mv.visitLabel(label);
     }
 }

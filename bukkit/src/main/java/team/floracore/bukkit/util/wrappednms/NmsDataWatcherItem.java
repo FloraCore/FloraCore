@@ -10,16 +10,16 @@ public interface NmsDataWatcherItem extends WrappedBukkitObject {
         return WrappedObject.getStatic(NmsDataWatcherItem.class).staticNewInstance(type, value);
     }
 
+    @WrappedConstructor
+    NmsDataWatcherItem staticNewInstance(NmsDataWatcherObject type, Object value);
+
     @WrappedMethod("a")
     NmsDataWatcherObject getType();
-
-    @WrappedMethod("b")
-    Object getValue();
 
     default <R extends WrappedObject> R getValue(Class<R> wrapper) {
         return WrappedObject.wrap(wrapper, getValue());
     }
 
-    @WrappedConstructor
-    NmsDataWatcherItem staticNewInstance(NmsDataWatcherObject type, Object value);
+    @WrappedMethod("b")
+    Object getValue();
 }

@@ -14,11 +14,11 @@ public interface NmsNBTTagLong extends NmsNBTTag {
     @WrappedConstructor
     NmsNBTTagLong staticNewInstance(long value);
 
-    @WrappedBukkitMethod({@VersionName("asLong"), @VersionName(maxVer = 18, value = {"d"}), @VersionName(minVer = 18, value = {"e"})})
-    long getValue();
-
     @Override
     default JsonPrimitive toJson() {
         return new JsonPrimitive(getValue());
     }
+
+    @WrappedBukkitMethod({@VersionName("asLong"), @VersionName(maxVer = 18, value = {"d"}), @VersionName(minVer = 18, value = {"e"})})
+    long getValue();
 }

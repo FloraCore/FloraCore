@@ -37,11 +37,11 @@ public enum StorageType {
         return def;
     }
 
-    public String getName() {
-        return this.name;
-    }
-
     public List<String> getIdentifiers() {
         return this.identifiers;
+    }
+
+    public String getName() {
+        return this.name;
     }
 }

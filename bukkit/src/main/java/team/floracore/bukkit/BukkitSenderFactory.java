@@ -18,6 +18,14 @@ public class BukkitSenderFactory extends SenderFactory<FCBukkitPlugin, CommandSe
     }
 
     @Override
+    protected UUID getUniqueId(CommandSender sender) {
+        if (sender instanceof Player) {
+            return ((Player) sender).getUniqueId();
+        }
+        return Sender.CONSOLE_UUID;
+    }
+
+    @Override
     protected String getName(CommandSender sender) {
         if (sender instanceof Player) {
             return sender.getName();
@@ -31,14 +39,6 @@ public class BukkitSenderFactory extends SenderFactory<FCBukkitPlugin, CommandSe
             return ((Player) sender).getDisplayName();
         }
         return Sender.CONSOLE_NAME;
-    }
-
-    @Override
-    protected UUID getUniqueId(CommandSender sender) {
-        if (sender instanceof Player) {
-            return ((Player) sender).getUniqueId();
-        }
-        return Sender.CONSOLE_UUID;
     }
 
     @Override

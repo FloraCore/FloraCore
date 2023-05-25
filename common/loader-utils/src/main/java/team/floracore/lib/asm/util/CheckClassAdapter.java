@@ -162,27 +162,6 @@ public class CheckClassAdapter extends ClassVisitor {
     // -----------------------------------------------------------------------------------------------
 
     /**
-     * Checks that the given access flags do not contain invalid flags. This method also checks that
-     * mutually incompatible flags are not set simultaneously.
-     *
-     * @param access         the access flags to be checked.
-     * @param possibleAccess the valid access flags.
-     */
-    static void checkAccess(final int access, final int possibleAccess) {
-        if ((access & ~possibleAccess) != 0) {
-            throw new IllegalArgumentException("Invalid access flags: " + access);
-        }
-        int publicProtectedPrivate = Opcodes.ACC_PUBLIC | Opcodes.ACC_PROTECTED | Opcodes.ACC_PRIVATE;
-        if (Integer.bitCount(access & publicProtectedPrivate) > 1) {
-            throw new IllegalArgumentException(
-                    "public, protected and private are mutually exclusive: " + access);
-        }
-        if (Integer.bitCount(access & (Opcodes.ACC_FINAL | Opcodes.ACC_ABSTRACT)) > 1) {
-            throw new IllegalArgumentException("final and abstract are mutually exclusive: " + access);
-        }
-    }
-
-    /**
      * Checks that the given access flags do not contain invalid flags for a method. This method also
      * checks that mutually incompatible flags are not set simultaneously.
      *
@@ -196,28 +175,6 @@ public class CheckClassAdapter extends ClassVisitor {
         if ((version & 0xFFFF) < Opcodes.V17
                 && Integer.bitCount(access & (Opcodes.ACC_STRICT | Opcodes.ACC_ABSTRACT)) > 1) {
             throw new IllegalArgumentException("strictfp and abstract are mutually exclusive: " + access);
-        }
-    }
-
-    /**
-     * Checks that the given name is a fully qualified name, using dots.
-     *
-     * @param version the class version.
-     * @param name    the name to be checked.
-     * @param source  the source of 'name' (e.g 'module' for a module name).
-     */
-    static void checkFullyQualifiedName(final int version, final String name, final String source) {
-        try {
-            int startIndex = 0;
-            int dotIndex;
-            while ((dotIndex = name.indexOf('.', startIndex + 1)) != -1) {
-                CheckMethodAdapter.checkIdentifier(version, name, startIndex, dotIndex, null);
-                startIndex = dotIndex + 1;
-            }
-            CheckMethodAdapter.checkIdentifier(version, name, startIndex, name.length(), null);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(
-                    "Invalid " + source + " (must be a fully qualified name): " + name, e);
         }
     }
 
@@ -522,10 +479,6 @@ public class CheckClassAdapter extends ClassVisitor {
         return pos;
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Utility methods
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Checks a single character.
      *
@@ -552,66 +505,9 @@ public class CheckClassAdapter extends ClassVisitor {
         return pos < string.length() ? string.charAt(pos) : (char) 0;
     }
 
-    /**
-     * Checks the reference to a type in a type annotation.
-     *
-     * @param typeRef a reference to an annotated type.
-     */
-    static void checkTypeRef(final int typeRef) {
-        int mask = 0;
-        switch (typeRef >>> 24) {
-            case TypeReference.CLASS_TYPE_PARAMETER:
-            case TypeReference.METHOD_TYPE_PARAMETER:
-            case TypeReference.METHOD_FORMAL_PARAMETER:
-                mask = 0xFFFF0000;
-                break;
-            case TypeReference.FIELD:
-            case TypeReference.METHOD_RETURN:
-            case TypeReference.METHOD_RECEIVER:
-            case TypeReference.LOCAL_VARIABLE:
-            case TypeReference.RESOURCE_VARIABLE:
-            case TypeReference.INSTANCEOF:
-            case TypeReference.NEW:
-            case TypeReference.CONSTRUCTOR_REFERENCE:
-            case TypeReference.METHOD_REFERENCE:
-                mask = 0xFF000000;
-                break;
-            case TypeReference.CLASS_EXTENDS:
-            case TypeReference.CLASS_TYPE_PARAMETER_BOUND:
-            case TypeReference.METHOD_TYPE_PARAMETER_BOUND:
-            case TypeReference.THROWS:
-            case TypeReference.EXCEPTION_PARAMETER:
-                mask = 0xFFFFFF00;
-                break;
-            case TypeReference.CAST:
-            case TypeReference.CONSTRUCTOR_INVOCATION_TYPE_ARGUMENT:
-            case TypeReference.METHOD_INVOCATION_TYPE_ARGUMENT:
-            case TypeReference.CONSTRUCTOR_REFERENCE_TYPE_ARGUMENT:
-            case TypeReference.METHOD_REFERENCE_TYPE_ARGUMENT:
-                mask = 0xFF0000FF;
-                break;
-            default:
-                break;
-        }
-        if (mask == 0 || (typeRef & ~mask) != 0) {
-            throw new IllegalArgumentException(
-                    "Invalid type reference 0x" + Integer.toHexString(typeRef));
-        }
-    }
-
-    /**
-     * Returns the package name of an internal name.
-     *
-     * @param name an internal name.
-     * @return the package name or "" if there is no package.
-     */
-    private static String packageName(final String name) {
-        int index = name.lastIndexOf('/');
-        if (index == -1) {
-            return "";
-        }
-        return name.substring(0, index);
-    }
+    // -----------------------------------------------------------------------------------------------
+    // Utility methods
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Checks the given class.
@@ -855,6 +751,49 @@ public class CheckClassAdapter extends ClassVisitor {
         return checkModuleAdapter;
     }
 
+    /**
+     * Checks that the given name is a fully qualified name, using dots.
+     *
+     * @param version the class version.
+     * @param name    the name to be checked.
+     * @param source  the source of 'name' (e.g 'module' for a module name).
+     */
+    static void checkFullyQualifiedName(final int version, final String name, final String source) {
+        try {
+            int startIndex = 0;
+            int dotIndex;
+            while ((dotIndex = name.indexOf('.', startIndex + 1)) != -1) {
+                CheckMethodAdapter.checkIdentifier(version, name, startIndex, dotIndex, null);
+                startIndex = dotIndex + 1;
+            }
+            CheckMethodAdapter.checkIdentifier(version, name, startIndex, name.length(), null);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    "Invalid " + source + " (must be a fully qualified name): " + name, e);
+        }
+    }
+
+    /**
+     * Checks that the given access flags do not contain invalid flags. This method also checks that
+     * mutually incompatible flags are not set simultaneously.
+     *
+     * @param access         the access flags to be checked.
+     * @param possibleAccess the valid access flags.
+     */
+    static void checkAccess(final int access, final int possibleAccess) {
+        if ((access & ~possibleAccess) != 0) {
+            throw new IllegalArgumentException("Invalid access flags: " + access);
+        }
+        int publicProtectedPrivate = Opcodes.ACC_PUBLIC | Opcodes.ACC_PROTECTED | Opcodes.ACC_PRIVATE;
+        if (Integer.bitCount(access & publicProtectedPrivate) > 1) {
+            throw new IllegalArgumentException(
+                    "public, protected and private are mutually exclusive: " + access);
+        }
+        if (Integer.bitCount(access & (Opcodes.ACC_FINAL | Opcodes.ACC_ABSTRACT)) > 1) {
+            throw new IllegalArgumentException("final and abstract are mutually exclusive: " + access);
+        }
+    }
+
     @Override
     public void visitNestHost(final String nestHost) {
         checkState();
@@ -867,6 +806,102 @@ public class CheckClassAdapter extends ClassVisitor {
         }
         visitNestHostCalled = true;
         super.visitNestHost(nestHost);
+    }
+
+    @Override
+    public void visitOuterClass(final String owner, final String name, final String descriptor) {
+        checkState();
+        if (visitOuterClassCalled) {
+            throw new IllegalStateException("visitOuterClass can be called only once.");
+        }
+        visitOuterClassCalled = true;
+        if (owner == null) {
+            throw new IllegalArgumentException("Illegal outer class owner");
+        }
+        if (descriptor != null) {
+            CheckMethodAdapter.checkMethodDescriptor(version, descriptor);
+        }
+        super.visitOuterClass(owner, name, descriptor);
+    }
+
+    @Override
+    public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
+        checkState();
+        CheckMethodAdapter.checkDescriptor(version, descriptor, false);
+        return new CheckAnnotationAdapter(super.visitAnnotation(descriptor, visible));
+    }
+
+    @Override
+    public AnnotationVisitor visitTypeAnnotation(
+            final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
+        checkState();
+        int sort = new TypeReference(typeRef).getSort();
+        if (sort != TypeReference.CLASS_TYPE_PARAMETER
+                && sort != TypeReference.CLASS_TYPE_PARAMETER_BOUND
+                && sort != TypeReference.CLASS_EXTENDS) {
+            throw new IllegalArgumentException(
+                    "Invalid type reference sort 0x" + Integer.toHexString(sort));
+        }
+        checkTypeRef(typeRef);
+        CheckMethodAdapter.checkDescriptor(version, descriptor, false);
+        return new CheckAnnotationAdapter(
+                super.visitTypeAnnotation(typeRef, typePath, descriptor, visible));
+    }
+
+    /**
+     * Checks the reference to a type in a type annotation.
+     *
+     * @param typeRef a reference to an annotated type.
+     */
+    static void checkTypeRef(final int typeRef) {
+        int mask = 0;
+        switch (typeRef >>> 24) {
+            case TypeReference.CLASS_TYPE_PARAMETER:
+            case TypeReference.METHOD_TYPE_PARAMETER:
+            case TypeReference.METHOD_FORMAL_PARAMETER:
+                mask = 0xFFFF0000;
+                break;
+            case TypeReference.FIELD:
+            case TypeReference.METHOD_RETURN:
+            case TypeReference.METHOD_RECEIVER:
+            case TypeReference.LOCAL_VARIABLE:
+            case TypeReference.RESOURCE_VARIABLE:
+            case TypeReference.INSTANCEOF:
+            case TypeReference.NEW:
+            case TypeReference.CONSTRUCTOR_REFERENCE:
+            case TypeReference.METHOD_REFERENCE:
+                mask = 0xFF000000;
+                break;
+            case TypeReference.CLASS_EXTENDS:
+            case TypeReference.CLASS_TYPE_PARAMETER_BOUND:
+            case TypeReference.METHOD_TYPE_PARAMETER_BOUND:
+            case TypeReference.THROWS:
+            case TypeReference.EXCEPTION_PARAMETER:
+                mask = 0xFFFFFF00;
+                break;
+            case TypeReference.CAST:
+            case TypeReference.CONSTRUCTOR_INVOCATION_TYPE_ARGUMENT:
+            case TypeReference.METHOD_INVOCATION_TYPE_ARGUMENT:
+            case TypeReference.CONSTRUCTOR_REFERENCE_TYPE_ARGUMENT:
+            case TypeReference.METHOD_REFERENCE_TYPE_ARGUMENT:
+                mask = 0xFF0000FF;
+                break;
+            default:
+                break;
+        }
+        if (mask == 0 || (typeRef & ~mask) != 0) {
+            throw new IllegalArgumentException(
+                    "Invalid type reference 0x" + Integer.toHexString(typeRef));
+        }
+    }
+
+    @Override
+    public void visitAttribute(final Attribute attribute) {
+        checkState();
+        if (attribute == null) {
+            throw new IllegalArgumentException("Invalid attribute (must not be null)");
+        }
+        super.visitAttribute(attribute);
     }
 
     @Override
@@ -887,6 +922,20 @@ public class CheckClassAdapter extends ClassVisitor {
         super.visitNestMember(nestMember);
     }
 
+    /**
+     * Returns the package name of an internal name.
+     *
+     * @param name an internal name.
+     * @return the package name or "" if there is no package.
+     */
+    private static String packageName(final String name) {
+        int index = name.lastIndexOf('/');
+        if (index == -1) {
+            return "";
+        }
+        return name.substring(0, index);
+    }
+
     @Override
     public void visitPermittedSubclass(final String permittedSubclass) {
         checkState();
@@ -894,21 +943,9 @@ public class CheckClassAdapter extends ClassVisitor {
         super.visitPermittedSubclass(permittedSubclass);
     }
 
-    @Override
-    public void visitOuterClass(final String owner, final String name, final String descriptor) {
-        checkState();
-        if (visitOuterClassCalled) {
-            throw new IllegalStateException("visitOuterClass can be called only once.");
-        }
-        visitOuterClassCalled = true;
-        if (owner == null) {
-            throw new IllegalArgumentException("Illegal outer class owner");
-        }
-        if (descriptor != null) {
-            CheckMethodAdapter.checkMethodDescriptor(version, descriptor);
-        }
-        super.visitOuterClass(owner, name, descriptor);
-    }
+    // -----------------------------------------------------------------------------------------------
+    // Static verification methods
+    // -----------------------------------------------------------------------------------------------
 
     @Override
     public void visitInnerClass(
@@ -987,10 +1024,6 @@ public class CheckClassAdapter extends ClassVisitor {
         return new CheckFieldAdapter(api, super.visitField(access, name, descriptor, signature, value));
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Static verification methods
-    // -----------------------------------------------------------------------------------------------
-
     @Override
     public MethodVisitor visitMethod(
             final int access,
@@ -1045,39 +1078,6 @@ public class CheckClassAdapter extends ClassVisitor {
         }
         checkMethodAdapter.version = version;
         return checkMethodAdapter;
-    }
-
-    @Override
-    public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
-        checkState();
-        CheckMethodAdapter.checkDescriptor(version, descriptor, false);
-        return new CheckAnnotationAdapter(super.visitAnnotation(descriptor, visible));
-    }
-
-    @Override
-    public AnnotationVisitor visitTypeAnnotation(
-            final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
-        checkState();
-        int sort = new TypeReference(typeRef).getSort();
-        if (sort != TypeReference.CLASS_TYPE_PARAMETER
-                && sort != TypeReference.CLASS_TYPE_PARAMETER_BOUND
-                && sort != TypeReference.CLASS_EXTENDS) {
-            throw new IllegalArgumentException(
-                    "Invalid type reference sort 0x" + Integer.toHexString(sort));
-        }
-        checkTypeRef(typeRef);
-        CheckMethodAdapter.checkDescriptor(version, descriptor, false);
-        return new CheckAnnotationAdapter(
-                super.visitTypeAnnotation(typeRef, typePath, descriptor, visible));
-    }
-
-    @Override
-    public void visitAttribute(final Attribute attribute) {
-        checkState();
-        if (attribute == null) {
-            throw new IllegalArgumentException("Invalid attribute (must not be null)");
-        }
-        super.visitAttribute(attribute);
     }
 
     @Override

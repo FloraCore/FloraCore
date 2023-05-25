@@ -1,6 +1,5 @@
 package team.floracore.bukkit.util.nothing;
 
-
 import team.floracore.bukkit.util.*;
 import team.floracore.common.util.nothing.*;
 import team.floracore.common.util.wrapper.*;

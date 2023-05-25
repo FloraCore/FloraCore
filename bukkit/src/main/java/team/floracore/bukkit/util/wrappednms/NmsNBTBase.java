@@ -14,8 +14,9 @@ public interface NmsNBTBase extends WrappedBukkitObject {
 
     static NmsNBTBase wrap(Object nmsNbt) {
         for (Class<? extends NmsNBTBase> w : NBTWrappers) {
-            if (Objects.requireNonNull(WrappedObject.getRawClass(w)).isAssignableFrom(nmsNbt.getClass()))
+            if (Objects.requireNonNull(WrappedObject.getRawClass(w)).isAssignableFrom(nmsNbt.getClass())) {
                 return WrappedObject.wrap(w, nmsNbt);
+            }
         }
         throw new IllegalArgumentException("unknown type " + nmsNbt.getClass() + " of NBTBase");
     }

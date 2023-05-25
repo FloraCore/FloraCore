@@ -496,6 +496,34 @@ public class Label {
     }
 
     /**
+     * Adds the successors of this label in the method's control flow graph (except those
+     * corresponding to a jsr target, and those already in a list of labels) to the given list of
+     * blocks to process, and returns the new list.
+     *
+     * @param listOfLabelsToProcess a list of basic blocks to process, linked together with their
+     *                              {@link #nextListElement} field.
+     * @return the new list of blocks to process.
+     */
+    private Label pushSuccessors(final Label listOfLabelsToProcess) {
+        Label newListOfLabelsToProcess = listOfLabelsToProcess;
+        Edge outgoingEdge = outgoingEdges;
+        while (outgoingEdge != null) {
+            // By construction, the second outgoing edge of a basic block that ends with a jsr instruction
+            // leads to the jsr target (see {@link #FLAG_SUBROUTINE_CALLER}).
+            boolean isJsrTarget =
+                    (flags & Label.FLAG_SUBROUTINE_CALLER) != 0 && outgoingEdge == outgoingEdges.nextEdge;
+            if (!isJsrTarget && outgoingEdge.successor.nextListElement == null) {
+                // Add this successor to the list of blocks to process, if it does not already belong to a
+                // list of labels.
+                outgoingEdge.successor.nextListElement = newListOfLabelsToProcess;
+                newListOfLabelsToProcess = outgoingEdge.successor;
+            }
+            outgoingEdge = outgoingEdge.nextEdge;
+        }
+        return newListOfLabelsToProcess;
+    }
+
+    /**
      * Finds the basic blocks that end a subroutine starting with the basic block corresponding to
      * this label and, for each one of them, adds an outgoing edge to the basic block following the
      * given subroutine call. In other words, completes the control flow graph by adding the edges
@@ -551,34 +579,6 @@ public class Label {
             listOfProcessedBlocks.nextListElement = null;
             listOfProcessedBlocks = newListOfProcessedBlocks;
         }
-    }
-
-    /**
-     * Adds the successors of this label in the method's control flow graph (except those
-     * corresponding to a jsr target, and those already in a list of labels) to the given list of
-     * blocks to process, and returns the new list.
-     *
-     * @param listOfLabelsToProcess a list of basic blocks to process, linked together with their
-     *                              {@link #nextListElement} field.
-     * @return the new list of blocks to process.
-     */
-    private Label pushSuccessors(final Label listOfLabelsToProcess) {
-        Label newListOfLabelsToProcess = listOfLabelsToProcess;
-        Edge outgoingEdge = outgoingEdges;
-        while (outgoingEdge != null) {
-            // By construction, the second outgoing edge of a basic block that ends with a jsr instruction
-            // leads to the jsr target (see {@link #FLAG_SUBROUTINE_CALLER}).
-            boolean isJsrTarget =
-                    (flags & Label.FLAG_SUBROUTINE_CALLER) != 0 && outgoingEdge == outgoingEdges.nextEdge;
-            if (!isJsrTarget && outgoingEdge.successor.nextListElement == null) {
-                // Add this successor to the list of blocks to process, if it does not already belong to a
-                // list of labels.
-                outgoingEdge.successor.nextListElement = newListOfLabelsToProcess;
-                newListOfLabelsToProcess = outgoingEdge.successor;
-            }
-            outgoingEdge = outgoingEdge.nextEdge;
-        }
-        return newListOfLabelsToProcess;
     }
 
     // -----------------------------------------------------------------------------------------------

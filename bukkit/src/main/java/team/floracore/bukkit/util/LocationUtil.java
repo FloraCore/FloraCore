@@ -64,63 +64,6 @@ public final class LocationUtil {
     private LocationUtil() {
     }
 
-    public static boolean isBlockAboveAir(final World world, final int x, final int y, final int z) {
-        return y > world.getMaxHeight() || HOLLOW_MATERIALS.contains(world.getBlockAt(x, y - 1, z).getType());
-    }
-
-    public static boolean isBlockOutsideWorldBorder(final World world, final int x, final int z) {
-        final Location center = world.getWorldBorder().getCenter();
-        final int radius = (int) world.getWorldBorder().getSize() / 2;
-        final int x1 = center.getBlockX() - radius, x2 = center.getBlockX() + radius;
-        final int z1 = center.getBlockZ() - radius, z2 = center.getBlockZ() + radius;
-        return x < x1 || x > x2 || z < z1 || z > z2;
-    }
-
-    public static int getXInsideWorldBorder(final World world, final int x) {
-        final Location center = world.getWorldBorder().getCenter();
-        final int radius = (int) world.getWorldBorder().getSize() / 2;
-        final int x1 = center.getBlockX() - radius, x2 = center.getBlockX() + radius;
-        if (x < x1) {
-            return x1;
-        } else if (x > x2) {
-            return x2;
-        }
-        return x;
-    }
-
-    public static int getZInsideWorldBorder(final World world, final int z) {
-        final Location center = world.getWorldBorder().getCenter();
-        final int radius = (int) world.getWorldBorder().getSize() / 2;
-        final int z1 = center.getBlockZ() - radius, z2 = center.getBlockZ() + radius;
-        if (z < z1) {
-            return z1;
-        } else if (z > z2) {
-            return z2;
-        }
-        return z;
-    }
-
-    public static boolean isBlockUnsafe(final World world, final int x, final int y, final int z) {
-        return isBlockDamaging(world, x, y, z) || isBlockAboveAir(world, x, y, z);
-    }
-
-    public static boolean isBlockDamaging(final World world, final int x, final int y, final int z) {
-        final Material block = world.getBlockAt(x, y, z).getType();
-        final Material below = world.getBlockAt(x, y - 1, z).getType();
-        final Material above = world.getBlockAt(x, y + 1, z).getType();
-
-        if (DAMAGING_TYPES.contains(below) || LAVA_TYPES.contains(below) || MaterialUtil.isBed(below)) {
-            return true;
-        }
-
-        if (block == PORTAL) {
-            return true;
-        }
-
-        return !HOLLOW_MATERIALS.contains(block) || !HOLLOW_MATERIALS.contains(above);
-    }
-
-
     public static Location getSafeDestination(final Location loc) throws Exception {
         if (loc == null || loc.getWorld() == null) {
             throw new Exception();
@@ -182,6 +125,62 @@ public final class LocationUtil {
             }
         }
         return new Location(world, x + 0.5, y, z + 0.5, loc.getYaw(), loc.getPitch());
+    }
+
+    public static boolean isBlockOutsideWorldBorder(final World world, final int x, final int z) {
+        final Location center = world.getWorldBorder().getCenter();
+        final int radius = (int) world.getWorldBorder().getSize() / 2;
+        final int x1 = center.getBlockX() - radius, x2 = center.getBlockX() + radius;
+        final int z1 = center.getBlockZ() - radius, z2 = center.getBlockZ() + radius;
+        return x < x1 || x > x2 || z < z1 || z > z2;
+    }
+
+    public static int getXInsideWorldBorder(final World world, final int x) {
+        final Location center = world.getWorldBorder().getCenter();
+        final int radius = (int) world.getWorldBorder().getSize() / 2;
+        final int x1 = center.getBlockX() - radius, x2 = center.getBlockX() + radius;
+        if (x < x1) {
+            return x1;
+        } else if (x > x2) {
+            return x2;
+        }
+        return x;
+    }
+
+    public static int getZInsideWorldBorder(final World world, final int z) {
+        final Location center = world.getWorldBorder().getCenter();
+        final int radius = (int) world.getWorldBorder().getSize() / 2;
+        final int z1 = center.getBlockZ() - radius, z2 = center.getBlockZ() + radius;
+        if (z < z1) {
+            return z1;
+        } else if (z > z2) {
+            return z2;
+        }
+        return z;
+    }
+
+    public static boolean isBlockAboveAir(final World world, final int x, final int y, final int z) {
+        return y > world.getMaxHeight() || HOLLOW_MATERIALS.contains(world.getBlockAt(x, y - 1, z).getType());
+    }
+
+    public static boolean isBlockUnsafe(final World world, final int x, final int y, final int z) {
+        return isBlockDamaging(world, x, y, z) || isBlockAboveAir(world, x, y, z);
+    }
+
+    public static boolean isBlockDamaging(final World world, final int x, final int y, final int z) {
+        final Material block = world.getBlockAt(x, y, z).getType();
+        final Material below = world.getBlockAt(x, y - 1, z).getType();
+        final Material above = world.getBlockAt(x, y + 1, z).getType();
+
+        if (DAMAGING_TYPES.contains(below) || LAVA_TYPES.contains(below) || MaterialUtil.isBed(below)) {
+            return true;
+        }
+
+        if (block == PORTAL) {
+            return true;
+        }
+
+        return !HOLLOW_MATERIALS.contains(block) || !HOLLOW_MATERIALS.contains(above);
     }
 
     public static class Vector3D {

@@ -33,19 +33,22 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
         }
     }
 
-
-    @Override
-    protected Set<Dependency> getGlobalDependencies() {
-        Set<Dependency> dependencies = super.getGlobalDependencies();
-        dependencies.add(Dependency.ADVENTURE_PLATFORM_BUNGEECORD);
-        dependencies.add(Dependency.ADVENTURE_TEXT_SERIALIZER_BUNGEECORD);
-        dependencies.add(Dependency.CLOUD_BUNGEE);
-        return dependencies;
-    }
-
     @Override
     public FCBungeeBootstrap getBootstrap() {
         return this.bootstrap;
+    }
+
+    @Override
+    public Stream<Sender> getOnlineSenders() {
+        return Stream.concat(
+                Stream.of(getConsoleSender()),
+                this.bootstrap.getProxy().getPlayers().stream().map(p -> this.senderFactory.wrap(p))
+        );
+    }
+
+    @Override
+    public Sender getConsoleSender() {
+        return this.senderFactory.wrap(this.bootstrap.getProxy().getConsole());
     }
 
     public Plugin getLoader() {
@@ -77,16 +80,12 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
-    public Stream<Sender> getOnlineSenders() {
-        return Stream.concat(
-                Stream.of(getConsoleSender()),
-                this.bootstrap.getProxy().getPlayers().stream().map(p -> this.senderFactory.wrap(p))
-        );
-    }
-
-    @Override
-    public Sender getConsoleSender() {
-        return this.senderFactory.wrap(this.bootstrap.getProxy().getConsole());
+    protected Set<Dependency> getGlobalDependencies() {
+        Set<Dependency> dependencies = super.getGlobalDependencies();
+        dependencies.add(Dependency.ADVENTURE_PLATFORM_BUNGEECORD);
+        dependencies.add(Dependency.ADVENTURE_TEXT_SERIALIZER_BUNGEECORD);
+        dependencies.add(Dependency.CLOUD_BUNGEE);
+        return dependencies;
     }
 
     public BungeeSenderFactory getSenderFactory() {

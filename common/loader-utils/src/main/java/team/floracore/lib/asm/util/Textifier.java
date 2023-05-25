@@ -483,26 +483,6 @@ public class Textifier extends Printer {
         visitExportOrOpen("opens ", packaze, access, modules);
     }
 
-    private void visitExportOrOpen(
-            final String method, final String packaze, final int access, final String... modules) {
-        stringBuilder.setLength(0);
-        stringBuilder.append(tab).append(method);
-        stringBuilder.append(packaze);
-        if (modules != null && modules.length > 0) {
-            stringBuilder.append(" to");
-        } else {
-            stringBuilder.append(';');
-        }
-        appendRawAccess(access);
-        if (modules != null && modules.length > 0) {
-            for (int i = 0; i < modules.length; ++i) {
-                stringBuilder.append(tab2).append(modules[i]);
-                stringBuilder.append(i != modules.length - 1 ? ",\n" : ";\n");
-            }
-        }
-        text.add(stringBuilder.toString());
-    }
-
     @Override
     public void visitUse(final String use) {
         stringBuilder.setLength(0);
@@ -530,10 +510,6 @@ public class Textifier extends Printer {
     public void visitModuleEnd() {
         // Nothing to do.
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Annotations
-    // -----------------------------------------------------------------------------------------------
 
     // DontCheck(OverloadMethodsDeclarationOrder): overloads are semantically different.
     @Override
@@ -615,45 +591,9 @@ public class Textifier extends Printer {
         text.add(stringBuilder.toString());
     }
 
-    private void visitInt(final int value) {
-        stringBuilder.append(value);
-    }
-
-    private void visitLong(final long value) {
-        stringBuilder.append(value).append('L');
-    }
-
-    private void visitFloat(final float value) {
-        stringBuilder.append(value).append('F');
-    }
-
-    private void visitDouble(final double value) {
-        stringBuilder.append(value).append('D');
-    }
-
-    private void visitChar(final char value) {
-        stringBuilder.append("(char)").append((int) value);
-    }
-
-    private void visitShort(final short value) {
-        stringBuilder.append("(short)").append(value);
-    }
-
-    private void visitByte(final byte value) {
-        stringBuilder.append("(byte)").append(value);
-    }
-
-    private void visitBoolean(final boolean value) {
-        stringBuilder.append(value);
-    }
-
-    private void visitString(final String value) {
-        appendString(stringBuilder, value);
-    }
-
-    private void visitType(final Type value) {
-        stringBuilder.append(value.getClassName()).append(CLASS_SUFFIX);
-    }
+    // -----------------------------------------------------------------------------------------------
+    // Annotations
+    // -----------------------------------------------------------------------------------------------
 
     @Override
     public void visitEnum(final String name, final String descriptor, final String value) {
@@ -686,18 +626,6 @@ public class Textifier extends Printer {
         // Nothing to do.
     }
 
-    private void visitAnnotationValue(final String name) {
-        stringBuilder.setLength(0);
-        maybeAppendComma(numAnnotationValues++);
-        if (name != null) {
-            stringBuilder.append(name).append('=');
-        }
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Record components
-    // -----------------------------------------------------------------------------------------------
-
     @Override
     public Textifier visitRecordComponentAnnotation(final String descriptor, final boolean visible) {
         return visitAnnotation(descriptor, visible);
@@ -719,10 +647,6 @@ public class Textifier extends Printer {
         // Nothing to do.
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Fields
-    // -----------------------------------------------------------------------------------------------
-
     @Override
     public Textifier visitFieldAnnotation(final String descriptor, final boolean visible) {
         return visitAnnotation(descriptor, visible);
@@ -743,10 +667,6 @@ public class Textifier extends Printer {
     public void visitFieldEnd() {
         // Nothing to do.
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Methods
-    // -----------------------------------------------------------------------------------------------
 
     @Override
     public void visitParameter(final String name, final int access) {
@@ -773,6 +693,10 @@ public class Textifier extends Printer {
             final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
         return visitTypeAnnotation(typeRef, typePath, descriptor, visible);
     }
+
+    // -----------------------------------------------------------------------------------------------
+    // Record components
+    // -----------------------------------------------------------------------------------------------
 
     @Override
     public Textifier visitAnnotableParameterCount(final int parameterCount, final boolean visible) {
@@ -810,6 +734,10 @@ public class Textifier extends Printer {
     public void visitCode() {
         // Nothing to do.
     }
+
+    // -----------------------------------------------------------------------------------------------
+    // Fields
+    // -----------------------------------------------------------------------------------------------
 
     @Override
     public void visitFrame(
@@ -877,6 +805,10 @@ public class Textifier extends Printer {
         stringBuilder.append(tab2).append(OPCODES[opcode]).append(' ').append(varIndex).append('\n');
         text.add(stringBuilder.toString());
     }
+
+    // -----------------------------------------------------------------------------------------------
+    // Methods
+    // -----------------------------------------------------------------------------------------------
 
     @Override
     public void visitTypeInsn(final int opcode, final String type) {
@@ -1169,198 +1101,6 @@ public class Textifier extends Printer {
         // Nothing to do.
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Common methods
-    // -----------------------------------------------------------------------------------------------
-
-    /**
-     * Prints a disassembled view of the given annotation.
-     *
-     * @param descriptor the class descriptor of the annotation class.
-     * @param visible    {@literal true} if the annotation is visible at runtime.
-     * @return a visitor to visit the annotation values.
-     */
-    // DontCheck(OverloadMethodsDeclarationOrder): overloads are semantically different.
-    public Textifier visitAnnotation(final String descriptor, final boolean visible) {
-        stringBuilder.setLength(0);
-        stringBuilder.append(tab).append('@');
-        appendDescriptor(FIELD_DESCRIPTOR, descriptor);
-        stringBuilder.append('(');
-        text.add(stringBuilder.toString());
-        return addNewTextifier(visible ? ")\n" : ") // invisible\n");
-    }
-
-    /**
-     * Prints a disassembled view of the given type annotation.
-     *
-     * @param typeRef    a reference to the annotated type. See {@link TypeReference}.
-     * @param typePath   the path to the annotated type argument, wildcard bound, array element type, or
-     *                   static inner type within 'typeRef'. May be {@literal null} if the annotation targets
-     *                   'typeRef' as a whole.
-     * @param descriptor the class descriptor of the annotation class.
-     * @param visible    {@literal true} if the annotation is visible at runtime.
-     * @return a visitor to visit the annotation values.
-     */
-    public Textifier visitTypeAnnotation(
-            final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
-        stringBuilder.setLength(0);
-        stringBuilder.append(tab).append('@');
-        appendDescriptor(FIELD_DESCRIPTOR, descriptor);
-        stringBuilder.append('(');
-        text.add(stringBuilder.toString());
-
-        stringBuilder.setLength(0);
-        stringBuilder.append(") : ");
-        appendTypeReference(typeRef);
-        stringBuilder.append(", ").append(typePath);
-        stringBuilder.append(visible ? "\n" : INVISIBLE);
-        return addNewTextifier(stringBuilder.toString());
-    }
-
-    /**
-     * Prints a disassembled view of the given attribute.
-     *
-     * @param attribute an attribute.
-     */
-    public void visitAttribute(final Attribute attribute) {
-        stringBuilder.setLength(0);
-        stringBuilder.append(tab).append("ATTRIBUTE ");
-        appendDescriptor(-1, attribute.type);
-
-        if (attribute instanceof TextifierSupport) {
-            if (labelNames == null) {
-                labelNames = new HashMap<>();
-            }
-            ((TextifierSupport) attribute).textify(stringBuilder, labelNames);
-        } else {
-            stringBuilder.append(" : unknown\n");
-        }
-
-        text.add(stringBuilder.toString());
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Utility methods
-    // -----------------------------------------------------------------------------------------------
-
-    /**
-     * Appends a string representation of the given access flags to {@link #stringBuilder}.
-     *
-     * @param accessFlags some access flags.
-     */
-    private void appendAccess(final int accessFlags) {
-        if ((accessFlags & Opcodes.ACC_PUBLIC) != 0) {
-            stringBuilder.append("public ");
-        }
-        if ((accessFlags & Opcodes.ACC_PRIVATE) != 0) {
-            stringBuilder.append("private ");
-        }
-        if ((accessFlags & Opcodes.ACC_PROTECTED) != 0) {
-            stringBuilder.append("protected ");
-        }
-        if ((accessFlags & Opcodes.ACC_FINAL) != 0) {
-            stringBuilder.append("final ");
-        }
-        if ((accessFlags & Opcodes.ACC_STATIC) != 0) {
-            stringBuilder.append("static ");
-        }
-        if ((accessFlags & Opcodes.ACC_SYNCHRONIZED) != 0) {
-            stringBuilder.append("synchronized ");
-        }
-        if ((accessFlags & Opcodes.ACC_VOLATILE) != 0) {
-            stringBuilder.append("volatile ");
-        }
-        if ((accessFlags & Opcodes.ACC_TRANSIENT) != 0) {
-            stringBuilder.append("transient ");
-        }
-        if ((accessFlags & Opcodes.ACC_ABSTRACT) != 0) {
-            stringBuilder.append("abstract ");
-        }
-        if ((accessFlags & Opcodes.ACC_STRICT) != 0) {
-            stringBuilder.append("strictfp ");
-        }
-        if ((accessFlags & Opcodes.ACC_SYNTHETIC) != 0) {
-            stringBuilder.append("synthetic ");
-        }
-        if ((accessFlags & Opcodes.ACC_MANDATED) != 0) {
-            stringBuilder.append("mandated ");
-        }
-        if ((accessFlags & Opcodes.ACC_ENUM) != 0) {
-            stringBuilder.append("enum ");
-        }
-    }
-
-    /**
-     * Appends the hexadecimal value of the given access flags to {@link #stringBuilder}.
-     *
-     * @param accessFlags some access flags.
-     */
-    private void appendRawAccess(final int accessFlags) {
-        stringBuilder
-                .append("// access flags 0x")
-                .append(Integer.toHexString(accessFlags).toUpperCase())
-                .append('\n');
-    }
-
-    /**
-     * Appends an internal name, a type descriptor or a type signature to {@link #stringBuilder}.
-     *
-     * @param type  the type of 'value'. Must be one of {@link #INTERNAL_NAME}, {@link
-     *              #FIELD_DESCRIPTOR}, {@link #FIELD_SIGNATURE}, {@link #METHOD_DESCRIPTOR}, {@link
-     *              #METHOD_SIGNATURE}, {@link #CLASS_SIGNATURE} or {@link #HANDLE_DESCRIPTOR}.
-     * @param value an internal name (see {@link Type#getInternalName()}), type descriptor or a type
-     *              signature. May be {@literal null}.
-     */
-    protected void appendDescriptor(final int type, final String value) {
-        if (type == CLASS_SIGNATURE || type == FIELD_SIGNATURE || type == METHOD_SIGNATURE) {
-            if (value != null) {
-                stringBuilder.append("// signature ").append(value).append('\n');
-            }
-        } else {
-            stringBuilder.append(value);
-        }
-    }
-
-    /**
-     * Appends the Java generic type declaration corresponding to the given signature.
-     *
-     * @param name      a class, field or method name.
-     * @param signature a class, field or method signature.
-     */
-    private void appendJavaDeclaration(final String name, final String signature) {
-        TraceSignatureVisitor traceSignatureVisitor = new TraceSignatureVisitor(access);
-        new SignatureReader(signature).accept(traceSignatureVisitor);
-        stringBuilder.append("// declaration: ");
-        if (traceSignatureVisitor.getReturnType() != null) {
-            stringBuilder.append(traceSignatureVisitor.getReturnType());
-            stringBuilder.append(' ');
-        }
-        stringBuilder.append(name);
-        stringBuilder.append(traceSignatureVisitor.getDeclaration());
-        if (traceSignatureVisitor.getExceptions() != null) {
-            stringBuilder.append(" throws ").append(traceSignatureVisitor.getExceptions());
-        }
-        stringBuilder.append('\n');
-    }
-
-    /**
-     * Appends the name of the given label to {@link #stringBuilder}. Constructs a new label name if
-     * the given label does not yet have one.
-     *
-     * @param label a label.
-     */
-    protected void appendLabel(final Label label) {
-        if (labelNames == null) {
-            labelNames = new HashMap<>();
-        }
-        String name = labelNames.get(label);
-        if (name == null) {
-            name = "L" + labelNames.size();
-            labelNames.put(label, name);
-        }
-        stringBuilder.append(name);
-    }
-
     /**
      * Appends a string representation of the given handle to {@link #stringBuilder}.
      *
@@ -1424,6 +1164,103 @@ public class Textifier extends Printer {
     }
 
     /**
+     * Appends the given stack map frame types to {@link #stringBuilder}.
+     *
+     * @param numTypes   the number of stack map frame types in 'frameTypes'.
+     * @param frameTypes an array of stack map frame types, in the format described in {@link
+     *                   MethodVisitor#visitFrame}.
+     */
+    private void appendFrameTypes(final int numTypes, final Object[] frameTypes) {
+        for (int i = 0; i < numTypes; ++i) {
+            if (i > 0) {
+                stringBuilder.append(' ');
+            }
+            if (frameTypes[i] instanceof String) {
+                String descriptor = (String) frameTypes[i];
+                if (descriptor.charAt(0) == '[') {
+                    appendDescriptor(FIELD_DESCRIPTOR, descriptor);
+                } else {
+                    appendDescriptor(INTERNAL_NAME, descriptor);
+                }
+            } else if (frameTypes[i] instanceof Integer) {
+                stringBuilder.append(FRAME_TYPES.get(((Integer) frameTypes[i]).intValue()));
+            } else {
+                appendLabel((Label) frameTypes[i]);
+            }
+        }
+    }
+
+    /**
+     * Appends the name of the given label to {@link #stringBuilder}. Constructs a new label name if
+     * the given label does not yet have one.
+     *
+     * @param label a label.
+     */
+    protected void appendLabel(final Label label) {
+        if (labelNames == null) {
+            labelNames = new HashMap<>();
+        }
+        String name = labelNames.get(label);
+        if (name == null) {
+            name = "L" + labelNames.size();
+            labelNames.put(label, name);
+        }
+        stringBuilder.append(name);
+    }
+
+    private void visitAnnotationValue(final String name) {
+        stringBuilder.setLength(0);
+        maybeAppendComma(numAnnotationValues++);
+        if (name != null) {
+            stringBuilder.append(name).append('=');
+        }
+    }
+
+    private void visitString(final String value) {
+        appendString(stringBuilder, value);
+    }
+
+    private void visitType(final Type value) {
+        stringBuilder.append(value.getClassName()).append(CLASS_SUFFIX);
+    }
+
+    private void visitByte(final byte value) {
+        stringBuilder.append("(byte)").append(value);
+    }
+
+    private void visitBoolean(final boolean value) {
+        stringBuilder.append(value);
+    }
+
+    private void visitShort(final short value) {
+        stringBuilder.append("(short)").append(value);
+    }
+
+    private void visitChar(final char value) {
+        stringBuilder.append("(char)").append((int) value);
+    }
+
+    private void visitInt(final int value) {
+        stringBuilder.append(value);
+    }
+
+    private void visitFloat(final float value) {
+        stringBuilder.append(value).append('F');
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Common methods
+    // -----------------------------------------------------------------------------------------------
+
+    private void visitLong(final long value) {
+        stringBuilder.append(value).append('L');
+    }
+
+    private void visitDouble(final double value) {
+        stringBuilder.append(value).append('D');
+    }
+
+    /**
      * Appends a comma to {@link #stringBuilder} if the given number is strictly positive.
      *
      * @param numValues a number of 'values visited so far', for instance the number of annotation
@@ -1433,6 +1270,79 @@ public class Textifier extends Printer {
         if (numValues > 0) {
             stringBuilder.append(", ");
         }
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Utility methods
+    // -----------------------------------------------------------------------------------------------
+
+    private void visitExportOrOpen(
+            final String method, final String packaze, final int access, final String... modules) {
+        stringBuilder.setLength(0);
+        stringBuilder.append(tab).append(method);
+        stringBuilder.append(packaze);
+        if (modules != null && modules.length > 0) {
+            stringBuilder.append(" to");
+        } else {
+            stringBuilder.append(';');
+        }
+        appendRawAccess(access);
+        if (modules != null && modules.length > 0) {
+            for (int i = 0; i < modules.length; ++i) {
+                stringBuilder.append(tab2).append(modules[i]);
+                stringBuilder.append(i != modules.length - 1 ? ",\n" : ";\n");
+            }
+        }
+        text.add(stringBuilder.toString());
+    }
+
+    /**
+     * Prints a disassembled view of the given attribute.
+     *
+     * @param attribute an attribute.
+     */
+    public void visitAttribute(final Attribute attribute) {
+        stringBuilder.setLength(0);
+        stringBuilder.append(tab).append("ATTRIBUTE ");
+        appendDescriptor(-1, attribute.type);
+
+        if (attribute instanceof TextifierSupport) {
+            if (labelNames == null) {
+                labelNames = new HashMap<>();
+            }
+            ((TextifierSupport) attribute).textify(stringBuilder, labelNames);
+        } else {
+            stringBuilder.append(" : unknown\n");
+        }
+
+        text.add(stringBuilder.toString());
+    }
+
+    /**
+     * Prints a disassembled view of the given type annotation.
+     *
+     * @param typeRef    a reference to the annotated type. See {@link TypeReference}.
+     * @param typePath   the path to the annotated type argument, wildcard bound, array element type, or
+     *                   static inner type within 'typeRef'. May be {@literal null} if the annotation targets
+     *                   'typeRef' as a whole.
+     * @param descriptor the class descriptor of the annotation class.
+     * @param visible    {@literal true} if the annotation is visible at runtime.
+     * @return a visitor to visit the annotation values.
+     */
+    public Textifier visitTypeAnnotation(
+            final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
+        stringBuilder.setLength(0);
+        stringBuilder.append(tab).append('@');
+        appendDescriptor(FIELD_DESCRIPTOR, descriptor);
+        stringBuilder.append('(');
+        text.add(stringBuilder.toString());
+
+        stringBuilder.setLength(0);
+        stringBuilder.append(") : ");
+        appendTypeReference(typeRef);
+        stringBuilder.append(", ").append(typePath);
+        stringBuilder.append(visible ? "\n" : INVISIBLE);
+        return addNewTextifier(stringBuilder.toString());
     }
 
     /**
@@ -1535,30 +1445,20 @@ public class Textifier extends Printer {
     }
 
     /**
-     * Appends the given stack map frame types to {@link #stringBuilder}.
+     * Prints a disassembled view of the given annotation.
      *
-     * @param numTypes   the number of stack map frame types in 'frameTypes'.
-     * @param frameTypes an array of stack map frame types, in the format described in {@link
-     *                   MethodVisitor#visitFrame}.
+     * @param descriptor the class descriptor of the annotation class.
+     * @param visible    {@literal true} if the annotation is visible at runtime.
+     * @return a visitor to visit the annotation values.
      */
-    private void appendFrameTypes(final int numTypes, final Object[] frameTypes) {
-        for (int i = 0; i < numTypes; ++i) {
-            if (i > 0) {
-                stringBuilder.append(' ');
-            }
-            if (frameTypes[i] instanceof String) {
-                String descriptor = (String) frameTypes[i];
-                if (descriptor.charAt(0) == '[') {
-                    appendDescriptor(FIELD_DESCRIPTOR, descriptor);
-                } else {
-                    appendDescriptor(INTERNAL_NAME, descriptor);
-                }
-            } else if (frameTypes[i] instanceof Integer) {
-                stringBuilder.append(FRAME_TYPES.get(((Integer) frameTypes[i]).intValue()));
-            } else {
-                appendLabel((Label) frameTypes[i]);
-            }
-        }
+    // DontCheck(OverloadMethodsDeclarationOrder): overloads are semantically different.
+    public Textifier visitAnnotation(final String descriptor, final boolean visible) {
+        stringBuilder.setLength(0);
+        stringBuilder.append(tab).append('@');
+        appendDescriptor(FIELD_DESCRIPTOR, descriptor);
+        stringBuilder.append('(');
+        text.add(stringBuilder.toString());
+        return addNewTextifier(visible ? ")\n" : ") // invisible\n");
     }
 
     /**
@@ -1583,5 +1483,105 @@ public class Textifier extends Printer {
      */
     protected Textifier createTextifier() {
         return new Textifier(api);
+    }
+
+    /**
+     * Appends the hexadecimal value of the given access flags to {@link #stringBuilder}.
+     *
+     * @param accessFlags some access flags.
+     */
+    private void appendRawAccess(final int accessFlags) {
+        stringBuilder
+                .append("// access flags 0x")
+                .append(Integer.toHexString(accessFlags).toUpperCase())
+                .append('\n');
+    }
+
+    /**
+     * Appends an internal name, a type descriptor or a type signature to {@link #stringBuilder}.
+     *
+     * @param type  the type of 'value'. Must be one of {@link #INTERNAL_NAME}, {@link
+     *              #FIELD_DESCRIPTOR}, {@link #FIELD_SIGNATURE}, {@link #METHOD_DESCRIPTOR}, {@link
+     *              #METHOD_SIGNATURE}, {@link #CLASS_SIGNATURE} or {@link #HANDLE_DESCRIPTOR}.
+     * @param value an internal name (see {@link Type#getInternalName()}), type descriptor or a type
+     *              signature. May be {@literal null}.
+     */
+    protected void appendDescriptor(final int type, final String value) {
+        if (type == CLASS_SIGNATURE || type == FIELD_SIGNATURE || type == METHOD_SIGNATURE) {
+            if (value != null) {
+                stringBuilder.append("// signature ").append(value).append('\n');
+            }
+        } else {
+            stringBuilder.append(value);
+        }
+    }
+
+    /**
+     * Appends the Java generic type declaration corresponding to the given signature.
+     *
+     * @param name      a class, field or method name.
+     * @param signature a class, field or method signature.
+     */
+    private void appendJavaDeclaration(final String name, final String signature) {
+        TraceSignatureVisitor traceSignatureVisitor = new TraceSignatureVisitor(access);
+        new SignatureReader(signature).accept(traceSignatureVisitor);
+        stringBuilder.append("// declaration: ");
+        if (traceSignatureVisitor.getReturnType() != null) {
+            stringBuilder.append(traceSignatureVisitor.getReturnType());
+            stringBuilder.append(' ');
+        }
+        stringBuilder.append(name);
+        stringBuilder.append(traceSignatureVisitor.getDeclaration());
+        if (traceSignatureVisitor.getExceptions() != null) {
+            stringBuilder.append(" throws ").append(traceSignatureVisitor.getExceptions());
+        }
+        stringBuilder.append('\n');
+    }
+
+    /**
+     * Appends a string representation of the given access flags to {@link #stringBuilder}.
+     *
+     * @param accessFlags some access flags.
+     */
+    private void appendAccess(final int accessFlags) {
+        if ((accessFlags & Opcodes.ACC_PUBLIC) != 0) {
+            stringBuilder.append("public ");
+        }
+        if ((accessFlags & Opcodes.ACC_PRIVATE) != 0) {
+            stringBuilder.append("private ");
+        }
+        if ((accessFlags & Opcodes.ACC_PROTECTED) != 0) {
+            stringBuilder.append("protected ");
+        }
+        if ((accessFlags & Opcodes.ACC_FINAL) != 0) {
+            stringBuilder.append("final ");
+        }
+        if ((accessFlags & Opcodes.ACC_STATIC) != 0) {
+            stringBuilder.append("static ");
+        }
+        if ((accessFlags & Opcodes.ACC_SYNCHRONIZED) != 0) {
+            stringBuilder.append("synchronized ");
+        }
+        if ((accessFlags & Opcodes.ACC_VOLATILE) != 0) {
+            stringBuilder.append("volatile ");
+        }
+        if ((accessFlags & Opcodes.ACC_TRANSIENT) != 0) {
+            stringBuilder.append("transient ");
+        }
+        if ((accessFlags & Opcodes.ACC_ABSTRACT) != 0) {
+            stringBuilder.append("abstract ");
+        }
+        if ((accessFlags & Opcodes.ACC_STRICT) != 0) {
+            stringBuilder.append("strictfp ");
+        }
+        if ((accessFlags & Opcodes.ACC_SYNTHETIC) != 0) {
+            stringBuilder.append("synthetic ");
+        }
+        if ((accessFlags & Opcodes.ACC_MANDATED) != 0) {
+            stringBuilder.append("mandated ");
+        }
+        if ((accessFlags & Opcodes.ACC_ENUM) != 0) {
+            stringBuilder.append("enum ");
+        }
     }
 }

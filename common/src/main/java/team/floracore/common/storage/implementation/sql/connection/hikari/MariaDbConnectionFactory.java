@@ -18,6 +18,11 @@ public class MariaDbConnectionFactory extends HikariConnectionFactory {
     }
 
     @Override
+    public Function<String, String> getStatementProcessor() {
+        return s -> s.replace('\'', '`'); // use backticks for quotes
+    }
+
+    @Override
     protected String defaultPort() {
         return "3306";
     }
@@ -41,10 +46,5 @@ public class MariaDbConnectionFactory extends HikariConnectionFactory {
         // kinda hacky. this will call #setProperties on the datasource, which will append these options
         // onto the connections.
         config.addDataSourceProperty("properties", propertiesString);
-    }
-
-    @Override
-    public Function<String, String> getStatementProcessor() {
-        return s -> s.replace('\'', '`'); // use backticks for quotes
     }
 }

@@ -97,13 +97,13 @@ public interface InventoryContents {
         }
 
         @Override
-        public SlotIterator newIterator(String id, SlotIterator.Type type, SlotPos startPos) {
-            return newIterator(id, type, startPos.getRow(), startPos.getColumn());
+        public SlotIterator newIterator(SlotIterator.Type type, int startRow, int startColumn) {
+            return new SlotIterator.Impl(this, inv, type, startRow, startColumn);
         }
 
         @Override
-        public SlotIterator newIterator(SlotIterator.Type type, int startRow, int startColumn) {
-            return new SlotIterator.Impl(this, inv, type, startRow, startColumn);
+        public SlotIterator newIterator(String id, SlotIterator.Type type, SlotPos startPos) {
+            return newIterator(id, type, startPos.getRow(), startPos.getColumn());
         }
 
         @Override
@@ -120,8 +120,9 @@ public interface InventoryContents {
         public Optional<SlotPos> firstEmpty() {
             for (int row = 0; row < contents.length; row++) {
                 for (int column = 0; column < contents[0].length; column++) {
-                    if (!this.get(row, column).isPresent())
+                    if (!this.get(row, column).isPresent()) {
                         return Optional.of(new SlotPos(row, column));
+                    }
                 }
             }
 
@@ -130,10 +131,12 @@ public interface InventoryContents {
 
         @Override
         public Optional<ClickableItem> get(int row, int column) {
-            if (row >= contents.length)
+            if (row >= contents.length) {
                 return Optional.empty();
-            if (column >= contents[row].length)
+            }
+            if (column >= contents[row].length) {
                 return Optional.empty();
+            }
 
             return Optional.ofNullable(contents[row][column]);
         }
@@ -145,10 +148,12 @@ public interface InventoryContents {
 
         @Override
         public InventoryContents set(int row, int column, ClickableItem item) {
-            if (row >= contents.length)
+            if (row >= contents.length) {
                 return this;
-            if (column >= contents[row].length)
+            }
+            if (column >= contents[row].length) {
                 return this;
+            }
 
             contents[row][column] = item;
             update(row, column, item != null ? item.getItem() : null);
@@ -176,28 +181,33 @@ public interface InventoryContents {
 
         @Override
         public InventoryContents fill(ClickableItem item) {
-            for (int row = 0; row < contents.length; row++)
-                for (int column = 0; column < contents[row].length; column++)
+            for (int row = 0; row < contents.length; row++) {
+                for (int column = 0; column < contents[row].length; column++) {
                     set(row, column, item);
+                }
+            }
 
             return this;
         }
 
         @Override
         public InventoryContents fillRow(int row, ClickableItem item) {
-            if (row >= contents.length)
+            if (row >= contents.length) {
                 return this;
+            }
 
-            for (int column = 0; column < contents[row].length; column++)
+            for (int column = 0; column < contents[row].length; column++) {
                 set(row, column, item);
+            }
 
             return this;
         }
 
         @Override
         public InventoryContents fillColumn(int column, ClickableItem item) {
-            for (int row = 0; row < contents.length; row++)
+            for (int row = 0; row < contents.length; row++) {
                 set(row, column, item);
+            }
 
             return this;
         }
@@ -212,8 +222,9 @@ public interface InventoryContents {
         public InventoryContents fillRect(int fromRow, int fromColumn, int toRow, int toColumn, ClickableItem item) {
             for (int row = fromRow; row <= toRow; row++) {
                 for (int column = fromColumn; column <= toColumn; column++) {
-                    if (row != fromRow && row != toRow && column != fromColumn && column != toColumn)
+                    if (row != fromRow && row != toRow && column != fromColumn && column != toColumn) {
                         continue;
+                    }
 
                     set(row, column, item);
                 }
@@ -247,8 +258,9 @@ public interface InventoryContents {
 
         private void update(int row, int column, ItemStack item) {
             Player currentPlayer = Bukkit.getPlayer(player);
-            if (!inv.getManager().getOpenedPlayers(inv).contains(currentPlayer))
+            if (!inv.getManager().getOpenedPlayers(inv).contains(currentPlayer)) {
                 return;
+            }
 
             Inventory topInventory = currentPlayer.getOpenInventory().getTopInventory();
             topInventory.setItem(inv.getColumns() * row + column, item);

@@ -13,10 +13,6 @@ public interface ConfigKeyFactory<T> {
     ConfigKeyFactory<String> LOWERCASE_STRING = (adapter, path, def) -> adapter.getString(path, def).toLowerCase(Locale.ROOT);
     ConfigKeyFactory<Map<String, String>> STRING_MAP = (config, path, def) -> ImmutableMap.copyOf(config.getStringMap(path, ImmutableMap.of()));
 
-    static <T> SimpleConfigKey<T> key(Function<ConfigurationAdapter, T> function) {
-        return new SimpleConfigKey<>(function);
-    }
-
     static <T> SimpleConfigKey<T> notReloadable(SimpleConfigKey<T> key) {
         key.setReloadable(false);
         return key;
@@ -24,6 +20,10 @@ public interface ConfigKeyFactory<T> {
 
     static SimpleConfigKey<Boolean> booleanKey(String path, boolean def) {
         return key(new Bound<>(BOOLEAN, path, def));
+    }
+
+    static <T> SimpleConfigKey<T> key(Function<ConfigurationAdapter, T> function) {
+        return new SimpleConfigKey<>(function);
     }
 
     static SimpleConfigKey<String> stringKey(String path, String def) {

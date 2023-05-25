@@ -18,7 +18,6 @@ import java.util.stream.*;
 
 import static team.floracore.common.util.AsmUtil.*;
 
-
 /**
  * wrapped nms class or craft bukkit class
  */
@@ -31,11 +30,20 @@ public interface WrappedObject {
         return wo == null || wo.isNull();
     }
 
+    default boolean isNull() {
+        return getRaw() == null;
+    }
+
+    Object getRaw();
+
+    void setRaw(Object raw);
+
     static Object getRaw(WrappedObject wrappedObject) {
-        if (wrappedObject == null)
+        if (wrappedObject == null) {
             return null;
-        else
+        } else {
             return wrappedObject.getRaw();
+        }
     }
 
     static <T extends WrappedObject> T allocInstance(Class<T> wrapper) {
@@ -44,11 +52,13 @@ public interface WrappedObject {
 
     static Class<?> getRawClass(Class<? extends WrappedObject> wrapper) {
         Class<?> t = buildingWrappers.get(wrapper);
-        if (t != null)
+        if (t != null) {
             return t;
+        }
         WrappedObject s = getStatic(wrapper);
-        if (s == null)
+        if (s == null) {
             return null;
+        }
         return s.getRawClass();
     }
 
@@ -60,15 +70,18 @@ public interface WrappedObject {
         try {
             MethodHandle c = cache.get().get(wrapper);
             if (c == null) {
-                if (!wrapper.isInterface())
+                if (!wrapper.isInterface()) {
                     throw new IllegalArgumentException("Wrapper " + wrapper.getName() + " must be an interface.");
-                if (!WrappedObject.class.isAssignableFrom(wrapper))
+                }
+                if (!WrappedObject.class.isAssignableFrom(wrapper)) {
                     throw new IllegalArgumentException("Wrapper " + wrapper.getName() + " must be a subclass of WrappedObject.");
+                }
                 T controller = ClassUtil.newInstance(wrapper);
                 Class<?> rawClass = controller.getAnnotationClass(wrapper);
                 if (rawClass == null) {
-                    if (wrapper.getDeclaredAnnotation(Optional.class) == null)
+                    if (wrapper.getDeclaredAnnotation(Optional.class) == null) {
                         throw new IllegalArgumentException("Wrapper " + wrapper.getName() + " must annotate its raw class.");
+                    }
                     return null;
                 }
                 buildingWrappers.put(wrapper, rawClass);
@@ -93,20 +106,25 @@ public interface WrappedObject {
 
                     for (Method m : wrapper.getDeclaredMethods()) {
                         Member rm = null;
-                        for (Annotation a : m.getDeclaredAnnotations())
-                            if (rm == null)
+                        for (Annotation a : m.getDeclaredAnnotations()) {
+                            if (rm == null) {
                                 rm = controller.getRawMember(rawClass, m, a);
-                        if (rm == null)
+                            }
+                        }
+                        if (rm == null) {
                             continue;
-                        if (Modifier.isStatic(m.getModifiers()))
+                        }
+                        if (Modifier.isStatic(m.getModifiers())) {
                             throw new IllegalArgumentException("Can not wrapper to a static method: " + m + ".");
+                        }
                         mn = new MethodNode(Opcodes.ACC_PUBLIC, m.getName(), getDesc(m), null, new String[0]);
                         boolean accessByForce = m.getDeclaredAnnotation(AccessByForce.class) != null || (!Modifier.isPublic(rawClass.getModifiers())) || (!Modifier.isPublic(rm.getDeclaringClass().getModifiers())) || (!Modifier.isPublic(rm.getModifiers()));
                         if (rm instanceof Field) {
                             switch (m.getParameterCount()) {
                                 case 0:
-                                    if (WrappedObject.class.isAssignableFrom(m.getReturnType()))
+                                    if (WrappedObject.class.isAssignableFrom(m.getReturnType())) {
                                         mn.visitLdcInsn(Type.getType(m.getReturnType()));
+                                    }
                                     if (accessByForce) {
                                         mn.visitFieldInsn(Opcodes.GETSTATIC, getType(cn.name), "objects", getDesc(Object[].class));
                                         mn.instructions.add(arrayLoadNode(Object.class, toList(ldcNode(objects.size()))));
@@ -121,8 +139,9 @@ public interface WrappedObject {
                                             mn.instructions.add(castNode(Object.class, ((Field) rm).getType()));
                                             mn.instructions.add(wrapNode());
                                             mn.instructions.add(castNode(m.getReturnType(), WrappedObject.class));
-                                        } else
+                                        } else {
                                             mn.instructions.add(castNode(m.getReturnType(), ((Field) rm).getType()));
+                                        }
                                         mn.instructions.add(returnNode(m.getReturnType()));
                                         objects.add(ClassUtil.unreflectGetter((Field) rm));
                                     } else {
@@ -136,8 +155,9 @@ public interface WrappedObject {
                                             mn.instructions.add(castNode(Object.class, ((Field) rm).getType()));
                                             mn.instructions.add(wrapNode());
                                             mn.instructions.add(castNode(m.getReturnType(), WrappedObject.class));
-                                        } else
+                                        } else {
                                             mn.instructions.add(castNode(m.getReturnType(), ((Field) rm).getType()));
+                                        }
                                         mn.instructions.add(returnNode(m.getReturnType()));
                                     }
                                     break;
@@ -155,16 +175,18 @@ public interface WrappedObject {
                                         if (WrappedObject.class.isAssignableFrom(m.getParameterTypes()[0])) {
                                             mn.instructions.add(AsmUtil.getRawNode());
                                             mn.instructions.add(AsmUtil.castNode(((Field) rm).getType(), Object.class));
-                                        } else
+                                        } else {
                                             mn.instructions.add(AsmUtil.castNode(((Field) rm).getType(), m.getParameterTypes()[0]));
+                                        }
                                         mn.visitMethodInsn(Opcodes.INVOKEVIRTUAL, getType(MethodHandle.class), "invokeExact", getDesc(Modifier.isStatic(rm.getModifiers()) ? new Class[]{((Field) rm).getType()} : new Class[]{rm.getDeclaringClass(), ((Field) rm).getType()}, void.class), false);
-                                        if (m.getReturnType() == void.class)
+                                        if (m.getReturnType() == void.class) {
                                             mn.visitInsn(Opcodes.RETURN);
-                                        else if (m.getReturnType() == wrapper) {
+                                        } else if (m.getReturnType() == wrapper) {
                                             mn.visitVarInsn(Opcodes.ALOAD, 0);
                                             mn.instructions.add(AsmUtil.returnNode(m.getReturnType()));
-                                        } else
+                                        } else {
                                             throw new IllegalArgumentException("Return type of setter must be This or void. On " + m);
+                                        }
                                         objects.add(ClassUtil.unreflectSetter((Field) rm));
                                     } else {
                                         if (!Modifier.isStatic(rm.getModifiers())) {
@@ -176,23 +198,26 @@ public interface WrappedObject {
                                         if (WrappedObject.class.isAssignableFrom(m.getParameterTypes()[0])) {
                                             mn.instructions.add(AsmUtil.getRawNode());
                                             mn.instructions.add(AsmUtil.castNode(((Field) rm).getType(), Object.class));
-                                        } else
+                                        } else {
                                             mn.instructions.add(AsmUtil.castNode(((Field) rm).getType(), m.getParameterTypes()[0]));
+                                        }
                                         mn.visitFieldInsn(Modifier.isStatic(rm.getModifiers()) ? Opcodes.PUTSTATIC : Opcodes.PUTFIELD, AsmUtil.getType(rm.getDeclaringClass()), rm.getName(), getDesc(((Field) rm).getType()));
                                         if (m.getReturnType() != void.class) {
                                             mn.visitVarInsn(Opcodes.ALOAD, 0);
                                             mn.instructions.add(AsmUtil.castNode(m.getReturnType(), wrapper));
                                             mn.instructions.add(AsmUtil.returnNode(m.getReturnType()));
-                                        } else
+                                        } else {
                                             mn.visitInsn(Opcodes.RETURN);
+                                        }
                                     }
                                     break;
                                 default:
                                     throw new IllegalArgumentException("Field accessor can only be getter(void) or setter(value). On " + m + ".");
                             }
                         } else if (rm instanceof Constructor) {
-                            if (m.getReturnType() != wrapper)
+                            if (m.getReturnType() != wrapper) {
                                 throw new IllegalArgumentException("Wrapped constructor must return wrapped this. On " + m);
+                            }
                             mn.visitLdcInsn(Type.getType(wrapper));
                             if (accessByForce) {
                                 mn.visitFieldInsn(Opcodes.GETSTATIC, getType(cn.name), "objects", getDesc(Object[].class));
@@ -203,8 +228,9 @@ public interface WrappedObject {
                                     if (WrappedObject.class.isAssignableFrom(m.getParameterTypes()[i])) {
                                         mn.instructions.add(AsmUtil.getRawNode());
                                         mn.instructions.add(AsmUtil.castNode(((Constructor<?>) rm).getParameterTypes()[i], Object.class));
-                                    } else
+                                    } else {
                                         mn.instructions.add(AsmUtil.castNode(((Constructor<?>) rm).getParameterTypes()[i], m.getParameterTypes()[i]));
+                                    }
                                 }
                                 mn.visitMethodInsn(Opcodes.INVOKEVIRTUAL, getType(MethodHandle.class), "invokeExact", getDesc(((Constructor<?>) rm).getParameterTypes(), rawClass), false);
                                 objects.add(ClassUtil.unreflect((Constructor<?>) rm));
@@ -216,8 +242,9 @@ public interface WrappedObject {
                                     if (WrappedObject.class.isAssignableFrom(m.getParameterTypes()[i])) {
                                         mn.instructions.add(AsmUtil.getRawNode());
                                         mn.instructions.add(AsmUtil.castNode(((Constructor<?>) rm).getParameterTypes()[i], Object.class));
-                                    } else
+                                    } else {
                                         mn.instructions.add(AsmUtil.castNode(((Constructor<?>) rm).getParameterTypes()[i], m.getParameterTypes()[i]));
+                                    }
                                 }
                                 mn.visitMethodInsn(Opcodes.INVOKESPECIAL, AsmUtil.getType(rawClass), "<init>", getDesc((Constructor<?>) rm), false);
                             }
@@ -225,8 +252,9 @@ public interface WrappedObject {
                             mn.instructions.add(AsmUtil.castNode(wrapper, WrappedObject.class));
                             mn.instructions.add(AsmUtil.returnNode(wrapper));
                         } else if (rm instanceof Method) {
-                            if (WrappedObject.class.isAssignableFrom(m.getReturnType()))
+                            if (WrappedObject.class.isAssignableFrom(m.getReturnType())) {
                                 mn.visitLdcInsn(Type.getType(m.getReturnType()));
+                            }
                             if (accessByForce) {
                                 mn.visitFieldInsn(Opcodes.GETSTATIC, getType(cn.name), "objects", getDesc(Object[].class));
                                 mn.instructions.add(arrayLoadNode(Object.class, toList(ldcNode(objects.size()))));
@@ -241,16 +269,18 @@ public interface WrappedObject {
                                     if (WrappedObject.class.isAssignableFrom(m.getParameterTypes()[i])) {
                                         mn.instructions.add(AsmUtil.getRawNode());
                                         mn.instructions.add(AsmUtil.castNode(((Method) rm).getParameterTypes()[i], Object.class));
-                                    } else
+                                    } else {
                                         mn.instructions.add(AsmUtil.castNode(((Method) rm).getParameterTypes()[i], m.getParameterTypes()[i]));
+                                    }
                                 }
                                 mn.visitMethodInsn(Opcodes.INVOKEVIRTUAL, getType(MethodHandle.class), "invokeExact", getDesc(Modifier.isStatic(rm.getModifiers()) ? ((Method) rm).getParameterTypes() : ListUtil.mergeLists(Lists.newArrayList(rm.getDeclaringClass()), Lists.newArrayList(((Method) rm).getParameterTypes())).toArray(new Class[0]), ((Method) rm).getReturnType()), false);
                                 if (WrappedObject.class.isAssignableFrom(m.getReturnType())) {
                                     mn.instructions.add(castNode(Object.class, ((Method) rm).getReturnType()));
                                     mn.instructions.add(wrapNode());
                                     mn.instructions.add(castNode(m.getReturnType(), WrappedObject.class));
-                                } else
+                                } else {
                                     mn.instructions.add(castNode(m.getReturnType(), ((Method) rm).getReturnType()));
+                                }
                                 mn.instructions.add(returnNode(m.getReturnType()));
                                 objects.add(ClassUtil.unreflect((Method) rm));
                             } else {
@@ -264,28 +294,33 @@ public interface WrappedObject {
                                     if (WrappedObject.class.isAssignableFrom(m.getParameterTypes()[i])) {
                                         mn.instructions.add(AsmUtil.getRawNode());
                                         mn.instructions.add(AsmUtil.castNode(((Method) rm).getParameterTypes()[i], Object.class));
-                                    } else
+                                    } else {
                                         mn.instructions.add(AsmUtil.castNode(((Method) rm).getParameterTypes()[i], m.getParameterTypes()[i]));
+                                    }
                                 }
                                 mn.visitMethodInsn(Modifier.isStatic(rm.getModifiers()) ? Opcodes.INVOKESTATIC : (rm.getDeclaringClass().isInterface() ? Opcodes.INVOKEINTERFACE : Opcodes.INVOKEVIRTUAL), AsmUtil.getType(rm.getDeclaringClass()), rm.getName(), getDesc((Method) rm), rm.getDeclaringClass().isInterface());
                                 if (WrappedObject.class.isAssignableFrom(m.getReturnType())) {
                                     mn.instructions.add(castNode(Object.class, ((Method) rm).getReturnType()));
                                     mn.instructions.add(wrapNode());
                                     mn.instructions.add(castNode(m.getReturnType(), WrappedObject.class));
-                                } else
+                                } else {
                                     mn.instructions.add(castNode(m.getReturnType(), ((Method) rm).getReturnType()));
+                                }
                                 mn.instructions.add(returnNode(m.getReturnType()));
                             }
-                        } else
+                        } else {
                             throw new IllegalArgumentException("Unknown raw member " + rm + " for " + m + ".");
+                        }
                         cn.methods.add(mn);
                     }
                     controller.apply(cn, wrapper);
                     for (Method m : wrapper.getMethods()) {
-                        if (!Modifier.isAbstract(m.getModifiers()) || Modifier.isStatic(m.getModifiers()) || !WrappedObject.class.isAssignableFrom(m.getDeclaringClass()))
+                        if (!Modifier.isAbstract(m.getModifiers()) || Modifier.isStatic(m.getModifiers()) || !WrappedObject.class.isAssignableFrom(m.getDeclaringClass())) {
                             continue;
-                        if (AsmUtil.getMethodNode(cn, m.getName(), getDesc(m)) != null)
+                        }
+                        if (AsmUtil.getMethodNode(cn, m.getName(), getDesc(m)) != null) {
                             continue;
+                        }
                         if (m.getName().equals("getRaw") && m.getParameterCount() == 0) {
                             mn = new MethodNode(Opcodes.ACC_PUBLIC, m.getName(), getDesc(m), null, new String[0]);
                             mn.visitVarInsn(Opcodes.ALOAD, 0);
@@ -295,15 +330,17 @@ public interface WrappedObject {
                             cn.methods.add(mn);
                             continue;
                         }
-                        if (m.getDeclaringClass() == wrapper)
+                        if (m.getDeclaringClass() == wrapper) {
                             continue;
+                        }
                         mn = new MethodNode(Opcodes.ACC_PUBLIC, m.getName(), getDesc(m), null, new String[0]);
                         mn.visitVarInsn(Opcodes.ALOAD, 0);
                         mn.visitLdcInsn(Type.getType(m.getDeclaringClass()));
                         mn.visitMethodInsn(Opcodes.INVOKEINTERFACE, AsmUtil.getType(WrappedObject.class), "cast", getDesc(new Class[]{Class.class}, WrappedObject.class), true);
                         mn.instructions.add(AsmUtil.castNode(m.getDeclaringClass(), WrappedObject.class));
-                        for (int i = 0; i < m.getParameterCount(); i++)
+                        for (int i = 0; i < m.getParameterCount(); i++) {
                             mn.instructions.add(AsmUtil.varLoadNode(m.getParameterTypes()[i], i + 1));
+                        }
                         mn.visitMethodInsn(Opcodes.INVOKEINTERFACE, AsmUtil.getType(m.getDeclaringClass()), m.getName(), getDesc(m), true);
                         mn.instructions.add(AsmUtil.returnNode(m.getReturnType()));
                         cn.methods.add(mn);
@@ -320,8 +357,9 @@ public interface WrappedObject {
                                 fos.write(cw.toByteArray());
                             }
                             throw e.getCause();
-                        } else
+                        } else {
                             throw e;
+                        }
                     }
                     cl.getDeclaredField("objects").set(null, objects.toArray());
                     synchronized (cache) {
@@ -334,8 +372,9 @@ public interface WrappedObject {
                 }
             }
             T r = TypeUtil.cast(c.invoke(raw));
-            if (raw != null && !getRawClass(wrapper).isAssignableFrom(ClassUtil.getClass(raw)))
+            if (raw != null && !getRawClass(wrapper).isAssignableFrom(ClassUtil.getClass(raw))) {
                 throw new ClassCastException(raw + " is not " + getRawClass(wrapper));
+            }
             return r;
         } catch (Throwable e) {
             throw TypeUtil.throwException(e);
@@ -345,8 +384,9 @@ public interface WrappedObject {
     static Class<?>[] getRawClasses(Class<?>... classes) {
         Class<?>[] r = Arrays.copyOf(classes, classes.length);
         for (int i = 0; i < r.length; i++) {
-            if (WrappedObject.class.isAssignableFrom(r[i]))
+            if (WrappedObject.class.isAssignableFrom(r[i])) {
                 r[i] = WrappedObject.getRawClass(TypeUtil.cast(r[i]));
+            }
         }
         return r;
     }
@@ -355,20 +395,12 @@ public interface WrappedObject {
         return getRawClass(wrapper).isAssignableFrom(getRaw().getClass());
     }
 
-    default boolean isNull() {
-        return getRaw() == null;
-    }
-
-    Object getRaw();
-
-    void setRaw(Object raw);
-
-    @WrappedMethod("clone")
-    WrappedObject clone00();
-
     default WrappedObject clone0() {
         return clone00();
     }
+
+    @WrappedMethod("clone")
+    WrappedObject clone00();
 
     default int hashCode0() {
         return Objects.hashCode(getRaw());
@@ -383,8 +415,9 @@ public interface WrappedObject {
     }
 
     default boolean equals0(Object obj) {
-        if (obj instanceof WrappedObject)
+        if (obj instanceof WrappedObject) {
             return Objects.equals(getRaw(), ((WrappedObject) obj).getRaw());
+        }
         return false;
     }
 
@@ -405,12 +438,14 @@ public interface WrappedObject {
     default Member getRawMember(Class<?> rawClass, Method m, Annotation a) {
         if (a instanceof WrappedFieldAccessor) {
             Class<?> type;
-            if (m.getParameterCount() == 0)
+            if (m.getParameterCount() == 0) {
                 type = m.getReturnType();
-            else
+            } else {
                 type = m.getParameterTypes()[0];
-            if (WrappedObject.class.isAssignableFrom(type))
+            }
+            if (WrappedObject.class.isAssignableFrom(type)) {
                 type = WrappedObject.getRawClass(TypeUtil.cast(type));
+            }
             Class<?> finalType = type;
             for (String name : ((WrappedFieldAccessor) a).value()) {
                 try {
@@ -418,32 +453,37 @@ public interface WrappedObject {
                         return Arrays.stream(rawClass.getDeclaredFields()).filter(f -> Modifier.isStatic(f.getModifiers())).filter(f -> f.getType() == finalType).collect(Collectors.toList()).get(Integer.parseInt(name.substring(1)));
                     } else if (name.startsWith("@")) {
                         return Arrays.stream(rawClass.getDeclaredFields()).filter(f -> !Modifier.isStatic(f.getModifiers())).filter(f -> f.getType() == finalType).collect(Collectors.toList()).get(Integer.parseInt(name.substring(1)));
-                    } else
+                    } else {
                         return rawClass.getDeclaredField(name);
+                    }
                 } catch (NoSuchFieldException | IndexOutOfBoundsException ignored) {
                 }
             }
-            if (m.getDeclaredAnnotation(Optional.class) == null)
+            if (m.getDeclaredAnnotation(Optional.class) == null) {
                 throw TypeUtil.throwException(new NoSuchFieldException("Field of accessor " + m + " is not found."));
+            }
         } else if (a instanceof WrappedConstructor) {
             try {
                 return rawClass.getDeclaredConstructor(getRawClasses(m.getParameterTypes()));
             } catch (NoSuchMethodException ignored) {
             }
-            if (m.getDeclaredAnnotation(Optional.class) == null)
+            if (m.getDeclaredAnnotation(Optional.class) == null) {
                 throw TypeUtil.throwException(new NoSuchMethodException("Method of wrapper " + m + " is not found."));
+            }
         } else if (a instanceof WrappedMethod) {
             for (String name : ((WrappedMethod) a).value()) {
-                if (name.startsWith("@") || name.startsWith("#"))
+                if (name.startsWith("@") || name.startsWith("#")) {
                     return Arrays.stream(rawClass.getDeclaredMethods()).filter(t -> (name.charAt(0) == '#') == Modifier.isStatic(t.getModifiers())).filter(t -> t.getReturnType().equals(getRawClasses(m.getReturnType())[0]) && Arrays.equals(t.getParameterTypes(), getRawClasses(m.getParameterTypes()))).toArray(Method[]::new)[Integer.parseInt(name.substring(1))];
-                else
+                } else {
                     try {
                         return rawClass.getDeclaredMethod(name, getRawClasses(m.getParameterTypes()));
                     } catch (NoSuchMethodException ignored) {
                     }
+                }
             }
-            if (m.getDeclaredAnnotation(Optional.class) == null)
+            if (m.getDeclaredAnnotation(Optional.class) == null) {
                 throw TypeUtil.throwException(new NoSuchMethodException("Method of wrapper " + m + " is not found."));
+            }
         }
         return null;
     }
@@ -453,13 +493,14 @@ public interface WrappedObject {
 
     default Class<?> getAnnotationClass(Class<? extends WrappedObject> wrapper) {
         WrappedClass a = wrapper.getDeclaredAnnotation(WrappedClass.class);
-        if (a != null)
+        if (a != null) {
             for (String n : a.value()) {
                 try {
                     return Class.forName(n, false, this.getClass().getClassLoader());
                 } catch (ClassNotFoundException ignored) {
                 }
             }
+        }
         return null;
     }
 }

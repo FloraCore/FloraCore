@@ -76,6 +76,23 @@ public class InsnList implements Iterable<AbstractInsnNode> {
     }
 
     /**
+     * Returns an array containing all the instructions in this list.
+     *
+     * @return an array containing all the instructions in this list.
+     */
+    public AbstractInsnNode[] toArray() {
+        int currentInsnIndex = 0;
+        AbstractInsnNode currentInsn = firstInsn;
+        AbstractInsnNode[] insnNodeArray = new AbstractInsnNode[size];
+        while (currentInsn != null) {
+            insnNodeArray[currentInsnIndex] = currentInsn;
+            currentInsn.index = currentInsnIndex++;
+            currentInsn = currentInsn.nextInsn;
+        }
+        return insnNodeArray;
+    }
+
+    /**
      * Returns {@literal true} if the given instruction belongs to this list. This method always scans
      * the instructions of this list until it finds the given instruction or reaches the end of the
      * list.
@@ -141,23 +158,6 @@ public class InsnList implements Iterable<AbstractInsnNode> {
     @SuppressWarnings("unchecked")
     public ListIterator<AbstractInsnNode> iterator(final int index) {
         return new InsnListIterator(index);
-    }
-
-    /**
-     * Returns an array containing all the instructions in this list.
-     *
-     * @return an array containing all the instructions in this list.
-     */
-    public AbstractInsnNode[] toArray() {
-        int currentInsnIndex = 0;
-        AbstractInsnNode currentInsn = firstInsn;
-        AbstractInsnNode[] insnNodeArray = new AbstractInsnNode[size];
-        while (currentInsn != null) {
-            insnNodeArray[currentInsnIndex] = currentInsn;
-            currentInsn.index = currentInsnIndex++;
-            currentInsn = currentInsn.nextInsn;
-        }
-        return insnNodeArray;
     }
 
     /**
@@ -234,6 +234,28 @@ public class InsnList implements Iterable<AbstractInsnNode> {
         }
         cache = null;
         insnList.removeAll(false);
+    }
+
+    /**
+     * Removes all the instructions of this list.
+     *
+     * @param mark if the instructions must be marked as no longer belonging to any {@link InsnList}.
+     */
+    void removeAll(final boolean mark) {
+        if (mark) {
+            AbstractInsnNode currentInsn = firstInsn;
+            while (currentInsn != null) {
+                AbstractInsnNode next = currentInsn.nextInsn;
+                currentInsn.index = -1; // currentInsn no longer belongs to an InsnList.
+                currentInsn.previousInsn = null;
+                currentInsn.nextInsn = null;
+                currentInsn = next;
+            }
+        }
+        size = 0;
+        firstInsn = null;
+        lastInsn = null;
+        cache = null;
     }
 
     /**
@@ -413,28 +435,6 @@ public class InsnList implements Iterable<AbstractInsnNode> {
 
     /**
      * Removes all the instructions of this list.
-     *
-     * @param mark if the instructions must be marked as no longer belonging to any {@link InsnList}.
-     */
-    void removeAll(final boolean mark) {
-        if (mark) {
-            AbstractInsnNode currentInsn = firstInsn;
-            while (currentInsn != null) {
-                AbstractInsnNode next = currentInsn.nextInsn;
-                currentInsn.index = -1; // currentInsn no longer belongs to an InsnList.
-                currentInsn.previousInsn = null;
-                currentInsn.nextInsn = null;
-                currentInsn = next;
-            }
-        }
-        size = 0;
-        firstInsn = null;
-        lastInsn = null;
-        cache = null;
-    }
-
-    /**
-     * Removes all the instructions of this list.
      */
     public void clear() {
         removeAll(false);
@@ -499,21 +499,6 @@ public class InsnList implements Iterable<AbstractInsnNode> {
         }
 
         @Override
-        public void remove() {
-            if (remove != null) {
-                if (remove == nextInsn) {
-                    nextInsn = nextInsn.nextInsn;
-                } else {
-                    previousInsn = previousInsn.previousInsn;
-                }
-                InsnList.this.remove(remove);
-                remove = null;
-            } else {
-                throw new IllegalStateException();
-            }
-        }
-
-        @Override
         public boolean hasPrevious() {
             return previousInsn != null;
         }
@@ -553,16 +538,18 @@ public class InsnList implements Iterable<AbstractInsnNode> {
         }
 
         @Override
-        public void add(final Object o) {
-            if (nextInsn != null) {
-                InsnList.this.insertBefore(nextInsn, (AbstractInsnNode) o);
-            } else if (previousInsn != null) {
-                InsnList.this.insert(previousInsn, (AbstractInsnNode) o);
+        public void remove() {
+            if (remove != null) {
+                if (remove == nextInsn) {
+                    nextInsn = nextInsn.nextInsn;
+                } else {
+                    previousInsn = previousInsn.previousInsn;
+                }
+                InsnList.this.remove(remove);
+                remove = null;
             } else {
-                InsnList.this.add((AbstractInsnNode) o);
+                throw new IllegalStateException();
             }
-            previousInsn = (AbstractInsnNode) o;
-            remove = null;
         }
 
         @Override
@@ -577,6 +564,19 @@ public class InsnList implements Iterable<AbstractInsnNode> {
             } else {
                 throw new IllegalStateException();
             }
+        }
+
+        @Override
+        public void add(final Object o) {
+            if (nextInsn != null) {
+                InsnList.this.insertBefore(nextInsn, (AbstractInsnNode) o);
+            } else if (previousInsn != null) {
+                InsnList.this.insert(previousInsn, (AbstractInsnNode) o);
+            } else {
+                InsnList.this.add((AbstractInsnNode) o);
+            }
+            previousInsn = (AbstractInsnNode) o;
+            remove = null;
         }
     }
 }

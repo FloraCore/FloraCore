@@ -1,6 +1,5 @@
 package team.floracore.common.util.nothing;
 
-
 import team.floracore.common.util.*;
 import team.floracore.common.util.wrapper.*;
 
@@ -22,20 +21,23 @@ public class NothingInjectInvoker implements Function<Object[], Object> {
         try {
             Object[] as = new Object[args.length];
             for (int i = 0; i != args.length; i++) {
-                if (argsWrappers[i] != null)
+                if (argsWrappers[i] != null) {
                     as[i] = WrappedObject.wrap(argsWrappers[i], ((Object[]) args[i])[0]);
-                else
+                } else {
                     as[i] = args[i];
+                }
             }
             Object r = target.invokeWithArguments(as);
             for (int i = 0; i != args.length; i++) {
-                if (argsWrappers[i] != null)
+                if (argsWrappers[i] != null) {
                     ((Object[]) args[i])[0] = ((WrappedObject) as[i]).getRaw();
+                }
             }
             if (r != null) {
                 Object o = TypeUtil.<Optional<?>, Object>cast(r).orElse(null);
-                if (o instanceof WrappedObject)
+                if (o instanceof WrappedObject) {
                     r = Optional.ofNullable(TypeUtil.<WrappedObject, Object>cast(o).getRaw());
+                }
             }
             return r;
         } catch (Throwable e) {

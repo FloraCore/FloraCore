@@ -19,6 +19,11 @@ public class BungeeConfigAdapter implements ConfigurationAdapter {
     }
 
     @Override
+    public FloraCorePlugin getPlugin() {
+        return this.plugin;
+    }
+
+    @Override
     public void reload() {
         try {
             this.configuration = ConfigurationProvider.getProvider(YamlConfiguration.class).load(this.file);
@@ -70,10 +75,5 @@ public class BungeeConfigAdapter implements ConfigurationAdapter {
         }
 
         return map;
-    }
-
-    @Override
-    public FloraCorePlugin getPlugin() {
-        return this.plugin;
     }
 }

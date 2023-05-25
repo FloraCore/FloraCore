@@ -1,6 +1,5 @@
 package team.floracore.common.util.nothing;
 
-
 import team.floracore.common.util.Optional;
 import team.floracore.common.util.*;
 import team.floracore.common.util.wrapper.*;
@@ -34,30 +33,6 @@ public class NothingClass {
         update();
     }
 
-    public <T extends Nothing & WrappedObject> void uninstall(Class<T> nothing) {
-        installedNothings.remove(nothing);
-        if (installedNothings.isEmpty())
-            uninstallAll();
-        else
-            update();
-    }
-
-    public void uninstallAll() {
-        installedNothings.clear();
-        free();
-        ClassUtil.loadClass(rawClass.getName(), rawData, rawClass.getClassLoader());
-    }
-
-    public int test(int[] v) {
-        return v[114514];
-    }
-
-    public void free() {
-        for (int h : handles)
-            Nothing.data.remove(h);
-        handles.clear();
-    }
-
     public void update() {
         free();
         try {
@@ -68,12 +43,13 @@ public class NothingClass {
             for (Class<? extends Nothing> n : installedNothings) {
                 for (Method m : n.getDeclaredMethods()) {
                     NothingInject[] is = TypeUtil.<Nothing, Object>cast(WrappedObject.getStatic(TypeUtil.cast(n))).getInjects(m);
-                    if (is != null)
+                    if (is != null) {
                         for (NothingInject i : is) {
                             Class<?>[] args = i.args();
                             for (int j = 0; j < args.length; j++) {
-                                if (WrappedObject.class.isAssignableFrom(args[j]))
+                                if (WrappedObject.class.isAssignableFrom(args[j])) {
                                     args[j] = WrappedObject.getRawClass(TypeUtil.cast(args[j]));
+                                }
                             }
                             Method tar = null;
                             for (String s : i.name()) {
@@ -83,16 +59,19 @@ public class NothingClass {
                                 }
                             }
                             if (tar == null) {
-                                if (i.optional() || m.getDeclaredAnnotation(Optional.class) != null)
+                                if (i.optional() || m.getDeclaredAnnotation(Optional.class) != null) {
                                     break;
-                                else
+                                } else {
                                     throw new NoSuchMethodException("Target of " + m + ".");
+                                }
                             }
                             MethodNode mn = AsmUtil.getMethodNode(cn, tar.getName(), AsmUtil.getDesc(tar));
-                            if (!nothingMethods.containsKey(mn))
+                            if (!nothingMethods.containsKey(mn)) {
                                 nothingMethods.put(mn, new NothingMethod(tar, mn));
+                            }
                             nothingMethods.get(mn).inject(i, m);
                         }
+                    }
                 }
             }
             for (NothingMethod nm : nothingMethods.values()) {
@@ -111,17 +90,19 @@ public class NothingClass {
                     } catch (Exception e) {
                         throw TypeUtil.throwException(e);
                     }
-                    if (var3.isAssignableFrom(var4))
+                    if (var3.isAssignableFrom(var4)) {
                         return type1;
-                    else if (var4.isAssignableFrom(var3))
+                    } else if (var4.isAssignableFrom(var3)) {
                         return type2;
-                    else if (!var3.isInterface() && !var4.isInterface()) {
+                    } else if (!var3.isInterface() && !var4.isInterface()) {
                         do {
                             var3 = var3.getSuperclass();
-                        } while (!var3.isAssignableFrom(var4));
+                        }
+                        while (!var3.isAssignableFrom(var4));
                         return var3.getName().replace('.', '/');
-                    } else
+                    } else {
                         return "java/lang/Object";
+                    }
                 }
             };
             cn.accept(cw);
@@ -129,5 +110,31 @@ public class NothingClass {
         } catch (Throwable e) {
             throw TypeUtil.throwException(e);
         }
+    }
+
+    public void free() {
+        for (int h : handles) {
+            Nothing.data.remove(h);
+        }
+        handles.clear();
+    }
+
+    public <T extends Nothing & WrappedObject> void uninstall(Class<T> nothing) {
+        installedNothings.remove(nothing);
+        if (installedNothings.isEmpty()) {
+            uninstallAll();
+        } else {
+            update();
+        }
+    }
+
+    public void uninstallAll() {
+        installedNothings.clear();
+        free();
+        ClassUtil.loadClass(rawClass.getName(), rawData, rawClass.getClassLoader());
+    }
+
+    public int test(int[] v) {
+        return v[114514];
     }
 }

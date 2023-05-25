@@ -9,46 +9,27 @@ import java.util.*;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagList", maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagList", minVer = 17)})
 public interface NmsNBTTagList extends NmsNBTTag {
-    static NmsNBTTagList newInstance() {
-        return WrappedObject.getStatic(NmsNBTTagList.class).staticNewInstance();
-    }
-
     static <T extends NmsNBTBase> NmsNBTTagList newInstance(List<T> l) {
         NmsNBTTagList r = newInstance();
         l.forEach(r::add);
         return r;
     }
 
-    static <T extends NmsNBTBase> NmsNBTTagList newInstance(T... l) {
-        NmsNBTTagList r = newInstance();
-        for (T i : l)
-            r.add(i);
-        return r;
+    static NmsNBTTagList newInstance() {
+        return WrappedObject.getStatic(NmsNBTTagList.class).staticNewInstance();
     }
 
-    static NmsNBTTagList wrapValues(List<?> values) {
-        if (values == null)
-            return null;
-        NmsNBTTagList r = NmsNBTTagList.newInstance();
-        values.forEach(v ->
-        {
-            r.add(NmsNBTTag.wrapValue(v));
-        });
-        return r;
+    default boolean add(NmsNBTBase nbt) {
+        if (BukkitWrapper.version >= 14) {
+            addV14(nbt);
+        } else {
+            addV_14(nbt);
+        }
+        return true;
     }
 
     @WrappedConstructor
     NmsNBTTagList staticNewInstance();
-
-    @Deprecated
-    @WrappedBukkitFieldAccessor({@VersionName("list"), @VersionName(minVer = 17, value = "c")})
-    List<Object> getList();
-
-    @WrappedMethod("size")
-    int size();
-
-    @WrappedBukkitMethod({@VersionName(value = "add", minVer = 14), @VersionName(minVer = 14, value = "c")})
-    void addV14(int i, NmsNBTBase nbt);
 
     default boolean addV14(NmsNBTBase nbt) {
         addV14(size(), nbt);
@@ -58,12 +39,30 @@ public interface NmsNBTTagList extends NmsNBTTag {
     @WrappedBukkitMethod(@VersionName(value = "add", maxVer = 14))
     void addV_14(NmsNBTBase nbt);
 
-    default boolean add(NmsNBTBase nbt) {
-        if (BukkitWrapper.version >= 14)
-            addV14(nbt);
-        else
-            addV_14(nbt);
-        return true;
+    @WrappedBukkitMethod({@VersionName(value = "add", minVer = 14), @VersionName(minVer = 14, value = "c")})
+    void addV14(int i, NmsNBTBase nbt);
+
+    @WrappedMethod("size")
+    int size();
+
+    static <T extends NmsNBTBase> NmsNBTTagList newInstance(T... l) {
+        NmsNBTTagList r = newInstance();
+        for (T i : l) {
+            r.add(i);
+        }
+        return r;
+    }
+
+    static NmsNBTTagList wrapValues(List<?> values) {
+        if (values == null) {
+            return null;
+        }
+        NmsNBTTagList r = NmsNBTTagList.newInstance();
+        values.forEach(v ->
+        {
+            r.add(NmsNBTTag.wrapValue(v));
+        });
+        return r;
     }
 
     default <T extends NmsNBTBase> NmsNBTTagList addAll(Collection<T> nbt) {
@@ -71,39 +70,13 @@ public interface NmsNBTTagList extends NmsNBTTag {
         return this;
     }
 
-    @WrappedBukkitMethod({@VersionName(minVer = 8, maxVer = 12, value = "g"), @VersionName(minVer = 12, maxVer = 13, value = "i"), @VersionName(value = "get", minVer = 13, maxVer = 18), @VersionName(minVer = 18, value = "k")})
-    NmsNBTBase get(int index);
-
-    default <T extends NmsNBTBase> T get(int index, Class<T> type) {
-        return get(index).cast(type);
-    }
-
-    @WrappedBukkitMethod(@VersionName(maxVer = 13, value = "a"))
-    void setV_13(int index, NmsNBTBase nbt);
-
-    @WrappedBukkitMethod({@VersionName(minVer = 13, value = "set"), @VersionName(minVer = 18, value = "d")})
-    NmsNBTBase setV13(int index, NmsNBTBase nbt);
-
-    default void set(int index, NmsNBTBase nbt) {
-        if (BukkitWrapper.v13)
-            setV13(index, nbt);
-        else
-            setV_13(index, nbt);
-    }
-
-    default boolean remove(NmsNBTBase nbt) {
-        return getList().remove(nbt.getRaw());
-    }
-
-    @WrappedBukkitMethod({@VersionName(minVer = 8, value = "a"), @VersionName(minVer = 12, value = "remove"), @VersionName(minVer = 18, value = "c")})
-    NmsNBTBase remove(int index);
-
-    default <T extends WrappedObject> T remove(int index, Class<T> type) {
-        return WrappedObject.wrap(type, remove(index).getRaw());
-    }
-
     default List<NmsNBTBase> values() {
         return new AbstractList<NmsNBTBase>() {
+            @Override
+            public boolean add(NmsNBTBase e) {
+                return NmsNBTTagList.this.add(e);
+            }
+
             @Override
             public NmsNBTBase get(int index) {
                 return NmsNBTTagList.this.get(index);
@@ -117,21 +90,17 @@ public interface NmsNBTTagList extends NmsNBTTag {
             }
 
             @Override
+            public void add(int index, NmsNBTBase element) {
+                if (BukkitWrapper.v13) {
+                    NmsNBTTagList.this.addV14(index, element);
+                } else {
+                    throw new UnsupportedOperationException();
+                }
+            }
+
+            @Override
             public NmsNBTBase remove(int index) {
                 return NmsNBTTagList.this.remove(index);
-            }
-
-            @Override
-            public void add(int index, NmsNBTBase element) {
-                if (BukkitWrapper.v13)
-                    NmsNBTTagList.this.addV14(index, element);
-                else
-                    throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public boolean add(NmsNBTBase e) {
-                return NmsNBTTagList.this.add(e);
             }
 
             @Override
@@ -146,8 +115,41 @@ public interface NmsNBTTagList extends NmsNBTTag {
         };
     }
 
+    @WrappedBukkitMethod({@VersionName(minVer = 8, maxVer = 12, value = "g"), @VersionName(minVer = 12, maxVer = 13, value = "i"), @VersionName(value = "get", minVer = 13, maxVer = 18), @VersionName(minVer = 18, value = "k")})
+    NmsNBTBase get(int index);
+
+    default void set(int index, NmsNBTBase nbt) {
+        if (BukkitWrapper.v13) {
+            setV13(index, nbt);
+        } else {
+            setV_13(index, nbt);
+        }
+    }
+
+    @WrappedBukkitMethod({@VersionName(minVer = 8, value = "a"), @VersionName(minVer = 12, value = "remove"), @VersionName(minVer = 18, value = "c")})
+    NmsNBTBase remove(int index);
+
+    default boolean remove(NmsNBTBase nbt) {
+        return getList().remove(nbt.getRaw());
+    }
+
+    @WrappedBukkitMethod({@VersionName(minVer = 13, value = "set"), @VersionName(minVer = 18, value = "d")})
+    NmsNBTBase setV13(int index, NmsNBTBase nbt);
+
+    @WrappedBukkitMethod(@VersionName(maxVer = 13, value = "a"))
+    void setV_13(int index, NmsNBTBase nbt);
+
+    @Deprecated
+    @WrappedBukkitFieldAccessor({@VersionName("list"), @VersionName(minVer = 17, value = "c")})
+    List<Object> getList();
+
     default <T extends NmsNBTBase> List<T> values(Class<T> wrapper) {
         return new AbstractList<T>() {
+            @Override
+            public boolean add(T e) {
+                return NmsNBTTagList.this.add(e);
+            }
+
             @Override
             public T get(int index) {
                 return NmsNBTTagList.this.get(index, wrapper);
@@ -161,23 +163,19 @@ public interface NmsNBTTagList extends NmsNBTTag {
             }
 
             @Override
+            public void add(int index, T element) {
+                if (BukkitWrapper.v13) {
+                    NmsNBTTagList.this.addV14(index, element);
+                } else if (index == size()) {
+                    NmsNBTTagList.this.addV_14(element);
+                } else {
+                    throw new UnsupportedOperationException();
+                }
+            }
+
+            @Override
             public T remove(int index) {
                 return NmsNBTTagList.this.remove(index, wrapper);
-            }
-
-            @Override
-            public void add(int index, T element) {
-                if (BukkitWrapper.v13)
-                    NmsNBTTagList.this.addV14(index, element);
-                else if (index == size())
-                    NmsNBTTagList.this.addV_14(element);
-                else
-                    throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public boolean add(T e) {
-                return NmsNBTTagList.this.add(e);
             }
 
             @Override
@@ -192,8 +190,21 @@ public interface NmsNBTTagList extends NmsNBTTag {
         };
     }
 
+    default <T extends NmsNBTBase> T get(int index, Class<T> type) {
+        return get(index).cast(type);
+    }
+
+    default <T extends WrappedObject> T remove(int index, Class<T> type) {
+        return WrappedObject.wrap(type, remove(index).getRaw());
+    }
+
     default List<String> wrapStringList() {
         return new AbstractList<String>() {
+            @Override
+            public boolean add(String e) {
+                return NmsNBTTagList.this.add(NmsNBTTagString.newInstance(e));
+            }
+
             @Override
             public String get(int index) {
                 return NmsNBTTagList.this.get(index, NmsNBTTagString.class).getValue();
@@ -207,21 +218,17 @@ public interface NmsNBTTagList extends NmsNBTTag {
             }
 
             @Override
+            public void add(int index, String element) {
+                if (BukkitWrapper.v13) {
+                    NmsNBTTagList.this.addV14(index, NmsNBTTagString.newInstance(element));
+                } else {
+                    throw new UnsupportedOperationException();
+                }
+            }
+
+            @Override
             public String remove(int index) {
                 return NmsNBTTagList.this.remove(index, NmsNBTTagString.class).getValue();
-            }
-
-            @Override
-            public void add(int index, String element) {
-                if (BukkitWrapper.v13)
-                    NmsNBTTagList.this.addV14(index, NmsNBTTagString.newInstance(element));
-                else
-                    throw new UnsupportedOperationException();
-            }
-
-            @Override
-            public boolean add(String e) {
-                return NmsNBTTagList.this.add(NmsNBTTagString.newInstance(e));
             }
 
             @Override

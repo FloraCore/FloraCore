@@ -156,28 +156,6 @@ public class SerialVersionUIDAdder extends ClassVisitor {
     // Overridden methods
     // -----------------------------------------------------------------------------------------------
 
-    /**
-     * Sorts the items in the collection and writes it to the given output stream.
-     *
-     * @param itemCollection   a collection of items.
-     * @param dataOutputStream where the items must be written.
-     * @param dotted           whether package names must use dots, instead of slashes.
-     * @throws IOException if an error occurs.
-     */
-    private static void writeItems(
-            final Collection<Item> itemCollection,
-            final DataOutput dataOutputStream,
-            final boolean dotted)
-            throws IOException {
-        Item[] items = itemCollection.toArray(new Item[0]);
-        Arrays.sort(items);
-        for (Item item : items) {
-            dataOutputStream.writeUTF(item.name);
-            dataOutputStream.writeInt(item.access);
-            dataOutputStream.writeUTF(dotted ? item.descriptor.replace('/', '.') : item.descriptor);
-        }
-    }
-
     @Override
     public void visit(
             final int version,
@@ -200,6 +178,58 @@ public class SerialVersionUIDAdder extends ClassVisitor {
         }
 
         super.visit(version, access, name, signature, superName, interfaces);
+    }
+
+    @Override
+    public void visitInnerClass(
+            final String innerClassName,
+            final String outerName,
+            final String innerName,
+            final int innerClassAccess) {
+        // Handles a bizarre special case. Nested classes (static classes declared inside another class)
+        // that are protected have their access bit set to public in their class files to deal with some
+        // odd reflection situation. Our SVUID computation must do as the JVM does and ignore access
+        // bits in the class file in favor of the access bits of the InnerClass attribute.
+        if ((name != null) && name.equals(innerClassName)) {
+            this.access = innerClassAccess;
+        }
+        super.visitInnerClass(innerClassName, outerName, innerName, innerClassAccess);
+    }
+
+    @Override
+    public FieldVisitor visitField(
+            final int access,
+            final String name,
+            final String desc,
+            final String signature,
+            final Object value) {
+        // Get the class field information for step 4 of the algorithm. Also determine if the class
+        // already has a SVUID.
+        if (computeSvuid) {
+            if ("serialVersionUID".equals(name)) {
+                // Since the class already has SVUID, we won't be computing it.
+                computeSvuid = false;
+                hasSvuid = true;
+            }
+            // Collect the non private fields. Only the ACC_PUBLIC, ACC_PRIVATE, ACC_PROTECTED,
+            // ACC_STATIC, ACC_FINAL, ACC_VOLATILE, and ACC_TRANSIENT flags are used when computing
+            // serialVersionUID values.
+            if ((access & Opcodes.ACC_PRIVATE) == 0
+                    || (access & (Opcodes.ACC_STATIC | Opcodes.ACC_TRANSIENT)) == 0) {
+                int mods =
+                        access
+                                & (Opcodes.ACC_PUBLIC
+                                | Opcodes.ACC_PRIVATE
+                                | Opcodes.ACC_PROTECTED
+                                | Opcodes.ACC_STATIC
+                                | Opcodes.ACC_FINAL
+                                | Opcodes.ACC_VOLATILE
+                                | Opcodes.ACC_TRANSIENT);
+                svuidFields.add(new Item(name, mods, desc));
+            }
+        }
+
+        return super.visitField(access, name, desc, signature, value);
     }
 
     @Override
@@ -243,62 +273,6 @@ public class SerialVersionUIDAdder extends ClassVisitor {
     }
 
     @Override
-    public FieldVisitor visitField(
-            final int access,
-            final String name,
-            final String desc,
-            final String signature,
-            final Object value) {
-        // Get the class field information for step 4 of the algorithm. Also determine if the class
-        // already has a SVUID.
-        if (computeSvuid) {
-            if ("serialVersionUID".equals(name)) {
-                // Since the class already has SVUID, we won't be computing it.
-                computeSvuid = false;
-                hasSvuid = true;
-            }
-            // Collect the non private fields. Only the ACC_PUBLIC, ACC_PRIVATE, ACC_PROTECTED,
-            // ACC_STATIC, ACC_FINAL, ACC_VOLATILE, and ACC_TRANSIENT flags are used when computing
-            // serialVersionUID values.
-            if ((access & Opcodes.ACC_PRIVATE) == 0
-                    || (access & (Opcodes.ACC_STATIC | Opcodes.ACC_TRANSIENT)) == 0) {
-                int mods =
-                        access
-                                & (Opcodes.ACC_PUBLIC
-                                | Opcodes.ACC_PRIVATE
-                                | Opcodes.ACC_PROTECTED
-                                | Opcodes.ACC_STATIC
-                                | Opcodes.ACC_FINAL
-                                | Opcodes.ACC_VOLATILE
-                                | Opcodes.ACC_TRANSIENT);
-                svuidFields.add(new Item(name, mods, desc));
-            }
-        }
-
-        return super.visitField(access, name, desc, signature, value);
-    }
-
-    @Override
-    public void visitInnerClass(
-            final String innerClassName,
-            final String outerName,
-            final String innerName,
-            final int innerClassAccess) {
-        // Handles a bizarre special case. Nested classes (static classes declared inside another class)
-        // that are protected have their access bit set to public in their class files to deal with some
-        // odd reflection situation. Our SVUID computation must do as the JVM does and ignore access
-        // bits in the class file in favor of the access bits of the InnerClass attribute.
-        if ((name != null) && name.equals(innerClassName)) {
-            this.access = innerClassAccess;
-        }
-        super.visitInnerClass(innerClassName, outerName, innerName, innerClassAccess);
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Utility methods
-    // -----------------------------------------------------------------------------------------------
-
-    @Override
     public void visitEnd() {
         // Add the SVUID field to the class if it doesn't have one.
         if (computeSvuid && !hasSvuid) {
@@ -312,16 +286,9 @@ public class SerialVersionUIDAdder extends ClassVisitor {
         super.visitEnd();
     }
 
-    /**
-     * Returns true if the class already has a SVUID field. The result of this method is only valid
-     * when visitEnd has been called.
-     *
-     * @return true if the class already has a SVUID field.
-     */
-    // DontCheck(AbbreviationAsWordInName): can't be renamed (for backward binary compatibility).
-    public boolean hasSVUID() {
-        return hasSvuid;
-    }
+    // -----------------------------------------------------------------------------------------------
+    // Utility methods
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Adds a final static serialVersionUID field to the class, with the given value.
@@ -422,6 +389,28 @@ public class SerialVersionUIDAdder extends ClassVisitor {
     }
 
     /**
+     * Sorts the items in the collection and writes it to the given output stream.
+     *
+     * @param itemCollection   a collection of items.
+     * @param dataOutputStream where the items must be written.
+     * @param dotted           whether package names must use dots, instead of slashes.
+     * @throws IOException if an error occurs.
+     */
+    private static void writeItems(
+            final Collection<Item> itemCollection,
+            final DataOutput dataOutputStream,
+            final boolean dotted)
+            throws IOException {
+        Item[] items = itemCollection.toArray(new Item[0]);
+        Arrays.sort(items);
+        for (Item item : items) {
+            dataOutputStream.writeUTF(item.name);
+            dataOutputStream.writeInt(item.access);
+            dataOutputStream.writeUTF(dotted ? item.descriptor.replace('/', '.') : item.descriptor);
+        }
+    }
+
+    /**
      * Returns the SHA-1 message digest of the given value.
      *
      * @param value the value whose SHA message digest must be computed.
@@ -434,6 +423,17 @@ public class SerialVersionUIDAdder extends ClassVisitor {
         } catch (NoSuchAlgorithmException e) {
             throw new UnsupportedOperationException(e);
         }
+    }
+
+    /**
+     * Returns true if the class already has a SVUID field. The result of this method is only valid
+     * when visitEnd has been called.
+     *
+     * @return true if the class already has a SVUID field.
+     */
+    // DontCheck(AbbreviationAsWordInName): can't be renamed (for backward binary compatibility).
+    public boolean hasSVUID() {
+        return hasSvuid;
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -453,12 +453,8 @@ public class SerialVersionUIDAdder extends ClassVisitor {
         }
 
         @Override
-        public int compareTo(final Item item) {
-            int result = name.compareTo(item.name);
-            if (result == 0) {
-                result = descriptor.compareTo(item.descriptor);
-            }
-            return result;
+        public int hashCode() {
+            return name.hashCode() ^ descriptor.hashCode();
         }
 
         @Override
@@ -470,8 +466,12 @@ public class SerialVersionUIDAdder extends ClassVisitor {
         }
 
         @Override
-        public int hashCode() {
-            return name.hashCode() ^ descriptor.hashCode();
+        public int compareTo(final Item item) {
+            int result = name.compareTo(item.name);
+            if (result == 0) {
+                result = descriptor.compareTo(item.descriptor);
+            }
+            return result;
         }
     }
 }

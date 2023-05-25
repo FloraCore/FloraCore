@@ -25,6 +25,10 @@ public class HealCommand extends FloraCoreBukkitCommand {
         PlayerCommandMessage.COMMAND_HEAL_SELF.send(getPlugin().getSenderFactory().wrap(s));
     }
 
+    private void heal(@NotNull Player player) {
+        player.setHealth(player.getMaxHealth());
+    }
+
     @CommandMethod("heal <target>")
     @CommandDescription("治疗其他玩家")
     @CommandPermission("floracore.command.heal.other")
@@ -34,9 +38,5 @@ public class HealCommand extends FloraCoreBukkitCommand {
         if (silent == null || !silent) {
             PlayerCommandMessage.COMMAND_HEAL_FROM.send(getPlugin().getSenderFactory().wrap(target), s.getName());
         }
-    }
-
-    private void heal(@NotNull Player player) {
-        player.setHealth(player.getMaxHealth());
     }
 }

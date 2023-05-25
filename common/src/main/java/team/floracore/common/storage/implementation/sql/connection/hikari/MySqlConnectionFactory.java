@@ -18,6 +18,11 @@ public class MySqlConnectionFactory extends HikariConnectionFactory {
     }
 
     @Override
+    public Function<String, String> getStatementProcessor() {
+        return s -> s.replace('\'', '`'); // use backticks for quotes
+    }
+
+    @Override
     protected String defaultPort() {
         return "3306";
     }
@@ -28,26 +33,6 @@ public class MySqlConnectionFactory extends HikariConnectionFactory {
         config.setJdbcUrl("jdbc:mysql://" + address + ":" + port + "/" + databaseName);
         config.setUsername(username);
         config.setPassword(password);
-    }
-
-    @Override
-    protected void postInitialize() {
-        super.postInitialize();
-
-        // Calling Class.forName("com.mysql.cj.jdbc.Driver") is enough to call the static initializer
-        // which makes our driver available in DriverManager. We don't want that, so unregister it after
-        // the pool has been setup.
-        Enumeration<Driver> drivers = DriverManager.getDrivers();
-        while (drivers.hasMoreElements()) {
-            Driver driver = drivers.nextElement();
-            if (driver.getClass().getName().equals("com.mysql.cj.jdbc.Driver")) {
-                try {
-                    DriverManager.deregisterDriver(driver);
-                } catch (SQLException e) {
-                    // ignore
-                }
-            }
-        }
     }
 
     @Override
@@ -75,7 +60,22 @@ public class MySqlConnectionFactory extends HikariConnectionFactory {
     }
 
     @Override
-    public Function<String, String> getStatementProcessor() {
-        return s -> s.replace('\'', '`'); // use backticks for quotes
+    protected void postInitialize() {
+        super.postInitialize();
+
+        // Calling Class.forName("com.mysql.cj.jdbc.Driver") is enough to call the static initializer
+        // which makes our driver available in DriverManager. We don't want that, so unregister it after
+        // the pool has been setup.
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            Driver driver = drivers.nextElement();
+            if (driver.getClass().getName().equals("com.mysql.cj.jdbc.Driver")) {
+                try {
+                    DriverManager.deregisterDriver(driver);
+                } catch (SQLException e) {
+                    // ignore
+                }
+            }
+        }
     }
 }

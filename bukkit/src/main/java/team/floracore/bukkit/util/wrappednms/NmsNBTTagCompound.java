@@ -10,16 +10,8 @@ import java.util.*;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagCompound", maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagCompound", minVer = 17)})
 public interface NmsNBTTagCompound extends NmsNBTTag {
-    static NmsNBTTagCompound newInstance() {
-        return WrappedObject.getStatic(NmsNBTTagCompound.class).staticNewInstance();
-    }
-
     static NmsNBTTagCompound newInstance(String json) {
         return NmsMojangsonParser.parse(json);
-    }
-
-    static NmsNBTTagTypeV15 getTypeV15() {
-        return WrappedObject.getStatic(NmsNBTTagCompound.class).staticGetTypeV15();
     }
 
     static NmsNBTTagCompound read(DataInput s) {
@@ -32,14 +24,26 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
         }
     }
 
+    static NmsNBTTagCompound newInstance() {
+        return WrappedObject.getStatic(NmsNBTTagCompound.class).staticNewInstance();
+    }
+
+    @WrappedBukkitMethod(value = {@VersionName(value = "load", maxVer = 15)})
+    void loadV_15(DataInput s, int depth, NmsNBTReadLimiter limiter);
+
+    static NmsNBTTagTypeV15 getTypeV15() {
+        return WrappedObject.getStatic(NmsNBTTagCompound.class).staticGetTypeV15();
+    }
+
     @WrappedConstructor
     NmsNBTTagCompound staticNewInstance();
 
     @WrappedBukkitFieldAccessor({@VersionName(minVer = 15, maxVer = 16, value = "a"), @VersionName(minVer = 16, value = "b")})
     NmsNBTTagTypeV15 staticGetTypeV15();
 
-    @WrappedBukkitFieldAccessor({@VersionName("map"), @VersionName(minVer = 17, value = "x")})
-    Map<String, Object> getMap();
+    default NmsNBTTagCompound set(String key, String value) {
+        return set(key, NmsNBTTagString.newInstance(value));
+    }
 
     default NmsNBTTagCompound set(String key, NmsNBTTag value) {
         return set(key, (NmsNBTBase) value);
@@ -50,9 +54,8 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
         return this;
     }
 
-    default NmsNBTTagCompound set(String key, String value) {
-        return set(key, NmsNBTTagString.newInstance(value));
-    }
+    @WrappedBukkitFieldAccessor({@VersionName("map"), @VersionName(minVer = 17, value = "x")})
+    Map<String, Object> getMap();
 
     default NmsNBTTagCompound set(String key, List<? extends NmsNBTBase> value) {
         return set(key, NmsNBTTagList.newInstance(value));
@@ -64,9 +67,6 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
 
     @WrappedMethod(value = {"write", "a"})
     void write(DataOutput s);
-
-    @WrappedBukkitMethod(value = {@VersionName(value = "load", maxVer = 15)})
-    void loadV_15(DataInput s, int depth, NmsNBTReadLimiter limiter);
 
     default boolean containsKey(String key) {
         return getMap().containsKey(key);
@@ -94,8 +94,9 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
     }
 
     default boolean getBool(String key, boolean def) {
-        if (containsKey(key))
+        if (containsKey(key)) {
             return getBool(key);
+        }
         return def;
     }
 

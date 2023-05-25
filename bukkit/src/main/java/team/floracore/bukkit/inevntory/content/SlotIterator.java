@@ -51,6 +51,12 @@ public interface SlotIterator {
         private int row, column;
 
         public Impl(InventoryContents contents, SmartInventory inv,
+                    Type type) {
+
+            this(contents, inv, type, 0, 0);
+        }
+
+        public Impl(InventoryContents contents, SmartInventory inv,
                     Type type, int startRow, int startColumn) {
 
             this.contents = contents;
@@ -62,12 +68,6 @@ public interface SlotIterator {
             this.column = startColumn;
         }
 
-        public Impl(InventoryContents contents, SmartInventory inv,
-                    Type type) {
-
-            this(contents, inv, type, 0, 0);
-        }
-
         @Override
         public Optional<ClickableItem> get() {
             return contents.get(row, column);
@@ -75,8 +75,9 @@ public interface SlotIterator {
 
         @Override
         public SlotIterator set(ClickableItem item) {
-            if (canPlace())
+            if (canPlace()) {
                 contents.set(row, column, item);
+            }
 
             return this;
         }
@@ -132,14 +133,16 @@ public interface SlotIterator {
                         case HORIZONTAL:
                             column = ++column % inv.getColumns();
 
-                            if (column == 0)
+                            if (column == 0) {
                                 row++;
+                            }
                             break;
                         case VERTICAL:
                             row = ++row % inv.getRows();
 
-                            if (row == 0)
+                            if (row == 0) {
                                 column++;
+                            }
                             break;
                     }
                 }

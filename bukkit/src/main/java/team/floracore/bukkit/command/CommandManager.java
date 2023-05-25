@@ -87,18 +87,6 @@ public class CommandManager {
         this.constructCommands();
     }
 
-    public FloraCorePlugin getPlugin() {
-        return plugin;
-    }
-
-    public BukkitCommandManager<CommandSender> getManager() {
-        return manager;
-    }
-
-    public AnnotationParser<CommandSender> getAnnotationParser() {
-        return annotationParser;
-    }
-
     public void constructCommands() {
         // test
         this.annotationParser.parse(new TestBukkitCommand(plugin));
@@ -149,5 +137,17 @@ public class CommandManager {
 
         // item
         // this.annotationParser.parse(new ItemFlagCommand(plugin)); // TODO 未测试
+    }
+
+    public FloraCorePlugin getPlugin() {
+        return plugin;
+    }
+
+    public BukkitCommandManager<CommandSender> getManager() {
+        return manager;
+    }
+
+    public AnnotationParser<CommandSender> getAnnotationParser() {
+        return annotationParser;
     }
 }

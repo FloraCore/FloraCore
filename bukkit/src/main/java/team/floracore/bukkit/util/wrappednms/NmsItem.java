@@ -6,37 +6,39 @@ import team.floracore.common.util.wrapper.*;
 
 @WrappedBukkitClass({@VersionName(value = "nms.Item", maxVer = 17), @VersionName(value = "net.minecraft.world.item.Item", minVer = 17)})
 public interface NmsItem extends WrappedBukkitObject {
-    static NmsRegistryMaterials getRegistryV_13() {
-        return WrappedObject.getStatic(NmsItem.class).staticGetRegistryV_13();
+    static NmsItem fromId(String id) {
+        return fromKey(NmsMinecraftKey.newInstance(id));
     }
 
     static NmsItem fromKey(NmsMinecraftKey key) {
-        if (BukkitWrapper.version >= 14)
+        if (BukkitWrapper.version >= 14) {
             return NmsIRegistry.getItemsV14().get(key, NmsItem.class);
-        else if (BukkitWrapper.v13)
+        } else if (BukkitWrapper.v13) {
             return NmsIRegistry.getItemsV13_14().get(key, NmsItem.class);
-        else
+        } else {
             return getRegistryV_13().get(key, NmsItem.class);
+        }
     }
 
-    static NmsItem fromId(String id) {
-        return fromKey(NmsMinecraftKey.newInstance(id));
+    static NmsRegistryMaterials getRegistryV_13() {
+        return WrappedObject.getStatic(NmsItem.class).staticGetRegistryV_13();
     }
 
     @WrappedBukkitFieldAccessor(@VersionName(maxVer = 13, value = "REGISTRY"))
     NmsRegistryMaterials staticGetRegistryV_13();
 
-    default NmsMinecraftKey getKey() {
-        if (BukkitWrapper.version >= 14)
-            return NmsIRegistry.getItemsV14().getKeyV13(this);
-        else if (BukkitWrapper.v13)
-            return NmsIRegistry.getItemsV13_14().getKey(this);
-        else
-            return getRegistryV_13().getKey(this);
-    }
-
     default String getId() {
         return getKey().toString();
+    }
+
+    default NmsMinecraftKey getKey() {
+        if (BukkitWrapper.version >= 14) {
+            return NmsIRegistry.getItemsV14().getKeyV13(this);
+        } else if (BukkitWrapper.v13) {
+            return NmsIRegistry.getItemsV13_14().getKey(this);
+        } else {
+            return getRegistryV_13().getKey(this);
+        }
     }
 
     @WrappedBukkitMethod(@VersionName(value = "b", minVer = 12, maxVer = 13))

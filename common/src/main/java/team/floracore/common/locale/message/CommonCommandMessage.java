@@ -24,7 +24,6 @@ public interface CommonCommandMessage extends AbstractMessage {
             // 检查控制台是否有错误
             .append(space()).append(translatable("floracore.command.misc.check-console-for-errors")).append(FULL_STOP));
 
-
     Args1<Collection<String>> INSTALLED_TRANSLATIONS = locales -> AbstractMessage.prefixed(translatable()
             // 已安装的翻译
             .key("floracore.command.translations.installed-translations").color(GREEN)
@@ -32,7 +31,6 @@ public interface CommonCommandMessage extends AbstractMessage {
             .append(text(':')).append(space())
             // list
             .append(AbstractMessage.formatStringList(locales)));
-
 
     Args4<String, String, Integer, List<String>> AVAILABLE_TRANSLATIONS_ENTRY = (tag, name, percentComplete, contributors) -> AbstractMessage.prefixed(text()
             // - {} ({}) - 已翻译{}% - 由 {}

@@ -118,6 +118,36 @@ public final class TypePath {
     }
 
     /**
+     * Returns a string representation of this type path. {@link #ARRAY_ELEMENT} steps are represented
+     * with '[', {@link #INNER_TYPE} steps with '.', {@link #WILDCARD_BOUND} steps with '*' and {@link
+     * #TYPE_ARGUMENT} steps with their type argument index in decimal form followed by ';'.
+     */
+    @Override
+    public String toString() {
+        int length = getLength();
+        StringBuilder result = new StringBuilder(length * 2);
+        for (int i = 0; i < length; ++i) {
+            switch (getStep(i)) {
+                case ARRAY_ELEMENT:
+                    result.append('[');
+                    break;
+                case INNER_TYPE:
+                    result.append('.');
+                    break;
+                case WILDCARD_BOUND:
+                    result.append('*');
+                    break;
+                case TYPE_ARGUMENT:
+                    result.append(getStepArgument(i)).append(';');
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        }
+        return result.toString();
+    }
+
+    /**
      * Returns the length of this path, i.e. its number of steps.
      *
      * @return the length of this path.
@@ -149,35 +179,5 @@ public final class TypePath {
     public int getStepArgument(final int index) {
         // Returns the type_argument_index of the path element of the given index.
         return typePathContainer[typePathOffset + 2 * index + 2];
-    }
-
-    /**
-     * Returns a string representation of this type path. {@link #ARRAY_ELEMENT} steps are represented
-     * with '[', {@link #INNER_TYPE} steps with '.', {@link #WILDCARD_BOUND} steps with '*' and {@link
-     * #TYPE_ARGUMENT} steps with their type argument index in decimal form followed by ';'.
-     */
-    @Override
-    public String toString() {
-        int length = getLength();
-        StringBuilder result = new StringBuilder(length * 2);
-        for (int i = 0; i < length; ++i) {
-            switch (getStep(i)) {
-                case ARRAY_ELEMENT:
-                    result.append('[');
-                    break;
-                case INNER_TYPE:
-                    result.append('.');
-                    break;
-                case WILDCARD_BOUND:
-                    result.append('*');
-                    break;
-                case TYPE_ARGUMENT:
-                    result.append(getStepArgument(i)).append(';');
-                    break;
-                default:
-                    throw new AssertionError();
-            }
-        }
-        return result.toString();
     }
 }

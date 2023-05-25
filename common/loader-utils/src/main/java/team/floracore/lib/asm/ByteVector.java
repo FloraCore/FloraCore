@@ -70,6 +70,22 @@ public class ByteVector {
     }
 
     /**
+     * Enlarges this byte vector so that it can receive 'size' more bytes.
+     *
+     * @param size number of additional bytes that this byte vector should be able to receive.
+     */
+    private void enlarge(final int size) {
+        if (length > data.length) {
+            throw new AssertionError("Internal error");
+        }
+        int doubleCapacity = 2 * data.length;
+        int minimalCapacity = length + size;
+        byte[] newData = new byte[doubleCapacity > minimalCapacity ? doubleCapacity : minimalCapacity];
+        System.arraycopy(data, 0, newData, 0, length);
+        data = newData;
+    }
+
+    /**
      * Puts two bytes into this byte vector. The byte vector is automatically enlarged if necessary.
      *
      * @param byteValue1 a byte.
@@ -332,21 +348,5 @@ public class ByteVector {
         }
         length += byteLength;
         return this;
-    }
-
-    /**
-     * Enlarges this byte vector so that it can receive 'size' more bytes.
-     *
-     * @param size number of additional bytes that this byte vector should be able to receive.
-     */
-    private void enlarge(final int size) {
-        if (length > data.length) {
-            throw new AssertionError("Internal error");
-        }
-        int doubleCapacity = 2 * data.length;
-        int minimalCapacity = length + size;
-        byte[] newData = new byte[doubleCapacity > minimalCapacity ? doubleCapacity : minimalCapacity];
-        System.arraycopy(data, 0, newData, 0, length);
-        data = newData;
     }
 }

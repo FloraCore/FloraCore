@@ -17,6 +17,11 @@ public class PostgreConnectionFactory extends HikariConnectionFactory {
     }
 
     @Override
+    public Function<String, String> getStatementProcessor() {
+        return s -> s.replace('\'', '"');
+    }
+
+    @Override
     protected String defaultPort() {
         return "5432";
     }
@@ -38,10 +43,5 @@ public class PostgreConnectionFactory extends HikariConnectionFactory {
         // remove the default config properties which don't exist for PostgreSQL
         properties.remove("useUnicode");
         properties.remove("characterEncoding");
-    }
-
-    @Override
-    public Function<String, String> getStatementProcessor() {
-        return s -> s.replace('\'', '"');
     }
 }

@@ -8,16 +8,16 @@ import java.nio.file.*;
 public class ReflectionClassPathAppender implements ClassPathAppender {
     private final URLClassLoaderAccess classLoaderAccess;
 
+    public ReflectionClassPathAppender(FloraCoreBootstrap bootstrap) throws IllegalStateException {
+        this(bootstrap.getClass().getClassLoader());
+    }
+
     public ReflectionClassPathAppender(ClassLoader classLoader) throws IllegalStateException {
         if (classLoader instanceof URLClassLoader) {
             this.classLoaderAccess = URLClassLoaderAccess.create((URLClassLoader) classLoader);
         } else {
             throw new IllegalStateException("ClassLoader is not instance of URLClassLoader");
         }
-    }
-
-    public ReflectionClassPathAppender(FloraCoreBootstrap bootstrap) throws IllegalStateException {
-        this(bootstrap.getClass().getClassLoader());
     }
 
     @Override

@@ -25,6 +25,16 @@ public interface NmsICommandListener extends WrappedBukkitObject {
         }
     }
 
+    default void sendMessage(NmsIChatBaseComponent msg) {
+        if (BukkitWrapper.version < 16) {
+            sendMessageV_16(msg);
+        } else if (BukkitWrapper.version < 19) {
+            sendMessageV16_19(msg, new UUID(0L, 0L));
+        } else {
+            sendMessageV19(msg);
+        }
+    }
+
     @WrappedBukkitMethod(@VersionName(maxVer = 16, value = "sendMessage"))
     void sendMessageV_16(NmsIChatBaseComponent msg);
 
@@ -33,15 +43,6 @@ public interface NmsICommandListener extends WrappedBukkitObject {
 
     @WrappedBukkitMethod(@VersionName(value = "a", minVer = 19))
     void sendMessageV19(NmsIChatBaseComponent msg);
-
-    default void sendMessage(NmsIChatBaseComponent msg) {
-        if (BukkitWrapper.version < 16)
-            sendMessageV_16(msg);
-        else if (BukkitWrapper.version < 19)
-            sendMessageV16_19(msg, new UUID(0L, 0L));
-        else
-            sendMessageV19(msg);
-    }
 
     interface GeneraldutyCommandSender extends CommandSender {
         NmsICommandListener getNms();

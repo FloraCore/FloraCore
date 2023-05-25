@@ -622,17 +622,27 @@ final class MethodWriter extends MethodVisitor {
         }
     }
 
-    boolean hasFrames() {
-        return stackMapTableNumberOfEntries > 0;
+    /**
+     * Adds a successor to {@link #currentBasicBlock} in the control flow graph.
+     *
+     * @param info      information about the control flow edge to be added.
+     * @param successor the successor block to be added to the current basic block.
+     */
+    private void addSuccessorToCurrentBasicBlock(final int info, final Label successor) {
+        currentBasicBlock.outgoingEdges = new Edge(info, successor, currentBasicBlock.outgoingEdges);
     }
 
-    boolean hasAsmInstructions() {
-        return hasAsmInstructions;
+    boolean hasFrames() {
+        return stackMapTableNumberOfEntries > 0;
     }
 
     // -----------------------------------------------------------------------------------------------
     // Implementation of the MethodVisitor abstract class
     // -----------------------------------------------------------------------------------------------
+
+    boolean hasAsmInstructions() {
+        return hasAsmInstructions;
+    }
 
     @Override
     public void visitParameter(final String name, final int access) {
@@ -1355,31 +1365,6 @@ final class MethodWriter extends MethodVisitor {
         visitSwitchInsn(dflt, labels);
     }
 
-    private void visitSwitchInsn(final Label dflt, final Label[] labels) {
-        if (currentBasicBlock != null) {
-            if (compute == COMPUTE_ALL_FRAMES) {
-                currentBasicBlock.frame.execute(Opcodes.LOOKUPSWITCH, 0, null, null);
-                // Add all the labels as successors of the current basic block.
-                addSuccessorToCurrentBasicBlock(Edge.JUMP, dflt);
-                dflt.getCanonicalInstance().flags |= Label.FLAG_JUMP_TARGET;
-                for (Label label : labels) {
-                    addSuccessorToCurrentBasicBlock(Edge.JUMP, label);
-                    label.getCanonicalInstance().flags |= Label.FLAG_JUMP_TARGET;
-                }
-            } else if (compute == COMPUTE_MAX_STACK_AND_LOCAL) {
-                // No need to update maxRelativeStackSize (the stack size delta is always negative).
-                --relativeStackSize;
-                // Add all the labels as successors of the current basic block.
-                addSuccessorToCurrentBasicBlock(relativeStackSize, dflt);
-                for (Label label : labels) {
-                    addSuccessorToCurrentBasicBlock(relativeStackSize, label);
-                }
-            }
-            // End the current basic block.
-            endCurrentBasicBlockWithNoSuccessor();
-        }
-    }
-
     @Override
     public void visitMultiANewArrayInsn(final String descriptor, final int numDimensions) {
         lastBytecodeOffset = code.length;
@@ -1773,14 +1758,29 @@ final class MethodWriter extends MethodVisitor {
     // Utility methods: control flow analysis algorithm
     // -----------------------------------------------------------------------------------------------
 
-    /**
-     * Adds a successor to {@link #currentBasicBlock} in the control flow graph.
-     *
-     * @param info      information about the control flow edge to be added.
-     * @param successor the successor block to be added to the current basic block.
-     */
-    private void addSuccessorToCurrentBasicBlock(final int info, final Label successor) {
-        currentBasicBlock.outgoingEdges = new Edge(info, successor, currentBasicBlock.outgoingEdges);
+    private void visitSwitchInsn(final Label dflt, final Label[] labels) {
+        if (currentBasicBlock != null) {
+            if (compute == COMPUTE_ALL_FRAMES) {
+                currentBasicBlock.frame.execute(Opcodes.LOOKUPSWITCH, 0, null, null);
+                // Add all the labels as successors of the current basic block.
+                addSuccessorToCurrentBasicBlock(Edge.JUMP, dflt);
+                dflt.getCanonicalInstance().flags |= Label.FLAG_JUMP_TARGET;
+                for (Label label : labels) {
+                    addSuccessorToCurrentBasicBlock(Edge.JUMP, label);
+                    label.getCanonicalInstance().flags |= Label.FLAG_JUMP_TARGET;
+                }
+            } else if (compute == COMPUTE_MAX_STACK_AND_LOCAL) {
+                // No need to update maxRelativeStackSize (the stack size delta is always negative).
+                --relativeStackSize;
+                // Add all the labels as successors of the current basic block.
+                addSuccessorToCurrentBasicBlock(relativeStackSize, dflt);
+                for (Label label : labels) {
+                    addSuccessorToCurrentBasicBlock(relativeStackSize, label);
+                }
+            }
+            // End the current basic block.
+            endCurrentBasicBlockWithNoSuccessor();
+        }
     }
 
     /**
@@ -1829,16 +1829,6 @@ final class MethodWriter extends MethodVisitor {
     }
 
     /**
-     * Sets an abstract type in {@link #currentFrame}.
-     *
-     * @param frameIndex   the index of the element to be set in {@link #currentFrame}.
-     * @param abstractType an abstract type.
-     */
-    void visitAbstractType(final int frameIndex, final int abstractType) {
-        currentFrame[frameIndex] = abstractType;
-    }
-
-    /**
      * Ends the visit of {@link #currentFrame} by writing it in the StackMapTable entries and by
      * updating the StackMapTable number_of_entries (except if the current frame is the first one,
      * which is implicit in StackMapTable). Then resets {@link #currentFrame} to {@literal null}.
@@ -1853,6 +1843,30 @@ final class MethodWriter extends MethodVisitor {
         }
         previousFrame = currentFrame;
         currentFrame = null;
+    }
+
+    /**
+     * Puts the given public API frame element type in {@link #stackMapTableEntries} , using the JVMS
+     * verification_type_info format used in StackMapTable attributes.
+     *
+     * @param type a frame element type described using the same format as in {@link
+     *             MethodVisitor#visitFrame}, i.e. either {@link Opcodes#TOP}, {@link Opcodes#INTEGER}, {@link
+     *             Opcodes#FLOAT}, {@link Opcodes#LONG}, {@link Opcodes#DOUBLE}, {@link Opcodes#NULL}, or
+     *             {@link Opcodes#UNINITIALIZED_THIS}, or the internal name of a class, or a Label designating
+     *             a NEW instruction (for uninitialized types).
+     */
+    private void putFrameType(final Object type) {
+        if (type instanceof Integer) {
+            stackMapTableEntries.putByte(((Integer) type).intValue());
+        } else if (type instanceof String) {
+            stackMapTableEntries
+                    .putByte(Frame.ITEM_OBJECT)
+                    .putShort(symbolTable.addConstantClass((String) type).index);
+        } else {
+            stackMapTableEntries
+                    .putByte(Frame.ITEM_UNINITIALIZED)
+                    .putShort(((Label) type).bytecodeOffset);
+        }
     }
 
     /**
@@ -1964,27 +1978,13 @@ final class MethodWriter extends MethodVisitor {
     }
 
     /**
-     * Puts the given public API frame element type in {@link #stackMapTableEntries} , using the JVMS
-     * verification_type_info format used in StackMapTable attributes.
+     * Sets an abstract type in {@link #currentFrame}.
      *
-     * @param type a frame element type described using the same format as in {@link
-     *             MethodVisitor#visitFrame}, i.e. either {@link Opcodes#TOP}, {@link Opcodes#INTEGER}, {@link
-     *             Opcodes#FLOAT}, {@link Opcodes#LONG}, {@link Opcodes#DOUBLE}, {@link Opcodes#NULL}, or
-     *             {@link Opcodes#UNINITIALIZED_THIS}, or the internal name of a class, or a Label designating
-     *             a NEW instruction (for uninitialized types).
+     * @param frameIndex   the index of the element to be set in {@link #currentFrame}.
+     * @param abstractType an abstract type.
      */
-    private void putFrameType(final Object type) {
-        if (type instanceof Integer) {
-            stackMapTableEntries.putByte(((Integer) type).intValue());
-        } else if (type instanceof String) {
-            stackMapTableEntries
-                    .putByte(Frame.ITEM_OBJECT)
-                    .putShort(symbolTable.addConstantClass((String) type).index);
-        } else {
-            stackMapTableEntries
-                    .putByte(Frame.ITEM_UNINITIALIZED)
-                    .putShort(((Label) type).bytecodeOffset);
-        }
+    void visitAbstractType(final int frameIndex, final int abstractType) {
+        currentFrame[frameIndex] = abstractType;
     }
 
     // -----------------------------------------------------------------------------------------------

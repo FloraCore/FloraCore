@@ -194,13 +194,16 @@ public class SignatureWriter extends SignatureVisitor {
     }
 
     /**
-     * Returns the signature that was built by this signature writer.
-     *
-     * @return the signature that was built by this signature writer.
+     * Ends the type arguments of a class or inner class type.
      */
-    @Override
-    public String toString() {
-        return stringBuilder.toString();
+    private void endArguments() {
+        // If the top of the stack is 'true', this means that some type arguments have been visited for
+        // the type whose visit is now ending. We therefore need to append a '>', and to pop one element
+        // from the stack.
+        if ((argumentStack & 1) == 1) {
+            stringBuilder.append('>');
+        }
+        argumentStack >>>= 1;
     }
 
     // -----------------------------------------------------------------------------------------------
@@ -218,15 +221,12 @@ public class SignatureWriter extends SignatureVisitor {
     }
 
     /**
-     * Ends the type arguments of a class or inner class type.
+     * Returns the signature that was built by this signature writer.
+     *
+     * @return the signature that was built by this signature writer.
      */
-    private void endArguments() {
-        // If the top of the stack is 'true', this means that some type arguments have been visited for
-        // the type whose visit is now ending. We therefore need to append a '>', and to pop one element
-        // from the stack.
-        if ((argumentStack & 1) == 1) {
-            stringBuilder.append('>');
-        }
-        argumentStack >>>= 1;
+    @Override
+    public String toString() {
+        return stringBuilder.toString();
     }
 }

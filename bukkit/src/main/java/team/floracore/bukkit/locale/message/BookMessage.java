@@ -50,7 +50,6 @@ public interface BookMessage extends AbstractMessage {
                 .key("floracore.command.misc.nick.book.random-page.custom").hoverEvent(hoverEvent).clickEvent(clickEvent).decoration(UNDERLINED, true).color(BLACK).build();
     };
 
-
     Args0 COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1 = () -> translatable()
             // 现在,请选择你要使用的{0}!
             .key("floracore.command.misc.nick.book.name-page.line.1")
@@ -117,7 +116,6 @@ public interface BookMessage extends AbstractMessage {
     Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_START_TIME_BOOK = (time) -> translatable()
             // 开始时间: {0}
             .key("floracore.command.misc.reports.gui.main.report.chats.chat.start-time").args(text(time, DARK_GREEN)).color(BLACK).build();
-
 
     Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_END_TIME_BOOK = (time) -> translatable()
             // 结束时间: {0}

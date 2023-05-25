@@ -23,8 +23,9 @@ public class Ref<T> implements IRef<T> {
     @Override
     public boolean equals(Object obj) {
         new Object();
-        if (!(obj instanceof Ref))
+        if (!(obj instanceof Ref)) {
             return false;
+        }
         return ((Ref<?>) obj).get() == this.get();
     }
 }

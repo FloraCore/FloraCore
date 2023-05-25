@@ -43,20 +43,16 @@ public final class StringUtil {
     }
 
     public static String[] split(String string, String regex) {
-        if (string.length() == 0)
+        if (string.length() == 0) {
             return new String[0];
+        }
         return string.split(regex);
     }
 
-    public static boolean startsWithIgnoreCase(String a, String b) {
-        if (a == null || b == null)
-            return a == null && b == null;
-        return a.toLowerCase().startsWith(b.toLowerCase());
-    }
-
     public static boolean endsWithIgnoreCase(String a, String b) {
-        if (a == null || b == null)
+        if (a == null || b == null) {
             return a == null && b == null;
+        }
         return a.toLowerCase().endsWith(b.toLowerCase());
     }
 
@@ -85,17 +81,10 @@ public final class StringUtil {
         return rl.toArray(new String[rl.size()]);
     }
 
-    public static String mergeStrings(String... strings) {
-        StringBuilder sb = new StringBuilder();
-        for (String s : strings) {
-            sb.append(s);
-        }
-        return sb.toString();
-    }
-
     public static String mergeStrings(String separator, String[] strings) {
-        if (strings.length == 0)
+        if (strings.length == 0) {
             return "";
+        }
         StringBuilder sb = new StringBuilder(strings[0]);
         for (int i = 1; i < strings.length; i++) {
             sb.append(separator);
@@ -116,8 +105,9 @@ public final class StringUtil {
             for (String s : ss) {
                 boolean c = true;
                 for (String k : beforeAndAfter.keySet()) {
-                    if (Objects.equals(t.getValue(), k))
+                    if (Objects.equals(t.getValue(), k)) {
                         break;
+                    }
                     if (Objects.equals(s, k)) {
                         c = false;
                         break;
@@ -132,12 +122,21 @@ public final class StringUtil {
                         ts.add(t.getValue());
                     }
                     ts.remove(ts.size() - 1);
-                } else
+                } else {
                     ts.add(s);
+                }
             }
             ss = ts.toArray(ss);
         }
         return mergeStrings(ss);
+    }
+
+    public static String mergeStrings(String... strings) {
+        StringBuilder sb = new StringBuilder();
+        for (String s : strings) {
+            sb.append(s);
+        }
+        return sb.toString();
     }
 
     public static String codeString(String str) {
@@ -169,16 +168,18 @@ public final class StringUtil {
 
     public static boolean containsIgnoreCase(List<String> list, String str) {
         for (String s : list) {
-            if (s.equalsIgnoreCase(str))
+            if (s.equalsIgnoreCase(str)) {
                 return true;
+            }
         }
         return false;
     }
 
     public static boolean containsAny(String str, List<String> ss) {
         for (String s : ss) {
-            if (str.contains(s))
+            if (str.contains(s)) {
                 return true;
+            }
         }
         return false;
     }
@@ -186,44 +187,36 @@ public final class StringUtil {
     public static boolean containsAnyIgnoreCase(String str, List<String> ss) {
         str = str.toLowerCase();
         for (String s : ss) {
-            if (str.contains(s.toLowerCase()))
+            if (str.contains(s.toLowerCase())) {
                 return true;
+            }
         }
         return false;
     }
 
     public static boolean startsWithAny(String str, Collection<String> ss) {
         for (String s : ss) {
-            if (str.startsWith(s))
+            if (str.startsWith(s)) {
                 return true;
+            }
         }
         return false;
     }
 
     public static boolean startsWithAnyIgnoreCase(String str, Collection<String> ss) {
         for (String s : ss) {
-            if (StringUtil.startsWithIgnoreCase(str, s))
+            if (StringUtil.startsWithIgnoreCase(str, s)) {
                 return true;
+            }
         }
         return false;
     }
 
-    public static int sum(String str, String s) {
-        int num = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (str.substring(i).startsWith(s))
-                num++;
+    public static boolean startsWithIgnoreCase(String a, String b) {
+        if (a == null || b == null) {
+            return a == null && b == null;
         }
-        return num;
-    }
-
-    public static int sumIgnoreCase(String str, String s) {
-        int num = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (startsWithIgnoreCase(str.substring(i), s))
-                num++;
-        }
-        return num;
+        return a.toLowerCase().startsWith(b.toLowerCase());
     }
 
     public static int sum(String str, List<String> ss) {
@@ -234,10 +227,30 @@ public final class StringUtil {
         return num;
     }
 
+    public static int sum(String str, String s) {
+        int num = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.substring(i).startsWith(s)) {
+                num++;
+            }
+        }
+        return num;
+    }
+
     public static int sumIgnoreCase(String str, List<String> ss) {
         int num = 0;
         for (String s : ss) {
             num += sumIgnoreCase(str, s);
+        }
+        return num;
+    }
+
+    public static int sumIgnoreCase(String str, String s) {
+        int num = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (startsWithIgnoreCase(str.substring(i), s)) {
+                num++;
+            }
         }
         return num;
     }

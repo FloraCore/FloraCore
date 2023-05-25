@@ -20,6 +20,11 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
     }
 
     @Override
+    public FloraCorePlugin getPlugin() {
+        return this.plugin;
+    }
+
+    @Override
     public void reload() {
         this.configuration = YamlConfiguration.loadConfiguration(this.file);
     }
@@ -68,10 +73,5 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
         }
 
         return map;
-    }
-
-    @Override
-    public FloraCorePlugin getPlugin() {
-        return this.plugin;
     }
 }

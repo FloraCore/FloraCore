@@ -34,6 +34,22 @@ public abstract class Interpreter<V extends Value> {
     }
 
     /**
+     * Creates a new value that represents the given parameter type. This method is called to
+     * initialize the value of a local corresponding to a method parameter in a frame.
+     *
+     * <p>By default, calls <code>newValue(type)</code>.
+     *
+     * @param isInstanceMethod {@literal true} if the method is non-static.
+     * @param local            the local variable index.
+     * @param type             a primitive or reference type.
+     * @return a value that represents the given type. The size of the returned value must be equal to
+     * the size of the given type.
+     */
+    public V newParameterValue(final boolean isInstanceMethod, final int local, final Type type) {
+        return newValue(type);
+    }
+
+    /**
      * Creates a new value that represents the given type.
      *
      * <p>Called for method parameters (including <code>this</code>), exception handler variable and
@@ -51,22 +67,6 @@ public abstract class Interpreter<V extends Value> {
      * the size of the given type.
      */
     public abstract V newValue(Type type);
-
-    /**
-     * Creates a new value that represents the given parameter type. This method is called to
-     * initialize the value of a local corresponding to a method parameter in a frame.
-     *
-     * <p>By default, calls <code>newValue(type)</code>.
-     *
-     * @param isInstanceMethod {@literal true} if the method is non-static.
-     * @param local            the local variable index.
-     * @param type             a primitive or reference type.
-     * @return a value that represents the given type. The size of the returned value must be equal to
-     * the size of the given type.
-     */
-    public V newParameterValue(final boolean isInstanceMethod, final int local, final Type type) {
-        return newValue(type);
-    }
 
     /**
      * Creates a new value that represents the given return type. This method is called to initialize

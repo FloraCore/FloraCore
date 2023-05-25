@@ -31,6 +31,10 @@ public enum ServerType {
         this.autoSync2 = autoSync2;
     }
 
+    public static ServerType parse(String name) {
+        return parse(name, UNKNOWN);
+    }
+
     public static ServerType parse(String name, ServerType def) {
         for (ServerType t : values()) {
             if (t.getName().equalsIgnoreCase(name)) {
@@ -38,10 +42,6 @@ public enum ServerType {
             }
         }
         return def;
-    }
-
-    public static ServerType parse(String name) {
-        return parse(name, UNKNOWN);
     }
 
     public String getName() {

@@ -52,19 +52,6 @@ public class TranslationManager {
         }
     }
 
-    public static boolean isTranslationFile(Path path) {
-        return path.getFileName().toString().endsWith(".properties");
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private static boolean isAdventureDuplicatesException(Exception e) {
-        return e instanceof IllegalArgumentException && (e.getMessage().startsWith("Invalid key") || e.getMessage().startsWith("Translation already exists"));
-    }
-
-    public static Component render(Component component) {
-        return render(component, Locale.getDefault());
-    }
-
     public static Component render(Component component, @Nullable String locale) {
         return render(component, parseLocale(locale));
     }
@@ -77,6 +64,10 @@ public class TranslationManager {
             }
         }
         return GlobalTranslator.render(component, locale);
+    }
+
+    public static @Nullable Locale parseLocale(@Nullable String locale) {
+        return locale == null ? null : Translator.parseLocale(locale);
     }
 
     public static Component render(Component component, @NotNull UUID uuid) {
@@ -95,8 +86,8 @@ public class TranslationManager {
         return render(component);
     }
 
-    public static @Nullable Locale parseLocale(@Nullable String locale) {
-        return locale == null ? null : Translator.parseLocale(locale);
+    public static Component render(Component component) {
+        return render(component, Locale.getDefault());
     }
 
     public static String localeDisplayName(Locale locale) {
@@ -153,20 +144,6 @@ public class TranslationManager {
     }
 
     /**
-     * Loads the base (English) translations from the jar file.
-     */
-    private void loadFromResourceBundle() {
-        ResourceBundle bundle = ResourceBundle.getBundle("floracore", DEFAULT_LOCALE, UTF8ResourceBundleControl.get());
-        try {
-            this.registry.registerAll(DEFAULT_LOCALE, bundle, false);
-        } catch (IllegalArgumentException e) {
-            if (!isAdventureDuplicatesException(e)) {
-                this.plugin.getLogger().warn("Error loading default locale file", e);
-            }
-        }
-    }
-
-    /**
      * Loads custom translations (in any language) from the plugin configuration folder.
      */
     public void loadFromFileSystem(Path directory, boolean suppressDuplicatesError) {
@@ -206,6 +183,24 @@ public class TranslationManager {
         });
     }
 
+    /**
+     * Loads the base (English) translations from the jar file.
+     */
+    private void loadFromResourceBundle() {
+        ResourceBundle bundle = ResourceBundle.getBundle("floracore", DEFAULT_LOCALE, UTF8ResourceBundleControl.get());
+        try {
+            this.registry.registerAll(DEFAULT_LOCALE, bundle, false);
+        } catch (IllegalArgumentException e) {
+            if (!isAdventureDuplicatesException(e)) {
+                this.plugin.getLogger().warn("Error loading default locale file", e);
+            }
+        }
+    }
+
+    public static boolean isTranslationFile(Path path) {
+        return path.getFileName().toString().endsWith(".properties");
+    }
+
     private Map.Entry<Locale, ResourceBundle> loadTranslationFile(Path translationFile) throws IOException {
         String fileName = translationFile.getFileName().toString();
         String localeString = fileName.substring(0, fileName.length() - ".properties".length());
@@ -223,5 +218,10 @@ public class TranslationManager {
         this.registry.registerAll(locale, bundle, false);
         this.installed.add(locale);
         return Maps.immutableEntry(locale, bundle);
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private static boolean isAdventureDuplicatesException(Exception e) {
+        return e instanceof IllegalArgumentException && (e.getMessage().startsWith("Invalid key") || e.getMessage().startsWith("Translation already exists"));
     }
 }

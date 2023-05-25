@@ -44,23 +44,23 @@ public class Method {
     /**
      * Constructs a new {@link Method}.
      *
-     * @param name       the method's name.
-     * @param descriptor the method's descriptor.
-     */
-    public Method(final String name, final String descriptor) {
-        this.name = name;
-        this.descriptor = descriptor;
-    }
-
-    /**
-     * Constructs a new {@link Method}.
-     *
      * @param name          the method's name.
      * @param returnType    the method's return type.
      * @param argumentTypes the method's argument types.
      */
     public Method(final String name, final Type returnType, final Type[] argumentTypes) {
         this(name, Type.getMethodDescriptor(returnType, argumentTypes));
+    }
+
+    /**
+     * Constructs a new {@link Method}.
+     *
+     * @param name       the method's name.
+     * @param descriptor the method's descriptor.
+     */
+    public Method(final String name, final String descriptor) {
+        this.name = name;
+        this.descriptor = descriptor;
     }
 
     /**
@@ -139,7 +139,8 @@ public class Method {
                 currentArgumentStartIndex = currentArgumentEndIndex + 1;
             }
             stringBuilder.append(argumentDescriptor);
-        } while (currentArgumentEndIndex != -1);
+        }
+        while (currentArgumentEndIndex != -1);
         stringBuilder.append(')').append(getDescriptorInternal(returnType, defaultPackage));
         return new Method(methodName, stringBuilder.toString());
     }
@@ -220,8 +221,8 @@ public class Method {
     }
 
     @Override
-    public String toString() {
-        return name + descriptor;
+    public int hashCode() {
+        return name.hashCode() ^ descriptor.hashCode();
     }
 
     @Override
@@ -234,7 +235,7 @@ public class Method {
     }
 
     @Override
-    public int hashCode() {
-        return name.hashCode() ^ descriptor.hashCode();
+    public String toString() {
+        return name + descriptor;
     }
 }

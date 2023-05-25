@@ -385,16 +385,6 @@ public class BasicVerifier extends BasicInterpreter {
     }
 
     /**
-     * Returns whether the given value corresponds to an array reference.
-     *
-     * @param value a value.
-     * @return whether 'value' corresponds to an array reference.
-     */
-    protected boolean isArrayValue(final BasicValue value) {
-        return value.isReference();
-    }
-
-    /**
      * Returns the value corresponding to the type of the elements of the given array reference value.
      *
      * @param objectArrayValue a value corresponding to array of object (or array) references.
@@ -403,6 +393,16 @@ public class BasicVerifier extends BasicInterpreter {
      */
     protected BasicValue getElementValue(final BasicValue objectArrayValue) throws AnalyzerException {
         return BasicValue.REFERENCE_VALUE;
+    }
+
+    /**
+     * Returns whether the given value corresponds to an array reference.
+     *
+     * @param value a value.
+     * @return whether 'value' corresponds to an array reference.
+     */
+    protected boolean isArrayValue(final BasicValue value) {
+        return value.isReference();
     }
 
     /**

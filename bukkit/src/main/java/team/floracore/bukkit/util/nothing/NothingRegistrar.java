@@ -1,6 +1,5 @@
 package team.floracore.bukkit.util.nothing;
 
-
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.util.module.*;
 import team.floracore.bukkit.util.wrappednms.*;

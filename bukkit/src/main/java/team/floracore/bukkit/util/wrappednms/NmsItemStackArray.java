@@ -1,6 +1,5 @@
 package team.floracore.bukkit.util.wrappednms;
 
-
 import team.floracore.common.util.wrapper.*;
 
 @WrappedArrayClass(NmsItemStack.class)

@@ -14,11 +14,11 @@ public interface NmsNBTTagByte extends NmsNBTTag {
     @WrappedConstructor
     NmsNBTTagByte staticNewInstance(byte value);
 
-    @WrappedBukkitMethod({@VersionName("asByte"), @VersionName(value = "g", maxVer = 13), @VersionName(value = "h", minVer = 18)})
-    byte getValue();
-
     @Override
     default JsonPrimitive toJson() {
         return new JsonPrimitive(getValue());
     }
+
+    @WrappedBukkitMethod({@VersionName("asByte"), @VersionName(value = "g", maxVer = 13), @VersionName(value = "h", minVer = 18)})
+    byte getValue();
 }

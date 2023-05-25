@@ -18,6 +18,12 @@ public class IncrementalIdMap<T> implements Map<Integer, T> {
         this.unused = unused;
     }
 
+    public int alloc(T value) {
+        int id = alloc();
+        store.set(id, value);
+        return id;
+    }
+
     public int alloc() {
         if (!unused.isEmpty()) {
             Iterator<Integer> it = unused.iterator();
@@ -27,12 +33,6 @@ public class IncrementalIdMap<T> implements Map<Integer, T> {
         }
         store.add(null);
         return store.size() - 1;
-    }
-
-    public int alloc(T value) {
-        int id = alloc();
-        store.set(id, value);
-        return id;
     }
 
     @Override
@@ -47,8 +47,9 @@ public class IncrementalIdMap<T> implements Map<Integer, T> {
 
     @Override
     public boolean containsKey(Object key) {
-        if (key instanceof Integer)
+        if (key instanceof Integer) {
             return ((Integer) key) < store.size() && !unused.contains(key);
+        }
         return false;
     }
 
@@ -112,8 +113,9 @@ public class IncrementalIdMap<T> implements Map<Integer, T> {
 
                     @Override
                     public Integer next() {
-                        while (unused.contains(next))
+                        while (unused.contains(next)) {
                             next++;
+                        }
                         return next++;
                     }
 
@@ -144,8 +146,9 @@ public class IncrementalIdMap<T> implements Map<Integer, T> {
     public Collection<T> values() {
         ArrayList<T> r = new ArrayList<>(size());
         for (int i = 0; i < store.size(); i++) {
-            if (unused.contains(i))
+            if (unused.contains(i)) {
                 r.add(store.get(i));
+            }
         }
         return r;
     }
@@ -161,8 +164,9 @@ public class IncrementalIdMap<T> implements Map<Integer, T> {
 
                     @Override
                     public boolean hasNext() {
-                        while (unused.contains(next))
+                        while (unused.contains(next)) {
                             next++;
+                        }
                         return next < store.size();
                     }
 

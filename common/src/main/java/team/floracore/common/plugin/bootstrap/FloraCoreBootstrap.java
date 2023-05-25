@@ -72,15 +72,6 @@ public interface FloraCoreBootstrap {
     Platform.Type getType();
 
     /**
-     * Gets the plugins main data storage directory
-     *
-     * <p>Bukkit: ./plugins/FloraCore</p>
-     *
-     * @return the platforms data folder
-     */
-    Path getDataDirectory();
-
-    /**
      * Gets the plugins configuration directory
      *
      * @return the config directory
@@ -88,6 +79,15 @@ public interface FloraCoreBootstrap {
     default Path getConfigDirectory() {
         return getDataDirectory();
     }
+
+    /**
+     * Gets the plugins main data storage directory
+     *
+     * <p>Bukkit: ./plugins/FloraCore</p>
+     *
+     * @return the platforms data folder
+     */
+    Path getDataDirectory();
 
     /**
      * Checks if a user is online

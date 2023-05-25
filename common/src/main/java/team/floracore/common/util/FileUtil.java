@@ -20,12 +20,14 @@ public final class FileUtil {
         List<byte[]> bufs = new ArrayList<>();
         byte[] buf;
         int t;
-        while ((t = deflater.deflate(buf = new byte[bufSize])) == bufSize)
+        while ((t = deflater.deflate(buf = new byte[bufSize])) == bufSize) {
             bufs.add(buf);
+        }
         deflater.end();
         ByteBuffer r = ByteBuffer.allocate(bufs.size() * bufSize + t);
-        for (byte[] i : bufs)
+        for (byte[] i : bufs) {
             r.put(i);
+        }
         r.put(buf, 0, t);
         return r.array();
     }
@@ -37,12 +39,14 @@ public final class FileUtil {
             List<byte[]> bufs = new ArrayList<>();
             byte[] buf;
             int t;
-            while ((t = inflater.inflate(buf = new byte[bufSize])) == bufSize)
+            while ((t = inflater.inflate(buf = new byte[bufSize])) == bufSize) {
                 bufs.add(buf);
+            }
             inflater.end();
             ByteBuffer r = ByteBuffer.allocate(bufs.size() * bufSize + t);
-            for (byte[] i : bufs)
+            for (byte[] i : bufs) {
                 r.put(i);
+            }
             r.put(buf, 0, t);
             return r.array();
         } catch (DataFormatException e) {
@@ -72,44 +76,38 @@ public final class FileUtil {
         return bos.toByteArray();
     }
 
-    public static void copy(InputStream i, OutputStream o) {
-        byte[] b = new byte[bufSize];
-        int l;
-        try {
-            while ((l = i.read(b)) != -1)
-                o.write(b, 0, l);
-        } catch (Throwable e) {
-            throw TypeUtil.throwException(e);
-        }
-    }
-
     public static void exportDir(JarFile jar, String jarDir, File dir) {
         exportDir(jar, jarDir, dir, true);
     }
 
     public static void exportDir(JarFile jar, String jarDir, File dir, boolean replace) {
-        if (dir.isFile())
+        if (dir.isFile()) {
             throw new IllegalArgumentException("dir");
+        }
         jarDir = jarDir.replace('\\', '/');
-        if (!jarDir.endsWith("/"))
+        if (!jarDir.endsWith("/")) {
             jarDir += '/';
+        }
         Enumeration<JarEntry> jee = jar.entries();
         while (jee.hasMoreElements()) {
             JarEntry je = jee.nextElement();
             if (!je.isDirectory() && je.getName().startsWith(jarDir)) {
                 File f = new File(dir, je.getName().substring(jarDir.length()));
                 File d = f.getParentFile();
-                if (d.isFile())
+                if (d.isFile()) {
                     throw new IllegalArgumentException(d.getPath());
-                if (!d.exists())
+                }
+                if (!d.exists()) {
                     d.mkdirs();
+                }
                 try {
                     l1:
                     {
-                        if (!f.exists())
+                        if (!f.exists()) {
                             f.createNewFile();
-                        else if (!replace)
+                        } else if (!replace) {
                             break l1;
+                        }
                         try (FileOutputStream fos = new FileOutputStream(f)) {
                             copy(jar.getInputStream(je), fos);
                         }
@@ -118,6 +116,18 @@ public final class FileUtil {
                     throw TypeUtil.throwException(e);
                 }
             }
+        }
+    }
+
+    public static void copy(InputStream i, OutputStream o) {
+        byte[] b = new byte[bufSize];
+        int l;
+        try {
+            while ((l = i.read(b)) != -1) {
+                o.write(b, 0, l);
+            }
+        } catch (Throwable e) {
+            throw TypeUtil.throwException(e);
         }
     }
 
@@ -150,7 +160,8 @@ public final class FileUtil {
                     redirects++;
                 }
             }
-        } while (redir);
+        }
+        while (redir);
         return in;
     }
 }

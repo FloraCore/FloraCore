@@ -11,12 +11,12 @@ public interface NmsEntity extends NmsICommandListener {
         return WrappedObject.wrap(NmsEntity.class, null).staticNewInstanceV13(type, world);
     }
 
+    @WrappedBukkitConstructor(minVer = 13)
+    NmsEntity staticNewInstanceV13(NmsEntityTypes type, NmsWorld world);
+
     static NmsEntity newInstanceV12_13(NmsWorld world) {
         return WrappedObject.wrap(NmsEntity.class, null).staticNewInstanceV12_13(world);
     }
-
-    @WrappedBukkitConstructor(minVer = 13)
-    NmsEntity staticNewInstanceV13(NmsEntityTypes type, NmsWorld world);
 
     @WrappedBukkitConstructor(minVer = 12, maxVer = 13)
     NmsEntity staticNewInstanceV12_13(NmsWorld world);

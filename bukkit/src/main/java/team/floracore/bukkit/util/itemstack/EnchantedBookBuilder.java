@@ -31,9 +31,10 @@ public class EnchantedBookBuilder extends ItemStackBuilder {
     }
 
     public ItemStackBuilder setHideStoredEnchants(boolean hideEnchants) {
-        if (hideEnchants)
+        if (hideEnchants) {
             return setHideFlags((byte) (getHideFlags() | 32));
-        else
+        } else {
             return setHideFlags((byte) (getHideFlags() & ~32));
+        }
     }
 }

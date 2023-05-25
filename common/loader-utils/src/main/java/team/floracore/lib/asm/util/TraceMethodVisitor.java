@@ -42,6 +42,12 @@ public final class TraceMethodVisitor extends MethodVisitor {
     }
 
     @Override
+    public AnnotationVisitor visitAnnotationDefault() {
+        Printer annotationPrinter = p.visitAnnotationDefault();
+        return new TraceAnnotationVisitor(super.visitAnnotationDefault(), annotationPrinter);
+    }
+
+    @Override
     public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
         Printer annotationPrinter = p.visitMethodAnnotation(descriptor, visible);
         return new TraceAnnotationVisitor(
@@ -57,18 +63,6 @@ public final class TraceMethodVisitor extends MethodVisitor {
     }
 
     @Override
-    public void visitAttribute(final Attribute attribute) {
-        p.visitMethodAttribute(attribute);
-        super.visitAttribute(attribute);
-    }
-
-    @Override
-    public AnnotationVisitor visitAnnotationDefault() {
-        Printer annotationPrinter = p.visitAnnotationDefault();
-        return new TraceAnnotationVisitor(super.visitAnnotationDefault(), annotationPrinter);
-    }
-
-    @Override
     public void visitAnnotableParameterCount(final int parameterCount, final boolean visible) {
         p.visitAnnotableParameterCount(parameterCount, visible);
         super.visitAnnotableParameterCount(parameterCount, visible);
@@ -80,6 +74,12 @@ public final class TraceMethodVisitor extends MethodVisitor {
         Printer annotationPrinter = p.visitParameterAnnotation(parameter, descriptor, visible);
         return new TraceAnnotationVisitor(
                 super.visitParameterAnnotation(parameter, descriptor, visible), annotationPrinter);
+    }
+
+    @Override
+    public void visitAttribute(final Attribute attribute) {
+        p.visitMethodAttribute(attribute);
+        super.visitAttribute(attribute);
     }
 
     @Override

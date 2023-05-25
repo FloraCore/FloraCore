@@ -24,20 +24,6 @@ public class SimpleExtensionManager implements ExtensionManager, AutoCloseable {
         this.plugin = plugin;
     }
 
-    private static boolean isJarInJar() {
-        String thisClassLoaderName = SimpleExtensionManager.class.getClassLoader().getClass().getName();
-        return thisClassLoaderName.equals("team.floracore.common.loader.JarInJarClassLoader");
-    }
-
-    private static void addJarToParentClasspath(Path path) throws Exception {
-        ClassLoader parentClassLoader = SimpleExtensionManager.class.getClassLoader().getParent();
-        if (!(parentClassLoader instanceof URLClassLoader)) {
-            throw new RuntimeException("useParentClassLoader is true but parent is not a URLClassLoader");
-        }
-
-        URLClassLoaderAccess.create(((URLClassLoader) parentClassLoader)).addURL(path.toUri().toURL());
-    }
-
     @Override
     public void close() {
         for (LoadedExtension extension : this.extensions) {
@@ -58,28 +44,6 @@ public class SimpleExtensionManager implements ExtensionManager, AutoCloseable {
         this.plugin.getLogger().info("Loading extension: " + extension.getClass().getName());
         this.extensions.add(new LoadedExtension(extension, null));
         extension.load();
-    }
-
-    public void loadExtensions(Path directory) {
-        try {
-            MoreFiles.createDirectoriesIfNotExists(directory);
-        } catch (IOException e) {
-            return;
-        }
-
-        try (Stream<Path> stream = Files.list(directory)) {
-            stream.forEach(path -> {
-                if (path.getFileName().toString().endsWith(".jar")) {
-                    try {
-                        loadExtension(path);
-                    } catch (Exception e) {
-                        this.plugin.getLogger().warn("Exception loading extension from " + path, e);
-                    }
-                }
-            });
-        } catch (IOException e) {
-            this.plugin.getLogger().warn("Exception loading extensions from " + directory, e);
-        }
     }
 
     @Override
@@ -166,6 +130,42 @@ public class SimpleExtensionManager implements ExtensionManager, AutoCloseable {
     @Override
     public @NonNull Collection<Extension> getLoadedExtensions() {
         return this.extensions.stream().map(e -> e.instance).collect(Collectors.toSet());
+    }
+
+    public void loadExtensions(Path directory) {
+        try {
+            MoreFiles.createDirectoriesIfNotExists(directory);
+        } catch (IOException e) {
+            return;
+        }
+
+        try (Stream<Path> stream = Files.list(directory)) {
+            stream.forEach(path -> {
+                if (path.getFileName().toString().endsWith(".jar")) {
+                    try {
+                        loadExtension(path);
+                    } catch (Exception e) {
+                        this.plugin.getLogger().warn("Exception loading extension from " + path, e);
+                    }
+                }
+            });
+        } catch (IOException e) {
+            this.plugin.getLogger().warn("Exception loading extensions from " + directory, e);
+        }
+    }
+
+    private static boolean isJarInJar() {
+        String thisClassLoaderName = SimpleExtensionManager.class.getClassLoader().getClass().getName();
+        return thisClassLoaderName.equals("team.floracore.common.loader.JarInJarClassLoader");
+    }
+
+    private static void addJarToParentClasspath(Path path) throws Exception {
+        ClassLoader parentClassLoader = SimpleExtensionManager.class.getClassLoader().getParent();
+        if (!(parentClassLoader instanceof URLClassLoader)) {
+            throw new RuntimeException("useParentClassLoader is true but parent is not a URLClassLoader");
+        }
+
+        URLClassLoaderAccess.create(((URLClassLoader) parentClassLoader)).addURL(path.toUri().toURL());
     }
 
     private static final class LoadedExtension {

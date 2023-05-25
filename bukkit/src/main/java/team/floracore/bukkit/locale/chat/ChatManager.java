@@ -48,12 +48,6 @@ public class ChatManager implements Listener {
         this.chat.setEndTime(endTime);
     }
 
-    public void addChatRecord(ChatRecord chatRecord) {
-        List<ChatRecord> chatRecords = this.chat.getRecords();
-        chatRecords.add(chatRecord);
-        this.chat.setRecords(chatRecords);
-    }
-
     public UUID getPlayerChatUUID(Player player) {
         UUID uuid = player.getUniqueId();
         return getPlayerChatUUID(uuid);
@@ -78,13 +72,10 @@ public class ChatManager implements Listener {
         this.plugin.getBootstrap().getScheduler().async().execute(() -> addChatRecord(chatRecord));
     }
 
-    public void clearPlayerChatsInvalid(UUID uuid) {
-        List<DATA> ret = plugin.getStorage().getImplementation().getSpecifiedTypeData(uuid, DataType.CHAT);
-        for (DATA data : ret) {
-            if (data.getValue().isEmpty()) {
-                plugin.getStorage().getImplementation().deleteDataID(data.getId());
-            }
-        }
+    public void addChatRecord(ChatRecord chatRecord) {
+        List<ChatRecord> chatRecords = this.chat.getRecords();
+        chatRecords.add(chatRecord);
+        this.chat.setRecords(chatRecords);
     }
 
     @EventHandler
@@ -99,6 +90,15 @@ public class ChatManager implements Listener {
             clearPlayerChatsInvalid(uuid);
             this.plugin.getStorage().getImplementation().insertData(uuid, DataType.CHAT, chatUUID.toString(), "", 0);
         });
+    }
+
+    public void clearPlayerChatsInvalid(UUID uuid) {
+        List<DATA> ret = plugin.getStorage().getImplementation().getSpecifiedTypeData(uuid, DataType.CHAT);
+        for (DATA data : ret) {
+            if (data.getValue().isEmpty()) {
+                plugin.getStorage().getImplementation().deleteDataID(data.getId());
+            }
+        }
     }
 
     @EventHandler

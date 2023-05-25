@@ -12,16 +12,16 @@ public class JObject implements JElement {
         return this.object;
     }
 
-    public JObject add(String key, JsonElement value) {
-        this.object.add(key, value);
-        return this;
-    }
-
     public JObject add(String key, String value) {
         if (value == null) {
             return add(key, JsonNull.INSTANCE);
         }
         return add(key, new JsonPrimitive(value));
+    }
+
+    public JObject add(String key, JsonElement value) {
+        this.object.add(key, value);
+        return this;
     }
 
     public JObject add(String key, Number value) {

@@ -13,10 +13,6 @@ public class ApiData implements DataAPI {
         this.plugin = plugin;
     }
 
-    public DATA getSpecifiedData(UUID uuid, DataType type, String key) {
-        return plugin.getStorage().getImplementation().getSpecifiedData(uuid, type, key);
-    }
-
     @Override
     public String getSpecifiedDataValue(UUID uuid, DataType type, String key) {
         DATA data = getSpecifiedData(uuid, type, key);
@@ -24,6 +20,10 @@ public class ApiData implements DataAPI {
             return null;
         }
         return data.getValue();
+    }
+
+    public DATA getSpecifiedData(UUID uuid, DataType type, String key) {
+        return plugin.getStorage().getImplementation().getSpecifiedData(uuid, type, key);
     }
 
     @Override
@@ -68,7 +68,6 @@ public class ApiData implements DataAPI {
     public void deleteDataExpired(UUID uuid) {
         plugin.getStorage().getImplementation().deleteDataExpired(uuid);
     }
-
 
     public FloraCorePlugin getPlugin() {
         return plugin;

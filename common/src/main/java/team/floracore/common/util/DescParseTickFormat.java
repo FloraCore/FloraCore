@@ -156,6 +156,15 @@ public final class DescParseTickFormat {
         return hoursMinutesToTicks(hours, minutes);
     }
 
+    public static long parseAlias(final String desc) throws NumberFormatException {
+        final Integer ret = nameToTicks.get(desc);
+        if (ret == null) {
+            throw new NumberFormatException();
+        }
+
+        return ret;
+    }
+
     public static long hoursMinutesToTicks(final int hours, final int minutes) {
         long ret = ticksAtMidnight;
         ret += (long) hours * ticksPerHour;
@@ -163,15 +172,6 @@ public final class DescParseTickFormat {
         ret += (minutes / 60.0) * ticksPerHour;
 
         ret %= ticksPerDay;
-        return ret;
-    }
-
-    public static long parseAlias(final String desc) throws NumberFormatException {
-        final Integer ret = nameToTicks.get(desc);
-        if (ret == null) {
-            throw new NumberFormatException();
-        }
-
         return ret;
     }
 
@@ -191,12 +191,6 @@ public final class DescParseTickFormat {
     public static String format24(final long ticks) {
         synchronized (SDFTwentyFour) {
             return formatDateFormat(ticks, SDFTwentyFour);
-        }
-    }
-
-    public static String format12(final long ticks) {
-        synchronized (SDFTwelve) {
-            return formatDateFormat(ticks, SDFTwelve);
         }
     }
 
@@ -237,5 +231,11 @@ public final class DescParseTickFormat {
         cal.add(Calendar.SECOND, (int) seconds + 1); // To solve rounding errors.
 
         return cal.getTime();
+    }
+
+    public static String format12(final long ticks) {
+        synchronized (SDFTwelve) {
+            return formatDateFormat(ticks, SDFTwelve);
+        }
     }
 }

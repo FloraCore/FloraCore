@@ -78,6 +78,140 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         }
     }
 
+    public boolean checkNicknameLegitimacy(Player p, String name) {
+        Sender sender = getPlugin().getSenderFactory().wrap(p);
+        int nameLengthMin = 3;
+        int nameLengthMax = 16;
+        if (name.contains(" ")) {
+            // 名字包含空格
+            PlayerCommandMessage.COMMAND_MISC_NICK_NAME_ILLEGAL_SPACE.send(sender);
+            return false;
+        } else if (name.length() < nameLengthMin || name.length() > nameLengthMax) {
+            // 名字长度不符合要求
+            PlayerCommandMessage.COMMAND_MISC_NICK_NAME_ILLEGAL_LENGTH.send(sender);
+            return false;
+        } else if (!name.matches("[a-zA-Z0-9_]+")) {
+            // 名字不符合Minecraft命名规则
+            PlayerCommandMessage.COMMAND_MISC_NICK_NAME_ILLEGAL_CHARACTER.send(sender);
+            return false;
+        } else {
+            // 执行相应操作
+            if (p.hasPermission("floracore.command.nick.admin")) {
+                return true;
+            } else {
+                return getStorageImplementation().selectPlayer(name) != null;
+            }
+        }
+    }
+
+    private void performNick(Player p, String rank, String skin, String name, boolean typeNick) {
+        UUID uuid = p.getUniqueId();
+        Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PREFIX);
+        // 修改玩家信息
+        resetName(p, name);
+        // 设置皮肤
+        String skinName;
+        if (typeNick) {
+            if (skin.equalsIgnoreCase("normal")) {
+                skinName = uuid.toString();
+            } else if (skin.equalsIgnoreCase("steve_alex")) {
+                Random random = new Random();
+                int randomNum = random.nextInt(2);
+                skinName = randomNum == 0 ? "Steve" : "Alex";
+            } else {
+                skinName = getPlugin().getNamesRepository().getRandomNameProperty().getName();
+            }
+        } else {
+            skinName = skin;
+        }
+        try {
+            // 判断是否为Normal，如果为Normal则不进行操作
+            UUID i = UUID.fromString(skinName);
+        } catch (IllegalArgumentException exception) {
+            NamesRepository.NameProperty selectedSkin;
+            // 不是Normal
+            // 判断是不是Steve/Alex
+            if (skinName.equalsIgnoreCase("Steve")) {
+                selectedSkin = getPlugin().getNamesRepository().getSteveProperty();
+            } else if (skinName.equalsIgnoreCase("Alex")) {
+                selectedSkin = getPlugin().getNamesRepository().getAlexProperty();
+            } else {
+                selectedSkin = getPlugin().getNamesRepository().getNameProperty(skinName);
+            }
+            if (selectedSkin != null) {
+                // 设置玩家皮肤
+                    /*getAsyncExecutor().execute(() -> {
+                        IProperty iProperty = skinsRestorerAPI.createPlatformProperty(selectedSkin.getName(), selectedSkin.getValue(), selectedSkin.getSignature());
+                        skinsRestorerAPI.applySkin(new PlayerWrapper(p), iProperty);
+                    });*/
+            }
+        }
+        // 设置Rank
+        User user = luckPerms.getUserManager().getUser(uuid);
+        if (user != null) {
+            PrefixNode node = PrefixNode.builder(ranks.get(rank), 77665).build();
+            user.data().add(node);
+            luckPerms.getUserManager().saveUser(user);
+        }
+        // 设置数据库Nick状态
+        getAsyncExecutor().execute(() -> {
+            getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.skin", skinName, 0);
+            getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.name", name, 0);
+            getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.rank", rank, 0);
+            getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.status", String.valueOf(true), 0);
+        });
+    }
+
+    private Book getFinishPage(String rank, String name, UUID uuid) {
+        Component bookTitle = text("FloraCore Nick FinishPage");
+        Component bookAuthor = text("FloraCore");
+        Collection<Component> bookPages = new ArrayList<>();
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1.build(), uuid);
+        Component line2 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_2.build(rank, name), uuid);
+        Component reset = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RESET.build(), uuid);
+        Component component = join(joinConfig, line1, space(),
+                // line 2
+                line2, space(),
+                // reset
+                reset).asComponent();
+        bookPages.add(component);
+        return Book.book(bookTitle, bookAuthor, bookPages);
+    }
+
+    private void resetName(Player player, String name) {
+        UUID uuid = player.getUniqueId();
+        NmsEntityPlayer nep = WrappedObject.wrap(ObcEntity.class, player).getHandle().cast(NmsEntityPlayer.class);
+        NmsEnumPlayerInfoAction removePlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).REMOVE_PLAYER();
+        NmsPacketPlayOutPlayerInfo removePacket = NmsPacketPlayOutPlayerInfo.newInstance(removePlayer, Collections.singletonList(nep.getRaw()));
+        ProtocolUtil.sendPacketToAllPlayers(removePacket);
+        WrappedGameProfile wgp = nep.getGameProfile();
+        wgp.setName(name);
+        player.setDisplayName(name);
+        player.setPlayerListName(null);
+        NmsEnumPlayerInfoAction addPlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).ADD_PLAYER();
+        NmsPacketPlayOutPlayerInfo addPacket = NmsPacketPlayOutPlayerInfo.newInstance(addPlayer, Collections.singletonList(nep.getRaw()));
+        ProtocolUtil.sendPacketToAllPlayers(addPacket);
+        getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
+            if (getPlugin().getLoader().getServer().getPluginManager().getPlugin("TAB") != null) {
+                TabPlayer tp = TabAPI.getInstance().getPlayer(uuid);
+                TablistFormatManager tfm = TabAPI.getInstance().getTablistFormatManager();
+                tfm.setName(tp, name);
+                TeamManager tm = TabAPI.getInstance().getTeamManager();
+                if (tm instanceof UnlimitedNametagManager) {
+                    UnlimitedNametagManager unm = (UnlimitedNametagManager) tm;
+                    unm.setName(tp, name);
+                }
+            }
+        }, 300, TimeUnit.MILLISECONDS);
+    }
+
+    @CommandMethod("nick reset")
+    @CommandDescription("取消你的昵称")
+    public void nickReset(final @NotNull Player p) {
+        unNick(p);
+    }
+
     @CommandMethod("unnick")
     @CommandDescription("取消你的昵称")
     public void unNick(final @NotNull Player p) {
@@ -92,10 +226,33 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         }
     }
 
-    @CommandMethod("nick reset")
-    @CommandDescription("取消你的昵称")
-    public void nickReset(final @NotNull Player p) {
-        unNick(p);
+    private void performUnNick(Player p) {
+        UUID uuid = p.getUniqueId();
+        DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
+        // 重置昵称
+        String name = getPlayerRecordName(uuid);
+        resetName(p, name);
+        // 重置rank
+        User user = luckPerms.getUserManager().getUser(uuid);
+        if (user != null) {
+            String prefix = user.getCachedData().getMetaData().getPrefix();
+            prefix = prefix == null ? "" : prefix;
+            PrefixNode node = PrefixNode.builder(prefix, 77665).build();
+            user.data().remove(node);
+            luckPerms.getUserManager().saveUser(user);
+        }
+        // TODO 重置皮肤
+
+        // 清除数据库Nick状态
+        getAsyncExecutor().execute(() -> {
+            DATA rankData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.rank");
+            if (statusData != null) {
+                getStorageImplementation().deleteDataID(statusData.getId());
+            }
+            if (rankData != null) {
+                getStorageImplementation().deleteDataID(rankData.getId());
+            }
+        });
     }
 
     @CommandMethod("book-nick <page> [rank] [skin] [name] [nickname]")
@@ -250,146 +407,6 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         }
     }
 
-    public boolean checkNicknameLegitimacy(Player p, String name) {
-        Sender sender = getPlugin().getSenderFactory().wrap(p);
-        int nameLengthMin = 3;
-        int nameLengthMax = 16;
-        if (name.contains(" ")) {
-            // 名字包含空格
-            PlayerCommandMessage.COMMAND_MISC_NICK_NAME_ILLEGAL_SPACE.send(sender);
-            return false;
-        } else if (name.length() < nameLengthMin || name.length() > nameLengthMax) {
-            // 名字长度不符合要求
-            PlayerCommandMessage.COMMAND_MISC_NICK_NAME_ILLEGAL_LENGTH.send(sender);
-            return false;
-        } else if (!name.matches("[a-zA-Z0-9_]+")) {
-            // 名字不符合Minecraft命名规则
-            PlayerCommandMessage.COMMAND_MISC_NICK_NAME_ILLEGAL_CHARACTER.send(sender);
-            return false;
-        } else {
-            // 执行相应操作
-            if (p.hasPermission("floracore.command.nick.admin")) {
-                return true;
-            } else {
-                return getStorageImplementation().selectPlayer(name) != null;
-            }
-        }
-    }
-
-    private void performUnNick(Player p) {
-        UUID uuid = p.getUniqueId();
-        DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
-        // 重置昵称
-        String name = getPlayerRecordName(uuid);
-        resetName(p, name);
-        // 重置rank
-        User user = luckPerms.getUserManager().getUser(uuid);
-        if (user != null) {
-            String prefix = user.getCachedData().getMetaData().getPrefix();
-            prefix = prefix == null ? "" : prefix;
-            PrefixNode node = PrefixNode.builder(prefix, 77665).build();
-            user.data().remove(node);
-            luckPerms.getUserManager().saveUser(user);
-        }
-        // TODO 重置皮肤
-
-        // 清除数据库Nick状态
-        getAsyncExecutor().execute(() -> {
-            DATA rankData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.rank");
-            if (statusData != null) {
-                getStorageImplementation().deleteDataID(statusData.getId());
-            }
-            if (rankData != null) {
-                getStorageImplementation().deleteDataID(rankData.getId());
-            }
-        });
-    }
-
-    private void performNick(Player p, String rank, String skin, String name, boolean typeNick) {
-        UUID uuid = p.getUniqueId();
-        Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PREFIX);
-        // 修改玩家信息
-        resetName(p, name);
-        // 设置皮肤
-        String skinName;
-        if (typeNick) {
-            if (skin.equalsIgnoreCase("normal")) {
-                skinName = uuid.toString();
-            } else if (skin.equalsIgnoreCase("steve_alex")) {
-                Random random = new Random();
-                int randomNum = random.nextInt(2);
-                skinName = randomNum == 0 ? "Steve" : "Alex";
-            } else {
-                skinName = getPlugin().getNamesRepository().getRandomNameProperty().getName();
-            }
-        } else {
-            skinName = skin;
-        }
-        try {
-            // 判断是否为Normal，如果为Normal则不进行操作
-            UUID i = UUID.fromString(skinName);
-        } catch (IllegalArgumentException exception) {
-            NamesRepository.NameProperty selectedSkin;
-            // 不是Normal
-            // 判断是不是Steve/Alex
-            if (skinName.equalsIgnoreCase("Steve")) {
-                selectedSkin = getPlugin().getNamesRepository().getSteveProperty();
-            } else if (skinName.equalsIgnoreCase("Alex")) {
-                selectedSkin = getPlugin().getNamesRepository().getAlexProperty();
-            } else {
-                selectedSkin = getPlugin().getNamesRepository().getNameProperty(skinName);
-            }
-            if (selectedSkin != null) {
-                // 设置玩家皮肤
-                    /*getAsyncExecutor().execute(() -> {
-                        IProperty iProperty = skinsRestorerAPI.createPlatformProperty(selectedSkin.getName(), selectedSkin.getValue(), selectedSkin.getSignature());
-                        skinsRestorerAPI.applySkin(new PlayerWrapper(p), iProperty);
-                    });*/
-            }
-        }
-        // 设置Rank
-        User user = luckPerms.getUserManager().getUser(uuid);
-        if (user != null) {
-            PrefixNode node = PrefixNode.builder(ranks.get(rank), 77665).build();
-            user.data().add(node);
-            luckPerms.getUserManager().saveUser(user);
-        }
-        // 设置数据库Nick状态
-        getAsyncExecutor().execute(() -> {
-            getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.skin", skinName, 0);
-            getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.name", name, 0);
-            getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.rank", rank, 0);
-            getStorageImplementation().insertData(uuid, DataType.FUNCTION, "nick.status", String.valueOf(true), 0);
-        });
-    }
-
-    private void resetName(Player player, String name) {
-        UUID uuid = player.getUniqueId();
-        NmsEntityPlayer nep = WrappedObject.wrap(ObcEntity.class, player).getHandle().cast(NmsEntityPlayer.class);
-        NmsEnumPlayerInfoAction removePlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).REMOVE_PLAYER();
-        NmsPacketPlayOutPlayerInfo removePacket = NmsPacketPlayOutPlayerInfo.newInstance(removePlayer, Collections.singletonList(nep.getRaw()));
-        ProtocolUtil.sendPacketToAllPlayers(removePacket);
-        WrappedGameProfile wgp = nep.getGameProfile();
-        wgp.setName(name);
-        player.setDisplayName(name);
-        player.setPlayerListName(null);
-        NmsEnumPlayerInfoAction addPlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).ADD_PLAYER();
-        NmsPacketPlayOutPlayerInfo addPacket = NmsPacketPlayOutPlayerInfo.newInstance(addPlayer, Collections.singletonList(nep.getRaw()));
-        ProtocolUtil.sendPacketToAllPlayers(addPacket);
-        getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
-            if (getPlugin().getLoader().getServer().getPluginManager().getPlugin("TAB") != null) {
-                TabPlayer tp = TabAPI.getInstance().getPlayer(uuid);
-                TablistFormatManager tfm = TabAPI.getInstance().getTablistFormatManager();
-                tfm.setName(tp, name);
-                TeamManager tm = TabAPI.getInstance().getTeamManager();
-                if (tm instanceof UnlimitedNametagManager) {
-                    UnlimitedNametagManager unm = (UnlimitedNametagManager) tm;
-                    unm.setName(tp, name);
-                }
-            }
-        }, 300, TimeUnit.MILLISECONDS);
-    }
-
     private Book getStartPage(UUID uuid) {
         Component bookTitle = text("FloraCore Nick StartPage");
         Component bookAuthor = text("FloraCore");
@@ -513,23 +530,6 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                 again, space(),
                 // custom
                 custom).asComponent();
-        bookPages.add(component);
-        return Book.book(bookTitle, bookAuthor, bookPages);
-    }
-
-    private Book getFinishPage(String rank, String name, UUID uuid) {
-        Component bookTitle = text("FloraCore Nick FinishPage");
-        Component bookAuthor = text("FloraCore");
-        Collection<Component> bookPages = new ArrayList<>();
-        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-        Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1.build(), uuid);
-        Component line2 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_2.build(rank, name), uuid);
-        Component reset = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RESET.build(), uuid);
-        Component component = join(joinConfig, line1, space(),
-                // line 2
-                line2, space(),
-                // reset
-                reset).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }

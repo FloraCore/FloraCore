@@ -52,6 +52,35 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.dataManager.reload();
     }
 
+    protected DependencyManager createDependencyManager() {
+        return new DependencyManagerImpl(this);
+    }
+
+    protected Set<Dependency> getGlobalDependencies() {
+        Set<Dependency> ret = EnumSet.of(Dependency.ADVENTURE, Dependency.ADVENTURE_NBT);
+        ret.add(Dependency.BYTE_BUDDY_AGENT);
+        ret.add(Dependency.ADVENTURE_KEY);
+        ret.add(Dependency.ADVENTURE_PLATFORM_API);
+        ret.add(Dependency.ADVENTURE_PLATFORM_FACET);
+        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY);
+        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON);
+        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL);
+        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN);
+        ret.add(Dependency.EXAMINATION_API);
+        ret.add(Dependency.CLOUD_CORE);
+        ret.add(Dependency.CLOUD_ANNOTATIONS);
+        ret.add(Dependency.CLOUD_BRIGADIER);
+        ret.add(Dependency.CLOUD_SERVICES);
+        ret.add(Dependency.CLOUD_TASKS);
+        ret.add(Dependency.GEANTYREF);
+        ret.add(Dependency.OKHTTP);
+        ret.add(Dependency.OKIO);
+        ret.add(Dependency.CAFFEINE);
+        ret.add(Dependency.UNSAFE_ACCESSOR);
+        ret.add(Dependency.OPENCSV);
+        return ret;
+    }
+
     public final void onEnable() {
         // load the sender factory instance
         setupSenderFactory();
@@ -117,6 +146,12 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         getLogger().info("Successfully enabled. (took " + timeTaken.toMillis() + "ms)");
     }
 
+    protected abstract void setupSenderFactory();
+
+    protected abstract ConfigurationAdapter provideConfigurationAdapter();
+
+    protected abstract void setupFramework();
+
     public final void onDisable() {
         getLogger().info("Starting shutdown process...");
 
@@ -145,12 +180,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         getLogger().info("Goodbye!");
     }
 
-    protected abstract ConfigurationAdapter provideConfigurationAdapter();
-
-    protected abstract void setupSenderFactory();
-
-    protected abstract void setupFramework();
-
     protected Path resolveConfig(String fileName) {
         Path configFile = getBootstrap().getConfigDirectory().resolve(fileName);
 
@@ -172,49 +201,24 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         return configFile;
     }
 
-    protected Set<Dependency> getGlobalDependencies() {
-        Set<Dependency> ret = EnumSet.of(Dependency.ADVENTURE, Dependency.ADVENTURE_NBT);
-        ret.add(Dependency.BYTE_BUDDY_AGENT);
-        ret.add(Dependency.ADVENTURE_KEY);
-        ret.add(Dependency.ADVENTURE_PLATFORM_API);
-        ret.add(Dependency.ADVENTURE_PLATFORM_FACET);
-        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY);
-        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON);
-        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL);
-        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN);
-        ret.add(Dependency.EXAMINATION_API);
-        ret.add(Dependency.CLOUD_CORE);
-        ret.add(Dependency.CLOUD_ANNOTATIONS);
-        ret.add(Dependency.CLOUD_BRIGADIER);
-        ret.add(Dependency.CLOUD_SERVICES);
-        ret.add(Dependency.CLOUD_TASKS);
-        ret.add(Dependency.GEANTYREF);
-        ret.add(Dependency.OKHTTP);
-        ret.add(Dependency.OKIO);
-        ret.add(Dependency.CAFFEINE);
-        ret.add(Dependency.UNSAFE_ACCESSOR);
-        ret.add(Dependency.OPENCSV);
-        return ret;
+    @Override
+    public OkHttpClient getHttpClient() {
+        return this.httpClient;
     }
 
     @Override
-    public TranslationManager getTranslationManager() {
-        return this.translationManager;
+    public PluginLogger getLogger() {
+        return getBootstrap().getPluginLogger();
+    }
+
+    @Override
+    public DependencyManager getDependencyManager() {
+        return this.dependencyManager;
     }
 
     @Override
     public FloraCoreConfiguration getConfiguration() {
         return this.configuration;
-    }
-
-    @Override
-    public String getServerName() {
-        return getConfiguration().get(ConfigKeys.SERVER_NAME);
-    }
-
-    @Override
-    public TranslationRepository getTranslationRepository() {
-        return this.translationRepository;
     }
 
     @Override
@@ -227,25 +231,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         return this.storage;
     }
 
-    protected DependencyManager createDependencyManager() {
-        return new DependencyManagerImpl(this);
-    }
-
-    @Override
-    public DependencyManager getDependencyManager() {
-        return this.dependencyManager;
-    }
-
-    @Override
-    public OkHttpClient getHttpClient() {
-        return this.httpClient;
-    }
-
-    @Override
-    public PluginLogger getLogger() {
-        return getBootstrap().getPluginLogger();
-    }
-
     @Override
     public FloraCoreApiProvider getApiProvider() {
         return this.apiProvider;
@@ -254,6 +239,16 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public SimpleExtensionManager getExtensionManager() {
         return this.extensionManager;
+    }
+
+    @Override
+    public TranslationManager getTranslationManager() {
+        return this.translationManager;
+    }
+
+    @Override
+    public TranslationRepository getTranslationRepository() {
+        return this.translationRepository;
     }
 
     @Override
@@ -277,5 +272,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
             return loadedPlugins.get(name).contains(author);
         }
         return false;
+    }
+
+    @Override
+    public String getServerName() {
+        return getConfiguration().get(ConfigKeys.SERVER_NAME);
     }
 }

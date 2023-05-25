@@ -18,6 +18,14 @@ public class BungeeSenderFactory extends SenderFactory<FCBungeePlugin, CommandSe
     }
 
     @Override
+    protected UUID getUniqueId(CommandSender sender) {
+        if (sender instanceof ProxiedPlayer) {
+            return ((ProxiedPlayer) sender).getUniqueId();
+        }
+        return Sender.CONSOLE_UUID;
+    }
+
+    @Override
     protected String getName(CommandSender sender) {
         if (sender instanceof ProxiedPlayer) {
             return sender.getName();
@@ -31,14 +39,6 @@ public class BungeeSenderFactory extends SenderFactory<FCBungeePlugin, CommandSe
             return ((ProxiedPlayer) sender).getDisplayName();
         }
         return Sender.CONSOLE_NAME;
-    }
-
-    @Override
-    protected UUID getUniqueId(CommandSender sender) {
-        if (sender instanceof ProxiedPlayer) {
-            return ((ProxiedPlayer) sender).getUniqueId();
-        }
-        return Sender.CONSOLE_UUID;
     }
 
     @Override

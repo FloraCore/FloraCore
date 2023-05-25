@@ -25,16 +25,20 @@ public final class Relocation {
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Relocation that = (Relocation) o;
-        return Objects.equals(this.pattern, that.pattern) &&
-                Objects.equals(this.relocatedPattern, that.relocatedPattern);
+    public int hashCode() {
+        return Objects.hash(this.pattern, this.relocatedPattern);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(this.pattern, this.relocatedPattern);
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Relocation that = (Relocation) o;
+        return Objects.equals(this.pattern, that.pattern) &&
+                Objects.equals(this.relocatedPattern, that.relocatedPattern);
     }
 }

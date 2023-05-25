@@ -50,6 +50,14 @@ public class KeyedConfiguration {
         load(true);
     }
 
+    protected void load(boolean initial) {
+        for (ConfigKey<?> key : this.keys) {
+            if (initial || key.reloadable()) {
+                this.values.put(key, key.get(this.adapter));
+            }
+        }
+    }
+
     /**
      * Gets the value of a given context key.
      *
@@ -59,14 +67,6 @@ public class KeyedConfiguration {
      */
     public <T> T get(ConfigKey<T> key) {
         return this.values.get(key);
-    }
-
-    protected void load(boolean initial) {
-        for (ConfigKey<?> key : this.keys) {
-            if (initial || key.reloadable()) {
-                this.values.put(key, key.get(this.adapter));
-            }
-        }
     }
 
     /**

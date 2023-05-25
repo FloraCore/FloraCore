@@ -26,7 +26,6 @@ public class ONLINE extends AbstractFloraCoreTable {
         this.serverName = serverName;
     }
 
-
     public UUID getUniqueId() {
         return uuid;
     }

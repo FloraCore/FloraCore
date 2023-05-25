@@ -89,7 +89,6 @@ public interface PlayerCommandMessage extends AbstractMessage {
             // {0}
             .args(text("/nick reset", DARK_RED).decoration(BOLD, true)).append(FULL_STOP).color(RED).build();
 
-
     Args1<Integer> COMMAND_AIR_GET_SELF_MAX = value -> AbstractMessage.prefixed(translatable().key("floracore.command.air.get.self.max").color(AQUA).args(text(value)).color(GREEN));
 
     Args1<Integer> COMMAND_AIR_GET_SELF_REMAINING = value -> AbstractMessage.prefixed(translatable().key("floracore.command.air.get.self.remaining").color(AQUA).args(text(value)).color(GREEN));
@@ -133,7 +132,6 @@ public interface PlayerCommandMessage extends AbstractMessage {
             .key("floracore.command.realname.success")
             // {}
             .args(text(name).color(GREEN), text(realName).color(GREEN)).color(AQUA));
-
 
     Args1<Integer> COMMAND_AIR_GET_MAX_SELF = value -> AbstractMessage.prefixed(translatable().key("floracore.command.air.get.max.self").color(AQUA).args(text(value)).color(GREEN));
 

@@ -35,6 +35,11 @@ public class SqliteConnectionFactory extends FlatfileConnectionFactory {
     }
 
     @Override
+    public Function<String, String> getStatementProcessor() {
+        return s -> s.replace('\'', '`');
+    }
+
+    @Override
     protected Connection createConnection(Path file) throws SQLException {
         try {
             return (Connection) this.connectionConstructor.newInstance("jdbc:sqlite:" + file.toString(), file.toString(), new Properties());
@@ -44,10 +49,5 @@ public class SqliteConnectionFactory extends FlatfileConnectionFactory {
             }
             throw new RuntimeException(e);
         }
-    }
-
-    @Override
-    public Function<String, String> getStatementProcessor() {
-        return s -> s.replace('\'', '`');
     }
 }

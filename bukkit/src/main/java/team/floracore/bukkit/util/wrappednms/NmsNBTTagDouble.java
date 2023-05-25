@@ -14,12 +14,12 @@ public interface NmsNBTTagDouble extends NmsNBTTag {
     @WrappedConstructor
     NmsNBTTagDouble staticNewInstance(double value);
 
-    @WrappedBukkitMethod({@VersionName("asDouble"), @VersionName(maxVer = 17, value = "@0"), @VersionName(minVer = 17, value = "@0")})
-    double getValue0();
-
     default Double getValue() {
         return getValue0();
     }
+
+    @WrappedBukkitMethod({@VersionName("asDouble"), @VersionName(maxVer = 17, value = "@0"), @VersionName(minVer = 17, value = "@0")})
+    double getValue0();
 
     @Override
     default JsonPrimitive toJson() {

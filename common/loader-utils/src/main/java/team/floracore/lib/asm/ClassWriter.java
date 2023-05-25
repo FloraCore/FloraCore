@@ -1067,7 +1067,8 @@ public class ClassWriter extends ClassVisitor {
         } else {
             do {
                 class1 = class1.getSuperclass();
-            } while (!class1.isAssignableFrom(class2));
+            }
+            while (!class1.isAssignableFrom(class2));
             return class1.getName().replace('.', '/');
         }
     }

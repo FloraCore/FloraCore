@@ -94,6 +94,10 @@ public class SmartInventory {
         }
     }
 
+    List<InventoryListener<? extends Event>> getListeners() {
+        return listeners;
+    }
+
     @SuppressWarnings("unchecked")
     public void close(Player player) {
         listeners.stream()
@@ -145,10 +149,6 @@ public class SmartInventory {
 
     public InventoryManager getManager() {
         return manager;
-    }
-
-    List<InventoryListener<? extends Event>> getListeners() {
-        return listeners;
     }
 
     public static final class Builder {
@@ -217,14 +217,16 @@ public class SmartInventory {
         }
 
         public SmartInventory build() {
-            if (this.provider == null)
+            if (this.provider == null) {
                 throw new IllegalStateException("The provider of the SmartInventory.Builder must be set.");
+            }
 
             InventoryManager manager = this.manager != null ? this.manager : FCBukkitPlugin.getInventoryManager();
 
-            if (manager == null)
+            if (manager == null) {
                 throw new IllegalStateException("The manager of the SmartInventory.Builder must be set, "
                         + "or the SmartInvs should be loaded as a plugin.");
+            }
 
             SmartInventory inv = new SmartInventory(manager);
             inv.id = this.id;

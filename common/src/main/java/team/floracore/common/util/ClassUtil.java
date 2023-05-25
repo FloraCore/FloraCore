@@ -39,14 +39,17 @@ public class ClassUtil {
      * @return 一个类的父类 交 另一个类的真子类
      */
     public static <E, T> List<Class<? extends E>> getSuperClasses(Class<T> clazz, Class<E> l) {
-        if (clazz == l || !l.isAssignableFrom(clazz))
+        if (clazz == l || !l.isAssignableFrom(clazz)) {
             return new LinkedList<>();
+        }
         List<Class<? extends E>> r = new LinkedList<>();
         r.add(TypeUtil.cast(clazz));
-        if (clazz.getSuperclass() != null)
+        if (clazz.getSuperclass() != null) {
             r.addAll(getSuperClasses(clazz.getSuperclass(), l));
-        for (Class<?> c : clazz.getInterfaces())
+        }
+        for (Class<?> c : clazz.getInterfaces()) {
             r.addAll(getSuperClasses(TypeUtil.cast(c), l));
+        }
         return r;
     }
 
@@ -59,8 +62,9 @@ public class ClassUtil {
     }
 
     public static Class<?> fromName(ClassLoader cl, String name) {
-        if (name.endsWith("[]"))
+        if (name.endsWith("[]")) {
             return Array.newInstance(fromName(cl, name.substring(0, name.length() - 2)), 0).getClass();
+        }
         switch (name) {
             case "void":
                 return void.class;
@@ -88,71 +92,17 @@ public class ClassUtil {
         }
     }
 
-    public static Instrumentation getAgentInstrumentation() {
-        if (agentInstrumentation == null) {
-            try {
-                agentInstrumentation = (Instrumentation) Class.forName("mz.lib.InstrumentationGetter", false, sysClassLoader).getDeclaredField("instrumentation").get(null);
-            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignore) {
-                try {
-                    try {
-                        ByteBuddyAgent.install();
-                    } catch (Throwable e) {
-                        System.err.println("无法注入JavaAgent");
-                        if (ToolProvider.getSystemJavaCompiler() == null)
-                            System.err.println("请使用JDK，推荐zulu jdk(zulu.org)");
-                        System.err.println("请删除启动参数-XX:+DisableAttachMechanism和-Djdk.attach.allowAttachSelf=false");
-                        System.err.println("也可以尝试安装MzLibAgent（注：这不是一个插件）");
-                        throw TypeUtil.throwException(e);
-                    }
-                    String className = ClassUtil.class.getName() + "$AgentInstrumentationGetter";
-                    if (TypeUtil.getThrowable(() ->
-                    {
-                        Class.forName(className, false, ClassLoader.getSystemClassLoader());
-                    }) instanceof ClassNotFoundException) {
-                        byte[] bs = FileUtil.readInputStream(ClassUtil.class.getClassLoader().getResourceAsStream(className.replace('.', '/') + ".class"));
-                        Root.getUnsafe().defineClass(className, bs, 0, bs.length, ClassLoader.getSystemClassLoader(), null);
-                    }
-                    Class<?> clazz = Class.forName(className, true, ClassLoader.getSystemClassLoader());
-                    agentInstrumentation = TypeUtil.cast(clazz.getField("agentInstrumentation").get(null));
-                } catch (Throwable e) {
-                    TypeUtil.throwException(e);
-                }
-            }
-        }
-        return agentInstrumentation;
-    }
-
-    public static Class<?> loadClass(String className, byte[] bs, ClassLoader classLoader) {
-        synchronized (ClassUtil.class) {
-            try {
-                try {
-                    try {
-                        getAgentInstrumentation().redefineClasses(new ClassDefinition(Class.forName(className.replace('/', '.'), false, classLoader), bs));
-                        return Class.forName(className.replace('/', '.'), false, classLoader);
-                    } catch (VerifyError e) {
-                        try (FileOutputStream fos = new FileOutputStream(new File(className.replace('/', '.') + ".class"))) {
-                            fos.write(bs);
-                        }
-                        throw e;
-                    }
-                } catch (ClassNotFoundException ignore) {
-                    return Root.getUnsafe().defineClass(className, bs, 0, bs.length, classLoader, null);
-                }
-            } catch (Throwable e) {
-                throw TypeUtil.throwException(e);
-            }
-        }
-    }
-
     public static Field getSuperField(Class<?> dc, String name) {
-        if (dc == null)
+        if (dc == null) {
             throw TypeUtil.throwException(new NoSuchFieldException(name));
+        }
         try {
             return dc.getDeclaredField(name);
         } catch (NoSuchFieldException e) {
             Field r = getSuperField(dc.getSuperclass(), name);
-            if (!Modifier.isStatic(r.getModifiers()))
+            if (!Modifier.isStatic(r.getModifiers())) {
                 return r;
+            }
             throw TypeUtil.throwException(e);
         }
     }
@@ -161,12 +111,13 @@ public class ClassUtil {
         try {
             return dc.getDeclaredMethod(name, argTypes);
         } catch (NoSuchMethodException e) {
-            if (dc.getSuperclass() != null)
+            if (dc.getSuperclass() != null) {
                 try {
                     TypeUtil.<NoSuchMethodException>fakeThrow();
                     return getSuperMethod(dc.getSuperclass(), name, argTypes);
                 } catch (NoSuchMethodException e1) {
                 }
+            }
             for (Class<?> i : dc.getInterfaces()) {
                 try {
                     TypeUtil.<NoSuchMethodException>fakeThrow();
@@ -180,10 +131,11 @@ public class ClassUtil {
 
     public static MethodHandle unreflectSetter(Field field) {
         try {
-            if (Modifier.isStatic(field.getModifiers()))
+            if (Modifier.isStatic(field.getModifiers())) {
                 return Root.getTrusted().findStaticSetter(field.getDeclaringClass(), field.getName(), field.getType());
-            else
+            } else {
                 return Root.getTrusted().findSetter(field.getDeclaringClass(), field.getName(), field.getType());
+            }
         } catch (Throwable e) {
             throw TypeUtil.throwException(e);
         }
@@ -191,10 +143,11 @@ public class ClassUtil {
 
     public static MethodHandle unreflectGetter(Field field) {
         try {
-            if (Modifier.isStatic(field.getModifiers()))
+            if (Modifier.isStatic(field.getModifiers())) {
                 return Root.getTrusted().findStaticGetter(field.getDeclaringClass(), field.getName(), field.getType());
-            else
+            } else {
                 return Root.getTrusted().findGetter(field.getDeclaringClass(), field.getName(), field.getType());
+            }
         } catch (Throwable e) {
             throw TypeUtil.throwException(e);
         }
@@ -210,10 +163,11 @@ public class ClassUtil {
 
     public static MethodHandle unreflect(Method method) {
         try {
-            if (Modifier.isStatic(method.getModifiers()))
+            if (Modifier.isStatic(method.getModifiers())) {
                 return unreflectSpecial(method);
-            else
+            } else {
                 return Root.getTrusted().findVirtual(method.getDeclaringClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
+            }
         } catch (Throwable e) {
             throw TypeUtil.throwException(e);
         }
@@ -221,10 +175,11 @@ public class ClassUtil {
 
     public static MethodHandle unreflectSpecial(Method method) {
         try {
-            if (Modifier.isStatic(method.getModifiers()))
+            if (Modifier.isStatic(method.getModifiers())) {
                 return Root.getTrusted().findStatic(method.getDeclaringClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()));
-            else
+            } else {
                 return Root.getTrusted().findSpecial(method.getDeclaringClass(), method.getName(), MethodType.methodType(method.getReturnType(), method.getParameterTypes()), method.getDeclaringClass());
+            }
         } catch (Throwable e) {
             throw TypeUtil.throwException(e);
         }
@@ -232,20 +187,24 @@ public class ClassUtil {
 
     public static List<Method> getAllMethods(Class<?> clazz) {
         List<Method> r = new ArrayList<>();
-        if (clazz.getSuperclass() != null)
+        if (clazz.getSuperclass() != null) {
             ListUtil.addAllNonexistent(r, getAllMethods(clazz.getSuperclass()));
-        for (Class<?> i : clazz.getInterfaces())
+        }
+        for (Class<?> i : clazz.getInterfaces()) {
             ListUtil.addAllNonexistent(r, getAllMethods(i));
+        }
         ListUtil.addAllNonexistent(r, Lists.newArrayList(clazz.getDeclaredMethods()));
         return r;
     }
 
     public static Set<Method> getAllMethods(Class<?> dc, String name, Class<?>... argTypes) {
         LinkedHashSet<Method> r = new LinkedHashSet<>();
-        if (dc != Object.class && !dc.isInterface())
+        if (dc != Object.class && !dc.isInterface()) {
             r.addAll(getAllMethods(dc.getSuperclass(), name, argTypes));
-        for (Class<?> i : dc.getInterfaces())
+        }
+        for (Class<?> i : dc.getInterfaces()) {
             r.addAll(getAllMethods(i, name, argTypes));
+        }
         try {
             r.add(dc.getDeclaredMethod(name, argTypes));
         } catch (NoSuchMethodException e) {
@@ -255,15 +214,18 @@ public class ClassUtil {
 
     public static boolean isAbstract(Method m, Class<?> clazz) {
         try {
-            if (!Modifier.isAbstract(clazz.getDeclaredMethod(m.getName(), m.getParameterTypes()).getModifiers()))
+            if (!Modifier.isAbstract(clazz.getDeclaredMethod(m.getName(), m.getParameterTypes()).getModifiers())) {
                 return false;
+            }
         } catch (NoSuchMethodException e) {
         }
-        if ((!clazz.isInterface()) && clazz != Object.class && !isAbstract(m, clazz.getSuperclass()))
+        if ((!clazz.isInterface()) && clazz != Object.class && !isAbstract(m, clazz.getSuperclass())) {
             return false;
+        }
         for (Class<?> i : clazz.getInterfaces()) {
-            if (!isAbstract(m, i))
+            if (!isAbstract(m, i)) {
                 return false;
+            }
         }
         return true;
     }
@@ -271,26 +233,30 @@ public class ClassUtil {
     public static Method getInvokable(Method m, Class<?> clazz) {
         try {
             Method r = clazz.getDeclaredMethod(m.getName(), m.getParameterTypes());
-            if (!Modifier.isAbstract(r.getModifiers()))
+            if (!Modifier.isAbstract(r.getModifiers())) {
                 return r;
+            }
         } catch (NoSuchMethodException e) {
         }
         if (clazz != Object.class && !clazz.isInterface()) {
             Method r = getInvokable(m, clazz.getSuperclass());
-            if (r != null)
+            if (r != null) {
                 return r;
+            }
         }
         for (Class<?> i : clazz.getInterfaces()) {
             Method r = getInvokable(m, i);
-            if (r != null)
+            if (r != null) {
                 return r;
+            }
         }
         return null;
     }
 
     public static String getName(Class<?> clazz) {
-        if (clazz.isArray())
+        if (clazz.isArray()) {
             return getName(clazz.getComponentType()) + "[]";
+        }
         return clazz.getName().replace('$', '.');
     }
 
@@ -334,12 +300,70 @@ public class ClassUtil {
         }
     }
 
+    public static Class<?> loadClass(String className, byte[] bs, ClassLoader classLoader) {
+        synchronized (ClassUtil.class) {
+            try {
+                try {
+                    try {
+                        getAgentInstrumentation().redefineClasses(new ClassDefinition(Class.forName(className.replace('/', '.'), false, classLoader), bs));
+                        return Class.forName(className.replace('/', '.'), false, classLoader);
+                    } catch (VerifyError e) {
+                        try (FileOutputStream fos = new FileOutputStream(new File(className.replace('/', '.') + ".class"))) {
+                            fos.write(bs);
+                        }
+                        throw e;
+                    }
+                } catch (ClassNotFoundException ignore) {
+                    return Root.getUnsafe().defineClass(className, bs, 0, bs.length, classLoader, null);
+                }
+            } catch (Throwable e) {
+                throw TypeUtil.throwException(e);
+            }
+        }
+    }
+
+    public static Instrumentation getAgentInstrumentation() {
+        if (agentInstrumentation == null) {
+            try {
+                agentInstrumentation = (Instrumentation) Class.forName("mz.lib.InstrumentationGetter", false, sysClassLoader).getDeclaredField("instrumentation").get(null);
+            } catch (ClassNotFoundException | NoSuchFieldException | IllegalAccessException ignore) {
+                try {
+                    try {
+                        ByteBuddyAgent.install();
+                    } catch (Throwable e) {
+                        System.err.println("无法注入JavaAgent");
+                        if (ToolProvider.getSystemJavaCompiler() == null) {
+                            System.err.println("请使用JDK，推荐zulu jdk(zulu.org)");
+                        }
+                        System.err.println("请删除启动参数-XX:+DisableAttachMechanism和-Djdk.attach.allowAttachSelf=false");
+                        System.err.println("也可以尝试安装MzLibAgent（注：这不是一个插件）");
+                        throw TypeUtil.throwException(e);
+                    }
+                    String className = ClassUtil.class.getName() + "$AgentInstrumentationGetter";
+                    if (TypeUtil.getThrowable(() ->
+                    {
+                        Class.forName(className, false, ClassLoader.getSystemClassLoader());
+                    }) instanceof ClassNotFoundException) {
+                        byte[] bs = FileUtil.readInputStream(ClassUtil.class.getClassLoader().getResourceAsStream(className.replace('.', '/') + ".class"));
+                        Root.getUnsafe().defineClass(className, bs, 0, bs.length, ClassLoader.getSystemClassLoader(), null);
+                    }
+                    Class<?> clazz = Class.forName(className, true, ClassLoader.getSystemClassLoader());
+                    agentInstrumentation = TypeUtil.cast(clazz.getField("agentInstrumentation").get(null));
+                } catch (Throwable e) {
+                    TypeUtil.throwException(e);
+                }
+            }
+        }
+        return agentInstrumentation;
+    }
+
     public static <T extends Annotation> T getSuperAnnotation(Method method, Class<T> annType) {
         for (Class<?> c : getSuperClasses(method.getDeclaringClass())) {
             try {
                 T r = c.getDeclaredMethod(method.getName(), method.getParameterTypes()).getDeclaredAnnotation(annType);
-                if (r != null)
+                if (r != null) {
                     return r;
+                }
             } catch (NoSuchMethodException ignored) {
             }
         }
@@ -391,19 +415,22 @@ public class ClassUtil {
     }
 
     public static int getDistance(Class<?> superClass, Class<?> subClass) {
-        if (superClass == subClass)
+        if (superClass == subClass) {
             return 0;
+        }
         if (superClass.isAssignableFrom(subClass)) {
             if (subClass != Object.class && !subClass.isInterface()) {
                 int r = getDistance(superClass, subClass.getSuperclass());
-                if (r != -1)
+                if (r != -1) {
                     return r + 1;
+                }
             }
             if (superClass.isInterface()) {
                 for (Class<?> i : subClass.getInterfaces()) {
                     int r = getDistance(superClass, i);
-                    if (r != -1)
+                    if (r != -1) {
                         return r + 1;
+                    }
                 }
             }
         }

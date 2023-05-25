@@ -27,24 +27,6 @@ public class ApiChat implements ChatAPI {
         return plugin;
     }
 
-    public List<DATA> getPlayerChatData(UUID uuid) {
-        CompletableFuture<List<DATA>> data = chatDataCache.get(uuid, u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.CHAT));
-        chatDataCache.put(uuid, data);
-        return data.join();
-    }
-
-    public List<DATA> getPlayerPartyChatData(UUID uuid) {
-        CompletableFuture<List<DATA>> data = partyDataCache.get(uuid, u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.SOCIAL_SYSTEMS_PARTY_HISTORY));
-        partyDataCache.put(uuid, data);
-        return data.join();
-    }
-
-    public PARTY getPlayerPartyData(UUID uuid) {
-        CompletableFuture<PARTY> data = partyCache.get(uuid, u -> plugin.getStorage().getImplementation().selectParty(u));
-        partyCache.put(uuid, data);
-        return data.join();
-    }
-
     @Override
     public List<DataChatRecord> getPlayerChatUUIDRecent(UUID uuid, int number) {
         List<DATA> i = getPlayerChatData(uuid);
@@ -65,6 +47,12 @@ public class ApiChat implements ChatAPI {
                 .collect(Collectors.toList());
     }
 
+    public List<DATA> getPlayerChatData(UUID uuid) {
+        CompletableFuture<List<DATA>> data = chatDataCache.get(uuid, u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.CHAT));
+        chatDataCache.put(uuid, data);
+        return data.join();
+    }
+
     @Override
     public List<DataChatRecord> getPlayerChatRecentParty(UUID uuid, int number) {
         List<DATA> i = getPlayerPartyChatData(uuid);
@@ -83,5 +71,17 @@ public class ApiChat implements ChatAPI {
                 .sorted(Comparator.comparingLong(DataChatRecord::getJoinTime).reversed())
                 .limit(number)
                 .collect(Collectors.toList());
+    }
+
+    public List<DATA> getPlayerPartyChatData(UUID uuid) {
+        CompletableFuture<List<DATA>> data = partyDataCache.get(uuid, u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.SOCIAL_SYSTEMS_PARTY_HISTORY));
+        partyDataCache.put(uuid, data);
+        return data.join();
+    }
+
+    public PARTY getPlayerPartyData(UUID uuid) {
+        CompletableFuture<PARTY> data = partyCache.get(uuid, u -> plugin.getStorage().getImplementation().selectParty(u));
+        partyCache.put(uuid, data);
+        return data.join();
     }
 }
