@@ -37,7 +37,7 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
 
         PluginLogger logger = plugin.getLogger();
         logger.warn("A " + throwable.getClass().getSimpleName() + " has occurred whilst initialising Hikari. This is likely due to classloading conflicts between other plugins.");
-        logger.warn("Please check for other plugins below (and try loading LuckPerms without them installed) before reporting the issue.");
+        logger.warn("Please check for other plugins below (and try loading FloraCore without them installed) before reporting the issue.");
 
         for (String className : noteworthyClasses) {
             Class<?> clazz;

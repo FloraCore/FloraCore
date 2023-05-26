@@ -98,7 +98,7 @@ public class FloraCoreApiProvider implements FloraCore {
     @Override
     public void registerMessengerProvider(@NonNull MessengerProvider messengerProvider) {
         if (this.plugin.getConfiguration().get(ConfigKeys.MESSAGING_SERVICE).equals("custom")) {
-            this.plugin.setMessagingService(new LuckPermsMessagingService(this.plugin, messengerProvider));
+            this.plugin.setMessagingService(new FloraCoreMessagingService(this.plugin, messengerProvider));
         }
     }
 }

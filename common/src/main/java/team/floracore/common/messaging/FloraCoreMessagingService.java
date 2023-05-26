@@ -11,14 +11,14 @@ import team.floracore.common.util.gson.*;
 import java.util.*;
 import java.util.concurrent.*;
 
-public class LuckPermsMessagingService implements InternalMessagingService, IncomingMessageConsumer {
+public class FloraCoreMessagingService implements InternalMessagingService, IncomingMessageConsumer {
     private final FloraCorePlugin plugin;
     private final ExpiringSet<UUID> receivedMessages;
 
     private final MessengerProvider messengerProvider;
     private final Messenger messenger;
 
-    public LuckPermsMessagingService(FloraCorePlugin plugin, MessengerProvider messengerProvider) {
+    public FloraCoreMessagingService(FloraCorePlugin plugin, MessengerProvider messengerProvider) {
         this.plugin = plugin;
 
         this.messengerProvider = messengerProvider;
@@ -80,7 +80,7 @@ public class LuckPermsMessagingService implements InternalMessagingService, Inco
         boolean valid = true;
 
         // instead of throwing an exception here, just return false
-        // it means an instance of LP can gracefully handle messages it doesn't
+        // it means an instance of FC can gracefully handle messages it doesn't
         // "understand" yet. (sent from an instance running a newer version, etc)
         if (!valid) {
             return false;

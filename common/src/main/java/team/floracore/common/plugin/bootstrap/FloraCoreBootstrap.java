@@ -65,7 +65,7 @@ public interface FloraCoreBootstrap {
     Instant getStartupTime();
 
     /**
-     * Gets the platform type this instance of LuckPerms is running on.
+     * Gets the platform type this instance of FloraCore is running on.
      *
      * @return the platform type
      */

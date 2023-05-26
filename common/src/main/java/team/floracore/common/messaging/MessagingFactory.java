@@ -73,7 +73,7 @@ public class MessagingFactory<P extends FloraCorePlugin> {
         if (messagingType.equals("redis")) {
             if (this.plugin.getConfiguration().get(ConfigKeys.REDIS_ENABLED)) {
                 try {
-                    return new LuckPermsMessagingService(this.plugin, new RedisMessengerProvider());
+                    return new FloraCoreMessagingService(this.plugin, new RedisMessengerProvider());
                 } catch (Exception e) {
                     getPlugin().getLogger().severe("Exception occurred whilst enabling Redis messaging service", e);
                 }
@@ -82,13 +82,13 @@ public class MessagingFactory<P extends FloraCorePlugin> {
             }
         } else if (messagingType.equals("sql")) {
             try {
-                return new LuckPermsMessagingService(this.plugin, new SqlMessengerProvider());
+                return new FloraCoreMessagingService(this.plugin, new SqlMessengerProvider());
             } catch (Exception e) {
                 getPlugin().getLogger().severe("Exception occurred whilst enabling SQL messaging service", e);
             }
         } else if (messagingType.equals("postgresql")) {
             try {
-                return new LuckPermsMessagingService(this.plugin, new PostgresMessengerProvider());
+                return new FloraCoreMessagingService(this.plugin, new PostgresMessengerProvider());
             } catch (Exception e) {
                 getPlugin().getLogger().severe("Exception occurred whilst enabling Postgres messaging service", e);
             }

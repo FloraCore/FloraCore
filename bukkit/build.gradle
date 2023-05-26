@@ -39,7 +39,7 @@ shadowJar {
 
     relocate 'org.mariadb.jdbc', 'team.floracore.lib.mariadb'
     relocate 'com.mysql', 'team.floracore.lib.mysql'
-    relocate 'com.impossibl', 'me.lucko.luckperms.lib.postgresql'
+    relocate 'com.impossibl', 'team.floracore.lib.postgresql'
     relocate 'com.zaxxer.hikari', 'team.floracore.lib.hikari'
     relocate 'redis.clients.jedis', 'team.floracore.lib.jedis'
     relocate 'org.apache.commons.pool2', 'team.floracore.lib.commonspool2'
