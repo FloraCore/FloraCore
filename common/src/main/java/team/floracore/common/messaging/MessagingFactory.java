@@ -3,7 +3,6 @@ package team.floracore.common.messaging;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.*;
 import team.floracore.common.config.*;
-import team.floracore.common.messaging.postgres.*;
 import team.floracore.common.messaging.redis.*;
 import team.floracore.common.messaging.sql.*;
 import team.floracore.common.plugin.*;
@@ -38,7 +37,7 @@ public class MessagingFactory<P extends FloraCorePlugin> {
                             messagingType = "sql";
                             break;
                         }
-                        if (sql.getConnectionFactory() instanceof PostgresConnectionFactory) {
+                        if (sql.getConnectionFactory() instanceof PostgreConnectionFactory) {
                             messagingType = "postgresql";
                             break;
                         }
@@ -83,14 +82,7 @@ public class MessagingFactory<P extends FloraCorePlugin> {
             } catch (Exception e) {
                 getPlugin().getLogger().severe("Exception occurred whilst enabling SQL messaging service", e);
             }
-        } else if (messagingType.equals("postgresql")) {
-            try {
-                return new FloraCoreMessagingService(this.plugin, new PostgresMessengerProvider());
-            } catch (Exception e) {
-                getPlugin().getLogger().severe("Exception occurred whilst enabling Postgres messaging service", e);
-            }
         }
-
         return null;
     }
 
@@ -150,32 +142,4 @@ public class MessagingFactory<P extends FloraCorePlugin> {
             throw new IllegalStateException("Can't find a supported sql storage implementation");
         }
     }
-
-    private class PostgresMessengerProvider implements MessengerProvider {
-
-        @Override
-        public @NonNull String getName() {
-            return "PostgreSQL";
-        }
-
-        @Override
-        public @NonNull Messenger obtain(@NonNull IncomingMessageConsumer incomingMessageConsumer) {
-            for (StorageImplementation implementation : getPlugin().getStorage().getImplementations()) {
-                if (implementation instanceof SqlStorage) {
-                    SqlStorage storage = (SqlStorage) implementation;
-                    if (storage.getConnectionFactory() instanceof PostgresConnectionFactory) {
-                        // found an implementation match!
-                        PostgresMessenger messenger = new PostgresMessenger(getPlugin(),
-                                storage,
-                                incomingMessageConsumer);
-                        messenger.init();
-                        return messenger;
-                    }
-                }
-            }
-
-            throw new IllegalStateException("Can't find a supported sql storage implementation");
-        }
-    }
-
 }

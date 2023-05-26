@@ -53,7 +53,6 @@ dependencies {
 
     compileOnly 'com.zaxxer:HikariCP:4.0.3'
     compileOnly 'redis.clients:jedis:4.3.1'
-    compileOnly 'com.impossibl.pgjdbc-ng:pgjdbc-ng:0.8.9'
 
     api 'io.github.karlatemp:unsafe-accessor:1.7.0'
     api 'com.opencsv:opencsv:5.7.1'

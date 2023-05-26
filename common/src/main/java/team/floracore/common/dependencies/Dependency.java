@@ -82,20 +82,11 @@ public enum Dependency {
             "8.0.30",
             "tb8vCYcZfDCt90qeQZuJzaTCV9otEUKHH1CEFtXyIno=",
             Relocation.of("mysql", "com{}mysql")),
-    POSTGRESQL_DRIVER(
-            "com{}impossibl{}pgjdbc-ng",
-            "pgjdbc-ng",
-            "0.8.9",
-            "WEYMezl02Rot2n2ATs7NABcvL9ceQ/oLA/XPduIEaWA=",
-            Relocation.of("postgresql", "com{}impossibl")
-    ),
-    POSTGRESQL_DRIVER_SPY(
-            "com{}impossibl{}pgjdbc-ng",
-            "spy",
-            "0.8.9",
-            "72ZuhpMy/4EYJZuSjBjGI5NGgdWmOpwjDHW9ISnqso8=",
-            Relocation.of("postgresql", "com{}impossibl")
-    ),
+    POSTGRESQL_DRIVER("org{}postgresql",
+            "postgresql",
+            "42.6.0",
+            "uBfGekDJQkn9WdTmhuMyftDT0/rkJrINoPHnVlLPxGE=",
+            Relocation.of("postgresql", "org{}postgresql")),
     /**
      * seems to be a compat bug in 1.4.200 with older dbs
      * {@see <a href="https://github.com/h2database/h2database/issues/2078">H2</a>}
@@ -144,10 +135,6 @@ public enum Dependency {
             "2.11.1",
             "6gUF7nUV5YsawOaG5NGl2ffYCOJRphvDcaoFlbmWP4M=",
             Relocation.of("commonspool2", "org{}apache{}commons{}pool2")),
-    NETTY_TRANSPORT_NATIVE_UNIX_COMMON("io.netty",
-            "netty-transport-native-unix-common",
-            "4.1.93.Final",
-            "d0FlocTbqssX+cGtZms1aaallxWugo58PUdwP0eaU+c="),
     ;
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";

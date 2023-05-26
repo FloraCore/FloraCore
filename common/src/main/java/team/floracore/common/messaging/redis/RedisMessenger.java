@@ -62,7 +62,6 @@ public class RedisMessenger implements Messenger {
     }
 
     private class Subscription extends JedisPubSub implements Runnable {
-
         @Override
         public void run() {
             boolean first = true;
@@ -73,13 +72,11 @@ public class RedisMessenger implements Messenger {
                     } else {
                         RedisMessenger.this.plugin.getLogger().info("Redis pubsub connection re-established");
                     }
-
                     jedis.subscribe(this, CHANNEL); // blocking call
                 } catch (Exception e) {
                     if (RedisMessenger.this.closing) {
                         return;
                     }
-
                     RedisMessenger.this.plugin.getLogger()
                             .warn("Redis pubsub connection dropped, trying to re-open the connection", e);
                     try {
@@ -87,7 +84,6 @@ public class RedisMessenger implements Messenger {
                     } catch (Exception ignored) {
 
                     }
-
                     // Sleep for 5 seconds to prevent massive spam in console
                     try {
                         Thread.sleep(5000);

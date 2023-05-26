@@ -67,7 +67,7 @@ public class StorageFactory {
             case POSTGRESQL:
                 return new SqlStorage(
                         this.plugin,
-                        new PostgresConnectionFactory(this.plugin.getConfiguration().get(ConfigKeys.DATABASE_VALUES)),
+                        new PostgreConnectionFactory(this.plugin.getConfiguration().get(ConfigKeys.DATABASE_VALUES)),
                         this.plugin.getConfiguration().get(ConfigKeys.SQL_TABLE_PREFIX)
                 );
             default:

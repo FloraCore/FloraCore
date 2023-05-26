@@ -6,8 +6,8 @@ import team.floracore.common.storage.misc.*;
 import java.util.*;
 import java.util.function.*;
 
-public class PostgresConnectionFactory extends HikariConnectionFactory {
-    public PostgresConnectionFactory(StorageCredentials configuration) {
+public class PostgreConnectionFactory extends HikariConnectionFactory {
+    public PostgreConnectionFactory(StorageCredentials configuration) {
         super(configuration);
     }
 
@@ -33,7 +33,7 @@ public class PostgresConnectionFactory extends HikariConnectionFactory {
                                      String databaseName,
                                      String username,
                                      String password) {
-        config.setDataSourceClassName("com.impossibl.postgres.jdbc.PGDataSource");
+        config.setDataSourceClassName("org.postgresql.ds.PGSimpleDataSource");
         config.addDataSourceProperty("serverName", address);
         config.addDataSourceProperty("portNumber", Integer.parseInt(port));
         config.addDataSourceProperty("databaseName", databaseName);
@@ -48,11 +48,5 @@ public class PostgresConnectionFactory extends HikariConnectionFactory {
         // remove the default config properties which don't exist for PostgreSQL
         properties.remove("useUnicode");
         properties.remove("characterEncoding");
-
-        // socketTimeout -> networkTimeout
-        Object socketTimeout = properties.remove("socketTimeout");
-        if (socketTimeout != null) {
-            properties.putIfAbsent("networkTimeout", Integer.parseInt(socketTimeout.toString()));
-        }
     }
 }
