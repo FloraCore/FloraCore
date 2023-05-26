@@ -20,6 +20,7 @@ dependencies {
     compileOnly fileTree(dir: '../libs', includes: ['*jar'])
     compileOnly fileTree(dir: './libs', includes: ['*jar'])
 
+    compileOnly 'com.google.guava:guava:31.1-jre'
     compileOnly 'com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT'
     compileOnly 'cloud.commandframework:cloud-paper:1.8.3'
     compileOnly 'net.kyori:adventure-platform-bukkit:4.3.0'
