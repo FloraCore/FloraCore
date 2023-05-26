@@ -1,8 +1,9 @@
 plugins {
     id "java"
+    id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-group 'org.floracore.bukkit.bungee'
+group 'org.floracore.bungee'
 version rootProject.version
 
 repositories {
@@ -15,6 +16,14 @@ dependencies {
     compileOnly 'org.checkerframework:checker-qual:3.32.0'
     compileOnly 'org.jetbrains:annotations:24.0.1'
     compileOnly 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
+}
+
+shadowJar {
+    archiveFileName = "FloraCore-Bungee-API-${rootProject.version}.jar"
+}
+
+artifacts {
+    archives shadowJar
 }
 
 tasks.withType(JavaCompile).configureEach {
