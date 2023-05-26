@@ -12,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    compileOnly project(':api')
+    implementation project(':api')
     compileOnly 'org.checkerframework:checker-qual:3.32.0'
     compileOnly 'org.jetbrains:annotations:24.0.1'
     compileOnly 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
@@ -20,6 +20,10 @@ dependencies {
 
 shadowJar {
     archiveFileName = "FloraCore-Bungee-API-${rootProject.version}.jar"
+
+    dependencies {
+        include(dependency('org.floracore:.*'))
+    }
 }
 
 artifacts {
