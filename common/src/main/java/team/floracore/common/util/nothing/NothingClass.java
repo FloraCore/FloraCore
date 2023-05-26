@@ -43,7 +43,7 @@ public class NothingClass {
             for (Class<? extends Nothing> n : installedNothings) {
                 for (Method m : n.getDeclaredMethods()) {
                     NothingInject[] is = TypeUtil.<Nothing, Object>cast(WrappedObject.getStatic(TypeUtil.cast(n)))
-                                                 .getInjects(m);
+                            .getInjects(m);
                     if (is != null) {
                         for (NothingInject i : is) {
                             Class<?>[] args = i.args();

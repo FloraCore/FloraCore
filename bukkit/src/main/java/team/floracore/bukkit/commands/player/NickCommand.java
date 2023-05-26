@@ -272,7 +272,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
         Map<String, String> ranks_permission = getPlugin().getConfiguration()
-                                                          .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
+                .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
         Map<String, String> ranks_prefix = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PREFIX);
         boolean custom = p.hasPermission("floracore.command.nick.custom");
         DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
@@ -339,8 +339,8 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                                     DataType.FUNCTION,
                                     "nick.name");
                             nickname = (data != null) ? data.getValue() : getPlugin().getNamesRepository()
-                                                                                     .getRandomNameProperty()
-                                                                                     .getName();
+                                    .getRandomNameProperty()
+                                    .getName();
                         } else if (name.equalsIgnoreCase("random") && !custom) {
                             nickname = getPlugin().getNamesRepository().getRandomNameProperty().getName();
                         }
@@ -457,8 +457,8 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         for (Map.Entry<String, String> entry : ranks.entrySet()) {
             String rankName = entry.getKey();
             String rankPermission = getPlugin().getConfiguration()
-                                               .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION)
-                                               .get(rankName);
+                    .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION)
+                    .get(rankName);
             if (player.hasPermission(rankPermission)) {
                 Component rank = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_RANK.build(
                         rankName,
@@ -579,7 +579,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
             if (nick && p.hasPermission("floracore.command.nick")) {
                 Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
                 Map<String, String> ranks_permission = getPlugin().getConfiguration()
-                                                                  .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
+                        .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
                 DATA rankData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.rank");
                 DATA skinData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.skin");
                 DATA nameData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.name");

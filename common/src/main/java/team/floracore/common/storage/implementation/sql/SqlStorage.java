@@ -29,7 +29,7 @@ public class SqlStorage implements StorageImplementation {
         this.plugin = plugin;
         this.connectionFactory = connectionFactory;
         this.statementProcessor = connectionFactory.getStatementProcessor()
-                                                   .compose(s -> s.replace("{prefix}", tablePrefix));
+                .compose(s -> s.replace("{prefix}", tablePrefix));
     }
 
     @Override
@@ -62,16 +62,16 @@ public class SqlStorage implements StorageImplementation {
         List<String> statements;
 
         String schemaFileName = "team/floracore/schema/" + this.connectionFactory.getImplementationName()
-                                                                                 .toLowerCase(Locale.ROOT) + ".sql";
+                .toLowerCase(Locale.ROOT) + ".sql";
         try (InputStream is = this.plugin.getBootstrap().getResourceStream(schemaFileName)) {
             if (is == null) {
                 throw new IOException("Couldn't locate schema file for " + this.connectionFactory.getImplementationName());
             }
 
             statements = SchemaReader.getStatements(is)
-                                     .stream()
-                                     .map(this.statementProcessor)
-                                     .collect(Collectors.toList());
+                    .stream()
+                    .map(this.statementProcessor)
+                    .collect(Collectors.toList());
         }
 
         try (Connection connection = this.connectionFactory.getConnection()) {

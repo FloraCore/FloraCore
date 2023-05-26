@@ -46,8 +46,8 @@ public class HasPermissionBukkitCommand extends FloraCoreBukkitCommand {
     public @NotNull List<String> getPermissionList(@NotNull CommandContext<CommandSender> sender,
                                                    @NotNull String input) {
         return Bukkit.getPluginManager()
-                     .getPermissions()
-                     .stream()
-                     .collect(ArrayList::new, (list, element) -> list.add(element.getName()), ArrayList::addAll);
+                .getPermissions()
+                .stream()
+                .collect(ArrayList::new, (list, element) -> list.add(element.getName()), ArrayList::addAll);
     }
 }

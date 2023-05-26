@@ -26,7 +26,7 @@ public class SqliteConnectionFactory extends FlatfileConnectionFactory {
         migrateOldDatabaseFile("floracore.sqlite");
 
         ClassLoader classLoader = plugin.getDependencyManager()
-                                        .obtainClassLoaderWith(EnumSet.of(Dependency.SQLITE_DRIVER));
+                .obtainClassLoaderWith(EnumSet.of(Dependency.SQLITE_DRIVER));
         try {
             Class<?> connectionClass = classLoader.loadClass("org.sqlite.jdbc4.JDBC4Connection");
             this.connectionConstructor = connectionClass.getConstructor(String.class, String.class, Properties.class);

@@ -91,8 +91,8 @@ public class SpeedBukkitCommand extends FloraCoreBukkitCommand {
         float maxSpeed = 1f;
         if (!isBypass) {
             maxSpeed = (speedType == SpeedType.FLY ? getPlugin().getConfiguration()
-                                                                .get(ConfigKeys.SPEED_MAX_FLY_SPEED) : getPlugin().getConfiguration()
-                                                                                                                  .get(ConfigKeys.SPEED_MAX_WALK_SPEED)).floatValue();
+                    .get(ConfigKeys.SPEED_MAX_FLY_SPEED) : getPlugin().getConfiguration()
+                    .get(ConfigKeys.SPEED_MAX_WALK_SPEED)).floatValue();
         }
 
         if (userSpeed < 1f) {

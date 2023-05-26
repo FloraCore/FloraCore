@@ -119,7 +119,6 @@ public abstract class MethodVisitor {
      *
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */
@@ -143,7 +142,6 @@ public abstract class MethodVisitor {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */
@@ -189,7 +187,6 @@ public abstract class MethodVisitor {
      *                   https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.7.18).
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */
@@ -276,7 +273,6 @@ public abstract class MethodVisitor {
      *                 values count for one stack element.
      * @param stack    the operand stack types in this frame. This array must not be modified. Its
      *                 content has the same format as the "local" array.
-     *
      * @throws IllegalStateException if a frame is visited just after another one, without any
      *                               instruction between the two (unless this frame is a Opcodes#F_SAME frame, in which case it
      *                               is silently ignored).
@@ -392,7 +388,6 @@ public abstract class MethodVisitor {
      *                   Type#getInternalName()}).
      * @param name       the method's name.
      * @param descriptor the method's descriptor (see {@link Type}).
-     *
      * @deprecated use {@link #visitMethodInsn(int, String, String, String, boolean)} instead.
      */
     @Deprecated
@@ -613,7 +608,6 @@ public abstract class MethodVisitor {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */
@@ -641,7 +635,6 @@ public abstract class MethodVisitor {
      * @param type    the internal name of the type of exceptions handled by the handler (see {@link
      *                Type#getInternalName()}), or {@literal null} to catch any exceptions (for "finally"
      *                blocks).
-     *
      * @throws IllegalArgumentException if one of the labels has already been visited by this visitor
      *                                  (by the {@link #visitLabel} method).
      */
@@ -664,7 +657,6 @@ public abstract class MethodVisitor {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */
@@ -690,7 +682,6 @@ public abstract class MethodVisitor {
      *                   (inclusive).
      * @param end        the last instruction corresponding to the scope of this local variable (exclusive).
      * @param index      the local variable's index.
-     *
      * @throws IllegalArgumentException if one of the labels has not already been visited by this
      *                                  visitor (by the {@link #visitLabel} method).
      */
@@ -723,7 +714,6 @@ public abstract class MethodVisitor {
      *                   the 'start' array.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */
@@ -751,7 +741,6 @@ public abstract class MethodVisitor {
      * @param line  a line number. This number refers to the source file from which the class was
      *              compiled.
      * @param start the first instruction corresponding to this line number.
-     *
      * @throws IllegalArgumentException if {@code start} has not already been visited by this visitor
      *                                  (by the {@link #visitLabel} method).
      */

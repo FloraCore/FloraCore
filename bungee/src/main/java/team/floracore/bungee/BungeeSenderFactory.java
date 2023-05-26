@@ -51,8 +51,8 @@ public class BungeeSenderFactory extends SenderFactory<FCBungeePlugin, CommandSe
         } else {
             Component finalMessage = message;
             getPlugin().getBootstrap()
-                       .getScheduler()
-                       .executeSync(() -> this.audiences.sender(sender).sendMessage(finalMessage));
+                    .getScheduler()
+                    .executeSync(() -> this.audiences.sender(sender).sendMessage(finalMessage));
         }
     }
 

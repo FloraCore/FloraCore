@@ -37,13 +37,13 @@ import java.util.stream.*;
 @CommandDescription("floracore.command.description.floracore")
 public class FloraCoreCommand extends FloraCoreBukkitCommand {
     private final AsyncCache<UUID, List<DATA>> dataCache = Caffeine.newBuilder()
-                                                                   .expireAfterWrite(3, TimeUnit.SECONDS)
-                                                                   .maximumSize(10000)
-                                                                   .buildAsync();
+            .expireAfterWrite(3, TimeUnit.SECONDS)
+            .maximumSize(10000)
+            .buildAsync();
     private final AsyncCache<String, UUID> uuidCache = Caffeine.newBuilder()
-                                                               .expireAfterWrite(10, TimeUnit.SECONDS)
-                                                               .maximumSize(10000)
-                                                               .buildAsync();
+            .expireAfterWrite(10, TimeUnit.SECONDS)
+            .maximumSize(10000)
+            .buildAsync();
 
     public FloraCoreCommand(FCBukkitPlugin plugin) {
         super(plugin);
@@ -74,20 +74,20 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
         CommonCommandMessage.INSTALLED_TRANSLATIONS.send(s,
                 getPlugin().getTranslationManager()
-                           .getInstalledLocales()
-                           .stream()
-                           .map(Locale::toLanguageTag)
-                           .sorted()
-                           .collect(Collectors.toList()));
+                        .getInstalledLocales()
+                        .stream()
+                        .map(Locale::toLanguageTag)
+                        .sorted()
+                        .collect(Collectors.toList()));
 
         CommonCommandMessage.AVAILABLE_TRANSLATIONS_HEADER.send(s);
         availableTranslations.stream()
-                             .sorted(Comparator.comparing(language -> language.locale().toLanguageTag()))
-                             .forEach(language -> CommonCommandMessage.AVAILABLE_TRANSLATIONS_ENTRY.send(s,
-                                     language.locale().toLanguageTag(),
-                                     TranslationManager.localeDisplayName(language.locale()),
-                                     language.progress(),
-                                     language.contributors()));
+                .sorted(Comparator.comparing(language -> language.locale().toLanguageTag()))
+                .forEach(language -> CommonCommandMessage.AVAILABLE_TRANSLATIONS_ENTRY.send(s,
+                        language.locale().toLanguageTag(),
+                        TranslationManager.localeDisplayName(language.locale()),
+                        language.progress(),
+                        language.contributors()));
         s.sendMessage(AbstractMessage.prefixed(Component.empty()));
         CommonCommandMessage.TRANSLATIONS_DOWNLOAD_PROMPT.send(s);
     }

@@ -22,13 +22,13 @@ public class ChatManager implements Listener {
         long startTime = System.currentTimeMillis();
         plugin.getStorage().getImplementation().insertChat(plugin.getServerName(), ChatType.SERVER, startTime);
         this.chat = plugin.getStorage()
-                          .getImplementation()
-                          .selectChatWithStartTime(plugin.getServerName(), ChatType.SERVER, startTime);
+                .getImplementation()
+                .selectChatWithStartTime(plugin.getServerName(), ChatType.SERVER, startTime);
         plugin.getListenerManager().registerListener(this);
         plugin.getBootstrap().getScheduler().async().execute(() -> {
             List<CHAT> ret = plugin.getStorage()
-                                   .getImplementation()
-                                   .selectChat(plugin.getServerName(), ChatType.SERVER);
+                    .getImplementation()
+                    .selectChat(plugin.getServerName(), ChatType.SERVER);
             for (CHAT i : ret) {
                 if (i.getId() != this.chat.getId()) {
                     if (i.getEndTime() <= 0) {
@@ -117,8 +117,8 @@ public class ChatManager implements Listener {
         String recordsJson = GsonProvider.normal().toJson(dataChatRecord);
         this.plugin.getBootstrap().getScheduler().async().execute(() -> {
             this.plugin.getStorage()
-                       .getImplementation()
-                       .insertData(uuid, DataType.CHAT, mapPlayerRecord.getChatUUID().toString(), recordsJson, 0);
+                    .getImplementation()
+                    .insertData(uuid, DataType.CHAT, mapPlayerRecord.getChatUUID().toString(), recordsJson, 0);
         });
     }
 

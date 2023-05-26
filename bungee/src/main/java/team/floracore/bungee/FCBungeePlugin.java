@@ -5,6 +5,7 @@ import team.floracore.bungee.command.*;
 import team.floracore.bungee.listener.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
+import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 
@@ -90,5 +91,10 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 
     public BungeeSenderFactory getSenderFactory() {
         return this.senderFactory;
+    }
+
+    @Override
+    protected MessagingFactory<?> provideMessagingFactory() {
+        return new BungeeMessagingFactory(this);
     }
 }

@@ -42,7 +42,7 @@ public class ONLINE extends AbstractFloraCoreTable {
         this.serverName = serverName;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_SERVER_NAME))) {
+                    .apply(UPDATE_SERVER_NAME))) {
                 ps.setString(1, serverName);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -60,7 +60,7 @@ public class ONLINE extends AbstractFloraCoreTable {
         this.status = true;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_STATUS_TRUE))) {
+                    .apply(UPDATE_STATUS_TRUE))) {
                 ps.setBoolean(1, true);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -74,7 +74,7 @@ public class ONLINE extends AbstractFloraCoreTable {
         this.status = true;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_STATUS_FALSE))) {
+                    .apply(UPDATE_STATUS_FALSE))) {
                 ps.setBoolean(1, false);
                 ps.setString(2, uuid.toString());
                 ps.setString(3, serverName);
@@ -89,7 +89,7 @@ public class ONLINE extends AbstractFloraCoreTable {
     public void init() throws SQLException {
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(INSERT))) {
+                    .apply(INSERT))) {
                 ps.setString(1, uuid.toString());
                 ps.setBoolean(2, status);
                 ps.setString(3, serverName);

@@ -70,7 +70,6 @@ public abstract class RecordComponentVisitor {
      *
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */
@@ -93,7 +92,6 @@ public abstract class RecordComponentVisitor {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */

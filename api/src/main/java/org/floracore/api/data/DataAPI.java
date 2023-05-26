@@ -12,7 +12,6 @@ public interface DataAPI {
      * @param uuid 玩家的UUID
      * @param type 数据类型
      * @param key  数据值的键值
-     *
      * @return 数据值
      */
     String getSpecifiedDataValue(UUID uuid, DataType type, String key);
@@ -23,7 +22,6 @@ public interface DataAPI {
      * @param uuid 玩家的UUID
      * @param type 数据类型
      * @param key  数据值的键值
-     *
      * @return 过期时间戳
      */
     Long getSpecifiedDataExpiry(UUID uuid, DataType type, String key);
@@ -34,7 +32,6 @@ public interface DataAPI {
      * @param uuid 玩家的UUID
      * @param type 数据类型
      * @param key  数据值的键值
-     *
      * @return ID
      */
     Integer getSpecifiedDataID(UUID uuid, DataType type, String key);
@@ -52,7 +49,6 @@ public interface DataAPI {
      * @param key    数据值的键值
      * @param value  数据值
      * @param expiry 过期时间戳
-     *
      * @return ID，若原先不存在数据，则返回-1，并插入数据库中。
      */
     int insertData(UUID uuid, DataType type, String key, String value, long expiry);

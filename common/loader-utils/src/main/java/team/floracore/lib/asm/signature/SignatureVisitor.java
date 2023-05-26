@@ -213,7 +213,6 @@ public abstract class SignatureVisitor {
      * Visits a type argument of the last visited class or inner class type.
      *
      * @param wildcard '+', '-' or '='.
-     *
      * @return a non null visitor to visit the signature of the type argument.
      */
     public SignatureVisitor visitTypeArgument(final char wildcard) {

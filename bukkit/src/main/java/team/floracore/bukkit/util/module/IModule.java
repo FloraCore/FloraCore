@@ -44,14 +44,14 @@ public interface IModule extends Listener {
             while (modules.size() > 0) {
                 Map.Entry<Plugin, List<IModule>> e = modules.entrySet().iterator().next();
                 if (ListUtil.mergeLists(ListUtil.mergeLists(Lists.newArrayList(modules.keySet()),
-                                                        Lists.newArrayList(remaining.keySet()))
-                                                .stream()
-                                                .map(p -> p.getDescription()
-                                                           .getDepend()
-                                                           .stream()
-                                                           .map(d -> Bukkit.getPluginManager().getPlugin(d))
-                                                           .collect(Collectors.toList()))
-                                                .toArray(List[]::new)).contains(e.getKey())) {
+                                Lists.newArrayList(remaining.keySet()))
+                        .stream()
+                        .map(p -> p.getDescription()
+                                .getDepend()
+                                .stream()
+                                .map(d -> Bukkit.getPluginManager().getPlugin(d))
+                                .collect(Collectors.toList()))
+                        .toArray(List[]::new)).contains(e.getKey())) {
                     remaining.put(e.getKey(), e.getValue());
                     modules.remove(e.getKey());
                 } else {
@@ -106,9 +106,9 @@ public interface IModule extends Listener {
                     reged++;
                     if (r instanceof IModule && r != this && !this.getAllDepends().contains(r)) {
                         FCBukkitBootstrap.loader.getLogger()
-                                                .warning("The module " + this.getClass()
-                                                                             .getName() + " should depends module " + r.getClass()
-                                                                                                                       .getName());
+                                .warning("The module " + this.getClass()
+                                        .getName() + " should depends module " + r.getClass()
+                                        .getName());
                     }
                     List<Object> list = getRegisteredObjects().computeIfAbsent(r, k -> new LinkedList<>());
                     list.add(obj);
@@ -219,9 +219,9 @@ public interface IModule extends Listener {
                 this.enable();
             } catch (Throwable e) {
                 this.getPlugin()
-                    .getLogger()
-                    .warning(this.getPlugin().getName() + " has a exception on enabling module " + this.getClass()
-                                                                                                       .getName());
+                        .getLogger()
+                        .warning(this.getPlugin().getName() + " has a exception on enabling module " + this.getClass()
+                                .getName());
                 e.printStackTrace();
             }
         }

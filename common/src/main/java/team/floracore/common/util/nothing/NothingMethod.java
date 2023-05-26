@@ -64,7 +64,7 @@ public class NothingMethod {
                                                 continue;
                                             }
                                             if (!Lists.newArrayList(i.getKey().byteCode().name())
-                                                      .contains(((MethodInsnNode) raw.get(loc)).name)) {
+                                                    .contains(((MethodInsnNode) raw.get(loc)).name)) {
                                                 continue;
                                             }
                                             Class<?>[] args = i.getKey().byteCode().methodArgs();
@@ -74,7 +74,7 @@ public class NothingMethod {
                                                 }
                                             }
                                             if (!AsmUtil.getDesc(args, void.class)
-                                                        .split("\\)")[0].equals(((MethodInsnNode) raw.get(loc)).desc.split(
+                                                    .split("\\)")[0].equals(((MethodInsnNode) raw.get(loc)).desc.split(
                                                     "\\)")[0])) {
                                                 continue;
                                             }
@@ -88,7 +88,7 @@ public class NothingMethod {
                                                 continue;
                                             }
                                             if (!Lists.newArrayList(i.getKey().byteCode().name())
-                                                      .contains(((FieldInsnNode) raw.get(loc)).name)) {
+                                                    .contains(((FieldInsnNode) raw.get(loc)).name)) {
                                                 continue;
                                             }
                                         } else if (raw.get(loc) instanceof VarInsnNode) {
@@ -97,8 +97,8 @@ public class NothingMethod {
                                             }
                                         } else if (raw.get(loc) instanceof LabelNode) {
                                             if (i.getKey()
-                                                 .byteCode()
-                                                 .label() != labels.indexOf(((LabelNode) raw.get(loc)).getLabel())) {
+                                                    .byteCode()
+                                                    .label() != labels.indexOf(((LabelNode) raw.get(loc)).getLabel())) {
                                                 continue;
                                             }
                                         } else if (raw.get(loc) instanceof JumpInsnNode) {
@@ -114,7 +114,7 @@ public class NothingMethod {
                                 }
                                 if (loc == raw.size()) {
                                     if (i.getKey().optional() || i.getValue()
-                                                                  .getDeclaredAnnotation(team.floracore.common.util.Optional.class) != null) {
+                                            .getDeclaredAnnotation(team.floracore.common.util.Optional.class) != null) {
                                         break;
                                     } else {
                                         throw new IllegalArgumentException(i.getKey() + " " + i.getValue());

@@ -21,7 +21,7 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
             return r;
         } else {
             return getTypeV15().read(s, 128, NmsNBTReadLimiter.newInstance(Long.MAX_VALUE))
-                               .cast(NmsNBTTagCompound.class);
+                    .cast(NmsNBTTagCompound.class);
         }
     }
 
@@ -29,12 +29,12 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
         return WrappedObject.getStatic(NmsNBTTagCompound.class).staticNewInstance();
     }
 
-    @WrappedBukkitMethod(value = {@VersionName(value = "load", maxVer = 15)})
-    void loadV_15(DataInput s, int depth, NmsNBTReadLimiter limiter);
-
     static NmsNBTTagTypeV15 getTypeV15() {
         return WrappedObject.getStatic(NmsNBTTagCompound.class).staticGetTypeV15();
     }
+
+    @WrappedBukkitMethod(value = {@VersionName(value = "load", maxVer = 15)})
+    void loadV_15(DataInput s, int depth, NmsNBTReadLimiter limiter);
 
     @WrappedConstructor
     NmsNBTTagCompound staticNewInstance();

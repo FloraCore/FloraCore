@@ -5,14 +5,14 @@ import org.checkerframework.checker.nullness.qual.*;
 import java.time.*;
 
 /**
- * Provides information about the platform LuckPerms is running on.
+ * Provides information about the platform FloraCore is running on.
  */
 public interface Platform {
 
     /**
-     * Gets the type of platform LuckPerms is running on
+     * Gets the type of platform FloraCore is running on
      *
-     * @return the type of platform LuckPerms is running on
+     * @return the type of platform FloraCore is running on
      */
     Platform.@NonNull Type getType();
 
@@ -24,7 +24,7 @@ public interface Platform {
     @NonNull Instant getStartTime();
 
     /**
-     * Represents a type of platform which LuckPerms can run on.
+     * Represents a type of platform which FloraCore can run on.
      */
     enum Type {
         BUKKIT("Bukkit"),

@@ -72,7 +72,7 @@ public abstract class AbstractJavaScheduler implements SchedulerAdapter {
         try {
             if (!this.worker.awaitTermination(1, TimeUnit.MINUTES)) {
                 this.bootstrap.getPluginLogger()
-                              .severe("Timed out waiting for the FloraCore worker thread pool to terminate");
+                        .severe("Timed out waiting for the FloraCore worker thread pool to terminate");
                 reportRunningTasks(thread -> thread.getName().startsWith("floracore-worker-"));
             }
         } catch (InterruptedException e) {
@@ -84,9 +84,9 @@ public abstract class AbstractJavaScheduler implements SchedulerAdapter {
         Thread.getAllStackTraces().forEach((thread, stack) -> {
             if (predicate.test(thread)) {
                 this.bootstrap.getPluginLogger()
-                              .warn("Thread " + thread.getName() + " is blocked, and may be the reason for the slow shutdown!\n" +
-                                      Arrays.stream(stack).map(el -> "  " + el).collect(Collectors.joining("\n"))
-                              );
+                        .warn("Thread " + thread.getName() + " is blocked, and may be the reason for the slow shutdown!\n" +
+                                Arrays.stream(stack).map(el -> "  " + el).collect(Collectors.joining("\n"))
+                        );
             }
         });
     }
@@ -107,7 +107,7 @@ public abstract class AbstractJavaScheduler implements SchedulerAdapter {
         @Override
         public void uncaughtException(Thread t, Throwable e) {
             AbstractJavaScheduler.this.bootstrap.getPluginLogger()
-                                                .warn("Thread " + t.getName() + " threw an uncaught exception", e);
+                    .warn("Thread " + t.getName() + " threw an uncaught exception", e);
         }
     }
 }

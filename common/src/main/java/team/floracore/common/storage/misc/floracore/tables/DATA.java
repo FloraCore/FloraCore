@@ -64,7 +64,7 @@ public class DATA extends AbstractFloraCoreTable {
         this.value = value;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_VALUE))) {
+                    .apply(UPDATE_VALUE))) {
                 ps.setString(1, value);
                 ps.setString(2, uuid.toString());
                 ps.setString(3, type.getName());
@@ -84,7 +84,7 @@ public class DATA extends AbstractFloraCoreTable {
         this.expiry = expiry;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_EXPIRY))) {
+                    .apply(UPDATE_EXPIRY))) {
                 ps.setLong(1, expiry);
                 ps.setString(2, uuid.toString());
                 ps.setString(3, type.getName());
@@ -100,7 +100,7 @@ public class DATA extends AbstractFloraCoreTable {
     public void init() throws SQLException {
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(INSERT))) {
+                    .apply(INSERT))) {
                 ps.setString(1, uuid.toString());
                 ps.setString(2, type.getName());
                 ps.setString(3, key);

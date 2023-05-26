@@ -48,7 +48,6 @@ public enum DependencyRepository {
      *
      * @param dependency the dependency to download
      * @param file       the file to write to
-     *
      * @throws DependencyDownloadException if unable to download
      */
     public void download(Dependency dependency, Path file) throws DependencyDownloadException {
@@ -64,9 +63,7 @@ public enum DependencyRepository {
      * bytes match the checksum.
      *
      * @param dependency the dependency to download
-     *
      * @return the downloaded bytes
-     *
      * @throws DependencyDownloadException if unable to download
      */
     public byte[] download(Dependency dependency) throws DependencyDownloadException {
@@ -78,10 +75,10 @@ public enum DependencyRepository {
         // ensure the hash matches the expected checksum
         if (!dependency.checksumMatches(hash)) {
             throw new DependencyDownloadException("Downloaded file had an invalid hash. " + "Expected: " + Base64.getEncoder()
-                                                                                                                 .encodeToString(
-                                                                                                                         dependency.getChecksum()) + " " + "Actual: " + Base64.getEncoder()
-                                                                                                                                                                              .encodeToString(
-                                                                                                                                                                                      hash));
+                    .encodeToString(
+                            dependency.getChecksum()) + " " + "Actual: " + Base64.getEncoder()
+                    .encodeToString(
+                            hash));
         }
 
         return bytes;
@@ -91,9 +88,7 @@ public enum DependencyRepository {
      * Downloads the raw bytes of the {@code dependency}.
      *
      * @param dependency the dependency to download
-     *
      * @return the downloaded bytes
-     *
      * @throws DependencyDownloadException if unable to download
      */
     public byte[] downloadRaw(Dependency dependency) throws DependencyDownloadException {
@@ -115,9 +110,7 @@ public enum DependencyRepository {
      * Opens a connection to the given {@code dependency}.
      *
      * @param dependency the dependency to download
-     *
      * @return the connection
-     *
      * @throws java.io.IOException if unable to open a connection
      */
     protected URLConnection openConnection(Dependency dependency) throws IOException {

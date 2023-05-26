@@ -57,20 +57,20 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
         CommonCommandMessage.INSTALLED_TRANSLATIONS.send(s,
                 getPlugin().getTranslationManager()
-                           .getInstalledLocales()
-                           .stream()
-                           .map(Locale::toLanguageTag)
-                           .sorted()
-                           .collect(Collectors.toList()));
+                        .getInstalledLocales()
+                        .stream()
+                        .map(Locale::toLanguageTag)
+                        .sorted()
+                        .collect(Collectors.toList()));
 
         CommonCommandMessage.AVAILABLE_TRANSLATIONS_HEADER.send(s);
         availableTranslations.stream()
-                             .sorted(Comparator.comparing(language -> language.locale().toLanguageTag()))
-                             .forEach(language -> CommonCommandMessage.AVAILABLE_TRANSLATIONS_ENTRY.send(s,
-                                     language.locale().toLanguageTag(),
-                                     TranslationManager.localeDisplayName(language.locale()),
-                                     language.progress(),
-                                     language.contributors()));
+                .sorted(Comparator.comparing(language -> language.locale().toLanguageTag()))
+                .forEach(language -> CommonCommandMessage.AVAILABLE_TRANSLATIONS_ENTRY.send(s,
+                        language.locale().toLanguageTag(),
+                        TranslationManager.localeDisplayName(language.locale()),
+                        language.progress(),
+                        language.contributors()));
         s.sendMessage(AbstractMessage.prefixed(Component.empty()));
         CommonCommandMessage.TRANSLATIONS_DOWNLOAD_PROMPT.send(s);
     }

@@ -20,14 +20,14 @@ public class EnvironmentVariableConfigAdapter extends StringBasedConfigurationAd
         // 'server'            -> FLORACORE_SERVER
         // 'data.table_prefix' -> FLORACORE_DATA_TABLE_PREFIX
         String key = PREFIX + path.toUpperCase(Locale.ROOT)
-                                  .replace('-', '_')
-                                  .replace('.', '_');
+                .replace('-', '_')
+                .replace('.', '_');
 
         String value = System.getenv(key);
         if (value != null) {
             this.plugin.getLogger()
-                       .info("Resolved configuration value from environment variable: " + key + " = " + (path.contains(
-                               "password") ? "*****" : value));
+                    .info("Resolved configuration value from environment variable: " + key + " = " + (path.contains(
+                            "password") ? "*****" : value));
         }
         return value;
     }

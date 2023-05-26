@@ -76,7 +76,7 @@ public class CHAT extends AbstractFloraCoreTable {
         String recordsJson = GsonProvider.normal().toJson(records);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_RECORDS))) {
+                    .apply(UPDATE_RECORDS))) {
                 ps.setString(1, recordsJson);
                 ps.setInt(2, id);
                 ps.execute();
@@ -98,7 +98,7 @@ public class CHAT extends AbstractFloraCoreTable {
         this.endTime = endTime;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_END_TIME))) {
+                    .apply(UPDATE_END_TIME))) {
                 ps.setLong(1, endTime);
                 ps.setInt(2, id);
                 ps.execute();
@@ -113,7 +113,7 @@ public class CHAT extends AbstractFloraCoreTable {
         String recordsJson = GsonProvider.normal().toJson(records);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(INSERT))) {
+                    .apply(INSERT))) {
                 ps.setString(1, name);
                 ps.setString(2, type.name());
                 ps.setString(3, recordsJson);

@@ -200,7 +200,6 @@ public class ClassRemapper extends ClassVisitor {
      * {@link MethodRemapper}.
      *
      * @param methodVisitor the MethodVisitor the remapper must delegate to.
-     *
      * @return the newly created remapper.
      */
     protected MethodVisitor createMethodRemapper(final MethodVisitor methodVisitor) {
@@ -212,7 +211,6 @@ public class ClassRemapper extends ClassVisitor {
      * {@link FieldRemapper}.
      *
      * @param fieldVisitor the FieldVisitor the remapper must delegate to.
-     *
      * @return the newly created remapper.
      */
     protected FieldVisitor createFieldRemapper(final FieldVisitor fieldVisitor) {
@@ -224,7 +222,6 @@ public class ClassRemapper extends ClassVisitor {
      * returns a new {@link RecordComponentRemapper}.
      *
      * @param recordComponentVisitor the RecordComponentVisitor the remapper must delegate to.
-     *
      * @return the newly created remapper.
      */
     protected RecordComponentVisitor createRecordComponentRemapper(
@@ -238,7 +235,6 @@ public class ClassRemapper extends ClassVisitor {
      *
      * @param descriptor        the descriptor of the visited annotation.
      * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
-     *
      * @return the newly created remapper.
      */
     protected AnnotationVisitor createAnnotationRemapper(
@@ -252,9 +248,7 @@ public class ClassRemapper extends ClassVisitor {
      * new {@link AnnotationRemapper}.
      *
      * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
-     *
      * @return the newly created remapper.
-     *
      * @deprecated use {@link #createAnnotationRemapper(String, AnnotationVisitor)} instead.
      */
     @Deprecated
@@ -267,7 +261,6 @@ public class ClassRemapper extends ClassVisitor {
      * {@link ModuleRemapper}.
      *
      * @param moduleVisitor the ModuleVisitor the remapper must delegate to.
-     *
      * @return the newly created remapper.
      */
     protected ModuleVisitor createModuleRemapper(final ModuleVisitor moduleVisitor) {

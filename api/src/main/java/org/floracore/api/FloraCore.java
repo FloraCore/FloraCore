@@ -3,6 +3,7 @@ package org.floracore.api;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
+import org.floracore.api.messenger.*;
 import org.floracore.api.platform.*;
 import org.floracore.api.player.*;
 
@@ -74,4 +75,14 @@ public interface FloraCore {
      * @return the plugin metadata
      */
     @NonNull PluginMetadata getPluginMetadata();
+
+    /**
+     * Registers a {@link MessengerProvider} for use by the platform.
+     *
+     * <p>Note that the mere action of registering a provider doesn't
+     * necessarily mean that it will be used.</p>
+     *
+     * @param messengerProvider the messenger provider.
+     */
+    void registerMessengerProvider(@NonNull MessengerProvider messengerProvider);
 }

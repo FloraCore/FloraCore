@@ -20,7 +20,6 @@ public abstract class URLClassLoaderAccess {
      * Creates a {@link URLClassLoaderAccess} for the given class loader.
      *
      * @param classLoader the class loader
-     *
      * @return the access object
      */
     public static URLClassLoaderAccess create(URLClassLoader classLoader) {

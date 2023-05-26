@@ -19,9 +19,9 @@ import java.util.stream.*;
 
 public class ItemStackBuilder implements Supplier<ItemStack> {
     public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
-                                                                                        .hexColors()
-                                                                                        .useUnusualXRepeatedCharacterHexFormat()
-                                                                                        .build();
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build();
     public ObcItemStack item;
 
     public ItemStackBuilder(NmsNBTTagCompound nbt) {
@@ -145,49 +145,28 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return newSkull(name,
                 UUID.nameUUIDFromBytes(url.getBytes(StringUtil.UTF8)),
                 Base64.getEncoder()
-                      .encodeToString(("{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}").getBytes(StringUtil.UTF8)));
+                        .encodeToString(("{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}").getBytes(StringUtil.UTF8)));
     }
 
     public static ItemStackBuilder newSkull(String name, UUID id, String value) {
         ItemStackBuilder is = forFlattening("skull", 3, "player_head");
         is.tag()
-          .set("SkullOwner",
-                  NmsNBTTagCompound.newInstance()
-                                   .set("Id",
-                                           BukkitWrapper.version < 16 ? NmsNBTTagString.newInstance(id.toString()) : NmsNBTTagIntArray.newInstance(
-                                                   id))
-                                   .set("Properties",
-                                           NmsNBTTagCompound.newInstance()
-                                                            .set("textures",
-                                                                    NmsNBTTagList.newInstance(NmsNBTTagCompound.newInstance()
-                                                                                                               .set("Value",
-                                                                                                                       NmsNBTTagString.newInstance(
-                                                                                                                               value))))));
+                .set("SkullOwner",
+                        NmsNBTTagCompound.newInstance()
+                                .set("Id",
+                                        BukkitWrapper.version < 16 ? NmsNBTTagString.newInstance(id.toString()) : NmsNBTTagIntArray.newInstance(
+                                                id))
+                                .set("Properties",
+                                        NmsNBTTagCompound.newInstance()
+                                                .set("textures",
+                                                        NmsNBTTagList.newInstance(NmsNBTTagCompound.newInstance()
+                                                                .set("Value",
+                                                                        NmsNBTTagString.newInstance(
+                                                                                value))))));
         if (name != null) {
             is.tag().getCompound("SkullOwner").set("Name", NmsNBTTagString.newInstance(name));
         }
         return is;
-    }
-
-    public NmsNBTTagCompound tag() {
-        if (!hasTag()) {
-            getHandle().setTag(NmsNBTTagCompound.newInstance());
-        }
-        return getHandle().getTag();
-    }
-
-    public boolean hasTag() {
-        if (WrappedObject.isNull(this.item.getHandle())) {
-            return false;
-        }
-        return !WrappedObject.isNull(item.getHandle().getTag());
-    }
-
-    public NmsItemStack getHandle() {
-        if (WrappedObject.isNull(this.item.getHandle())) {
-            this.item.setHandle(NmsItemStack.newInstance(ObcMagicNumbers.getItem(Material.AIR)));
-        }
-        return this.item.getHandle();
     }
 
     public static ItemStackBuilder returnArrow() {
@@ -255,6 +234,31 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return json;
     }
 
+    public static String getId(Material m) {
+        return ObcMagicNumbers.getItem(m).getId();
+    }
+
+    public NmsNBTTagCompound tag() {
+        if (!hasTag()) {
+            getHandle().setTag(NmsNBTTagCompound.newInstance());
+        }
+        return getHandle().getTag();
+    }
+
+    public boolean hasTag() {
+        if (WrappedObject.isNull(this.item.getHandle())) {
+            return false;
+        }
+        return !WrappedObject.isNull(item.getHandle().getTag());
+    }
+
+    public NmsItemStack getHandle() {
+        if (WrappedObject.isNull(this.item.getHandle())) {
+            this.item.setHandle(NmsItemStack.newInstance(ObcMagicNumbers.getItem(Material.AIR)));
+        }
+        return this.item.getHandle();
+    }
+
     @Override
     public ItemStack get() {
         return item.getRaw();
@@ -278,10 +282,6 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
 
     public ItemStackBuilder setId(Material m) {
         return setId(getId(m));
-    }
-
-    public static String getId(Material m) {
-        return ObcMagicNumbers.getItem(m).getId();
     }
 
     public ItemStackBuilder add(int count) {
@@ -341,7 +341,6 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
      * It doesn't work after The Flattening(MC 1.13)
      *
      * @param childId child ID
-     *
      * @return this
      */
     public ItemStackBuilder setChildId(int childId) {
@@ -417,17 +416,17 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return display().getString("LocName");
     }
 
+    public ItemStackBuilder setLocName(String locName) {
+        display().set("LocName", NmsNBTTagString.newInstance(locName));
+        return this;
+    }
+
     public NmsNBTTagCompound display() {
         NmsNBTTagCompound tag = tag();
         if (!tag.containsKey("display")) {
             tag.set("display", NmsNBTTagCompound.newInstance());
         }
         return tag.getCompound("display");
-    }
-
-    public ItemStackBuilder setLocName(String locName) {
-        display().set("LocName", NmsNBTTagString.newInstance(locName));
-        return this;
     }
 
     public NmsIChatBaseComponent getNameV14() {
@@ -470,10 +469,10 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
     public List<String> getLore() {
         if (hasDisplay() && display().containsKey("Lore")) {
             List<String> r = display().getList("Lore")
-                                      .values()
-                                      .stream()
-                                      .map(n -> n.cast(NmsNBTTagString.class).getValue())
-                                      .collect(Collectors.toList());
+                    .values()
+                    .stream()
+                    .map(n -> n.cast(NmsNBTTagString.class).getValue())
+                    .collect(Collectors.toList());
             if (BukkitWrapper.version >= 14) {
                 r = r.stream().map(l -> ObcChatMessage.fromJSONComponentV13(l)).collect(Collectors.toList());
             }
@@ -493,10 +492,10 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
     public ItemStackBuilder setLoreString(List<String> lore) {
         if (BukkitWrapper.version >= 14) {
             lore = lore.stream()
-                       .map(l -> l == null || l.length() == 0 ? "{\"text\":\"\"}" : ObcChatMessage.fromStringOrNullToJSONV13(
-                               l))
-                       .map(l -> setDefaultNonItalic(new JsonParser().parse(l).getAsJsonObject()).toString())
-                       .collect(Collectors.toList());
+                    .map(l -> l == null || l.length() == 0 ? "{\"text\":\"\"}" : ObcChatMessage.fromStringOrNullToJSONV13(
+                            l))
+                    .map(l -> setDefaultNonItalic(new JsonParser().parse(l).getAsJsonObject()).toString())
+                    .collect(Collectors.toList());
         }
         if (lore.isEmpty()) {
             display().remove("Lore");

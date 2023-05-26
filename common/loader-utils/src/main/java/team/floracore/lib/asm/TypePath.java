@@ -62,7 +62,6 @@ public final class TypePath {
      *
      * @param typePath a type path in string form, in the format used by {@link #toString()}. May be
      *                 {@literal null} or empty.
-     *
      * @return the corresponding TypePath object, or {@literal null} if the path is empty.
      */
     public static TypePath fromString(final String typePath) {
@@ -162,7 +161,6 @@ public final class TypePath {
      * Returns the value of the given step of this path.
      *
      * @param index an index between 0 and {@link #getLength()}, exclusive.
-     *
      * @return one of {@link #ARRAY_ELEMENT}, {@link #INNER_TYPE}, {@link #WILDCARD_BOUND}, or {@link
      * #TYPE_ARGUMENT}.
      */
@@ -176,7 +174,6 @@ public final class TypePath {
      * only be used for steps whose value is {@link #TYPE_ARGUMENT}.
      *
      * @param index an index between 0 and {@link #getLength()}, exclusive.
-     *
      * @return the index of the type argument that the given step is stepping into.
      */
     public int getStepArgument(final int index) {

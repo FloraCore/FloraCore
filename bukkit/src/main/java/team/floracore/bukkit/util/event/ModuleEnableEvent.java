@@ -19,12 +19,12 @@ public class ModuleEnableEvent extends Event implements IFutureEvent, Cancellabl
         this.module = module;
     }
 
-    public HandlerList getHandlers() {
-        return getHandlerList();
-    }
-
     public static HandlerList getHandlerList() {
         return handlers;
+    }
+
+    public HandlerList getHandlers() {
+        return getHandlerList();
     }
 
     public boolean isCancelled() {

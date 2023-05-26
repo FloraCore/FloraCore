@@ -34,12 +34,12 @@ public interface HelpMessage extends AbstractMessage {
                 // Click to put the command in chat
                 .key("floracore.command.misc.click.suggest-hover").color(WHITE).build());
         return text().append(component)
-                     .append(space())
-                     .append(i)
-                     .append(space())
-                     .append(description)
-                     .clickEvent(clickEvent)
-                     .hoverEvent(hoverEvent)
-                     .build();
+                .append(space())
+                .append(i)
+                .append(space())
+                .append(description)
+                .clickEvent(clickEvent)
+                .hoverEvent(hoverEvent)
+                .build();
     };
 }

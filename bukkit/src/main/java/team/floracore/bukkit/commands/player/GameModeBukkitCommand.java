@@ -166,7 +166,6 @@ public class GameModeBukkitCommand extends FloraCoreBukkitCommand {
      * @param gameMode        游戏模式
      * @param target          需要设置游戏模式的目标玩家
      * @param permission      权限节点
-     *
      * @return 是否拥有权限并成功设置
      */
     private boolean setGameModeIfPermissionOrSendMessage(@NotNull Sender messageReceiver,

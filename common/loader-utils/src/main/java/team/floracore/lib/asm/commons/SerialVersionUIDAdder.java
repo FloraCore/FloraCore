@@ -132,7 +132,6 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * version.
      *
      * @param classVisitor a {@link ClassVisitor} to which this visitor will delegate calls.
-     *
      * @throws IllegalStateException If a subclass calls this constructor.
      */
     public SerialVersionUIDAdder(final ClassVisitor classVisitor) {
@@ -156,6 +155,28 @@ public class SerialVersionUIDAdder extends ClassVisitor {
     // -----------------------------------------------------------------------------------------------
     // Overridden methods
     // -----------------------------------------------------------------------------------------------
+
+    /**
+     * Sorts the items in the collection and writes it to the given output stream.
+     *
+     * @param itemCollection   a collection of items.
+     * @param dataOutputStream where the items must be written.
+     * @param dotted           whether package names must use dots, instead of slashes.
+     * @throws IOException if an error occurs.
+     */
+    private static void writeItems(
+            final Collection<Item> itemCollection,
+            final DataOutput dataOutputStream,
+            final boolean dotted)
+            throws IOException {
+        Item[] items = itemCollection.toArray(new Item[0]);
+        Arrays.sort(items);
+        for (Item item : items) {
+            dataOutputStream.writeUTF(item.name);
+            dataOutputStream.writeInt(item.access);
+            dataOutputStream.writeUTF(dotted ? item.descriptor.replace('/', '.') : item.descriptor);
+        }
+    }
 
     @Override
     public void visit(
@@ -273,6 +294,10 @@ public class SerialVersionUIDAdder extends ClassVisitor {
         return super.visitMethod(access, name, descriptor, signature, exceptions);
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Utility methods
+    // -----------------------------------------------------------------------------------------------
+
     @Override
     public void visitEnd() {
         // Add the SVUID field to the class if it doesn't have one.
@@ -286,10 +311,6 @@ public class SerialVersionUIDAdder extends ClassVisitor {
 
         super.visitEnd();
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Utility methods
-    // -----------------------------------------------------------------------------------------------
 
     /**
      * Adds a final static serialVersionUID field to the class, with the given value.
@@ -310,7 +331,6 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * Computes and returns the value of SVUID.
      *
      * @return the serial version UID.
-     *
      * @throws IOException if an I/O error occurs.
      */
     // DontCheck(AbbreviationAsWordInName): can't be renamed (for backward binary compatibility).
@@ -391,33 +411,9 @@ public class SerialVersionUIDAdder extends ClassVisitor {
     }
 
     /**
-     * Sorts the items in the collection and writes it to the given output stream.
-     *
-     * @param itemCollection   a collection of items.
-     * @param dataOutputStream where the items must be written.
-     * @param dotted           whether package names must use dots, instead of slashes.
-     *
-     * @throws IOException if an error occurs.
-     */
-    private static void writeItems(
-            final Collection<Item> itemCollection,
-            final DataOutput dataOutputStream,
-            final boolean dotted)
-            throws IOException {
-        Item[] items = itemCollection.toArray(new Item[0]);
-        Arrays.sort(items);
-        for (Item item : items) {
-            dataOutputStream.writeUTF(item.name);
-            dataOutputStream.writeInt(item.access);
-            dataOutputStream.writeUTF(dotted ? item.descriptor.replace('/', '.') : item.descriptor);
-        }
-    }
-
-    /**
      * Returns the SHA-1 message digest of the given value.
      *
      * @param value the value whose SHA message digest must be computed.
-     *
      * @return the SHA-1 message digest of the given value.
      */
     // DontCheck(AbbreviationAsWordInName): can't be renamed (for backward binary compatibility).

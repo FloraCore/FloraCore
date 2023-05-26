@@ -45,11 +45,11 @@ public class CommandManager {
         // Create the annotation parser. This allows you to define commands using methods annotated with
         // @CommandMethod
         final Function<ParserParameters, CommandMeta> commandMetaFunction = p -> CommandMeta.simple()
-                                                                                            // This will allow you to decorate commands with descriptions
-                                                                                            .with(CommandMeta.DESCRIPTION,
-                                                                                                    p.get(StandardParameters.DESCRIPTION,
-                                                                                                            "NONE"))
-                                                                                            .build();
+                // This will allow you to decorate commands with descriptions
+                .with(CommandMeta.DESCRIPTION,
+                        p.get(StandardParameters.DESCRIPTION,
+                                "NONE"))
+                .build();
         this.annotationParser = new AnnotationParser<>(
                 this.manager,
                 CommandSender.class,

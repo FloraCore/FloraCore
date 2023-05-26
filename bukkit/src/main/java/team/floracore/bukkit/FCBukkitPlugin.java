@@ -13,6 +13,7 @@ import team.floracore.bukkit.util.nothing.*;
 import team.floracore.common.config.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
+import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -141,5 +142,10 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     public BukkitSenderFactory getSenderFactory() {
         return this.senderFactory;
+    }
+
+    @Override
+    protected MessagingFactory<?> provideMessagingFactory() {
+        return new BukkitMessagingFactory(this);
     }
 }

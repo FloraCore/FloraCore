@@ -16,8 +16,8 @@ public interface Nothing {
                 ClassUtil.extClassLoader)))) {
             nothingData.set(ClassUtil.loadClass("team.floracore.common.util.nothing.NothingData",
                     FileUtil.readInputStream(Nothing.class.getClassLoader()
-                                                          .getResourceAsStream(
-                                                                  "team/floracore/common/util/nothing/NothingData.class")),
+                            .getResourceAsStream(
+                                    "team/floracore/common/util/nothing/NothingData.class")),
                     ClassUtil.extClassLoader));
         }
         try {

@@ -106,7 +106,6 @@ final class AnnotationWriter extends AnnotationVisitor {
      * @param previousAnnotation the previously visited annotation of the
      *                           Runtime[In]Visible[Type]Annotations attribute to which this annotation belongs, or
      *                           {@literal null} in other cases (e.g. nested or array annotations).
-     *
      * @return a new {@link AnnotationWriter} for the given annotation descriptor.
      */
     static AnnotationWriter create(
@@ -137,7 +136,6 @@ final class AnnotationWriter extends AnnotationVisitor {
      * @param previousAnnotation the previously visited annotation of the
      *                           Runtime[In]Visible[Type]Annotations attribute to which this annotation belongs, or
      *                           {@literal null} in other cases (e.g. nested or array annotations).
-     *
      * @return a new {@link AnnotationWriter} for the given type annotation reference and descriptor.
      */
     static AnnotationWriter create(
@@ -179,7 +177,6 @@ final class AnnotationWriter extends AnnotationVisitor {
      * @param lastRuntimeInvisibleTypeAnnotation The last runtime invisible type annotation of a
      *                                           field, method or class field. The previous ones can be accessed with the {@link
      *                                           #previousAnnotation} field. May be {@literal null}.
-     *
      * @return the size in bytes of a Runtime[In]Visible[Type]Annotations attribute containing the
      * given annotations and all their predecessors. This includes the size of the
      * attribute_name_index and attribute_length fields.
@@ -211,31 +208,6 @@ final class AnnotationWriter extends AnnotationVisitor {
                             Constants.RUNTIME_INVISIBLE_TYPE_ANNOTATIONS);
         }
         return size;
-    }
-
-    /**
-     * Returns the size of a Runtime[In]Visible[Type]Annotations attribute containing this annotation
-     * and all its <i>predecessors</i> (see {@link #previousAnnotation}. Also adds the attribute name
-     * to the constant pool of the class (if not null).
-     *
-     * @param attributeName one of "Runtime[In]Visible[Type]Annotations", or {@literal null}.
-     *
-     * @return the size in bytes of a Runtime[In]Visible[Type]Annotations attribute containing this
-     * annotation and all its predecessors. This includes the size of the attribute_name_index and
-     * attribute_length fields.
-     */
-    int computeAnnotationsSize(final String attributeName) {
-        if (attributeName != null) {
-            symbolTable.addConstantUtf8(attributeName);
-        }
-        // The attribute_name_index, attribute_length and num_annotations fields use 8 bytes.
-        int attributeSize = 8;
-        AnnotationWriter annotationWriter = this;
-        while (annotationWriter != null) {
-            attributeSize += annotationWriter.annotation.length;
-            annotationWriter = annotationWriter.previousAnnotation;
-        }
-        return attributeSize;
     }
 
     /**
@@ -284,38 +256,6 @@ final class AnnotationWriter extends AnnotationVisitor {
     }
 
     /**
-     * Puts a Runtime[In]Visible[Type]Annotations attribute containing this annotations and all its
-     * <i>predecessors</i> (see {@link #previousAnnotation} in the given ByteVector. Annotations are
-     * put in the same order they have been visited.
-     *
-     * @param attributeNameIndex the constant pool index of the attribute name (one of
-     *                           "Runtime[In]Visible[Type]Annotations").
-     * @param output             where the attribute must be put.
-     */
-    void putAnnotations(final int attributeNameIndex, final ByteVector output) {
-        int attributeLength = 2; // For num_annotations.
-        int numAnnotations = 0;
-        AnnotationWriter annotationWriter = this;
-        AnnotationWriter firstAnnotation = null;
-        while (annotationWriter != null) {
-            // In case the user forgot to call visitEnd().
-            annotationWriter.visitEnd();
-            attributeLength += annotationWriter.annotation.length;
-            numAnnotations++;
-            firstAnnotation = annotationWriter;
-            annotationWriter = annotationWriter.previousAnnotation;
-        }
-        output.putShort(attributeNameIndex);
-        output.putInt(attributeLength);
-        output.putShort(numAnnotations);
-        annotationWriter = firstAnnotation;
-        while (annotationWriter != null) {
-            output.putByteArray(annotationWriter.annotation.data, 0, annotationWriter.annotation.length);
-            annotationWriter = annotationWriter.nextAnnotation;
-        }
-    }
-
-    /**
      * Returns the size of a Runtime[In]VisibleParameterAnnotations attribute containing all the
      * annotation lists from the given AnnotationWriter sub-array. Also adds the attribute name to the
      * constant pool of the class.
@@ -325,7 +265,6 @@ final class AnnotationWriter extends AnnotationVisitor {
      *                                element).
      * @param annotableParameterCount the number of elements in annotationWriters to take into account
      *                                (elements [0..annotableParameterCount[ are taken into account).
-     *
      * @return the size in bytes of a Runtime[In]VisibleParameterAnnotations attribute corresponding
      * to the given sub-array of AnnotationWriter lists. This includes the size of the
      * attribute_name_index and attribute_length fields.
@@ -347,10 +286,6 @@ final class AnnotationWriter extends AnnotationVisitor {
         }
         return attributeSize;
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Utility methods
-    // -----------------------------------------------------------------------------------------------
 
     /**
      * Puts a Runtime[In]VisibleParameterAnnotations attribute containing all the annotation lists
@@ -398,6 +333,66 @@ final class AnnotationWriter extends AnnotationVisitor {
                         annotationWriter.annotation.data, 0, annotationWriter.annotation.length);
                 annotationWriter = annotationWriter.nextAnnotation;
             }
+        }
+    }
+
+    /**
+     * Returns the size of a Runtime[In]Visible[Type]Annotations attribute containing this annotation
+     * and all its <i>predecessors</i> (see {@link #previousAnnotation}. Also adds the attribute name
+     * to the constant pool of the class (if not null).
+     *
+     * @param attributeName one of "Runtime[In]Visible[Type]Annotations", or {@literal null}.
+     * @return the size in bytes of a Runtime[In]Visible[Type]Annotations attribute containing this
+     * annotation and all its predecessors. This includes the size of the attribute_name_index and
+     * attribute_length fields.
+     */
+    int computeAnnotationsSize(final String attributeName) {
+        if (attributeName != null) {
+            symbolTable.addConstantUtf8(attributeName);
+        }
+        // The attribute_name_index, attribute_length and num_annotations fields use 8 bytes.
+        int attributeSize = 8;
+        AnnotationWriter annotationWriter = this;
+        while (annotationWriter != null) {
+            attributeSize += annotationWriter.annotation.length;
+            annotationWriter = annotationWriter.previousAnnotation;
+        }
+        return attributeSize;
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Utility methods
+    // -----------------------------------------------------------------------------------------------
+
+    /**
+     * Puts a Runtime[In]Visible[Type]Annotations attribute containing this annotations and all its
+     * <i>predecessors</i> (see {@link #previousAnnotation} in the given ByteVector. Annotations are
+     * put in the same order they have been visited.
+     *
+     * @param attributeNameIndex the constant pool index of the attribute name (one of
+     *                           "Runtime[In]Visible[Type]Annotations").
+     * @param output             where the attribute must be put.
+     */
+    void putAnnotations(final int attributeNameIndex, final ByteVector output) {
+        int attributeLength = 2; // For num_annotations.
+        int numAnnotations = 0;
+        AnnotationWriter annotationWriter = this;
+        AnnotationWriter firstAnnotation = null;
+        while (annotationWriter != null) {
+            // In case the user forgot to call visitEnd().
+            annotationWriter.visitEnd();
+            attributeLength += annotationWriter.annotation.length;
+            numAnnotations++;
+            firstAnnotation = annotationWriter;
+            annotationWriter = annotationWriter.previousAnnotation;
+        }
+        output.putShort(attributeNameIndex);
+        output.putInt(attributeLength);
+        output.putShort(numAnnotations);
+        annotationWriter = firstAnnotation;
+        while (annotationWriter != null) {
+            output.putByteArray(annotationWriter.annotation.data, 0, annotationWriter.annotation.length);
+            annotationWriter = annotationWriter.nextAnnotation;
         }
     }
 

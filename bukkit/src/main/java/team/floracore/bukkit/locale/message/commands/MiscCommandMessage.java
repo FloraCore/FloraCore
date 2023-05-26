@@ -15,31 +15,31 @@ public interface MiscCommandMessage extends AbstractMessage {
         Instant now = Instant.now();
         Duration timeElapsed = Duration.between(now, instant);
         return AbstractMessage.prefixed(text().append(text(type, GREEN))
-                                              .append(space())
-                                              .append(text("->", AQUA))
-                                              .append(space())
-                                              .append(text(key, AQUA))
-                                              .append(text(" - ", WHITE))
-                                              .append(text().color(WHITE)
-                                                            .append(text('\''))
-                                                            .append(text(value))
-                                                            .append(text('\'')))
-                                              .apply(builder -> {
-                                                  if (expiry > 0) {
-                                                      builder.append(space());
-                                                      builder.append(text().color(DARK_GRAY)
-                                                                           .append(OPEN_BRACKET)
-                                                                           .append(translatable()
-                                                                                   // 过期时间
-                                                                                   .key("floracore.command.generic.info.expires-in")
-                                                                                   .color(GRAY)
-                                                                                   .append(space())
-                                                                                   .append(text().color(AQUA)
-                                                                                                 .append(DurationFormatter.CONCISE.format(
-                                                                                                         timeElapsed))))
-                                                                           .append(CLOSE_BRACKET));
-                                                  }
-                                              }));
+                .append(space())
+                .append(text("->", AQUA))
+                .append(space())
+                .append(text(key, AQUA))
+                .append(text(" - ", WHITE))
+                .append(text().color(WHITE)
+                        .append(text('\''))
+                        .append(text(value))
+                        .append(text('\'')))
+                .apply(builder -> {
+                    if (expiry > 0) {
+                        builder.append(space());
+                        builder.append(text().color(DARK_GRAY)
+                                .append(OPEN_BRACKET)
+                                .append(translatable()
+                                        // 过期时间
+                                        .key("floracore.command.generic.info.expires-in")
+                                        .color(GRAY)
+                                        .append(space())
+                                        .append(text().color(AQUA)
+                                                .append(DurationFormatter.CONCISE.format(
+                                                        timeElapsed))))
+                                .append(CLOSE_BRACKET));
+                    }
+                }));
     };
 
     Args3<String, String, String> SET_DATA_SUCCESS = (key, value, target) -> AbstractMessage.prefixed(translatable()
@@ -48,9 +48,9 @@ public interface MiscCommandMessage extends AbstractMessage {
             .color(GREEN)
             .args(text().color(WHITE).append(text('\'')).append(text(key)).append(text('\'')),
                     text().color(WHITE)
-                          .append(text('\''))
-                          .append(AbstractMessage.formatColoredValue(value))
-                          .append(text('\'')),
+                            .append(text('\''))
+                            .append(AbstractMessage.formatColoredValue(value))
+                            .append(text('\'')),
                     text().color(AQUA).append(text(target)))
             .append(FULL_STOP));
 
@@ -61,9 +61,9 @@ public interface MiscCommandMessage extends AbstractMessage {
                     .color(GREEN)
                     .args(text().color(WHITE).append(text('\'')).append(text(key)).append(text('\'')),
                             text().color(WHITE)
-                                  .append(text('\''))
-                                  .append(AbstractMessage.formatColoredValue(value))
-                                  .append(text('\'')),
+                                    .append(text('\''))
+                                    .append(AbstractMessage.formatColoredValue(value))
+                                    .append(text('\'')),
                             text().color(AQUA).append(text(target)),
                             text().color(AQUA).append(DurationFormatter.LONG.format(duration)))
                     .append(FULL_STOP));
@@ -91,9 +91,9 @@ public interface MiscCommandMessage extends AbstractMessage {
             .args(text().color(AQUA).append(text(target)),
                     // type
                     text().color(WHITE)
-                          .append(OPEN_BRACKET)
-                          .append(text(type == null ? "*" : type.getName()))
-                          .append(CLOSE_BRACKET))
+                            .append(OPEN_BRACKET)
+                            .append(text(type == null ? "*" : type.getName()))
+                            .append(CLOSE_BRACKET))
             // .
             .append(FULL_STOP));
 

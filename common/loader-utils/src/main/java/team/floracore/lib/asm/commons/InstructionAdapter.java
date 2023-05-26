@@ -19,7 +19,6 @@ public class InstructionAdapter extends MethodVisitor {
      * Instead, they must use the {@link #InstructionAdapter(int, MethodVisitor)} version.
      *
      * @param methodVisitor the method visitor to which this adapter delegates calls.
-     *
      * @throws IllegalStateException If a subclass calls this constructor.
      */
     public InstructionAdapter(final MethodVisitor methodVisitor) {
@@ -92,6 +91,46 @@ public class InstructionAdapter extends MethodVisitor {
                 }
             }
         }
+    }
+
+    /**
+     * Generates the instruction to create and push on the stack an array of the given type.
+     *
+     * @param methodVisitor the method visitor to use to generate the instruction.
+     * @param type          an array Type.
+     */
+    static void newarray(final MethodVisitor methodVisitor, final Type type) {
+        int arrayType;
+        switch (type.getSort()) {
+            case Type.BOOLEAN:
+                arrayType = Opcodes.T_BOOLEAN;
+                break;
+            case Type.CHAR:
+                arrayType = Opcodes.T_CHAR;
+                break;
+            case Type.BYTE:
+                arrayType = Opcodes.T_BYTE;
+                break;
+            case Type.SHORT:
+                arrayType = Opcodes.T_SHORT;
+                break;
+            case Type.INT:
+                arrayType = Opcodes.T_INT;
+                break;
+            case Type.FLOAT:
+                arrayType = Opcodes.T_FLOAT;
+                break;
+            case Type.LONG:
+                arrayType = Opcodes.T_LONG;
+                break;
+            case Type.DOUBLE:
+                arrayType = Opcodes.T_DOUBLE;
+                break;
+            default:
+                methodVisitor.visitTypeInsn(Opcodes.ANEWARRAY, type.getInternalName());
+                return;
+        }
+        methodVisitor.visitIntInsn(Opcodes.NEWARRAY, arrayType);
     }
 
     @Override
@@ -688,12 +727,12 @@ public class InstructionAdapter extends MethodVisitor {
         tableswitch(min, max, dflt, labels);
     }
 
+    // -----------------------------------------------------------------------------------------------
+
     @Override
     public void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels) {
         lookupswitch(dflt, keys, labels);
     }
-
-    // -----------------------------------------------------------------------------------------------
 
     @Override
     public void visitMultiANewArrayInsn(final String descriptor, final int numDimensions) {
@@ -964,46 +1003,6 @@ public class InstructionAdapter extends MethodVisitor {
     }
 
     /**
-     * Generates the instruction to create and push on the stack an array of the given type.
-     *
-     * @param methodVisitor the method visitor to use to generate the instruction.
-     * @param type          an array Type.
-     */
-    static void newarray(final MethodVisitor methodVisitor, final Type type) {
-        int arrayType;
-        switch (type.getSort()) {
-            case Type.BOOLEAN:
-                arrayType = Opcodes.T_BOOLEAN;
-                break;
-            case Type.CHAR:
-                arrayType = Opcodes.T_CHAR;
-                break;
-            case Type.BYTE:
-                arrayType = Opcodes.T_BYTE;
-                break;
-            case Type.SHORT:
-                arrayType = Opcodes.T_SHORT;
-                break;
-            case Type.INT:
-                arrayType = Opcodes.T_INT;
-                break;
-            case Type.FLOAT:
-                arrayType = Opcodes.T_FLOAT;
-                break;
-            case Type.LONG:
-                arrayType = Opcodes.T_LONG;
-                break;
-            case Type.DOUBLE:
-                arrayType = Opcodes.T_DOUBLE;
-                break;
-            default:
-                methodVisitor.visitTypeInsn(Opcodes.ANEWARRAY, type.getInternalName());
-                return;
-        }
-        methodVisitor.visitIntInsn(Opcodes.NEWARRAY, arrayType);
-    }
-
-    /**
      * Generates a nop instruction.
      */
     public void nop() {
@@ -1135,7 +1134,6 @@ public class InstructionAdapter extends MethodVisitor {
      *                   Type#getInternalName()}).
      * @param name       the method's name.
      * @param descriptor the method's descriptor (see {@link Type}).
-     *
      * @deprecated use {@link #invokevirtual(String, String, String, boolean)} instead.
      */
     @Deprecated
@@ -1175,7 +1173,6 @@ public class InstructionAdapter extends MethodVisitor {
      *                   Type#getInternalName()}).
      * @param name       the method's name.
      * @param descriptor the method's descriptor (see {@link Type}).
-     *
      * @deprecated use {@link #invokespecial(String, String, String, boolean)} instead.
      */
     @Deprecated
@@ -1215,7 +1212,6 @@ public class InstructionAdapter extends MethodVisitor {
      *                   Type#getInternalName()}).
      * @param name       the method's name.
      * @param descriptor the method's descriptor (see {@link Type}).
-     *
      * @deprecated use {@link #invokestatic(String, String, String, boolean)} instead.
      */
     @Deprecated

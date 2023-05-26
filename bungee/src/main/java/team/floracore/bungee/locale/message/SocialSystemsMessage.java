@@ -233,16 +233,16 @@ public interface SocialSystemsMessage extends AbstractMessage {
                         // {}
                         .args(text(target, GRAY), text(5, RED)).color(AQUA).build(),
                 translatable().key("floracore.command.misc.party.offline.leader.transfer.1")
-                              .color(GRAY)
-                              .append(FULL_STOP)
-                              .append(translatable("floracore.command.misc.party.offline.leader.transfer.2"))
-                              .color(GRAY)
-                              .append(FULL_STOP)
-                              .append(translatable("floracore.command.misc.party.offline.leader.transfer.3"))
-                              .color(GRAY)
-                              .append(FULL_STOP)
-                              .color(AQUA)
-                              .build()
+                        .color(GRAY)
+                        .append(FULL_STOP)
+                        .append(translatable("floracore.command.misc.party.offline.leader.transfer.2"))
+                        .color(GRAY)
+                        .append(FULL_STOP)
+                        .append(translatable("floracore.command.misc.party.offline.leader.transfer.3"))
+                        .color(GRAY)
+                        .append(FULL_STOP)
+                        .color(AQUA)
+                        .build()
                 , MiscMessage.PARTY_HORIZONTAL_LINE.build()
         );
     };
@@ -453,14 +453,14 @@ public interface SocialSystemsMessage extends AbstractMessage {
                 String moderatorName = FloraCoreProvider.get().getPlayerAPI().getPlayerRecordName(moderator);
                 boolean moderatorOnline = FloraCoreProvider.get().getPlayerAPI().isOnline(moderator);
                 mc = mc.append(text(moderatorName, GRAY).append(space())
-                                                        .append(CIRCLE.color(moderatorOnline ? GREEN : RED)))
-                       .append(space());
+                                .append(CIRCLE.color(moderatorOnline ? GREEN : RED)))
+                        .append(space());
                 members.remove(moderator);
             }
             c = join(joinConfig, c, space(),
                     translatable().key("floracore.command.misc.party.moderators")
-                                  // {}
-                                  .args(mc).color(GREEN).build());
+                            // {}
+                            .args(mc).color(GREEN).build());
         }
         if (!members.isEmpty()) {
             Component mc = Component.empty();
@@ -468,12 +468,12 @@ public interface SocialSystemsMessage extends AbstractMessage {
                 String memberName = FloraCoreProvider.get().getPlayerAPI().getPlayerRecordName(member);
                 boolean memberOnline = FloraCoreProvider.get().getPlayerAPI().isOnline(member);
                 mc = mc.append(text(memberName, GRAY).append(space()).append(CIRCLE.color(memberOnline ? GREEN : RED)))
-                       .append(space());
+                        .append(space());
             }
             c = join(joinConfig, c, space(),
                     translatable().key("floracore.command.misc.party.members")
-                                  // {}
-                                  .args(mc).color(GREEN).build());
+                            // {}
+                            .args(mc).color(GREEN).build());
         }
         c = join(joinConfig, c, MiscMessage.PARTY_HORIZONTAL_LINE.build());
         return c;

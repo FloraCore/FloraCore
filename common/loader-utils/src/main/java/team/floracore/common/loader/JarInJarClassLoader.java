@@ -24,7 +24,6 @@ public class JarInJarClassLoader extends URLClassLoader {
      *
      * @param loaderClassLoader the loader plugin's classloader (setup and created by the platform)
      * @param jarResourcePath   the path to the jar-in-jar resource within the loader jar
-     *
      * @throws LoadingException if something unexpectedly bad happens
      */
     public JarInJarClassLoader(ClassLoader loaderClassLoader, String jarResourcePath) throws LoadingException {
@@ -37,7 +36,6 @@ public class JarInJarClassLoader extends URLClassLoader {
      *
      * @param loaderClassLoader the classloader for the "host" loader plugin
      * @param jarResourcePath   the inner jar resource path
-     *
      * @return a URL to the extracted file
      */
     private static URL extractJar(ClassLoader loaderClassLoader, String jarResourcePath) throws LoadingException {
@@ -99,7 +97,6 @@ public class JarInJarClassLoader extends URLClassLoader {
      *                         plugin constructor
      * @param loaderPlugin     the loader plugin instance
      * @param <T>              the type of the loader plugin
-     *
      * @return the instantiated bootstrap plugin
      */
     public <T> LoaderBootstrap instantiatePlugin(String bootstrapClass,

@@ -27,13 +27,13 @@ public class TranslationManager {
      */
     public static final Locale DEFAULT_LOCALE = Locale.SIMPLIFIED_CHINESE;
     public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
-                                                                                        .hexColors()
-                                                                                        .useUnusualXRepeatedCharacterHexFormat()
-                                                                                        .build();
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build();
     private static final AsyncCache<UUID, Locale> localeCache = Caffeine.newBuilder()
-                                                                        .expireAfterWrite(3, TimeUnit.SECONDS)
-                                                                        .maximumSize(10000)
-                                                                        .buildAsync();
+            .expireAfterWrite(3, TimeUnit.SECONDS)
+            .maximumSize(10000)
+            .buildAsync();
     private final FloraCorePlugin plugin;
     private final Set<Locale> installed = ConcurrentHashMap.newKeySet();
     private final Path translationsDirectory;
@@ -76,8 +76,8 @@ public class TranslationManager {
     public static Component render(Component component, @NotNull UUID uuid) {
         CompletableFuture<Locale> lf = localeCache.get(uuid, u -> {
             String value = FloraCoreProvider.get()
-                                            .getDataAPI()
-                                            .getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
+                    .getDataAPI()
+                    .getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
             if (value != null) {
                 return parseLocale(value);
             }
@@ -110,6 +110,17 @@ public class TranslationManager {
         }
 
         return locale.getDisplayLanguage(locale);
+    }
+
+    public static boolean isTranslationFile(Path path) {
+        return path.getFileName().toString().endsWith(".properties");
+    }
+
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    private static boolean isAdventureDuplicatesException(Exception e) {
+        return e instanceof IllegalArgumentException && (e.getMessage().startsWith("Invalid key") || e.getMessage()
+                .startsWith(
+                        "Translation already exists"));
     }
 
     public Path getTranslationsDirectory() {
@@ -203,10 +214,6 @@ public class TranslationManager {
         }
     }
 
-    public static boolean isTranslationFile(Path path) {
-        return path.getFileName().toString().endsWith(".properties");
-    }
-
     private Map.Entry<Locale, ResourceBundle> loadTranslationFile(Path translationFile) throws IOException {
         String fileName = translationFile.getFileName().toString();
         String localeString = fileName.substring(0, fileName.length() - ".properties".length());
@@ -224,12 +231,5 @@ public class TranslationManager {
         this.registry.registerAll(locale, bundle, false);
         this.installed.add(locale);
         return Maps.immutableEntry(locale, bundle);
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    private static boolean isAdventureDuplicatesException(Exception e) {
-        return e instanceof IllegalArgumentException && (e.getMessage().startsWith("Invalid key") || e.getMessage()
-                                                                                                      .startsWith(
-                                                                                                              "Translation already exists"));
     }
 }

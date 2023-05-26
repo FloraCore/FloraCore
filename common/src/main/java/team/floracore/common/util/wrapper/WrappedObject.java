@@ -30,14 +30,6 @@ public interface WrappedObject {
         return wo == null || wo.isNull();
     }
 
-    default boolean isNull() {
-        return getRaw() == null;
-    }
-
-    Object getRaw();
-
-    void setRaw(Object raw);
-
     static Object getRaw(WrappedObject wrappedObject) {
         if (wrappedObject == null) {
             return null;
@@ -141,7 +133,7 @@ public interface WrappedObject {
                         mn = new MethodNode(Opcodes.ACC_PUBLIC, m.getName(), getDesc(m), null, new String[0]);
                         boolean accessByForce = m.getDeclaredAnnotation(AccessByForce.class) != null || (!Modifier.isPublic(
                                 rawClass.getModifiers())) || (!Modifier.isPublic(rm.getDeclaringClass()
-                                                                                   .getModifiers())) || (!Modifier.isPublic(
+                                .getModifiers())) || (!Modifier.isPublic(
                                 rm.getModifiers()));
                         if (rm instanceof Field) {
                             switch (m.getParameterCount()) {
@@ -350,10 +342,10 @@ public interface WrappedObject {
                                         getType(MethodHandle.class),
                                         "invokeExact",
                                         getDesc(Modifier.isStatic(rm.getModifiers()) ? ((Method) rm).getParameterTypes() : ListUtil.mergeLists(
-                                                                                                                                           Lists.newArrayList(rm.getDeclaringClass()),
-                                                                                                                                           Lists.newArrayList(((Method) rm).getParameterTypes()))
-                                                                                                                                   .toArray(
-                                                                                                                                           new Class[0]),
+                                                                Lists.newArrayList(rm.getDeclaringClass()),
+                                                                Lists.newArrayList(((Method) rm).getParameterTypes()))
+                                                        .toArray(
+                                                                new Class[0]),
                                                 ((Method) rm).getReturnType()),
                                         false);
                                 if (WrappedObject.class.isAssignableFrom(m.getReturnType())) {
@@ -383,7 +375,7 @@ public interface WrappedObject {
                                     }
                                 }
                                 mn.visitMethodInsn(Modifier.isStatic(rm.getModifiers()) ? Opcodes.INVOKESTATIC : (rm.getDeclaringClass()
-                                                                                                                    .isInterface() ? Opcodes.INVOKEINTERFACE : Opcodes.INVOKEVIRTUAL),
+                                                .isInterface() ? Opcodes.INVOKEINTERFACE : Opcodes.INVOKEVIRTUAL),
                                         AsmUtil.getType(rm.getDeclaringClass()),
                                         rm.getName(),
                                         getDesc((Method) rm),
@@ -496,6 +488,14 @@ public interface WrappedObject {
         return r;
     }
 
+    default boolean isNull() {
+        return getRaw() == null;
+    }
+
+    Object getRaw();
+
+    void setRaw(Object raw);
+
     default <T extends WrappedObject> boolean is(Class<T> wrapper) {
         return getRawClass(wrapper).isAssignableFrom(getRaw().getClass());
     }
@@ -556,16 +556,16 @@ public interface WrappedObject {
                 try {
                     if (name.startsWith("#")) {
                         return Arrays.stream(rawClass.getDeclaredFields())
-                                     .filter(f -> Modifier.isStatic(f.getModifiers()))
-                                     .filter(f -> f.getType() == finalType)
-                                     .collect(Collectors.toList())
-                                     .get(Integer.parseInt(name.substring(1)));
+                                .filter(f -> Modifier.isStatic(f.getModifiers()))
+                                .filter(f -> f.getType() == finalType)
+                                .collect(Collectors.toList())
+                                .get(Integer.parseInt(name.substring(1)));
                     } else if (name.startsWith("@")) {
                         return Arrays.stream(rawClass.getDeclaredFields())
-                                     .filter(f -> !Modifier.isStatic(f.getModifiers()))
-                                     .filter(f -> f.getType() == finalType)
-                                     .collect(Collectors.toList())
-                                     .get(Integer.parseInt(name.substring(1)));
+                                .filter(f -> !Modifier.isStatic(f.getModifiers()))
+                                .filter(f -> f.getType() == finalType)
+                                .collect(Collectors.toList())
+                                .get(Integer.parseInt(name.substring(1)));
                     } else {
                         return rawClass.getDeclaredField(name);
                     }
@@ -587,12 +587,12 @@ public interface WrappedObject {
             for (String name : ((WrappedMethod) a).value()) {
                 if (name.startsWith("@") || name.startsWith("#")) {
                     return Arrays.stream(rawClass.getDeclaredMethods())
-                                 .filter(t -> (name.charAt(0) == '#') == Modifier.isStatic(t.getModifiers()))
-                                 .filter(t -> t.getReturnType()
-                                               .equals(getRawClasses(m.getReturnType())[0]) && Arrays.equals(
-                                         t.getParameterTypes(),
-                                         getRawClasses(m.getParameterTypes())))
-                                 .toArray(Method[]::new)[Integer.parseInt(name.substring(1))];
+                            .filter(t -> (name.charAt(0) == '#') == Modifier.isStatic(t.getModifiers()))
+                            .filter(t -> t.getReturnType()
+                                    .equals(getRawClasses(m.getReturnType())[0]) && Arrays.equals(
+                                    t.getParameterTypes(),
+                                    getRawClasses(m.getParameterTypes())))
+                            .toArray(Method[]::new)[Integer.parseInt(name.substring(1))];
                 } else {
                     try {
                         return rawClass.getDeclaredMethod(name, getRawClasses(m.getParameterTypes()));

@@ -62,9 +62,7 @@ public class InsnList implements Iterable<AbstractInsnNode> {
      * list.
      *
      * @param index the index of the instruction that must be returned.
-     *
      * @return the instruction whose index is given.
-     *
      * @throws IndexOutOfBoundsException if (index &lt; 0 || index &gt;= size()).
      */
     public AbstractInsnNode get(final int index) {
@@ -100,7 +98,6 @@ public class InsnList implements Iterable<AbstractInsnNode> {
      * list.
      *
      * @param insnNode an instruction.
-     *
      * @return {@literal true} if the given instruction belongs to this list.
      */
     public boolean contains(final AbstractInsnNode insnNode) {
@@ -118,7 +115,6 @@ public class InsnList implements Iterable<AbstractInsnNode> {
      * modify the list.
      *
      * @param insnNode an instruction <i>of this list</i>.
-     *
      * @return the index of the given instruction in this list. <i>The result of this method is
      * undefined if the given instruction does not belong to this list</i>. Use {@link #contains }
      * to test if an instruction belongs to an instruction list or not.
@@ -157,7 +153,6 @@ public class InsnList implements Iterable<AbstractInsnNode> {
      * Returns an iterator over the instructions in this list.
      *
      * @param index index of instruction for the iterator to start at.
-     *
      * @return an iterator over the instructions in this list.
      */
     @SuppressWarnings("unchecked")

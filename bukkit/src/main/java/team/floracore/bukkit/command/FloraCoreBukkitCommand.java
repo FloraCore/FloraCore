@@ -20,9 +20,9 @@ import java.util.stream.*;
 public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
     private final FCBukkitPlugin plugin;
     private final AsyncCache<String, SERVER> serversCache = Caffeine.newBuilder()
-                                                                    .expireAfterWrite(10, TimeUnit.SECONDS)
-                                                                    .maximumSize(10000)
-                                                                    .buildAsync();
+            .expireAfterWrite(10, TimeUnit.SECONDS)
+            .maximumSize(10000)
+            .buildAsync();
 
     public FloraCoreBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
@@ -33,9 +33,9 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
     public @NonNull List<String> getOnlinePlayers(final @NonNull CommandContext<CommandSender> sender,
                                                   final @NonNull String input) {
         return plugin.getOnlineSenders()
-                     .sorted(Comparator.comparing(Sender::getDisplayName))
-                     .map(Sender::getDisplayName)
-                     .collect(Collectors.toList());
+                .sorted(Comparator.comparing(Sender::getDisplayName))
+                .map(Sender::getDisplayName)
+                .collect(Collectors.toList());
     }
 
     @Suggestions("worlds")

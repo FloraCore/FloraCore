@@ -14,7 +14,7 @@ public interface MiscMessage extends AbstractMessage {
             .color(GRAY)
             .append(text('['))
             .append(text().decoration(BOLD, true)
-                          .append(translatable("floracore.command.misc.server.broadcast.prefix").color(AQUA)))
+                    .append(translatable("floracore.command.misc.server.broadcast.prefix").color(AQUA)))
             .append(text(']'))
             .build();
 
@@ -120,8 +120,8 @@ public interface MiscMessage extends AbstractMessage {
             "FloraCore version check failed!").color(RED));
     Args2<FloraCoreBootstrap, String> STARTUP_CHECKING_UPDATE_OUTDATED = (bootstrap, version) -> AbstractMessage.prefixed(
             text("The current FloraCore version is outdated! Latest version: ").color(RED)
-                                                                               .append(text("v" + version).color(
-                                                                                       DARK_AQUA)));
+                    .append(text("v" + version).color(
+                            DARK_AQUA)));
 
     Args0 NO_PERMISSION_FOR_SUBCOMMANDS = () -> AbstractMessage.prefixed(translatable()
             // 你没有权限使用任何子命令

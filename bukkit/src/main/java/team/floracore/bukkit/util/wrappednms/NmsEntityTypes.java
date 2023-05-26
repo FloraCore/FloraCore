@@ -16,12 +16,6 @@ public interface NmsEntityTypes extends WrappedBukkitObject {
         }
     }
 
-    @WrappedBukkitMethod(@VersionName(value = "a", minVer = 17))
-    NmsEntity staticSpawnV17(NmsNBTTagCompound nbt, NmsWorld world, Function<Object, Object> entityProcessor);
-
-    @WrappedBukkitMethod(@VersionName(value = "a", maxVer = 17))
-    NmsEntity staticSpawnV_17(NmsNBTTagCompound nbt, NmsWorld world);
-
     static String getTranslateKeyV_13(NmsEntity entity) {
         return "entity." + getNameV_13(entity) + ".name";
     }
@@ -30,12 +24,18 @@ public interface NmsEntityTypes extends WrappedBukkitObject {
         return WrappedObject.getStatic(NmsEntityTypes.class).staticGetNameV_13(entity);
     }
 
-    @WrappedBukkitMethod(@VersionName(value = "b", maxVer = 13))
-    String staticGetNameV_13(NmsEntity entity);
-
     static NmsRegistryMaterials getEntityTypesV_13() {
         return WrappedObject.getStatic(NmsEntityTypes.class).staticGetEntityTypesV_13();
     }
+
+    @WrappedBukkitMethod(@VersionName(value = "a", minVer = 17))
+    NmsEntity staticSpawnV17(NmsNBTTagCompound nbt, NmsWorld world, Function<Object, Object> entityProcessor);
+
+    @WrappedBukkitMethod(@VersionName(value = "a", maxVer = 17))
+    NmsEntity staticSpawnV_17(NmsNBTTagCompound nbt, NmsWorld world);
+
+    @WrappedBukkitMethod(@VersionName(value = "b", maxVer = 13))
+    String staticGetNameV_13(NmsEntity entity);
 
     @WrappedBukkitMethod(@VersionName(value = "@0", maxVer = 13))
     NmsRegistryMaterials staticGetEntityTypesV_13();

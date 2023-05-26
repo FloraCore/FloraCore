@@ -9,7 +9,7 @@ public interface NmsPacketPlayOutPlayerInfo extends NmsPacket {
     static NmsPacketPlayOutPlayerInfo newInstance(NmsEnumPlayerInfoAction nmsEnumPlayerInfoAction,
                                                   Iterable nmsEntityPlayers) {
         return WrappedObject.getStatic(NmsPacketPlayOutPlayerInfo.class)
-                            .staticNewInstance(nmsEnumPlayerInfoAction, nmsEntityPlayers);
+                .staticNewInstance(nmsEnumPlayerInfoAction, nmsEntityPlayers);
     }
 
     @WrappedBukkitConstructor

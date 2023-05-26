@@ -79,16 +79,16 @@ public interface MenuMessage extends AbstractMessage {
             .key("floracore.command.misc.reports.gui.main.report.reported")
             .args(text(reported, RED),
                     OPEN_BRACKET.append(translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline"))
-                                .append(CLOSE_BRACKET)
-                                .color(online ? GREEN : RED)).color(GRAY).build();
+                            .append(CLOSE_BRACKET)
+                            .color(online ? GREEN : RED)).color(GRAY).build();
 
     Args2<String, Boolean> COMMAND_REPORTS_GUI_MAIN_REPORTER_DETAILED = (reported, online) -> translatable()
             // 举报者: {0} {1}
             .key("floracore.command.misc.reports.gui.main.report.reporter.detailed")
             .args(text(reported, RED),
                     OPEN_BRACKET.append(translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline"))
-                                .append(CLOSE_BRACKET)
-                                .color(online ? GREEN : RED)).color(GRAY).build();
+                            .append(CLOSE_BRACKET)
+                            .color(online ? GREEN : RED)).color(GRAY).build();
 
     Args1<String> COMMAND_REPORTS_GUI_MAIN_REASON = (reason) -> translatable()
             // 原因: {0}

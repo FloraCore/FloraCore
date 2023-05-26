@@ -16,21 +16,21 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
         WrappedObject.getStatic(NmsNetworkManager.class).staticReceivePacketV13(packet, listener);
     }
 
-    @WrappedBukkitMethod(@VersionName(minVer = 13, value = "a"))
-    void staticReceivePacketV13(NmsPacket packet, NmsPacketListener listener);
-
     @NothingBukkitInject(name = @VersionName(minVer = 13, value = "a"), args = {NmsPacket.class, NmsPacketListener.class}, location = NothingLocation.FRONT)
     static Optional<Void> beforeReceivePacketV13(@LocalVar(0) NmsPacket packet,
                                                  @LocalVar(1) NmsPacketListener listener) {
         if (listener.is(NmsPlayerConnection.class)) {
             if (ProtocolUtil.onPacketReceive((Player) listener.cast(NmsPlayerConnection.class)
-                                                              .getPlayer()
-                                                              .getBukkitEntity(), packet)) {
+                    .getPlayer()
+                    .getBukkitEntity(), packet)) {
                 return Nothing.doReturn(null);
             }
         }
         return Nothing.doContinue();
     }
+
+    @WrappedBukkitMethod(@VersionName(minVer = 13, value = "a"))
+    void staticReceivePacketV13(NmsPacket packet, NmsPacketListener listener);
 
     @WrappedBukkitMethod({@VersionName(minVer = 12, value = "sendPacket"), @VersionName(minVer = 18, value = "a")})
     void sendPacket(NmsPacket packet);
@@ -43,9 +43,9 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
     default Optional<Void> sendPacketBefore(@LocalVar(1) NmsPacket packet) {
         if (this.getPacketListener().is(NmsPlayerConnection.class)) {
             if (ProtocolUtil.onPacketSend((Player) this.getPacketListener()
-                                                       .cast(NmsPlayerConnection.class)
-                                                       .getPlayer()
-                                                       .getBukkitEntity(), packet)) {
+                    .cast(NmsPlayerConnection.class)
+                    .getPlayer()
+                    .getBukkitEntity(), packet)) {
                 return Nothing.doReturn(null);
             }
         }

@@ -21,7 +21,6 @@ public final class SenderUtil {
      *
      * @param sender     命令发送者
      * @param permission 权限节点
-     *
      * @return 若没有权限节点，返回true
      */
     public static boolean sendIfNoPermission(Sender sender, String permission) {

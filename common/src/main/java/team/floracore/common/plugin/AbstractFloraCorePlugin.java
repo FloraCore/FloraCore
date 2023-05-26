@@ -9,6 +9,7 @@ import team.floracore.common.extension.*;
 import team.floracore.common.locale.data.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.locale.translation.*;
+import team.floracore.common.messaging.*;
 import team.floracore.common.plugin.logging.*;
 import team.floracore.common.storage.*;
 import team.floracore.common.util.github.*;
@@ -29,6 +30,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     // init during enable
     private FloraCoreConfiguration configuration;
     private FloraCoreApiProvider apiProvider;
+    private InternalMessagingService messagingService = null;
     private Storage storage;
     private SimpleExtensionManager extensionManager;
     private OkHttpClient httpClient;
@@ -136,6 +138,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // initialise storage
         this.storage = storageFactory.getInstance();
+        this.messagingService = provideMessagingFactory().getInstance();
 
         getLogger().info("Loading framework...");
         setupFramework();
@@ -158,6 +161,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     protected abstract ConfigurationAdapter provideConfigurationAdapter();
 
     protected abstract void setupFramework();
+
+    protected abstract MessagingFactory<?> provideMessagingFactory();
 
     public final void onDisable() {
         getLogger().info("Starting shutdown process...");
@@ -284,5 +289,17 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public String getServerName() {
         return getConfiguration().get(ConfigKeys.SERVER_NAME);
+    }
+
+    @Override
+    public Optional<InternalMessagingService> getMessagingService() {
+        return Optional.ofNullable(this.messagingService);
+    }
+
+    @Override
+    public void setMessagingService(InternalMessagingService messagingService) {
+        if (this.messagingService == null) {
+            this.messagingService = messagingService;
+        }
     }
 }

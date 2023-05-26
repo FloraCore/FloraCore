@@ -26,7 +26,6 @@ public class AnnotationRemapper extends AnnotationVisitor {
      *
      * @param annotationVisitor the annotation visitor this remapper must delegate to.
      * @param remapper          the remapper to use to remap the types in the visited annotation.
-     *
      * @deprecated use {@link #AnnotationRemapper(String, AnnotationVisitor, Remapper)} instead.
      */
     @Deprecated
@@ -74,7 +73,6 @@ public class AnnotationRemapper extends AnnotationVisitor {
      *                          ASM}<i>x</i> values in {@link Opcodes}.
      * @param annotationVisitor the annotation visitor this remapper must delegate to.
      * @param remapper          the remapper to use to remap the types in the visited annotation.
-     *
      * @deprecated use {@link #AnnotationRemapper(int, String, AnnotationVisitor, Remapper)} instead.
      */
     @Deprecated
@@ -124,7 +122,6 @@ public class AnnotationRemapper extends AnnotationVisitor {
      *
      * @param descriptor        the descriptor of the visited annotation.
      * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
-     *
      * @return the newly created remapper.
      */
     protected AnnotationVisitor createAnnotationRemapper(
@@ -142,7 +139,6 @@ public class AnnotationRemapper extends AnnotationVisitor {
      *
      * @param deprecatedAnnotationVisitor the result of a call to the deprecated
      *                                    createAnnotationRemapper method.
-     *
      * @return either this object, or the given one.
      */
     final AnnotationVisitor orDeprecatedValue(final AnnotationVisitor deprecatedAnnotationVisitor) {
@@ -163,9 +159,7 @@ public class AnnotationRemapper extends AnnotationVisitor {
      * new {@link AnnotationRemapper}.
      *
      * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
-     *
      * @return the newly created remapper.
-     *
      * @deprecated use {@link #createAnnotationRemapper(String, AnnotationVisitor)} instead.
      */
     @Deprecated
@@ -178,7 +172,6 @@ public class AnnotationRemapper extends AnnotationVisitor {
      * descriptor of the annotation is {@literal null}.
      *
      * @param name the name of the annotation attribute.
-     *
      * @return the new name of the annotation attribute.
      */
     private String mapAnnotationAttributeName(final String name) {

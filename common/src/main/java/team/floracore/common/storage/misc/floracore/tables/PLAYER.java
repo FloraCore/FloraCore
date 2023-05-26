@@ -81,7 +81,7 @@ public class PLAYER extends AbstractFloraCoreTable {
         this.name = name;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_NAME))) {
+                    .apply(UPDATE_NAME))) {
                 ps.setString(1, name);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -103,7 +103,7 @@ public class PLAYER extends AbstractFloraCoreTable {
         this.lastLoginIp = lastLoginIp;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_LAST_LOGIN_IP))) {
+                    .apply(UPDATE_LAST_LOGIN_IP))) {
                 ps.setString(1, lastLoginIp);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -125,7 +125,7 @@ public class PLAYER extends AbstractFloraCoreTable {
         this.lastLoginTime = lastLoginTime;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_LAST_LOGIN_TIME))) {
+                    .apply(UPDATE_LAST_LOGIN_TIME))) {
                 ps.setLong(1, lastLoginTime);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -143,7 +143,7 @@ public class PLAYER extends AbstractFloraCoreTable {
         this.playTime = playTime;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_PLAY_TIME))) {
+                    .apply(UPDATE_PLAY_TIME))) {
                 ps.setLong(1, playTime);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -155,7 +155,7 @@ public class PLAYER extends AbstractFloraCoreTable {
     public void init() throws SQLException {
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(INSERT))) {
+                    .apply(INSERT))) {
                 ps.setString(1, uuid.toString());
                 ps.setString(2, name);
                 ps.setString(3, firstLoginIp);

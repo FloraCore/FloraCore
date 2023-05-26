@@ -18,7 +18,6 @@ public final class EnumUtil {
      * @param enumClass The class to search through
      * @param names     The names of the fields to search for
      * @param <T>       The enum to search through
-     *
      * @return All matching enum fields
      */
     public static <T extends Enum<T>> Set<T> getAllMatching(final Class<T> enumClass, final String... names) {
@@ -42,7 +41,6 @@ public final class EnumUtil {
      * Gets the first Material field found from the given names.
      *
      * @param names The names of the fields to search for
-     *
      * @return The first matching Material
      */
     public static Material getMaterial(final String... names) {
@@ -56,7 +54,6 @@ public final class EnumUtil {
      * @param enumClass The class to search through
      * @param names     The names of the fields to search for
      * @param <T>       The enum to search through
-     *
      * @return The first matching enum field
      */
     public static <T extends Enum<T>> T valueOf(final Class<T> enumClass, final String... names) {
@@ -78,7 +75,6 @@ public final class EnumUtil {
      * Gets the first Statistic field found from the given names.
      *
      * @param names The names of the fields to search for
-     *
      * @return The first matching Statistic
      */
     public static Statistic getStatistic(final String... names) {

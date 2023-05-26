@@ -13,9 +13,9 @@ public interface CommonCommandMessage extends AbstractMessage {
             .key("floracore.command.reload-config.success").color(GREEN).append(FULL_STOP).append(space())
             // 某些选项仅在服务器重新启动后才应用
             .append(text().color(GRAY)
-                          .append(OPEN_BRACKET)
-                          .append(translatable("floracore.command.reload-config.restart-note"))
-                          .append(CLOSE_BRACKET)));
+                    .append(OPEN_BRACKET)
+                    .append(translatable("floracore.command.reload-config.restart-note"))
+                    .append(CLOSE_BRACKET)));
 
     Args0 TRANSLATIONS_SEARCHING = () -> AbstractMessage.prefixed(translatable()
             // 正在搜索可用的翻译, 请稍候...
@@ -92,22 +92,22 @@ public interface CommonCommandMessage extends AbstractMessage {
             .key("floracore.command.generic.data.info.title").color(AQUA).args(text(target)));
 
     Args2<Component, String> SERVER_DATA_ENTRY = (key, value) -> AbstractMessage.prefixed(text().append(key.color(GREEN))
-                                                                                                .append(space())
-                                                                                                .append(text("->",
-                                                                                                        AQUA))
-                                                                                                .append(space())
-                                                                                                .append(text(value,
-                                                                                                        WHITE))
-                                                                                                .apply(builder -> {
-                                                                                                }));
+            .append(space())
+            .append(text("->",
+                    AQUA))
+            .append(space())
+            .append(text(value,
+                    WHITE))
+            .apply(builder -> {
+            }));
     Args2<Component, Component> SERVER_DATA_ENTRY_1 = (key, value) -> AbstractMessage.prefixed(text().append(key.color(
-                                                                                                             GREEN))
-                                                                                                     .append(space())
-                                                                                                     .append(text("->",
-                                                                                                             AQUA))
-                                                                                                     .append(space())
-                                                                                                     .append(value.color(
-                                                                                                             WHITE))
-                                                                                                     .apply(builder -> {
-                                                                                                     }));
+                    GREEN))
+            .append(space())
+            .append(text("->",
+                    AQUA))
+            .append(space())
+            .append(value.color(
+                    WHITE))
+            .apply(builder -> {
+            }));
 }

@@ -11,13 +11,13 @@ import java.util.concurrent.*;
 public class ApiPlayer implements PlayerAPI {
     private final FloraCorePlugin plugin;
     AsyncCache<UUID, PLAYER> playersCache = Caffeine.newBuilder()
-                                                    .expireAfterWrite(3, TimeUnit.SECONDS)
-                                                    .maximumSize(10000)
-                                                    .buildAsync();
+            .expireAfterWrite(3, TimeUnit.SECONDS)
+            .maximumSize(10000)
+            .buildAsync();
     AsyncCache<String, PLAYER> playersRecordCache = Caffeine.newBuilder()
-                                                            .expireAfterWrite(3, TimeUnit.SECONDS)
-                                                            .maximumSize(10000)
-                                                            .buildAsync();
+            .expireAfterWrite(3, TimeUnit.SECONDS)
+            .maximumSize(10000)
+            .buildAsync();
 
     public ApiPlayer(FloraCorePlugin plugin) {
         this.plugin = plugin;

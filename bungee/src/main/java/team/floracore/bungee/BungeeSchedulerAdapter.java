@@ -31,8 +31,8 @@ public class BungeeSchedulerAdapter implements SchedulerAdapter {
     @Override
     public SchedulerTask asyncLater(Runnable task, long delay, TimeUnit unit) {
         ScheduledTask t = this.bootstrap.getProxy()
-                                        .getScheduler()
-                                        .schedule(this.bootstrap.getLoader(), task, delay, unit);
+                .getScheduler()
+                .schedule(this.bootstrap.getLoader(), task, delay, unit);
         this.tasks.add(t);
         return t::cancel;
     }
@@ -40,8 +40,8 @@ public class BungeeSchedulerAdapter implements SchedulerAdapter {
     @Override
     public SchedulerTask asyncRepeating(Runnable task, long interval, TimeUnit unit) {
         ScheduledTask t = this.bootstrap.getProxy()
-                                        .getScheduler()
-                                        .schedule(this.bootstrap.getLoader(), task, interval, interval, unit);
+                .getScheduler()
+                .schedule(this.bootstrap.getLoader(), task, interval, interval, unit);
         this.tasks.add(t);
         return t::cancel;
     }

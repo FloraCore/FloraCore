@@ -3,7 +3,7 @@ package org.floracore.api.platform;
 import org.checkerframework.checker.nullness.qual.*;
 
 /**
- * Provides information about the LuckPerms plugin.
+ * Provides information about the FloraCore plugin.
  */
 public interface PluginMetadata {
 

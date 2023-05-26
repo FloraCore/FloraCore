@@ -66,7 +66,6 @@ public class RecordComponentRemapper extends RecordComponentVisitor {
      *
      * @param descriptor        the descriptor sof the visited annotation.
      * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
-     *
      * @return the newly created remapper.
      */
     protected AnnotationVisitor createAnnotationRemapper(
@@ -80,9 +79,7 @@ public class RecordComponentRemapper extends RecordComponentVisitor {
      * new {@link AnnotationRemapper}.
      *
      * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
-     *
      * @return the newly created remapper.
-     *
      * @deprecated use {@link #createAnnotationRemapper(String, AnnotationVisitor)} instead.
      */
     @Deprecated
