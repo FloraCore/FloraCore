@@ -66,5 +66,5 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1.12.0
         with:
-          artifacts: "api/build/libs/*.jar,api/bukkit/build/libs/*API*.jar,api/bungee/build/libs/*API*.jar,common/build/libs/*.jar,common/loader-utils/build/libs/*.jar,bukkit/build/libs/*.jar,bungee/build/libs/*.jar,bungee/loader/build/libs/*.jar,libs/*.jar"
+          artifacts: "api/build/libs/*.jar,api/bukkit/build/libs/*API*.jar,api/bungee/build/libs/*API*.jar,common/build/libs/*.jar,common/loader-utils/build/libs/*.jar,bukkit/build/libs/*.jar,bukkit/loader/build/libs/*.jar,bungee/build/libs/*.jar,bungee/loader/build/libs/*.jar,libs/*.jar"
           token: ${{ secrets.GITHUB_TOKEN }}
