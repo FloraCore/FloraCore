@@ -51,10 +51,7 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
     @Suggestions("worlds-all")
     public @NotNull List<String> getWorldsWithAll(final @NotNull CommandContext<CommandSender> sender,
                                                   final @NotNull String input) {
-        final List<String> worlds = Lists.newArrayList();
-        for (final World world : plugin.getBootstrap().getServer().getWorlds()) {
-            worlds.add(world.getName());
-        }
+        final List<String> worlds = getWorlds(sender, input);
         worlds.add("*");
         return worlds;
     }
