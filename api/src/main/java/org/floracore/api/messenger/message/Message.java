@@ -1,8 +1,8 @@
 package org.floracore.api.messenger.message;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.*;
 import org.jetbrains.annotations.ApiStatus.*;
+import org.jetbrains.annotations.*;
 
 import java.util.*;
 
@@ -20,6 +20,7 @@ public interface Message {
      *
      * @return the id of the message
      */
-    @NonNull UUID getId();
+    @NotNull
+    UUID getId();
 
 }

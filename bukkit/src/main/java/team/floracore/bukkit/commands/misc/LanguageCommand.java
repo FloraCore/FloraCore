@@ -6,8 +6,8 @@ import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.format.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
+import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
 import team.floracore.bukkit.inevntory.*;
@@ -31,7 +31,7 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("language|lang")
-    public void language(final @NonNull Player player) {
+    public void language(final @NotNull Player player) {
         getLanguageGui(player).open(player);
     }
 

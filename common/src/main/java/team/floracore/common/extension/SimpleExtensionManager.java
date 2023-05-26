@@ -1,8 +1,8 @@
 package team.floracore.common.extension;
 
 import com.google.gson.*;
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.extension.*;
+import org.jetbrains.annotations.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.plugin.classpath.*;
 import team.floracore.common.util.*;
@@ -47,7 +47,7 @@ public class SimpleExtensionManager implements ExtensionManager, AutoCloseable {
     }
 
     @Override
-    public @NonNull Extension loadExtension(Path path) throws IOException {
+    public @NotNull Extension loadExtension(Path path) throws IOException {
         if (this.extensions.stream().anyMatch(e -> path.equals(e.path))) {
             throw new IllegalStateException("Extension at path " + path + " already loaded.");
         }
@@ -129,7 +129,7 @@ public class SimpleExtensionManager implements ExtensionManager, AutoCloseable {
     }
 
     @Override
-    public @NonNull Collection<Extension> getLoadedExtensions() {
+    public @NotNull Collection<Extension> getLoadedExtensions() {
         return this.extensions.stream().map(e -> e.instance).collect(Collectors.toSet());
     }
 

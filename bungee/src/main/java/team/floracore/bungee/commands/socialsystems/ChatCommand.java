@@ -12,7 +12,6 @@ import net.md_5.bungee.api.connection.*;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.*;
 import net.md_5.bungee.event.*;
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.bungee.messenger.message.type.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
@@ -37,8 +36,8 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
 
     @CommandMethod("chat <type>")
     @CommandDescription("Switches you to the <type> chat channel")
-    public void chat(final @NonNull ProxiedPlayer player,
-                     final @NonNull @Argument(value = "type", suggestions = "type") @Greedy String type) {
+    public void chat(final @NotNull ProxiedPlayer player,
+                     final @NotNull @Argument(value = "type", suggestions = "type") @Greedy String type) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
         Type t = Type.parse(type);

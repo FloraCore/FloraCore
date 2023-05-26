@@ -1,6 +1,6 @@
 package org.floracore.api;
 
-import org.checkerframework.checker.nullness.qual.*;
+import org.jetbrains.annotations.*;
 
 import static org.jetbrains.annotations.ApiStatus.*;
 
@@ -27,7 +27,7 @@ public final class FloraCoreProvider {
      * @return an instance of the FloraCore API
      * @throws IllegalStateException if the API is not loaded yet
      */
-    public static @NonNull FloraCore get() {
+    public static @NotNull FloraCore get() {
         FloraCore instance = FloraCoreProvider.instance;
         if (instance == null) {
             throw new NotLoadedException();

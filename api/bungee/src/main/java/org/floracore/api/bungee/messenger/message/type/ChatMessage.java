@@ -1,6 +1,5 @@
 package org.floracore.api.bungee.messenger.message.type;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.message.*;
 import org.jetbrains.annotations.*;
 
@@ -12,14 +11,14 @@ public interface ChatMessage extends Message {
      *
      * @return 接收者的UUID
      */
-    @NonNull UUID getReceiver();
+    @NotNull UUID getReceiver();
 
     /**
      * 获取聊天类型
      *
      * @return 聊天类型
      */
-    @NonNull ChatMessageType getType();
+    @NotNull ChatMessageType getType();
 
     /**
      * 获取参数

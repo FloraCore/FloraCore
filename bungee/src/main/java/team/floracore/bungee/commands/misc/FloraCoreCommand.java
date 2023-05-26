@@ -6,7 +6,6 @@ import cloud.commandframework.annotations.suggestions.*;
 import cloud.commandframework.context.*;
 import net.kyori.adventure.text.*;
 import net.md_5.bungee.api.*;
-import org.checkerframework.checker.nullness.qual.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bungee.*;
 import team.floracore.bungee.command.*;
@@ -34,7 +33,7 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee reload")
     @CommandDescription("floracore.command.description.floracore.reload")
-    public void reload(final @NonNull CommandSender sender) {
+    public void reload(final @NotNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         getPlugin().getConfiguration().reload();
         CommonCommandMessage.RELOAD_CONFIG_SUCCESS.send(s);
@@ -42,7 +41,7 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee translations")
     @CommandDescription("floracore.command.description.floracore.translations")
-    public void translations(final @NonNull CommandSender sender) {
+    public void translations(final @NotNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
 
@@ -77,7 +76,7 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee translations install")
     @CommandDescription("floracore.command.description.floracore.translations.install")
-    public void installTranslations(final @NonNull CommandSender sender) {
+    public void installTranslations(final @NotNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
 
@@ -96,8 +95,8 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee server <target>")
     @CommandDescription("floracore.command.description.floracore.server")
-    public void server(final @NonNull CommandSender sender,
-                       final @NonNull @Argument(value = "target", suggestions = "servers") String target) {
+    public void server(final @NotNull CommandSender sender,
+                       final @NotNull @Argument(value = "target", suggestions = "servers") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
         if (server == null) {
@@ -123,8 +122,8 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee server <target> set autosync1 <value>")
     @CommandDescription("floracore.command.description.floracore.server.set.autosync1")
-    public void serverSet1(final @NonNull CommandSender sender,
-                           final @NonNull @Argument(value = "target", suggestions = "servers") String target,
+    public void serverSet1(final @NotNull CommandSender sender,
+                           final @NotNull @Argument(value = "target", suggestions = "servers") String target,
                            final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
@@ -140,8 +139,8 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee server <target> set autosync2 <value>")
     @CommandDescription("floracore.command.description.floracore.server.set.autosync2")
-    public void serverSet2(final @NonNull CommandSender sender,
-                           final @NonNull @Argument(value = "target", suggestions = "servers") String target,
+    public void serverSet2(final @NotNull CommandSender sender,
+                           final @NotNull @Argument(value = "target", suggestions = "servers") String target,
                            final @Argument("value") boolean value) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);

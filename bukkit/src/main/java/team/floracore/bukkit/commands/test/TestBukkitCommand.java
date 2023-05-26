@@ -15,7 +15,7 @@ import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
-import org.checkerframework.checker.nullness.qual.*;
+import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
 import team.floracore.bukkit.util.itemstack.*;
@@ -54,7 +54,7 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      */
     @CommandMethod("test")
     @CommandDescription("测试根命令")
-    public void test(final @NonNull CommandSender sender) {
+    public void test(final @NotNull CommandSender sender) {
         sender.sendMessage("这是一个测试命令。");
     }
 
@@ -64,7 +64,7 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      */
     @CommandMethod("test c1")
     @CommandDescription("测试c1命令")
-    public void test_c1(final @NonNull CommandSender sender) {
+    public void test_c1(final @NotNull CommandSender sender) {
         sender.sendMessage("我是c1命令。");
     }
 
@@ -73,7 +73,7 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      */
     @CommandMethod("test c1 b1")
     @CommandDescription("测试c1命令")
-    public void test_c1_b1(final @NonNull CommandSender sender) {
+    public void test_c1_b1(final @NotNull CommandSender sender) {
         sender.sendMessage("我是c1中的b1命令。");
     }
 
@@ -84,7 +84,7 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
     @CommandMethod("test c2")
     @CommandPermission("admin.test1")
     @CommandDescription("测试c2命令")
-    public void test_c2(final @NonNull CommandSender sender) {
+    public void test_c2(final @NotNull CommandSender sender) {
         sender.sendMessage("我是c2命令。");
     }
 
@@ -92,8 +92,8 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      * 这是命令参数的推荐内容，必须搭配@Argument注解使用，详情使用看test_c2_a1_qu函数。
      */
     @Suggestions("test_c2_a1_sug")
-    public @NonNull List<String> test_c2_a1_sug(final @NonNull CommandContext<CommandSender> ctx,
-                                                final @NonNull String input) {
+    public @NotNull List<String> test_c2_a1_sug(final @NotNull CommandContext<CommandSender> ctx,
+                                                final @NotNull String input) {
         List<String> ret = new ArrayList<>();
         ret.add("测试命令1");
         ret.add("测试命令2");
@@ -107,7 +107,7 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      */
     @CommandMethod("test c2 a1 [query]")
     @CommandDescription("测试c2命令")
-    public void test_c2_a1_qu(final @NonNull CommandSender sender,
+    public void test_c2_a1_qu(final @NotNull CommandSender sender,
                               final @Argument(value = "query", suggestions = "test_c2_a1_sug") @Greedy String query) {
         sender.sendMessage("我是c2中的a1命令，你选择的query是" + query);
     }
@@ -119,13 +119,13 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      */
     @CommandMethod("test c3 a1 [query]")
     @CommandDescription("测试c3 a1命令")
-    public void test_c3_a1_qu(final @NonNull CommandSender sender, final @Argument("query") @Greedy World query) {
+    public void test_c3_a1_qu(final @NotNull CommandSender sender, final @Argument("query") @Greedy World query) {
         sender.sendMessage("我是c2中的a2命令，你选择的query是" + query);
     }
 
     @CommandMethod("test c3 a2 [query]")
     @CommandDescription("测试c3 a2命令")
-    public void test_c3_a2_qu(final @NonNull CommandSender sender, final @Argument("query") @Greedy Player query) {
+    public void test_c3_a2_qu(final @NotNull CommandSender sender, final @Argument("query") @Greedy Player query) {
         sender.sendMessage("我是c2中的a2命令，你选择的query是" + query);
     }
 
@@ -134,7 +134,7 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      */
     @CommandMethod("test c4 a1")
     @CommandDescription("测试c4 a1命令")
-    public void test_c4_a1(final @NonNull Player player) {
+    public void test_c4_a1(final @NotNull Player player) {
         Component bookTitle = Component.text("Encyclopedia of cats");
         Component bookAuthor = Component.text("kashike");
         Collection<Component> bookPages = new ArrayList<>();
@@ -153,7 +153,7 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      */
     @CommandMethod("test c4 a2")
     @CommandDescription("测试c4 a2命令")
-    public void test_c4_a2(final @NonNull Player player) {
+    public void test_c4_a2(final @NotNull Player player) {
         final Component name = Component.text("Awesome BossBar");
         // Creates a red boss bar which has no progress and no notches
         final BossBar emptyBar = BossBar.bossBar(name, 0, BossBar.Color.RED, BossBar.Overlay.PROGRESS);
@@ -172,7 +172,7 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      */
     @CommandMethod("test c5 a1 [query]")
     @CommandDescription("测试c5 a1命令")
-    public void test_c5_a1_qu(final @NonNull CommandSender sender, final @Argument("query") String[] query) {
+    public void test_c5_a1_qu(final @NotNull CommandSender sender, final @Argument("query") String[] query) {
         sender.sendMessage("我是c2中的a2命令，你选择的query是" + Arrays.toString(query));
     }
 
@@ -182,13 +182,13 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
      */
     @CommandMethod("test c5 a2 [query]")
     @CommandDescription("测试c5 a2命令")
-    public void test_c5_a2_qu(final @NonNull CommandSender sender, final @Argument("query") @Greedy String query) {
+    public void test_c5_a2_qu(final @NotNull CommandSender sender, final @Argument("query") @Greedy String query) {
         sender.sendMessage("我是c2中的a2命令，你选择的query是" + query);
     }
 
     @CommandMethod("test lp a1")
     @CommandDescription("测试lp a1命令")
-    public void luckPermsTest(final @NonNull Player player) {
+    public void luckPermsTest(final @NotNull Player player) {
         UUID uuid = player.getUniqueId();
         LuckPerms luckPerms = LuckPermsProvider.get();
         User user = luckPerms.getUserManager().getUser(uuid);
@@ -199,14 +199,14 @@ public class TestBukkitCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("test item a1")
-    public void itemA1(final @NonNull Player player) {
+    public void itemA1(final @NotNull Player player) {
         ItemStackBuilder isb = ItemStackBuilder.whiteStainedGlassPane();
         ItemStack itemStack = isb.get();
         player.getInventory().setItem(1, itemStack);
     }
 
     @CommandMethod("test nms a1")
-    public void nmsA1(final @NonNull Player player) {
+    public void nmsA1(final @NotNull Player player) {
         NmsEntityHuman neh = NmsEntityHuman.fromBukkit(player);
         WrappedGameProfile wgp = neh.getGameProfile();
         System.out.println(wgp.getName());

@@ -7,8 +7,6 @@ import com.google.common.collect.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
@@ -148,14 +146,14 @@ public class TimeBukkitCommand extends FloraCoreBukkitCommand {
     }
 
     @Suggestions("timeNames")
-    public @NonNull List<String> getTimeNames(final @NonNull CommandContext<CommandSender> sender,
-                                              final @NonNull String input) {
+    public @NotNull List<String> getTimeNames(final @NotNull CommandContext<CommandSender> sender,
+                                              final @NotNull String input) {
         return ImmutableList.of("sunrise", "day", "morning", "noon", "afternoon", "sunset", "night", "midnight");
     }
 
     @Suggestions("timeNumbers")
-    public @NonNull List<String> getTimeNumbers(final @NonNull CommandContext<CommandSender> sender,
-                                                final @NonNull String input) {
+    public @NotNull List<String> getTimeNumbers(final @NotNull CommandContext<CommandSender> sender,
+                                                final @NotNull String input) {
         return ImmutableList.of("1000", "2000", "3000", "4000", "5000");
     }
 }

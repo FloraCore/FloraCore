@@ -1,7 +1,7 @@
 package org.floracore.api.messenger.message;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Represents an outgoing {@link Message}.
@@ -28,6 +28,7 @@ public interface OutgoingMessage extends Message {
      *
      * @return an encoded string form of the message
      */
-    @NonNull String asEncodedString();
+    @NotNull
+    String asEncodedString();
 
 }

@@ -1,7 +1,7 @@
 package org.floracore.api.messenger;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.jetbrains.annotations.ApiStatus.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Represents a provider for {@link Messenger} instances.
@@ -19,7 +19,8 @@ public interface MessengerProvider {
      *
      * @return the provider name
      */
-    @NonNull String getName();
+    @NotNull
+    String getName();
 
     /**
      * Creates and returns a new {@link Messenger} instance, which passes
@@ -32,6 +33,7 @@ public interface MessengerProvider {
      *                                incoming messages to
      * @return a new messenger agent instance
      */
-    @NonNull Messenger obtain(@NonNull IncomingMessageConsumer incomingMessageConsumer);
+    @NotNull
+    Messenger obtain(@NotNull IncomingMessageConsumer incomingMessageConsumer);
 
 }

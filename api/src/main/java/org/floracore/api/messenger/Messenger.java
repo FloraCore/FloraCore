@@ -1,8 +1,8 @@
 package org.floracore.api.messenger;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.message.*;
 import org.jetbrains.annotations.ApiStatus.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Represents an object which dispatches {@link OutgoingMessage}s.
@@ -25,7 +25,7 @@ public interface Messenger extends AutoCloseable {
      *
      * @param outgoingMessage the outgoing message
      */
-    void sendOutgoingMessage(@NonNull OutgoingMessage outgoingMessage);
+    void sendOutgoingMessage(@NotNull OutgoingMessage outgoingMessage);
 
     /**
      * Performs the necessary action to gracefully shut down the messenger.

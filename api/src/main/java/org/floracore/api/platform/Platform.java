@@ -1,6 +1,6 @@
 package org.floracore.api.platform;
 
-import org.checkerframework.checker.nullness.qual.*;
+import org.jetbrains.annotations.*;
 
 import java.time.*;
 
@@ -14,14 +14,15 @@ public interface Platform {
      *
      * @return the type of platform FloraCore is running on
      */
-    Platform.@NonNull Type getType();
+    Platform.@NotNull Type getType();
 
     /**
      * Gets the time when the plugin first started.
      *
-     * @return the enable time
+     * @return the enabled time
      */
-    @NonNull Instant getStartTime();
+    @NotNull
+    Instant getStartTime();
 
     /**
      * Represents a type of platform which FloraCore can run on.
@@ -41,7 +42,7 @@ public interface Platform {
          *
          * @return a readable name
          */
-        public @NonNull String getFriendlyName() {
+        public @NotNull String getFriendlyName() {
             return this.friendlyName;
         }
     }

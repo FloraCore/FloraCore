@@ -91,6 +91,7 @@ public class CommandManager {
         this.annotationParser.parse(new ChatCommand(plugin));
         this.annotationParser.parse(new FriendCommand(plugin));
         this.annotationParser.parse(new GuildCommand(plugin));
+        this.annotationParser.parse(new PartyCommand(plugin, manager));
         this.annotationParser.parse(new StaffCommand(plugin));
     }
 

@@ -1,7 +1,7 @@
 package team.floracore.common.messaging.message;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.message.*;
+import org.jetbrains.annotations.*;
 
 import java.util.*;
 
@@ -13,7 +13,7 @@ public abstract class AbstractMessage implements Message, OutgoingMessage {
     }
 
     @Override
-    public @NonNull UUID getId() {
+    public @NotNull UUID getId() {
         return this.id;
     }
 }

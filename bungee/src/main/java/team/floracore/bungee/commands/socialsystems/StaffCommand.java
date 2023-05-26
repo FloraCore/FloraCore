@@ -4,8 +4,8 @@ import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.processing.*;
 import cloud.commandframework.annotations.specifier.*;
 import net.md_5.bungee.api.connection.*;
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.bungee.messenger.message.type.*;
+import org.jetbrains.annotations.*;
 import team.floracore.bungee.*;
 import team.floracore.bungee.command.*;
 
@@ -19,14 +19,14 @@ public class StaffCommand extends FloraCoreBungeeCommand {
     }
 
     @CommandMethod("staffchat|sc <message>")
-    public void staffChat(final @NonNull ProxiedPlayer player,
-                          final @NonNull @Argument("message") @Greedy String message) {
+    public void staffChat(final @NotNull ProxiedPlayer player,
+                          final @NotNull @Argument("message") @Greedy String message) {
         chat(player, message);
     }
 
     @CommandMethod("staff|s chat <message>")
     @CommandDescription("让你在STAFF频道中发言")
-    public void chat(final @NonNull ProxiedPlayer player, final @NonNull @Argument("message") @Greedy String message) {
+    public void chat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
         UUID uuid = player.getUniqueId();
         getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
                 .pushChatMessage(UUID.randomUUID(),

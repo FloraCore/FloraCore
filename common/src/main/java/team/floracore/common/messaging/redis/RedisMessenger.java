@@ -1,8 +1,8 @@
 package team.floracore.common.messaging.redis;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.*;
 import org.floracore.api.messenger.message.*;
+import org.jetbrains.annotations.*;
 import redis.clients.jedis.*;
 import team.floracore.common.plugin.*;
 
@@ -46,7 +46,7 @@ public class RedisMessenger implements Messenger {
     }
 
     @Override
-    public void sendOutgoingMessage(@NonNull OutgoingMessage outgoingMessage) {
+    public void sendOutgoingMessage(@NotNull OutgoingMessage outgoingMessage) {
         try (Jedis jedis = this.jedisPool.getResource()) {
             jedis.publish(CHANNEL, outgoingMessage.asEncodedString());
         } catch (Exception e) {

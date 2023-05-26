@@ -1,12 +1,12 @@
 package team.floracore.common.api;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.floracore.api.messenger.*;
 import org.floracore.api.platform.*;
 import org.floracore.api.player.*;
+import org.floracore.api.server.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.api.implementation.*;
 import team.floracore.common.config.*;
@@ -26,6 +26,7 @@ public class FloraCoreApiProvider implements FloraCore {
     private final ApiPlayer playerAPI;
     private final ApiChat chatAPI;
     private final ApiPlatform platform;
+    private final ApiServer server;
 
     public FloraCoreApiProvider(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -33,6 +34,7 @@ public class FloraCoreApiProvider implements FloraCore {
         this.playerAPI = new ApiPlayer(plugin);
         this.chatAPI = new ApiChat(plugin);
         this.platform = new ApiPlatform(plugin);
+        this.server = new ApiServer(plugin);
     }
 
     public void ensureApiWasLoadedByPlugin() {
@@ -84,6 +86,11 @@ public class FloraCoreApiProvider implements FloraCore {
         return this.chatAPI;
     }
 
+    @Override
+    public ServerAPI getServerAPI() {
+        return this.server;
+    }
+
     @NotNull
     @Override
     public ApiPlatform getPlatform() {
@@ -91,12 +98,12 @@ public class FloraCoreApiProvider implements FloraCore {
     }
 
     @Override
-    public @NonNull PluginMetadata getPluginMetadata() {
+    public @NotNull PluginMetadata getPluginMetadata() {
         return this.platform;
     }
 
     @Override
-    public void registerMessengerProvider(@NonNull MessengerProvider messengerProvider) {
+    public void registerMessengerProvider(@NotNull MessengerProvider messengerProvider) {
         if (this.plugin.getConfiguration().get(ConfigKeys.MESSAGING_SERVICE).equals("custom")) {
             this.plugin.setMessagingService(new FloraCoreMessagingService(this.plugin, messengerProvider));
         }

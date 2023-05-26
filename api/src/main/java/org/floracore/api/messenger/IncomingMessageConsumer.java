@@ -1,8 +1,8 @@
 package org.floracore.api.messenger;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.message.*;
 import org.jetbrains.annotations.ApiStatus.*;
+import org.jetbrains.annotations.*;
 
 /**
  * Encapsulates the FloraCore system which accepts incoming {@link Message}s
@@ -29,6 +29,6 @@ public interface IncomingMessageConsumer {
      * @param encodedString the encoded string
      * @return true if the plugin accepted the message
      */
-    boolean consumeIncomingMessageAsString(@NonNull String encodedString);
+    boolean consumeIncomingMessageAsString(@NotNull String encodedString);
 
 }

@@ -5,7 +5,6 @@ import cloud.commandframework.annotations.specifier.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
-import org.checkerframework.checker.nullness.qual.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
@@ -23,7 +22,7 @@ public class BroadCastBukkitCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("broadcast|bc <contents>")
-    public void broadcast(@NotNull CommandSender s, @NonNull @Argument("contents") @Greedy String contents) {
+    public void broadcast(@NotNull CommandSender s, @NotNull @Argument("contents") @Greedy String contents) {
         Sender s1 = getPlugin().getConsoleSender();
         ServerCommandMessage.COMMAND_BROADCAST.send(s1, contents);
         for (Player player : Bukkit.getOnlinePlayers()) {

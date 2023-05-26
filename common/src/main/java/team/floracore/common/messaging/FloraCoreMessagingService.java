@@ -1,8 +1,9 @@
 package team.floracore.common.messaging;
 
 import com.google.gson.*;
-import org.checkerframework.checker.nullness.qual.*;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.floracore.api.messenger.*;
+import org.jetbrains.annotations.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.util.*;
 import team.floracore.common.util.gson.*;
@@ -79,7 +80,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
     }
 
     @Override
-    public boolean consumeIncomingMessageAsString(@NonNull String encodedString) {
+    public boolean consumeIncomingMessageAsString(@NotNull String encodedString) {
         try {
             return consumeIncomingMessageAsString0(encodedString);
         } catch (Exception e) {
@@ -89,7 +90,7 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         }
     }
 
-    private boolean consumeIncomingMessageAsString0(@NonNull String encodedString) {
+    private boolean consumeIncomingMessageAsString0(@NotNull String encodedString) {
         Objects.requireNonNull(encodedString, "encodedString");
         JsonObject parsed = Objects.requireNonNull(GsonProvider.normal().fromJson(encodedString, JsonObject.class),
                 "parsed");

@@ -1,6 +1,7 @@
 package org.floracore.api.platform;
 
-import org.checkerframework.checker.nullness.qual.*;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.*;
 
 import java.util.*;
 
@@ -28,14 +29,16 @@ public interface PlatformEntity {
      *
      * @return the object name
      */
-    @NonNull String getName();
+    @NotNull
+    String getName();
 
     /**
      * Gets the entities type.
      *
      * @return the type
      */
-    @NonNull Type getType();
+    @NotNull
+    Type getType();
 
     /**
      * The different types of {@link PlatformEntity}

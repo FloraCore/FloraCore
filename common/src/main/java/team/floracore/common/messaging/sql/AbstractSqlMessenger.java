@@ -1,8 +1,8 @@
 package team.floracore.common.messaging.sql;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.*;
 import org.floracore.api.messenger.message.*;
+import org.jetbrains.annotations.*;
 
 import java.sql.*;
 import java.util.concurrent.locks.*;
@@ -53,7 +53,7 @@ public abstract class AbstractSqlMessenger implements Messenger {
     protected abstract String getTableName();
 
     @Override
-    public void sendOutgoingMessage(@NonNull OutgoingMessage outgoingMessage) {
+    public void sendOutgoingMessage(@NotNull OutgoingMessage outgoingMessage) {
         this.lock.readLock().lock();
         if (this.closed) {
             this.lock.readLock().unlock();

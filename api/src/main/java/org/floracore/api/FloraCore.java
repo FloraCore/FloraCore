@@ -1,11 +1,12 @@
 package org.floracore.api;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import org.floracore.api.messenger.*;
 import org.floracore.api.platform.*;
 import org.floracore.api.player.*;
+import org.floracore.api.server.*;
+import org.jetbrains.annotations.*;
 
 /**
  * The FloraCore API.
@@ -61,12 +62,20 @@ public interface FloraCore {
     ChatAPI getChatAPI();
 
     /**
+     * 获取服务器API
+     *
+     * @return 服务器API
+     */
+    ServerAPI getServerAPI();
+
+    /**
      * Gets the {@link Platform}, which represents the server platform the
      * plugin is running on.
      *
      * @return the platform
      */
-    @NonNull Platform getPlatform();
+    @NotNull
+    Platform getPlatform();
 
     /**
      * Gets the {@link PluginMetadata}, responsible for providing metadata about
@@ -74,7 +83,8 @@ public interface FloraCore {
      *
      * @return the plugin metadata
      */
-    @NonNull PluginMetadata getPluginMetadata();
+    @NotNull
+    PluginMetadata getPluginMetadata();
 
     /**
      * Registers a {@link MessengerProvider} for use by the platform.
@@ -84,5 +94,5 @@ public interface FloraCore {
      *
      * @param messengerProvider the messenger provider.
      */
-    void registerMessengerProvider(@NonNull MessengerProvider messengerProvider);
+    void registerMessengerProvider(@NotNull MessengerProvider messengerProvider);
 }

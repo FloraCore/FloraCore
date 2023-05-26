@@ -1,6 +1,5 @@
 package org.floracore.api.extension;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.jetbrains.annotations.*;
 
 import java.io.*;
@@ -26,13 +25,13 @@ public interface ExtensionManager {
      * @return the extension
      * @throws java.io.IOException if the extension could not be loaded
      */
-    @NonNull Extension loadExtension(Path path) throws IOException;
+    @NotNull Extension loadExtension(Path path) throws IOException;
 
     /**
      * Gets a collection of all loaded extensions.
      *
      * @return the loaded extensions
      */
-    @NonNull @Unmodifiable Collection<Extension> getLoadedExtensions();
+    @NotNull @Unmodifiable Collection<Extension> getLoadedExtensions();
 
 }

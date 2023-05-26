@@ -8,7 +8,7 @@ import net.kyori.adventure.text.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
 import org.bukkit.entity.*;
-import org.checkerframework.checker.nullness.qual.*;
+import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.bukkit.command.*;
 import team.floracore.bukkit.locale.message.commands.*;
@@ -29,8 +29,8 @@ public class WeatherBukkitCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("weather <weather> [time]")
     @CommandDescription("设置天气状态并指定持续时间")
-    public void weather(final @NonNull Player p,
-                        final @NonNull @Argument(value = "weather", suggestions = "weather") String weather,
+    public void weather(final @NotNull Player p,
+                        final @NotNull @Argument(value = "weather", suggestions = "weather") String weather,
                         final @Argument(value = "time", suggestions = "commonDurations") String time,
                         @Flag("world") World world) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
@@ -59,8 +59,8 @@ public class WeatherBukkitCommand extends FloraCoreBukkitCommand {
     }
 
     @Suggestions("weather")
-    public @NonNull List<String> getWeather(final @NonNull CommandContext<CommandSender> sender,
-                                            final @NonNull String input) {
+    public @NotNull List<String> getWeather(final @NotNull CommandContext<CommandSender> sender,
+                                            final @NotNull String input) {
         return ImmutableList.of("storm", "sun");
     }
 }

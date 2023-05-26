@@ -6,8 +6,8 @@ import com.github.benmanes.caffeine.cache.*;
 import com.google.common.collect.*;
 import org.bukkit.*;
 import org.bukkit.command.*;
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.server.*;
+import org.jetbrains.annotations.*;
 import team.floracore.bukkit.*;
 import team.floracore.common.command.*;
 import team.floracore.common.sender.*;
@@ -30,8 +30,8 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
     }
 
     @Suggestions("onlinePlayers")
-    public @NonNull List<String> getOnlinePlayers(final @NonNull CommandContext<CommandSender> sender,
-                                                  final @NonNull String input) {
+    public @NotNull List<String> getOnlinePlayers(final @NotNull CommandContext<CommandSender> sender,
+                                                  final @NotNull String input) {
         return plugin.getOnlineSenders()
                 .sorted(Comparator.comparing(Sender::getDisplayName))
                 .map(Sender::getDisplayName)
@@ -39,8 +39,8 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
     }
 
     @Suggestions("worlds")
-    public @NonNull List<String> getWorlds(final @NonNull CommandContext<CommandSender> sender,
-                                           final @NonNull String input) {
+    public @NotNull List<String> getWorlds(final @NotNull CommandContext<CommandSender> sender,
+                                           final @NotNull String input) {
         final List<String> worlds = Lists.newArrayList();
         for (final World world : plugin.getBootstrap().getServer().getWorlds()) {
             worlds.add(world.getName());
@@ -49,8 +49,8 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
     }
 
     @Suggestions("worlds-all")
-    public @NonNull List<String> getWorldsWithAll(final @NonNull CommandContext<CommandSender> sender,
-                                                  final @NonNull String input) {
+    public @NotNull List<String> getWorldsWithAll(final @NotNull CommandContext<CommandSender> sender,
+                                                  final @NotNull String input) {
         final List<String> worlds = Lists.newArrayList();
         for (final World world : plugin.getBootstrap().getServer().getWorlds()) {
             worlds.add(world.getName());
@@ -60,8 +60,8 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
     }
 
     @Suggestions("commonDurations")
-    public @NonNull List<String> getCommonDurations(final @NonNull CommandContext<CommandSender> sender,
-                                                    final @NonNull String input) {
+    public @NotNull List<String> getCommonDurations(final @NotNull CommandContext<CommandSender> sender,
+                                                    final @NotNull String input) {
         return ImmutableList.of("1", "60", "600", "3600", "86400");
     }
 

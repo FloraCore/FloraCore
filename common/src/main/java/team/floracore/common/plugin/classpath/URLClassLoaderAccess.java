@@ -1,6 +1,6 @@
 package team.floracore.common.plugin.classpath;
 
-import org.checkerframework.checker.nullness.qual.*;
+import org.jetbrains.annotations.*;
 
 import java.lang.reflect.*;
 import java.net.*;
@@ -42,7 +42,7 @@ public abstract class URLClassLoaderAccess {
      *
      * @param url the URL to add
      */
-    public abstract void addURL(@NonNull URL url);
+    public abstract void addURL(@NotNull URL url);
 
     /**
      * Accesses using reflection, not supported on Java 9+.
@@ -70,7 +70,7 @@ public abstract class URLClassLoaderAccess {
         }
 
         @Override
-        public void addURL(@NonNull URL url) {
+        public void addURL(@NotNull URL url) {
             try {
                 ADD_URL_METHOD.invoke(super.classLoader, url);
             } catch (ReflectiveOperationException e) {
@@ -87,7 +87,7 @@ public abstract class URLClassLoaderAccess {
         }
 
         @Override
-        public void addURL(@NonNull URL url) {
+        public void addURL(@NotNull URL url) {
             URLClassLoaderAccess.throwError(null);
         }
     }

@@ -1,7 +1,7 @@
 package team.floracore.common.messaging;
 
-import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.*;
+import org.jetbrains.annotations.*;
 import team.floracore.common.config.*;
 import team.floracore.common.messaging.redis.*;
 import team.floracore.common.messaging.sql.*;
@@ -93,12 +93,12 @@ public class MessagingFactory<P extends FloraCorePlugin> {
     private class RedisMessengerProvider implements MessengerProvider {
 
         @Override
-        public @NonNull String getName() {
+        public @NotNull String getName() {
             return "Redis";
         }
 
         @Override
-        public @NonNull Messenger obtain(@NonNull IncomingMessageConsumer incomingMessageConsumer) {
+        public @NotNull Messenger obtain(@NotNull IncomingMessageConsumer incomingMessageConsumer) {
             RedisMessenger redis = new RedisMessenger(getPlugin(), incomingMessageConsumer);
 
             FloraCoreConfiguration config = getPlugin().getConfiguration();
@@ -121,12 +121,12 @@ public class MessagingFactory<P extends FloraCorePlugin> {
     private class SqlMessengerProvider implements MessengerProvider {
 
         @Override
-        public @NonNull String getName() {
+        public @NotNull String getName() {
             return "Sql";
         }
 
         @Override
-        public @NonNull Messenger obtain(@NonNull IncomingMessageConsumer incomingMessageConsumer) {
+        public @NotNull Messenger obtain(@NotNull IncomingMessageConsumer incomingMessageConsumer) {
             for (StorageImplementation implementation : getPlugin().getStorage().getImplementations()) {
                 if (implementation instanceof SqlStorage) {
                     SqlStorage storage = (SqlStorage) implementation;
