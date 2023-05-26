@@ -176,6 +176,9 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
             this.messagingService.close();
         }
 
+        getLogger().info("Disabling framework...");
+        disableFramework();
+
         // close storage
         getLogger().info("Closing storage...");
         this.storage.shutdown();
@@ -197,6 +200,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         getLogger().info("Goodbye!");
     }
+
+    protected abstract void disableFramework();
 
     protected Path resolveConfig(String fileName) {
         Path configFile = getBootstrap().getConfigDirectory().resolve(fileName);

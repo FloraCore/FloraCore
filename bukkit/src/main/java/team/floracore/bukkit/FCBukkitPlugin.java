@@ -8,6 +8,7 @@ import org.floracore.api.server.*;
 import team.floracore.bukkit.command.*;
 import team.floracore.bukkit.inevntory.*;
 import team.floracore.bukkit.listener.*;
+import team.floracore.bukkit.locale.chat.*;
 import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.module.*;
 import team.floracore.bukkit.util.nothing.*;
@@ -33,6 +34,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private CommandManager commandManager;
     private BukkitSenderFactory senderFactory;
     private BukkitMessagingFactory bukkitMessagingFactory;
+    private ChatManager chatManager;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -123,6 +125,17 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
         this.listenerManager = new ListenerManager(this);
         this.commandManager = new CommandManager(this);
+        this.chatManager = new ChatManager(this);
+    }
+
+    @Override
+    protected void disableFramework() {
+        RegistrarRegistrar.instance.unload();
+        ListenerRegistrar.instance.unload();
+        IModule.ModuleModule.instance.unload();
+        NothingRegistrar.instance.unload();
+
+        chatManager.shutdown();
     }
 
     public JavaPlugin getLoader() {

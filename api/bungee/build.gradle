@@ -7,11 +7,14 @@ version rootProject.version
 
 repositories {
     mavenCentral()
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
 }
 
 dependencies {
+    compileOnly project(':api')
     compileOnly 'org.checkerframework:checker-qual:3.32.0'
     compileOnly 'org.jetbrains:annotations:24.0.1'
+    compileOnly 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
 }
 
 tasks.withType(JavaCompile).configureEach {

@@ -1,6 +1,9 @@
 package team.floracore.common.messaging;
 
 import org.floracore.api.messenger.*;
+import team.floracore.common.util.*;
+
+import java.util.*;
 
 public interface InternalMessagingService {
     /**
@@ -18,4 +21,10 @@ public interface InternalMessagingService {
      * Closes the messaging service
      */
     void close();
+
+    UUID generatePingId();
+
+    ExpiringSet<UUID> getReceivedMessages();
+
+    void addReceivedMessage(UUID uuid);
 }

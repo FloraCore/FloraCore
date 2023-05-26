@@ -61,10 +61,21 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         this.messenger.close();
     }
 
-    private UUID generatePingId() {
+    @Override
+    public UUID generatePingId() {
         UUID uuid = UUID.randomUUID();
         this.receivedMessages.add(uuid);
         return uuid;
+    }
+
+    @Override
+    public ExpiringSet<UUID> getReceivedMessages() {
+        return receivedMessages;
+    }
+
+    @Override
+    public void addReceivedMessage(UUID uuid) {
+        this.receivedMessages.add(uuid);
     }
 
     @Override

@@ -10,6 +10,7 @@ import cloud.commandframework.meta.*;
 import net.md_5.bungee.api.*;
 import team.floracore.bungee.*;
 import team.floracore.bungee.commands.misc.*;
+import team.floracore.bungee.commands.socialsystems.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
@@ -82,6 +83,15 @@ public class CommandManager {
     public void constructCommands() {
         // misc
         this.annotationParser.parse(new FloraCoreCommand(plugin));
+
+        // social systems
+        this.annotationParser.parse(new AdminCommand(plugin));
+        this.annotationParser.parse(new BloggerCommand(plugin));
+        this.annotationParser.parse(new BuilderCommand(plugin));
+        this.annotationParser.parse(new ChatCommand(plugin));
+        this.annotationParser.parse(new FriendCommand(plugin));
+        this.annotationParser.parse(new GuildCommand(plugin));
+        this.annotationParser.parse(new StaffCommand(plugin));
     }
 
     public FloraCorePlugin getPlugin() {
