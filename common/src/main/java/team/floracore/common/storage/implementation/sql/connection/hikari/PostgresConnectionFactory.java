@@ -17,12 +17,22 @@ public class PostgresConnectionFactory extends HikariConnectionFactory {
     }
 
     @Override
+    public Function<String, String> getStatementProcessor() {
+        return s -> s.replace('\'', '"');
+    }
+
+    @Override
     protected String defaultPort() {
         return "5432";
     }
 
     @Override
-    protected void configureDatabase(HikariConfig config, String address, String port, String databaseName, String username, String password) {
+    protected void configureDatabase(HikariConfig config,
+                                     String address,
+                                     String port,
+                                     String databaseName,
+                                     String username,
+                                     String password) {
         config.setDataSourceClassName("com.impossibl.postgres.jdbc.PGDataSource");
         config.addDataSourceProperty("serverName", address);
         config.addDataSourceProperty("portNumber", Integer.parseInt(port));
@@ -44,10 +54,5 @@ public class PostgresConnectionFactory extends HikariConnectionFactory {
         if (socketTimeout != null) {
             properties.putIfAbsent("networkTimeout", Integer.parseInt(socketTimeout.toString()));
         }
-    }
-
-    @Override
-    public Function<String, String> getStatementProcessor() {
-        return s -> s.replace('\'', '"');
     }
 }

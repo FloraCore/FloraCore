@@ -81,6 +81,11 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
+    protected MessagingFactory<?> provideMessagingFactory() {
+        return new BukkitMessagingFactory(this);
+    }
+
+    @Override
     protected void setupFramework() {
         getLogger().info("Loading inventory manager...");
         inventoryManager = new InventoryManager(getLoader());
@@ -142,10 +147,5 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     public BukkitSenderFactory getSenderFactory() {
         return this.senderFactory;
-    }
-
-    @Override
-    protected MessagingFactory<?> provideMessagingFactory() {
-        return new BukkitMessagingFactory(this);
     }
 }

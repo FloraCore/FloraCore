@@ -6,7 +6,9 @@ import team.floracore.common.util.wrapper.*;
 
 import java.util.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.Container", maxVer = 17), @VersionName(value = "net.minecraft.world.inventory.Container", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.Container",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.world.inventory.Container",
+                                                             minVer = 17)})
 public interface NmsContainer extends WrappedBukkitObject {
     default NmsSlot getSlot(int index) {
         return WrappedObject.wrap(NmsSlot.class, getSlots().get(index));
@@ -33,6 +35,7 @@ public interface NmsContainer extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor({@VersionName("windowId"), @VersionName(minVer = 17, value = "j")})
     int getWindowId();
 
-    @WrappedBukkitMethod({@VersionName(minVer = 17, value = "incrementStateId"), @VersionName(minVer = 18, value = "k")})
+    @WrappedBukkitMethod({@VersionName(minVer = 17, value = "incrementStateId"), @VersionName(minVer = 18,
+                                                                                              value = "k")})
     int incrementStateIdV17();
 }

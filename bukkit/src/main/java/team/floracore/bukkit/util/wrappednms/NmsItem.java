@@ -4,7 +4,8 @@ import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.Item", maxVer = 17), @VersionName(value = "net.minecraft.world.item.Item", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.Item",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.world.item.Item", minVer = 17)})
 public interface NmsItem extends WrappedBukkitObject {
     static NmsItem fromId(String id) {
         return fromKey(NmsMinecraftKey.newInstance(id));
@@ -47,9 +48,15 @@ public interface NmsItem extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor(@VersionName(value = "name", minVer = 8))
     String getNameV8();
 
-    @WrappedBukkitFieldAccessor({@VersionName("maxStackSize"), @VersionName(value = "c", minVer = 17, maxVer = 18.2f), @VersionName(value = "d", minVer = 18.2f)})
+    @WrappedBukkitFieldAccessor({@VersionName("maxStackSize"), @VersionName(value = "c",
+                                                                            minVer = 17,
+                                                                            maxVer = 18.2f), @VersionName(value = "d",
+                                                                                                          minVer = 18.2f)})
     int getMaxStackSize();
 
-    @WrappedBukkitFieldAccessor({@VersionName("maxStackSize"), @VersionName(value = "c", minVer = 17, maxVer = 18.2f), @VersionName(value = "d", minVer = 18.2f)})
+    @WrappedBukkitFieldAccessor({@VersionName("maxStackSize"), @VersionName(value = "c",
+                                                                            minVer = 17,
+                                                                            maxVer = 18.2f), @VersionName(value = "d",
+                                                                                                          minVer = 18.2f)})
     NmsItem setMaxStackSize(int count);
 }

@@ -10,7 +10,7 @@ import team.floracore.common.plugin.*;
  * An implementation of {@link Messenger} using Redis.
  */
 public class RedisMessenger implements Messenger {
-    private static final String CHANNEL = "floracore:update";
+    private static final String CHANNEL = "floracore:messenger";
 
     private final FloraCorePlugin plugin;
     private final IncomingMessageConsumer consumer;
@@ -32,7 +32,13 @@ public class RedisMessenger implements Messenger {
         if (username == null) {
             this.jedisPool = new JedisPool(new JedisPoolConfig(), host, port, Protocol.DEFAULT_TIMEOUT, password, ssl);
         } else {
-            this.jedisPool = new JedisPool(new JedisPoolConfig(), host, port, Protocol.DEFAULT_TIMEOUT, username, password, ssl);
+            this.jedisPool = new JedisPool(new JedisPoolConfig(),
+                    host,
+                    port,
+                    Protocol.DEFAULT_TIMEOUT,
+                    username,
+                    password,
+                    ssl);
         }
 
         this.sub = new Subscription();
@@ -74,7 +80,8 @@ public class RedisMessenger implements Messenger {
                         return;
                     }
 
-                    RedisMessenger.this.plugin.getLogger().warn("Redis pubsub connection dropped, trying to re-open the connection", e);
+                    RedisMessenger.this.plugin.getLogger()
+                            .warn("Redis pubsub connection dropped, trying to re-open the connection", e);
                     try {
                         unsubscribe();
                     } catch (Exception ignored) {

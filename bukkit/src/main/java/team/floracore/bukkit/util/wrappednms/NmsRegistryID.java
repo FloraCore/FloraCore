@@ -5,7 +5,8 @@ import team.floracore.bukkit.util.wrapper.*;
 
 import java.util.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.RegistryID", maxVer = 17), @VersionName(value = "net.minecraft.util.RegistryID", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.RegistryID",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.util.RegistryID", minVer = 17)})
 public interface NmsRegistryID extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor(@VersionName(maxVer = 13, value = "b"))
     Object[] getBV_13();

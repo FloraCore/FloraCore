@@ -7,7 +7,8 @@ import team.floracore.common.util.wrapper.*;
 
 import java.util.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.NBTTagList", maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagList", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.NBTTagList",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagList", minVer = 17)})
 public interface NmsNBTTagList extends NmsNBTTag {
     static <T extends NmsNBTBase> NmsNBTTagList newInstance(List<T> l) {
         NmsNBTTagList r = newInstance();
@@ -17,26 +18,6 @@ public interface NmsNBTTagList extends NmsNBTTag {
 
     static NmsNBTTagList newInstance() {
         return WrappedObject.getStatic(NmsNBTTagList.class).staticNewInstance();
-    }
-
-    static <T extends NmsNBTBase> NmsNBTTagList newInstance(T... l) {
-        NmsNBTTagList r = newInstance();
-        for (T i : l) {
-            r.add(i);
-        }
-        return r;
-    }
-
-    static NmsNBTTagList wrapValues(List<?> values) {
-        if (values == null) {
-            return null;
-        }
-        NmsNBTTagList r = NmsNBTTagList.newInstance();
-        values.forEach(v ->
-        {
-            r.add(NmsNBTTag.wrapValue(v));
-        });
-        return r;
     }
 
     default boolean add(NmsNBTBase nbt) {
@@ -64,6 +45,26 @@ public interface NmsNBTTagList extends NmsNBTTag {
 
     @WrappedMethod("size")
     int size();
+
+    static <T extends NmsNBTBase> NmsNBTTagList newInstance(T... l) {
+        NmsNBTTagList r = newInstance();
+        for (T i : l) {
+            r.add(i);
+        }
+        return r;
+    }
+
+    static NmsNBTTagList wrapValues(List<?> values) {
+        if (values == null) {
+            return null;
+        }
+        NmsNBTTagList r = NmsNBTTagList.newInstance();
+        values.forEach(v ->
+        {
+            r.add(NmsNBTTag.wrapValue(v));
+        });
+        return r;
+    }
 
     default <T extends NmsNBTBase> NmsNBTTagList addAll(Collection<T> nbt) {
         nbt.forEach(n -> add(n));
@@ -115,7 +116,12 @@ public interface NmsNBTTagList extends NmsNBTTag {
         };
     }
 
-    @WrappedBukkitMethod({@VersionName(minVer = 8, maxVer = 12, value = "g"), @VersionName(minVer = 12, maxVer = 13, value = "i"), @VersionName(value = "get", minVer = 13, maxVer = 18), @VersionName(minVer = 18, value = "k")})
+    @WrappedBukkitMethod({@VersionName(minVer = 8, maxVer = 12, value = "g"), @VersionName(minVer = 12,
+                                                                                           maxVer = 13,
+                                                                                           value = "i"), @VersionName(
+            value = "get",
+            minVer = 13,
+            maxVer = 18), @VersionName(minVer = 18, value = "k")})
     NmsNBTBase get(int index);
 
     default void set(int index, NmsNBTBase nbt) {
@@ -126,7 +132,9 @@ public interface NmsNBTTagList extends NmsNBTTag {
         }
     }
 
-    @WrappedBukkitMethod({@VersionName(minVer = 8, value = "a"), @VersionName(minVer = 12, value = "remove"), @VersionName(minVer = 18, value = "c")})
+    @WrappedBukkitMethod({@VersionName(minVer = 8, value = "a"), @VersionName(minVer = 12,
+                                                                              value = "remove"), @VersionName(minVer = 18,
+                                                                                                              value = "c")})
     NmsNBTBase remove(int index);
 
     default boolean remove(NmsNBTBase nbt) {

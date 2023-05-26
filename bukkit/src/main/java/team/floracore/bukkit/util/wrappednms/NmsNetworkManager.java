@@ -10,13 +10,20 @@ import team.floracore.common.util.wrapper.*;
 
 import java.util.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.NetworkManager", maxVer = 17), @VersionName(value = "net.minecraft.network.NetworkManager", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.NetworkManager",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.network.NetworkManager",
+                                                             minVer = 17)})
 public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
     static void receivePacketV13(NmsPacket packet, NmsPacketListener listener) {
         WrappedObject.getStatic(NmsNetworkManager.class).staticReceivePacketV13(packet, listener);
     }
 
-    @NothingBukkitInject(name = @VersionName(minVer = 13, value = "a"), args = {NmsPacket.class, NmsPacketListener.class}, location = NothingLocation.FRONT)
+    @WrappedBukkitMethod(@VersionName(minVer = 13, value = "a"))
+    void staticReceivePacketV13(NmsPacket packet, NmsPacketListener listener);
+
+    @NothingBukkitInject(name = @VersionName(minVer = 13, value = "a"),
+                         args = {NmsPacket.class, NmsPacketListener.class},
+                         location = NothingLocation.FRONT)
     static Optional<Void> beforeReceivePacketV13(@LocalVar(0) NmsPacket packet,
                                                  @LocalVar(1) NmsPacketListener listener) {
         if (listener.is(NmsPlayerConnection.class)) {
@@ -29,17 +36,26 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
         return Nothing.doContinue();
     }
 
-    @WrappedBukkitMethod(@VersionName(minVer = 13, value = "a"))
-    void staticReceivePacketV13(NmsPacket packet, NmsPacketListener listener);
-
     @WrappedBukkitMethod({@VersionName(minVer = 12, value = "sendPacket"), @VersionName(minVer = 18, value = "a")})
     void sendPacket(NmsPacket packet);
 
-    @NothingBukkitInject(name = @VersionName(minVer = 8, maxVer = 12, value = "handle"), args = {NmsPacket.class}, location = NothingLocation.FRONT)
-    @NothingBukkitInject(name = @VersionName(minVer = 12, maxVer = 13, value = "sendPacket"), args = {NmsPacket.class}, location = NothingLocation.FRONT)
-    @NothingBukkitInject(name = @VersionName(maxVer = 13, value = "a"), args = {NmsPacket.class, GenericFutureListener[].class}, location = NothingLocation.FRONT)
-    @NothingBukkitInject(name = {@VersionName(minVer = 13, value = "sendPacket", maxVer = 19.1f), @VersionName(minVer = 18, value = "a", maxVer = 19.1f)}, args = {NmsPacket.class, GenericFutureListener.class}, location = NothingLocation.FRONT)
-    @NothingBukkitInject(name = @VersionName(value = {"sendPacket", "a"}, minVer = 19.1f), args = {NmsPacket.class, NmsPacketSendListener.class}, location = NothingLocation.FRONT)
+    @NothingBukkitInject(name = @VersionName(minVer = 8, maxVer = 12, value = "handle"),
+                         args = {NmsPacket.class},
+                         location = NothingLocation.FRONT)
+    @NothingBukkitInject(name = @VersionName(minVer = 12, maxVer = 13, value = "sendPacket"),
+                         args = {NmsPacket.class},
+                         location = NothingLocation.FRONT)
+    @NothingBukkitInject(name = @VersionName(maxVer = 13, value = "a"),
+                         args = {NmsPacket.class, GenericFutureListener[].class},
+                         location = NothingLocation.FRONT)
+    @NothingBukkitInject(name = {@VersionName(minVer = 13,
+                                              value = "sendPacket",
+                                              maxVer = 19.1f), @VersionName(minVer = 18, value = "a", maxVer = 19.1f)},
+                         args = {NmsPacket.class, GenericFutureListener.class},
+                         location = NothingLocation.FRONT)
+    @NothingBukkitInject(name = @VersionName(value = {"sendPacket", "a"}, minVer = 19.1f),
+                         args = {NmsPacket.class, NmsPacketSendListener.class},
+                         location = NothingLocation.FRONT)
     default Optional<Void> sendPacketBefore(@LocalVar(1) NmsPacket packet) {
         if (this.getPacketListener().is(NmsPlayerConnection.class)) {
             if (ProtocolUtil.onPacketSend((Player) this.getPacketListener()
@@ -52,6 +68,10 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
         return Nothing.doContinue();
     }
 
-    @WrappedBukkitFieldAccessor({@VersionName("packetListener"), @VersionName(maxVer = 13, value = "m"), @VersionName(minVer = 17, maxVer = 18.2f, value = "m"), @VersionName(value = "o", minVer = 18.2f, maxVer = 19), @VersionName(value = "o", minVer = 19)})
+    @WrappedBukkitFieldAccessor({@VersionName("packetListener"), @VersionName(maxVer = 13, value = "m"), @VersionName(
+            minVer = 17,
+            maxVer = 18.2f,
+            value = "m"), @VersionName(value = "o", minVer = 18.2f, maxVer = 19), @VersionName(value = "o",
+                                                                                               minVer = 19)})
     NmsPacketListener getPacketListener();
 }

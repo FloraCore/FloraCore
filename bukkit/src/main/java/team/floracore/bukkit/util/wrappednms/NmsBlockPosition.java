@@ -5,7 +5,8 @@ import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.BlockPosition", maxVer = 17), @VersionName(value = "net.minecraft.core.BlockPosition", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.BlockPosition",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.core.BlockPosition", minVer = 17)})
 public interface NmsBlockPosition extends WrappedBukkitObject {
     static NmsBlockPosition newInstance(Location location) {
         return newInstance(location.getBlockX(), location.getBlockY(), location.getBlockZ());

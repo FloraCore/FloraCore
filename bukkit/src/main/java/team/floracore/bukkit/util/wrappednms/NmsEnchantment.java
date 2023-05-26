@@ -6,7 +6,9 @@ import team.floracore.common.util.wrapper.*;
 
 import java.util.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.Enchantment", maxVer = 17), @VersionName(value = "net.minecraft.world.item.enchantment.Enchantment", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.Enchantment",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.world.item.enchantment.Enchantment",
+                                                             minVer = 17)})
 public interface NmsEnchantment extends WrappedBukkitObject {
     static NmsRegistryMaterials getEnchantsV_13() {
         return Objects.requireNonNull(WrappedObject.wrap(NmsEnchantment.class, null)).staticGetEnchantsV_13();
@@ -29,7 +31,9 @@ public interface NmsEnchantment extends WrappedBukkitObject {
     @WrappedBukkitMethod(@VersionName(value = "a", maxVer = 13))
     String getTranslateKeyV_13();
 
-    @WrappedBukkitClass({@VersionName(value = "nms.Enchantment$Rarity", maxVer = 17), @VersionName(value = "net.minecraft.world.item.enchantment.Enchantment$Rarity", minVer = 17)})
+    @WrappedBukkitClass({@VersionName(value = "nms.Enchantment$Rarity",
+                                      maxVer = 17), @VersionName(value = "net.minecraft.world.item.enchantment.Enchantment$Rarity",
+                                                                 minVer = 17)})
     interface Rarity extends WrappedObject {
     }
 }

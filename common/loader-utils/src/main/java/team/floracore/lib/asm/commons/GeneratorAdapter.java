@@ -205,6 +205,20 @@ public class GeneratorAdapter extends LocalVariablesSorter {
     }
 
     /**
+     * Returns the internal names of the given types.
+     *
+     * @param types a set of types.
+     * @return the internal names of the given types (see {@link Type#getInternalName()}).
+     */
+    private static String[] getInternalNames(final Type[] types) {
+        String[] names = new String[types.length];
+        for (int i = 0; i < names.length; ++i) {
+            names[i] = types[i].getInternalName();
+        }
+        return names;
+    }
+
+    /**
      * Constructs a new {@link GeneratorAdapter}. <i>Subclasses must not use this constructor</i>.
      * Instead, they must use the {@link #GeneratorAdapter(int, MethodVisitor, int, String, String)}
      * version.
@@ -249,43 +263,6 @@ public class GeneratorAdapter extends LocalVariablesSorter {
         this.argumentTypes = Type.getArgumentTypes(descriptor);
     }
 
-    /**
-     * Returns the internal names of the given types.
-     *
-     * @param types a set of types.
-     * @return the internal names of the given types (see {@link Type#getInternalName()}).
-     */
-    private static String[] getInternalNames(final Type[] types) {
-        String[] names = new String[types.length];
-        for (int i = 0; i < names.length; ++i) {
-            names[i] = types[i].getInternalName();
-        }
-        return names;
-    }
-
-    private static Type getBoxedType(final Type type) {
-        switch (type.getSort()) {
-            case Type.BYTE:
-                return BYTE_TYPE;
-            case Type.BOOLEAN:
-                return BOOLEAN_TYPE;
-            case Type.SHORT:
-                return SHORT_TYPE;
-            case Type.CHAR:
-                return CHARACTER_TYPE;
-            case Type.INT:
-                return INTEGER_TYPE;
-            case Type.FLOAT:
-                return FLOAT_TYPE;
-            case Type.LONG:
-                return LONG_TYPE;
-            case Type.DOUBLE:
-                return DOUBLE_TYPE;
-            default:
-                return type;
-        }
-    }
-
     public int getAccess() {
         return access;
     }
@@ -298,13 +275,13 @@ public class GeneratorAdapter extends LocalVariablesSorter {
         return returnType;
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Instructions to push constants on the stack
-    // -----------------------------------------------------------------------------------------------
-
     public Type[] getArgumentTypes() {
         return argumentTypes.clone();
     }
+
+    // -----------------------------------------------------------------------------------------------
+    // Instructions to push constants on the stack
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Generates the instruction to push the given value on the stack.
@@ -440,10 +417,6 @@ public class GeneratorAdapter extends LocalVariablesSorter {
         }
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Instructions to load and store method arguments
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Generates the instruction to load 'this' on the stack.
      */
@@ -453,6 +426,10 @@ public class GeneratorAdapter extends LocalVariablesSorter {
         }
         mv.visitVarInsn(Opcodes.ALOAD, 0);
     }
+
+    // -----------------------------------------------------------------------------------------------
+    // Instructions to load and store method arguments
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Generates the instructions to load all the method arguments on the stack.
@@ -541,10 +518,6 @@ public class GeneratorAdapter extends LocalVariablesSorter {
         loadInsn(argumentTypes[arg], getArgIndex(arg));
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Instructions to load and store local variables
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Generates the instructions to box the top stack value. This value is replaced by its boxed
      * equivalent on top of the stack.
@@ -574,6 +547,10 @@ public class GeneratorAdapter extends LocalVariablesSorter {
         }
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Instructions to load and store local variables
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Generates the instruction to store an element in an array.
      *
@@ -593,6 +570,29 @@ public class GeneratorAdapter extends LocalVariablesSorter {
             mv.visitInsn(Opcodes.ACONST_NULL);
         } else {
             mv.visitLdcInsn(value);
+        }
+    }
+
+    private static Type getBoxedType(final Type type) {
+        switch (type.getSort()) {
+            case Type.BYTE:
+                return BYTE_TYPE;
+            case Type.BOOLEAN:
+                return BOOLEAN_TYPE;
+            case Type.SHORT:
+                return SHORT_TYPE;
+            case Type.CHAR:
+                return CHARACTER_TYPE;
+            case Type.INT:
+                return INTEGER_TYPE;
+            case Type.FLOAT:
+                return FLOAT_TYPE;
+            case Type.LONG:
+                return LONG_TYPE;
+            case Type.DOUBLE:
+                return DOUBLE_TYPE;
+            default:
+                return type;
         }
     }
 

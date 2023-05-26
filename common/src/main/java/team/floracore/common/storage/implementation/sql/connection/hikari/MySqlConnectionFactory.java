@@ -17,26 +17,26 @@ public class MySqlConnectionFactory extends HikariConnectionFactory {
     }
 
     @Override
+    public Function<String, String> getStatementProcessor() {
+        return s -> s.replace('\'', '`'); // use backticks for quotes
+    }
+
+    @Override
     protected String defaultPort() {
         return "3306";
     }
 
     @Override
-    protected void configureDatabase(HikariConfig config, String address, String port, String databaseName, String username, String password) {
+    protected void configureDatabase(HikariConfig config,
+                                     String address,
+                                     String port,
+                                     String databaseName,
+                                     String username,
+                                     String password) {
         config.setDriverClassName("com.mysql.cj.jdbc.Driver");
         config.setJdbcUrl("jdbc:mysql://" + address + ":" + port + "/" + databaseName);
         config.setUsername(username);
         config.setPassword(password);
-    }
-
-    @Override
-    protected void postInitialize() {
-        super.postInitialize();
-
-        // Calling Class.forName("com.mysql.cj.jdbc.Driver") is enough to call the static initializer
-        // which makes our driver available in DriverManager. We don't want that, so unregister it after
-        // the pool has been setup.
-        deregisterDriver("com.mysql.cj.jdbc.Driver");
     }
 
     @Override
@@ -64,7 +64,12 @@ public class MySqlConnectionFactory extends HikariConnectionFactory {
     }
 
     @Override
-    public Function<String, String> getStatementProcessor() {
-        return s -> s.replace('\'', '`'); // use backticks for quotes
+    protected void postInitialize() {
+        super.postInitialize();
+
+        // Calling Class.forName("com.mysql.cj.jdbc.Driver") is enough to call the static initializer
+        // which makes our driver available in DriverManager. We don't want that, so unregister it after
+        // the pool has been setup.
+        deregisterDriver("com.mysql.cj.jdbc.Driver");
     }
 }

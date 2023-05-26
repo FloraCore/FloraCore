@@ -16,12 +16,22 @@ public class MariaDbConnectionFactory extends HikariConnectionFactory {
     }
 
     @Override
+    public Function<String, String> getStatementProcessor() {
+        return s -> s.replace('\'', '`'); // use backticks for quotes
+    }
+
+    @Override
     protected String defaultPort() {
         return "3306";
     }
 
     @Override
-    protected void configureDatabase(HikariConfig config, String address, String port, String databaseName, String username, String password) {
+    protected void configureDatabase(HikariConfig config,
+                                     String address,
+                                     String port,
+                                     String databaseName,
+                                     String username,
+                                     String password) {
         config.setDriverClassName("org.mariadb.jdbc.Driver");
         config.setJdbcUrl("jdbc:mariadb://" + address + ":" + port + "/" + databaseName);
         config.setUsername(username);
@@ -36,10 +46,5 @@ public class MariaDbConnectionFactory extends HikariConnectionFactory {
         // which makes our driver available in DriverManager. We don't want that, so unregister it after
         // the pool has been setup.
         deregisterDriver("org.mariadb.jdbc.Driver");
-    }
-
-    @Override
-    public Function<String, String> getStatementProcessor() {
-        return s -> s.replace('\'', '`'); // use backticks for quotes
     }
 }

@@ -14,7 +14,7 @@ public class DependencyRegistry {
     private static final SetMultimap<StorageType, Dependency> STORAGE_DEPENDENCIES = ImmutableSetMultimap.<StorageType, Dependency>builder()
             .putAll(StorageType.MARIADB,        Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.MARIADB_DRIVER)
             .putAll(StorageType.MYSQL,          Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.MYSQL_DRIVER)
-            .putAll(StorageType.POSTGRESQL,     Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.POSTGRESQL_DRIVER, Dependency.POSTGRESQL_DRIVER_SPY)
+            .putAll(StorageType.POSTGRESQL,     Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.POSTGRESQL_DRIVER, Dependency.POSTGRESQL_DRIVER_SPY,Dependency.NETTY_TRANSPORT_NATIVE_UNIX_COMMON)
             .putAll(StorageType.SQLITE,         Dependency.SQLITE_DRIVER)
             .putAll(StorageType.H2,             Dependency.H2_DRIVER)
             .build();
@@ -23,19 +23,6 @@ public class DependencyRegistry {
     @SuppressWarnings("ConstantConditions")
     public static boolean isGsonRelocated() {
         return JsonElement.class.getName().startsWith("team.floracore");
-    }
-
-    private static boolean slf4jPresent() {
-        return classExists("org.slf4j.Logger") && classExists("org.slf4j.LoggerFactory");
-    }
-
-    private static boolean classExists(String className) {
-        try {
-            Class.forName(className);
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
     }
 
     public Set<Dependency> resolveStorageDependencies(Set<StorageType> storageTypes, boolean redis) {
@@ -58,6 +45,19 @@ public class DependencyRegistry {
         }
 
         return dependencies;
+    }
+
+    private static boolean slf4jPresent() {
+        return classExists("org.slf4j.Logger") && classExists("org.slf4j.LoggerFactory");
+    }
+
+    private static boolean classExists(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     public boolean shouldAutoLoad(Dependency dependency) {

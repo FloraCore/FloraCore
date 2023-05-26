@@ -37,6 +37,16 @@ public class SqlMessenger extends AbstractSqlMessenger {
     }
 
     @Override
+    protected Connection getConnection() throws SQLException {
+        return this.sqlStorage.getConnectionFactory().getConnection();
+    }
+
+    @Override
+    protected String getTableName() {
+        return this.sqlStorage.getStatementProcessor().apply("{prefix}messenger");
+    }
+
+    @Override
     public void close() {
         SchedulerTask task = this.pollTask;
         if (task != null) {
@@ -51,15 +61,5 @@ public class SqlMessenger extends AbstractSqlMessenger {
         this.housekeepingTask = null;
 
         super.close();
-    }
-
-    @Override
-    protected Connection getConnection() throws SQLException {
-        return this.sqlStorage.getConnectionFactory().getConnection();
-    }
-
-    @Override
-    protected String getTableName() {
-        return this.sqlStorage.getStatementProcessor().apply("{prefix}messenger");
     }
 }

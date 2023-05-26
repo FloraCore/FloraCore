@@ -22,6 +22,75 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
         this.configuration = configuration;
     }
 
+    protected static void deregisterDriver(String driverClassName) {
+        Enumeration<Driver> drivers = DriverManager.getDrivers();
+        while (drivers.hasMoreElements()) {
+            Driver driver = drivers.nextElement();
+            if (driver.getClass().getName().equals(driverClassName)) {
+                try {
+                    DriverManager.deregisterDriver(driver);
+                } catch (SQLException e) {
+                    // ignore
+                }
+            }
+        }
+    }
+
+    @Override
+    public void init(FloraCorePlugin plugin) {
+        HikariConfig config;
+        try {
+            config = new HikariConfig();
+        } catch (LinkageError e) {
+            handleClassloadingError(e, plugin);
+            throw e;
+        }
+
+        // set pool name so the logging output can be linked back to us
+        config.setPoolName("floracore-hikari");
+
+        // get the database info/credentials from the config file
+        String[] addressSplit = this.configuration.getAddress().split(":");
+        String address = addressSplit[0];
+        String port = addressSplit.length > 1 ? addressSplit[1] : defaultPort();
+
+        // allow the implementation to configure the HikariConfig appropriately with these values
+        try {
+            configureDatabase(config,
+                    address,
+                    port,
+                    this.configuration.getDatabase(),
+                    this.configuration.getUsername(),
+                    this.configuration.getPassword());
+        } catch (NoSuchMethodError e) {
+            handleClassloadingError(e, plugin);
+        }
+
+        // get the extra connection properties from the config
+        Map<String, Object> properties = new HashMap<>(this.configuration.getProperties());
+
+        // allow the implementation to override/make changes to these properties
+        overrideProperties(properties);
+
+        // set the properties
+        setProperties(config, properties);
+
+        // configure the connection pool
+        config.setMaximumPoolSize(this.configuration.getMaxPoolSize());
+        config.setMinimumIdle(this.configuration.getMinIdleConnections());
+        config.setMaxLifetime(this.configuration.getMaxLifetime());
+        config.setKeepaliveTime(this.configuration.getKeepAliveTime());
+        config.setConnectionTimeout(this.configuration.getConnectionTimeout());
+
+        // don't perform any initial connection validation - we subsequently call #getConnection
+        // to setup the schema anyways
+        config.setInitializationFailTimeout(-1);
+
+        this.hikari = new HikariDataSource(config);
+
+        postInitialize();
+    }
+
     // dumb plugins seem to keep doing stupid stuff with shading of SLF4J and Log4J.
     // detect this and print a more useful error message.
     private static void handleClassloadingError(Throwable throwable, FloraCorePlugin plugin) {
@@ -36,8 +105,10 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
         );
 
         PluginLogger logger = plugin.getLogger();
-        logger.warn("A " + throwable.getClass().getSimpleName() + " has occurred whilst initialising Hikari. This is likely due to classloading conflicts between other plugins.");
-        logger.warn("Please check for other plugins below (and try loading FloraCore without them installed) before reporting the issue.");
+        logger.warn("A " + throwable.getClass()
+                .getSimpleName() + " has occurred whilst initialising Hikari. This is likely due to classloading conflicts between other plugins.");
+        logger.warn(
+                "Please check for other plugins below (and try loading FloraCore without them installed) before reporting the issue.");
 
         for (String className : noteworthyClasses) {
             Class<?> clazz;
@@ -56,20 +127,6 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
             }
 
             logger.warn("Class " + className + " has been loaded by: " + loaderName);
-        }
-    }
-
-    protected static void deregisterDriver(String driverClassName) {
-        Enumeration<Driver> drivers = DriverManager.getDrivers();
-        while (drivers.hasMoreElements()) {
-            Driver driver = drivers.nextElement();
-            if (driver.getClass().getName().equals(driverClassName)) {
-                try {
-                    DriverManager.deregisterDriver(driver);
-                } catch (SQLException e) {
-                    // ignore
-                }
-            }
         }
     }
 
@@ -92,7 +149,12 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
      * @param username     the database username
      * @param password     the database password
      */
-    protected abstract void configureDatabase(HikariConfig config, String address, String port, String databaseName, String username, String password);
+    protected abstract void configureDatabase(HikariConfig config,
+                                              String address,
+                                              String port,
+                                              String databaseName,
+                                              String username,
+                                              String password);
 
     /**
      * Allows the connection factory instance to override certain properties before they are set.
@@ -121,56 +183,6 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
      */
     protected void postInitialize() {
 
-    }
-
-    @Override
-    public void init(FloraCorePlugin plugin) {
-        HikariConfig config;
-        try {
-            config = new HikariConfig();
-        } catch (LinkageError e) {
-            handleClassloadingError(e, plugin);
-            throw e;
-        }
-
-        // set pool name so the logging output can be linked back to us
-        config.setPoolName("floracore-hikari");
-
-        // get the database info/credentials from the config file
-        String[] addressSplit = this.configuration.getAddress().split(":");
-        String address = addressSplit[0];
-        String port = addressSplit.length > 1 ? addressSplit[1] : defaultPort();
-
-        // allow the implementation to configure the HikariConfig appropriately with these values
-        try {
-            configureDatabase(config, address, port, this.configuration.getDatabase(), this.configuration.getUsername(), this.configuration.getPassword());
-        } catch (NoSuchMethodError e) {
-            handleClassloadingError(e, plugin);
-        }
-
-        // get the extra connection properties from the config
-        Map<String, Object> properties = new HashMap<>(this.configuration.getProperties());
-
-        // allow the implementation to override/make changes to these properties
-        overrideProperties(properties);
-
-        // set the properties
-        setProperties(config, properties);
-
-        // configure the connection pool
-        config.setMaximumPoolSize(this.configuration.getMaxPoolSize());
-        config.setMinimumIdle(this.configuration.getMinIdleConnections());
-        config.setMaxLifetime(this.configuration.getMaxLifetime());
-        config.setKeepaliveTime(this.configuration.getKeepAliveTime());
-        config.setConnectionTimeout(this.configuration.getConnectionTimeout());
-
-        // don't perform any initial connection validation - we subsequently call #getConnection
-        // to setup the schema anyways
-        config.setInitializationFailTimeout(-1);
-
-        this.hikari = new HikariDataSource(config);
-
-        postInitialize();
     }
 
     @Override

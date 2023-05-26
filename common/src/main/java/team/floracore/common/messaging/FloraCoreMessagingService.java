@@ -95,14 +95,16 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         try {
             return consumeIncomingMessageAsString0(encodedString);
         } catch (Exception e) {
-            this.plugin.getLogger().warn("Unable to decode incoming messaging service message: '" + encodedString + "'", e);
+            this.plugin.getLogger()
+                    .warn("Unable to decode incoming messaging service message: '" + encodedString + "'", e);
             return false;
         }
     }
 
     private boolean consumeIncomingMessageAsString0(@NonNull String encodedString) {
         Objects.requireNonNull(encodedString, "encodedString");
-        JsonObject parsed = Objects.requireNonNull(GsonProvider.normal().fromJson(encodedString, JsonObject.class), "parsed");
+        JsonObject parsed = Objects.requireNonNull(GsonProvider.normal().fromJson(encodedString, JsonObject.class),
+                "parsed");
         JsonObject json = parsed.getAsJsonObject();
 
         // extract id

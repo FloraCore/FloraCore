@@ -103,6 +103,23 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
         }
     }
 
+    @Override
+    public Class<PacketListener> getType() {
+        return PacketListener.class;
+    }
+
+    @Override
+    public boolean register(PacketListener obj) {
+        if (obj instanceof SendListener) {
+            ProtocolUtil.regSendListener(obj.priority, obj.type, obj.listener);
+        } else if (obj instanceof ReceiveListener) {
+            ProtocolUtil.regReceiveListener(obj.priority, obj.type, obj.listener);
+        } else {
+            throw new IllegalArgumentException("Unknown class " + obj.getClass());
+        }
+        return true;
+    }
+
     public static <T extends NmsPacket> void regSendListener(EventPriority priority,
                                                              Class<T> type,
                                                              TriConsumer<Player, T, Ref<Boolean>> listener) {
@@ -133,6 +150,17 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
         l.get(priority.ordinal()).put(listener, type);
     }
 
+    @Override
+    public void unregister(PacketListener obj) {
+        if (obj instanceof SendListener) {
+            ProtocolUtil.unregSendListener(obj.priority, obj.type, obj.listener);
+        } else if (obj instanceof ReceiveListener) {
+            ProtocolUtil.unregReceiveListener(obj.priority, obj.type, obj.listener);
+        } else {
+            throw new IllegalArgumentException("Unknown class " + obj.getClass());
+        }
+    }
+
     public static <T extends NmsPacket> void unregSendListener(EventPriority priority,
                                                                Class<T> type,
                                                                TriConsumer<Player, T, Ref<Boolean>> listener) {
@@ -150,34 +178,6 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
                 WrappedObject.getRawClass(type));
         if (l != null) {
             l.remove(listener);
-        }
-    }
-
-    @Override
-    public Class<PacketListener> getType() {
-        return PacketListener.class;
-    }
-
-    @Override
-    public boolean register(PacketListener obj) {
-        if (obj instanceof SendListener) {
-            ProtocolUtil.regSendListener(obj.priority, obj.type, obj.listener);
-        } else if (obj instanceof ReceiveListener) {
-            ProtocolUtil.regReceiveListener(obj.priority, obj.type, obj.listener);
-        } else {
-            throw new IllegalArgumentException("Unknown class " + obj.getClass());
-        }
-        return true;
-    }
-
-    @Override
-    public void unregister(PacketListener obj) {
-        if (obj instanceof SendListener) {
-            ProtocolUtil.unregSendListener(obj.priority, obj.type, obj.listener);
-        } else if (obj instanceof ReceiveListener) {
-            ProtocolUtil.unregReceiveListener(obj.priority, obj.type, obj.listener);
-        } else {
-            throw new IllegalArgumentException("Unknown class " + obj.getClass());
         }
     }
 

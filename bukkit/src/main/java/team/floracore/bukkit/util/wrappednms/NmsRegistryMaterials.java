@@ -9,7 +9,9 @@ import team.floracore.common.util.wrapper.*;
 
 import java.util.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.RegistryMaterials", maxVer = 17), @VersionName(value = "net.minecraft.core.RegistryMaterials", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.RegistryMaterials",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.core.RegistryMaterials",
+                                                             minVer = 17)})
 public interface NmsRegistryMaterials extends WrappedBukkitObject {
     default NmsMinecraftKey getKey(WrappedObject value) {
         if (BukkitWrapper.v13) {
@@ -57,7 +59,9 @@ public interface NmsRegistryMaterials extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor(@VersionName(value = "@0", minVer = 13, maxVer = 18.2f))
     BiMap<Object, Object> getKeyMapV13_182();
 
-    @WrappedBukkitFieldAccessor({@VersionName(maxVer = 13, value = "a"), @VersionName(minVer = 13, maxVer = 16, value = "b")})
+    @WrappedBukkitFieldAccessor({@VersionName(maxVer = 13, value = "a"), @VersionName(minVer = 13,
+                                                                                      maxVer = 16,
+                                                                                      value = "b")})
     NmsRegistryID getRegIDV_15();
 
     default Map<Object, Integer> getIdMapV16() {
@@ -98,7 +102,8 @@ public interface NmsRegistryMaterials extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor(@VersionName(minVer = 16, value = "@1", maxVer = 18.2f))
     BiMap<Object, Object> getResourceKeyMapV16_182();
 
-    @WrappedBukkitFieldAccessor({@VersionName(minVer = 16, value = "@0", maxVer = 18.2f), @VersionName(minVer = 18.2f, value = "@3")})
+    @WrappedBukkitFieldAccessor({@VersionName(minVer = 16, value = "@0", maxVer = 18.2f), @VersionName(minVer = 18.2f,
+                                                                                                       value = "@3")})
     Map<Object, Object> getLifecycleMapV16();
 
     @WrappedBukkitMethod(@VersionName("@0"))

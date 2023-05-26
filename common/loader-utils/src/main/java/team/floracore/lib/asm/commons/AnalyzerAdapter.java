@@ -157,17 +157,6 @@ public class AnalyzerAdapter extends MethodVisitor {
         maxLocals = locals.size();
     }
 
-    private static void visitFrameTypes(
-            final int numTypes, final Object[] frameTypes, final List<Object> result) {
-        for (int i = 0; i < numTypes; ++i) {
-            Object frameType = frameTypes[i];
-            result.add(frameType);
-            if (frameType == Opcodes.LONG || frameType == Opcodes.DOUBLE) {
-                result.add(Opcodes.TOP);
-            }
-        }
-    }
-
     @Override
     public void visitFrame(
             final int type,
@@ -193,6 +182,17 @@ public class AnalyzerAdapter extends MethodVisitor {
         visitFrameTypes(numStack, stack, this.stack);
         maxLocals = Math.max(maxLocals, this.locals.size());
         maxStack = Math.max(maxStack, this.stack.size());
+    }
+
+    private static void visitFrameTypes(
+            final int numTypes, final Object[] frameTypes, final List<Object> result) {
+        for (int i = 0; i < numTypes; ++i) {
+            Object frameType = frameTypes[i];
+            result.add(frameType);
+            if (frameType == Opcodes.LONG || frameType == Opcodes.DOUBLE) {
+                result.add(Opcodes.TOP);
+            }
+        }
     }
 
     @Override

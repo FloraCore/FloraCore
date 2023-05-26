@@ -5,7 +5,8 @@ import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.NBTTagDouble", maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagDouble", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.NBTTagDouble",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagDouble", minVer = 17)})
 public interface NmsNBTTagDouble extends NmsNBTTag {
     static NmsNBTTagDouble newInstance(double value) {
         return WrappedObject.getStatic(NmsNBTTagDouble.class).staticNewInstance(value);
@@ -18,7 +19,8 @@ public interface NmsNBTTagDouble extends NmsNBTTag {
         return getValue0();
     }
 
-    @WrappedBukkitMethod({@VersionName("asDouble"), @VersionName(maxVer = 17, value = "@0"), @VersionName(minVer = 17, value = "@0")})
+    @WrappedBukkitMethod({@VersionName("asDouble"), @VersionName(maxVer = 17, value = "@0"), @VersionName(minVer = 17,
+                                                                                                          value = "@0")})
     double getValue0();
 
     @Override

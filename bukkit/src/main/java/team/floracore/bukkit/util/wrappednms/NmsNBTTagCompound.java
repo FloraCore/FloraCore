@@ -8,7 +8,8 @@ import team.floracore.common.util.wrapper.*;
 import java.io.*;
 import java.util.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.NBTTagCompound", maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagCompound", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.NBTTagCompound",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagCompound", minVer = 17)})
 public interface NmsNBTTagCompound extends NmsNBTTag {
     static NmsNBTTagCompound newInstance(String json) {
         return NmsMojangsonParser.parse(json);
@@ -29,17 +30,18 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
         return WrappedObject.getStatic(NmsNBTTagCompound.class).staticNewInstance();
     }
 
+    @WrappedBukkitMethod(value = {@VersionName(value = "load", maxVer = 15)})
+    void loadV_15(DataInput s, int depth, NmsNBTReadLimiter limiter);
+
     static NmsNBTTagTypeV15 getTypeV15() {
         return WrappedObject.getStatic(NmsNBTTagCompound.class).staticGetTypeV15();
     }
 
-    @WrappedBukkitMethod(value = {@VersionName(value = "load", maxVer = 15)})
-    void loadV_15(DataInput s, int depth, NmsNBTReadLimiter limiter);
-
     @WrappedConstructor
     NmsNBTTagCompound staticNewInstance();
 
-    @WrappedBukkitFieldAccessor({@VersionName(minVer = 15, maxVer = 16, value = "a"), @VersionName(minVer = 16, value = "b")})
+    @WrappedBukkitFieldAccessor({@VersionName(minVer = 15, maxVer = 16, value = "a"), @VersionName(minVer = 16,
+                                                                                                   value = "b")})
     NmsNBTTagTypeV15 staticGetTypeV15();
 
     default NmsNBTTagCompound set(String key, String value) {

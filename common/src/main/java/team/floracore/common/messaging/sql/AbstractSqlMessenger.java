@@ -11,7 +11,6 @@ import java.util.concurrent.locks.*;
  * An implementation of {@link Messenger} using SQL.
  */
 public abstract class AbstractSqlMessenger implements Messenger {
-
     private final IncomingMessageConsumer consumer;
     private final ReadWriteLock lock = new ReentrantReadWriteLock();
     private long lastId = -1;
@@ -20,10 +19,6 @@ public abstract class AbstractSqlMessenger implements Messenger {
     protected AbstractSqlMessenger(IncomingMessageConsumer consumer) {
         this.consumer = consumer;
     }
-
-    protected abstract Connection getConnection() throws SQLException;
-
-    protected abstract String getTableName();
 
     public void init() throws SQLException {
         try (Connection c = getConnection()) {
@@ -53,6 +48,10 @@ public abstract class AbstractSqlMessenger implements Messenger {
         }
     }
 
+    protected abstract Connection getConnection() throws SQLException;
+
+    protected abstract String getTableName();
+
     @Override
     public void sendOutgoingMessage(@NonNull OutgoingMessage outgoingMessage) {
         this.lock.readLock().lock();
@@ -70,6 +69,16 @@ public abstract class AbstractSqlMessenger implements Messenger {
             e.printStackTrace();
         } finally {
             this.lock.readLock().unlock();
+        }
+    }
+
+    @Override
+    public void close() {
+        this.lock.writeLock().lock();
+        try {
+            this.closed = true;
+        } finally {
+            this.lock.writeLock().unlock();
         }
     }
 
@@ -115,16 +124,6 @@ public abstract class AbstractSqlMessenger implements Messenger {
             e.printStackTrace();
         } finally {
             this.lock.readLock().unlock();
-        }
-    }
-
-    @Override
-    public void close() {
-        this.lock.writeLock().lock();
-        try {
-            this.closed = true;
-        } finally {
-            this.lock.writeLock().unlock();
         }
     }
 }

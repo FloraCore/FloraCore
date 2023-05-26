@@ -27,6 +27,12 @@ public interface ObcChatMessage extends WrappedBukkitObject {
         return WrappedObject.getStatic(ObcChatMessage.class).staticFromStringOrNullV13(s);
     }
 
+    @WrappedBukkitMethod(@VersionName(value = "fromStringOrNullToJSON", minVer = 17))
+    String staticFromStringOrNullToJSONV17(String s);
+
+    @WrappedBukkitMethod(@VersionName(value = "fromStringOrNull", minVer = 13))
+    NmsIChatBaseComponent staticFromStringOrNullV13(String s);
+
     static String fromJSONComponentV13(String json) {
         if (BukkitWrapper.v17) {
             return fromJSONComponentV17(json);
@@ -42,12 +48,6 @@ public interface ObcChatMessage extends WrappedBukkitObject {
     static String fromComponentV13(NmsIChatBaseComponent cc) {
         return WrappedObject.getStatic(ObcChatMessage.class).staticFromComponentV13(cc);
     }
-
-    @WrappedBukkitMethod(@VersionName(value = "fromStringOrNullToJSON", minVer = 17))
-    String staticFromStringOrNullToJSONV17(String s);
-
-    @WrappedBukkitMethod(@VersionName(value = "fromStringOrNull", minVer = 13))
-    NmsIChatBaseComponent staticFromStringOrNullV13(String s);
 
     @WrappedBukkitMethod(@VersionName(value = "fromJSONComponent", minVer = 17))
     String staticFromJSONComponentV17(String s);

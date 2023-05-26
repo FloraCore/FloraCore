@@ -16,7 +16,7 @@ import java.util.concurrent.atomic.*;
  * An implementation of {@link Messenger} using Postgres.
  */
 public class PostgresMessenger implements Messenger {
-    private static final String CHANNEL = "floracore:update";
+    private static final String CHANNEL = "floracore:messenger";
 
     private final FloraCorePlugin plugin;
     private final SqlStorage sqlStorage;
@@ -33,32 +33,9 @@ public class PostgresMessenger implements Messenger {
 
     public void init() {
         checkAndReopenConnection(true);
-        this.checkConnectionTask = this.plugin.getBootstrap().getScheduler().asyncRepeating(() -> checkAndReopenConnection(false), 5, TimeUnit.SECONDS);
-    }
-
-    @Override
-    public void sendOutgoingMessage(@NonNull OutgoingMessage outgoingMessage) {
-        try (PGConnection connection = this.sqlStorage.getConnectionFactory().getConnection().unwrap(PGConnection.class)) {
-            try (PreparedStatement ps = connection.prepareStatement("SELECT pg_notify(?, ?)")) {
-                ps.setString(1, CHANNEL);
-                ps.setString(2, outgoingMessage.asEncodedString());
-                ps.execute();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void close() {
-        try {
-            this.checkConnectionTask.cancel();
-            if (this.listener != null) {
-                this.listener.close();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        this.checkConnectionTask = this.plugin.getBootstrap()
+                .getScheduler()
+                .asyncRepeating(() -> checkAndReopenConnection(false), 5, TimeUnit.SECONDS);
     }
 
     /**
@@ -92,12 +69,41 @@ public class PostgresMessenger implements Messenger {
         }
     }
 
+    @Override
+    public void sendOutgoingMessage(@NonNull OutgoingMessage outgoingMessage) {
+        try (PGConnection connection = this.sqlStorage.getConnectionFactory()
+                .getConnection()
+                .unwrap(PGConnection.class)) {
+            try (PreparedStatement ps = connection.prepareStatement("SELECT pg_notify(?, ?)")) {
+                ps.setString(1, CHANNEL);
+                ps.setString(2, outgoingMessage.asEncodedString());
+                ps.execute();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void close() {
+        try {
+            this.checkConnectionTask.cancel();
+            if (this.listener != null) {
+                this.listener.close();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private class NotificationListener implements PGNotificationListener, AutoCloseable {
         private final CountDownLatch latch = new CountDownLatch(1);
         private final AtomicBoolean listening = new AtomicBoolean(false);
 
         public void listenAndBind() {
-            try (PGConnection connection = PostgresMessenger.this.sqlStorage.getConnectionFactory().getConnection().unwrap(PGConnection.class)) {
+            try (PGConnection connection = PostgresMessenger.this.sqlStorage.getConnectionFactory()
+                    .getConnection()
+                    .unwrap(PGConnection.class)) {
                 connection.addNotificationListener(CHANNEL, this);
 
                 try (Statement s = connection.createStatement()) {

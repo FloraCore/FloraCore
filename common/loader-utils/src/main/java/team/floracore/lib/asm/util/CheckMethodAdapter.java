@@ -635,6 +635,16 @@ public class CheckMethodAdapter extends MethodVisitor {
         }
     }
 
+    @Override
+    public void visitParameter(final String name, final int access) {
+        if (name != null) {
+            checkUnqualifiedName(version, name, "name");
+        }
+        CheckClassAdapter.checkAccess(
+                access, Opcodes.ACC_FINAL | Opcodes.ACC_MANDATED | Opcodes.ACC_SYNTHETIC);
+        super.visitParameter(name, access);
+    }
+
     /**
      * Checks that the given string is a valid unqualified name.
      *
@@ -683,64 +693,6 @@ public class CheckMethodAdapter extends MethodVisitor {
                         INVALID + message + " (must be a valid Java identifier): " + name);
             }
         }
-    }
-
-    /**
-     * Checks that the given value is a signed byte.
-     *
-     * @param value   the value to be checked.
-     * @param message the message to use in case of error.
-     */
-    private static void checkSignedByte(final int value, final String message) {
-        if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE) {
-            throw new IllegalArgumentException(message + " (must be a signed byte): " + value);
-        }
-    }
-
-    /**
-     * Checks that the given value is a signed short.
-     *
-     * @param value   the value to be checked.
-     * @param message the message to use in case of error.
-     */
-    private static void checkSignedShort(final int value, final String message) {
-        if (value < Short.MIN_VALUE || value > Short.MAX_VALUE) {
-            throw new IllegalArgumentException(message + " (must be a signed short): " + value);
-        }
-    }
-
-    /**
-     * Checks that the given value is an unsigned short.
-     *
-     * @param value   the value to be checked.
-     * @param message the message to use in case of error.
-     */
-    private static void checkUnsignedShort(final int value, final String message) {
-        if (value < 0 || value > 65535) {
-            throw new IllegalArgumentException(message + " (must be an unsigned short): " + value);
-        }
-    }
-
-    /**
-     * Checks that the method to visit the given opcode is equal to the given method.
-     *
-     * @param opcode the opcode to be checked.
-     * @param method the expected visit method.
-     */
-    private static void checkOpcodeMethod(final int opcode, final Method method) {
-        if (opcode < Opcodes.NOP || opcode > Opcodes.IFNONNULL || OPCODE_METHODS[opcode] != method) {
-            throw new IllegalArgumentException("Invalid opcode: " + opcode);
-        }
-    }
-
-    @Override
-    public void visitParameter(final String name, final int access) {
-        if (name != null) {
-            checkUnqualifiedName(version, name, "name");
-        }
-        CheckClassAdapter.checkAccess(
-                access, Opcodes.ACC_FINAL | Opcodes.ACC_MANDATED | Opcodes.ACC_SYNTHETIC);
-        super.visitParameter(name, access);
     }
 
     @Override
@@ -929,6 +881,30 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
+    /**
+     * Checks that the given value is a signed byte.
+     *
+     * @param value   the value to be checked.
+     * @param message the message to use in case of error.
+     */
+    private static void checkSignedByte(final int value, final String message) {
+        if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE) {
+            throw new IllegalArgumentException(message + " (must be a signed byte): " + value);
+        }
+    }
+
+    /**
+     * Checks that the given value is a signed short.
+     *
+     * @param value   the value to be checked.
+     * @param message the message to use in case of error.
+     */
+    private static void checkSignedShort(final int value, final String message) {
+        if (value < Short.MIN_VALUE || value > Short.MAX_VALUE) {
+            throw new IllegalArgumentException(message + " (must be a signed short): " + value);
+        }
+    }
+
     @Override
     public void visitVarInsn(final int opcode, final int varIndex) {
         checkVisitCodeCalled();
@@ -937,6 +913,18 @@ public class CheckMethodAdapter extends MethodVisitor {
         checkUnsignedShort(varIndex, INVALID_LOCAL_VARIABLE_INDEX);
         super.visitVarInsn(opcode, varIndex);
         ++insnCount;
+    }
+
+    /**
+     * Checks that the given value is an unsigned short.
+     *
+     * @param value   the value to be checked.
+     * @param message the message to use in case of error.
+     */
+    private static void checkUnsignedShort(final int value, final String message) {
+        if (value < 0 || value > 65535) {
+            throw new IllegalArgumentException(message + " (must be an unsigned short): " + value);
+        }
     }
 
     @Override
@@ -1053,10 +1041,6 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Utility methods
-    // -----------------------------------------------------------------------------------------------
-
     @Override
     public void visitIincInsn(final int varIndex, final int increment) {
         checkVisitCodeCalled();
@@ -1066,6 +1050,10 @@ public class CheckMethodAdapter extends MethodVisitor {
         super.visitIincInsn(varIndex, increment);
         ++insnCount;
     }
+
+    // -----------------------------------------------------------------------------------------------
+    // Utility methods
+    // -----------------------------------------------------------------------------------------------
 
     @Override
     public void visitTableSwitchInsn(
@@ -1322,6 +1310,18 @@ public class CheckMethodAdapter extends MethodVisitor {
     private void checkVisitMaxsNotCalled() {
         if (visitMaxCalled) {
             throw new IllegalStateException("Cannot visit instructions after visitMaxs has been called.");
+        }
+    }
+
+    /**
+     * Checks that the method to visit the given opcode is equal to the given method.
+     *
+     * @param opcode the opcode to be checked.
+     * @param method the expected visit method.
+     */
+    private static void checkOpcodeMethod(final int opcode, final Method method) {
+        if (opcode < Opcodes.NOP || opcode > Opcodes.IFNONNULL || OPCODE_METHODS[opcode] != method) {
+            throw new IllegalArgumentException("Invalid opcode: " + opcode);
         }
     }
 

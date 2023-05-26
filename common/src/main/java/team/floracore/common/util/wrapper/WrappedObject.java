@@ -30,6 +30,14 @@ public interface WrappedObject {
         return wo == null || wo.isNull();
     }
 
+    default boolean isNull() {
+        return getRaw() == null;
+    }
+
+    Object getRaw();
+
+    void setRaw(Object raw);
+
     static Object getRaw(WrappedObject wrappedObject) {
         if (wrappedObject == null) {
             return null;
@@ -487,14 +495,6 @@ public interface WrappedObject {
         }
         return r;
     }
-
-    default boolean isNull() {
-        return getRaw() == null;
-    }
-
-    Object getRaw();
-
-    void setRaw(Object raw);
 
     default <T extends WrappedObject> boolean is(Class<T> wrapper) {
         return getRawClass(wrapper).isAssignableFrom(getRaw().getClass());

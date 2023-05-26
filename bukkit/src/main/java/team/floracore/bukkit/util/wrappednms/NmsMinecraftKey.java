@@ -6,11 +6,16 @@ import team.floracore.common.util.wrapper.*;
 
 import java.util.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.MinecraftKey", maxVer = 17), @VersionName(value = "net.minecraft.resources.MinecraftKey", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.MinecraftKey",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.resources.MinecraftKey",
+                                                             minVer = 17)})
 public interface NmsMinecraftKey extends WrappedBukkitObject {
     static NmsMinecraftKey newInstance(String s) {
         return WrappedObject.getStatic(NmsMinecraftKey.class).staticNewInstance(s);
     }
+
+    @WrappedConstructor
+    NmsMinecraftKey staticNewInstance(String s);
 
     static NmsMinecraftKey random() {
         return NmsMinecraftKey.newInstance("floracore", UUID.randomUUID().toString().replace("-", ""));
@@ -19,9 +24,6 @@ public interface NmsMinecraftKey extends WrappedBukkitObject {
     static NmsMinecraftKey newInstance(String namespace, String key) {
         return WrappedObject.getStatic(NmsMinecraftKey.class).staticNewInstance(namespace, key);
     }
-
-    @WrappedConstructor
-    NmsMinecraftKey staticNewInstance(String s);
 
     default NmsMinecraftKey staticNewInstance(String namespace, String key) {
         return staticNewInstance(namespace + ":" + key);

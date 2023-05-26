@@ -160,15 +160,21 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
     protected abstract ConfigurationAdapter provideConfigurationAdapter();
 
-    protected abstract void setupFramework();
-
     protected abstract MessagingFactory<?> provideMessagingFactory();
+
+    protected abstract void setupFramework();
 
     public final void onDisable() {
         getLogger().info("Starting shutdown process...");
 
         // cancel delayed/repeating tasks
         getBootstrap().getScheduler().shutdownScheduler();
+
+        // close messaging service
+        if (this.messagingService != null) {
+            getLogger().info("Closing messaging service...");
+            this.messagingService.close();
+        }
 
         // close storage
         getLogger().info("Closing storage...");

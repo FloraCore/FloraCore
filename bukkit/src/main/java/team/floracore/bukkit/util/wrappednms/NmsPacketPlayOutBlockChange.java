@@ -5,7 +5,9 @@ import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.PacketPlayOutBlockChange", maxVer = 17), @VersionName(value = "net.minecraft.network.protocol.game.PacketPlayOutBlockChange", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.PacketPlayOutBlockChange",
+                                  maxVer = 17), @VersionName(value = "net.minecraft.network.protocol.game.PacketPlayOutBlockChange",
+                                                             minVer = 17)})
 public interface NmsPacketPlayOutBlockChange extends NmsPacket {
     static NmsPacketPlayOutBlockChange newInstance() {
         return WrappedObject.getStatic(NmsPacketPlayOutBlockChange.class).staticNewInstance();

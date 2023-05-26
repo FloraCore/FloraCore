@@ -66,15 +66,6 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
     // provide adapters
 
-    private static boolean checkIncompatibleVersion() {
-        try {
-            Class.forName("com.google.gson.JsonElement");
-            return false;
-        } catch (ClassNotFoundException e) {
-            return true;
-        }
-    }
-
     @Override
     public Plugin getLoader() {
         return loader;
@@ -95,12 +86,12 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         return this.classPathAppender;
     }
 
-    // lifecycle
-
     @Override
     public CountDownLatch getLoadLatch() {
         return this.loadLatch;
     }
+
+    // lifecycle
 
     @Override
     public CountDownLatch getEnableLatch() {
@@ -132,8 +123,6 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         return getProxy().getPlayer(uniqueId) != null;
     }
 
-    // provide information about the plugin
-
     @Override
     public @Nullable String identifyClassLoader(ClassLoader classLoader) throws Exception {
         Class<?> pluginClassLoader = Class.forName("net.md_5.bungee.api.plugin.PluginClassloader");
@@ -146,6 +135,8 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         }
         return null;
     }
+
+    // provide information about the plugin
 
     public ProxyServer getProxy() {
         return loader.getProxy();
@@ -161,6 +152,15 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
             this.plugin.onLoad();
         } finally {
             this.loadLatch.countDown();
+        }
+    }
+
+    private static boolean checkIncompatibleVersion() {
+        try {
+            Class.forName("com.google.gson.JsonElement");
+            return false;
+        } catch (ClassNotFoundException e) {
+            return true;
         }
     }
 

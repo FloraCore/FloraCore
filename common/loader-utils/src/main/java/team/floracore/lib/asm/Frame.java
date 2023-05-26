@@ -323,6 +323,68 @@ class Frame {
     }
 
     /**
+     * Sets this frame to the value of the given frame.
+     *
+     * <p>WARNING: after this method is called the two frames share the same data structures. It is
+     * recommended to discard the given frame to avoid unexpected side effects.
+     *
+     * @param frame The new frame value.
+     */
+    final void copyFrom(final Frame frame) {
+        inputLocals = frame.inputLocals;
+        inputStack = frame.inputStack;
+        outputStackStart = 0;
+        outputLocals = frame.outputLocals;
+        outputStack = frame.outputStack;
+        outputStackTop = frame.outputStackTop;
+        initializationCount = frame.initializationCount;
+        initializations = frame.initializations;
+    }
+
+    /**
+     * Sets the input frame from the given method description. This method is used to initialize the
+     * first frame of a method, which is implicit (i.e. not stored explicitly in the StackMapTable
+     * attribute).
+     *
+     * @param symbolTable the type table to use to lookup and store type {@link Symbol}.
+     * @param access      the method's access flags.
+     * @param descriptor  the method descriptor.
+     * @param maxLocals   the maximum number of local variables of the method.
+     */
+    final void setInputFrameFromDescriptor(
+            final SymbolTable symbolTable,
+            final int access,
+            final String descriptor,
+            final int maxLocals) {
+        inputLocals = new int[maxLocals];
+        inputStack = new int[0];
+        int inputLocalIndex = 0;
+        if ((access & Opcodes.ACC_STATIC) == 0) {
+            if ((access & Constants.ACC_CONSTRUCTOR) == 0) {
+                inputLocals[inputLocalIndex++] =
+                        REFERENCE_KIND | symbolTable.addType(symbolTable.getClassName());
+            } else {
+                inputLocals[inputLocalIndex++] = UNINITIALIZED_THIS;
+            }
+        }
+        for (Type argumentType : Type.getArgumentTypes(descriptor)) {
+            int abstractType =
+                    getAbstractTypeFromDescriptor(symbolTable, argumentType.getDescriptor(), 0);
+            inputLocals[inputLocalIndex++] = abstractType;
+            if (abstractType == LONG || abstractType == DOUBLE) {
+                inputLocals[inputLocalIndex++] = TOP;
+            }
+        }
+        while (inputLocalIndex < maxLocals) {
+            inputLocals[inputLocalIndex++] = TOP;
+        }
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Methods related to the input frame
+    // -----------------------------------------------------------------------------------------------
+
+    /**
      * Returns the abstract type corresponding to the given type descriptor.
      *
      * @param symbolTable the type table to use to lookup and store type {@link Symbol}.
@@ -396,187 +458,6 @@ class Frame {
     }
 
     /**
-     * Returns the abstract type corresponding to the given public API frame element type.
-     *
-     * @param symbolTable the type table to use to lookup and store type {@link Symbol}.
-     * @param type        a frame element type described using the same format as in {@link
-     *                    MethodVisitor#visitFrame}, i.e. either {@link Opcodes#TOP}, {@link Opcodes#INTEGER}, {@link
-     *                    Opcodes#FLOAT}, {@link Opcodes#LONG}, {@link Opcodes#DOUBLE}, {@link Opcodes#NULL}, or
-     *                    {@link Opcodes#UNINITIALIZED_THIS}, or the internal name of a class, or a Label designating
-     *                    a NEW instruction (for uninitialized types).
-     * @return the abstract type corresponding to the given frame element type.
-     */
-    static int getAbstractTypeFromApiFormat(final SymbolTable symbolTable, final Object type) {
-        if (type instanceof Integer) {
-            return CONSTANT_KIND | ((Integer) type).intValue();
-        } else if (type instanceof String) {
-            String descriptor = Type.getObjectType((String) type).getDescriptor();
-            return getAbstractTypeFromDescriptor(symbolTable, descriptor, 0);
-        } else {
-            return UNINITIALIZED_KIND
-                    | symbolTable.addUninitializedType("", ((Label) type).bytecodeOffset);
-        }
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Methods related to the input frame
-    // -----------------------------------------------------------------------------------------------
-
-    /**
-     * Merges the type at the given index in the given abstract type array with the given type.
-     * Returns {@literal true} if the type array has been modified by this operation.
-     *
-     * @param symbolTable the type table to use to lookup and store type {@link Symbol}.
-     * @param sourceType  the abstract type with which the abstract type array element must be merged.
-     *                    This type should be of {@link #CONSTANT_KIND}, {@link #REFERENCE_KIND} or {@link
-     *                    #UNINITIALIZED_KIND} kind, with positive or {@literal null} array dimensions.
-     * @param dstTypes    an array of abstract types. These types should be of {@link #CONSTANT_KIND},
-     *                    {@link #REFERENCE_KIND} or {@link #UNINITIALIZED_KIND} kind, with positive or {@literal
-     *                    null} array dimensions.
-     * @param dstIndex    the index of the type that must be merged in dstTypes.
-     * @return {@literal true} if the type array has been modified by this operation.
-     */
-    private static boolean merge(
-            final SymbolTable symbolTable,
-            final int sourceType,
-            final int[] dstTypes,
-            final int dstIndex) {
-        int dstType = dstTypes[dstIndex];
-        if (dstType == sourceType) {
-            // If the types are equal, merge(sourceType, dstType) = dstType, so there is no change.
-            return false;
-        }
-        int srcType = sourceType;
-        if ((sourceType & ~DIM_MASK) == NULL) {
-            if (dstType == NULL) {
-                return false;
-            }
-            srcType = NULL;
-        }
-        if (dstType == 0) {
-            // If dstTypes[dstIndex] has never been assigned, merge(srcType, dstType) = srcType.
-            dstTypes[dstIndex] = srcType;
-            return true;
-        }
-        int mergedType;
-        if ((dstType & DIM_MASK) != 0 || (dstType & KIND_MASK) == REFERENCE_KIND) {
-            // If dstType is a reference type of any array dimension.
-            if (srcType == NULL) {
-                // If srcType is the NULL type, merge(srcType, dstType) = dstType, so there is no change.
-                return false;
-            } else if ((srcType & (DIM_MASK | KIND_MASK)) == (dstType & (DIM_MASK | KIND_MASK))) {
-                // If srcType has the same array dimension and the same kind as dstType.
-                if ((dstType & KIND_MASK) == REFERENCE_KIND) {
-                    // If srcType and dstType are reference types with the same array dimension,
-                    // merge(srcType, dstType) = dim(srcType) | common super class of srcType and dstType.
-                    mergedType =
-                            (srcType & DIM_MASK)
-                                    | REFERENCE_KIND
-                                    | symbolTable.addMergedType(srcType & VALUE_MASK, dstType & VALUE_MASK);
-                } else {
-                    // If srcType and dstType are array types of equal dimension but different element types,
-                    // merge(srcType, dstType) = dim(srcType) - 1 | java/lang/Object.
-                    int mergedDim = ELEMENT_OF + (srcType & DIM_MASK);
-                    mergedType = mergedDim | REFERENCE_KIND | symbolTable.addType("java/lang/Object");
-                }
-            } else if ((srcType & DIM_MASK) != 0 || (srcType & KIND_MASK) == REFERENCE_KIND) {
-                // If srcType is any other reference or array type,
-                // merge(srcType, dstType) = min(srcDdim, dstDim) | java/lang/Object
-                // where srcDim is the array dimension of srcType, minus 1 if srcType is an array type
-                // with a non reference element type (and similarly for dstDim).
-                int srcDim = srcType & DIM_MASK;
-                if (srcDim != 0 && (srcType & KIND_MASK) != REFERENCE_KIND) {
-                    srcDim = ELEMENT_OF + srcDim;
-                }
-                int dstDim = dstType & DIM_MASK;
-                if (dstDim != 0 && (dstType & KIND_MASK) != REFERENCE_KIND) {
-                    dstDim = ELEMENT_OF + dstDim;
-                }
-                mergedType =
-                        Math.min(srcDim, dstDim) | REFERENCE_KIND | symbolTable.addType("java/lang/Object");
-            } else {
-                // If srcType is any other type, merge(srcType, dstType) = TOP.
-                mergedType = TOP;
-            }
-        } else if (dstType == NULL) {
-            // If dstType is the NULL type, merge(srcType, dstType) = srcType, or TOP if srcType is not a
-            // an array type or a reference type.
-            mergedType =
-                    (srcType & DIM_MASK) != 0 || (srcType & KIND_MASK) == REFERENCE_KIND ? srcType : TOP;
-        } else {
-            // If dstType is any other type, merge(srcType, dstType) = TOP whatever srcType.
-            mergedType = TOP;
-        }
-        if (mergedType != dstType) {
-            dstTypes[dstIndex] = mergedType;
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Sets this frame to the value of the given frame.
-     *
-     * <p>WARNING: after this method is called the two frames share the same data structures. It is
-     * recommended to discard the given frame to avoid unexpected side effects.
-     *
-     * @param frame The new frame value.
-     */
-    final void copyFrom(final Frame frame) {
-        inputLocals = frame.inputLocals;
-        inputStack = frame.inputStack;
-        outputStackStart = 0;
-        outputLocals = frame.outputLocals;
-        outputStack = frame.outputStack;
-        outputStackTop = frame.outputStackTop;
-        initializationCount = frame.initializationCount;
-        initializations = frame.initializations;
-    }
-
-    /**
-     * Sets the input frame from the given method description. This method is used to initialize the
-     * first frame of a method, which is implicit (i.e. not stored explicitly in the StackMapTable
-     * attribute).
-     *
-     * @param symbolTable the type table to use to lookup and store type {@link Symbol}.
-     * @param access      the method's access flags.
-     * @param descriptor  the method descriptor.
-     * @param maxLocals   the maximum number of local variables of the method.
-     */
-    final void setInputFrameFromDescriptor(
-            final SymbolTable symbolTable,
-            final int access,
-            final String descriptor,
-            final int maxLocals) {
-        inputLocals = new int[maxLocals];
-        inputStack = new int[0];
-        int inputLocalIndex = 0;
-        if ((access & Opcodes.ACC_STATIC) == 0) {
-            if ((access & Constants.ACC_CONSTRUCTOR) == 0) {
-                inputLocals[inputLocalIndex++] =
-                        REFERENCE_KIND | symbolTable.addType(symbolTable.getClassName());
-            } else {
-                inputLocals[inputLocalIndex++] = UNINITIALIZED_THIS;
-            }
-        }
-        for (Type argumentType : Type.getArgumentTypes(descriptor)) {
-            int abstractType =
-                    getAbstractTypeFromDescriptor(symbolTable, argumentType.getDescriptor(), 0);
-            inputLocals[inputLocalIndex++] = abstractType;
-            if (abstractType == LONG || abstractType == DOUBLE) {
-                inputLocals[inputLocalIndex++] = TOP;
-            }
-        }
-        while (inputLocalIndex < maxLocals) {
-            inputLocals[inputLocalIndex++] = TOP;
-        }
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Methods related to the output frame
-    // -----------------------------------------------------------------------------------------------
-
-    /**
      * Sets the input frame from the given public API frame description.
      *
      * @param symbolTable the type table to use to lookup and store type {@link Symbol}.
@@ -620,6 +501,33 @@ class Frame {
         outputStackTop = 0;
         initializationCount = 0;
     }
+
+    /**
+     * Returns the abstract type corresponding to the given public API frame element type.
+     *
+     * @param symbolTable the type table to use to lookup and store type {@link Symbol}.
+     * @param type        a frame element type described using the same format as in {@link
+     *                    MethodVisitor#visitFrame}, i.e. either {@link Opcodes#TOP}, {@link Opcodes#INTEGER}, {@link
+     *                    Opcodes#FLOAT}, {@link Opcodes#LONG}, {@link Opcodes#DOUBLE}, {@link Opcodes#NULL}, or
+     *                    {@link Opcodes#UNINITIALIZED_THIS}, or the internal name of a class, or a Label designating
+     *                    a NEW instruction (for uninitialized types).
+     * @return the abstract type corresponding to the given frame element type.
+     */
+    static int getAbstractTypeFromApiFormat(final SymbolTable symbolTable, final Object type) {
+        if (type instanceof Integer) {
+            return CONSTANT_KIND | ((Integer) type).intValue();
+        } else if (type instanceof String) {
+            String descriptor = Type.getObjectType((String) type).getDescriptor();
+            return getAbstractTypeFromDescriptor(symbolTable, descriptor, 0);
+        } else {
+            return UNINITIALIZED_KIND
+                    | symbolTable.addUninitializedType("", ((Label) type).bytecodeOffset);
+        }
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Methods related to the output frame
+    // -----------------------------------------------------------------------------------------------
 
     final int getInputStackSize() {
         return inputStack.length;
@@ -1145,10 +1053,6 @@ class Frame {
         }
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Methods to handle uninitialized types
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Pops an abstract type from the output frame stack and returns its value.
      *
@@ -1162,6 +1066,10 @@ class Frame {
             return STACK_KIND | -(--outputStackStart);
         }
     }
+
+    // -----------------------------------------------------------------------------------------------
+    // Methods to handle uninitialized types
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Replaces the abstract type stored at the given local variable index in the output frame.
@@ -1184,10 +1092,6 @@ class Frame {
         outputLocals[localIndex] = abstractType;
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Main method, to simulate the execution of each instruction on the output frame
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Pops as many abstract types from the output frame stack as described by the given descriptor.
      *
@@ -1205,7 +1109,7 @@ class Frame {
     }
 
     // -----------------------------------------------------------------------------------------------
-    // Frame merging methods, used in the second step of the stack map frame computation algorithm
+    // Main method, to simulate the execution of each instruction on the output frame
     // -----------------------------------------------------------------------------------------------
 
     /**
@@ -1229,6 +1133,10 @@ class Frame {
         // Store the abstract type.
         initializations[initializationCount++] = abstractType;
     }
+
+    // -----------------------------------------------------------------------------------------------
+    // Frame merging methods, used in the second step of the stack map frame computation algorithm
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Merges the input frame of the given {@link Frame} with the input and output frames of this
@@ -1365,10 +1273,6 @@ class Frame {
         }
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Frame output methods, to generate StackMapFrame attributes
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Returns the "initialized" abstract type corresponding to the given abstract type.
      *
@@ -1402,6 +1306,102 @@ class Frame {
             }
         }
         return abstractType;
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Frame output methods, to generate StackMapFrame attributes
+    // -----------------------------------------------------------------------------------------------
+
+    /**
+     * Merges the type at the given index in the given abstract type array with the given type.
+     * Returns {@literal true} if the type array has been modified by this operation.
+     *
+     * @param symbolTable the type table to use to lookup and store type {@link Symbol}.
+     * @param sourceType  the abstract type with which the abstract type array element must be merged.
+     *                    This type should be of {@link #CONSTANT_KIND}, {@link #REFERENCE_KIND} or {@link
+     *                    #UNINITIALIZED_KIND} kind, with positive or {@literal null} array dimensions.
+     * @param dstTypes    an array of abstract types. These types should be of {@link #CONSTANT_KIND},
+     *                    {@link #REFERENCE_KIND} or {@link #UNINITIALIZED_KIND} kind, with positive or {@literal
+     *                    null} array dimensions.
+     * @param dstIndex    the index of the type that must be merged in dstTypes.
+     * @return {@literal true} if the type array has been modified by this operation.
+     */
+    private static boolean merge(
+            final SymbolTable symbolTable,
+            final int sourceType,
+            final int[] dstTypes,
+            final int dstIndex) {
+        int dstType = dstTypes[dstIndex];
+        if (dstType == sourceType) {
+            // If the types are equal, merge(sourceType, dstType) = dstType, so there is no change.
+            return false;
+        }
+        int srcType = sourceType;
+        if ((sourceType & ~DIM_MASK) == NULL) {
+            if (dstType == NULL) {
+                return false;
+            }
+            srcType = NULL;
+        }
+        if (dstType == 0) {
+            // If dstTypes[dstIndex] has never been assigned, merge(srcType, dstType) = srcType.
+            dstTypes[dstIndex] = srcType;
+            return true;
+        }
+        int mergedType;
+        if ((dstType & DIM_MASK) != 0 || (dstType & KIND_MASK) == REFERENCE_KIND) {
+            // If dstType is a reference type of any array dimension.
+            if (srcType == NULL) {
+                // If srcType is the NULL type, merge(srcType, dstType) = dstType, so there is no change.
+                return false;
+            } else if ((srcType & (DIM_MASK | KIND_MASK)) == (dstType & (DIM_MASK | KIND_MASK))) {
+                // If srcType has the same array dimension and the same kind as dstType.
+                if ((dstType & KIND_MASK) == REFERENCE_KIND) {
+                    // If srcType and dstType are reference types with the same array dimension,
+                    // merge(srcType, dstType) = dim(srcType) | common super class of srcType and dstType.
+                    mergedType =
+                            (srcType & DIM_MASK)
+                                    | REFERENCE_KIND
+                                    | symbolTable.addMergedType(srcType & VALUE_MASK, dstType & VALUE_MASK);
+                } else {
+                    // If srcType and dstType are array types of equal dimension but different element types,
+                    // merge(srcType, dstType) = dim(srcType) - 1 | java/lang/Object.
+                    int mergedDim = ELEMENT_OF + (srcType & DIM_MASK);
+                    mergedType = mergedDim | REFERENCE_KIND | symbolTable.addType("java/lang/Object");
+                }
+            } else if ((srcType & DIM_MASK) != 0 || (srcType & KIND_MASK) == REFERENCE_KIND) {
+                // If srcType is any other reference or array type,
+                // merge(srcType, dstType) = min(srcDdim, dstDim) | java/lang/Object
+                // where srcDim is the array dimension of srcType, minus 1 if srcType is an array type
+                // with a non reference element type (and similarly for dstDim).
+                int srcDim = srcType & DIM_MASK;
+                if (srcDim != 0 && (srcType & KIND_MASK) != REFERENCE_KIND) {
+                    srcDim = ELEMENT_OF + srcDim;
+                }
+                int dstDim = dstType & DIM_MASK;
+                if (dstDim != 0 && (dstType & KIND_MASK) != REFERENCE_KIND) {
+                    dstDim = ELEMENT_OF + dstDim;
+                }
+                mergedType =
+                        Math.min(srcDim, dstDim) | REFERENCE_KIND | symbolTable.addType("java/lang/Object");
+            } else {
+                // If srcType is any other type, merge(srcType, dstType) = TOP.
+                mergedType = TOP;
+            }
+        } else if (dstType == NULL) {
+            // If dstType is the NULL type, merge(srcType, dstType) = srcType, or TOP if srcType is not a
+            // an array type or a reference type.
+            mergedType =
+                    (srcType & DIM_MASK) != 0 || (srcType & KIND_MASK) == REFERENCE_KIND ? srcType : TOP;
+        } else {
+            // If dstType is any other type, merge(srcType, dstType) = TOP whatever srcType.
+            mergedType = TOP;
+        }
+        if (mergedType != dstType) {
+            dstTypes[dstIndex] = mergedType;
+            return true;
+        }
+        return false;
     }
 
     /**

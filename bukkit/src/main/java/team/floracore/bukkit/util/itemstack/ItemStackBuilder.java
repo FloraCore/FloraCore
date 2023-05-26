@@ -169,6 +169,27 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return is;
     }
 
+    public NmsNBTTagCompound tag() {
+        if (!hasTag()) {
+            getHandle().setTag(NmsNBTTagCompound.newInstance());
+        }
+        return getHandle().getTag();
+    }
+
+    public boolean hasTag() {
+        if (WrappedObject.isNull(this.item.getHandle())) {
+            return false;
+        }
+        return !WrappedObject.isNull(item.getHandle().getTag());
+    }
+
+    public NmsItemStack getHandle() {
+        if (WrappedObject.isNull(this.item.getHandle())) {
+            this.item.setHandle(NmsItemStack.newInstance(ObcMagicNumbers.getItem(Material.AIR)));
+        }
+        return this.item.getHandle();
+    }
+
     public static ItemStackBuilder returnArrow() {
         return newSkull(null,
                 "http://textures.minecraft.net/texture/d9ed8bcbafbe99787325239048b8099407a098e7077c9b4c3b478b289b9149fd");
@@ -234,31 +255,6 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return json;
     }
 
-    public static String getId(Material m) {
-        return ObcMagicNumbers.getItem(m).getId();
-    }
-
-    public NmsNBTTagCompound tag() {
-        if (!hasTag()) {
-            getHandle().setTag(NmsNBTTagCompound.newInstance());
-        }
-        return getHandle().getTag();
-    }
-
-    public boolean hasTag() {
-        if (WrappedObject.isNull(this.item.getHandle())) {
-            return false;
-        }
-        return !WrappedObject.isNull(item.getHandle().getTag());
-    }
-
-    public NmsItemStack getHandle() {
-        if (WrappedObject.isNull(this.item.getHandle())) {
-            this.item.setHandle(NmsItemStack.newInstance(ObcMagicNumbers.getItem(Material.AIR)));
-        }
-        return this.item.getHandle();
-    }
-
     @Override
     public ItemStack get() {
         return item.getRaw();
@@ -282,6 +278,10 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
 
     public ItemStackBuilder setId(Material m) {
         return setId(getId(m));
+    }
+
+    public static String getId(Material m) {
+        return ObcMagicNumbers.getItem(m).getId();
     }
 
     public ItemStackBuilder add(int count) {

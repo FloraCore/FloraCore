@@ -13,6 +13,20 @@ import java.util.logging.*;
 import static java.util.logging.Level.*;
 
 public class ChestInventoryOpener implements InventoryOpener {
+    @Override
+    public Inventory open(SmartInventory inv, Player player) {
+        checkArgument(inv.getColumns() == 9,
+                "The column count for the chest inventory must be 9, found: %s.", inv.getColumns());
+        checkArgument(inv.getRows() >= 1 && inv.getRows() <= 6,
+                "The row count for the chest inventory must be between 1 and 6, found: %s", inv.getRows());
+        InventoryManager manager = inv.getManager();
+        Inventory handle = Bukkit.createInventory(player, inv.getRows() * inv.getColumns(), inv.getTitle());
+
+        fill(handle, manager.getContents(player).get());
+        player.openInventory(handle);
+        return handle;
+    }
+
     public static void checkArgument(boolean b, String errorMessageTemplate, int p1) {
         if (!b) {
             throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1));
@@ -74,20 +88,6 @@ public class ChestInventoryOpener implements InventoryOpener {
                     .log(WARNING, "Exception during lenientFormat for " + objectToString, e);
             return "<" + objectToString + " threw " + e.getClass().getName() + ">";
         }
-    }
-
-    @Override
-    public Inventory open(SmartInventory inv, Player player) {
-        checkArgument(inv.getColumns() == 9,
-                "The column count for the chest inventory must be 9, found: %s.", inv.getColumns());
-        checkArgument(inv.getRows() >= 1 && inv.getRows() <= 6,
-                "The row count for the chest inventory must be between 1 and 6, found: %s", inv.getRows());
-        InventoryManager manager = inv.getManager();
-        Inventory handle = Bukkit.createInventory(player, inv.getRows() * inv.getColumns(), inv.getTitle());
-
-        fill(handle, manager.getContents(player).get());
-        player.openInventory(handle);
-        return handle;
     }
 
     @Override

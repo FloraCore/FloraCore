@@ -144,6 +144,10 @@ public enum Dependency {
             "2.11.1",
             "6gUF7nUV5YsawOaG5NGl2ffYCOJRphvDcaoFlbmWP4M=",
             Relocation.of("commonspool2", "org{}apache{}commons{}pool2")),
+    NETTY_TRANSPORT_NATIVE_UNIX_COMMON("io.netty",
+            "netty-transport-native-unix-common",
+            "4.1.93.Final",
+            "d0FlocTbqssX+cGtZms1aaallxWugo58PUdwP0eaU+c="),
     ;
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";

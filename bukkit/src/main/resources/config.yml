@@ -14,6 +14,7 @@ bungeecord: false
 #   |  Remote databases - require connection information to be configured below
 #   |=> MySQL
 #   |=> MariaDB (preferred over MySQL)
+#   |=> PostgreSQL
 #
 #   |  Flat file/local database - don't require any extra configuration
 #   |=> H2

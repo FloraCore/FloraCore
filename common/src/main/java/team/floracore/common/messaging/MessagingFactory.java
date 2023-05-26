@@ -20,10 +20,6 @@ public class MessagingFactory<P extends FloraCorePlugin> {
         this.plugin = plugin;
     }
 
-    protected P getPlugin() {
-        return this.plugin;
-    }
-
     public final InternalMessagingService getInstance() {
         String messagingType = this.plugin.getConfiguration().get(ConfigKeys.MESSAGING_SERVICE);
         if (messagingType.equals("none")) {
@@ -56,7 +52,8 @@ public class MessagingFactory<P extends FloraCorePlugin> {
         }
 
         if (messagingType.equals("custom")) {
-            this.plugin.getLogger().info("Messaging service is set to custom. No service is initialized at this stage yet.");
+            this.plugin.getLogger()
+                    .info("Messaging service is set to custom. No service is initialized at this stage yet.");
             return null;
         }
 
@@ -95,6 +92,10 @@ public class MessagingFactory<P extends FloraCorePlugin> {
         }
 
         return null;
+    }
+
+    protected P getPlugin() {
+        return this.plugin;
     }
 
     private class RedisMessengerProvider implements MessengerProvider {
@@ -164,7 +165,9 @@ public class MessagingFactory<P extends FloraCorePlugin> {
                     SqlStorage storage = (SqlStorage) implementation;
                     if (storage.getConnectionFactory() instanceof PostgresConnectionFactory) {
                         // found an implementation match!
-                        PostgresMessenger messenger = new PostgresMessenger(getPlugin(), storage, incomingMessageConsumer);
+                        PostgresMessenger messenger = new PostgresMessenger(getPlugin(),
+                                storage,
+                                incomingMessageConsumer);
                         messenger.init();
                         return messenger;
                     }
