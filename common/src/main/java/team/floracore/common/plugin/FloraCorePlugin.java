@@ -1,5 +1,6 @@
 package team.floracore.common.plugin;
 
+import com.google.gson.*;
 import okhttp3.*;
 import team.floracore.common.api.*;
 import team.floracore.common.config.*;
@@ -121,4 +122,6 @@ public interface FloraCorePlugin {
      * @param service the service
      */
     void setMessagingService(InternalMessagingService service);
+
+    boolean processIncomingMessage(String type, JsonElement content, UUID id);
 }

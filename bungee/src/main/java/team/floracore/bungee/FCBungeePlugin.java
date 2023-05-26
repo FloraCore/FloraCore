@@ -1,5 +1,6 @@
 package team.floracore.bungee;
 
+import com.google.gson.*;
 import net.md_5.bungee.api.plugin.*;
 import team.floracore.bungee.command.*;
 import team.floracore.bungee.listener.*;
@@ -50,6 +51,11 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     @Override
     public Sender getConsoleSender() {
         return this.senderFactory.wrap(this.bootstrap.getProxy().getConsole());
+    }
+
+    @Override
+    public boolean processIncomingMessage(String type, JsonElement content, UUID id) {
+        return false;
     }
 
     public Plugin getLoader() {

@@ -1,5 +1,6 @@
 package team.floracore.bukkit;
 
+import com.google.gson.*;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.plugin.java.*;
@@ -143,6 +144,11 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     @Override
     public Sender getConsoleSender() {
         return getSenderFactory().wrap(this.bootstrap.getConsole());
+    }
+
+    @Override
+    public boolean processIncomingMessage(String type, JsonElement content, UUID id) {
+        return false;
     }
 
     public BukkitSenderFactory getSenderFactory() {

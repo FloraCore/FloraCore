@@ -3,7 +3,6 @@ package team.floracore.common.messaging;
 import com.google.gson.*;
 import org.checkerframework.checker.nullness.qual.*;
 import org.floracore.api.messenger.*;
-import org.floracore.api.messenger.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.util.*;
 import team.floracore.common.util.gson.*;
@@ -69,28 +68,6 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
     }
 
     @Override
-    public boolean consumeIncomingMessage(@NonNull Message message) {
-        Objects.requireNonNull(message, "message");
-
-        if (!this.receivedMessages.add(message.getId())) {
-            return false;
-        }
-
-        // determine if the message can be handled by us
-        boolean valid = true;
-
-        // instead of throwing an exception here, just return false
-        // it means an instance of FC can gracefully handle messages it doesn't
-        // "understand" yet. (sent from an instance running a newer version, etc)
-        if (!valid) {
-            return false;
-        }
-
-        processIncomingMessage(message);
-        return true;
-    }
-
-    @Override
     public boolean consumeIncomingMessageAsString(@NonNull String encodedString) {
         try {
             return consumeIncomingMessageAsString0(encodedString);
@@ -129,61 +106,6 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
         // extract content
         @Nullable JsonElement content = json.get("content");
 
-        // decode message
-        Message decoded;
-        /*switch (type) {
-            case UpdateMessageImpl.TYPE:
-                decoded = UpdateMessageImpl.decode(content, id);
-                break;
-            case UserUpdateMessageImpl.TYPE:
-                decoded = UserUpdateMessageImpl.decode(content, id);
-                break;
-            case ActionLogMessageImpl.TYPE:
-                decoded = ActionLogMessageImpl.decode(content, id);
-                break;
-            default:
-                // gracefully return if we just don't recognise the type
-                return false;
-        }
-
-        // consume the message
-        processIncomingMessage(decoded);*/
-        return true;
-    }
-
-    private void processIncomingMessage(Message message) {
-        /*if (message instanceof UpdateMessage) {
-            UpdateMessage msg = (UpdateMessage) message;
-
-            this.plugin.getLogger().info("[Messaging] Received update ping with id: " + msg.getId());
-
-            if (this.plugin.getEventDispatcher().dispatchNetworkPreSync(false, msg.getId())) {
-                return;
-            }
-
-            this.plugin.getSyncTaskBuffer().request();
-        } else if (message instanceof UserUpdateMessage) {
-            UserUpdateMessage msg = (UserUpdateMessage) message;
-
-            User user = this.plugin.getUserManager().getIfLoaded(msg.getUserUniqueId());
-            if (user == null) {
-                return;
-            }
-
-            this.plugin.getLogger().info("[Messaging] Received user update ping for '" + user.getPlainDisplayName() + "' with id: " + msg.getId());
-
-            if (this.plugin.getEventDispatcher().dispatchNetworkPreSync(false, msg.getId())) {
-                return;
-            }
-
-            this.plugin.getStorage().loadUser(user.getUniqueId(), null);
-        } else if (message instanceof ActionLogMessage) {
-            ActionLogMessage msg = (ActionLogMessage) message;
-
-            this.plugin.getEventDispatcher().dispatchLogReceive(msg.getId(), msg.getAction());
-            this.plugin.getLogDispatcher().dispatchFromRemote((LoggedAction) msg.getAction());
-        } else {
-            throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
-        }*/
+        return plugin.processIncomingMessage(type, content, id);
     }
 }

@@ -10,23 +10,6 @@ import org.jetbrains.annotations.ApiStatus.*;
  */
 @NonExtendable
 public interface IncomingMessageConsumer {
-
-    /**
-     * Consumes a message instance.
-     *
-     * <p>The boolean returned from this method indicates whether or not the
-     * platform accepted the message. Some implementations which have multiple
-     * distribution channels may wish to use this result to dispatch the same
-     * message back to additional receivers.</p>
-     *
-     * <p>The implementation will usually return <code>false</code> if a message
-     * with the same ping id has already been processed.</p>
-     *
-     * @param message the message
-     * @return true if the message was accepted by the plugin
-     */
-    boolean consumeIncomingMessage(@NonNull Message message);
-
     /**
      * Consumes a message in an encoded string format.
      *
