@@ -96,10 +96,6 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
         return bungeeMessagingFactory;
     }
 
-    public BungeeMessagingFactory getBungeeMessagingFactory() {
-        return bungeeMessagingFactory;
-    }
-
     @Override
     protected void setupFramework() {
         this.listenerManager = new ListenerManager(this);
@@ -109,6 +105,10 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     @Override
     protected void disableFramework() {
 
+    }
+
+    public BungeeMessagingFactory getBungeeMessagingFactory() {
+        return bungeeMessagingFactory;
     }
 
     public BungeeSenderFactory getSenderFactory() {

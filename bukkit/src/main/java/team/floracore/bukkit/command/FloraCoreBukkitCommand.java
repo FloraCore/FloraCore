@@ -38,6 +38,14 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
                 .collect(Collectors.toList());
     }
 
+    @Suggestions("worlds-all")
+    public @NotNull List<String> getWorldsWithAll(final @NotNull CommandContext<CommandSender> sender,
+                                                  final @NotNull String input) {
+        final List<String> worlds = getWorlds(sender, input);
+        worlds.add("*");
+        return worlds;
+    }
+
     @Suggestions("worlds")
     public @NotNull List<String> getWorlds(final @NotNull CommandContext<CommandSender> sender,
                                            final @NotNull String input) {
@@ -45,14 +53,6 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
         for (final World world : plugin.getBootstrap().getServer().getWorlds()) {
             worlds.add(world.getName());
         }
-        return worlds;
-    }
-
-    @Suggestions("worlds-all")
-    public @NotNull List<String> getWorldsWithAll(final @NotNull CommandContext<CommandSender> sender,
-                                                  final @NotNull String input) {
-        final List<String> worlds = getWorlds(sender, input);
-        worlds.add("*");
         return worlds;
     }
 

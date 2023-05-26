@@ -111,22 +111,6 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
         }
     }
 
-    private String getPlayerName(UUID uuid) {
-        return getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(uuid);
-    }
-
-    public void pushChatMessage(UUID receiver, ChatMessage.ChatMessageType type, List<String> parameters) {
-        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> {
-            getPlugin().getMessagingService().ifPresent(service -> {
-                UUID requestId = service.generatePingId();
-                this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
-                ChatMessageImpl chatMessage = new ChatMessageImpl(requestId, receiver, type, parameters);
-                service.getMessenger().sendOutgoingMessage(chatMessage);
-                chat(chatMessage);
-            });
-        });
-    }
-
     public void notice(NoticeMessage noticeMsg) {
         ProxiedPlayer player = getPlugin().getBootstrap().getProxy().getPlayer(noticeMsg.getReceiver());
         List<String> parameters = noticeMsg.getParameters();
@@ -236,6 +220,22 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
                     break;
             }
         }
+    }
+
+    private String getPlayerName(UUID uuid) {
+        return getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(uuid);
+    }
+
+    public void pushChatMessage(UUID receiver, ChatMessage.ChatMessageType type, List<String> parameters) {
+        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> {
+            getPlugin().getMessagingService().ifPresent(service -> {
+                UUID requestId = service.generatePingId();
+                this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
+                ChatMessageImpl chatMessage = new ChatMessageImpl(requestId, receiver, type, parameters);
+                service.getMessenger().sendOutgoingMessage(chatMessage);
+                chat(chatMessage);
+            });
+        });
     }
 
     public void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, List<String> parameters) {

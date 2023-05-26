@@ -29,8 +29,8 @@ public class FloraCoreBungeeCommand extends AbstractFloraCoreCommand {
         CommandSender s = sender.getSender();
         ProxiedPlayer p = (ProxiedPlayer) s;
         return p.getServer().getInfo().getPlayers().stream()
-                .sorted(Comparator.comparing(ProxiedPlayer::getDisplayName))
-                .map(ProxiedPlayer::getDisplayName)
+                .sorted(Comparator.comparing(ProxiedPlayer::getName))
+                .map(ProxiedPlayer::getName)
                 .collect(Collectors.toList());
     }
 }
