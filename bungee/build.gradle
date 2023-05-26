@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     implementation project(':common')
+    compileOnly project(':api:bungee')
     compileOnly project(':common:loader-utils')
     compileOnly fileTree(dir: '../libs', includes: ['*jar'])
     compileOnly fileTree(dir: './libs', includes: ['*jar'])

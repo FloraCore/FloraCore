@@ -32,6 +32,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private ListenerManager listenerManager;
     private CommandManager commandManager;
     private BukkitSenderFactory senderFactory;
+    private BukkitMessagingFactory bukkitMessagingFactory;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -83,7 +84,8 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     @Override
     protected MessagingFactory<?> provideMessagingFactory() {
-        return new BukkitMessagingFactory(this);
+        this.bukkitMessagingFactory = new BukkitMessagingFactory(this);
+        return this.bukkitMessagingFactory;
     }
 
     @Override
@@ -148,7 +150,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     @Override
     public boolean processIncomingMessage(String type, JsonElement content, UUID id) {
-        return false;
+        return bukkitMessagingFactory.processIncomingMessage(type, content, id);
     }
 
     public BukkitSenderFactory getSenderFactory() {

@@ -9,4 +9,8 @@ findProject(':bukkit:loader')?.name = 'loader'
 include 'bungee'
 include 'bungee:loader'
 findProject(':bungee:loader')?.name = 'loader'
+include 'api:bukkit'
+findProject(':api:bukkit')?.name = 'bukkit'
+include 'api:bungee'
+findProject(':api:bungee')?.name = 'bungee'
 

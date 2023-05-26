@@ -1,0 +1,23 @@
+plugins {
+    id "java"
+}
+
+group 'org.floracore.bukkit'
+version rootProject.version
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compileOnly 'org.checkerframework:checker-qual:3.32.0'
+    compileOnly 'org.jetbrains:annotations:24.0.1'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = "UTF-8"
+}
+
+javadoc {
+    options.encoding = "UTF-8"
+}

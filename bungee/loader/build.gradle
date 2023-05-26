@@ -14,6 +14,7 @@ dependencies {
     compileOnly 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
 
     implementation project(':api')
+    implementation project(':api:bungee')
     implementation project(':common:loader-utils')
 }
 processResources {

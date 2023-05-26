@@ -21,6 +21,7 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     private BungeeSenderFactory senderFactory;
     private ListenerManager listenerManager;
     private CommandManager commandManager;
+    private BungeeMessagingFactory bungeeMessagingFactory;
 
     public FCBungeePlugin(FCBungeeBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -55,7 +56,7 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 
     @Override
     public boolean processIncomingMessage(String type, JsonElement content, UUID id) {
-        return false;
+        return bungeeMessagingFactory.processIncomingMessage(type, content, id);
     }
 
     public Plugin getLoader() {
@@ -91,7 +92,8 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 
     @Override
     protected MessagingFactory<?> provideMessagingFactory() {
-        return new BungeeMessagingFactory(this);
+        this.bungeeMessagingFactory = new BungeeMessagingFactory(this);
+        return bungeeMessagingFactory;
     }
 
     @Override
