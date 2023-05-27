@@ -35,6 +35,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private BukkitSenderFactory senderFactory;
     private BukkitMessagingFactory bukkitMessagingFactory;
     private ChatManager chatManager;
+    private BungeeUtil bungeeUtil;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -92,6 +93,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     @Override
     protected void setupFramework() {
+        this.bungeeUtil = new BungeeUtil(this);
         getLogger().info("Loading inventory manager...");
         inventoryManager = new InventoryManager(getLoader());
         inventoryManager.init();
@@ -172,5 +174,13 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     public ChatManager getChatManager() {
         return chatManager;
+    }
+
+    public BukkitMessagingFactory getBukkitMessagingFactory() {
+        return bukkitMessagingFactory;
+    }
+
+    public BungeeUtil getBungeeUtil() {
+        return bungeeUtil;
     }
 }

@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}chat`
     id        INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
     name      VARCHAR(36)        NOT NULL,
     type      VARCHAR(16)        NOT NULL,
-    records   TEXT               NOT NULL,
+    records   LONGTEXT           NOT NULL,
     startTime BIGINT             NOT NULL,
     endTime   BIGINT             NULL
 );

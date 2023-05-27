@@ -106,6 +106,18 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return forFlattening("stained_glass_pane", (short) 15, "black_stained_glass_pane");
     }
 
+    public static ItemStackBuilder limeTerracotta() {
+        return forFlattening("stained_clay", (short) 1, "lime_terracotta");
+    }
+
+    public static ItemStackBuilder lightBlueTerracotta() {
+        return forFlattening("stained_clay", (short) 3, "light_blue_terracotta");
+    }
+
+    public static ItemStackBuilder redTerracotta() {
+        return forFlattening("stained_clay", (short) 14, "red_terracotta");
+    }
+
     public static ItemStackBuilder grass() {
         return forFlattening("tallgrass", (short) 1, "grass");
     }

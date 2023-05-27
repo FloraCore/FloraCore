@@ -500,7 +500,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                     }
                     getPlugin().getBootstrap()
                             .getScheduler()
-                            .asyncLater(() -> partyWarp(party.getUniqueId(), getPlugin().getServerName()),
+                            .asyncLater(() -> partyWarp(party.getUniqueId(), player.getServer().getInfo().getName()),
                                     1,
                                     TimeUnit.SECONDS);
                 });
@@ -531,15 +531,14 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             PARTY party = getStorageImplementation().selectParty(partyUUID);
             List<UUID> members = party.getMembers();
             for (UUID member : members) {
-                String serverNow;
-                DATA data = getStorageImplementation().getSpecifiedData(member, DataType.FUNCTION, "server-status");
-                if (data != null) {
-                    serverNow = data.getValue();
+                ProxiedPlayer player = getPlugin().getProxy().getPlayer(member);
+                if (player != null) {
+                    String serverNow = player.getServer().getInfo().getName();
                     if (!serverName.equalsIgnoreCase(serverNow)) {
-                        ProxiedPlayer player = getPlugin().getProxy().getPlayer(member);
                         ServerInfo serverInfo = getPlugin().getProxy().getServerInfo(serverName);
-                        player.connect(serverInfo);
-                        // service.pushConnectServer(member, serverName);
+                        if (serverInfo != null) {
+                            player.connect(serverInfo);
+                        }
                     }
                 }
             }
@@ -721,7 +720,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             switch (FloraCoreProvider.get().getServerAPI().getServerType(serverName)) {
                 case GAME:
                 case NORMAL:
-                    partyWarp(party.getUniqueId(), getPlugin().getServerName());
+                    partyWarp(party.getUniqueId(), serverName);
                     break;
             }
         }

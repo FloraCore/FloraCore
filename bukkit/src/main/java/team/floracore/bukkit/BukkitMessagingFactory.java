@@ -80,6 +80,59 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
         }
     }
 
+    public void pushReport(UUID reporter,
+                           UUID reportedUser,
+                           String reporterServer,
+                           String reportedUserServer,
+                           String reason) {
+        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> {
+            getPlugin().getMessagingService().ifPresent(service -> {
+                UUID requestId = service.generatePingId();
+                this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
+                ReportMessageImpl reportMessage = new ReportMessageImpl(requestId,
+                        reporter,
+                        reportedUser,
+                        reporterServer,
+                        reportedUserServer,
+                        reason);
+                service.getMessenger().sendOutgoingMessage(reportMessage);
+                String player = getPlayerName(reporter);
+                String target = getPlayerName(reportedUser);
+                boolean playerOnlineStatus = isPlayerOnline(reporter);
+                boolean targetOnlineStatus = isPlayerOnline(reportedUser);
+                notifyStaffReport(player,
+                        target,
+                        reporterServer,
+                        reportedUserServer,
+                        reason,
+                        playerOnlineStatus,
+                        targetOnlineStatus);
+
+            });
+        });
+    }
+
+    public void notifyStaffReport(String reporter,
+                                  String reportedUser,
+                                  String reporterServer,
+                                  String reportedUserServer,
+                                  String reason,
+                                  boolean playerOnlineStatus,
+                                  boolean targetOnlineStatus) {
+        getPlugin().getOnlineSenders().forEach(i -> {
+            if (i.hasPermission("floracore.report.staff")) {
+                PlayerCommandMessage.COMMAND_MISC_REPORT_BROADCAST.send(i,
+                        reporter,
+                        reportedUser,
+                        reporterServer,
+                        reportedUserServer,
+                        reason,
+                        playerOnlineStatus,
+                        targetOnlineStatus);
+            }
+        });
+    }
+
     public void pushTeleport(UUID sender, UUID recipient, String serverName) {
         this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> {
             getPlugin().getMessagingService().ifPresent(service -> {
@@ -133,13 +186,13 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
                     public void run() {
                         Player sender = Bukkit.getPlayer(su);
                         Player recipient = Bukkit.getPlayer(ru);
-                        Sender s = getPlugin().getSenderFactory().wrap(sender);
                         if (shouldCancel.get() || secondsElapsed >= 30 || recipient == null) {
                             // 取消任务
                             scheduler.cancelTask(taskId[0]);
                             return;
                         }
                         if (sender != null) {
+                            Sender s = getPlugin().getSenderFactory().wrap(sender);
                             getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
                                 if (getPlugin().getLoader()
                                         .getServer()

@@ -11,6 +11,7 @@ import org.bukkit.*;
 import org.bukkit.enchantments.*;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.*;
+import org.floracore.api.bukkit.messenger.message.type.*;
 import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
@@ -85,8 +86,8 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                 MiscMessage.PLAYER_NOT_FOUND.send(s, target);
             }
         } else {
-            /*getPlugin().getMessagingService().ifPresent(service -> service.pushTeleport(u, ut, server));
-            getPlugin().getBungeeUtil().connect(sender, server);*/
+            getPlugin().getBukkitMessagingFactory().pushTeleport(u, ut, server);
+            getPlugin().getBungeeUtil().connect(sender, server);
         }
     }
 
@@ -141,19 +142,18 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                               String reportedUserServer,
                               String reason) {
         getAsyncExecutor().execute(() -> {
-            getPlugin().getMessagingService().ifPresent(service -> {
-                UUID uuid = UUID.randomUUID();
-                long time = System.currentTimeMillis();
-                List<ReportDataChatRecord> chat = new ArrayList<>();
-                ChatAPI chatAPI = getPlugin().getApiProvider().getChatAPI();
-                ChatManager chatManager = getPlugin().getChatManager();
-                List<ReportDataChatRecord> c1 = getPlayerChatUUIDRecent(reporter, time, chatAPI, chatManager);
-                List<ReportDataChatRecord> c2 = getPlayerChatUUIDRecent(reportedUser, time, chatAPI, chatManager);
-                chat.addAll(c1);
-                chat.addAll(c2);
-                getStorageImplementation().addReport(uuid, reporter, reportedUser, reason, time, chat);
-                // service.pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
-            });
+            UUID uuid = UUID.randomUUID();
+            long time = System.currentTimeMillis();
+            List<ReportDataChatRecord> chat = new ArrayList<>();
+            ChatAPI chatAPI = getPlugin().getApiProvider().getChatAPI();
+            ChatManager chatManager = getPlugin().getChatManager();
+            List<ReportDataChatRecord> c1 = getPlayerChatUUIDRecent(reporter, time, chatAPI, chatManager);
+            List<ReportDataChatRecord> c2 = getPlayerChatUUIDRecent(reportedUser, time, chatAPI, chatManager);
+            chat.addAll(c1);
+            chat.addAll(c2);
+            getStorageImplementation().addReport(uuid, reporter, reportedUser, reason, time, chat);
+            getPlugin().getBukkitMessagingFactory()
+                    .pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
         });
     }
 
@@ -363,48 +363,44 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                 case WAITING:
                     Component accepted = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_ACCEPTED.build(),
                             uuid);
-                    ItemStack ai = ItemStackBuilder.limeStainedGlassPane().get();
+                    ItemStack ai = ItemStackBuilder.limeStainedGlassPane().setName(accepted).get();
                     contents.set(3, 4, ClickableItem.of(ai, inventoryClickEvent -> {
                         report.setStatus(ReportStatus.ACCEPTED);
                         getReportGui(player, reportUUID, conclusion).open(player);
-                        getPlugin().getMessagingService().ifPresent(service -> {
-                            String reported = getPlayerRecordName(report.getReported());
-                            for (UUID reporter : report.getReporters()) {
-                                /*service.pushNoticeMessage(reporter,
-                                        NoticeMessage.NoticeType.REPORT_ACCEPTED,
-                                        Collections.singletonList(reported));*/
-                            }
-                           /*service.pushNoticeMessage(UUID.randomUUID(),
-                                    NoticeMessage.NoticeType.REPORT_STAFF_ACCEPTED,
-                                    Arrays.asList(resultRns, reported));*/
-                        });
+                        String reported = getPlayerRecordName(report.getReported());
+                        for (UUID reporter : report.getReporters()) {
+                            getPlugin().getBukkitMessagingFactory().pushNoticeMessage(reporter,
+                                    NoticeMessage.NoticeType.REPORT_ACCEPTED,
+                                    Collections.singletonList(reported));
+                        }
+                        getPlugin().getBukkitMessagingFactory().pushNoticeMessage(UUID.randomUUID(),
+                                NoticeMessage.NoticeType.REPORT_STAFF_ACCEPTED,
+                                Arrays.asList(resultRns, reported));
                     }));
                     break;
                 case ACCEPTED:
                     Component end = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_END.build(), uuid);
-                    ItemStackBuilder ei = ItemStackBuilder.limeStainedGlassPane();
+                    ItemStackBuilder ei = ItemStackBuilder.lightBlueStainedGlassPane().setName(end);
                     ei.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
                     contents.set(3, 4, ClickableItem.of(ei.get(), inventoryClickEvent -> {
                         report.setStatus(ReportStatus.ENDED);
                         report.setConclusionTime(System.currentTimeMillis());
                         getReportGui(player, reportUUID, conclusion).open(player);
-                        getPlugin().getMessagingService().ifPresent(service -> {
-                            String reported = getPlayerRecordName(report.getReported());
-                            for (UUID reporter : report.getReporters()) {
-                                /*service.pushNoticeMessage(reporter,
-                                        NoticeMessage.NoticeType.REPORT_PROCESSED,
-                                        Collections.singletonList(reported));*/
-                            }
-                            /*service.pushNoticeMessage(UUID.randomUUID(),
-                                    NoticeMessage.NoticeType.REPORT_STAFF_PROCESSED,
-                                    Arrays.asList(resultRns, reported));*/
-                        });
+                        String reported = getPlayerRecordName(report.getReported());
+                        for (UUID reporter : report.getReporters()) {
+                            getPlugin().getBukkitMessagingFactory().pushNoticeMessage(reporter,
+                                    NoticeMessage.NoticeType.REPORT_PROCESSED,
+                                    Collections.singletonList(reported));
+                        }
+                        getPlugin().getBukkitMessagingFactory().pushNoticeMessage(UUID.randomUUID(),
+                                NoticeMessage.NoticeType.REPORT_STAFF_PROCESSED,
+                                Arrays.asList(resultRns, reported));
                     }));
                     break;
                 case ENDED:
                     Component ended = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_ENDED.build(),
                             uuid);
-                    ItemStack edi = ItemStackBuilder.redStainedGlassPane().get();
+                    ItemStack edi = ItemStackBuilder.redStainedGlassPane().setName(ended).get();
                     contents.set(3, 4, ClickableItem.empty(edi));
                     break;
             }
