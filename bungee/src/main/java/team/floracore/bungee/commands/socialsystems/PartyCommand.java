@@ -4,6 +4,7 @@ import cloud.commandframework.CommandManager;
 import cloud.commandframework.annotations.*;
 import cloud.commandframework.annotations.processing.*;
 import cloud.commandframework.annotations.specifier.*;
+import net.md_5.bungee.api.config.*;
 import net.md_5.bungee.api.connection.*;
 import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.*;
@@ -535,6 +536,9 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 if (data != null) {
                     serverNow = data.getValue();
                     if (!serverName.equalsIgnoreCase(serverNow)) {
+                        ProxiedPlayer player = getPlugin().getProxy().getPlayer(member);
+                        ServerInfo serverInfo = getPlugin().getProxy().getServerInfo(serverName);
+                        player.connect(serverInfo);
                         // service.pushConnectServer(member, serverName);
                     }
                 }

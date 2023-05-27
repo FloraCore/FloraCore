@@ -119,7 +119,7 @@ public class CommandManager {
         this.annotationParser.parse(new OPListBukkitCommand(plugin));
         this.annotationParser.parse(new PingCommand(plugin));
         this.annotationParser.parse(new RealNameBukkitCommand(plugin));
-        // this.annotationParser.parse(new ReportCommand(plugin)); // TODO 命令已完成基本测试
+        this.annotationParser.parse(new ReportCommand(plugin)); // TODO 命令已完成基本测试
         this.annotationParser.parse(new SpeedBukkitCommand(plugin));
         this.annotationParser.parse(new SuicideBukkitCommand(plugin));
         this.annotationParser.parse(new TopCommand(plugin));

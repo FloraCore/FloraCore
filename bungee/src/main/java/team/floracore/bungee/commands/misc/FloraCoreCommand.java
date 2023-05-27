@@ -156,6 +156,6 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @Suggestions("servers")
     public List<String> getServers(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
-        return new ArrayList<>(getPlugin().getBootstrap().getProxy().getServersCopy().keySet());
+        return new ArrayList<>(getPlugin().getProxy().getServersCopy().keySet());
     }
 }

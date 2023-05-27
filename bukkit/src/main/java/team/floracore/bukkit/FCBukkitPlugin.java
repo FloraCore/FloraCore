@@ -169,4 +169,8 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     public BukkitSenderFactory getSenderFactory() {
         return this.senderFactory;
     }
+
+    public ChatManager getChatManager() {
+        return chatManager;
+    }
 }

@@ -37,7 +37,7 @@ public class CommandManager {
                     mapperFunction);
         } catch (final Exception e) {
             plugin.getLogger().severe("Failed to initialize the command this.manager");
-            plugin.getBootstrap().getProxy().stop();
+            plugin.getProxy().stop();
         }
         // Use contains to filter suggestions instead of default startsWith
         this.manager.commandSuggestionProcessor(new FilteringCommandSuggestionProcessor<>(

@@ -30,11 +30,11 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
                 break;
             case NoticeMessageImpl.TYPE:
                 decoded = NoticeMessageImpl.decode(content, id);
+                break;
             default:
                 return false;
 
         }
-
         // consume the message
         processIncomingMessage(decoded);
         return true;
@@ -54,7 +54,7 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
     }
 
     public void chat(ChatMessage chatMsg) {
-        ProxiedPlayer player = getPlugin().getBootstrap().getProxy().getPlayer(chatMsg.getReceiver());
+        ProxiedPlayer player = getPlugin().getProxy().getPlayer(chatMsg.getReceiver());
         List<String> parameters = chatMsg.getParameters();
         switch (chatMsg.getType()) {
             case STAFF:
@@ -112,7 +112,7 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
     }
 
     public void notice(NoticeMessage noticeMsg) {
-        ProxiedPlayer player = getPlugin().getBootstrap().getProxy().getPlayer(noticeMsg.getReceiver());
+        ProxiedPlayer player = getPlugin().getProxy().getPlayer(noticeMsg.getReceiver());
         List<String> parameters = noticeMsg.getParameters();
         if (player != null) {
             Sender sender = getPlugin().getSenderFactory().wrap(player);

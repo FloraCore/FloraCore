@@ -21,7 +21,7 @@ public class ListenerManager {
     }
 
     public PluginManager getPluginManager() {
-        return plugin.getBootstrap().getProxy().getPluginManager();
+        return plugin.getProxy().getPluginManager();
     }
 
     public FloraCorePlugin getPlugin() {

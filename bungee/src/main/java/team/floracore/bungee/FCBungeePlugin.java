@@ -1,6 +1,7 @@
 package team.floracore.bungee;
 
 import com.google.gson.*;
+import net.md_5.bungee.api.*;
 import net.md_5.bungee.api.plugin.*;
 import team.floracore.bungee.command.*;
 import team.floracore.bungee.listener.*;
@@ -34,6 +35,11 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
         } catch (ClassNotFoundException e) {
             return false;
         }
+    }
+
+
+    public ProxyServer getProxy() {
+        return getBootstrap().getProxy();
     }
 
     @Override

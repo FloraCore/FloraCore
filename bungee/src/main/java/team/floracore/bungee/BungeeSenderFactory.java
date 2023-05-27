@@ -63,7 +63,7 @@ public class BungeeSenderFactory extends SenderFactory<FCBungeePlugin, CommandSe
 
     @Override
     protected void performCommand(CommandSender sender, String command) {
-        getPlugin().getBootstrap().getProxy().getPluginManager().dispatchCommand(sender, command);
+        getPlugin().getProxy().getPluginManager().dispatchCommand(sender, command);
     }
 
     @Override

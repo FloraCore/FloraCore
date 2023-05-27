@@ -5,7 +5,9 @@ import com.google.gson.*;
 import net.kyori.adventure.text.*;
 import net.kyori.adventure.text.serializer.legacy.*;
 import org.bukkit.*;
+import org.bukkit.enchantments.*;
 import org.bukkit.inventory.*;
+import org.bukkit.inventory.meta.*;
 import org.bukkit.material.*;
 import team.floracore.bukkit.util.wrappednms.*;
 import team.floracore.bukkit.util.wrappedobc.*;
@@ -335,6 +337,27 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
             return 0;
         }
         return item.getRaw().getDurability();
+    }
+
+    public ItemStackBuilder setEnchants(Map<Enchantment, Integer> enchants) {
+        ItemStack is = item.getRaw();
+        is.addEnchantments(enchants);
+        return this;
+    }
+
+    public ItemStackBuilder addEnchantment(Enchantment enchantment, int level) {
+        ItemStack is = item.getRaw();
+        ItemMeta im = is.getItemMeta();
+        im.addEnchant(enchantment, level, true);
+        is.setItemMeta(im);
+        return this;
+    }
+
+    public ItemStackBuilder setInfinityDurability() {
+        ItemStack is = item.getRaw();
+        ItemMeta im = is.getItemMeta();
+        im.setUnbreakable(true);
+        return this;
     }
 
     /**
