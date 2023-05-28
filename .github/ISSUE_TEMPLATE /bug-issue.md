@@ -1,5 +1,5 @@
 ---
-name: Bug report
+name: 举报BUG
 about: 创建一个BUG议题以帮助我们改进
 
 ---
