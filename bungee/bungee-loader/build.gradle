@@ -8,15 +8,14 @@ version rootProject.version
 
 repositories {
     maven { url 'https://repo.papermc.io/repository/maven-public/' }
-    maven { url 'https://oss.sonatype.org/content/groups/public/' }
 }
 
 dependencies {
-    compileOnly 'com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT'
+    compileOnly 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
 
     implementation project(':api')
-    implementation project(':api:bukkit-api')
-    implementation project(':common:loader-utils')
+    implementation project(':api:bungee-api')
+    implementation project(':common:common-loader-utils')
 }
 processResources {
     def props = [version: rootProject.version]
@@ -28,10 +27,10 @@ processResources {
 }
 
 shadowJar {
-    archiveFileName = "FloraCore-Bukkit-${rootProject.version}.jar"
+    archiveFileName = "FloraCore-Bungee-${rootProject.version}.jar"
 
     from {
-        project(':bukkit').tasks.shadowJar.archiveFile
+        project(':bungee').tasks.shadowJar.archiveFile
     }
 }
 

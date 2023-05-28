@@ -27,7 +27,7 @@ dependencies {
     api project(':api')
     api 'org.checkerframework:checker-qual:3.32.0'
 
-    compileOnly project(':common:loader-utils')
+    compileOnly project(':common:common-loader-utils')
 
     compileOnly 'org.slf4j:slf4j-api:2.0.5'
     compileOnly 'org.apache.logging.log4j:log4j-api:2.20.0'
