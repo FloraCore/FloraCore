@@ -3,7 +3,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-group 'org.floracore.bukkit'
+group 'org.floracore'
 version rootProject.version
 
 repositories {

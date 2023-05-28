@@ -8,6 +8,9 @@ group 'team.floracore'
 version '2.0.3'
 
 subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven-publish'
+
     group = project.group
     version = project.version
 
@@ -16,6 +19,21 @@ subprojects {
 
     repositories {
         mavenCentral()
+    }
+
+    java {
+        withSourcesJar()
+    }
+
+    publishing {
+        publications {
+            maven(MavenPublication) {
+                groupId project.group
+                artifactId project.name
+                version project.version
+                from components.java
+            }
+        }
     }
 }
 
