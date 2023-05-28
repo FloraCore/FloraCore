@@ -1,9 +1,9 @@
 ---
-name: Bug report
-about: 创建一个报告以帮助我们改进FloraCore
+name: Bukkit Multiple Version Exceptions
+about: 创建一个Bukkit多版本不兼容的报告以帮助我们改进FloraCore
 title: ''
-labels: bug
-assignees: flowerinsnowdh, xLikeWATCHDOG
+labels: ''
+assignees: xLikeWATCHDOG
 
 ---
 
@@ -20,11 +20,8 @@ assignees: flowerinsnowdh, xLikeWATCHDOG
 3. 向下滚动到 '....'
 4. 看见错误
 
-**预期的行为**
-清晰而简明地描述你所期望发生的事情
-
-**屏幕截图**
-如果适用，请添加屏幕截图以帮助解释你的问题
+**屏幕截图/堆栈错误记录**
+如果适用，请添加屏幕截图或服务端堆栈错误记录以帮助解释你的问题
 
 **额外的补充**
 在此添加关于该问题的任何其他补充
