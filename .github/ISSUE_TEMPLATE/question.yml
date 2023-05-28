@@ -1,0 +1,50 @@
+name: ❓ Question
+description: 创建一个问题以向社区提出FloraCore使用问题
+title: "[问题]: "
+labels: ["question"]
+body:
+  - type: input
+    id: contact
+    attributes:
+      label: 联系方式
+      description: 如果我们需要更多信息，我们如何与您联系？
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: description-question
+    attributes:
+      label: 简明扼要地描述该问题是什么
+      description: 请同时告诉我们您期望发生的情况。
+    validations:
+      required: true
+  - type: dropdown
+    id: floracore-version
+    attributes:
+      label: FloraCore版本
+      description: 您正在运行哪个版本的FloraCore？
+      options:
+        - 2.0.4.3
+        - 其它版本(请在补充的地方进行补充)
+    validations:
+      required: true
+  - type: dropdown
+    id: server-type
+    attributes:
+      label: 服务器类型
+      description: 您在哪种服务器上运行FloraCore？
+      options:
+        - Paper/Bukkit
+        - Spigot/Bukkit
+        - BungeeCord
+        - Waterfall
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 用户协议
+      description: 通过提交此问题，您同意遵守我们的[用户协议](https://github.com/FloraCore/FloraCore/wiki/%E7%94%A8%E6%88%B7%E5%8D%8F%E8%AE%AE)
+      options:
+        - label: 我同意遵守FloraCore的用户协议。
+          required: true
