@@ -1,0 +1,46 @@
+name: 💡 新功能建议
+description: 创建报告以帮助我们改进FloraCore
+title: "[新功能建议]: "
+labels: ["feature-suggestions"]
+assignees:
+  - flowerinsnowdh
+  - xLikeWATCHDOG
+body:
+  - type: markdown
+    attributes:
+      value: |
+        感谢您花时间填写此建议。
+  - type: input
+    id: contact
+    attributes:
+      label: 联系方式
+      description: 如果我们需要更多信息，我们如何与您联系？
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: description-bug
+    attributes:
+      label: 简明扼要地描述该建议是什么
+      description: 请同时告诉我们您期望发生的情况。
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: 实现步骤
+      description: 如何实现这个功能
+      placeholder: |
+        1. 前往 '...'
+        2. 点击 '....'
+        3. 向下滚动到 '....'
+    validations:
+      required: true
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: 用户协议
+      description: 通过提交此问题，您同意遵守我们的[用户协议](https://github.com/FloraCore/FloraCore/wiki/%E7%94%A8%E6%88%B7%E5%8D%8F%E8%AE%AE)
+      options:
+        - label: 我同意遵守FloraCore的用户协议。
+          required: true
