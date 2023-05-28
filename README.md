@@ -5,6 +5,7 @@
 ![Code-Size](https://img.shields.io/github/languages/code-size/FloraCore/FloraCore?style=flat-square)
 ![Release](https://img.shields.io/github/v/release/FloraCore/FloraCore?style=flat-square)
 ![Actions](https://img.shields.io/github/actions/workflow/status/FloraCore/FloraCore/gradle-publish.yml?style=flat-square)
+[![JitPack](https://jitpack.io/v/FloraCore/FloraCore.svg)](https://jitpack.io/#FloraCore/FloraCore)
 ![Crowdin](https://badges.crowdin.net/floracore/localized.svg)
 
 </div>
