@@ -43,14 +43,14 @@ jobs:
           name: build-result
           path: |
             api/build/libs
-            api/bukkit/build/libs
-            api/bungee/build/libs
+            api/bukkit-api/build/libs
+            api/bungee-api/build/libs
             common/build/libs
-            common/loader-utils/build/libs
+            common/common-loader-utils/build/libs
             bukkit/build/libs
-            bukkit/loader/build/libs
+            bukkit/bukkit-loader/build/libs
             bungee/build/libs
-            bungee/loader/build/libs
+            bungee/bungee-loader/build/libs
             libs
   release:
     name: Download back the built plugins and release them
@@ -66,5 +66,5 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1.12.0
         with:
-          artifacts: "api/build/libs/*.jar,api/bukkit/build/libs/*API*.jar,api/bungee/build/libs/*API*.jar,common/build/libs/*.jar,common/loader-utils/build/libs/*.jar,bukkit/build/libs/*.jar,bukkit/loader/build/libs/*.jar,bungee/build/libs/*.jar,bungee/loader/build/libs/*.jar,libs/*.jar"
+          artifacts: "api/build/libs/*.jar,api/bukkit-api/build/libs/*API*.jar,api/bungee-api/build/libs/*API*.jar,common/build/libs/*.jar,common/common-loader-utils/build/libs/*.jar,bukkit/build/libs/*.jar,bukkit/bukkit-loader/build/libs/*.jar,bungee/build/libs/*.jar,bungee/bungee-loader/build/libs/*.jar,libs/*.jar"
           token: ${{ secrets.GITHUB_TOKEN }}
