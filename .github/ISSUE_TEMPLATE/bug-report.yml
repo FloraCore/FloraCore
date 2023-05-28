@@ -1,0 +1,62 @@
+name: 🐞 Bug Report
+description: 创建一个报告以帮助我们改进FloraCore
+title: "[Bug]: "
+labels: ["bug"]
+assignees:
+  - flowerinsnowdh
+  - xLikeWATCHDOG
+body:
+  - type: markdown
+    attributes:
+      value: |
+        谢谢你花时间填写这份错误报告
+  - type: input
+    id: contact
+    attributes:
+      label: 联系方式
+      description: 如果我们需要更多的信息，我们如何与你联系？
+      placeholder: ex. email@example.com
+    validations:
+      required: false
+  - type: textarea
+    id: description-bug
+    attributes:
+      label: 简明扼要地描述该错误是什么
+      description: 同时请告诉我们，你期望发生什么？
+      placeholder: 告诉我们你看到了什么
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: FloraCore 版本
+      description: 你运行的是什么版本的FloraCore?
+      options:
+        - 2.0.4.3
+        - 其它版本(请在补充的地方进行补充)
+    validations:
+      required: true
+  - type: dropdown
+    id: browsers
+    attributes:
+      label: What browsers are you seeing the problem on?
+      multiple: true
+      options:
+        - Firefox
+        - Chrome
+        - Safari
+        - Microsoft Edge
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      render: shell
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true
