@@ -2,7 +2,7 @@
 
 如果提交一个自定义议题，请提供FloraCore版本和服务器类型。例如：
 
-- FloraCore版本：1.0.0
-- 服务器类型：Paper/Bukkit
+- **FloraCore版本**：`1.0.0`
+- **服务器类型**：`Paper/Bukkit`
 
 谢谢!
