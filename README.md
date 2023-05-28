@@ -51,6 +51,7 @@ MzLibAgent不是一个Bukkit插件，请按照以下步骤安装：
 
 - [JavaDoc](https://floracore.github.io/index.html)
 - [开发标准及规范](./documentation/STANDARD.md)（所有开发者必看）。
+- [API](https://github.com/FloraCore/FloraCore/wiki/API)
 
 # Visitors
 
