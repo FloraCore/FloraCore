@@ -7,7 +7,8 @@ import java.util.*;
  */
 public interface DataAPI {
     /**
-     * 获取指定的Data的值
+     * 获取指定的Data的值。
+     * 若数据不存在，则返回null。
      *
      * @param uuid 玩家的UUID
      * @param type 数据类型
@@ -17,7 +18,8 @@ public interface DataAPI {
     String getSpecifiedDataValue(UUID uuid, DataType type, String key);
 
     /**
-     * 获取指定Data的过期时间戳
+     * 获取指定Data的过期时间戳。
+     * 若数据不存在，则返回null。
      *
      * @param uuid 玩家的UUID
      * @param type 数据类型
@@ -28,6 +30,7 @@ public interface DataAPI {
 
     /**
      * 获取指定Data的ID
+     * 若数据不存在，则返回null。
      *
      * @param uuid 玩家的UUID
      * @param type 数据类型

@@ -621,11 +621,13 @@ public interface PlayerCommandMessage extends AbstractMessage {
             "floracore.command.misc.report.notice.processed").color(AQUA).args(text(target).color(RED)));
 
     Args2<String, String> COMMAND_MISC_REPORT_NOTICE_STAFF_ACCEPTED = (reporter, target) -> AbstractMessage.prefixed(
+            // 玩家 {0} 对玩家 {1} 的举报已被受理
             translatable().key("floracore.command.misc.report.notice.staff.accepted")
                     .color(AQUA)
                     .args(text(reporter).color(GREEN), text(target).color(RED)));
 
     Args2<String, String> COMMAND_MISC_REPORT_NOTICE_STAFF_PROCESSED = (reporter, target) -> AbstractMessage.prefixed(
+            // 玩家 {0} 对玩家 {1} 的举报已被处理
             translatable().key("floracore.command.misc.report.notice.staff.processed")
                     .color(AQUA)
                     .args(text(reporter).color(GREEN), text(target).color(RED)));

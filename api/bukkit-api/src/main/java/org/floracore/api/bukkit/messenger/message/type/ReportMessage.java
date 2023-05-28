@@ -5,6 +5,9 @@ import org.jetbrains.annotations.*;
 
 import java.util.*;
 
+/**
+ * 举报消息
+ */
 public interface ReportMessage extends Message {
 
     /**

@@ -18,18 +18,39 @@ public class ChatRecord {
         this.time = time;
     }
 
+    /**
+     * 获取聊天记录的编号
+     * 该编号为当前记录的第几号聊天记录
+     *
+     * @return 聊天记录的编号
+     */
     public int getId() {
         return id;
     }
 
-    public UUID getUuid() {
+    /**
+     * 获取发送这条消息的玩家
+     *
+     * @return 发送这条消息的玩家
+     */
+    public UUID getUniqueId() {
         return uuid;
     }
 
+    /**
+     * 获取发送这条消息的时间
+     *
+     * @return 发送这条消息的时间
+     */
     public long getTime() {
         return time;
     }
 
+    /**
+     * 获取发送的消息
+     *
+     * @return 发送的消息
+     */
     public String getMessage() {
         return message;
     }

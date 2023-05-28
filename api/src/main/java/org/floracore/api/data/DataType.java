@@ -38,10 +38,26 @@ public enum DataType {
         this.name = name;
     }
 
+    /**
+     * 通过字符串换取{@link DataType}
+     * 若不存在，则返回默认值{@link DataType#AUTO_SYNC}
+     *
+     * @param name 目标字符串
+     * @return 数据类型
+     */
     public static DataType parse(String name) {
         return parse(name, AUTO_SYNC);
     }
 
+    /**
+     * 通过字符串获取{@link DataType}
+     * 若不存在，则返回默认值。
+     * 默认值在参数中设置。
+     *
+     * @param name 目标字符串
+     * @param def  默认值
+     * @return 数据类型
+     */
     public static DataType parse(String name, DataType def) {
         for (DataType t : values()) {
             if (t.getName().equalsIgnoreCase(name)) {

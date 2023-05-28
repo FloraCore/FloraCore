@@ -513,7 +513,7 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                 List<Component> lore = new ArrayList<>();
                 lore.add(Component.space());
                 lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_PLAYER.build(
-                        getPlayerRecordName(chat.getUuid())), uuid));
+                        getPlayerRecordName(chat.getUniqueId())), uuid));
                 long startTime = chat.getDataChatRecord().getJoinTime();
                 long endTime = chat.getDataChatRecord().getQuitTime();
                 lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_START_TIME.build(
@@ -666,9 +666,9 @@ public class ReportCommand extends FloraCoreBukkitCommand {
             Component c = join(joinConfig,
                     TranslationManager.render(BookMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_CHAT.build(
                             DurationFormatter.getTimeFromTimestamp(record.getTime()),
-                            getPlayerRecordName(record.getUuid()),
+                            getPlayerRecordName(record.getUniqueId()),
                             record.getMessage(),
-                            record.getUuid().equals(reportDataChatRecord.getUuid())), uuid),
+                            record.getUniqueId().equals(reportDataChatRecord.getUniqueId())), uuid),
                     space(),
                     TranslationManager.render(BookMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3.build(
                             reportUUID,

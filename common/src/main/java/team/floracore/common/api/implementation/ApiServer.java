@@ -25,6 +25,9 @@ public class ApiServer implements ServerAPI {
     @Override
     public ServerType getServerType(String serverName) {
         SERVER server = getServerData(serverName);
+        if (server == null) {
+            return null;
+        }
         return server.getType();
     }
 

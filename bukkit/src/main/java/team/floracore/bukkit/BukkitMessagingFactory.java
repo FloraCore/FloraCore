@@ -26,10 +26,6 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
         return super.getServiceFor(messagingType);
     }
 
-    private String getPlayerName(UUID uuid) {
-        return getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(uuid);
-    }
-
     public void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, List<String> parameters) {
         this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> {
             getPlugin().getMessagingService().ifPresent(service -> {
@@ -112,6 +108,14 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
         });
     }
 
+    private String getPlayerName(UUID uuid) {
+        return getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(uuid);
+    }
+
+    private boolean isPlayerOnline(UUID uuid) {
+        return getPlugin().getApiProvider().getPlayerAPI().isOnline(uuid);
+    }
+
     public void notifyStaffReport(String reporter,
                                   String reportedUser,
                                   String reporterServer,
@@ -142,10 +146,6 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
                 service.getMessenger().sendOutgoingMessage(teleportMessage);
             });
         });
-    }
-
-    private boolean isPlayerOnline(UUID uuid) {
-        return getPlugin().getApiProvider().getPlayerAPI().isOnline(uuid);
     }
 
     public boolean processIncomingMessage(String type, JsonElement content, UUID id) {

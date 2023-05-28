@@ -5,6 +5,9 @@ import org.jetbrains.annotations.*;
 
 import java.util.*;
 
+/**
+ * 通知消息
+ */
 public interface NoticeMessage extends Message {
     /**
      * 获取接收者的UUID
@@ -33,13 +36,23 @@ public interface NoticeMessage extends Message {
     enum NoticeType {
         /**
          * 举报受理通知
+         * 通知的玩家为举报者。
          */
         REPORT_ACCEPTED,
         /**
          * 举报处理通知
+         * 通知的玩家为举报者。
          */
         REPORT_PROCESSED,
+        /**
+         * 举报受理通知
+         * 通知的玩家为在线的STAFF。
+         */
         REPORT_STAFF_ACCEPTED,
+        /**
+         * 举报处理通知
+         * 通知的玩家为在线的STAFF。
+         */
         REPORT_STAFF_PROCESSED,
     }
 }

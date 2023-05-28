@@ -28,7 +28,13 @@ public interface Platform {
      * Represents a type of platform which FloraCore can run on.
      */
     enum Type {
+        /**
+         * 插件是在Bukkit核心中启动的。
+         */
         BUKKIT("Bukkit"),
+        /**
+         * 插件是在BungeeCord核心中启动的。
+         */
         BUNGEECORD("BungeeCord");
 
         private final String friendlyName;

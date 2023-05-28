@@ -351,6 +351,19 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return item.getRaw().getDurability();
     }
 
+    /**
+     * It doesn't work after The Flattening(MC 1.13)
+     *
+     * @param childId child ID
+     * @return this
+     */
+    public ItemStackBuilder setChildId(int childId) {
+        if (!BukkitWrapper.v13) {
+            item.getRaw().setDurability((short) childId);
+        }
+        return this;
+    }
+
     public ItemStackBuilder setEnchants(Map<Enchantment, Integer> enchants) {
         ItemStack is = item.getRaw();
         is.addEnchantments(enchants);
@@ -369,19 +382,6 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         ItemStack is = item.getRaw();
         ItemMeta im = is.getItemMeta();
         im.setUnbreakable(true);
-        return this;
-    }
-
-    /**
-     * It doesn't work after The Flattening(MC 1.13)
-     *
-     * @param childId child ID
-     * @return this
-     */
-    public ItemStackBuilder setChildId(int childId) {
-        if (!BukkitWrapper.v13) {
-            item.getRaw().setDurability((short) childId);
-        }
         return this;
     }
 

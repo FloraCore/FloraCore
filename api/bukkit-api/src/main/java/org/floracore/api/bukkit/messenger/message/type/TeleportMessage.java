@@ -5,6 +5,9 @@ import org.jetbrains.annotations.*;
 
 import java.util.*;
 
+/**
+ * 跨服传送消息
+ */
 public interface TeleportMessage extends Message {
     /**
      * 获取传送者的UUID

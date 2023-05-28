@@ -3,10 +3,12 @@ package team.floracore.common.api.implementation;
 import com.github.benmanes.caffeine.cache.*;
 import org.floracore.api.player.*;
 import team.floracore.common.plugin.*;
+import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
 import java.util.*;
 import java.util.concurrent.*;
+import java.util.stream.*;
 
 public class ApiPlayer implements PlayerAPI {
     private final FloraCorePlugin plugin;
@@ -62,6 +64,12 @@ public class ApiPlayer implements PlayerAPI {
 
     @Override
     public boolean isOnline(UUID uuid) {
+        List<Sender> senders = plugin.getOnlineSenders().collect(Collectors.toList());
+        for (Sender sender : senders) {
+            if (sender.getUniqueId() == uuid) {
+                return true;
+            }
+        }
         ONLINE online = plugin.getStorage().getImplementation().selectOnline(uuid);
         if (online == null) {
             return false;
