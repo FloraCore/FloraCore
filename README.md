@@ -19,7 +19,7 @@ FloraCore（简称FC）是一个基于Minecraft(Bukkit/BungeeCord)的开源基�
 取名为FloraCore的原因是，它可以准确地表达该插件的主要功能和核心特点，同时也能与两个主要开发者（[@冬花ice](https://github.com/flowerinsnowdh)
 和[@花花](https://github.com/xLikeWATCHDOG/)）的网名“花”相呼应。此外，该名字简单易记，同时也具有一定的高级感和专业感，适合作为一个基础插件的名称。
 
-本插件支持Bukkit和BungeeCord，其中Bukkit支持1.8以上的所有版本。
+本插件支持Bukkit和BungeeCord，其中Bukkit支持1.8以上的所有版本，BungeeCord仅在最新版本提供支持，如果在使用BungeeCord版本过程遇到问题，请先尝试更新BungeeCord。
 
 # 框架
 
