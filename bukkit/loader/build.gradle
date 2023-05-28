@@ -15,7 +15,7 @@ dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT'
 
     implementation project(':api')
-    implementation project(':api:bukkit')
+    implementation project(':api:bukkit-api')
     implementation project(':common:loader-utils')
 }
 processResources {

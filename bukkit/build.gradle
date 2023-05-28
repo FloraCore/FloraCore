@@ -17,8 +17,8 @@ repositories {
 
 dependencies {
     implementation project(':common')
-    compileOnly project(':api:bukkit')
     compileOnly project(':common:loader-utils')
+    compileOnly project(':api:bukkit-api')
     compileOnly fileTree(dir: '../libs', includes: ['*jar'])
     compileOnly fileTree(dir: './libs', includes: ['*jar'])
 
