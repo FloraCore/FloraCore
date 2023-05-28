@@ -27,7 +27,7 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: version
+    id: floracore-version
     attributes:
       label: FloraCore 版本
       description: 你运行的是什么版本的FloraCore?
@@ -37,26 +37,28 @@ body:
     validations:
       required: true
   - type: dropdown
-    id: browsers
+    id: server-type
     attributes:
-      label: What browsers are you seeing the problem on?
-      multiple: true
+      label: 服务器类型
+      description: 你是在哪种服务器上运行的FloraCore?
       options:
-        - Firefox
-        - Chrome
-        - Safari
-        - Microsoft Edge
+        - Paper/Bukkit
+        - Spigot/Bukkit
+        - BungeeCord
+        - Waterfall
   - type: textarea
     id: logs
     attributes:
-      label: Relevant log output
-      description: Please copy and paste any relevant log output. This will be automatically formatted into code, so no need for backticks.
+      label: 堆栈错误日志
+      description: 如果同时出现错误的话,请给出相关错误的堆栈日志。
       render: shell
+    validations:
+      required: false
   - type: checkboxes
     id: terms
     attributes:
-      label: Code of Conduct
-      description: By submitting this issue, you agree to follow our [Code of Conduct](https://example.com)
+      label: 用户协议
+      description: 通过提交此问题，您同意遵守我们的[用户协议](https://github.com/FloraCore/FloraCore/wiki/%E7%94%A8%E6%88%B7%E5%8D%8F%E8%AE%AE)
       options:
-        - label: I agree to follow this project's Code of Conduct
+        - label: 我同意遵守FloraCore的用户协议。
           required: true
