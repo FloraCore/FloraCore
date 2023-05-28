@@ -1,0 +1,111 @@
+################################################################################################################
+
+#                                                                                                              #
+
+# Specify Chat Module 2023® by vlouboos licenced to mc.kinomc.net                                              #
+
+#                                                                                                              #
+
+# Config.yml                                                                                                   #
+
+#                                                                                                              #
+
+# Format:                                                                                                      #
+
+#                                                                                                              #
+
+# ID:                                                                                                          #
+
+#   name: "Your Channel Name" (Color codes are enabled with character '&')                                     #
+
+#   format: "The message format which will display to the chat" (Color codes are enabled with character '&')   #
+
+#   enableColorChar: true    Set to "false" to prevent translate '&a' to Green-Colored and so on.              #
+
+#   commands:     Command "specifychat" isn't allowed to set.                                                  #
+
+#     - command1                                                                                               #
+
+#     - command2                                                                                               #
+
+#   permissions:    Permission "sc.all" means that player can send & receive messages in every channel.        #
+
+#     - permission1                                                                                            #
+
+#     - permission2                                                                                            #
+
+#                                                                                                              #
+
+# Placeholders:                                                                                                #
+
+#   %name% - the name of channel                                                                               #
+
+#   %player% - the name of sender (Console will be displayed as "Console", support LuckPerms)                  #
+
+#   %message% - the message that sender sent.                                                                  #
+
+#   %time% - the time that the message was sent.                                                               #
+
+#                                                                                                              #
+
+################################################################################################################
+
+StaffChat:
+
+  name: "&9&lStaff&f&lChat"
+
+  format: "%name%&7 » %player%&7: &f%message%"
+
+  enableColorChar: true
+
+  commands:
+
+    - staffchat
+
+    - sc
+
+  permissions:
+
+    - group.t-helper
+
+    - group.helper
+
+    - group.mod
+
+    - group.admin
+
+AdminChat:
+
+  name: "&c&lAdmin&f&lChat"
+
+  format: "%name%&7 » %player%&7: &f%message%"
+
+  enableColorChar: true
+
+  commands:
+
+    - adminchat
+
+    - ac
+
+  permissions:
+
+    - group.admin
+
+TeamChat:
+
+  name: "&a&lTeam&f&lChat"
+
+  format: "%name%&7 » %player%&7: &f%message%"
+
+  enableColorChar: true
+
+  commands:
+
+    - teamchat
+
+    - tc
+
+  permissions:
+
+    - sc.all
