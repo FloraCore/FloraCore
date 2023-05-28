@@ -16,8 +16,8 @@ import team.floracore.common.sender.*;
  */
 @CommandPermission("floracore.command.broadcast")
 @CommandDescription("在服务器发送广播信息")
-public class BroadCastBukkitCommand extends FloraCoreBukkitCommand {
-    public BroadCastBukkitCommand(FCBukkitPlugin plugin) {
+public class BroadCastCommand extends FloraCoreBukkitCommand {
+    public BroadCastCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

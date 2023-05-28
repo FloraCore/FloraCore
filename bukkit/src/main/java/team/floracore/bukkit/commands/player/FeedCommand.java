@@ -12,14 +12,14 @@ import team.floracore.bukkit.locale.message.commands.*;
  * Feed命令
  */
 @CommandPermission("floracore.command.feed")
-@CommandDescription("喂饱一名玩家")
-public class FeedBukkitCommand extends FloraCoreBukkitCommand {
-    public FeedBukkitCommand(FCBukkitPlugin plugin) {
+@CommandDescription("floracore.command.description.feed")
+public class FeedCommand extends FloraCoreBukkitCommand {
+    public FeedCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("feed")
-    @CommandDescription("喂饱您自己")
+    @CommandDescription("floracore.command.description.feed.self")
     public void self(@NotNull Player s) {
         feed(s);
         PlayerCommandMessage.COMMAND_FEED_SELF.send(getPlugin().getSenderFactory().wrap(s));
@@ -31,8 +31,8 @@ public class FeedBukkitCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("feed <target>")
-    @CommandDescription("喂饱目标玩家")
     @CommandPermission("floracore.command.feed.other")
+    @CommandDescription("floracore.command.description.feed.other")
     public void other(@NotNull CommandSender s,
                       @NotNull @Argument("target") Player target,
                       @Nullable @Flag("silent") Boolean silent) {

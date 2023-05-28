@@ -12,8 +12,8 @@ import team.floracore.common.sender.*;
 
 @CommandPermission("floracore.command.suicide")
 @CommandDescription("自杀")
-public class SuicideBukkitCommand extends FloraCoreBukkitCommand {
-    public SuicideBukkitCommand(FCBukkitPlugin plugin) {
+public class SuicideCommand extends FloraCoreBukkitCommand {
+    public SuicideCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

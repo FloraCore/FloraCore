@@ -21,8 +21,8 @@ import java.util.*;
  */
 @CommandPermission("floracore.command.gamemode")
 @CommandDescription("设置玩家的游戏模式")
-public class GameModeBukkitCommand extends FloraCoreBukkitCommand {
-    public GameModeBukkitCommand(FCBukkitPlugin plugin) {
+public class GameModeCommand extends FloraCoreBukkitCommand {
+    public GameModeCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

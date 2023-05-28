@@ -21,8 +21,8 @@ import java.util.*;
  */
 @CommandPermission("floracore.command.speed")
 @CommandDescription("设置玩家的指定类型的速度")
-public class SpeedBukkitCommand extends FloraCoreBukkitCommand {
-    public SpeedBukkitCommand(FCBukkitPlugin plugin) {
+public class SpeedCommand extends FloraCoreBukkitCommand {
+    public SpeedCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

@@ -95,37 +95,37 @@ public class CommandManager {
 
     public void constructCommands() {
         // test
-        this.annotationParser.parse(new TestBukkitCommand(plugin));
+        this.annotationParser.parse(new TestCommand(plugin));
 
         // misc
         this.annotationParser.parse(new FloraCoreCommand(plugin));
         this.annotationParser.parse(new LanguageCommand(plugin));
 
         // player
-        this.annotationParser.parse(new AirBukkitCommand(plugin));
-        this.annotationParser.parse(new EnderChestBukkitCommand(plugin));
-        this.annotationParser.parse(new FeedBukkitCommand(plugin));
-        this.annotationParser.parse(new FireTickBukkitCommand(plugin));
-        this.annotationParser.parse(new FlyBukkitCommand(plugin));
-        this.annotationParser.parse(new FoodBukkitCommand(plugin));
-        this.annotationParser.parse(new GameModeBukkitCommand(plugin));
+        this.annotationParser.parse(new AirCommand(plugin));
+        this.annotationParser.parse(new EnderChestCommand(plugin));
+        this.annotationParser.parse(new FeedCommand(plugin));
+        this.annotationParser.parse(new FireTickCommand(plugin));
+        this.annotationParser.parse(new FlyCommand(plugin));
+        this.annotationParser.parse(new FoodCommand(plugin));
+        this.annotationParser.parse(new GameModeCommand(plugin));
         // this.annotationParser.parse(new GiveCommand(plugin));
-        this.annotationParser.parse(new HasPermissionBukkitCommand(plugin));
+        this.annotationParser.parse(new HasPermissionCommand(plugin));
         this.annotationParser.parse(new HatCommand(plugin));
         this.annotationParser.parse(new HealCommand(plugin));
-        this.annotationParser.parse(new InvSeeBukkitCommand(plugin));
+        this.annotationParser.parse(new InvSeeCommand(plugin));
         // this.annotationParser.parse(new MaxHealthCommand(plugin));
         this.annotationParser.parse(new NickCommand(plugin)); // TODO 命令测试中 未测试：Rank设置 未完善：Skin设置 (目前已经将Rank设置和Skin设置移除)
-        this.annotationParser.parse(new OPListBukkitCommand(plugin));
+        this.annotationParser.parse(new OPListCommand(plugin));
         this.annotationParser.parse(new PingCommand(plugin));
-        this.annotationParser.parse(new RealNameBukkitCommand(plugin));
+        this.annotationParser.parse(new RealNameCommand(plugin));
         this.annotationParser.parse(new ReportCommand(plugin)); // TODO 命令已完成基本测试
-        this.annotationParser.parse(new SpeedBukkitCommand(plugin));
-        this.annotationParser.parse(new SuicideBukkitCommand(plugin));
+        this.annotationParser.parse(new SpeedCommand(plugin));
+        this.annotationParser.parse(new SuicideCommand(plugin));
         this.annotationParser.parse(new TopCommand(plugin));
 
         // server
-        this.annotationParser.parse(new BroadCastBukkitCommand(plugin));
+        this.annotationParser.parse(new BroadCastCommand(plugin));
 
         // social systems
         /* this.annotationParser.parse(new AdminCommand(plugin));
@@ -138,8 +138,8 @@ public class CommandManager {
         this.annotationParser.parse(new StaffCommand(plugin)); */
 
         // world
-        this.annotationParser.parse(new TimeBukkitCommand(plugin));
-        this.annotationParser.parse(new WeatherBukkitCommand(plugin));
+        this.annotationParser.parse(new TimeCommand(plugin));
+        this.annotationParser.parse(new WeatherCommand(plugin));
 
         // item
         // this.annotationParser.parse(new ItemFlagCommand(plugin)); // TODO 未测试

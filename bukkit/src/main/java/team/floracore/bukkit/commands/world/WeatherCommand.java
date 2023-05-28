@@ -22,8 +22,8 @@ import java.util.*;
  */
 @CommandPermission("floracore.command.weather")
 @CommandDescription("设置世界的天气")
-public class WeatherBukkitCommand extends FloraCoreBukkitCommand {
-    public WeatherBukkitCommand(FCBukkitPlugin plugin) {
+public class WeatherCommand extends FloraCoreBukkitCommand {
+    public WeatherCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

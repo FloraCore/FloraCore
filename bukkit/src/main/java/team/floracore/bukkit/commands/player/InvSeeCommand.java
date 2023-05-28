@@ -13,8 +13,8 @@ import team.floracore.common.sender.*;
  */
 @CommandPermission("floracore.command.invsee")
 @CommandDescription("打开指定玩家的物品栏")
-public class InvSeeBukkitCommand extends FloraCoreBukkitCommand {
-    public InvSeeBukkitCommand(FCBukkitPlugin plugin) {
+public class InvSeeCommand extends FloraCoreBukkitCommand {
+    public InvSeeCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

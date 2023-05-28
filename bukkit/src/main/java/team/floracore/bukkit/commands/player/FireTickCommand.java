@@ -13,16 +13,16 @@ import team.floracore.common.util.*;
 /**
  * FireTick命令
  */
-@CommandDescription("设置玩家着火时间")
 @CommandPermission("floracore.command.firetick")
-public class FireTickBukkitCommand extends FloraCoreBukkitCommand {
-    public FireTickBukkitCommand(FCBukkitPlugin plugin) {
+@CommandDescription("floracore.command.description.firetick")
+public class FireTickCommand extends FloraCoreBukkitCommand {
+    public FireTickCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("firetick|burn <time> [target]")
-    @CommandDescription("设置自己的着火时间（单位：秒）")
-    public void self(
+    @CommandDescription("floracore.command.description.firetick")
+    public void firetick(
             @NotNull CommandSender s,
             @Argument("time") int time,
             @Nullable @Argument("target") Player target,

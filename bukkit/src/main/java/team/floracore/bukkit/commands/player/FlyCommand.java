@@ -20,8 +20,8 @@ import java.util.*;
  */
 @CommandPermission("floracore.command.fly")
 @CommandDescription("设置玩家的飞行状态")
-public class FlyBukkitCommand extends FloraCoreBukkitCommand implements Listener {
-    public FlyBukkitCommand(FCBukkitPlugin plugin) {
+public class FlyCommand extends FloraCoreBukkitCommand implements Listener {
+    public FlyCommand(FCBukkitPlugin plugin) {
         super(plugin);
         plugin.getListenerManager().registerListener(this);
     }

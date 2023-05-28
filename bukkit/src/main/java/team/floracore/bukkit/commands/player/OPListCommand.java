@@ -14,15 +14,15 @@ import java.util.*;
 /**
  * OPList命令
  */
-@CommandDescription("列出本服所有拥有OP权限的玩家")
 @CommandPermission("floracore.command.oplist")
-public class OPListBukkitCommand extends FloraCoreBukkitCommand {
-    public OPListBukkitCommand(FCBukkitPlugin plugin) {
+@CommandDescription("列出本服所有拥有OP权限的玩家")
+public class OPListCommand extends FloraCoreBukkitCommand {
+    public OPListCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
-    @CommandDescription("列出本服所有拥有OP权限的玩家")
     @CommandMethod("oplist")
+    @CommandDescription("列出本服所有拥有OP权限的玩家")
     public void execute(@NotNull CommandSender s) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         Set<OfflinePlayer> ops = Bukkit.getOperators();

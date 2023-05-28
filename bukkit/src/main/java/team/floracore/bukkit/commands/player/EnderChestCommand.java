@@ -19,21 +19,20 @@ import java.util.*;
 /**
  * EnderChest命令
  */
-@CommandDescription("打开末影箱")
 @CommandPermission("floracore.command.enderchest")
-public class EnderChestBukkitCommand extends FloraCoreBukkitCommand implements Listener {
+@CommandDescription("floracore.command.description.enderchest")
+public class EnderChestCommand extends FloraCoreBukkitCommand implements Listener {
     /**
      * 对应玩家禁止修改的内容
      */
     public static final Map<UUID, Inventory> READONLY_MAP = new HashMap<>();
 
-    public EnderChestBukkitCommand(FCBukkitPlugin plugin) {
+    public EnderChestCommand(FCBukkitPlugin plugin) {
         super(plugin);
         plugin.getListenerManager().registerListener(this);
     }
 
     @CommandMethod("ender|enderchest [target] [for]")
-    @CommandDescription("为某人或自己打开某人或自己的末影箱")
     public void enderChest(
             @NotNull CommandSender s,
             @Nullable @Argument(value = "target", description = "末影箱主人，默认自己") Player target,

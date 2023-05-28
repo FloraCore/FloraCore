@@ -24,7 +24,7 @@ import java.io.*;
 import java.util.*;
 
 @CommandContainer
-@CommandDescription("设置FloraCore的显示语言")
+@CommandDescription("floracore.command.description.language")
 public class LanguageCommand extends FloraCoreBukkitCommand {
     public LanguageCommand(FCBukkitPlugin plugin) {
         super(plugin);

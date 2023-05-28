@@ -13,16 +13,16 @@ import team.floracore.common.util.*;
 /**
  * Air命令
  */
-@CommandDescription("获取或设置氧气值")
 @CommandPermission("floracore.command.air")
-public class AirBukkitCommand extends FloraCoreBukkitCommand {
-    public AirBukkitCommand(FCBukkitPlugin plugin) {
+@CommandDescription("floracore.command.description.air")
+public class AirCommand extends FloraCoreBukkitCommand {
+    public AirCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("air get")
     @CommandPermission("floracore.command.air.get")
-    @CommandDescription("获取自己的氧气值（单位：ticks）")
+    @CommandDescription("floracore.command.description.air.get")
     public void getSelf(@NotNull Player s) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         PlayerCommandMessage.COMMAND_AIR_GET_REMAINING_SELF.send(sender, s.getRemainingAir()); // 返回剩余氧气值
@@ -31,7 +31,7 @@ public class AirBukkitCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("air get <target>")
     @CommandPermission("floracore.command.air.get.other")
-    @CommandDescription("获取目标的氧气值（单位：ticks）")
+    @CommandDescription("floracore.command.description.air.get.other")
     public void getOther(@NotNull CommandSender s, @NotNull @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         PlayerCommandMessage.COMMAND_AIR_GET_REMAINING_OTHER.send(sender,
@@ -44,7 +44,7 @@ public class AirBukkitCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("air setmax <value> [target]")
     @CommandPermission("floracore.command.air.set.max")
-    @CommandDescription("设置自己的最大氧气值（单位：ticks）")
+    @CommandDescription("floracore.command.description.air.set.max")
     public void setMax(
             @NotNull CommandSender s,
             @Argument("value") int value,
@@ -76,7 +76,7 @@ public class AirBukkitCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("air setremaining <value> [target]")
     @CommandPermission("floracore.command.air.set.remaining")
-    @CommandDescription("设置自己的剩余氧气值（单位：ticks）")
+    @CommandDescription("floracore.command.description.air.set.remaining")
     public void setRemaining(
             @NotNull CommandSender s,
             @Argument("value") int value,

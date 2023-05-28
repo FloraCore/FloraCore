@@ -31,8 +31,8 @@ import java.util.*;
  */
 @CommandContainer
 @CommandPermission("admin.test")
-public class TestBukkitCommand extends FloraCoreBukkitCommand {
-    public TestBukkitCommand(FCBukkitPlugin plugin) {
+public class TestCommand extends FloraCoreBukkitCommand {
+    public TestCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 

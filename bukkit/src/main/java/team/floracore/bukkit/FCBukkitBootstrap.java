@@ -206,7 +206,7 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         this.serverStopping = true;
         this.plugin.onDisable();
 
-        EnderChestBukkitCommand.READONLY_MAP.clear();
+        EnderChestCommand.READONLY_MAP.clear();
     }
 
     public boolean isServerStarting() {
