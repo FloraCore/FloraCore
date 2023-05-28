@@ -46,6 +46,8 @@ body:
         - Spigot/Bukkit
         - BungeeCord
         - Waterfall
+    validations:
+      required: true
   - type: textarea
     id: reproduction-steps
     attributes:
