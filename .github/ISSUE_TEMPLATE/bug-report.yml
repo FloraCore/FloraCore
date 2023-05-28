@@ -1,6 +1,6 @@
 name: 🐞 Bug Report
-description: 创建一个报告以帮助我们改进FloraCore
-title: "[Bug]: "
+description: 创建报告以帮助我们改进FloraCore
+title: "[BUG]: "
 labels: ["bug"]
 assignees:
   - flowerinsnowdh
@@ -9,12 +9,12 @@ body:
   - type: markdown
     attributes:
       value: |
-        谢谢你花时间填写这份错误报告
+        感谢您花时间填写此错误报告。
   - type: input
     id: contact
     attributes:
       label: 联系方式
-      description: 如果我们需要更多的信息，我们如何与你联系？
+      description: 如果我们需要更多信息，我们如何与您联系？
       placeholder: ex. email@example.com
     validations:
       required: false
@@ -22,15 +22,15 @@ body:
     id: description-bug
     attributes:
       label: 简明扼要地描述该错误是什么
-      description: 同时请告诉我们，你期望发生什么？
-      placeholder: 告诉我们你看到了什么
+      description: 请同时告诉我们您期望发生的情况。
+      placeholder: 描述您遇到的情况
     validations:
       required: true
   - type: dropdown
     id: floracore-version
     attributes:
-      label: FloraCore 版本
-      description: 你运行的是什么版本的FloraCore?
+      label: FloraCore版本
+      description: 您正在运行哪个版本的FloraCore？
       options:
         - 2.0.4.3
         - 其它版本(请在补充的地方进行补充)
@@ -40,17 +40,29 @@ body:
     id: server-type
     attributes:
       label: 服务器类型
-      description: 你是在哪种服务器上运行的FloraCore?
+      description: 您在哪种服务器上运行FloraCore？
       options:
         - Paper/Bukkit
         - Spigot/Bukkit
         - BungeeCord
         - Waterfall
   - type: textarea
+    id: reproduction-steps
+    attributes:
+      label: 复现步骤
+      description: 如何复现这个错误
+      placeholder: |
+        1. 前往 '...'
+        2. 点击 '....'
+        3. 向下滚动到 '....'
+        4. 看见错误
+    validations:
+      required: true
+  - type: textarea
     id: logs
     attributes:
       label: 堆栈错误日志
-      description: 如果同时出现错误的话,请给出相关错误的堆栈日志。
+      description: 如果有相关错误的堆栈日志，请提供。
       render: shell
     validations:
       required: false
