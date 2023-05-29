@@ -11,6 +11,7 @@ import net.md_5.bungee.api.*;
 import team.floracore.bungee.*;
 import team.floracore.bungee.commands.misc.*;
 import team.floracore.bungee.commands.socialsystems.*;
+import team.floracore.bungee.commands.test.*;
 import team.floracore.common.locale.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
@@ -93,6 +94,9 @@ public class CommandManager {
         this.annotationParser.parse(new GuildCommand(plugin));
         this.annotationParser.parse(new PartyCommand(plugin, manager));
         this.annotationParser.parse(new StaffCommand(plugin));
+
+        // test
+        this.annotationParser.parse(new TestCommand(plugin));
     }
 
     public FloraCorePlugin getPlugin() {
