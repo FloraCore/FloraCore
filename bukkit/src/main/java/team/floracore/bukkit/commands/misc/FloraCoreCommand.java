@@ -52,6 +52,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
     public void reload(final @NotNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         getPlugin().getConfiguration().reload();
+        getPlugin().getBoardsConfiguration().reload();
         getPlugin().getTranslationManager().reload();
         getPlugin().getScoreBoardManager().reload();
         CommonCommandMessage.RELOAD_CONFIG_SUCCESS.send(s);
