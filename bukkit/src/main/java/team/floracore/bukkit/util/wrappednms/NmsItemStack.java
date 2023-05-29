@@ -24,12 +24,6 @@ public interface NmsItemStack extends WrappedBukkitObject {
         return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV12_13(nbt);
     }
 
-    @WrappedBukkitMethod(@VersionName(value = {"fromCompound", "a"}, minVer = 13))
-    NmsItemStack staticFromNbtV13(NmsNBTTagCompound nbt);
-
-    @WrappedBukkitConstructor(minVer = 12, maxVer = 13)
-    NmsItemStack staticNewInstanceV12_13(NmsNBTTagCompound nbt);
-
     static NmsItemStack newInstance(NmsItem item) {
         return newInstance(item, 1);
     }
@@ -42,6 +36,12 @@ public interface NmsItemStack extends WrappedBukkitObject {
             return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV12_13(item, count);
         }
     }
+
+    @WrappedBukkitMethod(@VersionName(value = {"fromCompound", "a"}, minVer = 13))
+    NmsItemStack staticFromNbtV13(NmsNBTTagCompound nbt);
+
+    @WrappedBukkitConstructor(minVer = 12, maxVer = 13)
+    NmsItemStack staticNewInstanceV12_13(NmsNBTTagCompound nbt);
 
     @WrappedBukkitConstructor(minVer = 13)
     NmsItemStack staticNewInstanceV13(NmsIMaterialV13 item, int count);

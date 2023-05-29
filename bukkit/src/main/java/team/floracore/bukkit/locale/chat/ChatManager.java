@@ -24,7 +24,7 @@ public class ChatManager implements Listener {
         this.chat = plugin.getStorage()
                 .getImplementation()
                 .selectChatWithStartTime(plugin.getServerName(), ChatType.SERVER, startTime);
-        plugin.getListenerManager().registerListener(this);
+        //plugin.getListenerManager().registerListener(this);
         plugin.getBootstrap().getScheduler().async().execute(() -> {
             List<CHAT> ret = plugin.getStorage()
                     .getImplementation()

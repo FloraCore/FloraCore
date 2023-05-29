@@ -1,6 +1,5 @@
 package team.floracore.common.locale.translation;
 
-import com.github.benmanes.caffeine.cache.*;
 import com.google.common.collect.*;
 import net.kyori.adventure.key.*;
 import net.kyori.adventure.text.*;
@@ -30,10 +29,6 @@ public class TranslationManager {
             .hexColors()
             .useUnusualXRepeatedCharacterHexFormat()
             .build();
-    private static final AsyncCache<UUID, Locale> localeCache = Caffeine.newBuilder()
-            .expireAfterWrite(3, TimeUnit.SECONDS)
-            .maximumSize(10000)
-            .buildAsync();
     private final FloraCorePlugin plugin;
     private final Set<Locale> installed = ConcurrentHashMap.newKeySet();
     private final Path translationsDirectory;
@@ -78,18 +73,14 @@ public class TranslationManager {
     }
 
     public static Component render(Component component, @NotNull UUID uuid) {
-        CompletableFuture<Locale> lf = localeCache.get(uuid, u -> {
-            String value = FloraCoreProvider.get()
-                    .getDataAPI()
-                    .getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
-            if (value != null) {
-                return parseLocale(value);
-            }
-            return null;
-        });
-        Locale locale = lf.join();
+        Locale locale = null;
+        String value = FloraCoreProvider.get()
+                .getDataAPI()
+                .getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
+        if (value != null) {
+            locale = parseLocale(value);
+        }
         if (locale != null) {
-            localeCache.put(uuid, lf);
             return render(component, locale);
         }
         return render(component);
@@ -123,8 +114,7 @@ public class TranslationManager {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean isAdventureDuplicatesException(Exception e) {
         return e instanceof IllegalArgumentException && (e.getMessage().startsWith("Invalid key") || e.getMessage()
-                .startsWith(
-                        "Translation already exists"));
+                .startsWith("Translation already exists"));
     }
 
     public Path getTranslationsDirectory() {
