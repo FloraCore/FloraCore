@@ -1,10 +1,10 @@
 #更新时间(单位: Tick)
-UpdateTime: 10
+update-time: 10
 #关闭记分板的世界
-DisableWorld:
-  - WorldName
+disable-worlds:
+  - worldName
 #记分板
-Boards:
+boards:
   #默认记分板
   default:
     #记分板顺序(将按照从小到大依次检测 比如 1-50 优先检测 1 符合则显示 不符合 检测 2 ...)

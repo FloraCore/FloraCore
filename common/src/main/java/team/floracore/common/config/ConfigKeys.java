@@ -50,12 +50,14 @@ public class ConfigKeys {
                 connectionTimeout,
                 props);
     }));
+
     /**
      * The prefix for any SQL tables
      */
     public static final ConfigKey<String> SQL_TABLE_PREFIX = notReloadable(key(c -> {
         return c.getString("data.table-prefix", c.getString("data.table_prefix", "floracore_"));
     }));
+
     /**
      * The name of the storage method being used
      */

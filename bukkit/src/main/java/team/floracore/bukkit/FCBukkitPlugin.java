@@ -10,6 +10,7 @@ import team.floracore.bukkit.config.*;
 import team.floracore.bukkit.inevntory.*;
 import team.floracore.bukkit.listener.*;
 import team.floracore.bukkit.locale.chat.*;
+import team.floracore.bukkit.scoreboard.*;
 import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.module.*;
 import team.floracore.bukkit.util.nothing.*;
@@ -38,6 +39,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private ChatManager chatManager;
     private BungeeUtil bungeeUtil;
     private BoardsConfiguration boardsConfiguration;
+    private ScoreBoardManager scoreBoardManager;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -88,25 +90,11 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
-    protected void setupConfiguration() {
-        ConfigurationAdapter boardsConfigFileAdapter = new BukkitConfigAdapter(this,
-                resolveConfig("boards.yml").toFile());
-        this.boardsConfiguration = new BoardsConfiguration(this,
-                new MultiConfigurationAdapter(this,
-                        new SystemPropertyConfigAdapter(this),
-                        new EnvironmentVariableConfigAdapter(this),
-                        boardsConfigFileAdapter));
-    }
-
-    @Override
-    protected MessagingFactory<?> provideMessagingFactory() {
-        this.bukkitMessagingFactory = new BukkitMessagingFactory(this);
-        return this.bukkitMessagingFactory;
-    }
-
-    @Override
     protected void setupFramework() {
         this.bungeeUtil = new BungeeUtil(this);
+        getLogger().info("Loading Scoreboard manager...");
+        scoreBoardManager.start();
+
         getLogger().info("Loading inventory manager...");
         inventoryManager = new InventoryManager(getLoader());
         inventoryManager.init();
@@ -144,7 +132,27 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
+    protected MessagingFactory<?> provideMessagingFactory() {
+        this.bukkitMessagingFactory = new BukkitMessagingFactory(this);
+        return this.bukkitMessagingFactory;
+    }
+
+    @Override
+    protected void setupConfiguration() {
+        ConfigurationAdapter boardsConfigFileAdapter = new BukkitConfigAdapter(this,
+                resolveConfig("boards.yml").toFile());
+        this.boardsConfiguration = new BoardsConfiguration(this,
+                new MultiConfigurationAdapter(this,
+                        new SystemPropertyConfigAdapter(this),
+                        new EnvironmentVariableConfigAdapter(this),
+                        boardsConfigFileAdapter));
+        scoreBoardManager = new ScoreBoardManager(this);
+    }
+
+    @Override
     protected void disableFramework() {
+        scoreBoardManager.getSidebarBoard().cancel();
+
         RegistrarRegistrar.instance.unload();
         ListenerRegistrar.instance.unload();
         IModule.ModuleModule.instance.unload();
@@ -195,5 +203,13 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     public BungeeUtil getBungeeUtil() {
         return bungeeUtil;
+    }
+
+    public BoardsConfiguration getBoardsConfiguration() {
+        return boardsConfiguration;
+    }
+
+    public ScoreBoardManager getScoreBoardManager() {
+        return scoreBoardManager;
     }
 }

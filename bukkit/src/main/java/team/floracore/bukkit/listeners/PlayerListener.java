@@ -4,8 +4,10 @@ import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
 import org.floracore.api.data.*;
+import team.floracore.bukkit.*;
+import team.floracore.bukkit.config.*;
 import team.floracore.bukkit.listener.*;
-import team.floracore.common.plugin.*;
+import team.floracore.bukkit.scoreboard.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
 
@@ -13,8 +15,13 @@ import java.sql.*;
 import java.util.*;
 
 public class PlayerListener extends FloraCoreBukkitListener {
-    public PlayerListener(FloraCorePlugin plugin) {
+    private final FCBukkitPlugin plugin;
+    private final ScoreBoardManager manager;
+
+    public PlayerListener(FCBukkitPlugin plugin) {
         super(plugin);
+        this.plugin = plugin;
+        manager = plugin.getScoreBoardManager();
     }
 
     @EventHandler
@@ -72,5 +79,25 @@ public class PlayerListener extends FloraCoreBukkitListener {
                 online.setStatusFalse(getPlugin().getServerName());
             }
         });
+    }
+
+    @EventHandler
+    public void onPlayerChangeWorld(PlayerChangedWorldEvent e) {
+        Player player = e.getPlayer();
+        if (plugin.getBoardsConfiguration().get(BoardsKeys.DISABLE_WORLDS).contains(player.getWorld().getName())) {
+            manager.removeTarget(e.getPlayer());
+        } else {
+            manager.addTarget(e.getPlayer());
+        }
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        manager.addTarget(e.getPlayer());
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        manager.removeTarget(e.getPlayer());
     }
 }

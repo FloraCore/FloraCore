@@ -98,6 +98,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
                         new SystemPropertyConfigAdapter(this),
                         new EnvironmentVariableConfigAdapter(this),
                         configFileAdapter));
+        setupConfiguration();
 
         // check update
         if (this.configuration.get(ConfigKeys.CHECK_UPDATE)) {

@@ -19,6 +19,7 @@ public class ListenerManager {
         PluginManager pm = getPluginManager();
         Plugin p = plugin.getBootstrap().getLoader();
         pm.registerEvents(new PlayerListener(plugin), p);
+        pm.registerEvents(new ScoreboardListener(plugin), p);
     }
 
     public PluginManager getPluginManager() {
