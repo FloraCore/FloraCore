@@ -18,20 +18,20 @@ public interface NmsIChatBaseComponent extends WrappedBukkitObject {
             return WrappedObject.getStatic(NmsChatSerializer.class).staticJsonToComponent(json);
         }
 
+        @WrappedMethod({"jsonToComponent", "a"})
+        NmsIChatBaseComponent staticJsonToComponent(String json);
+
         static String toJson(NmsIChatBaseComponent s) {
             return WrappedObject.getStatic(NmsChatSerializer.class).staticToJson(s);
         }
+
+        @WrappedMethod({"a"})
+        String staticToJson(NmsIChatBaseComponent s);
 
         static String getJson(String text) {
             JsonObject o = new JsonObject();
             o.add("text", new JsonPrimitive(text));
             return o.toString();
         }
-
-        @WrappedMethod({"jsonToComponent", "a"})
-        NmsIChatBaseComponent staticJsonToComponent(String json);
-
-        @WrappedMethod({"a"})
-        String staticToJson(NmsIChatBaseComponent s);
     }
 }

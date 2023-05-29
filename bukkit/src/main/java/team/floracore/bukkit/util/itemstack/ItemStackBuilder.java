@@ -106,18 +106,6 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return forFlattening("stained_glass_pane", (short) 15, "black_stained_glass_pane");
     }
 
-    public static ItemStackBuilder limeTerracotta() {
-        return forFlattening("stained_clay", (short) 1, "lime_terracotta");
-    }
-
-    public static ItemStackBuilder lightBlueTerracotta() {
-        return forFlattening("stained_clay", (short) 3, "light_blue_terracotta");
-    }
-
-    public static ItemStackBuilder redTerracotta() {
-        return forFlattening("stained_clay", (short) 14, "red_terracotta");
-    }
-
     public static ItemStackBuilder grass() {
         return forFlattening("tallgrass", (short) 1, "grass");
     }
@@ -364,27 +352,6 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return this;
     }
 
-    public ItemStackBuilder setEnchants(Map<Enchantment, Integer> enchants) {
-        ItemStack is = item.getRaw();
-        is.addEnchantments(enchants);
-        return this;
-    }
-
-    public ItemStackBuilder addEnchantment(Enchantment enchantment, int level) {
-        ItemStack is = item.getRaw();
-        ItemMeta im = is.getItemMeta();
-        im.addEnchant(enchantment, level, true);
-        is.setItemMeta(im);
-        return this;
-    }
-
-    public ItemStackBuilder setInfinityDurability() {
-        ItemStack is = item.getRaw();
-        ItemMeta im = is.getItemMeta();
-        im.setUnbreakable(true);
-        return this;
-    }
-
     public ItemStackBuilder removeMapId() {
         if (BukkitWrapper.v13) {
             tag().remove("map");
@@ -522,6 +489,27 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
             ret.add(SERIALIZER.serialize(component));
         }
         return setLoreString(ret);
+    }
+
+    public ItemStackBuilder setEnchants(Map<Enchantment, Integer> enchants) {
+        ItemStack is = item.getRaw();
+        is.addEnchantments(enchants);
+        return this;
+    }
+
+    public ItemStackBuilder addEnchantment(Enchantment enchantment, int level) {
+        ItemStack is = item.getRaw();
+        ItemMeta im = is.getItemMeta();
+        im.addEnchant(enchantment, level, true);
+        is.setItemMeta(im);
+        return this;
+    }
+
+    public ItemStackBuilder setInfinityDurability() {
+        ItemStack is = item.getRaw();
+        ItemMeta im = is.getItemMeta();
+        im.setUnbreakable(true);
+        return this;
     }
 
     public ItemStackBuilder setLoreString(List<String> lore) {

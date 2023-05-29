@@ -20,26 +20,6 @@ public interface NmsNBTTagList extends NmsNBTTag {
         return WrappedObject.getStatic(NmsNBTTagList.class).staticNewInstance();
     }
 
-    static <T extends NmsNBTBase> NmsNBTTagList newInstance(T... l) {
-        NmsNBTTagList r = newInstance();
-        for (T i : l) {
-            r.add(i);
-        }
-        return r;
-    }
-
-    static NmsNBTTagList wrapValues(List<?> values) {
-        if (values == null) {
-            return null;
-        }
-        NmsNBTTagList r = NmsNBTTagList.newInstance();
-        values.forEach(v ->
-        {
-            r.add(NmsNBTTag.wrapValue(v));
-        });
-        return r;
-    }
-
     default boolean add(NmsNBTBase nbt) {
         if (BukkitWrapper.version >= 14) {
             addV14(nbt);
@@ -65,6 +45,26 @@ public interface NmsNBTTagList extends NmsNBTTag {
 
     @WrappedMethod("size")
     int size();
+
+    static <T extends NmsNBTBase> NmsNBTTagList newInstance(T... l) {
+        NmsNBTTagList r = newInstance();
+        for (T i : l) {
+            r.add(i);
+        }
+        return r;
+    }
+
+    static NmsNBTTagList wrapValues(List<?> values) {
+        if (values == null) {
+            return null;
+        }
+        NmsNBTTagList r = NmsNBTTagList.newInstance();
+        values.forEach(v ->
+        {
+            r.add(NmsNBTTag.wrapValue(v));
+        });
+        return r;
+    }
 
     default <T extends NmsNBTBase> NmsNBTTagList addAll(Collection<T> nbt) {
         nbt.forEach(n -> add(n));

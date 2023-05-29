@@ -18,6 +18,9 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
         WrappedObject.getStatic(NmsNetworkManager.class).staticReceivePacketV13(packet, listener);
     }
 
+    @WrappedBukkitMethod(@VersionName(minVer = 13, value = "a"))
+    void staticReceivePacketV13(NmsPacket packet, NmsPacketListener listener);
+
     @NothingBukkitInject(name = @VersionName(minVer = 13, value = "a"),
                          args = {NmsPacket.class, NmsPacketListener.class},
                          location = NothingLocation.FRONT)
@@ -32,9 +35,6 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
         }
         return Nothing.doContinue();
     }
-
-    @WrappedBukkitMethod(@VersionName(minVer = 13, value = "a"))
-    void staticReceivePacketV13(NmsPacket packet, NmsPacketListener listener);
 
     @WrappedBukkitMethod({@VersionName(minVer = 12, value = "sendPacket"), @VersionName(minVer = 18, value = "a")})
     void sendPacket(NmsPacket packet);

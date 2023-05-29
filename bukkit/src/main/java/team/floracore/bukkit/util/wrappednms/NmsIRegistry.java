@@ -11,30 +11,6 @@ public interface NmsIRegistry extends WrappedBukkitObject {
         return WrappedObject.getStatic(NmsIRegistry.class).staticGetItemsV13().cast(NmsRegistryMaterials.class);
     }
 
-    static NmsRegistryBlocks getItemsV14() {
-        return WrappedObject.getStatic(NmsIRegistry.class).staticGetItemsV13().cast(NmsRegistryBlocks.class);
-    }
-
-    static NmsIRegistry getEnchantsV13() {
-        if (BukkitWrapper.version < 19.3f) {
-            return WrappedObject.getStatic(NmsIRegistry.class).staticGetEnchantsV13_193();
-        } else {
-            return NmsBuiltInRegistriesV193.getEnchants();
-        }
-    }
-
-    static NmsRegistryMaterials getEntityTypesV13() {
-        if (BukkitWrapper.version < 14) {
-            return WrappedObject.getStatic(NmsIRegistry.class)
-                    .staticGetEntityTypesV13_14()
-                    .cast(NmsRegistryMaterials.class);
-        } else if (BukkitWrapper.version < 19.3f) {
-            return WrappedObject.getStatic(NmsIRegistry.class).staticGetEntityTypesV14_193();
-        } else {
-            return NmsBuiltInRegistriesV193.getEntityTypes();
-        }
-    }
-
     default NmsIRegistry staticGetItemsV13() {
         if (BukkitWrapper.version < 15) {
             return staticGetItemsV13_15();
@@ -53,6 +29,18 @@ public interface NmsIRegistry extends WrappedBukkitObject {
                                                                                                          maxVer = 19.3f)})
     NmsRegistryBlocks staticGetItemsV15_193();
 
+    static NmsRegistryBlocks getItemsV14() {
+        return WrappedObject.getStatic(NmsIRegistry.class).staticGetItemsV13().cast(NmsRegistryBlocks.class);
+    }
+
+    static NmsIRegistry getEnchantsV13() {
+        if (BukkitWrapper.version < 19.3f) {
+            return WrappedObject.getStatic(NmsIRegistry.class).staticGetEnchantsV13_193();
+        } else {
+            return NmsBuiltInRegistriesV193.getEnchants();
+        }
+    }
+
     @WrappedBukkitFieldAccessor({@VersionName(minVer = 13,
                                               maxVer = 19.3f,
                                               value = "ENCHANTMENT"), @VersionName(minVer = 17,
@@ -64,6 +52,18 @@ public interface NmsIRegistry extends WrappedBukkitObject {
             value = "V",
             maxVer = 19), @VersionName(value = "W", minVer = 19, maxVer = 19.3f)})
     NmsIRegistry staticGetEnchantsV13_193();
+
+    static NmsRegistryMaterials getEntityTypesV13() {
+        if (BukkitWrapper.version < 14) {
+            return WrappedObject.getStatic(NmsIRegistry.class)
+                    .staticGetEntityTypesV13_14()
+                    .cast(NmsRegistryMaterials.class);
+        } else if (BukkitWrapper.version < 19.3f) {
+            return WrappedObject.getStatic(NmsIRegistry.class).staticGetEntityTypesV14_193();
+        } else {
+            return NmsBuiltInRegistriesV193.getEntityTypes();
+        }
+    }
 
     @WrappedBukkitFieldAccessor(@VersionName(value = {"ENTITY_TYPE", "#12"}, minVer = 13, maxVer = 14))
     NmsIRegistry staticGetEntityTypesV13_14();

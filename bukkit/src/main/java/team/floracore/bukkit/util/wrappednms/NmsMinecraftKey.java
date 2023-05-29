@@ -14,6 +14,9 @@ public interface NmsMinecraftKey extends WrappedBukkitObject {
         return WrappedObject.getStatic(NmsMinecraftKey.class).staticNewInstance(s);
     }
 
+    @WrappedConstructor
+    NmsMinecraftKey staticNewInstance(String s);
+
     static NmsMinecraftKey random() {
         return NmsMinecraftKey.newInstance("floracore", UUID.randomUUID().toString().replace("-", ""));
     }
@@ -21,9 +24,6 @@ public interface NmsMinecraftKey extends WrappedBukkitObject {
     static NmsMinecraftKey newInstance(String namespace, String key) {
         return WrappedObject.getStatic(NmsMinecraftKey.class).staticNewInstance(namespace, key);
     }
-
-    @WrappedConstructor
-    NmsMinecraftKey staticNewInstance(String s);
 
     default NmsMinecraftKey staticNewInstance(String namespace, String key) {
         return staticNewInstance(namespace + ":" + key);
