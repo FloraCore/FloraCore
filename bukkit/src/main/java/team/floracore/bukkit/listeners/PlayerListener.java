@@ -64,6 +64,7 @@ public class PlayerListener extends FloraCoreBukkitListener {
             }
             storageImplementation.insertData(uuid, DataType.FUNCTION, "server-status", getPlugin().getServerName(), 0);
         });
+        manager.addTarget(e.getPlayer());
     }
 
     @EventHandler
@@ -79,6 +80,7 @@ public class PlayerListener extends FloraCoreBukkitListener {
                 online.setStatusFalse(getPlugin().getServerName());
             }
         });
+        manager.removeTarget(e.getPlayer());
     }
 
     @EventHandler
@@ -89,15 +91,5 @@ public class PlayerListener extends FloraCoreBukkitListener {
         } else {
             manager.addTarget(e.getPlayer());
         }
-    }
-
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e) {
-        manager.addTarget(e.getPlayer());
-    }
-
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e) {
-        manager.removeTarget(e.getPlayer());
     }
 }

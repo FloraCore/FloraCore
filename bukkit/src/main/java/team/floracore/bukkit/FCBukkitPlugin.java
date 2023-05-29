@@ -92,8 +92,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     @Override
     protected void setupFramework() {
         this.bungeeUtil = new BungeeUtil(this);
-        getLogger().info("Loading Scoreboard manager...");
-        scoreBoardManager.start();
 
         getLogger().info("Loading inventory manager...");
         inventoryManager = new InventoryManager(getLoader());
@@ -147,6 +145,8 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
                         new EnvironmentVariableConfigAdapter(this),
                         boardsConfigFileAdapter));
         scoreBoardManager = new ScoreBoardManager(this);
+        getLogger().info("Loading scoreboard manager...");
+        scoreBoardManager.start();
     }
 
     @Override

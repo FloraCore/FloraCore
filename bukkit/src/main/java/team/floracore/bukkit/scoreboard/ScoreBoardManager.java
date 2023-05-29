@@ -50,7 +50,7 @@ public class ScoreBoardManager {
     }
 
     public void addTarget(final Player player) {
-        if (plugin.getBoardsConfiguration().get(BoardsKeys.DISABLE_WORLDS).contains(player.getWorld().getName())) {
+        if (!plugin.getBoardsConfiguration().get(BoardsKeys.DISABLE_WORLDS).contains(player.getWorld().getName())) {
             Bukkit.getScheduler().runTask(plugin.getLoader(), () -> getSidebarBoard().addTarget(player));
         }
     }

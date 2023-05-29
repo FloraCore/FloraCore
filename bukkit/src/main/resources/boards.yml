@@ -1,8 +1,9 @@
 #更新时间(单位: Tick)
 update-time: 10
-#关闭记分板的世界
-disable-worlds:
-  - worldName
+#启用的计分板列表
+enabled-board-list:
+  - default
+  - admin
 #记分板
 boards:
   #默认记分板
@@ -20,25 +21,5 @@ boards:
     #记分板内容(不得超过32个字符(1.13+限制为128字符) 包括颜色字符 超过部分自动截取)
     lines:
       - '&6名 称: &a%player_displayname%'
-      - '&6世 界: &b%player_world%'
-      - '&6位 置: &3%player_x%,%player_y%,%player_z%'
-      - '&6等 级: &e%player_level%'
-      - '&6血 量: &c%player_health%'
-      - '&6饥 饿: &d%player_food_level%'
-      - '&6模 式: &4%player_gamemode%'
-      - '&6到 期: &7%time_left_2099-01-01 00:00:00%'
-  #默认记分板
-  admin:
-    #记分板顺序(将按照从小到大依次检测 比如 1-50 优先检测 1 符合则显示 不符合 检测 2 ...)
-    index: 49
-    #记分板标题
-    title: '服务器信息'
-    #记分板权限
-    permission: floracore.admin
-    #记分板内容(不得超过32个字符(1.13+限制为128字符) 包括颜色字符 超过部分自动截取)
-    lines:
-      - '&6名 称: &a%plugin_name%'
-      - '&6版 本: &b%plugin_version%'
-      - '&6作 者: &c%plugin_author%'
-      - '&6人 数: &c%server_online%/%server_max%'
-      - '&6内 存: &a%server_ram_used%/%server_ram_total%/%server_ram_max%'
+      - ''
+      - '&eteam.floracore'

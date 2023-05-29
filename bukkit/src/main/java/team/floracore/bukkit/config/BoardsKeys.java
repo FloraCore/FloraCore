@@ -22,7 +22,7 @@ public class BoardsKeys {
 
     public static final ConfigKey<List<BoardModel>> BOARD_MODELS = notReloadable(key(c -> {
         List<BoardModel> ret = new ArrayList<>();
-        List<String> boards = c.getStringList("boards", new ArrayList<>());
+        List<String> boards = c.getStringList("enabled-board-list", new ArrayList<>());
         for (String board : boards) {
             int index = c.getInteger("boards." + board + ".index", Integer.MAX_VALUE);
             String title = c.getString("boards." + board + ".title", "null");
@@ -35,12 +35,12 @@ public class BoardsKeys {
             Date endDate;
             try {
                 startDate = dateFormat.parse(startTime);
-            } catch (ParseException e) {
+            } catch (Throwable e) {
                 startDate = null;
             }
             try {
                 endDate = dateFormat.parse(endTime);
-            } catch (ParseException e) {
+            } catch (Throwable e) {
                 endDate = null;
             }
             BoardModel boardModel = new BoardModel(board, index, startDate, endDate, title, permission, lines);
