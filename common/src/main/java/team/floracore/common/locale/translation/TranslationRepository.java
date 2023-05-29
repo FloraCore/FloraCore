@@ -18,8 +18,8 @@ import java.util.concurrent.*;
 import java.util.function.*;
 
 public class TranslationRepository {
-    private static final String TRANSLATIONS_INFO_ENDPOINT = "https://fc-meta.kinomc.net/data/translations";
-    private static final String TRANSLATIONS_DOWNLOAD_ENDPOINT = "https://fc-meta.kinomc.net/translation/";
+    private static String TRANSLATIONS_INFO_ENDPOINT;
+    private static String TRANSLATIONS_DOWNLOAD_ENDPOINT;
     private static final long MAX_BUNDLE_SIZE = 1048576L; // 1mb
     private static final long CACHE_MAX_AGE = TimeUnit.HOURS.toMillis(1);
 
@@ -29,6 +29,28 @@ public class TranslationRepository {
     public TranslationRepository(FloraCorePlugin plugin) {
         this.plugin = plugin;
         this.abstractHttpClient = new AbstractHttpClient(plugin.getHttpClient());
+        String DOMAIN_NAME_URL = getDomainNameURL();
+        TRANSLATIONS_INFO_ENDPOINT = DOMAIN_NAME_URL + "data/translations";
+        TRANSLATIONS_DOWNLOAD_ENDPOINT = DOMAIN_NAME_URL + "translation";
+    }
+
+    public String getDomainNameURL() {
+        try {
+            StringBuilder domainUrl = new StringBuilder();
+            InputStream inputStream = plugin.getBootstrap().getResourceStream("TRANSLATION_REPOSITORY_URL");
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                domainUrl.append(line.trim());
+            }
+            String du = domainUrl.toString();
+            if (!du.endsWith("/")) {
+                du += "/";
+            }
+            return du;
+        } catch (IOException e) {
+            return "https://fc-meta.kinomc.net/";
+        }
     }
 
     /**
