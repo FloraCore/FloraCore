@@ -29,12 +29,27 @@ body:
     id: floracore-version
     attributes:
       label: FloraCore版本
-      description: 您正在运行哪个版本的FloraCore？
+      description: |
+        您正在运行哪个版本的FloraCore？
+        
+        注意:最新版本的FloraCore可能已经修复该问题。
+        因此，旧版FloraCore发表此议题可能不受支持。
       options:
         - 2.0.4.3
         - 其它版本(请在补充的地方进行补充)
     validations:
       required: true
+  - type: input
+    id: version-info
+    attributes:
+      label: 其它版本
+      description: |
+        如果无你正在使用的FloraCore版本，请在此输入你当前的FloraCore版本。
+        
+        注意:如果你在上面选择了其它版本，而并没有在此处进行补充，那么该议题将不受支持。
+      placeholder: ex. 1.0.0
+    validations:
+      required: false
   - type: dropdown
     id: server-type
     attributes:
