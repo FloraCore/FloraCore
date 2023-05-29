@@ -31,7 +31,7 @@ public class TranslationRepository {
         this.abstractHttpClient = new AbstractHttpClient(plugin.getHttpClient());
         String DOMAIN_NAME_URL = getDomainNameURL();
         TRANSLATIONS_INFO_ENDPOINT = DOMAIN_NAME_URL + "data/translations";
-        TRANSLATIONS_DOWNLOAD_ENDPOINT = DOMAIN_NAME_URL + "translation";
+        TRANSLATIONS_DOWNLOAD_ENDPOINT = DOMAIN_NAME_URL + "translation/";
     }
 
     public String getDomainNameURL() {

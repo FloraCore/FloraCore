@@ -37,6 +37,7 @@ public class TranslationManager {
     private final FloraCorePlugin plugin;
     private final Set<Locale> installed = ConcurrentHashMap.newKeySet();
     private final Path translationsDirectory;
+    private final Path configTranslationsDirectory;
     private final Path repositoryTranslationsDirectory;
     private final Path customTranslationsDirectory;
     private TranslationRegistry registry;
@@ -44,12 +45,15 @@ public class TranslationManager {
     public TranslationManager(FloraCorePlugin plugin) {
         this.plugin = plugin;
         this.translationsDirectory = this.plugin.getBootstrap().getConfigDirectory().resolve("translations");
-        this.repositoryTranslationsDirectory = this.translationsDirectory.resolve("repository");
-        this.customTranslationsDirectory = this.translationsDirectory.resolve("custom");
+        Path pluginTranslationsDirectory = this.translationsDirectory.resolve("plugin");
+        this.repositoryTranslationsDirectory = pluginTranslationsDirectory.resolve("repository");
+        this.customTranslationsDirectory = pluginTranslationsDirectory.resolve("custom");
+        this.configTranslationsDirectory = this.translationsDirectory.resolve("config");
 
         try {
             MoreFiles.createDirectoriesIfNotExists(this.repositoryTranslationsDirectory);
             MoreFiles.createDirectoriesIfNotExists(this.customTranslationsDirectory);
+            MoreFiles.createDirectoriesIfNotExists(this.configTranslationsDirectory);
         } catch (IOException e) {
             // ignore
         }
@@ -143,6 +147,7 @@ public class TranslationManager {
         loadFromFileSystem(this.customTranslationsDirectory, false);
         loadFromFileSystem(this.repositoryTranslationsDirectory, true);
         loadFromResourceBundle();
+        loadFromFileSystem(this.configTranslationsDirectory, false);
 
         // register it to the global source, so our translations can be picked up by adventure-platform
         GlobalTranslator.translator().addSource(this.registry);
