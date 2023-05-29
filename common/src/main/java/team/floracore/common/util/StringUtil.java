@@ -62,7 +62,7 @@ public final class StringUtil {
      * @param mergeIndex 可以合并的字符串的索引
      * @param stringsNum 合并后的字符串数量
      * @param strings    一些字符串
-     * @return 合并后的字符串，合并的用空格分开
+     * @return 合并后的字符串, 合并的用空格分开
      */
     public static String[] mergeStrings(int mergeIndex, int stringsNum, String... strings) {
         if (strings.length < stringsNum) {

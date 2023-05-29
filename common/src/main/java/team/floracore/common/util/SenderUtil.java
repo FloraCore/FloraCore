@@ -6,7 +6,7 @@ import team.floracore.common.sender.*;
 
 public final class SenderUtil {
     /**
-     * 告诉命令发送者，该命令必须由玩家执行
+     * 告诉命令发送者,该命令必须由玩家执行
      *
      * @param sender 命令发送者
      */
@@ -17,11 +17,11 @@ public final class SenderUtil {
     }
 
     /**
-     * 判断命令发送者是否包含命令，若没有，告知没有权限消息
+     * 判断命令发送者是否包含命令,若没有,告知没有权限消息
      *
      * @param sender     命令发送者
      * @param permission 权限节点
-     * @return 若没有权限节点，返回true
+     * @return 若没有权限节点, 返回true
      */
     public static boolean sendIfNoPermission(Sender sender, String permission) {
         if (!sender.hasPermission(permission)) {

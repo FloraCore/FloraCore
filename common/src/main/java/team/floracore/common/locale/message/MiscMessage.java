@@ -136,14 +136,14 @@ public interface MiscMessage extends AbstractMessage {
             .key("floracore.commandsystem.no-permission").color(RED));
 
     Args1<String> COMMAND_INVALID_COMMAND_SYNTAX = correctSyntax -> AbstractMessage.prefixed(text()
-            // 命令语法错误，您可能想要输入：{0}
+            // 命令语法错误,您可能想要输入：{0}
             .color(RED)
             .append(translatable("floracore.commandsystem.invalid-command-syntax", text(correctSyntax, DARK_AQUA)))
             .append(FULL_STOP));
 
     Args2<String, String> COMMAND_INVALID_COMMAND_SENDER = (commandSender, requiredSender) -> AbstractMessage.prefixed(
             text()
-                    // {0} 不允许执行该命令，必须由 {1} 执行
+                    // {0} 不允许执行该命令,必须由 {1} 执行
                     .color(RED)
                     .append(translatable("floracore.commandsystem.invalid-command-sender",
                             text(commandSender),

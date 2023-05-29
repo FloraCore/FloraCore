@@ -25,8 +25,8 @@ public class FoodCommand extends FloraCoreBukkitCommand {
     @CommandDescription("获取一名玩家的饥饿值")
     public void get(@NotNull CommandSender s, @Nullable @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
-        if (target == null) { // 目标为空，则目标为自己
-            // 目标为自己时，发送者必须是玩家
+        if (target == null) { // 目标为空,则目标为自己
+            // 目标为自己时,发送者必须是玩家
             if (!(s instanceof Player)) { // 不是玩家
                 SenderUtil.sendMustBe(sender, s.getClass(), Player.class); // 告知不予执行
                 return;
@@ -59,8 +59,8 @@ public class FoodCommand extends FloraCoreBukkitCommand {
             PlayerCommandMessage.COMMAND_FOOD_SET_INVALID_VALUE.send(sender);
             return;
         }
-        if (target == null) { // 目标为空，则目标为自己
-            // 目标为自己时，发送者必须是玩家
+        if (target == null) { // 目标为空,则目标为自己
+            // 目标为自己时,发送者必须是玩家
             if (!(s instanceof Player)) { // 不是玩家
                 SenderUtil.sendMustBe(sender, s.getClass(), Player.class); // 告知不予执行
                 return;
@@ -94,8 +94,8 @@ public class FoodCommand extends FloraCoreBukkitCommand {
             PlayerCommandMessage.COMMAND_FOOD_SET_INVALID_VALUE.send(sender);
             return;
         }
-        if (target == null) { // 目标为空，则目标为自己
-            // 目标为自己时，发送者必须是玩家
+        if (target == null) { // 目标为空,则目标为自己
+            // 目标为自己时,发送者必须是玩家
             if (!(s instanceof Player)) { // 不是玩家
                 SenderUtil.sendMustBe(sender, s.getClass(), Player.class); // 告知不予执行
                 return;

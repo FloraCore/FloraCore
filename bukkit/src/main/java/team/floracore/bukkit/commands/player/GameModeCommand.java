@@ -48,7 +48,7 @@ public class GameModeCommand extends FloraCoreBukkitCommand {
             if (!sender.isConsole()) {
                 t = (Player) s;
             } else {
-                // 控制台时，将只允许设置别人的游戏模式。
+                // 控制台时,将只允许设置别人的游戏模式。
                 execute = false;
             }
         } else {
@@ -69,7 +69,7 @@ public class GameModeCommand extends FloraCoreBukkitCommand {
                                 MiscMessage.COMMAND_MISC_GAMEMODE_SURVIVAL.build(),
                                 t.getDisplayName());
                         if (!own) {
-                            if (silent == null || !silent) { // 若非静音模式，则发送消息
+                            if (silent == null || !silent) { // 若非静音模式,则发送消息
                                 PlayerCommandMessage.COMMAND_GAMEMODE_FROM.send(ts,
                                         MiscMessage.COMMAND_MISC_GAMEMODE_SURVIVAL.build(),
                                         sender.getDisplayName());
@@ -160,7 +160,7 @@ public class GameModeCommand extends FloraCoreBukkitCommand {
     }
 
     /**
-     * 若`messageReceiver`拥有`permission`权限，将`target`的游戏模式设置为`gameMode`，否则发送没有权限消息给`messageReceiver`
+     * 若`messageReceiver`拥有`permission`权限,将`target`的游戏模式设置为`gameMode`,否则发送没有权限消息给`messageReceiver`
      *
      * @param messageReceiver 消息接收者
      * @param gameMode        游戏模式

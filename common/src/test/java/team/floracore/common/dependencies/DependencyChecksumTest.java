@@ -21,7 +21,7 @@ public class DependencyChecksumTest {
     }
 
     /**
-     * 之所以注释了，是因为编译的时候太慢了。
+     * 之所以注释了,是因为编译的时候太慢了。
      */
     @Test
     public void getChecksumMatches() {

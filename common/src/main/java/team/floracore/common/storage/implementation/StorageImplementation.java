@@ -27,8 +27,8 @@ public interface StorageImplementation {
     void shutdown();
 
     /**
-     * 此方法慎用，未经过缓存，频繁使用易使负载过大。
-     * 若不存在，则返回null。
+     * 此方法慎用,未经过缓存,频繁使用易使负载过大。
+     * 若不存在,则返回null。
      */
     PLAYER selectPlayer(String name);
 
@@ -37,10 +37,10 @@ public interface StorageImplementation {
     void deletePlayer(UUID u);
 
     /**
-     * 虽然名称是插入数据，但是并不是简单的插入数据。
-     * 如果不存在数据，才会进行插入操作。
-     * 如果存在数据，则会读取数据，而不进行插入操作。
-     * 如果存在数据，还会同时更新value和expiry数据。
+     * 虽然名称是插入数据,但是并不是简单的插入数据。
+     * 如果不存在数据,才会进行插入操作。
+     * 如果存在数据,则会读取数据,而不进行插入操作。
+     * 如果存在数据,还会同时更新value和expiry数据。
      *
      * @return Data数据。
      */
@@ -49,7 +49,7 @@ public interface StorageImplementation {
     List<DATA> selectData(UUID uuid);
 
     /**
-     * 如果无该记录，则返回Null。
+     * 如果无该记录,则返回Null。
      */
     DATA getSpecifiedData(UUID uuid, DataType type, String key);
 
@@ -80,7 +80,7 @@ public interface StorageImplementation {
     REPORT selectReport(UUID uuid);
 
     /**
-     * @return 返回未处理的举报；若无，则返回null。
+     * @return 返回未处理的举报；若无,则返回null。
      */
     REPORT getUnprocessedReports(UUID uuid);
 

@@ -8,7 +8,7 @@ import java.util.*;
 public interface DataAPI {
     /**
      * 获取指定的Data的值。
-     * 若数据不存在，则返回null。
+     * 若数据不存在,则返回null。
      *
      * @param uuid 玩家的UUID
      * @param type 数据类型
@@ -19,7 +19,7 @@ public interface DataAPI {
 
     /**
      * 获取指定Data的过期时间戳。
-     * 若数据不存在，则返回null。
+     * 若数据不存在,则返回null。
      *
      * @param uuid 玩家的UUID
      * @param type 数据类型
@@ -30,7 +30,7 @@ public interface DataAPI {
 
     /**
      * 获取指定Data的ID
-     * 若数据不存在，则返回null。
+     * 若数据不存在,则返回null。
      *
      * @param uuid 玩家的UUID
      * @param type 数据类型
@@ -41,10 +41,10 @@ public interface DataAPI {
 
     /**
      * 插入数据
-     * 虽然名称是插入数据，但是并不是简单的插入数据。
-     * 如果不存在数据，才会进行插入操作。
-     * 如果存在数据，则会读取数据，而不进行插入操作。
-     * 如果存在数据，还会同时更新value和expiry数据。
+     * 虽然名称是插入数据,但是并不是简单的插入数据。
+     * 如果不存在数据,才会进行插入操作。
+     * 如果存在数据,则会读取数据,而不进行插入操作。
+     * 如果存在数据,还会同时更新value和expiry数据。
      * 返回为-1即不存在数据的标志。
      *
      * @param uuid   玩家的UUID
@@ -52,7 +52,7 @@ public interface DataAPI {
      * @param key    数据值的键值
      * @param value  数据值
      * @param expiry 过期时间戳
-     * @return ID，若原先不存在数据，则返回-1，并插入数据库中。
+     * @return ID, 若原先不存在数据, 则返回-1,并插入数据库中。
      */
     int insertData(UUID uuid, DataType type, String key, String value, long expiry);
 

@@ -13,7 +13,7 @@ body:
     id: contact
     attributes:
       label: 联系方式
-      description: 如果我们需要更多信息，我们如何与您联系？
+      description: 如果我们需要更多信息,我们如何与您联系？
       placeholder: ex. email@example.com
     validations:
       required: false
@@ -33,7 +33,7 @@ body:
         您正在运行哪个版本的FloraCore？
         
         注意:最新版本的FloraCore可能已经修复该问题。
-        因此，旧版FloraCore发表此议题可能不受支持。
+        因此,旧版FloraCore发表此议题可能不受支持。
       options:
         - 2.0.4.3
         - 其它版本(请在补充的地方进行补充)
@@ -44,9 +44,9 @@ body:
     attributes:
       label: 其它版本
       description: |
-        如果无你正在使用的FloraCore版本，请在此输入你当前的FloraCore版本。
+        如果无你正在使用的FloraCore版本,请在此输入你当前的FloraCore版本。
         
-        注意:如果你在上面选择了其它版本，而并没有在此处进行补充，那么该议题将不受支持。
+        注意:如果你在上面选择了其它版本,而并没有在此处进行补充,那么该议题将不受支持。
       placeholder: ex. 1.0.0
     validations:
       required: false
@@ -78,7 +78,7 @@ body:
     id: logs
     attributes:
       label: 堆栈错误日志
-      description: 如果有相关错误的堆栈日志，请提供。
+      description: 如果有相关错误的堆栈日志,请提供。
       render: shell
     validations:
       required: false
@@ -86,7 +86,7 @@ body:
     id: terms
     attributes:
       label: 用户协议
-      description: 通过提交此问题，您同意遵守我们的[用户协议](https://github.com/FloraCore/FloraCore/wiki/%E7%94%A8%E6%88%B7%E5%8D%8F%E8%AE%AE)
+      description: 通过提交此问题,您同意遵守我们的[用户协议](https://github.com/FloraCore/FloraCore/wiki/%E7%94%A8%E6%88%B7%E5%8D%8F%E8%AE%AE)
       options:
         - label: 我同意遵守FloraCore的用户协议。
           required: true

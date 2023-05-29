@@ -7,6 +7,7 @@ import org.floracore.api.messenger.*;
 import org.floracore.api.platform.*;
 import org.floracore.api.player.*;
 import org.floracore.api.server.*;
+import org.floracore.api.translation.*;
 import org.jetbrains.annotations.*;
 import team.floracore.common.api.implementation.*;
 import team.floracore.common.config.*;
@@ -27,6 +28,7 @@ public class FloraCoreApiProvider implements FloraCore {
     private final ApiChat chatAPI;
     private final ApiPlatform platform;
     private final ApiServer server;
+    private final ApiTranslation translation;
 
     public FloraCoreApiProvider(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -35,6 +37,7 @@ public class FloraCoreApiProvider implements FloraCore {
         this.chatAPI = new ApiChat(plugin);
         this.platform = new ApiPlatform(plugin);
         this.server = new ApiServer(plugin);
+        this.translation = new ApiTranslation(plugin);
     }
 
     public void ensureApiWasLoadedByPlugin() {
@@ -107,5 +110,10 @@ public class FloraCoreApiProvider implements FloraCore {
         if (this.plugin.getConfiguration().get(ConfigKeys.MESSAGING_SERVICE).equals("custom")) {
             this.plugin.setMessagingService(new FloraCoreMessagingService(this.plugin, messengerProvider));
         }
+    }
+
+    @Override
+    public TranslationAPI getTranslationAPI() {
+        return translation;
     }
 }

@@ -59,7 +59,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
         List<UUID> members;
         if (data == null) {
             members = new ArrayList<>();
-            // 获取队伍，如果不存在则创建队伍
+            // 获取队伍,如果不存在则创建队伍
             // 随机Party UUID
             partyUUID = UUID.randomUUID();
             // 获取队长的UUID
@@ -126,14 +126,14 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             Instant newTime = Instant.now().plus(d);
             // 将结果转换为时间戳
             long expiry = newTime.toEpochMilli();
-            // 为了防止处理意外，设置65秒后自毁。
+            // 为了防止处理意外,设置65秒后自毁。
             getStorageImplementation().insertData(ut,
                     DataType.SOCIAL_SYSTEMS_PARTY_INVITE,
                     partyUUID.toString(),
                     uuid.toString(),
                     expiry);
             getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
-                // 获取目标玩家是否接受，如果未接受，则发送邀请玩家过期信息
+                // 获取目标玩家是否接受,如果未接受,则发送邀请玩家过期信息
                 DATA inviteData = getStorageImplementation().getSpecifiedData(ut,
                         DataType.SOCIAL_SYSTEMS_PARTY_INVITE,
                         partyUUID.toString());
@@ -563,7 +563,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_NOT_ENOUGH_PEOPLE.send(sender);
                 return;
             }
-            if (!senderUUID.equals(leaderUUID)) { // 发送者不是队长，无权限转让
+            if (!senderUUID.equals(leaderUUID)) { // 发送者不是队长,无权限转让
                 SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_NO_PERMISSION.send(sender);
                 return;
             }
@@ -612,7 +612,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_NOT_ENOUGH_PEOPLE.send(sender);
                 return;
             }
-            if (!senderUUID.equals(leaderUUID)) { // 发送者不是队长，无权限转让
+            if (!senderUUID.equals(leaderUUID)) { // 发送者不是队长,无权限转让
                 SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_NO_PERMISSION.send(sender);
                 return;
             }
@@ -662,7 +662,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_NOT_ENOUGH_PEOPLE.send(sender);
                 return;
             }
-            if (!senderUUID.equals(leaderUUID)) { // 发送者不是队长，无权限转让
+            if (!senderUUID.equals(leaderUUID)) { // 发送者不是队长,无权限转让
                 SocialSystemsMessage.COMMAND_MISC_PARTY_TRANSFER_NO_PERMISSION.send(sender);
                 return;
             }

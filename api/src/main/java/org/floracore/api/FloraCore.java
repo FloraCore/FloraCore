@@ -6,6 +6,7 @@ import org.floracore.api.messenger.*;
 import org.floracore.api.platform.*;
 import org.floracore.api.player.*;
 import org.floracore.api.server.*;
+import org.floracore.api.translation.*;
 import org.jetbrains.annotations.*;
 
 /**
@@ -67,6 +68,13 @@ public interface FloraCore {
      * @return 服务器API
      */
     ServerAPI getServerAPI();
+
+    /**
+     * 获取国际化多语言API
+     *
+     * @return 国际化多语言API
+     */
+    TranslationAPI getTranslationAPI();
 
     /**
      * Gets the {@link Platform}, which represents the server platform the

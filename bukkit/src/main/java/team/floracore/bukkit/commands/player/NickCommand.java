@@ -125,7 +125,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
             skinName = skin;
         }
         try {
-            // 判断是否为Normal，如果为Normal则不进行操作
+            // 判断是否为Normal,如果为Normal则不进行操作
             UUID i = UUID.fromString(skinName);
         } catch (IllegalArgumentException exception) {
             NamesRepository.NameProperty selectedSkin;

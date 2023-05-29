@@ -32,7 +32,7 @@ public interface WorldCommandMessage extends AbstractMessage {
 
     Args3<String, Component, String> COMMAND_WEATHER_TIME = (world, weather, time) -> AbstractMessage.prefixed(
             translatable()
-                    // 你将 {0} 的天气设为 {1}，持续 {2} 秒
+                    // 你将 {0} 的天气设为 {1},持续 {2} 秒
                     .key("floracore.command.weather.time")
                     .color(AQUA)
                     .args(text(world).color(GREEN), weather.color(GREEN), text(time).color(GREEN))

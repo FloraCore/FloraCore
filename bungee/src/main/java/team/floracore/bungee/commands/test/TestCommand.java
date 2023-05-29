@@ -10,9 +10,9 @@ import team.floracore.bungee.command.*;
 import team.floracore.common.sender.*;
 
 /**
- * 该类请后续开发者不要删除，这是一个参考实现。几乎实现了Cloud命令框架中存在的所有可能。
+ * 该类请后续开发者不要删除,这是一个参考实现。几乎实现了Cloud命令框架中存在的所有可能。
  * {@see <a href="https://github.com/Incendo/cloud/blob/master/examples/example-bukkit/src/main/java/cloud/commandframework/examples/bukkit/ExamplePlugin.java">官方实现例子</a>}
- * 该类注册了一个test命令，统一需要权限才能使用。
+ * 该类注册了一个test命令,统一需要权限才能使用。
  */
 @CommandContainer
 @CommandPermission("admin.test")

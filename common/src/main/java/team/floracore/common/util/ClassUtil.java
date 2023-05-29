@@ -364,7 +364,7 @@ public class ClassUtil {
                     } catch (Throwable e) {
                         System.err.println("无法注入JavaAgent");
                         if (ToolProvider.getSystemJavaCompiler() == null) {
-                            System.err.println("请使用JDK，推荐zulu jdk(zulu.org)");
+                            System.err.println("请使用JDK,推荐zulu jdk(zulu.org)");
                         }
                         System.err.println("请删除启动参数-XX:+DisableAttachMechanism和-Djdk.attach.allowAttachSelf=false");
                         System.err.println("也可以尝试安装MzLibAgent（注：这不是一个插件）");

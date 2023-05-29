@@ -45,7 +45,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
     Args0 COMMAND_MISC_PARTY_ALREADY_IN_THE_TEAM = () -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
-                        // 你已经在组队里了，必须离开当前组队！
+                        // 你已经在组队里了,必须离开当前组队！
                         .key("floracore.command.misc.party.already-in-the-team").color(RED).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
@@ -69,7 +69,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
     Args0 COMMAND_MISC_PARTY_ALREADY_JOINED_THE_TEAM = () -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
-                        // 你已经加入了这个队伍，不能重复加入!
+                        // 你已经加入了这个队伍,不能重复加入!
                         .key("floracore.command.misc.party.already_joined_the_team").color(RED).build(),
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
@@ -179,7 +179,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
     Args2<String, String> COMMAND_MISC_PARTY_PROMOTE_LEADER = (sender, target) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
-                        // {0} 已将 {1} 提拔为组队队长，{0} 现在为组队管理员
+                        // {0} 已将 {1} 提拔为组队队长,{0} 现在为组队管理员
                         .key("floracore.command.misc.party.promote.leader").color(AQUA)
                         .append(FULL_STOP)
                         // {}
@@ -228,7 +228,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
     Args1<String> COMMAND_MISC_PARTY_OFFLINE_LEADER = (target) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
-                        // 组队队长 {0} 已断开连接，若 {1} 分钟内未重新连接则移出组队
+                        // 组队队长 {0} 已断开连接,若 {1} 分钟内未重新连接则移出组队
                         .key("floracore.command.misc.party.offline.leader").append(FULL_STOP)
                         // {}
                         .args(text(target, GRAY), text(5, RED)).color(AQUA).build(),
@@ -250,7 +250,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
     Args2<String, String> COMMAND_MISC_PARTY_OFFLINE_TRANSFER = (offlinePlayer, target) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
-                        // 由于 {0} 已断开连接，且 {1} 分钟内未重新连接，现已将队长转让给 {2}
+                        // 由于 {0} 已断开连接,且 {1} 分钟内未重新连接,现已将队长转让给 {2}
                         .key("floracore.command.misc.party.offline.transfer").color(AQUA)
                         // {}
                         .args(text(offlinePlayer, GRAY), text(5, RED), text(target, GRAY))
@@ -262,7 +262,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
     Args1<String> COMMAND_MISC_PARTY_OFFLINE_KICK = (target) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
-                        // 由于 {0} 已断开连接，且 {1} 分钟内未重新连接，现已将其移出组队
+                        // 由于 {0} 已断开连接,且 {1} 分钟内未重新连接,现已将其移出组队
                         .key("floracore.command.misc.party.offline.kick").append(FULL_STOP).color(AQUA)
                         // {}
                         .args(text(target, GRAY), text(5, RED))
@@ -274,7 +274,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
     Args1<String> COMMAND_MISC_PARTY_OFFLINE = (target) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
-                        // {0} 已断开连接，若 {1} 分钟内未重新连接则移出组队
+                        // {0} 已断开连接,若 {1} 分钟内未重新连接则移出组队
                         .key("floracore.command.misc.party.offline").append(FULL_STOP)
                         // {}
                         .args(text(target, GRAY), text(5, RED)).color(AQUA).build(),

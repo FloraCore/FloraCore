@@ -2,7 +2,7 @@ package org.floracore.api.data.chat;
 
 /**
  * 玩家在当前服务器的聊天记录。
- * 包括了加入时间和离开时间，方便定位聊天记录。
+ * 包括了加入时间和离开时间,方便定位聊天记录。
  */
 public class DataChatRecord {
     protected final int id;

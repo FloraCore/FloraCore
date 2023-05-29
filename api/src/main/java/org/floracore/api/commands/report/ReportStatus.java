@@ -9,7 +9,7 @@ public enum ReportStatus {
      */
     WAITING,
     /**
-     * 已受理，等待处理
+     * 已受理,等待处理
      */
     ACCEPTED,
     /**
