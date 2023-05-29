@@ -395,21 +395,6 @@ public final class Type {
     }
 
     /**
-     * Appends the descriptor corresponding to this type to the given string buffer.
-     *
-     * @param stringBuilder the string builder to which the descriptor must be appended.
-     */
-    private void appendDescriptor(final StringBuilder stringBuilder) {
-        if (sort == OBJECT) {
-            stringBuilder.append(valueBuffer, valueBegin - 1, valueEnd + 1);
-        } else if (sort == INTERNAL) {
-            stringBuilder.append('L').append(valueBuffer, valueBegin, valueEnd).append(';');
-        } else {
-            stringBuilder.append(valueBuffer, valueBegin, valueEnd);
-        }
-    }
-
-    /**
      * Returns the {@link Type} values corresponding to the argument types of the given method.
      *
      * @param method a method.
@@ -470,10 +455,6 @@ public final class Type {
         return stringBuilder.toString();
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Methods to get class names, internal names or descriptors.
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Returns the {@link Type} corresponding to the return type of the given method.
      *
@@ -484,26 +465,9 @@ public final class Type {
         return getType(method.getReturnType());
     }
 
-    /**
-     * Returns the type of the elements of this array type. This method should only be used for an
-     * array type.
-     *
-     * @return Returns the type of the elements of this array type.
-     */
-    public Type getElementType() {
-        final int numDimensions = getDimensions();
-        return getTypeInternal(valueBuffer, valueBegin + numDimensions, valueEnd);
-    }
-
-    /**
-     * Returns the argument types of methods of this type. This method should only be used for method
-     * types.
-     *
-     * @return the argument types of methods of this type.
-     */
-    public Type[] getArgumentTypes() {
-        return getArgumentTypes(getDescriptor());
-    }
+    // -----------------------------------------------------------------------------------------------
+    // Methods to get class names, internal names or descriptors.
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Returns the {@link Type} values corresponding to the argument types of the given method
@@ -554,31 +518,6 @@ public final class Type {
     }
 
     /**
-     * Returns the descriptor corresponding to this type.
-     *
-     * @return the descriptor corresponding to this type.
-     */
-    public String getDescriptor() {
-        if (sort == OBJECT) {
-            return valueBuffer.substring(valueBegin - 1, valueEnd + 1);
-        } else if (sort == INTERNAL) {
-            return 'L' + valueBuffer.substring(valueBegin, valueEnd) + ';';
-        } else {
-            return valueBuffer.substring(valueBegin, valueEnd);
-        }
-    }
-
-    /**
-     * Returns the return type of methods of this type. This method should only be used for method
-     * types.
-     *
-     * @return the return type of methods of this type.
-     */
-    public Type getReturnType() {
-        return getReturnType(getDescriptor());
-    }
-
-    /**
      * Returns the {@link Type} corresponding to the return type of the given method descriptor.
      *
      * @param methodDescriptor a method descriptor.
@@ -610,6 +549,108 @@ public final class Type {
             }
         }
         return currentOffset + 1;
+    }
+
+    /**
+     * Computes the size of the arguments and of the return value of a method.
+     *
+     * @param methodDescriptor a method descriptor.
+     * @return the size of the arguments of the method (plus one for the implicit this argument),
+     * argumentsSize, and the size of its return value, returnSize, packed into a single int i =
+     * {@code (argumentsSize &lt;&lt; 2) | returnSize} (argumentsSize is therefore equal to {@code
+     * i &gt;&gt; 2}, and returnSize to {@code i &amp; 0x03}).
+     */
+    public static int getArgumentsAndReturnSizes(final String methodDescriptor) {
+        int argumentsSize = 1;
+        // Skip the first character, which is always a '('.
+        int currentOffset = 1;
+        int currentChar = methodDescriptor.charAt(currentOffset);
+        // Parse the argument types and compute their size, one at a each loop iteration.
+        while (currentChar != ')') {
+            if (currentChar == 'J' || currentChar == 'D') {
+                currentOffset++;
+                argumentsSize += 2;
+            } else {
+                while (methodDescriptor.charAt(currentOffset) == '[') {
+                    currentOffset++;
+                }
+                if (methodDescriptor.charAt(currentOffset++) == 'L') {
+                    // Skip the argument descriptor content.
+                    int semiColumnOffset = methodDescriptor.indexOf(';', currentOffset);
+                    currentOffset = Math.max(currentOffset, semiColumnOffset + 1);
+                }
+                argumentsSize += 1;
+            }
+            currentChar = methodDescriptor.charAt(currentOffset);
+        }
+        currentChar = methodDescriptor.charAt(currentOffset + 1);
+        if (currentChar == 'V') {
+            return argumentsSize << 2;
+        } else {
+            int returnSize = (currentChar == 'J' || currentChar == 'D') ? 2 : 1;
+            return argumentsSize << 2 | returnSize;
+        }
+    }
+
+    /**
+     * Appends the descriptor corresponding to this type to the given string buffer.
+     *
+     * @param stringBuilder the string builder to which the descriptor must be appended.
+     */
+    private void appendDescriptor(final StringBuilder stringBuilder) {
+        if (sort == OBJECT) {
+            stringBuilder.append(valueBuffer, valueBegin - 1, valueEnd + 1);
+        } else if (sort == INTERNAL) {
+            stringBuilder.append('L').append(valueBuffer, valueBegin, valueEnd).append(';');
+        } else {
+            stringBuilder.append(valueBuffer, valueBegin, valueEnd);
+        }
+    }
+
+    /**
+     * Returns the type of the elements of this array type. This method should only be used for an
+     * array type.
+     *
+     * @return Returns the type of the elements of this array type.
+     */
+    public Type getElementType() {
+        final int numDimensions = getDimensions();
+        return getTypeInternal(valueBuffer, valueBegin + numDimensions, valueEnd);
+    }
+
+    /**
+     * Returns the argument types of methods of this type. This method should only be used for method
+     * types.
+     *
+     * @return the argument types of methods of this type.
+     */
+    public Type[] getArgumentTypes() {
+        return getArgumentTypes(getDescriptor());
+    }
+
+    /**
+     * Returns the descriptor corresponding to this type.
+     *
+     * @return the descriptor corresponding to this type.
+     */
+    public String getDescriptor() {
+        if (sort == OBJECT) {
+            return valueBuffer.substring(valueBegin - 1, valueEnd + 1);
+        } else if (sort == INTERNAL) {
+            return 'L' + valueBuffer.substring(valueBegin, valueEnd) + ';';
+        } else {
+            return valueBuffer.substring(valueBegin, valueEnd);
+        }
+    }
+
+    /**
+     * Returns the return type of methods of this type. This method should only be used for method
+     * types.
+     *
+     * @return the return type of methods of this type.
+     */
+    public Type getReturnType() {
+        return getReturnType(getDescriptor());
     }
 
     /**
@@ -652,6 +693,10 @@ public final class Type {
         }
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Methods to get the sort, dimension, size, and opcodes corresponding to a Type or descriptor.
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Returns the internal name of the class corresponding to this object or array type. The internal
      * name of a class is its fully qualified name (as returned by Class.getName(), where '.' are
@@ -662,10 +707,6 @@ public final class Type {
     public String getInternalName() {
         return valueBuffer.substring(valueBegin, valueEnd);
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Methods to get the sort, dimension, size, and opcodes corresponding to a Type or descriptor.
-    // -----------------------------------------------------------------------------------------------
 
     /**
      * Returns the sort of this type.
@@ -731,47 +772,6 @@ public final class Type {
      */
     public int getArgumentsAndReturnSizes() {
         return getArgumentsAndReturnSizes(getDescriptor());
-    }
-
-    /**
-     * Computes the size of the arguments and of the return value of a method.
-     *
-     * @param methodDescriptor a method descriptor.
-     * @return the size of the arguments of the method (plus one for the implicit this argument),
-     * argumentsSize, and the size of its return value, returnSize, packed into a single int i =
-     * {@code (argumentsSize &lt;&lt; 2) | returnSize} (argumentsSize is therefore equal to {@code
-     * i &gt;&gt; 2}, and returnSize to {@code i &amp; 0x03}).
-     */
-    public static int getArgumentsAndReturnSizes(final String methodDescriptor) {
-        int argumentsSize = 1;
-        // Skip the first character, which is always a '('.
-        int currentOffset = 1;
-        int currentChar = methodDescriptor.charAt(currentOffset);
-        // Parse the argument types and compute their size, one at a each loop iteration.
-        while (currentChar != ')') {
-            if (currentChar == 'J' || currentChar == 'D') {
-                currentOffset++;
-                argumentsSize += 2;
-            } else {
-                while (methodDescriptor.charAt(currentOffset) == '[') {
-                    currentOffset++;
-                }
-                if (methodDescriptor.charAt(currentOffset++) == 'L') {
-                    // Skip the argument descriptor content.
-                    int semiColumnOffset = methodDescriptor.indexOf(';', currentOffset);
-                    currentOffset = Math.max(currentOffset, semiColumnOffset + 1);
-                }
-                argumentsSize += 1;
-            }
-            currentChar = methodDescriptor.charAt(currentOffset);
-        }
-        currentChar = methodDescriptor.charAt(currentOffset + 1);
-        if (currentChar == 'V') {
-            return argumentsSize << 2;
-        } else {
-            int returnSize = (currentChar == 'J' || currentChar == 'D') ? 2 : 1;
-            return argumentsSize << 2 | returnSize;
-        }
     }
 
     /**

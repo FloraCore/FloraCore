@@ -9,6 +9,12 @@ import team.floracore.bukkit.inevntory.*;
 import static com.google.common.base.Strings.*;
 
 public class ChestInventoryOpener implements InventoryOpener {
+    public static void checkArgument(boolean b, String errorMessageTemplate, int p1) {
+        if (!b) {
+            throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1));
+        }
+    }
+
     @Override
     public Inventory open(SmartInventory inv, Player player) {
         checkArgument(inv.getColumns() == 9,
@@ -21,12 +27,6 @@ public class ChestInventoryOpener implements InventoryOpener {
         fill(handle, manager.getContents(player).get());
         player.openInventory(handle);
         return handle;
-    }
-
-    public static void checkArgument(boolean b, String errorMessageTemplate, int p1) {
-        if (!b) {
-            throw new IllegalArgumentException(lenientFormat(errorMessageTemplate, p1));
-        }
     }
 
     @Override

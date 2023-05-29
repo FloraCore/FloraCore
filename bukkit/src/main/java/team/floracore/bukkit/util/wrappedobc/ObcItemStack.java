@@ -7,37 +7,29 @@ import team.floracore.bukkit.util.wrappednms.*;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.*;
 
-import java.util.*;
-
 @WrappedBukkitClass(@VersionName("obc.inventory.CraftItemStack"))
 public interface ObcItemStack extends WrappedBukkitObject {
-    static ObcItemStack asCraftMirror(NmsItemStack nms) {
-        return WrappedObject.getStatic(ObcItemStack.class).staticAsCraftMirror(nms);
-    }
-
-    @WrappedMethod("asCraftMirror")
-    ObcItemStack staticAsCraftMirror(NmsItemStack nms);
-
     static ObcItemStack ensure(ItemStack item) {
         if (item == null) {
             item = new ItemStack(Material.AIR);
         }
-        if (Objects.requireNonNull(WrappedObject.getRawClass(ObcItemStack.class)).isAssignableFrom(item.getClass())) {
+        if (WrappedObject.getRawClass(ObcItemStack.class).isAssignableFrom(item.getClass())) {
             return WrappedObject.wrap(ObcItemStack.class, item);
         } else {
             return asCraftCopy(item);
         }
     }
 
-    static ObcItemStack asCraftCopy(ItemStack item) {
-        return WrappedObject.getStatic(ObcItemStack.class).staticAsCraftCopy(item);
+    static ObcItemStack asCraftMirror(NmsItemStack nms) {
+        return WrappedObject.getStatic(ObcItemStack.class).staticAsCraftMirror(nms);
     }
-
-    @WrappedMethod("asCraftCopy")
-    ObcItemStack staticAsCraftCopy(ItemStack item);
 
     static boolean isAir(ItemStack is) {
         return getCount(is) < 1;
+    }
+
+    static ObcItemStack asCraftCopy(ItemStack item) {
+        return WrappedObject.getStatic(ObcItemStack.class).staticAsCraftCopy(item);
     }
 
     static int getCount(ItemStack is) {
@@ -51,15 +43,15 @@ public interface ObcItemStack extends WrappedBukkitObject {
         return WrappedObject.getStatic(ObcItemStack.class).staticAsBukkitCopy(nms);
     }
 
-    @WrappedMethod("asBukkitCopy")
-    ItemStack staticAsBukkitCopy(NmsItemStack nms);
-
     static NmsItemStack asNMSCopy(ItemStack is) {
         return WrappedObject.getStatic(ObcItemStack.class).staticAsNMSCopy(is);
     }
 
-    @WrappedMethod("asNMSCopy")
-    NmsItemStack staticAsNMSCopy(ItemStack item);
+    @WrappedMethod("asCraftCopy")
+    ObcItemStack staticAsCraftCopy(ItemStack item);
+
+    @WrappedMethod("asBukkitCopy")
+    ItemStack staticAsBukkitCopy(NmsItemStack nms);
 
     @WrappedFieldAccessor("handle")
     NmsItemStack getHandle();
@@ -69,4 +61,10 @@ public interface ObcItemStack extends WrappedBukkitObject {
 
     @Override
     ItemStack getRaw();
+
+    @WrappedMethod("asCraftMirror")
+    ObcItemStack staticAsCraftMirror(NmsItemStack nms);
+
+    @WrappedMethod("asNMSCopy")
+    NmsItemStack staticAsNMSCopy(ItemStack item);
 }

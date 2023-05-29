@@ -74,6 +74,15 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
     // provide adapters
 
+    private static boolean checkIncompatibleVersion() {
+        try {
+            Class.forName("com.google.gson.JsonElement");
+            return false;
+        } catch (ClassNotFoundException e) {
+            return true;
+        }
+    }
+
     public Server getServer() {
         return loader.getServer();
     }
@@ -93,12 +102,12 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         return this.schedulerAdapter;
     }
 
+    // lifecycle
+
     @Override
     public ClassPathAppender getClassPathAppender() {
         return this.classPathAppender;
     }
-
-    // lifecycle
 
     @Override
     public CountDownLatch getLoadLatch() {
@@ -130,13 +139,13 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         return this.loader.getDataFolder().toPath().toAbsolutePath();
     }
 
+    // provide information about the plugin
+
     @Override
     public boolean isPlayerOnline(UUID uniqueId) {
         Player player = getServer().getPlayer(uniqueId);
         return player != null && player.isOnline();
     }
-
-    // provide information about the plugin
 
     @Override
     public @Nullable String identifyClassLoader(ClassLoader classLoader) throws ReflectiveOperationException {
@@ -161,15 +170,6 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
             this.plugin.onLoad();
         } finally {
             this.loadLatch.countDown();
-        }
-    }
-
-    private static boolean checkIncompatibleVersion() {
-        try {
-            Class.forName("com.google.gson.JsonElement");
-            return false;
-        } catch (ClassNotFoundException e) {
-            return true;
         }
     }
 

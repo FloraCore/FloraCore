@@ -25,6 +25,19 @@ public class DependencyRegistry {
         return JsonElement.class.getName().startsWith("team.floracore");
     }
 
+    private static boolean slf4jPresent() {
+        return classExists("org.slf4j.Logger") && classExists("org.slf4j.LoggerFactory");
+    }
+
+    private static boolean classExists(String className) {
+        try {
+            Class.forName(className);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
+
     public Set<Dependency> resolveStorageDependencies(Set<StorageType> storageTypes, boolean redis) {
         Set<Dependency> dependencies = new LinkedHashSet<>();
         for (StorageType storageType : storageTypes) {
@@ -45,19 +58,6 @@ public class DependencyRegistry {
         }
 
         return dependencies;
-    }
-
-    private static boolean slf4jPresent() {
-        return classExists("org.slf4j.Logger") && classExists("org.slf4j.LoggerFactory");
-    }
-
-    private static boolean classExists(String className) {
-        try {
-            Class.forName(className);
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
     }
 
     public boolean shouldAutoLoad(Dependency dependency) {

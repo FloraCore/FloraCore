@@ -36,6 +36,45 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
         }
     }
 
+    // dumb plugins seem to keep doing stupid stuff with shading of SLF4J and Log4J.
+    // detect this and print a more useful error message.
+    private static void handleClassloadingError(Throwable throwable, FloraCorePlugin plugin) {
+        List<String> noteworthyClasses = ImmutableList.of(
+                "org.slf4j.LoggerFactory",
+                "org.slf4j.ILoggerFactory",
+                "org.apache.logging.slf4j.Log4jLoggerFactory",
+                "org.apache.logging.log4j.spi.LoggerContext",
+                "org.apache.logging.log4j.spi.AbstractLoggerAdapter",
+                "org.slf4j.impl.StaticLoggerBinder",
+                "org.slf4j.helpers.MessageFormatter"
+        );
+
+        PluginLogger logger = plugin.getLogger();
+        logger.warn("A " + throwable.getClass()
+                .getSimpleName() + " has occurred whilst initialising Hikari. This is likely due to classloading conflicts between other plugins.");
+        logger.warn(
+                "Please check for other plugins below (and try loading FloraCore without them installed) before reporting the issue.");
+
+        for (String className : noteworthyClasses) {
+            Class<?> clazz;
+            try {
+                clazz = Class.forName(className);
+            } catch (Exception e) {
+                continue;
+            }
+
+            ClassLoader loader = clazz.getClassLoader();
+            String loaderName;
+            try {
+                loaderName = plugin.getBootstrap().identifyClassLoader(loader) + " (" + loader.toString() + ")";
+            } catch (Throwable e) {
+                loaderName = loader.toString();
+            }
+
+            logger.warn("Class " + className + " has been loaded by: " + loaderName);
+        }
+    }
+
     @Override
     public void init(FloraCorePlugin plugin) {
         HikariConfig config;
@@ -89,45 +128,6 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
         this.hikari = new HikariDataSource(config);
 
         postInitialize();
-    }
-
-    // dumb plugins seem to keep doing stupid stuff with shading of SLF4J and Log4J.
-    // detect this and print a more useful error message.
-    private static void handleClassloadingError(Throwable throwable, FloraCorePlugin plugin) {
-        List<String> noteworthyClasses = ImmutableList.of(
-                "org.slf4j.LoggerFactory",
-                "org.slf4j.ILoggerFactory",
-                "org.apache.logging.slf4j.Log4jLoggerFactory",
-                "org.apache.logging.log4j.spi.LoggerContext",
-                "org.apache.logging.log4j.spi.AbstractLoggerAdapter",
-                "org.slf4j.impl.StaticLoggerBinder",
-                "org.slf4j.helpers.MessageFormatter"
-        );
-
-        PluginLogger logger = plugin.getLogger();
-        logger.warn("A " + throwable.getClass()
-                .getSimpleName() + " has occurred whilst initialising Hikari. This is likely due to classloading conflicts between other plugins.");
-        logger.warn(
-                "Please check for other plugins below (and try loading FloraCore without them installed) before reporting the issue.");
-
-        for (String className : noteworthyClasses) {
-            Class<?> clazz;
-            try {
-                clazz = Class.forName(className);
-            } catch (Exception e) {
-                continue;
-            }
-
-            ClassLoader loader = clazz.getClassLoader();
-            String loaderName;
-            try {
-                loaderName = plugin.getBootstrap().identifyClassLoader(loader) + " (" + loader.toString() + ")";
-            } catch (Throwable e) {
-                loaderName = loader.toString();
-            }
-
-            logger.warn("Class " + className + " has been loaded by: " + loaderName);
-        }
     }
 
     /**

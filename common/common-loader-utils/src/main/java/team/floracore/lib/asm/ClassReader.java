@@ -156,41 +156,6 @@ public class ClassReader {
     }
 
     /**
-     * Reads the given input stream and returns its content as a byte array.
-     *
-     * @param inputStream an input stream.
-     * @param close       true to close the input stream after reading.
-     * @return the content of the given input stream.
-     * @throws IOException if a problem occurs during reading.
-     */
-    @SuppressWarnings("PMD.UseTryWithResources")
-    private static byte[] readStream(final InputStream inputStream, final boolean close)
-            throws IOException {
-        if (inputStream == null) {
-            throw new IOException("Class not found");
-        }
-        int bufferSize = computeBufferSize(inputStream);
-        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
-            byte[] data = new byte[bufferSize];
-            int bytesRead;
-            int readCount = 0;
-            while ((bytesRead = inputStream.read(data, 0, bufferSize)) != -1) {
-                outputStream.write(data, 0, bytesRead);
-                readCount++;
-            }
-            outputStream.flush();
-            if (readCount == 1) {
-                return data;
-            }
-            return outputStream.toByteArray();
-        } finally {
-            if (close) {
-                inputStream.close();
-            }
-        }
-    }
-
-    /**
      * Constructs a new {@link ClassReader} object.
      *
      * @param classFileBuffer a byte array containing the JVMS ClassFile structure to be read.
@@ -202,19 +167,6 @@ public class ClassReader {
             final int classFileOffset,
             final int classFileLength) { // NOPMD(UnusedFormalParameter) used for backward compatibility.
         this(classFileBuffer, classFileOffset, /* checkClassVersion = */ true);
-    }
-
-    private static int computeBufferSize(final InputStream inputStream) throws IOException {
-        int expectedLength = inputStream.available();
-        /*
-         * Some implementations can return 0 while holding available data (e.g. new
-         * FileInputStream("/proc/a_file")). Also in some pathological cases a very small number might
-         * be returned, and in this case we use a default size.
-         */
-        if (expectedLength < 256) {
-            return INPUT_STREAM_DATA_CHUNK_SIZE;
-        }
-        return Math.min(expectedLength, MAX_BUFFER_SIZE);
     }
 
     /**
@@ -313,6 +265,71 @@ public class ClassReader {
     }
 
     /**
+     * Constructs a new {@link ClassReader} object.
+     *
+     * @param className the fully qualified name of the class to be read. The ClassFile structure is
+     *                  retrieved with the current class loader's {@link ClassLoader#getSystemResourceAsStream}.
+     * @throws IOException if an exception occurs during reading.
+     */
+    public ClassReader(final String className) throws IOException {
+        this(
+                readStream(
+                        ClassLoader.getSystemResourceAsStream(className.replace('.', '/') + ".class"), true));
+    }
+
+    /**
+     * Reads the given input stream and returns its content as a byte array.
+     *
+     * @param inputStream an input stream.
+     * @param close       true to close the input stream after reading.
+     * @return the content of the given input stream.
+     * @throws IOException if a problem occurs during reading.
+     */
+    @SuppressWarnings("PMD.UseTryWithResources")
+    private static byte[] readStream(final InputStream inputStream, final boolean close)
+            throws IOException {
+        if (inputStream == null) {
+            throw new IOException("Class not found");
+        }
+        int bufferSize = computeBufferSize(inputStream);
+        try (ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            byte[] data = new byte[bufferSize];
+            int bytesRead;
+            int readCount = 0;
+            while ((bytesRead = inputStream.read(data, 0, bufferSize)) != -1) {
+                outputStream.write(data, 0, bytesRead);
+                readCount++;
+            }
+            outputStream.flush();
+            if (readCount == 1) {
+                return data;
+            }
+            return outputStream.toByteArray();
+        } finally {
+            if (close) {
+                inputStream.close();
+            }
+        }
+    }
+
+    private static int computeBufferSize(final InputStream inputStream) throws IOException {
+        int expectedLength = inputStream.available();
+        /*
+         * Some implementations can return 0 while holding available data (e.g. new
+         * FileInputStream("/proc/a_file")). Also in some pathological cases a very small number might
+         * be returned, and in this case we use a default size.
+         */
+        if (expectedLength < 256) {
+            return INPUT_STREAM_DATA_CHUNK_SIZE;
+        }
+        return Math.min(expectedLength, MAX_BUFFER_SIZE);
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Accessors
+    // -----------------------------------------------------------------------------------------------
+
+    /**
      * Reads a signed short value in this {@link ClassReader}. <i>This method is intended for {@link
      * Attribute} sub classes, and is normally not needed by class generators or adapters.</i>
      *
@@ -323,10 +340,6 @@ public class ClassReader {
         byte[] classBuffer = classFileBuffer;
         return (short) (((classBuffer[offset] & 0xFF) << 8) | (classBuffer[offset + 1] & 0xFF));
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Accessors
-    // -----------------------------------------------------------------------------------------------
 
     /**
      * Reads an unsigned short value in this {@link ClassReader}. <i>This method is intended for
@@ -421,6 +434,10 @@ public class ClassReader {
         return currentOffset + 2;
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Public methods
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Reads a CONSTANT_Utf8 constant pool entry in this {@link ClassReader}. <i>This method is
      * intended for {@link Attribute} sub classes, and is normally not needed by class generators or
@@ -441,10 +458,6 @@ public class ClassReader {
         return readUtf(constantPoolEntryIndex, charBuffer);
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Public methods
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Reads a signed int value in this {@link ClassReader}. <i>This method is intended for {@link
      * Attribute} sub classes, and is normally not needed by class generators or adapters.</i>
@@ -459,6 +472,10 @@ public class ClassReader {
                 | ((classBuffer[offset + 2] & 0xFF) << 8)
                 | (classBuffer[offset + 3] & 0xFF);
     }
+
+    // ----------------------------------------------------------------------------------------------
+    // Methods to parse modules, fields and methods
+    // ----------------------------------------------------------------------------------------------
 
     /**
      * Reads a CONSTANT_Utf8 constant pool entry in {@link #classFileBuffer}.
@@ -478,10 +495,6 @@ public class ClassReader {
         return constantUtf8Values[constantPoolEntryIndex] =
                 readUtf(cpInfoOffset + 2, readUnsignedShort(cpInfoOffset), charBuffer);
     }
-
-    // ----------------------------------------------------------------------------------------------
-    // Methods to parse modules, fields and methods
-    // ----------------------------------------------------------------------------------------------
 
     /**
      * Reads an UTF8 string in {@link #classFileBuffer}.
@@ -513,19 +526,6 @@ public class ClassReader {
             }
         }
         return new String(charBuffer, 0, strLength);
-    }
-
-    /**
-     * Constructs a new {@link ClassReader} object.
-     *
-     * @param className the fully qualified name of the class to be read. The ClassFile structure is
-     *                  retrieved with the current class loader's {@link ClassLoader#getSystemResourceAsStream}.
-     * @throws IOException if an exception occurs during reading.
-     */
-    public ClassReader(final String className) throws IOException {
-        this(
-                readStream(
-                        ClassLoader.getSystemResourceAsStream(className.replace('.', '/') + ".class"), true));
     }
 
     /**

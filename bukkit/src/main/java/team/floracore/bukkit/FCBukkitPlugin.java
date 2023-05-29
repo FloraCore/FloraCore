@@ -93,14 +93,14 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     protected void setupFramework() {
         this.bungeeUtil = new BungeeUtil(this);
 
-        getLogger().info("Loading inventory manager...");
-        inventoryManager = new InventoryManager(getLoader());
-        inventoryManager.init();
-
         RegistrarRegistrar.instance.load();
         ListenerRegistrar.instance.load();
         IModule.ModuleModule.instance.load();
         NothingRegistrar.instance.load();
+
+        getLogger().info("Loading inventory manager...");
+        inventoryManager = new InventoryManager(getLoader());
+        inventoryManager.init();
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getLoader(), () -> {
             SERVER server = getStorage().getImplementation().selectServer(getServerName());
@@ -151,12 +151,12 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     @Override
     protected void disableFramework() {
-        scoreBoardManager.getSidebarBoard().cancel();
-
         RegistrarRegistrar.instance.unload();
         ListenerRegistrar.instance.unload();
         IModule.ModuleModule.instance.unload();
         NothingRegistrar.instance.unload();
+
+        scoreBoardManager.getSidebarBoard().cancel();
 
         chatManager.shutdown();
     }

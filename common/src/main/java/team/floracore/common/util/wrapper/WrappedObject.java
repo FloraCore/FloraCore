@@ -2,16 +2,16 @@ package team.floracore.common.util.wrapper;
 
 import com.google.common.collect.*;
 import io.github.karlatemp.unsafeaccessor.*;
-import team.floracore.common.util.Optional;
 import team.floracore.common.util.*;
-import team.floracore.lib.asm.Type;
 import team.floracore.lib.asm.*;
 import team.floracore.lib.asm.tree.*;
 
 import java.io.*;
 import java.lang.annotation.*;
 import java.lang.invoke.*;
+import java.lang.reflect.Type;
 import java.lang.reflect.*;
+import java.util.Optional;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.*;
@@ -29,14 +29,6 @@ public interface WrappedObject {
     static boolean isNull(WrappedObject wo) {
         return wo == null || wo.isNull();
     }
-
-    default boolean isNull() {
-        return getRaw() == null;
-    }
-
-    Object getRaw();
-
-    void setRaw(Object raw);
 
     static Object getRaw(WrappedObject wrappedObject) {
         if (wrappedObject == null) {
@@ -127,11 +119,10 @@ public interface WrappedObject {
 
                     for (Method m : wrapper.getDeclaredMethods()) {
                         Member rm = null;
-                        for (Annotation a : m.getDeclaredAnnotations()) {
+                        for (Annotation a : m.getDeclaredAnnotations())
                             if (rm == null) {
                                 rm = controller.getRawMember(rawClass, m, a);
                             }
-                        }
                         if (rm == null) {
                             continue;
                         }
@@ -141,8 +132,7 @@ public interface WrappedObject {
                         mn = new MethodNode(Opcodes.ACC_PUBLIC, m.getName(), getDesc(m), null, new String[0]);
                         boolean accessByForce = m.getDeclaredAnnotation(AccessByForce.class) != null || (!Modifier.isPublic(
                                 rawClass.getModifiers())) || (!Modifier.isPublic(rm.getDeclaringClass()
-                                .getModifiers())) || (!Modifier.isPublic(
-                                rm.getModifiers()));
+                                .getModifiers())) || (!Modifier.isPublic(rm.getModifiers()));
                         if (rm instanceof Field) {
                             switch (m.getParameterCount()) {
                                 case 0:
@@ -310,11 +300,8 @@ public interface WrappedObject {
                                                 m.getParameterTypes()[i]));
                                     }
                                 }
-                                mn.visitMethodInsn(Opcodes.INVOKESPECIAL,
-                                        AsmUtil.getType(rawClass),
-                                        "<init>",
-                                        getDesc((Constructor<?>) rm),
-                                        false);
+                                mn.visitMethodInsn(Opcodes.INVOKESPECIAL, AsmUtil.getType(rawClass), "<init>",
+                                        getDesc((Constructor<?>) rm), false);
                             }
                             mn.instructions.add(AsmUtil.wrapNode());
                             mn.instructions.add(AsmUtil.castNode(wrapper, WrappedObject.class));
@@ -350,11 +337,9 @@ public interface WrappedObject {
                                         getType(MethodHandle.class),
                                         "invokeExact",
                                         getDesc(Modifier.isStatic(rm.getModifiers()) ? ((Method) rm).getParameterTypes() : ListUtil.mergeLists(
-                                                                Lists.newArrayList(rm.getDeclaringClass()),
-                                                                Lists.newArrayList(((Method) rm).getParameterTypes()))
-                                                        .toArray(
-                                                                new Class[0]),
-                                                ((Method) rm).getReturnType()),
+                                                        Lists.newArrayList(rm.getDeclaringClass()),
+                                                        Lists.newArrayList(((Method) rm).getParameterTypes()))
+                                                .toArray(new Class[0]), ((Method) rm).getReturnType()),
                                         false);
                                 if (WrappedObject.class.isAssignableFrom(m.getReturnType())) {
                                     mn.instructions.add(castNode(Object.class, ((Method) rm).getReturnType()));
@@ -430,20 +415,13 @@ public interface WrappedObject {
                         mn = new MethodNode(Opcodes.ACC_PUBLIC, m.getName(), getDesc(m), null, new String[0]);
                         mn.visitVarInsn(Opcodes.ALOAD, 0);
                         mn.visitLdcInsn(Type.getType(m.getDeclaringClass()));
-                        mn.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-                                AsmUtil.getType(WrappedObject.class),
-                                "cast",
-                                getDesc(new Class[]{Class.class}, WrappedObject.class),
-                                true);
+                        mn.visitMethodInsn(Opcodes.INVOKEINTERFACE, AsmUtil.getType(WrappedObject.class), "cast",
+                                getDesc(new Class[]{Class.class}, WrappedObject.class), true);
                         mn.instructions.add(AsmUtil.castNode(m.getDeclaringClass(), WrappedObject.class));
-                        for (int i = 0; i < m.getParameterCount(); i++) {
+                        for (int i = 0; i < m.getParameterCount(); i++)
                             mn.instructions.add(AsmUtil.varLoadNode(m.getParameterTypes()[i], i + 1));
-                        }
-                        mn.visitMethodInsn(Opcodes.INVOKEINTERFACE,
-                                AsmUtil.getType(m.getDeclaringClass()),
-                                m.getName(),
-                                getDesc(m),
-                                true);
+                        mn.visitMethodInsn(Opcodes.INVOKEINTERFACE, AsmUtil.getType(m.getDeclaringClass()), m.getName(),
+                                getDesc(m), true);
                         mn.instructions.add(AsmUtil.returnNode(m.getReturnType()));
                         cn.methods.add(mn);
                     }
@@ -500,12 +478,20 @@ public interface WrappedObject {
         return getRawClass(wrapper).isAssignableFrom(getRaw().getClass());
     }
 
-    default WrappedObject clone0() {
-        return clone00();
+    default boolean isNull() {
+        return getRaw() == null;
     }
+
+    Object getRaw();
+
+    void setRaw(Object raw);
 
     @WrappedMethod("clone")
     WrappedObject clone00();
+
+    default WrappedObject clone0() {
+        return clone00();
+    }
 
     default int hashCode0() {
         return Objects.hashCode(getRaw());
@@ -588,8 +574,7 @@ public interface WrappedObject {
                 if (name.startsWith("@") || name.startsWith("#")) {
                     return Arrays.stream(rawClass.getDeclaredMethods())
                             .filter(t -> (name.charAt(0) == '#') == Modifier.isStatic(t.getModifiers()))
-                            .filter(t -> t.getReturnType()
-                                    .equals(getRawClasses(m.getReturnType())[0]) && Arrays.equals(
+                            .filter(t -> t.getReturnType().equals(getRawClasses(m.getReturnType())[0]) && Arrays.equals(
                                     t.getParameterTypes(),
                                     getRawClasses(m.getParameterTypes())))
                             .toArray(Method[]::new)[Integer.parseInt(name.substring(1))];

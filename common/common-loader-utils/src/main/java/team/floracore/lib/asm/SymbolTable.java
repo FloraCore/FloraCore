@@ -202,6 +202,45 @@ final class SymbolTable {
         }
     }
 
+    private static int hash(
+            final int tag, final String value1, final String value2, final String value3) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode());
+    }
+
+    private static int hash(final int tag, final int value) {
+        return 0x7FFFFFFF & (tag + value);
+    }
+
+    private static int hash(final int tag, final String value1, final String value2) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode());
+    }
+
+    private static int hash(final int tag, final long value) {
+        return 0x7FFFFFFF & (tag + (int) value + (int) (value >>> 32));
+    }
+
+    private static int hash(final int tag, final String value) {
+        return 0x7FFFFFFF & (tag + value.hashCode());
+    }
+
+    private static int hash(
+            final int tag,
+            final String value1,
+            final String value2,
+            final String value3,
+            final int value4) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode() * value4);
+    }
+
+    private static int hash(
+            final int tag, final String value1, final String value2, final int value3) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * (value3 + 1));
+    }
+
+    private static int hash(final int tag, final String value1, final int value2) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() + value2);
+    }
+
     /**
      * Adds a new CONSTANT_Fieldref_info, CONSTANT_Methodref_info or CONSTANT_InterfaceMethodref_info
      * to the constant pool of this symbol table.
@@ -233,6 +272,10 @@ final class SymbolTable {
     private void addConstantIntegerOrFloat(final int index, final int tag, final int value) {
         add(new Entry(index, tag, value, hash(tag, value)));
     }
+
+    // -----------------------------------------------------------------------------------------------
+    // Generic symbol table entries management.
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Adds a new CONSTANT_NameAndType_info to the constant pool of this symbol table.
@@ -267,6 +310,10 @@ final class SymbolTable {
     private void addConstantUtf8(final int index, final String value) {
         add(new Entry(index, Symbol.CONSTANT_UTF8_TAG, value, hash(Symbol.CONSTANT_UTF8_TAG, value)));
     }
+
+    // -----------------------------------------------------------------------------------------------
+    // Constant pool entries management.
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Adds a new CONSTANT_MethodHandle_info to the constant pool of this symbol table.
@@ -386,49 +433,6 @@ final class SymbolTable {
         int index = entry.hashCode % entries.length;
         entry.next = entries[index];
         entries[index] = entry;
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Generic symbol table entries management.
-    // -----------------------------------------------------------------------------------------------
-
-    private static int hash(
-            final int tag, final String value1, final String value2, final String value3) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode());
-    }
-
-    private static int hash(final int tag, final int value) {
-        return 0x7FFFFFFF & (tag + value);
-    }
-
-    private static int hash(final int tag, final String value1, final String value2) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode());
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Constant pool entries management.
-    // -----------------------------------------------------------------------------------------------
-
-    private static int hash(final int tag, final long value) {
-        return 0x7FFFFFFF & (tag + (int) value + (int) (value >>> 32));
-    }
-
-    private static int hash(final int tag, final String value) {
-        return 0x7FFFFFFF & (tag + value.hashCode());
-    }
-
-    private static int hash(
-            final int tag,
-            final String value1,
-            final String value2,
-            final String value3,
-            final int value4) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode() * value4);
-    }
-
-    private static int hash(
-            final int tag, final String value1, final String value2, final int value3) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * (value3 + 1));
     }
 
     /**
@@ -850,6 +854,10 @@ final class SymbolTable {
         return put(new Entry(index, tag, value, hashCode));
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Bootstrap method entries management.
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Adds a CONSTANT_NameAndType_info to the constant pool of this symbol table. Does nothing if the
      * constant pool already contains a similar item.
@@ -874,10 +882,6 @@ final class SymbolTable {
         constantPool.put122(tag, addConstantUtf8(name), addConstantUtf8(descriptor));
         return put(new Entry(constantPoolCount++, tag, name, descriptor, hashCode)).index;
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Bootstrap method entries management.
-    // -----------------------------------------------------------------------------------------------
 
     /**
      * Adds a CONSTANT_MethodHandle_info to the constant pool of this symbol table. Does nothing if
@@ -925,6 +929,10 @@ final class SymbolTable {
                 new Entry(constantPoolCount++, tag, owner, name, descriptor, referenceKind, hashCode));
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Type table entries management.
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Adds a CONSTANT_MethodType_info to the constant pool of this symbol table. Does nothing if the
      * constant pool already contains a similar item.
@@ -935,10 +943,6 @@ final class SymbolTable {
     Symbol addConstantMethodType(final String methodDescriptor) {
         return addConstantUtf8Reference(Symbol.CONSTANT_METHOD_TYPE_TAG, methodDescriptor);
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Type table entries management.
-    // -----------------------------------------------------------------------------------------------
 
     /**
      * Adds a CONSTANT_Dynamic_info to the constant pool of this symbol table. Also adds the related
@@ -1025,6 +1029,10 @@ final class SymbolTable {
         return addConstantUtf8Reference(Symbol.CONSTANT_MODULE_TAG, moduleName);
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Static helper methods to compute hash codes.
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Adds a CONSTANT_Package_info to the constant pool of this symbol table. Does nothing if the
      * constant pool already contains a similar item.
@@ -1035,10 +1043,6 @@ final class SymbolTable {
     Symbol addConstantPackage(final String packageName) {
         return addConstantUtf8Reference(Symbol.CONSTANT_PACKAGE_TAG, packageName);
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Static helper methods to compute hash codes.
-    // -----------------------------------------------------------------------------------------------
 
     /**
      * Adds a bootstrap method to the BootstrapMethods attribute of this symbol table. Does nothing if
@@ -1161,10 +1165,6 @@ final class SymbolTable {
         }
         return addTypeInternal(
                 new Entry(typeCount, Symbol.UNINITIALIZED_TYPE_TAG, value, bytecodeOffset, hashCode));
-    }
-
-    private static int hash(final int tag, final String value1, final int value2) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() + value2);
     }
 
     /**

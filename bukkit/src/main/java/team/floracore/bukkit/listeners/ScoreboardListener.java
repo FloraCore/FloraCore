@@ -25,6 +25,15 @@ public class ScoreboardListener extends FloraCoreBukkitListener {
         this.plugin = plugin;
     }
 
+    public static boolean check(final Player player, final BoardModel model) {
+        return player.hasPermission(model.permission) && dataCheck(model) && !offList.contains(player.getName());
+    }
+
+    public static boolean dataCheck(final BoardModel model) {
+        final long now = System.currentTimeMillis();
+        return (model.time_start == null || model.time_start.getTime() <= now) && (model.time_end == null || now <= model.time_end.getTime());
+    }
+
     @EventHandler(priority = EventPriority.LOW)
     public void onBodyUpdate(BodyUpdateEvent event) {
         for (BoardModel model : plugin.getScoreBoardManager().getModels()) {
@@ -36,15 +45,6 @@ public class ScoreboardListener extends FloraCoreBukkitListener {
                 break;
             }
         }
-    }
-
-    public static boolean check(final Player player, final BoardModel model) {
-        return player.hasPermission(model.permission) && dataCheck(model) && !offList.contains(player.getName());
-    }
-
-    public static boolean dataCheck(final BoardModel model) {
-        final long now = System.currentTimeMillis();
-        return (model.time_start == null || model.time_start.getTime() <= now) && (model.time_end == null || now <= model.time_end.getTime());
     }
 
     @EventHandler(priority = EventPriority.LOW)

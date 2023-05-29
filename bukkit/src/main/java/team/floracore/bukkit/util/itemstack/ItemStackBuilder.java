@@ -106,18 +106,6 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return forFlattening("stained_glass_pane", (short) 15, "black_stained_glass_pane");
     }
 
-    public static ItemStackBuilder limeTerracotta() {
-        return forFlattening("stained_clay", (short) 1, "lime_terracotta");
-    }
-
-    public static ItemStackBuilder lightBlueTerracotta() {
-        return forFlattening("stained_clay", (short) 3, "light_blue_terracotta");
-    }
-
-    public static ItemStackBuilder redTerracotta() {
-        return forFlattening("stained_clay", (short) 14, "red_terracotta");
-    }
-
     public static ItemStackBuilder grass() {
         return forFlattening("tallgrass", (short) 1, "grass");
     }
@@ -181,27 +169,6 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
             is.tag().getCompound("SkullOwner").set("Name", NmsNBTTagString.newInstance(name));
         }
         return is;
-    }
-
-    public NmsNBTTagCompound tag() {
-        if (!hasTag()) {
-            getHandle().setTag(NmsNBTTagCompound.newInstance());
-        }
-        return getHandle().getTag();
-    }
-
-    public boolean hasTag() {
-        if (WrappedObject.isNull(this.item.getHandle())) {
-            return false;
-        }
-        return !WrappedObject.isNull(item.getHandle().getTag());
-    }
-
-    public NmsItemStack getHandle() {
-        if (WrappedObject.isNull(this.item.getHandle())) {
-            this.item.setHandle(NmsItemStack.newInstance(ObcMagicNumbers.getItem(Material.AIR)));
-        }
-        return this.item.getHandle();
     }
 
     public static ItemStackBuilder returnArrow() {
@@ -269,6 +236,31 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return json;
     }
 
+    public static String getId(Material m) {
+        return ObcMagicNumbers.getItem(m).getId();
+    }
+
+    public NmsNBTTagCompound tag() {
+        if (!hasTag()) {
+            getHandle().setTag(NmsNBTTagCompound.newInstance());
+        }
+        return getHandle().getTag();
+    }
+
+    public boolean hasTag() {
+        if (WrappedObject.isNull(this.item.getHandle())) {
+            return false;
+        }
+        return !WrappedObject.isNull(item.getHandle().getTag());
+    }
+
+    public NmsItemStack getHandle() {
+        if (WrappedObject.isNull(this.item.getHandle())) {
+            this.item.setHandle(NmsItemStack.newInstance(ObcMagicNumbers.getItem(Material.AIR)));
+        }
+        return this.item.getHandle();
+    }
+
     @Override
     public ItemStack get() {
         return item.getRaw();
@@ -292,10 +284,6 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
 
     public ItemStackBuilder setId(Material m) {
         return setId(getId(m));
-    }
-
-    public static String getId(Material m) {
-        return ObcMagicNumbers.getItem(m).getId();
     }
 
     public ItemStackBuilder add(int count) {
