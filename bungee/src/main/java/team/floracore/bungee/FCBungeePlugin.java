@@ -109,6 +109,11 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
+    protected void setupConfiguration() {
+
+    }
+
+    @Override
     protected void disableFramework() {
 
     }

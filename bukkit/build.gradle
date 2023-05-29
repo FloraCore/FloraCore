@@ -13,6 +13,7 @@ repositories {
     maven { url 'https://repo.dmulloy2.net/repository/public/' }
     maven { url 'https://repo.kryptonmc.org/releases' }
     maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
 }
 
 dependencies {
@@ -31,6 +32,7 @@ dependencies {
     compileOnly 'me.neznamy:tab-api:3.2.4'
     compileOnly 'it.unimi.dsi:fastutil:8.5.12'
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.0.0'
+    compileOnly 'me.clip:placeholderapi:2.11.3'
 }
 
 

@@ -6,6 +6,7 @@ import org.bukkit.entity.*;
 import org.bukkit.plugin.java.*;
 import org.floracore.api.server.*;
 import team.floracore.bukkit.command.*;
+import team.floracore.bukkit.config.*;
 import team.floracore.bukkit.inevntory.*;
 import team.floracore.bukkit.listener.*;
 import team.floracore.bukkit.locale.chat.*;
@@ -36,6 +37,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private BukkitMessagingFactory bukkitMessagingFactory;
     private ChatManager chatManager;
     private BungeeUtil bungeeUtil;
+    private BoardsConfiguration boardsConfiguration;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -83,6 +85,17 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     @Override
     protected ConfigurationAdapter provideConfigurationAdapter() {
         return new BukkitConfigAdapter(this, resolveConfig("config.yml").toFile());
+    }
+
+    @Override
+    protected void setupConfiguration() {
+        ConfigurationAdapter boardsConfigFileAdapter = new BukkitConfigAdapter(this,
+                resolveConfig("boards.yml").toFile());
+        this.boardsConfiguration = new BoardsConfiguration(this,
+                new MultiConfigurationAdapter(this,
+                        new SystemPropertyConfigAdapter(this),
+                        new EnvironmentVariableConfigAdapter(this),
+                        boardsConfigFileAdapter));
     }
 
     @Override

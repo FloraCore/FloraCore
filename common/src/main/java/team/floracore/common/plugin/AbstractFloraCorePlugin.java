@@ -164,6 +164,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
     protected abstract void setupFramework();
 
+    protected abstract void setupConfiguration();
+
     public final void onDisable() {
         getLogger().info("Starting shutdown process...");
 

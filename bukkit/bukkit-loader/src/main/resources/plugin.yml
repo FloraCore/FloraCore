@@ -9,6 +9,7 @@ depend:
 softdepend:
   - PremiumVanish
   - TAB
+  - PlaceholderAPI
 permissions:
   floracore.admin:
     default: op

@@ -1,6 +1,5 @@
 plugins {
     id "java"
-    id "java-library"
 }
 
 group 'org.floracore'
@@ -13,10 +12,7 @@ repositories {
 dependencies {
     compileOnly 'org.checkerframework:checker-qual:3.32.0'
     compileOnly 'org.jetbrains:annotations:24.0.1'
-
-    api 'net.kyori:adventure-api:4.13.0'
-    api 'net.kyori:adventure-text-serializer-plain:4.13.1'
-    api 'net.kyori:adventure-text-serializer-legacy:4.13.1'
+    compileOnly 'net.kyori:adventure-api:4.13.0'
 }
 
 tasks.withType(JavaCompile).configureEach {
