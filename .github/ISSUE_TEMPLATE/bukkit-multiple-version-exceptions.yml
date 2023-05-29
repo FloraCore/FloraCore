@@ -1,7 +1,7 @@
 name: 🐞 Bukkit多版本兼容问题
 description: 创建一个Bukkit多版本不兼容的报告以帮助我们改进FloraCore
 title: "[多版本兼容问题]: "
-labels: ["bukkit-multiple-version-exceptions"]
+labels: [ "bukkit-multiple-version-exceptions" ]
 assignees:
   - xLikeWATCHDOG
 body:

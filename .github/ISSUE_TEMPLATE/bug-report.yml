@@ -1,7 +1,7 @@
 name: 🐞 Bug Report
 description: 创建报告以帮助我们改进FloraCore
 title: "[BUG]: "
-labels: ["bug"]
+labels: [ "bug" ]
 assignees:
   - flowerinsnowdh
   - xLikeWATCHDOG

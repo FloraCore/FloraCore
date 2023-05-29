@@ -18,11 +18,10 @@ import java.util.concurrent.*;
 import java.util.function.*;
 
 public class TranslationRepository {
-    private static String TRANSLATIONS_INFO_ENDPOINT;
-    private static String TRANSLATIONS_DOWNLOAD_ENDPOINT;
     private static final long MAX_BUNDLE_SIZE = 1048576L; // 1mb
     private static final long CACHE_MAX_AGE = TimeUnit.HOURS.toMillis(1);
-
+    private static String TRANSLATIONS_INFO_ENDPOINT;
+    private static String TRANSLATIONS_DOWNLOAD_ENDPOINT;
     private final FloraCorePlugin plugin;
     private final AbstractHttpClient abstractHttpClient;
 

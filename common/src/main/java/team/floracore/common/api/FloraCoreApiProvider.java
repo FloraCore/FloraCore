@@ -94,6 +94,11 @@ public class FloraCoreApiProvider implements FloraCore {
         return this.server;
     }
 
+    @Override
+    public TranslationAPI getTranslationAPI() {
+        return translation;
+    }
+
     @NotNull
     @Override
     public ApiPlatform getPlatform() {
@@ -110,10 +115,5 @@ public class FloraCoreApiProvider implements FloraCore {
         if (this.plugin.getConfiguration().get(ConfigKeys.MESSAGING_SERVICE).equals("custom")) {
             this.plugin.setMessagingService(new FloraCoreMessagingService(this.plugin, messengerProvider));
         }
-    }
-
-    @Override
-    public TranslationAPI getTranslationAPI() {
-        return translation;
     }
 }
