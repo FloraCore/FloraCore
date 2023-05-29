@@ -1,6 +1,10 @@
 package org.floracore.api.translation;
 
+import net.kyori.adventure.text.*;
+import org.jetbrains.annotations.*;
+
 import java.nio.file.*;
+import java.util.*;
 
 /**
  * 国际化多语言API
@@ -24,4 +28,29 @@ public interface TranslationAPI {
      * @param suppressDuplicatesError 是否抑制重复错误
      */
     void loadCustomLanguageFile(Path directory, boolean suppressDuplicatesError);
+
+    /**
+     * 注意：参数"sender",必须为Sender的子类。
+     *
+     * @param sender    玩家
+     * @param component 信息组件
+     */
+    void sendMessage(@NotNull Object sender, @NotNull Component component);
+
+    /**
+     * 向控制台发送信息。
+     *
+     * @param component 信息组件
+     */
+    void sendConsoleMessage(@NotNull Component component);
+
+    /**
+     * 通过UUID获取目标玩家选择的语言。
+     * 若无选择语言，或不存在这名玩家,则会返回默认的语言。
+     *
+     * @param component 未翻译的信息组件
+     * @param uuid      玩家UUID
+     * @return 已翻译的信息组件
+     */
+    Component render(Component component, @NotNull UUID uuid);
 }
