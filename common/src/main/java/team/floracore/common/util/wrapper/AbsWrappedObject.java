@@ -23,6 +23,11 @@ public abstract class AbsWrappedObject implements WrappedObject {
     }
 
     @Override
+    public int hashCode() {
+        return hashCode0();
+    }
+
+    @Override
     public boolean equals(Object obj) {
         return equals0(obj);
     }
@@ -30,11 +35,6 @@ public abstract class AbsWrappedObject implements WrappedObject {
     @Override
     public AbsWrappedObject clone() {
         return (AbsWrappedObject) clone0().cast(this.getWrapper());
-    }
-
-    @Override
-    public int hashCode() {
-        return hashCode0();
     }
 
     @Override

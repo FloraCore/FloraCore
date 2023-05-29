@@ -12,7 +12,7 @@ public interface NmsItemStack extends WrappedBukkitObject {
         if (BukkitWrapper.v13) {
             return fromNbtV13(nbt);
         } else {
-            return newInstanceV_13(nbt);
+            return newInstanceV8_13(nbt);
         }
     }
 
@@ -20,8 +20,8 @@ public interface NmsItemStack extends WrappedBukkitObject {
         return WrappedObject.getStatic(NmsItemStack.class).staticFromNbtV13(nbt);
     }
 
-    static NmsItemStack newInstanceV_13(NmsNBTTagCompound nbt) {
-        return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV_13(nbt);
+    static NmsItemStack newInstanceV8_13(NmsNBTTagCompound nbt) {
+        return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV8_13(nbt);
     }
 
     static NmsItemStack newInstance(NmsItem item) {
@@ -33,21 +33,21 @@ public interface NmsItemStack extends WrappedBukkitObject {
             return WrappedObject.getStatic(NmsItemStack.class)
                     .staticNewInstanceV13(item.cast(NmsIMaterialV13.class), count);
         } else {
-            return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV_13(item, count);
+            return WrappedObject.getStatic(NmsItemStack.class).staticNewInstanceV8_13(item, count);
         }
     }
 
     @WrappedBukkitMethod(@VersionName(value = {"fromCompound", "a"}, minVer = 13))
     NmsItemStack staticFromNbtV13(NmsNBTTagCompound nbt);
 
-    @WrappedBukkitConstructor(maxVer = 13)
-    NmsItemStack staticNewInstanceV_13(NmsNBTTagCompound nbt);
+    @WrappedBukkitConstructor(minVer = 8, maxVer = 13)
+    NmsItemStack staticNewInstanceV8_13(NmsNBTTagCompound nbt);
 
     @WrappedBukkitConstructor(minVer = 13)
     NmsItemStack staticNewInstanceV13(NmsIMaterialV13 item, int count);
 
-    @WrappedBukkitConstructor(maxVer = 13)
-    NmsItemStack staticNewInstanceV_13(NmsItem item, int count);
+    @WrappedBukkitConstructor(minVer = 8, maxVer = 13)
+    NmsItemStack staticNewInstanceV8_13(NmsItem item, int count);
 
     @WrappedMethod({"save", "b"})
     NmsNBTTagCompound save(NmsNBTTagCompound nbt);
