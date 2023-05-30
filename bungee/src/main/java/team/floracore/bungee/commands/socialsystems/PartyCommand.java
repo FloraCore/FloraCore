@@ -12,6 +12,7 @@ import net.md_5.bungee.event.*;
 import org.floracore.api.*;
 import org.floracore.api.bungee.messenger.message.type.*;
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bungee.*;
 import team.floracore.bungee.command.*;
@@ -182,8 +183,6 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
         getAsyncExecutor().execute(() -> {
             long disbandTime = System.currentTimeMillis();
             party.setDisbandTime(disbandTime);
-            /*CHAT chat = getStorageImplementation().selectChatWithID(chatID);
-            chat.setEndTime(disbandTime);*/
             for (UUID member : members) {
                 DATA md = getStorageImplementation().getSpecifiedData(member, DataType.SOCIAL_SYSTEMS, "party");
                 if (md != null) {
@@ -438,12 +437,8 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                                     ChatMessage.ChatMessageType.PARTY,
                                     Arrays.asList(uuid.toString(), message));
                 }
-                /*CHAT chat = getStorageImplementation().selectChatWithID(chatID);
-                List<ChatRecord> chatRecords = chat.getRecords();
-                int id = chat.getRecords().size() + 1;
-                ChatRecord chatRecord = new ChatRecord(id, uuid, message, System.currentTimeMillis());
-                chatRecords.add(chatRecord);
-                chat.setRecords(chatRecords);*/
+                long time = System.currentTimeMillis();
+                getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.PARTY, partyUUID.toString(), uuid, message, time));
             });
         }
     }

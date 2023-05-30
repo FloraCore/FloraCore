@@ -5,6 +5,7 @@ import cloud.commandframework.annotations.processing.*;
 import cloud.commandframework.annotations.specifier.*;
 import net.md_5.bungee.api.connection.*;
 import org.floracore.api.bungee.messenger.message.type.*;
+import org.floracore.api.data.chat.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bungee.*;
 import team.floracore.bungee.command.*;
@@ -32,5 +33,7 @@ public class StaffCommand extends FloraCoreBungeeCommand {
                 .pushChatMessage(UUID.randomUUID(),
                         ChatMessage.ChatMessageType.STAFF,
                         Arrays.asList(uuid.toString(), message)));
+        long time = System.currentTimeMillis();
+        getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.STAFF,"", uuid, message, time));
     }
 }

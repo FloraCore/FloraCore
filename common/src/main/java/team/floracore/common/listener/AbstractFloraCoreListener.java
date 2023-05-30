@@ -16,7 +16,7 @@ public abstract class AbstractFloraCoreListener implements FloraCoreListener {
         return plugin;
     }
 
-    public StorageImplementation getImplementation() {
+    public StorageImplementation getStorageImplementation() {
         return plugin.getStorage().getImplementation();
     }
 
