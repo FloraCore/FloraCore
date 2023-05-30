@@ -99,24 +99,11 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // check update
         if (this.configuration.get(ConfigKeys.CHECK_UPDATE)) {
-            this.getBootstrap().getScheduler().async().execute(() -> {
-                try {
-                    MiscMessage.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
-                    String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
-                    if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
-                        MiscMessage.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(),
-                                getBootstrap(),
-                                leastReleaseTagVersion);
-                    } else {
-                        MiscMessage.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());
-                    }
-                } catch (IOException e) {
-                    MiscMessage.STARTUP_CHECKING_UPDATE_FAILED.send(getConsoleSender(), getBootstrap());
-                }
-            });
+            this.getBootstrap().getScheduler().async().execute(() -> checkUpdate(true));
+            this.getBootstrap().getScheduler().asyncRepeating(() -> checkUpdate(false), 10, TimeUnit.MINUTES);
         }
 
-        // setup a bytebin instance
+        // setup a byte bin instance
         this.httpClient = new OkHttpClient.Builder().callTimeout(15, TimeUnit.SECONDS).build();
 
         // init translation repo and update bundle files
@@ -322,5 +309,23 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public StorageFactory getStorageFactory() {
         return storageFactory;
+    }
+
+    public void checkUpdate(boolean latestNotification) {
+        try {
+            MiscMessage.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
+            String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
+            if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
+                MiscMessage.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(),
+                        getBootstrap(),
+                        leastReleaseTagVersion);
+            } else {
+                if (latestNotification) {
+                    MiscMessage.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());
+                }
+            }
+        } catch (IOException e) {
+            MiscMessage.STARTUP_CHECKING_UPDATE_FAILED.send(getConsoleSender(), getBootstrap());
+        }
     }
 }
