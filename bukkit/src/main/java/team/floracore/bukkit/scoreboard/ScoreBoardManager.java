@@ -1,13 +1,18 @@
 package team.floracore.bukkit.scoreboard;
 
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.config.*;
-import team.floracore.bukkit.scoreboard.core.*;
-import team.floracore.bukkit.scoreboard.model.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import team.floracore.bukkit.FCBukkitBootstrap;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.config.BoardsKeys;
+import team.floracore.bukkit.scoreboard.core.Condition;
+import team.floracore.bukkit.scoreboard.core.SidebarBoard;
+import team.floracore.bukkit.scoreboard.model.BoardModel;
+import team.floracore.common.util.gson.GsonProvider;
 
-import java.util.*;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * 计分板管理器
@@ -39,7 +44,6 @@ public class ScoreBoardManager {
 
     public void reload() {
         sbd.cancel();
-        plugin.getBoardsConfiguration().reload();
         load();
         start();
     }

@@ -1,24 +1,29 @@
 package team.floracore.common.locale.translation;
 
-import com.google.common.collect.*;
-import net.kyori.adventure.key.*;
-import net.kyori.adventure.text.*;
-import net.kyori.adventure.text.serializer.legacy.*;
-import net.kyori.adventure.translation.*;
-import net.kyori.adventure.util.*;
+import com.google.common.collect.Maps;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.translation.GlobalTranslator;
+import net.kyori.adventure.translation.TranslationRegistry;
+import net.kyori.adventure.translation.Translator;
+import net.kyori.adventure.util.UTF8ResourceBundleControl;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.floracore.api.*;
-import org.floracore.api.data.*;
-import org.jetbrains.annotations.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.util.*;
+import org.floracore.api.FloraCoreProvider;
+import org.floracore.api.data.DataType;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.util.MoreFiles;
 
-import java.io.*;
-import java.nio.charset.*;
-import java.nio.file.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class TranslationManager {
     /**
@@ -74,9 +79,7 @@ public class TranslationManager {
 
     public static Component render(Component component, @NotNull UUID uuid) {
         Locale locale = null;
-        String value = FloraCoreProvider.get()
-                .getDataAPI()
-                .getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
+        String value = FloraCoreProvider.get().getDataAPI().getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
         if (value != null) {
             locale = parseLocale(value);
         }

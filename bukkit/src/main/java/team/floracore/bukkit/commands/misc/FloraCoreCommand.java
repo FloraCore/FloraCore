@@ -1,31 +1,42 @@
 package team.floracore.bukkit.commands.misc;
 
 import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.processing.*;
-import cloud.commandframework.annotations.suggestions.*;
-import cloud.commandframework.context.*;
-import com.github.benmanes.caffeine.cache.*;
-import net.kyori.adventure.text.*;
-import org.bukkit.*;
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import org.floracore.api.data.*;
-import org.jetbrains.annotations.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.command.*;
-import team.floracore.bukkit.locale.message.commands.*;
-import team.floracore.common.http.*;
-import team.floracore.common.locale.message.*;
-import team.floracore.common.locale.translation.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
-import team.floracore.common.util.*;
+import cloud.commandframework.annotations.processing.CommandContainer;
+import cloud.commandframework.annotations.suggestions.Suggestions;
+import cloud.commandframework.context.CommandContext;
+import com.github.benmanes.caffeine.cache.AsyncCache;
+import com.github.benmanes.caffeine.cache.Caffeine;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.floracore.api.data.DataType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.command.FloraCoreBukkitCommand;
+import team.floracore.bukkit.locale.message.commands.MiscCommandMessage;
+import team.floracore.common.config.ConfigKeys;
+import team.floracore.common.http.UnsuccessfulRequestException;
+import team.floracore.common.locale.message.AbstractMessage;
+import team.floracore.common.locale.message.CommonCommandMessage;
+import team.floracore.common.locale.message.MiscMessage;
+import team.floracore.common.locale.translation.TranslationManager;
+import team.floracore.common.locale.translation.TranslationRepository;
+import team.floracore.common.messaging.InternalMessagingService;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.storage.misc.floracore.tables.DATA;
+import team.floracore.common.storage.misc.floracore.tables.PLAYER;
+import team.floracore.common.storage.misc.floracore.tables.SERVER;
+import team.floracore.common.util.DurationFormatter;
 
-import java.io.*;
-import java.time.*;
+import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * FloraCore命令
@@ -34,6 +45,7 @@ import java.util.stream.*;
 @CommandPermission("floracore.admin")
 @CommandDescription("floracore.command.description.floracore")
 public class FloraCoreCommand extends FloraCoreBukkitCommand {
+    private final FCBukkitPlugin plugin;
     private final AsyncCache<UUID, List<DATA>> dataCache = Caffeine.newBuilder()
             .expireAfterWrite(3, TimeUnit.SECONDS)
             .maximumSize(10000)
@@ -45,36 +57,51 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     public FloraCoreCommand(FCBukkitPlugin plugin) {
         super(plugin);
+        this.plugin = plugin;
     }
 
     @CommandMethod("fc|floracore reload")
     @CommandDescription("floracore.command.description.floracore.reload")
     public void reload(final @NotNull CommandSender sender) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
-        getPlugin().getConfiguration().reload();
-        getPlugin().getBoardsConfiguration().reload();
-        getPlugin().getTranslationManager().reload();
-        getPlugin().getScoreBoardManager().reload();
+        Sender s = plugin.getSenderFactory().wrap(sender);
+        plugin.getConfiguration().reload();
+        // close messaging service
+        if (plugin.getMessagingService() != null) {
+            plugin.getLogger().info("Closing messaging service...");
+            plugin.getMessagingService().ifPresent(InternalMessagingService::close);
+        }
+        // 重载数据库服务
+        plugin.getLogger().info("Closing storage...");
+        plugin.getStorage().shutdown();
+        plugin.getLogger().info("Reloading storage and messaging service...");
+        plugin.getDependencyManager().loadStorageDependencies(plugin.getStorageFactory().getRequiredTypes(),
+                plugin.getConfiguration().get(ConfigKeys.REDIS_ENABLED));
+        // initialise storage
+        plugin.setStorage(plugin.getStorageFactory().getInstance());
+        plugin.setMessagingService(plugin.provideMessagingFactory().getInstance());
+        plugin.getBoardsConfiguration().reload();
+        plugin.getTranslationManager().reload();
+        plugin.getScoreBoardManager().reload();
         CommonCommandMessage.RELOAD_CONFIG_SUCCESS.send(s);
     }
 
     @CommandMethod("fc|floracore translations")
     @CommandDescription("floracore.command.description.floracore.translations")
     public void translations(final @NotNull CommandSender sender) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Sender s = plugin.getSenderFactory().wrap(sender);
         CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
 
         List<TranslationRepository.LanguageInfo> availableTranslations;
         try {
-            availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
+            availableTranslations = plugin.getTranslationRepository().getAvailableLanguages();
         } catch (IOException | UnsuccessfulRequestException e) {
             CommonCommandMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
-            getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
+            plugin.getLogger().warn("Unable to obtain a list of available translations", e);
             return;
         }
 
         CommonCommandMessage.INSTALLED_TRANSLATIONS.send(s,
-                getPlugin().getTranslationManager()
+                plugin.getTranslationManager()
                         .getInstalledLocales()
                         .stream()
                         .map(Locale::toLanguageTag)
@@ -96,19 +123,19 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
     @CommandMethod("fc|floracore translations install")
     @CommandDescription("floracore.command.description.floracore.translations.install")
     public void installTranslations(final @NotNull CommandSender sender) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Sender s = plugin.getSenderFactory().wrap(sender);
         CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
 
         List<TranslationRepository.LanguageInfo> availableTranslations;
         try {
-            availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
+            availableTranslations = plugin.getTranslationRepository().getAvailableLanguages();
         } catch (IOException | UnsuccessfulRequestException e) {
             CommonCommandMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
-            getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
+            plugin.getLogger().warn("Unable to obtain a list of available translations", e);
             return;
         }
         CommonCommandMessage.TRANSLATIONS_INSTALLING.send(s);
-        getPlugin().getTranslationRepository().downloadAndInstallTranslations(availableTranslations, s, true);
+        plugin.getTranslationRepository().downloadAndInstallTranslations(availableTranslations, s, true);
         CommonCommandMessage.TRANSLATIONS_INSTALL_COMPLETE.send(s);
     }
 
@@ -116,7 +143,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
     @CommandDescription("floracore.command.description.floracore.server")
     public void server(final @NotNull CommandSender sender,
                        final @NotNull @Argument(value = "target", suggestions = "servers") String target) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Sender s = plugin.getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
         if (server == null) {
             CommonCommandMessage.DATA_NONE.send(s, target);
@@ -144,7 +171,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
     public void serverSet1(final @NotNull CommandSender sender,
                            final @NotNull @Argument(value = "target", suggestions = "servers") String target,
                            final @Argument("value") boolean value) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Sender s = plugin.getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
         if (server == null) {
             // TODO 无记录的服务器数据
@@ -161,7 +188,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
     public void serverSet2(final @NotNull CommandSender sender,
                            final @NotNull @Argument(value = "target", suggestions = "servers") String target,
                            final @Argument("value") boolean value) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Sender s = plugin.getSenderFactory().wrap(sender);
         SERVER server = getStorageImplementation().selectServer(target);
         if (server == null) {
             // TODO 无记录的服务器数据
@@ -175,7 +202,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @Suggestions("servers")
     public List<String> getServers(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
-        return new ArrayList<>(Collections.singletonList(getPlugin().getServerName()));
+        return new ArrayList<>(Collections.singletonList(plugin.getServerName()));
     }
 
     @CommandMethod("fc|floracore data <target> <type>")
@@ -183,7 +210,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
     public void data(final @NotNull CommandSender sender,
                      final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
                      @Argument("type") DataType type) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Sender s = plugin.getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
             UUID u;
@@ -228,7 +255,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
                         final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
                         final @NotNull @Argument("key") String key,
                         final @NotNull @Argument("value") String value) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Sender s = plugin.getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
             UUID u;
@@ -259,7 +286,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
     public void dataUnSet(final @NotNull CommandSender sender,
                           final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
                           final @NotNull @Argument("key") String key) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Sender s = plugin.getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
             UUID u;
@@ -297,7 +324,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
                             final @NotNull @Argument("key") String key,
                             final @NotNull @Argument("value") String value,
                             final @NotNull @Argument("duration") String duration) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Sender s = plugin.getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
             UUID u;
@@ -341,7 +368,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
     public void dataClear(final @NotNull CommandSender sender,
                           final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
                           final @Nullable @Flag("type") DataType type) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        Sender s = plugin.getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
         CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
             UUID u;

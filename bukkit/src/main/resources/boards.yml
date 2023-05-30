@@ -3,7 +3,6 @@ update-time: 10
 #启用的计分板列表
 enabled-board-list:
   - default
-  - admin
 #记分板
 boards:
   #默认记分板

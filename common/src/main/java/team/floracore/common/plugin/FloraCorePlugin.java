@@ -71,6 +71,8 @@ public interface FloraCorePlugin {
      */
     Sender getConsoleSender();
 
+    void setStorage(Storage storage);
+
     /**
      * Returns the class implementing the FloraCoreAPI on this platform.
      *
@@ -124,4 +126,6 @@ public interface FloraCorePlugin {
     void setMessagingService(InternalMessagingService service);
 
     boolean processIncomingMessage(String type, JsonElement content, UUID id);
+
+    StorageFactory getStorageFactory();
 }

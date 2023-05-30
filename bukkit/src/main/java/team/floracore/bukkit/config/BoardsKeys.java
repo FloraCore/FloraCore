@@ -1,13 +1,16 @@
 package team.floracore.bukkit.config;
 
-import team.floracore.bukkit.scoreboard.model.*;
-import team.floracore.common.config.generic.*;
-import team.floracore.common.config.generic.key.*;
+import team.floracore.bukkit.scoreboard.model.BoardModel;
+import team.floracore.common.config.generic.KeyedConfiguration;
+import team.floracore.common.config.generic.key.ConfigKey;
+import team.floracore.common.config.generic.key.SimpleConfigKey;
 
-import java.text.*;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
+import static team.floracore.common.config.generic.key.ConfigKeyFactory.key;
 
 /**
  * All of the {@link ConfigKey}s used by FloraCore.
@@ -16,11 +19,10 @@ import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
  * to function a bit like an enum, but with generics.</p>
  */
 public class BoardsKeys {
-    public static final ConfigKey<Integer> UPDATE_TIME = notReloadable(key(c -> c.getInteger("update-time", 10)));
-    public static final ConfigKey<List<String>> DISABLE_WORLDS = notReloadable(key(c -> c.getStringList("disable-worlds",
-            new ArrayList<>())));
+    public static final ConfigKey<Integer> UPDATE_TIME = key(c -> c.getInteger("update-time", 10));
+    public static final ConfigKey<List<String>> DISABLE_WORLDS = key(c -> c.getStringList("disable-worlds", new ArrayList<>()));
 
-    public static final ConfigKey<List<BoardModel>> BOARD_MODELS = notReloadable(key(c -> {
+    public static final ConfigKey<List<BoardModel>> BOARD_MODELS = key(c -> {
         List<BoardModel> ret = new ArrayList<>();
         List<String> boards = c.getStringList("enabled-board-list", new ArrayList<>());
         for (String board : boards) {
@@ -47,7 +49,7 @@ public class BoardsKeys {
             ret.add(boardModel);
         }
         return ret;
-    }));
+    });
 
     /**
      * A list of the keys defined in this class.

@@ -1,13 +1,14 @@
 package team.floracore.bukkit.config;
 
-import team.floracore.common.config.generic.*;
-import team.floracore.common.config.generic.adapter.*;
-import team.floracore.common.plugin.*;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.common.config.generic.KeyedConfiguration;
+import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
+import team.floracore.common.plugin.FloraCorePlugin;
 
 public class BoardsConfiguration extends KeyedConfiguration {
-    private final FloraCorePlugin plugin;
+    private final FCBukkitPlugin plugin;
 
-    public BoardsConfiguration(FloraCorePlugin plugin, ConfigurationAdapter adapter) {
+    public BoardsConfiguration(FCBukkitPlugin plugin, ConfigurationAdapter adapter) {
         super(adapter, BoardsKeys.getKeys());
         this.plugin = plugin;
 

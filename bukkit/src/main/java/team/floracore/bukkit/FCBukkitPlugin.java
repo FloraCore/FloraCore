@@ -15,6 +15,7 @@ import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.module.*;
 import team.floracore.bukkit.util.nothing.*;
 import team.floracore.common.config.*;
+import team.floracore.common.config.generic.KeyedConfiguration;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.messaging.*;
@@ -38,7 +39,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private BukkitMessagingFactory bukkitMessagingFactory;
     private ChatManager chatManager;
     private BungeeUtil bungeeUtil;
-    private BoardsConfiguration boardsConfiguration;
+    private KeyedConfiguration boardsConfiguration;
     private ScoreBoardManager scoreBoardManager;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
@@ -130,22 +131,16 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
-    protected MessagingFactory<?> provideMessagingFactory() {
+    public MessagingFactory<?> provideMessagingFactory() {
         this.bukkitMessagingFactory = new BukkitMessagingFactory(this);
         return this.bukkitMessagingFactory;
     }
 
     @Override
     protected void setupConfiguration() {
-        ConfigurationAdapter boardsConfigFileAdapter = new BukkitConfigAdapter(this,
-                resolveConfig("boards.yml").toFile());
-        this.boardsConfiguration = new BoardsConfiguration(this,
-                new MultiConfigurationAdapter(this,
-                        new SystemPropertyConfigAdapter(this),
-                        new EnvironmentVariableConfigAdapter(this),
-                        boardsConfigFileAdapter));
-        scoreBoardManager = new ScoreBoardManager(this);
+        this.boardsConfiguration = new BoardsConfiguration(this,new BukkitConfigAdapter(this, resolveConfig("boards.yml").toFile()));
         getLogger().info("Loading scoreboard manager...");
+        scoreBoardManager = new ScoreBoardManager(this);
         scoreBoardManager.start();
     }
 
@@ -205,7 +200,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         return bungeeUtil;
     }
 
-    public BoardsConfiguration getBoardsConfiguration() {
+    public KeyedConfiguration getBoardsConfiguration() {
         return boardsConfiguration;
     }
 

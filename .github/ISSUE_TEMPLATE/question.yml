@@ -28,10 +28,8 @@ body:
         注意:最新版本的FloraCore可能已经修复该问题。
         因此,旧版FloraCore发表此议题可能不受支持。
       options:
+        - 2.0.4.7
         - 2.0.4.6
-        - 2.0.4.5
-        - 2.0.4.4
-        - 2.0.4.3
         - 其它版本(请在补充的地方进行补充)
     validations:
       required: true

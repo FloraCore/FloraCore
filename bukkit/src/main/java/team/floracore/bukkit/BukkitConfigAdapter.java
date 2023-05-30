@@ -1,19 +1,22 @@
 package team.floracore.bukkit;
 
-import org.bukkit.configuration.*;
-import org.bukkit.configuration.file.*;
-import team.floracore.common.config.generic.adapter.*;
-import team.floracore.common.plugin.*;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.configuration.file.YamlConfiguration;
+import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
+import team.floracore.common.plugin.FloraCorePlugin;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 public class BukkitConfigAdapter implements ConfigurationAdapter {
-    private final FloraCorePlugin plugin;
+    private final FCBukkitPlugin plugin;
     private final File file;
     private YamlConfiguration configuration;
 
-    public BukkitConfigAdapter(FloraCorePlugin plugin, File file) {
+    public BukkitConfigAdapter(FCBukkitPlugin plugin, File file) {
         this.plugin = plugin;
         this.file = file;
         reload();
@@ -35,6 +38,11 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
     }
 
     @Override
+    public double getDouble(String path, double def) {
+        return this.configuration.getDouble(path, def);
+    }
+
+    @Override
     public int getInteger(String path, int def) {
         return this.configuration.getInt(path, def);
     }
@@ -42,11 +50,6 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
     @Override
     public float getFloat(String path, float def) {
         return Float.parseFloat(this.configuration.get(path, def).toString());
-    }
-
-    @Override
-    public double getDouble(String path, double def) {
-        return this.configuration.getDouble(path, def);
     }
 
     @Override
@@ -67,11 +70,9 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
         if (section == null) {
             return def;
         }
-
         for (String key : section.getKeys(false)) {
             map.put(key, section.getString(key));
         }
-
         return map;
     }
 }

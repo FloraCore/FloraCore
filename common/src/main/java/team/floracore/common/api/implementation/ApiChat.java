@@ -15,15 +15,15 @@ import java.util.stream.*;
 
 public class ApiChat implements ChatAPI {
     private final FloraCorePlugin plugin;
-    AsyncCache<UUID, List<DATA>> chatDataCache = Caffeine.newBuilder()
+    private final AsyncCache<UUID, List<DATA>> chatDataCache = Caffeine.newBuilder()
             .expireAfterWrite(3, TimeUnit.SECONDS)
             .maximumSize(10000)
             .buildAsync();
-    AsyncCache<UUID, List<DATA>> partyDataCache = Caffeine.newBuilder()
+    private final AsyncCache<UUID, List<DATA>> partyDataCache = Caffeine.newBuilder()
             .expireAfterWrite(3, TimeUnit.SECONDS)
             .maximumSize(10000)
             .buildAsync();
-    AsyncCache<UUID, PARTY> partyCache = Caffeine.newBuilder()
+    private final AsyncCache<UUID, PARTY> partyCache = Caffeine.newBuilder()
             .expireAfterWrite(3, TimeUnit.SECONDS)
             .maximumSize(10000)
             .buildAsync();
