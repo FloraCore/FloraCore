@@ -34,12 +34,12 @@ CREATE TABLE IF NOT EXISTS `{prefix}server`
 
 CREATE TABLE IF NOT EXISTS `{prefix}chat`
 (
-    id        INTEGER     NOT NULL PRIMARY KEY AUTOINCREMENT,
-    name      VARCHAR(36) NOT NULL,
-    type      VARCHAR(16) NOT NULL,
-    records   TEXT        NOT NULL,
-    startTime BIGINT      NOT NULL,
-    endTime   BIGINT      NULL
+    id         INTEGER     NOT NULL PRIMARY KEY AUTOINCREMENT,
+    type       VARCHAR(16) NOT NULL,
+    parameters VARCHAR(36) NOT NULL,
+    uuid       VARCHAR(36) NOT NULL,
+    message    TEXT        NOT NULL,
+    time       BIGINT      NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `{prefix}report`

@@ -1,8 +1,6 @@
 package team.floracore.common.storage.implementation;
 
-import org.floracore.api.commands.report.*;
 import org.floracore.api.data.*;
-import org.floracore.api.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.sql.connection.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -64,32 +62,6 @@ public interface StorageImplementation {
     void deleteDataID(int id);
 
     SERVER selectServer(String name);
-
-    List<CHAT> selectChat(String name, ChatType type);
-
-    CHAT selectChatWithStartTime(String name, ChatType type, long startTime);
-
-    CHAT selectChatWithID(int id);
-
-    void insertChat(String name, ChatType type, long startTime);
-
-    List<REPORT> getReports();
-
-    List<REPORT> selectReports(UUID uuid);
-
-    REPORT selectReport(UUID uuid);
-
-    /**
-     * @return 返回未处理的举报；若无,则返回null。
-     */
-    REPORT getUnprocessedReports(UUID uuid);
-
-    void addReport(UUID uuid,
-                   UUID reporter,
-                   UUID reported,
-                   String reason,
-                   long reportTime,
-                   List<ReportDataChatRecord> chat);
 
     PARTY selectParty(UUID uuid);
 

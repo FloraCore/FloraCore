@@ -14,7 +14,6 @@ import net.md_5.bungee.api.plugin.*;
 import net.md_5.bungee.event.*;
 import org.floracore.api.bungee.messenger.message.type.*;
 import org.floracore.api.data.*;
-import org.floracore.api.data.chat.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bungee.*;
 import team.floracore.bungee.command.*;
@@ -182,12 +181,12 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                                 }
                             });
                             int chatID = party.getChat();
-                            CHAT chat = getStorageImplementation().selectChatWithID(chatID);
+                            /*CHAT chat = getStorageImplementation().selectChatWithID(chatID);
                             List<ChatRecord> chatRecords = chat.getRecords();
                             int id = chat.getRecords().size() + 1;
                             ChatRecord chatRecord = new ChatRecord(id, uuid, message, System.currentTimeMillis());
                             chatRecords.add(chatRecord);
-                            chat.setRecords(chatRecords);
+                            chat.setRecords(chatRecords);*/
                         });
                     }
                     break;

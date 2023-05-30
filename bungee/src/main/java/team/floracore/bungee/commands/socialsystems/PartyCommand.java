@@ -12,7 +12,6 @@ import net.md_5.bungee.event.*;
 import org.floracore.api.*;
 import org.floracore.api.bungee.messenger.message.type.*;
 import org.floracore.api.data.*;
-import org.floracore.api.data.chat.*;
 import org.jetbrains.annotations.*;
 import team.floracore.bungee.*;
 import team.floracore.bungee.command.*;
@@ -68,7 +67,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             long createTime = System.currentTimeMillis();
             getAsyncExecutor().execute(() -> {
                 // 创建Chat
-                getStorageImplementation().insertChat(partyUUID.toString(), ChatType.PARTY, createTime);
+                /*getStorageImplementation().insertChat(partyUUID.toString(), ChatType.PARTY, createTime);
                 CHAT chat = getStorageImplementation().selectChatWithStartTime(partyUUID.toString(),
                         ChatType.PARTY,
                         createTime);
@@ -79,7 +78,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                         DataType.SOCIAL_SYSTEMS_PARTY_HISTORY,
                         String.valueOf(System.currentTimeMillis()),
                         partyUUID.toString(),
-                        0);
+                        0);*/
             });
         } else {
             partyUUID = UUID.fromString(data.getValue());
@@ -190,8 +189,8 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             long disbandTime = System.currentTimeMillis();
             party.setDisbandTime(disbandTime);
             int chatID = party.getChat();
-            CHAT chat = getStorageImplementation().selectChatWithID(chatID);
-            chat.setEndTime(disbandTime);
+            /*CHAT chat = getStorageImplementation().selectChatWithID(chatID);
+            chat.setEndTime(disbandTime);*/
             for (UUID member : members) {
                 DATA md = getStorageImplementation().getSpecifiedData(member, DataType.SOCIAL_SYSTEMS, "party");
                 if (md != null) {
@@ -447,12 +446,12 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                                     Arrays.asList(uuid.toString(), message));
                 }
                 int chatID = party.getChat();
-                CHAT chat = getStorageImplementation().selectChatWithID(chatID);
+                /*CHAT chat = getStorageImplementation().selectChatWithID(chatID);
                 List<ChatRecord> chatRecords = chat.getRecords();
                 int id = chat.getRecords().size() + 1;
                 ChatRecord chatRecord = new ChatRecord(id, uuid, message, System.currentTimeMillis());
                 chatRecords.add(chatRecord);
-                chat.setRecords(chatRecords);
+                chat.setRecords(chatRecords);*/
             });
         }
     }

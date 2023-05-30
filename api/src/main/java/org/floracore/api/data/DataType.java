@@ -15,10 +15,6 @@ public enum DataType {
      */
     FUNCTION("function"),
     /**
-     * 聊天记录
-     */
-    CHAT("chat"),
-    /**
      * 社交系统
      */
     SOCIAL_SYSTEMS("social-systems"),
