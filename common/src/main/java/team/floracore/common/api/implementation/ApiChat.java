@@ -6,6 +6,7 @@ import org.floracore.api.data.*;
 import org.floracore.api.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.*;
 import team.floracore.common.util.gson.*;
 
 import java.lang.reflect.*;
@@ -14,19 +15,13 @@ import java.util.concurrent.*;
 import java.util.stream.*;
 
 public class ApiChat implements ChatAPI {
+    private static final Cache<UUID, List<DATA>> chatDataCache = CaffeineFactory.newBuilder()
+            .expireAfterWrite(3, TimeUnit.SECONDS).build();
+    private static final Cache<UUID, List<DATA>> partyDataCache = CaffeineFactory.newBuilder()
+            .expireAfterWrite(3, TimeUnit.SECONDS).build();
+    private static final Cache<UUID, PARTY> partyCache = CaffeineFactory.newBuilder()
+            .expireAfterWrite(3, TimeUnit.SECONDS).build();
     private final FloraCorePlugin plugin;
-    private final AsyncCache<UUID, List<DATA>> chatDataCache = Caffeine.newBuilder()
-            .expireAfterWrite(3, TimeUnit.SECONDS)
-            .maximumSize(10000)
-            .buildAsync();
-    private final AsyncCache<UUID, List<DATA>> partyDataCache = Caffeine.newBuilder()
-            .expireAfterWrite(3, TimeUnit.SECONDS)
-            .maximumSize(10000)
-            .buildAsync();
-    private final AsyncCache<UUID, PARTY> partyCache = Caffeine.newBuilder()
-            .expireAfterWrite(3, TimeUnit.SECONDS)
-            .maximumSize(10000)
-            .buildAsync();
 
     public ApiChat(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -57,10 +52,12 @@ public class ApiChat implements ChatAPI {
     }
 
     public List<DATA> getPlayerChatData(UUID uuid) {
-        CompletableFuture<List<DATA>> data = chatDataCache.get(uuid,
-                u -> plugin.getStorage().getImplementation().getSpecifiedTypeData(u, DataType.CHAT));
-        chatDataCache.put(uuid, data);
-        return data.join();
+        List<DATA> data = chatDataCache.getIfPresent(uuid);
+        if (data == null) {
+            data = plugin.getStorage().getImplementation().getSpecifiedTypeData(uuid, DataType.CHAT);
+            chatDataCache.put(uuid, data);
+        }
+        return data;
     }
 
     @Override
@@ -86,18 +83,20 @@ public class ApiChat implements ChatAPI {
     }
 
     public List<DATA> getPlayerPartyChatData(UUID uuid) {
-        CompletableFuture<List<DATA>> data = partyDataCache.get(uuid,
-                u -> plugin.getStorage()
-                        .getImplementation()
-                        .getSpecifiedTypeData(u, DataType.SOCIAL_SYSTEMS_PARTY_HISTORY));
-        partyDataCache.put(uuid, data);
-        return data.join();
+        List<DATA> data = partyDataCache.getIfPresent(uuid);
+        if (data == null) {
+            data = plugin.getStorage().getImplementation().getSpecifiedTypeData(uuid, DataType.SOCIAL_SYSTEMS_PARTY_HISTORY);
+            partyDataCache.put(uuid, data);
+        }
+        return data;
     }
 
     public PARTY getPlayerPartyData(UUID uuid) {
-        CompletableFuture<PARTY> data = partyCache.get(uuid,
-                u -> plugin.getStorage().getImplementation().selectParty(u));
-        partyCache.put(uuid, data);
-        return data.join();
+        PARTY data = partyCache.getIfPresent(uuid);
+        if (data == null) {
+            data = plugin.getStorage().getImplementation().selectParty(uuid);
+            partyCache.put(uuid, data);
+        }
+        return data;
     }
 }

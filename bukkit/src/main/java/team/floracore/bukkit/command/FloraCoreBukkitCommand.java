@@ -12,17 +12,16 @@ import team.floracore.bukkit.*;
 import team.floracore.common.command.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.*;
 
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.*;
 
 public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
+    private static final Cache<String, SERVER> serverCache = CaffeineFactory.newBuilder()
+            .expireAfterWrite(10, TimeUnit.SECONDS).build();
     private final FCBukkitPlugin plugin;
-    private final AsyncCache<String, SERVER> serversCache = Caffeine.newBuilder()
-            .expireAfterWrite(10, TimeUnit.SECONDS)
-            .maximumSize(10000)
-            .buildAsync();
 
     public FloraCoreBukkitCommand(FCBukkitPlugin plugin) {
         super(plugin);
@@ -68,9 +67,12 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
 
     public SERVER getServer() {
         String name = getPlugin().getServerName();
-        CompletableFuture<SERVER> servers = serversCache.get(name, getStorageImplementation()::selectServer);
-        serversCache.put(name, servers);
-        return servers.join();
+        SERVER server = serverCache.getIfPresent(name);
+        if (server == null) {
+            server = getStorageImplementation().selectServer(name);
+            serverCache.put(name, server);
+        }
+        return server;
     }
 
     public FCBukkitPlugin getPlugin() {

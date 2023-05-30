@@ -1,5 +1,6 @@
 package team.floracore.common.locale.translation;
 
+import com.github.benmanes.caffeine.cache.*;
 import com.google.common.collect.*;
 import net.kyori.adventure.key.*;
 import net.kyori.adventure.text.*;
@@ -29,6 +30,8 @@ public class TranslationManager {
             .hexColors()
             .useUnusualXRepeatedCharacterHexFormat()
             .build();
+    private static final Cache<UUID, String> languageCache = CaffeineFactory.newBuilder()
+            .expireAfterWrite(1, TimeUnit.SECONDS).build();
     private final FloraCorePlugin plugin;
     private final Set<Locale> installed = ConcurrentHashMap.newKeySet();
     private final Path translationsDirectory;
@@ -74,7 +77,14 @@ public class TranslationManager {
 
     public static Component render(Component component, @NotNull UUID uuid) {
         Locale locale = null;
-        String value = FloraCoreProvider.get().getDataAPI().getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
+        String cache = languageCache.getIfPresent(uuid);
+        String value = cache;
+        if (cache == null) {
+            value = FloraCoreProvider.get().getDataAPI().getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
+            if (value != null) {
+                languageCache.put(uuid, value);
+            }
+        }
         if (value != null) {
             locale = parseLocale(value);
         }

@@ -34,15 +34,11 @@ import java.util.stream.*;
 @CommandPermission("floracore.admin")
 @CommandDescription("floracore.command.description.floracore")
 public class FloraCoreCommand extends FloraCoreBukkitCommand {
+    private static final Cache<UUID, List<DATA>> dataCache = CaffeineFactory.newBuilder()
+            .expireAfterWrite(3, TimeUnit.SECONDS).build();
+    private static final Cache<String, UUID> uuidCache = CaffeineFactory.newBuilder()
+            .expireAfterWrite(10, TimeUnit.SECONDS).build();
     private final FCBukkitPlugin plugin;
-    private final AsyncCache<UUID, List<DATA>> dataCache = Caffeine.newBuilder()
-            .expireAfterWrite(3, TimeUnit.SECONDS)
-            .maximumSize(10000)
-            .buildAsync();
-    private final AsyncCache<String, UUID> uuidCache = Caffeine.newBuilder()
-            .expireAfterWrite(10, TimeUnit.SECONDS)
-            .maximumSize(10000)
-            .buildAsync();
 
     public FloraCoreCommand(FCBukkitPlugin plugin) {
         super(plugin);
@@ -187,28 +183,26 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
                      @Argument("type") DataType type) {
         Sender s = plugin.getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
-            UUID u;
+        UUID u = uuidCache.getIfPresent(target.toLowerCase());
+        if (u == null) {
             if (p == null) {
                 try {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
                     u = i.getUniqueId();
                 } catch (Throwable e) {
                     MiscMessage.PLAYER_NOT_FOUND.send(s, target);
-                    return null;
+                    return;
                 }
             } else {
                 u = p.getUniqueId();
             }
-            return u;
-        });
-        uuidCache.put(target.toLowerCase(), uf);
-        UUID u = uf.join();
-        if (u == null) {
-            return;
+            uuidCache.put(target.toLowerCase(), u);
         }
-        CompletableFuture<List<DATA>> ldf = dataCache.get(u, (a) -> getStorageImplementation().selectData(u));
-        List<DATA> all = ldf.join();
+        List<DATA> all = dataCache.getIfPresent(u);
+        if (all == null) {
+            all = getStorageImplementation().selectData(u);
+            dataCache.put(u, all);
+        }
         List<DATA> ret = all.parallelStream().filter(data -> data.getType() == type).collect(Collectors.toList());
         if (ret.isEmpty()) {
             CommonCommandMessage.DATA_NONE.send(s, target);
@@ -232,25 +226,20 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
                         final @NotNull @Argument("value") String value) {
         Sender s = plugin.getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
-            UUID u;
+        UUID u = uuidCache.getIfPresent(target.toLowerCase());
+        if (u == null) {
             if (p == null) {
                 try {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
                     u = i.getUniqueId();
                 } catch (Throwable e) {
                     MiscMessage.PLAYER_NOT_FOUND.send(s, target);
-                    return null;
+                    return;
                 }
             } else {
                 u = p.getUniqueId();
             }
-            return u;
-        });
-        uuidCache.put(target.toLowerCase(), uf);
-        UUID u = uf.join();
-        if (u == null) {
-            return;
+            uuidCache.put(target.toLowerCase(), u);
         }
         DATA data = getStorageImplementation().insertData(u, DataType.CUSTOM, key, value, 0);
         MiscCommandMessage.SET_DATA_SUCCESS.send(s, key, value, target);
@@ -263,25 +252,20 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
                           final @NotNull @Argument("key") String key) {
         Sender s = plugin.getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
-            UUID u;
+        UUID u = uuidCache.getIfPresent(target.toLowerCase());
+        if (u == null) {
             if (p == null) {
                 try {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
                     u = i.getUniqueId();
                 } catch (Throwable e) {
                     MiscMessage.PLAYER_NOT_FOUND.send(s, target);
-                    return null;
+                    return;
                 }
             } else {
                 u = p.getUniqueId();
             }
-            return u;
-        });
-        uuidCache.put(target.toLowerCase(), uf);
-        UUID u = uf.join();
-        if (u == null) {
-            return;
+            uuidCache.put(target.toLowerCase(), u);
         }
         DATA data = getStorageImplementation().getSpecifiedData(u, DataType.CUSTOM, key);
         if (data == null) {
@@ -301,25 +285,20 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
                             final @NotNull @Argument("duration") String duration) {
         Sender s = plugin.getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
-            UUID u;
+        UUID u = uuidCache.getIfPresent(target.toLowerCase());
+        if (u == null) {
             if (p == null) {
                 try {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
                     u = i.getUniqueId();
                 } catch (Throwable e) {
                     MiscMessage.PLAYER_NOT_FOUND.send(s, target);
-                    return null;
+                    return;
                 }
             } else {
                 u = p.getUniqueId();
             }
-            return u;
-        });
-        uuidCache.put(target.toLowerCase(), uf);
-        UUID u = uf.join();
-        if (u == null) {
-            return;
+            uuidCache.put(target.toLowerCase(), u);
         }
         try {
             Duration d = parseDuration(duration);
@@ -345,25 +324,20 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
                           final @Nullable @Flag("type") DataType type) {
         Sender s = plugin.getSenderFactory().wrap(sender);
         Player p = Bukkit.getPlayer(target);
-        CompletableFuture<UUID> uf = uuidCache.get(target.toLowerCase(), (a) -> {
-            UUID u;
+        UUID u = uuidCache.getIfPresent(target.toLowerCase());
+        if (u == null) {
             if (p == null) {
                 try {
                     PLAYER i = getStorageImplementation().selectPlayer(target);
                     u = i.getUniqueId();
                 } catch (Throwable e) {
                     MiscMessage.PLAYER_NOT_FOUND.send(s, target);
-                    return null;
+                    return;
                 }
             } else {
                 u = p.getUniqueId();
             }
-            return u;
-        });
-        uuidCache.put(target.toLowerCase(), uf);
-        UUID u = uf.join();
-        if (u == null) {
-            return;
+            uuidCache.put(target.toLowerCase(), u);
         }
         if (type != null) {
             // remove type

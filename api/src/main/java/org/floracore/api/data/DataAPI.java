@@ -1,5 +1,7 @@
 package org.floracore.api.data;
 
+import org.checkerframework.checker.nullness.qual.*;
+
 import java.util.*;
 
 /**
@@ -15,7 +17,7 @@ public interface DataAPI {
      * @param key  数据值的键值
      * @return 数据值
      */
-    String getSpecifiedDataValue(UUID uuid, DataType type, String key);
+    @Nullable String getSpecifiedDataValue(UUID uuid, DataType type, String key);
 
     /**
      * 获取指定Data的过期时间戳。
@@ -26,7 +28,7 @@ public interface DataAPI {
      * @param key  数据值的键值
      * @return 过期时间戳
      */
-    Long getSpecifiedDataExpiry(UUID uuid, DataType type, String key);
+    @Nullable Long getSpecifiedDataExpiry(UUID uuid, DataType type, String key);
 
     /**
      * 获取指定Data的ID
@@ -37,7 +39,7 @@ public interface DataAPI {
      * @param key  数据值的键值
      * @return ID
      */
-    Integer getSpecifiedDataID(UUID uuid, DataType type, String key);
+    @Nullable Integer getSpecifiedDataID(UUID uuid, DataType type, String key);
 
     /**
      * 插入数据

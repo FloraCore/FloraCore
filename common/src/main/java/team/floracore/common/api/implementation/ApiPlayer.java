@@ -5,21 +5,18 @@ import org.floracore.api.player.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.*;
 
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.stream.*;
 
 public class ApiPlayer implements PlayerAPI {
+    private static final Cache<UUID, PLAYER> playersCache = CaffeineFactory.newBuilder()
+            .expireAfterWrite(3, TimeUnit.SECONDS).build();
+    private static final Cache<String, PLAYER> playerRecordCache = CaffeineFactory.newBuilder()
+            .expireAfterWrite(3, TimeUnit.SECONDS).build();
     private final FloraCorePlugin plugin;
-    AsyncCache<UUID, PLAYER> playersCache = Caffeine.newBuilder()
-            .expireAfterWrite(3, TimeUnit.SECONDS)
-            .maximumSize(10000)
-            .buildAsync();
-    AsyncCache<String, PLAYER> playersRecordCache = Caffeine.newBuilder()
-            .expireAfterWrite(3, TimeUnit.SECONDS)
-            .maximumSize(10000)
-            .buildAsync();
 
     public ApiPlayer(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -31,10 +28,12 @@ public class ApiPlayer implements PlayerAPI {
     }
 
     public PLAYER getPlayers(String name) {
-        CompletableFuture<PLAYER> players = playersRecordCache.get(name,
-                n -> plugin.getStorage().getImplementation().selectPlayer(n));
-        playersRecordCache.put(name, players);
-        return players.join();
+        PLAYER player = playerRecordCache.getIfPresent(name);
+        if (player == null) {
+            player = plugin.getStorage().getImplementation().selectPlayer(name);
+            playerRecordCache.put(name, player);
+        }
+        return player;
     }
 
     @Override
@@ -56,10 +55,12 @@ public class ApiPlayer implements PlayerAPI {
     }
 
     public PLAYER getPlayers(UUID uuid) {
-        CompletableFuture<PLAYER> players = playersCache.get(uuid,
-                u -> plugin.getStorage().getImplementation().selectPlayer(u));
-        playersCache.put(uuid, players);
-        return players.join();
+        PLAYER player = playersCache.getIfPresent(uuid);
+        if (player == null) {
+            player = plugin.getStorage().getImplementation().selectPlayer(uuid);
+            playersCache.put(uuid, player);
+        }
+        return player;
     }
 
     @Override
