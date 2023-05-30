@@ -1,6 +1,7 @@
 package team.floracore.common.storage.implementation;
 
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.sql.connection.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -72,4 +73,12 @@ public interface StorageImplementation {
     ONLINE selectOnline(UUID uuid);
 
     void insertOnline(UUID uuid, boolean status, String serverName);
+
+    /**
+     * 对参数"parameters"有以下解释，
+     * 1.该参数内容由参数"type"决定。
+     * 2.若type为{@link ChatType#SERVER},则该参数内容为服务器名。
+     * 3.若type为{@link ChatType#PARTY},则该参数内容为组队UUID。
+     */
+    void insertChat(ChatType type, String parameters, UUID uuid, String message, long time);
 }

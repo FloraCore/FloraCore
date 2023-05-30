@@ -2,6 +2,7 @@ package team.floracore.common.storage.implementation.sql;
 
 import com.google.gson.reflect.*;
 import org.floracore.api.data.*;
+import org.floracore.api.data.chat.*;
 import org.floracore.api.server.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
@@ -438,6 +439,16 @@ public class SqlStorage implements StorageImplementation {
         ONLINE online = new ONLINE(plugin, this, uuid, status, serverName);
         try {
             online.init();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void insertChat(ChatType type, String parameters, UUID uuid, String message, long time) {
+        CHAT chat = new CHAT(plugin, this, -1, type, parameters, uuid, message, time);
+        try {
+            chat.init();
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
