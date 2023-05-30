@@ -5,6 +5,7 @@ import net.md_5.bungee.api.*;
 import net.md_5.bungee.api.plugin.*;
 import team.floracore.bungee.command.*;
 import team.floracore.bungee.listener.*;
+import team.floracore.bungee.messaging.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.messaging.*;

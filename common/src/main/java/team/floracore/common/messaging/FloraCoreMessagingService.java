@@ -4,6 +4,7 @@ import com.google.gson.*;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.floracore.api.messenger.*;
 import org.jetbrains.annotations.*;
+import team.floracore.common.messaging.message.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.util.*;
 import team.floracore.common.util.gson.*;
@@ -40,6 +41,16 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 .toJson();
 
         return GsonProvider.normal().toJson(json);
+    }
+
+    @Override
+    public void pushChangeName(UUID changer, String name) {
+        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
+            UUID requestId = generatePingId();
+            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            ChangeNameMessageImpl changeNameMessage = new ChangeNameMessageImpl(requestId, changer, name);
+            this.messenger.sendOutgoingMessage(changeNameMessage);
+        });
     }
 
     @Override

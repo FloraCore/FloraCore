@@ -1,4 +1,4 @@
-package team.floracore.bukkit;
+package team.floracore.bukkit.messaging;
 
 import com.google.gson.*;
 import de.myzelyam.api.vanish.*;
@@ -7,6 +7,7 @@ import org.bukkit.entity.*;
 import org.bukkit.scheduler.*;
 import org.floracore.api.bukkit.messenger.message.type.*;
 import org.floracore.api.messenger.message.*;
+import team.floracore.bukkit.*;
 import team.floracore.bukkit.locale.message.commands.*;
 import team.floracore.bukkit.messaging.message.*;
 import team.floracore.common.messaging.*;

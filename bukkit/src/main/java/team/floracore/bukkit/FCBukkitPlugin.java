@@ -10,6 +10,7 @@ import team.floracore.bukkit.config.*;
 import team.floracore.bukkit.inevntory.*;
 import team.floracore.bukkit.listener.*;
 import team.floracore.bukkit.locale.chat.*;
+import team.floracore.bukkit.messaging.*;
 import team.floracore.bukkit.scoreboard.*;
 import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.module.*;

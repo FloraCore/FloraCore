@@ -68,7 +68,7 @@ public abstract class Board implements Iterable<Player> {
     }
 
     public void update(final Condition condition, final int interval) {
-        taskId = plugin.getServer().getScheduler().runTaskTimerAsynchronously(plugin, () -> {
+        taskId = Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, () -> {
             if (condition.get()) {
                 final Iterator<Player> iterator = iterator();
                 while (iterator.hasNext()) {
@@ -97,7 +97,7 @@ public abstract class Board implements Iterable<Player> {
 
     public void cancel() {
         if (taskId != 0) {
-            plugin.getServer().getScheduler().cancelTask(taskId);
+            Bukkit.getScheduler().cancelTask(taskId);
             taskId = 0;
             for (final Player player : this.targets.keySet()) {
                 player.setScoreboard(Bukkit.getScoreboardManager().getMainScoreboard());

@@ -108,7 +108,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         UUID uuid = p.getUniqueId();
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PREFIX);
         // 修改玩家信息
-        resetName(p, name);
+        changeName(p, name);
         // 设置皮肤
         String skinName;
         if (typeNick) {
@@ -181,7 +181,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
 
-    private void resetName(Player player, String name) {
+    private void changeName(Player player, String name) {
         UUID uuid = player.getUniqueId();
         NmsEntityPlayer nep = WrappedObject.wrap(ObcEntity.class, player).getHandle().cast(NmsEntityPlayer.class);
         NmsEnumPlayerInfoAction removePlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).REMOVE_PLAYER();
@@ -208,6 +208,10 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                 }
             }
         }, 300, TimeUnit.MILLISECONDS);
+        if (getPlugin().getConfiguration().get(ConfigKeys.BUNGEECORD)) {
+            // 向BC发送修改名字的消息
+            getPlugin().getMessagingService().ifPresent(service -> service.pushChangeName(uuid, name));
+        }
     }
 
     @CommandMethod("nick reset")
@@ -235,7 +239,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         // 重置昵称
         String name = getPlayerRecordName(uuid);
-        resetName(p, name);
+        changeName(p, name);
         // 重置rank
         User user = luckPerms.getUserManager().getUser(uuid);
         if (user != null) {
@@ -568,7 +572,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onPlayerJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
         UUID u = p.getUniqueId();

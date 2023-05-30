@@ -36,32 +36,4 @@ public class BoardModel {
         this.permission = permission;
         this.lines = lines;
     }
-
-    public String getName() {
-        return name;
-    }
-
-    public List<String> getLines() {
-        return lines;
-    }
-
-    public @Nullable Date getTime_end() {
-        return time_end;
-    }
-
-    public @Nullable Date getTime_start() {
-        return time_start;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public String getPermission() {
-        return permission;
-    }
-
-    public String getTitle() {
-        return title;
-    }
 }

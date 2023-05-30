@@ -1,12 +1,15 @@
-package team.floracore.bungee;
+package team.floracore.bungee.messaging;
 
 import com.google.gson.*;
 import net.md_5.bungee.api.connection.*;
 import org.floracore.api.bungee.messenger.message.type.*;
 import org.floracore.api.messenger.message.*;
+import org.floracore.api.messenger.message.type.*;
+import team.floracore.bungee.*;
 import team.floracore.bungee.locale.message.*;
 import team.floracore.bungee.messaging.message.*;
 import team.floracore.common.messaging.*;
+import team.floracore.common.messaging.message.*;
 import team.floracore.common.sender.*;
 
 import java.util.*;
@@ -31,6 +34,9 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
             case NoticeMessageImpl.TYPE:
                 decoded = NoticeMessageImpl.decode(content, id);
                 break;
+            case ChangeNameMessageImpl.TYPE:
+                decoded = ChangeNameMessageImpl.decode(content, id);
+                break;
             default:
                 return false;
 
@@ -48,6 +54,14 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
         } else if (message instanceof NoticeMessage) {
             NoticeMessage noticeMsg = (NoticeMessage) message;
             notice(noticeMsg);
+        } else if (message instanceof ChangeNameMessage) {
+            ChangeNameMessage changeNameMsg = (ChangeNameMessage) message;
+            UUID changer = changeNameMsg.getChanger();
+            String name = changeNameMsg.getName();
+            ProxiedPlayer player = getPlugin().getProxy().getPlayer(changer);
+            if (player != null) {
+                player.setDisplayName(name);
+            }
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }
