@@ -4,12 +4,12 @@ description: A basic plugin with rich functions
 website: https://github.com/FloraCore/FloraCore
 main: team.floracore.bukkit.loader.BukkitLoaderPlugin
 depend:
-  - LuckPerms
   - ProtocolLib
 softdepend:
   - PremiumVanish
   - TAB
   - PlaceholderAPI
+  - LuckPerms
 permissions:
   floracore.admin:
     default: op

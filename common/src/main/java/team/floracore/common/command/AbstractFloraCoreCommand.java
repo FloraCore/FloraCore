@@ -1,7 +1,5 @@
 package team.floracore.common.command;
 
-import net.luckperms.api.*;
-import net.luckperms.api.model.user.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.storage.implementation.*;
 import team.floracore.common.util.*;
@@ -55,21 +53,8 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
     }
 
     @Override
-    public CompletableFuture<Boolean> hasPermissionAsync(UUID uuid, String permission) {
-        LuckPerms luckPerms = LuckPermsProvider.get();
-        CompletableFuture<User> future = luckPerms.getUserManager().loadUser(uuid);
-        return future.thenApply(user -> {
-            if (user == null) {
-                // 加载用户数据失败
-                return false;
-            }
-            return user.getCachedData().getPermissionData().checkPermission(permission).asBoolean();
-        });
-    }
-
-    @Override
     public boolean hasPermission(UUID uuid, String permission) {
-        return hasPermissionAsync(uuid, permission).join();
+        return plugin.getApiProvider().getPlayerAPI().hasPermission(uuid, permission);
     }
 
     @Override

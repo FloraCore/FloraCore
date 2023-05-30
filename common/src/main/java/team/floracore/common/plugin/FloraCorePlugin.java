@@ -128,4 +128,8 @@ public interface FloraCorePlugin {
     boolean processIncomingMessage(String type, JsonElement content, UUID id);
 
     StorageFactory getStorageFactory();
+
+    boolean luckPermsHook();
+
+    Sender getSender(UUID uuid);
 }

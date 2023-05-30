@@ -1,7 +1,11 @@
 package team.floracore.common.api.implementation;
 
 import com.github.benmanes.caffeine.cache.*;
+import net.luckperms.api.*;
+import net.luckperms.api.model.user.*;
+import net.luckperms.api.node.types.*;
 import org.floracore.api.player.*;
+import org.floracore.api.player.rank.*;
 import team.floracore.common.plugin.*;
 import team.floracore.common.sender.*;
 import team.floracore.common.storage.misc.floracore.tables.*;
@@ -17,9 +21,74 @@ public class ApiPlayer implements PlayerAPI {
     private static final Cache<String, PLAYER> playerRecordCache = CaffeineFactory.newBuilder()
             .expireAfterWrite(3, TimeUnit.SECONDS).build();
     private final FloraCorePlugin plugin;
+    private RankConsumer rankConsumer;
+    private PermissionEvaluator permissionEvaluator;
 
     public ApiPlayer(FloraCorePlugin plugin) {
         this.plugin = plugin;
+        this.permissionEvaluator = (uuid, permission) -> {
+            if (plugin.luckPermsHook()) {
+                // 在这里实现自定义的权限评估逻辑
+                // 返回一个 CompletableFuture<Boolean> 对象
+                LuckPerms luckPerms = LuckPermsProvider.get();
+                CompletableFuture<User> future = luckPerms.getUserManager().loadUser(uuid);
+                return future.thenApply(user -> {
+                    if (user == null) {
+                        // 加载用户数据失败
+                        return false;
+                    }
+                    return user.getCachedData().getPermissionData().checkPermission(permission).asBoolean();
+                });
+            }
+            Sender sender = plugin.getSender(uuid);
+            if (sender == null) {
+                return CompletableFuture.completedFuture(false);
+            }
+            return CompletableFuture.completedFuture(sender.hasPermission(permission));
+        };
+        try {
+            this.rankConsumer = new RankConsumer() {
+                @Override
+                public CompletableFuture<Void> setRank(UUID uuid, String rank) {
+                    CompletableFuture<Void> future = new CompletableFuture<>();
+                    try {
+                        if (plugin.luckPermsHook()) {
+                            LuckPerms luckPerms = LuckPermsProvider.get();
+                            User user = luckPerms.getUserManager().getUser(uuid);
+                            if (user != null) {
+                                PrefixNode node = PrefixNode.builder(rank, 77665).build();
+                                user.data().add(node);
+                                luckPerms.getUserManager().saveUser(user);
+                            }
+                        }
+                    } catch (Throwable ignored) {
+                    }
+                    return future;
+                }
+
+                @Override
+                public CompletableFuture<Void> resetRank(UUID uuid) {
+                    CompletableFuture<Void> future = new CompletableFuture<>();
+                    try {
+                        if (plugin.luckPermsHook()) {
+                            LuckPerms luckPerms = LuckPermsProvider.get();
+                            User user = luckPerms.getUserManager().getUser(uuid);
+                            if (user != null) {
+                                String prefix = user.getCachedData().getMetaData().getPrefix();
+                                prefix = prefix == null ? "" : prefix;
+                                PrefixNode node = PrefixNode.builder(prefix, 77665).build();
+                                user.data().remove(node);
+                                luckPerms.getUserManager().saveUser(user);
+                            }
+                        }
+                    } catch (Throwable ignored) {
+                    }
+                    return future;
+                }
+            };
+        } catch (Throwable i) {
+            this.rankConsumer = null;
+        }
     }
 
     @Override
@@ -86,5 +155,51 @@ public class ApiPlayer implements PlayerAPI {
 
     public FloraCorePlugin getPlugin() {
         return plugin;
+    }
+
+    @Override
+    public void setPermissionEvaluator(PermissionEvaluator permissionEvaluator) {
+        this.permissionEvaluator = permissionEvaluator;
+    }
+
+    @Override
+    public CompletableFuture<Boolean> hasPermissionAsync(UUID uuid, String permission, PermissionEvaluator evaluator) {
+        return evaluator.evaluate(uuid, permission);
+    }
+
+    @Override
+    public boolean hasPermission(UUID uuid, String permission) {
+        return hasPermissionAsync(uuid, permission, this.permissionEvaluator).join();
+    }
+
+    @Override
+    public CompletableFuture<Void> setRank(UUID uuid, String rank, RankConsumer rankConsumer) {
+        return rankConsumer.setRank(uuid, rank);
+    }
+
+    @Override
+    public void setRank(UUID uuid, String rank) throws NullPointerException {
+        setRank(uuid, rank, this.rankConsumer).join();
+    }
+
+    @Override
+    public CompletableFuture<Void> resetRank(UUID uuid, RankConsumer rankConsumer) throws NullPointerException {
+        if (rankConsumer == null) {
+            throw new NullPointerException();
+        }
+        return rankConsumer.resetRank(uuid);
+    }
+
+    @Override
+    public void resetRank(UUID uuid) throws NullPointerException {
+        resetRank(uuid, this.rankConsumer).join();
+    }
+
+    @Override
+    public void setRankConsumer(RankConsumer rankConsumer) throws NullPointerException {
+        if (rankConsumer == null) {
+            throw new NullPointerException();
+        }
+        this.rankConsumer = rankConsumer;
     }
 }

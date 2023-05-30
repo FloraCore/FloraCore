@@ -1,6 +1,9 @@
 package org.floracore.api.player;
 
+import org.floracore.api.player.rank.*;
+
 import java.util.*;
+import java.util.concurrent.*;
 
 /**
  * 玩家API。
@@ -43,4 +46,64 @@ public interface PlayerAPI {
      * @return 在线情况
      */
     boolean isOnline(UUID uuid);
+
+    /**
+     * 设置权限评估器。
+     *
+     * @param permissionEvaluator 权限评估器，用于评估权限。
+     */
+    void setPermissionEvaluator(PermissionEvaluator permissionEvaluator);
+
+    /**
+     * 异步检查指定 UUID 是否具有指定权限。
+     *
+     * @param uuid       要检查权限的 UUID。
+     * @param permission 要检查的权限字符串。
+     * @param evaluator  权限评估器，用于评估权限。
+     * @return 一个 CompletableFuture 对象，表示权限检查的结果。返回值为布尔类型。如果具有权限，则返回 true；否则返回 false。
+     */
+    CompletableFuture<Boolean> hasPermissionAsync(UUID uuid, String permission, PermissionEvaluator evaluator);
+
+    /**
+     * 同步检查指定 UUID的玩家 是否具有指定权限。
+     *
+     * @param uuid       要检查权限的 UUID。
+     * @param permission 要检查的权限字符串。
+     * @return 如果具有权限，则返回 true；否则返回 false。
+     */
+    boolean hasPermission(UUID uuid, String permission);
+
+    /**
+     * 设置指定玩家的Rank。
+     *
+     * @param uuid         玩家的UUID。
+     * @param rank         要设置的Rank。
+     * @param rankConsumer Rank处理者对象，用于在设置Rank时执行自定义逻辑。
+     */
+    CompletableFuture<Void> setRank(UUID uuid, String rank, RankConsumer rankConsumer) throws NullPointerException;
+
+    /**
+     * 设置指定玩家的Rank。
+     *
+     * @param uuid 玩家的UUID。
+     * @param rank 要设置的Rank。
+     */
+    void setRank(UUID uuid, String rank) throws NullPointerException;
+
+    /**
+     * 重置指定玩家的Rank。
+     *
+     * @param uuid         玩家的UUID。
+     * @param rankConsumer Rank处理者对象，用于在重置Rank时执行自定义逻辑。
+     */
+    CompletableFuture<Void> resetRank(UUID uuid, RankConsumer rankConsumer) throws NullPointerException;
+
+    /**
+     * 重置指定玩家的Rank。
+     *
+     * @param uuid 玩家的UUID。
+     */
+    void resetRank(UUID uuid) throws NullPointerException;
+
+    void setRankConsumer(RankConsumer rankConsumer);
 }

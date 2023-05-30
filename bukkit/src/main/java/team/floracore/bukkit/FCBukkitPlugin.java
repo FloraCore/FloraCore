@@ -146,6 +146,20 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     }
 
     @Override
+    public boolean luckPermsHook() {
+        return getLoader().getServer().getPluginManager().getPlugin("LuckPerms") != null;
+    }
+
+    @Override
+    public Sender getSender(UUID uuid) {
+        Player player = Bukkit.getPlayer(uuid);
+        if (player == null) {
+            return null;
+        }
+        return getSenderFactory().wrap(player);
+    }
+
+    @Override
     protected void disableFramework() {
         RegistrarRegistrar.instance.unload();
         ListenerRegistrar.instance.unload();

@@ -1,0 +1,16 @@
+package team.floracore.common.locale.message;
+
+import static net.kyori.adventure.text.Component.*;
+import static net.kyori.adventure.text.format.NamedTextColor.*;
+
+/**
+ * API消息
+ *
+ * @author xLikeWATCHDOG
+ * @date 2023/5/30 22:39
+ */
+public interface ApiMessage extends AbstractMessage {
+    Args0 API_PLAYER_RANK_CONSUMER_NOT_FOUND = () -> AbstractMessage.prefixed(translatable()
+            // 未找到合适的Rank设置器,请联系管理员
+            .key("floracore.api.player.rank.consumer.not-found").color(RED).append(FULL_STOP));
+}

@@ -2,6 +2,7 @@ package team.floracore.bungee;
 
 import com.google.gson.*;
 import net.md_5.bungee.api.*;
+import net.md_5.bungee.api.connection.*;
 import net.md_5.bungee.api.plugin.*;
 import team.floracore.bungee.command.*;
 import team.floracore.bungee.listener.*;
@@ -125,5 +126,19 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 
     public BungeeSenderFactory getSenderFactory() {
         return this.senderFactory;
+    }
+
+    @Override
+    public boolean luckPermsHook() {
+        return getLoader().getProxy().getPluginManager().getPlugin("LuckPerms") != null;
+    }
+
+    @Override
+    public Sender getSender(UUID uuid) {
+        ProxiedPlayer player = getProxy().getPlayer(uuid);
+        if (player == null) {
+            return null;
+        }
+        return getSenderFactory().wrap(player);
     }
 }

@@ -3,7 +3,6 @@ version: ${version}
 description: A basic plugin with rich functions
 website: https://github.com/FloraCore/FloraCore
 main: team.floracore.bungee.loader.BungeeLoaderPlugin
-depend:
-  - LuckPerms
 softdepend:
   - RedisBungee
+  - LuckPerms

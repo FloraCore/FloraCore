@@ -6,9 +6,6 @@ import me.neznamy.tab.api.team.*;
 import net.kyori.adventure.audience.*;
 import net.kyori.adventure.inventory.*;
 import net.kyori.adventure.text.*;
-import net.luckperms.api.*;
-import net.luckperms.api.model.user.*;
-import net.luckperms.api.node.types.*;
 import org.bukkit.entity.*;
 import org.bukkit.event.*;
 import org.bukkit.event.player.*;
@@ -42,13 +39,10 @@ import static net.kyori.adventure.text.Component.*;
 @CommandPermission("floracore.command.nick")
 @CommandDescription("修改玩家的昵称")
 public class NickCommand extends FloraCoreBukkitCommand implements Listener {
-    private final LuckPerms luckPerms;
     private final ConcurrentHashMap<UUID, NmsBlockPosition> signBP = new ConcurrentHashMap<>();
 
     public NickCommand(FCBukkitPlugin plugin) {
         super(plugin);
-        // this.skinsRestorerAPI = SkinsRestorerAPI.getApi();
-        this.luckPerms = LuckPermsProvider.get();
         plugin.getListenerManager().registerListener(this);
     }
 
@@ -105,6 +99,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
     }
 
     private void performNick(Player p, String rank, String skin, String name, boolean typeNick) {
+        Sender sender = getPlugin().getSenderFactory().wrap(p);
         UUID uuid = p.getUniqueId();
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PREFIX);
         // 修改玩家信息
@@ -147,11 +142,10 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
             }
         }
         // 设置Rank
-        User user = luckPerms.getUserManager().getUser(uuid);
-        if (user != null) {
-            PrefixNode node = PrefixNode.builder(ranks.get(rank), 77665).build();
-            user.data().add(node);
-            luckPerms.getUserManager().saveUser(user);
+        try {
+            getPlugin().getApiProvider().getPlayerAPI().setRank(uuid, ranks.get(rank));
+        } catch (NullPointerException e) {
+            ApiMessage.API_PLAYER_RANK_CONSUMER_NOT_FOUND.send(sender);
         }
         // 设置数据库Nick状态
         getAsyncExecutor().execute(() -> {
@@ -235,19 +229,17 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
     }
 
     private void performUnNick(Player p) {
+        Sender sender = getPlugin().getSenderFactory().wrap(p);
         UUID uuid = p.getUniqueId();
         DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
         // 重置昵称
         String name = getPlayerRecordName(uuid);
         changeName(p, name);
         // 重置rank
-        User user = luckPerms.getUserManager().getUser(uuid);
-        if (user != null) {
-            String prefix = user.getCachedData().getMetaData().getPrefix();
-            prefix = prefix == null ? "" : prefix;
-            PrefixNode node = PrefixNode.builder(prefix, 77665).build();
-            user.data().remove(node);
-            luckPerms.getUserManager().saveUser(user);
+        try {
+            getPlugin().getApiProvider().getPlayerAPI().resetRank(uuid);
+        } catch (NullPointerException e) {
+            ApiMessage.API_PLAYER_RANK_CONSUMER_NOT_FOUND.send(sender);
         }
         // TODO 重置皮肤
 
