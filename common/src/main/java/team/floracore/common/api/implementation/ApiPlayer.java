@@ -24,13 +24,16 @@ public class ApiPlayer implements PlayerAPI {
 
     @Override
     public boolean hasPlayerRecord(String name) {
-        return getPlayers(name) != null;
+        return getPlayer(name) != null;
     }
 
-    public PLAYER getPlayers(String name) {
+    public PLAYER getPlayer(String name) {
         PLAYER player = playerRecordCache.getIfPresent(name);
         if (player == null) {
             player = plugin.getStorage().getImplementation().selectPlayer(name);
+            if (player == null){
+                return null;
+            }
             playerRecordCache.put(name, player);
         }
         return player;
@@ -38,7 +41,7 @@ public class ApiPlayer implements PlayerAPI {
 
     @Override
     public UUID getPlayerRecordUUID(String name) {
-        PLAYER players = getPlayers(name);
+        PLAYER players = getPlayer(name);
         if (players == null) {
             return null;
         }
@@ -47,17 +50,20 @@ public class ApiPlayer implements PlayerAPI {
 
     @Override
     public String getPlayerRecordName(UUID uuid) {
-        PLAYER players = getPlayers(uuid);
+        PLAYER players = getPlayer(uuid);
         if (players == null) {
             return null;
         }
         return players.getName();
     }
 
-    public PLAYER getPlayers(UUID uuid) {
+    public PLAYER getPlayer(UUID uuid) {
         PLAYER player = playersCache.getIfPresent(uuid);
         if (player == null) {
             player = plugin.getStorage().getImplementation().selectPlayer(uuid);
+            if (player == null){
+                return null;
+            }
             playersCache.put(uuid, player);
         }
         return player;

@@ -36,6 +36,9 @@ public class ApiServer implements ServerAPI {
         SERVER server = serverCache.getIfPresent(name);
         if (server == null) {
             server = plugin.getStorage().getImplementation().selectServer(name);
+            if (server == null){
+                return null;
+            }
             serverCache.put(name, server);
         }
         return server;

@@ -313,7 +313,9 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
     public void checkUpdate(boolean latestNotification) {
         try {
-            MiscMessage.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
+            if (latestNotification) {
+                MiscMessage.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
+            }
             String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
             if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
                 MiscMessage.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(),
