@@ -34,6 +34,6 @@ public class StaffCommand extends FloraCoreBungeeCommand {
                         ChatMessage.ChatMessageType.STAFF,
                         Arrays.asList(uuid.toString(), message)));
         long time = System.currentTimeMillis();
-        getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.STAFF,"", uuid, message, time));
+        getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.STAFF, "", uuid, message, time));
     }
 }

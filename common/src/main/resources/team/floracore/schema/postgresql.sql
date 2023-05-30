@@ -51,8 +51,7 @@ CREATE TABLE IF NOT EXISTS "{prefix}report"
     reasons        TEXT        NOT NULL,
     reportTime     BIGINT      NOT NULL,
     status         VARCHAR(36) NOT NULL,
-    conclusionTime BIGINT      NULL,
-    chat           TEXT        NOT NULL
+    conclusionTime BIGINT NULL
 );
 
 CREATE TABLE IF NOT EXISTS "{prefix}party"

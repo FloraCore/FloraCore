@@ -28,6 +28,6 @@ public class BuilderCommand extends FloraCoreBungeeCommand {
                         ChatMessage.ChatMessageType.BUILDER,
                         Arrays.asList(uuid.toString(), message)));
         long time = System.currentTimeMillis();
-        getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.BUILDER,"", uuid, message, time));
+        getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.BUILDER, "", uuid, message, time));
     }
 }
