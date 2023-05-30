@@ -362,7 +362,6 @@ public class SqlStorage implements StorageImplementation {
                         String settings = rs.getString("settings");
                         long createTime = rs.getLong("createTime");
                         long disbandTime = rs.getLong("disbandTime");
-                        int chat = rs.getInt("chat");
                         return new PARTY(plugin,
                                 this,
                                 id,
@@ -372,8 +371,7 @@ public class SqlStorage implements StorageImplementation {
                                 members,
                                 settings,
                                 createTime,
-                                disbandTime,
-                                chat);
+                                disbandTime);
                     } else {
                         return null;
                     }
@@ -395,7 +393,7 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
-    public void insertParty(UUID uuid, UUID leader, long createTime, int chat) {
+    public void insertParty(UUID uuid, UUID leader, long createTime) {
         PARTY party = new PARTY(plugin,
                 this,
                 -1,
@@ -405,8 +403,7 @@ public class SqlStorage implements StorageImplementation {
                 Collections.singletonList(leader),
                 "",
                 createTime,
-                -1,
-                chat);
+                -1);
         try {
             party.init();
         } catch (SQLException e) {

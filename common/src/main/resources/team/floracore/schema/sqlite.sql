@@ -64,8 +64,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}party`
     members     TEXT        NOT NULL,
     settings    TEXT        NOT NULL,
     createTime  BIGINT      NOT NULL,
-    disbandTime BIGINT      NOT NULL,
-    chat        INT         NOT NULL
+    disbandTime BIGINT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `{prefix}online`

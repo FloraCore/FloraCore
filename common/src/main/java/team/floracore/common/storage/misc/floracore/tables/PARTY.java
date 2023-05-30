@@ -16,12 +16,11 @@ public class PARTY extends AbstractFloraCoreTable {
     private static final String UPDATE_MEMBERS = "UPDATE '{prefix}party' SET members=? WHERE uuid=?";
     private static final String UPDATE_SETTINGS = "UPDATE '{prefix}party' SET settings=? WHERE uuid=?";
     private static final String UPDATE_DISBAND_TIME = "UPDATE '{prefix}party' SET disbandTime=? WHERE uuid=?";
-    private static final String INSERT = "INSERT INTO '{prefix}party' (uuid, leader, moderators, members, settings, createTime, disbandTime, chat) VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO '{prefix}party' (uuid, leader, moderators, members, settings, createTime, disbandTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
     private final int id;
     private final UUID uuid;
     private final long createTime;
-    private final int chat;
     private UUID leader;
     private List<UUID> moderators;
     /**
@@ -40,8 +39,7 @@ public class PARTY extends AbstractFloraCoreTable {
                  List<UUID> members,
                  String settings,
                  long createTime,
-                 long disbandTime,
-                 int chat) {
+                 long disbandTime) {
         super(plugin, storageImplementation);
         this.id = id;
         this.uuid = uuid;
@@ -51,15 +49,10 @@ public class PARTY extends AbstractFloraCoreTable {
         this.settings = settings;
         this.createTime = createTime;
         this.disbandTime = disbandTime;
-        this.chat = chat;
     }
 
     public int getId() {
         return id;
-    }
-
-    public int getChat() {
-        return chat;
     }
 
     public UUID getUniqueId() {
@@ -176,7 +169,6 @@ public class PARTY extends AbstractFloraCoreTable {
                 ps.setString(5, settings);
                 ps.setLong(6, createTime);
                 ps.setLong(7, disbandTime);
-                ps.setInt(8, chat);
                 ps.execute();
             }
         }

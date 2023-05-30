@@ -67,7 +67,7 @@ public interface StorageImplementation {
 
     PARTY selectEffectiveParty(UUID uuid);
 
-    void insertParty(UUID uuid, UUID leader, long createTime, int chat);
+    void insertParty(UUID uuid, UUID leader, long createTime);
 
     ONLINE selectOnline(UUID uuid);
 

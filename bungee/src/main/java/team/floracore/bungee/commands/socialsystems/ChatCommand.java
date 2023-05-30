@@ -180,7 +180,6 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                                                     Arrays.asList(uuid.toString(), message));
                                 }
                             });
-                            int chatID = party.getChat();
                             /*CHAT chat = getStorageImplementation().selectChatWithID(chatID);
                             List<ChatRecord> chatRecords = chat.getRecords();
                             int id = chat.getRecords().size() + 1;

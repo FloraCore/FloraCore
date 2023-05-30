@@ -66,19 +66,13 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             members.add(leader);
             long createTime = System.currentTimeMillis();
             getAsyncExecutor().execute(() -> {
-                // 创建Chat
-                /*getStorageImplementation().insertChat(partyUUID.toString(), ChatType.PARTY, createTime);
-                CHAT chat = getStorageImplementation().selectChatWithStartTime(partyUUID.toString(),
-                        ChatType.PARTY,
-                        createTime);
-                int chatID = chat.getId();
-                getStorageImplementation().insertParty(partyUUID, leader, createTime, chatID);
+                getStorageImplementation().insertParty(partyUUID, leader, createTime);
                 getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "party", partyUUID.toString(), 0);
                 getStorageImplementation().insertData(uuid,
                         DataType.SOCIAL_SYSTEMS_PARTY_HISTORY,
                         String.valueOf(System.currentTimeMillis()),
                         partyUUID.toString(),
-                        0);*/
+                        0);
             });
         } else {
             partyUUID = UUID.fromString(data.getValue());
@@ -188,7 +182,6 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
         getAsyncExecutor().execute(() -> {
             long disbandTime = System.currentTimeMillis();
             party.setDisbandTime(disbandTime);
-            int chatID = party.getChat();
             /*CHAT chat = getStorageImplementation().selectChatWithID(chatID);
             chat.setEndTime(disbandTime);*/
             for (UUID member : members) {
@@ -445,7 +438,6 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                                     ChatMessage.ChatMessageType.PARTY,
                                     Arrays.asList(uuid.toString(), message));
                 }
-                int chatID = party.getChat();
                 /*CHAT chat = getStorageImplementation().selectChatWithID(chatID);
                 List<ChatRecord> chatRecords = chat.getRecords();
                 int id = chat.getRecords().size() + 1;
