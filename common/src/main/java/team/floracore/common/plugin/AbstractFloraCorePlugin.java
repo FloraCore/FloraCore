@@ -1,35 +1,24 @@
 package team.floracore.common.plugin;
 
-import okhttp3.OkHttpClient;
-import team.floracore.common.api.ApiRegistrationUtil;
-import team.floracore.common.api.FloraCoreApiProvider;
-import team.floracore.common.config.ConfigKeys;
-import team.floracore.common.config.FloraCoreConfiguration;
-import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
-import team.floracore.common.dependencies.Dependency;
-import team.floracore.common.dependencies.DependencyManager;
-import team.floracore.common.dependencies.DependencyManagerImpl;
-import team.floracore.common.extension.SimpleExtensionManager;
-import team.floracore.common.locale.data.DataManager;
-import team.floracore.common.locale.data.NamesRepository;
-import team.floracore.common.locale.message.MiscMessage;
-import team.floracore.common.locale.translation.TranslationManager;
-import team.floracore.common.locale.translation.TranslationRepository;
-import team.floracore.common.messaging.InternalMessagingService;
-import team.floracore.common.messaging.MessagingFactory;
-import team.floracore.common.plugin.logging.PluginLogger;
-import team.floracore.common.storage.Storage;
-import team.floracore.common.storage.StorageFactory;
-import team.floracore.common.util.github.GithubUtil;
+import okhttp3.*;
+import team.floracore.common.api.*;
+import team.floracore.common.config.*;
+import team.floracore.common.config.generic.adapter.*;
+import team.floracore.common.dependencies.*;
+import team.floracore.common.extension.*;
+import team.floracore.common.locale.data.*;
+import team.floracore.common.locale.message.*;
+import team.floracore.common.locale.translation.*;
+import team.floracore.common.messaging.*;
+import team.floracore.common.plugin.logging.*;
+import team.floracore.common.storage.*;
+import team.floracore.common.util.github.*;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.time.Duration;
-import java.time.Instant;
+import java.io.*;
+import java.nio.file.*;
+import java.time.*;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     // Active plugins on the server

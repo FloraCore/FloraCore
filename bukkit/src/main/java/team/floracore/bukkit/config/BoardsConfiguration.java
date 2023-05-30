@@ -1,9 +1,9 @@
 package team.floracore.bukkit.config;
 
-import team.floracore.bukkit.FCBukkitPlugin;
-import team.floracore.common.config.generic.KeyedConfiguration;
-import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
-import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.bukkit.*;
+import team.floracore.common.config.generic.*;
+import team.floracore.common.config.generic.adapter.*;
+import team.floracore.common.plugin.*;
 
 public class BoardsConfiguration extends KeyedConfiguration {
     private final FCBukkitPlugin plugin;

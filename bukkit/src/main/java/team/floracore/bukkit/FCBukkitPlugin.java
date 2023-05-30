@@ -15,7 +15,7 @@ import team.floracore.bukkit.util.*;
 import team.floracore.bukkit.util.module.*;
 import team.floracore.bukkit.util.nothing.*;
 import team.floracore.common.config.*;
-import team.floracore.common.config.generic.KeyedConfiguration;
+import team.floracore.common.config.generic.*;
 import team.floracore.common.config.generic.adapter.*;
 import team.floracore.common.dependencies.*;
 import team.floracore.common.messaging.*;
@@ -138,7 +138,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     @Override
     protected void setupConfiguration() {
-        this.boardsConfiguration = new BoardsConfiguration(this,new BukkitConfigAdapter(this, resolveConfig("boards.yml").toFile()));
+        this.boardsConfiguration = new BoardsConfiguration(this, new BukkitConfigAdapter(this, resolveConfig("boards.yml").toFile()));
         getLogger().info("Loading scoreboard manager...");
         scoreBoardManager = new ScoreBoardManager(this);
         scoreBoardManager.start();

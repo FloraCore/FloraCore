@@ -57,6 +57,8 @@ public interface FloraCorePlugin {
      */
     Storage getStorage();
 
+    void setStorage(Storage storage);
+
     /**
      * Gets a list of online Senders on the platform
      *
@@ -70,8 +72,6 @@ public interface FloraCorePlugin {
      * @return the console sender of the instance
      */
     Sender getConsoleSender();
-
-    void setStorage(Storage storage);
 
     /**
      * Returns the class implementing the FloraCoreAPI on this platform.

@@ -20,7 +20,9 @@ public class ApiServer implements ServerAPI {
             .maximumSize(10000)
             .buildAsync();
 
-    public ApiServer(FloraCorePlugin plugin) {this.plugin = plugin;}
+    public ApiServer(FloraCorePlugin plugin) {
+        this.plugin = plugin;
+    }
 
     @Override
     public ServerType getServerType(String serverName) {

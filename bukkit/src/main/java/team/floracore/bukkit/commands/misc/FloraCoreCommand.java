@@ -1,42 +1,31 @@
 package team.floracore.bukkit.commands.misc;
 
 import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.processing.CommandContainer;
-import cloud.commandframework.annotations.suggestions.Suggestions;
-import cloud.commandframework.context.CommandContext;
-import com.github.benmanes.caffeine.cache.AsyncCache;
-import com.github.benmanes.caffeine.cache.Caffeine;
-import net.kyori.adventure.text.Component;
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Player;
-import org.floracore.api.data.DataType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import team.floracore.bukkit.FCBukkitPlugin;
-import team.floracore.bukkit.command.FloraCoreBukkitCommand;
-import team.floracore.bukkit.locale.message.commands.MiscCommandMessage;
-import team.floracore.common.config.ConfigKeys;
-import team.floracore.common.http.UnsuccessfulRequestException;
-import team.floracore.common.locale.message.AbstractMessage;
-import team.floracore.common.locale.message.CommonCommandMessage;
-import team.floracore.common.locale.message.MiscMessage;
-import team.floracore.common.locale.translation.TranslationManager;
-import team.floracore.common.locale.translation.TranslationRepository;
-import team.floracore.common.messaging.InternalMessagingService;
-import team.floracore.common.sender.Sender;
-import team.floracore.common.storage.misc.floracore.tables.DATA;
-import team.floracore.common.storage.misc.floracore.tables.PLAYER;
-import team.floracore.common.storage.misc.floracore.tables.SERVER;
-import team.floracore.common.util.DurationFormatter;
+import cloud.commandframework.annotations.processing.*;
+import cloud.commandframework.annotations.suggestions.*;
+import cloud.commandframework.context.*;
+import com.github.benmanes.caffeine.cache.*;
+import net.kyori.adventure.text.*;
+import org.bukkit.*;
+import org.bukkit.command.*;
+import org.bukkit.entity.*;
+import org.floracore.api.data.*;
+import org.jetbrains.annotations.*;
+import team.floracore.bukkit.*;
+import team.floracore.bukkit.command.*;
+import team.floracore.bukkit.locale.message.commands.*;
+import team.floracore.common.http.*;
+import team.floracore.common.locale.message.*;
+import team.floracore.common.locale.translation.*;
+import team.floracore.common.sender.*;
+import team.floracore.common.storage.misc.floracore.tables.*;
+import team.floracore.common.util.*;
 
-import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
+import java.io.*;
+import java.time.*;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import java.util.concurrent.*;
+import java.util.stream.*;
 
 /**
  * FloraCore命令
@@ -65,20 +54,6 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
     public void reload(final @NotNull CommandSender sender) {
         Sender s = plugin.getSenderFactory().wrap(sender);
         plugin.getConfiguration().reload();
-        // close messaging service
-        if (plugin.getMessagingService() != null) {
-            plugin.getLogger().info("Closing messaging service...");
-            plugin.getMessagingService().ifPresent(InternalMessagingService::close);
-        }
-        // 重载数据库服务
-        plugin.getLogger().info("Closing storage...");
-        plugin.getStorage().shutdown();
-        plugin.getLogger().info("Reloading storage and messaging service...");
-        plugin.getDependencyManager().loadStorageDependencies(plugin.getStorageFactory().getRequiredTypes(),
-                plugin.getConfiguration().get(ConfigKeys.REDIS_ENABLED));
-        // initialise storage
-        plugin.setStorage(plugin.getStorageFactory().getInstance());
-        plugin.setMessagingService(plugin.provideMessagingFactory().getInstance());
         plugin.getBoardsConfiguration().reload();
         plugin.getTranslationManager().reload();
         plugin.getScoreBoardManager().reload();
