@@ -70,6 +70,7 @@ public class ApiPlayer implements PlayerAPI {
                         }
                     } catch (Throwable ignored) {
                     }
+                    future.complete(null);
                     return future;
                 }
 
@@ -90,6 +91,7 @@ public class ApiPlayer implements PlayerAPI {
                         }
                     } catch (Throwable ignored) {
                     }
+                    future.complete(null);
                     return future;
                 }
             };
