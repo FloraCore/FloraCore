@@ -137,6 +137,10 @@ public enum Dependency {
                    "2.11.1",
                    "6gUF7nUV5YsawOaG5NGl2ffYCOJRphvDcaoFlbmWP4M=",
                    Relocation.of("commonspool2", "org{}apache{}commons{}pool2")),
+    BUKKIT_GUI("com.huanmeng-qwq",
+               "Bukkit-Gui",
+               "1.3.1",
+               "DNqQ/1GLcJJDM71dXIQ4zCy+QZpg9CABVswIa1tiiTM="),
     ;
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";

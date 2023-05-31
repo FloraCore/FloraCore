@@ -83,6 +83,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         dependencies.add(Dependency.ADVENTURE_PLATFORM_BUKKIT);
         dependencies.add(Dependency.CLOUD_BUKKIT);
         dependencies.add(Dependency.CLOUD_PAPER);
+        dependencies.add(Dependency.BUKKIT_GUI);
         return dependencies;
     }
 
@@ -144,9 +145,8 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     @Override
     protected void setupConfiguration() {
-        this.boardsConfiguration = new BoardsConfiguration(this,
-                                                           new BukkitConfigAdapter(this,
-                                                                                   resolveConfig("boards.yml").toFile()));
+        ConfigurationAdapter boardsFileAdapter = new BukkitConfigAdapter(this, resolveConfig("boards.yml").toFile());
+        this.boardsConfiguration = new BoardsConfiguration(this, boardsFileAdapter);
         getLogger().info("Loading scoreboard manager...");
         scoreBoardManager = new ScoreBoardManager(this);
         scoreBoardManager.start();
