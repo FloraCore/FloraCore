@@ -1,7 +1,7 @@
-name: 💡 新功能建议
+name: 💡 新建议
 description: 创建一个新功能建议以帮助我们改进FloraCore
-title: "[新功能建议]: "
-labels: [ "feature-suggestions" ]
+title: "[建议]: "
+labels: [ "type: suggestion" ]
 assignees:
   - flowerinsnowdh
   - xLikeWATCHDOG
