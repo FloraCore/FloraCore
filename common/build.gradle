@@ -32,7 +32,6 @@ dependencies {
     compileOnly 'org.slf4j:slf4j-api:2.0.5'
     compileOnly 'org.apache.logging.log4j:log4j-api:2.20.0'
     compileOnly 'net.luckperms:api:5.4'
-    compileOnly 'me.lucko:jar-relocator:1.4'
     compileOnly fileTree(dir: '../libs', includes: ['*jar'])
 
     api 'net.kyori:adventure-api:4.13.0'

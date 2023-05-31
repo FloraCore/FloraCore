@@ -83,7 +83,7 @@ public class DependencyManagerImpl implements DependencyManager {
 
     private synchronized RelocationHandler getRelocationHandler() {
         if (this.relocationHandler == null) {
-            this.relocationHandler = new RelocationHandler(this);
+            this.relocationHandler = new RelocationHandler();
         }
         return this.relocationHandler;
     }
