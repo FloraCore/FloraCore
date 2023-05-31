@@ -1,9 +1,10 @@
 package team.floracore.common.messaging;
 
-import org.floracore.api.messenger.*;
-import team.floracore.common.util.*;
+import org.floracore.api.messenger.Messenger;
+import org.floracore.api.messenger.MessengerProvider;
+import team.floracore.common.util.ExpiringSet;
 
-import java.util.*;
+import java.util.UUID;
 
 public interface InternalMessagingService {
     void pushChangeName(UUID changer, String name);

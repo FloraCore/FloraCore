@@ -1,6 +1,6 @@
 package team.floracore.lib.asm;
 
-import java.util.*;
+import java.util.Arrays;
 
 /**
  * A constant whose value is computed at runtime, with a bootstrap method.

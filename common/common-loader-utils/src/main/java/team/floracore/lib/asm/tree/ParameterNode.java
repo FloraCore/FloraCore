@@ -1,6 +1,7 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
 
 /**
  * A node that represents a parameter of a method.

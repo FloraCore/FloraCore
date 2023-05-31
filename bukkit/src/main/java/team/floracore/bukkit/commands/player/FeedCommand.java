@@ -1,12 +1,13 @@
 package team.floracore.bukkit.commands.player;
 
 import cloud.commandframework.annotations.*;
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import org.jetbrains.annotations.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.command.*;
-import team.floracore.bukkit.locale.message.commands.*;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.command.FloraCoreBukkitCommand;
+import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
 
 /**
  * Feed命令

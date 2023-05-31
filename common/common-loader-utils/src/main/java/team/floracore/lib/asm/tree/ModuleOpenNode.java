@@ -1,8 +1,9 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ModuleVisitor;
+import team.floracore.lib.asm.Type;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * A node that represents an opened package with its name and the module that can access it.

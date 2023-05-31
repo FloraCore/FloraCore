@@ -1,20 +1,21 @@
 package team.floracore.common.messaging.message;
 
-import com.google.gson.*;
+import com.google.gson.JsonElement;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.floracore.api.messenger.message.type.*;
-import org.jetbrains.annotations.*;
-import team.floracore.common.messaging.*;
-import team.floracore.common.util.gson.*;
+import org.floracore.api.messenger.message.type.ChangeNameMessage;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.common.messaging.FloraCoreMessagingService;
+import team.floracore.common.util.gson.JObject;
 
-import java.util.*;
+import java.util.Optional;
+import java.util.UUID;
 
 public class ChangeNameMessageImpl extends AbstractMessage implements ChangeNameMessage {
     public static final String TYPE = "change-name";
     private final UUID changer;
     private final String name;
 
-    public ChangeNameMessageImpl(UUID id, UUID changer,String name) {
+    public ChangeNameMessageImpl(UUID id, UUID changer, String name) {
         super(id);
         this.changer = changer;
         this.name = name;
@@ -34,7 +35,7 @@ public class ChangeNameMessageImpl extends AbstractMessage implements ChangeName
                 .map(JsonElement::getAsString)
                 .orElseThrow(() -> new IllegalStateException("Incoming message has no name argument: " + content));
 
-        return new ChangeNameMessageImpl(id, changer,name);
+        return new ChangeNameMessageImpl(id, changer, name);
     }
 
     @Override

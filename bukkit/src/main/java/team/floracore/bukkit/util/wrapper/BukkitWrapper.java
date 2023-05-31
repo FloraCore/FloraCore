@@ -1,11 +1,12 @@
 package team.floracore.bukkit.util.wrapper;
 
-import com.google.common.collect.*;
-import org.bukkit.*;
-import team.floracore.bukkit.util.*;
-import team.floracore.common.util.*;
+import com.google.common.collect.Lists;
+import org.bukkit.Bukkit;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.common.util.TypeUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class BukkitWrapper {
     /**

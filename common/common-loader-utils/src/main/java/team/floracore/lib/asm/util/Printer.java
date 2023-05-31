@@ -2,8 +2,12 @@ package team.floracore.lib.asm.util;
 
 import team.floracore.lib.asm.*;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An abstract converter from visit events to text.

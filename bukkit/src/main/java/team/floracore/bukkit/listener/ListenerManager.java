@@ -1,10 +1,12 @@
 package team.floracore.bukkit.listener;
 
-import org.bukkit.event.*;
-import org.bukkit.plugin.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.listeners.*;
-import team.floracore.common.plugin.*;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.listeners.PlayerListener;
+import team.floracore.bukkit.listeners.ScoreboardListener;
+import team.floracore.common.plugin.FloraCorePlugin;
 
 public class ListenerManager {
     private final FCBukkitPlugin plugin;

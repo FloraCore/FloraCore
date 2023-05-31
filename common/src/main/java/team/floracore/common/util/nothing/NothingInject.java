@@ -1,6 +1,6 @@
 package team.floracore.common.util.nothing;
 
-import team.floracore.common.util.wrapper.*;
+import team.floracore.common.util.wrapper.WrappedObject;
 
 import java.lang.annotation.*;
 

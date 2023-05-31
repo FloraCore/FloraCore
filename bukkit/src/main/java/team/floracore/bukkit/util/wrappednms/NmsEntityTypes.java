@@ -1,14 +1,17 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitMethod;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.util.function.*;
+import java.util.function.Function;
 
 @WrappedBukkitClass({@VersionName(value = "nms.EntityTypes",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.world.entity.EntityTypes",
-                                                             minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.world.entity.EntityTypes",
+        minVer = 17)})
 public interface NmsEntityTypes extends WrappedBukkitObject {
     static NmsEntity spawn(NmsNBTTagCompound nbt, NmsWorld world) {
         if (BukkitWrapper.v17) {

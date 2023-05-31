@@ -1,8 +1,8 @@
 package team.floracore.common.util.nothing;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Opcodes;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Target;
 
 @Target({})
 public @interface NothingByteCode {

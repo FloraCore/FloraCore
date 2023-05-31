@@ -1,12 +1,14 @@
 package team.floracore.bukkit.locale.message;
 
-import net.kyori.adventure.text.*;
-import org.floracore.api.data.chat.*;
-import team.floracore.common.locale.message.*;
+import net.kyori.adventure.text.Component;
+import org.floracore.api.data.chat.ChatType;
+import team.floracore.common.locale.message.AbstractMessage;
 
-import static net.kyori.adventure.text.Component.*;
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.translatable;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
-import static net.kyori.adventure.text.format.TextDecoration.*;
+import static net.kyori.adventure.text.format.TextDecoration.BOLD;
+import static net.kyori.adventure.text.format.TextDecoration.UNDERLINED;
 
 public interface MenuMessage extends AbstractMessage {
     Args1<Integer> COMMAND_REPORTS_GUI_PAGE = (page) -> translatable()

@@ -1,18 +1,18 @@
 package team.floracore.common.api.implementation;
 
-import com.github.benmanes.caffeine.cache.*;
-import org.floracore.api.server.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
-import team.floracore.common.util.*;
+import com.github.benmanes.caffeine.cache.Cache;
+import org.floracore.api.server.ServerAPI;
+import org.floracore.api.server.ServerType;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.storage.misc.floracore.tables.SERVER;
+import team.floracore.common.util.CaffeineFactory;
 
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 服务器API的实现
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/26 17:57
  */
 public class ApiServer implements ServerAPI {
     private static final Cache<String, SERVER> serverCache = CaffeineFactory.newBuilder()
@@ -36,7 +36,7 @@ public class ApiServer implements ServerAPI {
         SERVER server = serverCache.getIfPresent(name);
         if (server == null) {
             server = plugin.getStorage().getImplementation().selectServer(name);
-            if (server == null){
+            if (server == null) {
                 return null;
             }
             serverCache.put(name, server);

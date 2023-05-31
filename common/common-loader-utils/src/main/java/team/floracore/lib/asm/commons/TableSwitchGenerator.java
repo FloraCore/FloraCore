@@ -1,6 +1,6 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Label;
 
 /**
  * A code generator for switch statements.

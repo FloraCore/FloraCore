@@ -1,20 +1,22 @@
 package team.floracore.bukkit.commands.player;
 
 import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.suggestions.*;
-import cloud.commandframework.context.*;
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import org.jetbrains.annotations.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.command.*;
-import team.floracore.bukkit.locale.message.commands.*;
-import team.floracore.common.config.*;
-import team.floracore.common.locale.message.*;
-import team.floracore.common.sender.*;
+import cloud.commandframework.annotations.suggestions.Suggestions;
+import cloud.commandframework.context.CommandContext;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.command.FloraCoreBukkitCommand;
+import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
+import team.floracore.common.config.ConfigKeys;
+import team.floracore.common.locale.message.MiscMessage;
+import team.floracore.common.sender.Sender;
 
 import javax.annotation.Nullable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * Speed命令

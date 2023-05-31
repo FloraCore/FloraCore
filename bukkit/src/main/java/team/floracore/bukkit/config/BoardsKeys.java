@@ -1,13 +1,16 @@
 package team.floracore.bukkit.config;
 
-import team.floracore.bukkit.scoreboard.model.*;
-import team.floracore.common.config.generic.*;
-import team.floracore.common.config.generic.key.*;
+import team.floracore.bukkit.scoreboard.model.BoardModel;
+import team.floracore.common.config.generic.KeyedConfiguration;
+import team.floracore.common.config.generic.key.ConfigKey;
+import team.floracore.common.config.generic.key.SimpleConfigKey;
 
-import java.text.*;
-import java.util.*;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
-import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
+import static team.floracore.common.config.generic.key.ConfigKeyFactory.key;
 
 /**
  * All of the {@link ConfigKey}s used by FloraCore.

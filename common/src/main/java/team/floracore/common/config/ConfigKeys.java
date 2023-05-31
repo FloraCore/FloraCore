@@ -1,13 +1,15 @@
 package team.floracore.common.config;
 
-import com.google.common.collect.*;
-import org.floracore.api.server.*;
-import team.floracore.common.config.generic.*;
-import team.floracore.common.config.generic.key.*;
-import team.floracore.common.storage.*;
-import team.floracore.common.storage.misc.*;
+import com.google.common.collect.ImmutableMap;
+import org.floracore.api.server.ServerType;
+import team.floracore.common.config.generic.KeyedConfiguration;
+import team.floracore.common.config.generic.key.ConfigKey;
+import team.floracore.common.config.generic.key.SimpleConfigKey;
+import team.floracore.common.storage.StorageType;
+import team.floracore.common.storage.misc.StorageCredentials;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
 

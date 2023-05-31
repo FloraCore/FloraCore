@@ -1,14 +1,14 @@
 package team.floracore.bukkit.scoreboard.model;
 
-import org.checkerframework.checker.nullness.qual.*;
+import org.checkerframework.checker.nullness.qual.Nullable;
 
-import java.util.*;
+import java.util.Date;
+import java.util.List;
 
 /**
  * 计分板模型
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/29 19:25
  */
 public class BoardModel {
     public final transient String name;

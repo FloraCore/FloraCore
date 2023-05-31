@@ -1,7 +1,12 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.signature.*;
+import team.floracore.lib.asm.ConstantDynamic;
+import team.floracore.lib.asm.Handle;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
+import team.floracore.lib.asm.signature.SignatureReader;
+import team.floracore.lib.asm.signature.SignatureVisitor;
+import team.floracore.lib.asm.signature.SignatureWriter;
 
 /**
  * A class responsible for remapping types and names.

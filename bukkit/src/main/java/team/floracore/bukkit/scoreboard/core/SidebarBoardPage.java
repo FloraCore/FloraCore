@@ -1,17 +1,23 @@
 package team.floracore.bukkit.scoreboard.core;
 
-import org.apache.commons.lang3.*;
-import org.bukkit.*;
-import org.bukkit.scoreboard.*;
-import team.floracore.common.util.*;
+import org.apache.commons.lang3.Validate;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.scoreboard.DisplaySlot;
+import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Team;
+import team.floracore.common.util.StringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 侧边栏计分板页面
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/29 19:38
  */
 public class SidebarBoardPage extends BoardPage {
     private static final List<ChatColor> COLORS = Arrays.asList(ChatColor.values());

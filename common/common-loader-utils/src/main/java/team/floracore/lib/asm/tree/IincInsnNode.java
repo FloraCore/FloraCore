@@ -1,8 +1,9 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * A node that represents an IINC instruction.

@@ -1,20 +1,24 @@
 package team.floracore.bukkit.inevntory;
 
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
-import org.bukkit.event.player.*;
-import org.bukkit.event.server.*;
-import org.bukkit.inventory.*;
-import org.bukkit.plugin.*;
-import org.bukkit.plugin.java.*;
-import org.bukkit.scheduler.*;
-import team.floracore.bukkit.inevntory.content.*;
-import team.floracore.bukkit.inevntory.opener.*;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import team.floracore.bukkit.inevntory.content.InventoryContents;
+import team.floracore.bukkit.inevntory.opener.ChestInventoryOpener;
+import team.floracore.bukkit.inevntory.opener.InventoryOpener;
+import team.floracore.bukkit.inevntory.opener.SpecialInventoryOpener;
 
 import java.util.*;
-import java.util.logging.*;
+import java.util.logging.Level;
 
 public class InventoryManager {
     private final JavaPlugin plugin;

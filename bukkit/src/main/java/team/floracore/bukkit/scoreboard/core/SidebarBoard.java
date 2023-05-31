@@ -1,15 +1,15 @@
 package team.floracore.bukkit.scoreboard.core;
 
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.plugin.*;
-import team.floracore.bukkit.event.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import team.floracore.bukkit.event.BodyUpdateEvent;
+import team.floracore.bukkit.event.TitleUpdateEvent;
 
 /**
  * 侧边栏计分板
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/29 19:38
  */
 public class SidebarBoard extends Board {
     public SidebarBoard(final Plugin plugin) {

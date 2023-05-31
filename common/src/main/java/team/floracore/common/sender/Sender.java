@@ -1,9 +1,9 @@
 package team.floracore.common.sender;
 
-import net.kyori.adventure.text.*;
-import team.floracore.common.plugin.*;
+import net.kyori.adventure.text.Component;
+import team.floracore.common.plugin.FloraCorePlugin;
 
-import java.util.*;
+import java.util.UUID;
 
 /**
  * Wrapper interface to represent a CommandSender/CommandSource within the common command implementations.

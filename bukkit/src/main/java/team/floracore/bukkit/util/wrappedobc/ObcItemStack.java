@@ -1,13 +1,16 @@
 package team.floracore.bukkit.util.wrappedobc;
 
-import org.bukkit.*;
-import org.bukkit.inventory.*;
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrappednms.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrappednms.NmsItemStack;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
+import team.floracore.common.util.wrapper.WrappedFieldAccessor;
+import team.floracore.common.util.wrapper.WrappedMethod;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.util.*;
+import java.util.Objects;
 
 @WrappedBukkitClass(@VersionName("obc.inventory.CraftItemStack"))
 public interface ObcItemStack extends WrappedBukkitObject {

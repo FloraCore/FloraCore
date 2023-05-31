@@ -1,19 +1,22 @@
 package team.floracore.bukkit.util;
 
-import me.clip.placeholderapi.*;
-import net.kyori.adventure.text.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import team.floracore.common.locale.translation.*;
+import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.Component;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
+import team.floracore.common.locale.translation.TranslationManager;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Bukkit字符串替换
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/29 20:12
  */
 public class BukkitStringReplacer {
     public static List<String> processStringListForPlayer(Player player, List<String> input) {

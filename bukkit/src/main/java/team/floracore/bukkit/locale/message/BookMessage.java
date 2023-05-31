@@ -1,15 +1,17 @@
 package team.floracore.bukkit.locale.message;
 
-import net.kyori.adventure.text.*;
-import net.kyori.adventure.text.event.*;
-import team.floracore.bukkit.commands.player.*;
-import team.floracore.common.locale.message.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import team.floracore.bukkit.commands.player.NickCommand;
+import team.floracore.common.locale.message.AbstractMessage;
 
-import java.util.*;
+import java.util.UUID;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
-import static net.kyori.adventure.text.format.TextDecoration.*;
+import static net.kyori.adventure.text.format.TextDecoration.BOLD;
+import static net.kyori.adventure.text.format.TextDecoration.UNDERLINED;
 
 public interface BookMessage extends AbstractMessage {
     Args0 COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_LINE_1 = () -> translatable()

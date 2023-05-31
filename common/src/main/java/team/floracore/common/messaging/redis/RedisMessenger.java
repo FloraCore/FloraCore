@@ -1,10 +1,11 @@
 package team.floracore.common.messaging.redis;
 
-import org.floracore.api.messenger.*;
-import org.floracore.api.messenger.message.*;
-import org.jetbrains.annotations.*;
+import org.floracore.api.messenger.IncomingMessageConsumer;
+import org.floracore.api.messenger.Messenger;
+import org.floracore.api.messenger.message.OutgoingMessage;
+import org.jetbrains.annotations.NotNull;
 import redis.clients.jedis.*;
-import team.floracore.common.plugin.*;
+import team.floracore.common.plugin.FloraCorePlugin;
 
 /**
  * An implementation of {@link Messenger} using Redis.

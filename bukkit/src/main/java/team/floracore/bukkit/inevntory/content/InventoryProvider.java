@@ -1,6 +1,6 @@
 package team.floracore.bukkit.inevntory.content;
 
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 
 public interface InventoryProvider {
     void init(Player player, InventoryContents contents);

@@ -1,8 +1,11 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A node that represents a stack map frame. These nodes are pseudo instruction nodes in order to be

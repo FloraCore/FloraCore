@@ -1,21 +1,28 @@
 package team.floracore.common.locale.translation;
 
-import com.google.gson.*;
-import okhttp3.*;
-import org.checkerframework.checker.nullness.qual.*;
-import team.floracore.common.config.*;
-import team.floracore.common.http.*;
-import team.floracore.common.locale.message.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.util.gson.*;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import team.floracore.common.config.ConfigKeys;
+import team.floracore.common.http.AbstractHttpClient;
+import team.floracore.common.http.UnsuccessfulRequestException;
+import team.floracore.common.locale.message.MiscMessage;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.util.gson.GsonProvider;
 
 import java.io.*;
-import java.nio.charset.*;
-import java.nio.file.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.*;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 public class TranslationRepository {
     private static final long MAX_BUNDLE_SIZE = 1048576L; // 1mb

@@ -1,9 +1,11 @@
 package team.floracore.lib.asm.tree.analysis;
 
-import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.tree.*;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
+import team.floracore.lib.asm.tree.AbstractInsnNode;
+import team.floracore.lib.asm.tree.TryCatchBlockNode;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * A semantic bytecode interpreter. More precisely, this interpreter only manages the computation of

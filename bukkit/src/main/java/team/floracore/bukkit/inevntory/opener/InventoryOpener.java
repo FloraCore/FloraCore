@@ -1,10 +1,11 @@
 package team.floracore.bukkit.inevntory.opener;
 
-import org.bukkit.entity.*;
-import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.*;
-import team.floracore.bukkit.inevntory.*;
-import team.floracore.bukkit.inevntory.content.*;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import team.floracore.bukkit.inevntory.ClickableItem;
+import team.floracore.bukkit.inevntory.SmartInventory;
+import team.floracore.bukkit.inevntory.content.InventoryContents;
 
 public interface InventoryOpener {
 

@@ -1,8 +1,9 @@
 package team.floracore.bukkit.util.nothing;
 
-import team.floracore.bukkit.util.*;
-import team.floracore.common.util.nothing.*;
-import team.floracore.common.util.wrapper.*;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.common.util.nothing.NothingLocation;
+import team.floracore.common.util.nothing.NothingPriority;
+import team.floracore.common.util.wrapper.WrappedObject;
 
 import java.lang.annotation.*;
 

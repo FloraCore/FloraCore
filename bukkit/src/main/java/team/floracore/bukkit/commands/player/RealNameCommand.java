@@ -1,15 +1,18 @@
 package team.floracore.bukkit.commands.player;
 
-import cloud.commandframework.annotations.*;
-import org.bukkit.entity.*;
-import org.jetbrains.annotations.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.command.*;
-import team.floracore.bukkit.locale.message.commands.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.command.FloraCoreBukkitCommand;
+import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.storage.misc.floracore.tables.PLAYER;
 
-import java.util.*;
+import java.util.UUID;
 
 /**
  * RealName命令

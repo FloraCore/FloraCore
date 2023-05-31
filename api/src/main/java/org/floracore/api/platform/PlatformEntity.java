@@ -1,9 +1,9 @@
 package org.floracore.api.platform;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.UUID;
 
 /**
  * Represents an entity on the server.

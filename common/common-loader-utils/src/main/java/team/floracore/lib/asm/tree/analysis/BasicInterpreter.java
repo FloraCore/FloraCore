@@ -1,9 +1,12 @@
 package team.floracore.lib.asm.tree.analysis;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ConstantDynamic;
+import team.floracore.lib.asm.Handle;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
 import team.floracore.lib.asm.tree.*;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * An {@link Interpreter} for {@link BasicValue} values.

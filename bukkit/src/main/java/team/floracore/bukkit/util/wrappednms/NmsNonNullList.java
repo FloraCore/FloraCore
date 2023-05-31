@@ -1,14 +1,18 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitMethod;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.AbstractList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NonNullList",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.core.NonNullList", minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.core.NonNullList", minVer = 17)})
 public interface NmsNonNullList extends WrappedBukkitObject, Iterable<WrappedObject> {
     static NmsNonNullList newInstance(List<? extends WrappedObject> list) {
         NmsNonNullList r = newInstance();

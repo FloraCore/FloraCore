@@ -1,13 +1,16 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
-import org.floracore.api.commands.report.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.storage.implementation.*;
-import team.floracore.common.storage.misc.floracore.*;
-import team.floracore.common.util.gson.*;
+import org.floracore.api.commands.report.ReportStatus;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.storage.implementation.StorageImplementation;
+import team.floracore.common.storage.misc.floracore.AbstractFloraCoreTable;
+import team.floracore.common.util.gson.GsonProvider;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
+import java.util.UUID;
 
 public class REPORT extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}report' LIMIT 300";

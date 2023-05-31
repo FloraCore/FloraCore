@@ -1,8 +1,8 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.MethodVisitor;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * A node that represents a local variable instruction. A local variable instruction is an

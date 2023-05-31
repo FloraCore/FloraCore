@@ -1,6 +1,8 @@
 package team.floracore.lib.asm;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * A parser to make a {@link ClassVisitor} visit a ClassFile structure, as defined in the Java

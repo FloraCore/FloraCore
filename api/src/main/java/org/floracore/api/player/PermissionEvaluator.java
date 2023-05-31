@@ -1,13 +1,12 @@
 package org.floracore.api.player;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * {@code PermissionEvaluator} 接口代表一个权限评估器，用于对给定的 UUID 和权限字符串进行权限评估。
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/30 21:27
  */
 public interface PermissionEvaluator {
     /**

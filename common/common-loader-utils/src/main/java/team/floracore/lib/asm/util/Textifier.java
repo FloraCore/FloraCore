@@ -1,9 +1,10 @@
 package team.floracore.lib.asm.util;
 
 import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.signature.*;
+import team.floracore.lib.asm.signature.SignatureReader;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**

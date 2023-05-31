@@ -1,9 +1,13 @@
 package team.floracore.lib.asm.tree.analysis;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
 import team.floracore.lib.asm.tree.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A semantic bytecode analyzer. <i>This class does not fully check that JSR and RET instructions

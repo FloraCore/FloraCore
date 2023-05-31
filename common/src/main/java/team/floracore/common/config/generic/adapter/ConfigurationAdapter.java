@@ -1,8 +1,9 @@
 package team.floracore.common.config.generic.adapter;
 
-import team.floracore.common.plugin.*;
+import team.floracore.common.plugin.FloraCorePlugin;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 
 public interface ConfigurationAdapter {
 

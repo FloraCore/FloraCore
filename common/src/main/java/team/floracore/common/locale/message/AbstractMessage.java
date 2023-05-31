@@ -1,14 +1,17 @@
 package team.floracore.common.locale.message;
 
-import net.kyori.adventure.text.*;
-import net.kyori.adventure.text.serializer.legacy.*;
-import team.floracore.common.sender.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ComponentLike;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import team.floracore.common.sender.Sender;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
-import static net.kyori.adventure.text.format.TextDecoration.*;
+import static net.kyori.adventure.text.format.TextDecoration.BOLD;
 
 public abstract interface AbstractMessage {
     TextComponent OPEN_BRACKET = Component.text('(');

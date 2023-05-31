@@ -1,9 +1,10 @@
 package team.floracore.common.plugin.classpath;
 
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 
-import java.lang.reflect.*;
-import java.net.*;
+import java.lang.reflect.Method;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 /**
  * Provides access to {@link java.net.URLClassLoader}#addURL.

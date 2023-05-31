@@ -1,17 +1,19 @@
 package team.floracore.bukkit.scoreboard.core;
 
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.plugin.*;
-import org.jetbrains.annotations.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * 计分板
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/29 19:37
  */
 
 public abstract class Board implements Iterable<Player> {

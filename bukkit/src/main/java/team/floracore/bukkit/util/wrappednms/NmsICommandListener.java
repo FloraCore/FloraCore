@@ -1,17 +1,23 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import org.bukkit.command.*;
-import org.bukkit.entity.*;
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrappedobc.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import org.bukkit.command.BlockCommandSender;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.entity.Entity;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrappedobc.ObcBlockCommandSender;
+import team.floracore.bukkit.util.wrappedobc.ObcEntity;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitMethod;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.util.*;
+import java.util.UUID;
 
 @WrappedBukkitClass({@VersionName(value = "nms.ICommandListener",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.commands.ICommandListener",
-                                                             minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.commands.ICommandListener",
+        minVer = 17)})
 public interface NmsICommandListener extends WrappedBukkitObject {
     static NmsICommandListener fromBukkit(CommandSender sender) {
         if (sender instanceof BlockCommandSender) {
@@ -41,8 +47,8 @@ public interface NmsICommandListener extends WrappedBukkitObject {
     void sendMessageV_16(NmsIChatBaseComponent msg);
 
     @WrappedBukkitMethod({@VersionName(minVer = 16, maxVer = 19, value = "sendMessage"), @VersionName(value = "a",
-                                                                                                      minVer = 18,
-                                                                                                      maxVer = 19)})
+            minVer = 18,
+            maxVer = 19)})
     void sendMessageV16_19(NmsIChatBaseComponent msg, UUID sender);
 
     @WrappedBukkitMethod(@VersionName(value = "a", minVer = 19))

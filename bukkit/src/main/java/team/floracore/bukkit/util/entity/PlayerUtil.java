@@ -1,7 +1,8 @@
 package team.floracore.bukkit.util.entity;
 
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
 
 public class PlayerUtil {
     public static ItemStack getEquipment(HumanEntity player, EquipmentSlot slot) {

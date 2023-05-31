@@ -1,12 +1,20 @@
 package team.floracore.lib.asm.util;
 
 import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.tree.*;
+import team.floracore.lib.asm.tree.ClassNode;
+import team.floracore.lib.asm.tree.MethodNode;
+import team.floracore.lib.asm.tree.TryCatchBlockNode;
 import team.floracore.lib.asm.tree.analysis.Frame;
 import team.floracore.lib.asm.tree.analysis.*;
 
-import java.io.*;
-import java.util.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A {@link ClassVisitor} that checks that its methods are properly used. More precisely this class

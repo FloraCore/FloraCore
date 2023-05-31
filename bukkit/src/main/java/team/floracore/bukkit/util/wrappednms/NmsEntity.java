@@ -1,12 +1,14 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import org.bukkit.entity.*;
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import org.bukkit.entity.Entity;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitConstructor;
+import team.floracore.common.util.wrapper.WrappedMethod;
+import team.floracore.common.util.wrapper.WrappedObject;
 
 @WrappedBukkitClass({@VersionName(value = "nms.Entity",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.world.entity.Entity", minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.world.entity.Entity", minVer = 17)})
 public interface NmsEntity extends NmsICommandListener {
     static NmsEntity newInstanceV13(NmsEntityTypes type, NmsWorld world) {
         return WrappedObject.wrap(NmsEntity.class, null).staticNewInstanceV13(type, world);

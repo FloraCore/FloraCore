@@ -1,10 +1,13 @@
 package team.floracore.bukkit.util.event;
 
-import org.bukkit.event.*;
-import team.floracore.bukkit.util.module.*;
-import team.floracore.common.util.*;
+import org.bukkit.event.Cancellable;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import team.floracore.bukkit.util.module.IModule;
+import team.floracore.common.util.TypeUtil;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @see IModule

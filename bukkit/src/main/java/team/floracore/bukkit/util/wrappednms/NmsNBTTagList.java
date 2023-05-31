@@ -1,14 +1,21 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import com.google.gson.*;
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import com.google.gson.JsonArray;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitFieldAccessor;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitMethod;
+import team.floracore.common.util.wrapper.WrappedConstructor;
+import team.floracore.common.util.wrapper.WrappedMethod;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.Collection;
+import java.util.List;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagList",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagList", minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagList", minVer = 17)})
 public interface NmsNBTTagList extends NmsNBTTag {
     static <T extends NmsNBTBase> NmsNBTTagList newInstance(List<T> l) {
         NmsNBTTagList r = newInstance();
@@ -117,8 +124,8 @@ public interface NmsNBTTagList extends NmsNBTTag {
     }
 
     @WrappedBukkitMethod({@VersionName(minVer = 8, maxVer = 12, value = "g"), @VersionName(minVer = 12,
-                                                                                           maxVer = 13,
-                                                                                           value = "i"), @VersionName(
+            maxVer = 13,
+            value = "i"), @VersionName(
             value = "get",
             minVer = 13,
             maxVer = 18), @VersionName(minVer = 18, value = "k")})
@@ -133,8 +140,8 @@ public interface NmsNBTTagList extends NmsNBTTag {
     }
 
     @WrappedBukkitMethod({@VersionName(minVer = 8, value = "a"), @VersionName(minVer = 12,
-                                                                              value = "remove"), @VersionName(minVer = 18,
-                                                                                                              value = "c")})
+            value = "remove"), @VersionName(minVer = 18,
+            value = "c")})
     NmsNBTBase remove(int index);
 
     default boolean remove(NmsNBTBase nbt) {

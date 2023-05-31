@@ -1,6 +1,6 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.MethodVisitor;
 
 /**
  * A node that represents a local variable declaration.

@@ -1,10 +1,10 @@
 package team.floracore.common.locale.data;
 
-import team.floracore.common.plugin.*;
-import team.floracore.common.util.*;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.util.MoreFiles;
 
-import java.io.*;
-import java.nio.file.*;
+import java.io.IOException;
+import java.nio.file.Path;
 
 public class DataManager {
     private final FloraCorePlugin plugin;

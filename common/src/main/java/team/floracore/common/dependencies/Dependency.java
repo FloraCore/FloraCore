@@ -1,10 +1,15 @@
 package team.floracore.common.dependencies;
 
-import com.google.common.collect.*;
-import team.floracore.common.dependencies.relocation.*;
+import com.google.common.collect.ImmutableList;
+import team.floracore.common.dependencies.relocation.Relocation;
+import team.floracore.common.dependencies.relocation.RelocationHelper;
 
-import java.security.*;
-import java.util.*;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
+import java.util.Base64;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * The dependencies used by FloraCore.

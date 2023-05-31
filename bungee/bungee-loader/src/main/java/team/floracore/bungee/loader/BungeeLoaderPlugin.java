@@ -1,7 +1,8 @@
 package team.floracore.bungee.loader;
 
-import net.md_5.bungee.api.plugin.*;
-import team.floracore.common.loader.*;
+import net.md_5.bungee.api.plugin.Plugin;
+import team.floracore.common.loader.JarInJarClassLoader;
+import team.floracore.common.loader.LoaderBootstrap;
 
 public class BungeeLoaderPlugin extends Plugin {
     private static final String JAR_NAME = "floracore-bungee.jarinjar";

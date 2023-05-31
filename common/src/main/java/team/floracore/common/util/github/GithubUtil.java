@@ -1,11 +1,13 @@
 package team.floracore.common.util.github;
 
-import com.google.gson.*;
-import team.floracore.common.util.gson.*;
+import com.google.gson.JsonObject;
+import team.floracore.common.util.gson.GsonProvider;
 
-import javax.net.ssl.*;
-import java.io.*;
-import java.net.*;
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
 
 public class GithubUtil {
     private static final String GITHUB_API_BASE_URL = "https://api.github.com/repos/FloraCore/FloraCore";

@@ -1,15 +1,16 @@
 package team.floracore.bungee.command;
 
-import cloud.commandframework.annotations.suggestions.*;
-import cloud.commandframework.context.*;
-import net.md_5.bungee.api.*;
-import net.md_5.bungee.api.connection.*;
-import org.jetbrains.annotations.*;
-import team.floracore.bungee.*;
-import team.floracore.common.command.*;
+import cloud.commandframework.annotations.suggestions.Suggestions;
+import cloud.commandframework.context.CommandContext;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.bungee.FCBungeePlugin;
+import team.floracore.common.command.AbstractFloraCoreCommand;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class FloraCoreBungeeCommand extends AbstractFloraCoreCommand {
     private final FCBungeePlugin plugin;

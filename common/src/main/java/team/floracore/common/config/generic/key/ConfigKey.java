@@ -1,6 +1,6 @@
 package team.floracore.common.config.generic.key;
 
-import team.floracore.common.config.generic.adapter.*;
+import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
 
 /**
  * Represents a key in the configuration.

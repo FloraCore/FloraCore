@@ -1,7 +1,9 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrapper.*;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitFieldAccessor;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 
 @WrappedBukkitClass(@VersionName(maxVer = 17, value = "nms.PacketPlayOutPlayerInfo$EnumPlayerInfoAction"))
 public interface NmsEnumPlayerInfoAction extends WrappedBukkitObject {

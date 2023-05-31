@@ -1,12 +1,13 @@
 package team.floracore.bukkit.inevntory.opener;
 
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.*;
-import team.floracore.bukkit.inevntory.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import team.floracore.bukkit.inevntory.InventoryManager;
+import team.floracore.bukkit.inevntory.SmartInventory;
 
-import static com.google.common.base.Strings.*;
+import static com.google.common.base.Strings.lenientFormat;
 
 public class ChestInventoryOpener implements InventoryOpener {
     public static void checkArgument(boolean b, String errorMessageTemplate, int p1) {

@@ -21,9 +21,10 @@
  */
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Attribute;
+import team.floracore.lib.asm.Label;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * An {@link Attribute} that can generate the ASM code to create an equivalent

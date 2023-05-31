@@ -1,13 +1,15 @@
 package team.floracore.common.storage.implementation.sql.connection.file;
 
-import team.floracore.common.dependencies.*;
-import team.floracore.common.plugin.*;
+import team.floracore.common.dependencies.Dependency;
+import team.floracore.common.plugin.FloraCorePlugin;
 
-import java.lang.reflect.*;
-import java.nio.file.*;
-import java.sql.*;
-import java.util.*;
-import java.util.function.*;
+import java.lang.reflect.Constructor;
+import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.EnumSet;
+import java.util.Properties;
+import java.util.function.Function;
 
 public class SqliteConnectionFactory extends FlatfileConnectionFactory {
     private Constructor<?> connectionConstructor;

@@ -1,6 +1,6 @@
 package team.floracore.lib.asm.tree.analysis;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Type;
 
 /**
  * A {@link Value} that is represented with its type in a seven types type system. This type system

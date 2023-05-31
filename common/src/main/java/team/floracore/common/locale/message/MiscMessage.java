@@ -1,12 +1,14 @@
 package team.floracore.common.locale.message;
 
-import net.kyori.adventure.text.*;
-import team.floracore.common.plugin.bootstrap.*;
-import team.floracore.common.util.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import team.floracore.common.plugin.bootstrap.FloraCoreBootstrap;
+import team.floracore.common.util.DescParseTickFormat;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
-import static net.kyori.adventure.text.format.TextDecoration.*;
+import static net.kyori.adventure.text.format.TextDecoration.BOLD;
+import static net.kyori.adventure.text.format.TextDecoration.STRIKETHROUGH;
 
 public interface MiscMessage extends AbstractMessage {
     Component PREFIX_BROADCAST = text()

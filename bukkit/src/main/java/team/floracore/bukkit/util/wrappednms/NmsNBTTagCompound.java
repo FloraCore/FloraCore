@@ -1,15 +1,22 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import com.google.gson.*;
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import com.google.gson.JsonObject;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitFieldAccessor;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitMethod;
+import team.floracore.common.util.wrapper.WrappedConstructor;
+import team.floracore.common.util.wrapper.WrappedMethod;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.io.*;
-import java.util.*;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.util.List;
+import java.util.Map;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagCompound",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagCompound", minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagCompound", minVer = 17)})
 public interface NmsNBTTagCompound extends NmsNBTTag {
     static NmsNBTTagCompound newInstance(String json) {
         return NmsMojangsonParser.parse(json);
@@ -41,7 +48,7 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
     NmsNBTTagCompound staticNewInstance();
 
     @WrappedBukkitFieldAccessor({@VersionName(minVer = 15, maxVer = 16, value = "a"), @VersionName(minVer = 16,
-                                                                                                   value = "b")})
+            value = "b")})
     NmsNBTTagTypeV15 staticGetTypeV15();
 
     default NmsNBTTagCompound set(String key, String value) {

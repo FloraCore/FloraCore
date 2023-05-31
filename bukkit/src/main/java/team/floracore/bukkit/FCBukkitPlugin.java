@@ -1,32 +1,37 @@
 package team.floracore.bukkit;
 
-import com.google.gson.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.plugin.java.*;
-import org.floracore.api.server.*;
-import team.floracore.bukkit.command.*;
-import team.floracore.bukkit.config.*;
-import team.floracore.bukkit.inevntory.*;
-import team.floracore.bukkit.listener.*;
-import team.floracore.bukkit.locale.chat.*;
-import team.floracore.bukkit.messaging.*;
-import team.floracore.bukkit.scoreboard.*;
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.module.*;
-import team.floracore.bukkit.util.nothing.*;
-import team.floracore.common.config.*;
-import team.floracore.common.config.generic.*;
-import team.floracore.common.config.generic.adapter.*;
-import team.floracore.common.dependencies.*;
-import team.floracore.common.messaging.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
+import com.google.gson.JsonElement;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
+import org.floracore.api.server.ServerType;
+import team.floracore.bukkit.command.CommandManager;
+import team.floracore.bukkit.config.BoardsConfiguration;
+import team.floracore.bukkit.inevntory.InventoryManager;
+import team.floracore.bukkit.listener.ListenerManager;
+import team.floracore.bukkit.locale.chat.ChatManager;
+import team.floracore.bukkit.messaging.BukkitMessagingFactory;
+import team.floracore.bukkit.scoreboard.ScoreBoardManager;
+import team.floracore.bukkit.util.BungeeUtil;
+import team.floracore.bukkit.util.ListenerRegistrar;
+import team.floracore.bukkit.util.module.IModule;
+import team.floracore.bukkit.util.module.RegistrarRegistrar;
+import team.floracore.bukkit.util.nothing.NothingRegistrar;
+import team.floracore.common.config.ConfigKeys;
+import team.floracore.common.config.generic.KeyedConfiguration;
+import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
+import team.floracore.common.dependencies.Dependency;
+import team.floracore.common.messaging.MessagingFactory;
+import team.floracore.common.plugin.AbstractFloraCorePlugin;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.storage.misc.floracore.tables.SERVER;
 
-import java.sql.*;
-import java.util.*;
-import java.util.stream.*;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * FloraCore implementation for the Bukkit API.

@@ -1,10 +1,12 @@
 package team.floracore.bukkit.util;
 
-import org.bukkit.*;
-import org.bukkit.entity.*;
+import org.bukkit.Material;
+import org.bukkit.Statistic;
+import org.bukkit.entity.EntityType;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Field;
+import java.util.EnumSet;
+import java.util.Set;
 
 public final class EnumUtil {
 

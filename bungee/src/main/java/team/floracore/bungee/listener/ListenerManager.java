@@ -1,9 +1,11 @@
 package team.floracore.bungee.listener;
 
-import net.md_5.bungee.api.plugin.*;
-import team.floracore.bungee.*;
-import team.floracore.bungee.listeners.*;
-import team.floracore.common.plugin.*;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.plugin.PluginManager;
+import team.floracore.bungee.FCBungeePlugin;
+import team.floracore.bungee.listeners.PlayerListener;
+import team.floracore.common.plugin.FloraCorePlugin;
 
 public class ListenerManager {
     private final FCBungeePlugin plugin;

@@ -1,11 +1,17 @@
 package team.floracore.bungee;
 
-import net.md_5.bungee.config.*;
-import team.floracore.common.config.generic.adapter.*;
-import team.floracore.common.plugin.*;
+import net.md_5.bungee.config.Configuration;
+import net.md_5.bungee.config.ConfigurationProvider;
+import net.md_5.bungee.config.YamlConfiguration;
+import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
+import team.floracore.common.plugin.FloraCorePlugin;
 
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class BungeeConfigAdapter implements ConfigurationAdapter {
     private final FloraCorePlugin plugin;

@@ -1,6 +1,9 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.AnnotationVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.RecordComponentVisitor;
+import team.floracore.lib.asm.TypePath;
 
 /**
  * A {@link RecordComponentVisitor} that remaps types with a {@link Remapper}.

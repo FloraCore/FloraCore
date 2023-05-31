@@ -1,9 +1,9 @@
 package org.floracore.api.bukkit.messenger.message.type;
 
-import org.floracore.api.messenger.message.*;
-import org.jetbrains.annotations.*;
+import org.floracore.api.messenger.message.Message;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.UUID;
 
 /**
  * 跨服传送消息

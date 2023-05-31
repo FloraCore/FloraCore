@@ -1,6 +1,6 @@
 package team.floracore.lib.asm.tree.analysis;
 
-import team.floracore.lib.asm.tree.*;
+import team.floracore.lib.asm.tree.AbstractInsnNode;
 
 /**
  * An exception thrown if a problem occurs during the analysis of a method.

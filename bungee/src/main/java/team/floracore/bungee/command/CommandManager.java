@@ -1,22 +1,26 @@
 package team.floracore.bungee.command;
 
-import cloud.commandframework.*;
-import cloud.commandframework.annotations.*;
-import cloud.commandframework.arguments.parser.*;
-import cloud.commandframework.bungee.*;
-import cloud.commandframework.exceptions.*;
-import cloud.commandframework.execution.*;
-import cloud.commandframework.meta.*;
-import net.md_5.bungee.api.*;
-import team.floracore.bungee.*;
-import team.floracore.bungee.commands.misc.*;
+import cloud.commandframework.CommandTree;
+import cloud.commandframework.annotations.AnnotationParser;
+import cloud.commandframework.arguments.parser.ParserParameters;
+import cloud.commandframework.arguments.parser.StandardParameters;
+import cloud.commandframework.bungee.BungeeCommandManager;
+import cloud.commandframework.exceptions.InvalidCommandSenderException;
+import cloud.commandframework.exceptions.InvalidSyntaxException;
+import cloud.commandframework.exceptions.NoPermissionException;
+import cloud.commandframework.execution.CommandExecutionCoordinator;
+import cloud.commandframework.execution.FilteringCommandSuggestionProcessor;
+import cloud.commandframework.meta.CommandMeta;
+import net.md_5.bungee.api.CommandSender;
+import team.floracore.bungee.FCBungeePlugin;
+import team.floracore.bungee.commands.misc.FloraCoreCommand;
 import team.floracore.bungee.commands.socialsystems.*;
-import team.floracore.bungee.commands.test.*;
-import team.floracore.common.locale.message.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
+import team.floracore.bungee.commands.test.TestCommand;
+import team.floracore.common.locale.message.MiscMessage;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
 
-import java.util.function.*;
+import java.util.function.Function;
 
 /**
  * 命令管理器。

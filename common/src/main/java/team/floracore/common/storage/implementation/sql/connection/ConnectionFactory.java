@@ -1,9 +1,10 @@
 package team.floracore.common.storage.implementation.sql.connection;
 
-import team.floracore.common.plugin.*;
+import team.floracore.common.plugin.FloraCorePlugin;
 
-import java.sql.*;
-import java.util.function.*;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.function.Function;
 
 public interface ConnectionFactory {
 

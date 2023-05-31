@@ -1,8 +1,11 @@
 package team.floracore.common.util;
 
-import java.math.*;
-import java.text.*;
-import java.util.*;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public final class NumberUtil {
     private static final DecimalFormat twoDPlaces = new DecimalFormat("#,###.##");

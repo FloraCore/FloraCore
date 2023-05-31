@@ -1,6 +1,6 @@
 package team.floracore.common.util.wrapper;
 
-import team.floracore.common.util.*;
+import team.floracore.common.util.Ref;
 
 public class WrappedRef<T extends WrappedObject> extends Ref<T> {
     public volatile Class<T> wrapper;

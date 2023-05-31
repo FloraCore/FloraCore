@@ -1,8 +1,8 @@
 package team.floracore.bukkit.util.event;
 
-import team.floracore.common.util.*;
+import team.floracore.common.util.TypeUtil;
 
-import java.util.*;
+import java.util.List;
 
 public interface IFutureEvent {
     default void doAfter(TypeUtil.Runnable task) {

@@ -1,16 +1,19 @@
 package team.floracore.common.util.nothing;
 
-import com.google.common.collect.*;
+import com.google.common.collect.Lists;
 import team.floracore.common.util.*;
-import team.floracore.common.util.wrapper.*;
-import team.floracore.lib.asm.*;
+import team.floracore.common.util.wrapper.WrappedObject;
+import team.floracore.lib.asm.Label;
+import team.floracore.lib.asm.Opcodes;
 import team.floracore.lib.asm.tree.*;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.Optional;
 import java.util.*;
-import java.util.function.*;
+import java.util.function.BiFunction;
+import java.util.function.Function;
 
 /**
  * A temp storage while NothingClass is updated

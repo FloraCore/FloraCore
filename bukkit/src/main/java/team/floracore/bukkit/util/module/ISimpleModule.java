@@ -1,8 +1,10 @@
 package team.floracore.bukkit.util.module;
 
-import org.bukkit.plugin.*;
+import org.bukkit.plugin.Plugin;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public interface ISimpleModule extends IModule {
     @Override

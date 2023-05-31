@@ -1,11 +1,11 @@
 package team.floracore.common.util;
 
-import com.google.common.collect.*;
-import io.github.karlatemp.unsafeaccessor.*;
+import com.google.common.collect.Lists;
+import io.github.karlatemp.unsafeaccessor.Root;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Field;
 import java.util.*;
-import java.util.stream.*;
+import java.util.stream.Collectors;
 
 public final class ListUtil {
     public static Field unmodifiableCollectionC;

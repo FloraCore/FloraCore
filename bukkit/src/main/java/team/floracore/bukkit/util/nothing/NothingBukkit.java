@@ -1,12 +1,12 @@
 package team.floracore.bukkit.util.nothing;
 
-import com.google.common.collect.*;
-import team.floracore.bukkit.util.wrapper.*;
+import com.google.common.collect.Lists;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
 import team.floracore.common.util.nothing.*;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.List;
 
 public interface NothingBukkit extends Nothing {
     @Override

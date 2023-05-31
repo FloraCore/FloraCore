@@ -1,9 +1,10 @@
 package team.floracore.common.messaging.message;
 
-import org.floracore.api.messenger.message.*;
-import org.jetbrains.annotations.*;
+import org.floracore.api.messenger.message.Message;
+import org.floracore.api.messenger.message.OutgoingMessage;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.UUID;
 
 public abstract class AbstractMessage implements Message, OutgoingMessage {
     private final UUID id;

@@ -1,9 +1,10 @@
 package org.floracore.api.bungee.messenger.message.type;
 
-import org.floracore.api.messenger.message.*;
-import org.jetbrains.annotations.*;
+import org.floracore.api.messenger.message.Message;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * 通知消息

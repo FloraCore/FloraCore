@@ -1,7 +1,7 @@
 package org.floracore.api.player.rank;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 该接口定义了设置和重置指定玩家Rank的方法。
@@ -10,7 +10,6 @@ import java.util.concurrent.*;
  * <p>通过传递玩家的UUID和要设置的等级，可以将指定等级应用于指定玩家。同样，也可以重置指定玩家的Rank。
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/30 21:47
  */
 public interface RankConsumer {
     /**

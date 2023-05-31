@@ -1,6 +1,7 @@
 package team.floracore.common.plugin.logging;
 
-import java.util.logging.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class JavaPluginLogger implements PluginLogger {
     private final Logger logger;

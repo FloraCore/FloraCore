@@ -1,9 +1,13 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.tree.*;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
+import team.floracore.lib.asm.tree.MethodNode;
+import team.floracore.lib.asm.tree.TryCatchBlockNode;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * A {@link MethodVisitor} adapter to sort the exception handlers. The handlers are sorted in a

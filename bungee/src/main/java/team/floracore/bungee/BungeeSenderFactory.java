@@ -1,13 +1,14 @@
 package team.floracore.bungee;
 
-import net.kyori.adventure.platform.bungeecord.*;
-import net.kyori.adventure.text.*;
-import net.md_5.bungee.api.*;
-import net.md_5.bungee.api.connection.*;
-import team.floracore.common.locale.translation.*;
-import team.floracore.common.sender.*;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
+import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import team.floracore.common.locale.translation.TranslationManager;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.sender.SenderFactory;
 
-import java.util.*;
+import java.util.UUID;
 
 public class BungeeSenderFactory extends SenderFactory<FCBungeePlugin, CommandSender> {
     private final BungeeAudiences audiences;

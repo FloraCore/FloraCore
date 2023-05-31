@@ -2,8 +2,9 @@ package team.floracore.bukkit.util.wrapper;
 
 import team.floracore.common.util.wrapper.*;
 
-import java.lang.annotation.*;
-import java.lang.reflect.*;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Member;
+import java.lang.reflect.Method;
 
 @WrappedClass("java.lang.Object")
 public interface WrappedBukkitObject extends WrappedObject {

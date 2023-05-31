@@ -1,8 +1,9 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Type;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A named method descriptor.

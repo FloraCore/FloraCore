@@ -1,16 +1,21 @@
 package team.floracore.common.messaging;
 
-import org.floracore.api.messenger.*;
-import org.jetbrains.annotations.*;
-import team.floracore.common.config.*;
-import team.floracore.common.messaging.redis.*;
-import team.floracore.common.messaging.sql.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.storage.implementation.*;
-import team.floracore.common.storage.implementation.sql.*;
-import team.floracore.common.storage.implementation.sql.connection.hikari.*;
+import org.floracore.api.messenger.IncomingMessageConsumer;
+import org.floracore.api.messenger.Messenger;
+import org.floracore.api.messenger.MessengerProvider;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.common.config.ConfigKeys;
+import team.floracore.common.config.FloraCoreConfiguration;
+import team.floracore.common.messaging.redis.RedisMessenger;
+import team.floracore.common.messaging.sql.SqlMessenger;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.storage.implementation.StorageImplementation;
+import team.floracore.common.storage.implementation.sql.SqlStorage;
+import team.floracore.common.storage.implementation.sql.connection.hikari.MariaDbConnectionFactory;
+import team.floracore.common.storage.implementation.sql.connection.hikari.MySqlConnectionFactory;
+import team.floracore.common.storage.implementation.sql.connection.hikari.PostgreConnectionFactory;
 
-import java.util.*;
+import java.util.Locale;
 
 public class MessagingFactory<P extends FloraCorePlugin> {
     private final P plugin;

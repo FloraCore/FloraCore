@@ -1,8 +1,8 @@
 package team.floracore.common.util;
 
-import org.jetbrains.annotations.*;
-import team.floracore.common.locale.message.*;
-import team.floracore.common.sender.*;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.common.locale.message.MiscMessage;
+import team.floracore.common.sender.Sender;
 
 public final class SenderUtil {
     /**

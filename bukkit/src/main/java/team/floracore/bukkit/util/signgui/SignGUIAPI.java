@@ -1,21 +1,31 @@
 package team.floracore.bukkit.util.signgui;
 
-import com.comphenix.protocol.*;
-import com.comphenix.protocol.events.*;
-import com.comphenix.protocol.wrappers.*;
-import org.bukkit.*;
-import org.bukkit.block.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.bukkit.event.player.*;
-import org.bukkit.plugin.*;
-import team.floracore.bukkit.util.wrappednms.*;
-import team.floracore.bukkit.util.wrappedobc.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import com.comphenix.protocol.PacketType;
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
+import com.comphenix.protocol.events.PacketAdapter;
+import com.comphenix.protocol.events.PacketContainer;
+import com.comphenix.protocol.events.PacketEvent;
+import com.comphenix.protocol.wrappers.BlockPosition;
+import com.comphenix.protocol.wrappers.WrappedChatComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.plugin.Plugin;
+import team.floracore.bukkit.util.wrappednms.NmsTileEntitySign;
+import team.floracore.bukkit.util.wrappedobc.ObcSign;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public final class SignGUIAPI {
     private final SignCompleteHandler action;

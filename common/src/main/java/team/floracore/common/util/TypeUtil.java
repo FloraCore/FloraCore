@@ -1,13 +1,13 @@
 package team.floracore.common.util;
 
-import org.apache.logging.log4j.util.*;
-import team.floracore.common.util.wrapper.*;
+import org.apache.logging.log4j.util.TriConsumer;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.nio.charset.*;
-import java.util.*;
-import java.util.function.*;
+import java.io.Serializable;
+import java.lang.reflect.Array;
+import java.nio.charset.StandardCharsets;
+import java.util.Objects;
+import java.util.function.BiFunction;
 
 public final class TypeUtil {
     public @Deprecated TypeUtil() {

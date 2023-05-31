@@ -1,8 +1,9 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Type;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
 
 /**
  * A {@link Remapper} using a {@link Map} to define its mapping.

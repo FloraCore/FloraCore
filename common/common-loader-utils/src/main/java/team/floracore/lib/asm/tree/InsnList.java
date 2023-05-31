@@ -1,8 +1,9 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.MethodVisitor;
 
-import java.util.*;
+import java.util.ListIterator;
+import java.util.NoSuchElementException;
 
 /**
  * A doubly linked list of {@link AbstractInsnNode} objects. <i>This implementation is not thread

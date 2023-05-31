@@ -1,8 +1,8 @@
 package team.floracore.bukkit.util.signgui;
 
-import org.bukkit.entity.*;
+import org.bukkit.entity.Player;
 
-import java.util.*;
+import java.util.List;
 
 public final class SignCompletedEvent {
     private final Player player;

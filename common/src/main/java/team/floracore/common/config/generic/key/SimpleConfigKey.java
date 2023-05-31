@@ -1,8 +1,8 @@
 package team.floracore.common.config.generic.key;
 
-import team.floracore.common.config.generic.adapter.*;
+import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
 
-import java.util.function.*;
+import java.util.function.Function;
 
 /**
  * Basic {@link ConfigKey} implementation.

@@ -27,7 +27,8 @@
 // THE POSSIBILITY OF SUCH DAMAGE.
 package team.floracore.lib.asm.signature;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
 
 /**
  * A visitor to visit a generic signature. The methods of this interface must be called in one of

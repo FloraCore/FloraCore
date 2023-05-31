@@ -1,9 +1,9 @@
 package org.floracore.api.player;
 
-import org.floracore.api.player.rank.*;
+import org.floracore.api.player.rank.RankConsumer;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * 玩家API。

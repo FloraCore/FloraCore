@@ -1,21 +1,24 @@
 package team.floracore.bungee;
 
-import net.md_5.bungee.api.*;
-import net.md_5.bungee.api.plugin.*;
-import org.checkerframework.checker.nullness.qual.*;
-import org.floracore.api.platform.*;
-import team.floracore.common.loader.*;
-import team.floracore.common.plugin.bootstrap.*;
-import team.floracore.common.plugin.classpath.*;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.plugin.PluginDescription;
+import org.checkerframework.checker.nullness.qual.Nullable;
+import org.floracore.api.platform.Platform;
+import team.floracore.common.loader.LoaderBootstrap;
+import team.floracore.common.plugin.bootstrap.BootstrappedWithLoader;
+import team.floracore.common.plugin.bootstrap.FloraCoreBootstrap;
+import team.floracore.common.plugin.classpath.ClassPathAppender;
+import team.floracore.common.plugin.classpath.JarInJarClassPathAppender;
+import team.floracore.common.plugin.logging.JavaPluginLogger;
 import team.floracore.common.plugin.logging.PluginLogger;
-import team.floracore.common.plugin.logging.*;
 
-import java.lang.reflect.*;
-import java.nio.file.*;
-import java.time.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.logging.*;
+import java.lang.reflect.Field;
+import java.nio.file.Path;
+import java.time.Instant;
+import java.util.UUID;
+import java.util.concurrent.CountDownLatch;
+import java.util.logging.Logger;
 
 /**
  * Bootstrap plugin for FloraCore running on Bukkit.

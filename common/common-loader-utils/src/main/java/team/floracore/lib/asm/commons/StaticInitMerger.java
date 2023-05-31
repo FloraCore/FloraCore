@@ -1,6 +1,8 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ClassVisitor;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
 
 /**
  * A {@link ClassVisitor} that merges &lt;clinit&gt; methods into a single one. All the existing

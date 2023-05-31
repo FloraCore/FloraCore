@@ -1,8 +1,8 @@
 package team.floracore.bukkit.inevntory.content;
 
-import team.floracore.bukkit.inevntory.*;
+import team.floracore.bukkit.inevntory.ClickableItem;
 
-import java.util.*;
+import java.util.Arrays;
 
 public interface Pagination {
     ClickableItem[] getPageItems();

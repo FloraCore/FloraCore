@@ -1,8 +1,9 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Type;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * A node that represents a type instruction. A type instruction is an instruction which takes an

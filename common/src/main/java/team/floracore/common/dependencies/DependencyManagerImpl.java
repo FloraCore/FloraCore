@@ -1,19 +1,23 @@
 package team.floracore.common.dependencies;
 
-import com.google.common.collect.*;
-import org.checkerframework.checker.nullness.qual.*;
-import team.floracore.common.dependencies.classloader.*;
-import team.floracore.common.dependencies.relocation.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.plugin.classpath.*;
-import team.floracore.common.storage.*;
-import team.floracore.common.util.*;
+import com.google.common.collect.ImmutableSet;
+import org.checkerframework.checker.nullness.qual.MonotonicNonNull;
+import team.floracore.common.dependencies.classloader.IsolatedClassLoader;
+import team.floracore.common.dependencies.relocation.Relocation;
+import team.floracore.common.dependencies.relocation.RelocationHandler;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.plugin.classpath.ClassPathAppender;
+import team.floracore.common.storage.StorageType;
+import team.floracore.common.util.MoreFiles;
 
-import java.io.*;
-import java.net.*;
-import java.nio.file.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.Executor;
 
 /**
  * Loads and manages runtime dependencies for the plugin.

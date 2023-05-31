@@ -2,7 +2,7 @@ package team.floracore.lib.asm.tree;
 
 import team.floracore.lib.asm.*;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * A node that represents an LDC instruction.

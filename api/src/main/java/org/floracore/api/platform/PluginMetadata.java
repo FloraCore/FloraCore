@@ -1,6 +1,6 @@
 package org.floracore.api.platform;
 
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Provides information about the FloraCore plugin.

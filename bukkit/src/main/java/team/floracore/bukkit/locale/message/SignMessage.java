@@ -1,9 +1,9 @@
 package team.floracore.bukkit.locale.message;
 
-import team.floracore.common.locale.message.*;
+import team.floracore.common.locale.message.AbstractMessage;
 
-import static net.kyori.adventure.text.Component.*;
-import static net.kyori.adventure.text.format.NamedTextColor.*;
+import static net.kyori.adventure.text.Component.translatable;
+import static net.kyori.adventure.text.format.NamedTextColor.BLACK;
 
 public interface SignMessage extends AbstractMessage {
     Args0 COMMAND_MISC_NICK_SIGN_LINE_2 = () -> translatable()

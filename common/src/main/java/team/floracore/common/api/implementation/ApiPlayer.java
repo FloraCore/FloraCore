@@ -1,19 +1,24 @@
 package team.floracore.common.api.implementation;
 
-import com.github.benmanes.caffeine.cache.*;
-import net.luckperms.api.*;
-import net.luckperms.api.model.user.*;
-import net.luckperms.api.node.types.*;
-import org.floracore.api.player.*;
-import org.floracore.api.player.rank.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
-import team.floracore.common.util.*;
+import com.github.benmanes.caffeine.cache.Cache;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
+import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.types.PrefixNode;
+import org.floracore.api.player.PermissionEvaluator;
+import org.floracore.api.player.PlayerAPI;
+import org.floracore.api.player.rank.RankConsumer;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.storage.misc.floracore.tables.ONLINE;
+import team.floracore.common.storage.misc.floracore.tables.PLAYER;
+import team.floracore.common.util.CaffeineFactory;
 
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.*;
+import java.util.List;
+import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class ApiPlayer implements PlayerAPI {
     private static final Cache<UUID, PLAYER> playersCache = CaffeineFactory.newBuilder()
@@ -100,7 +105,7 @@ public class ApiPlayer implements PlayerAPI {
         PLAYER player = playerRecordCache.getIfPresent(name);
         if (player == null) {
             player = plugin.getStorage().getImplementation().selectPlayer(name);
-            if (player == null){
+            if (player == null) {
                 return null;
             }
             playerRecordCache.put(name, player);
@@ -130,7 +135,7 @@ public class ApiPlayer implements PlayerAPI {
         PLAYER player = playersCache.getIfPresent(uuid);
         if (player == null) {
             player = plugin.getStorage().getImplementation().selectPlayer(uuid);
-            if (player == null){
+            if (player == null) {
                 return null;
             }
             playersCache.put(uuid, player);

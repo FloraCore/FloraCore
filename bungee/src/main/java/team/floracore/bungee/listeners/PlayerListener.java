@@ -1,15 +1,17 @@
 package team.floracore.bungee.listeners;
 
-import net.md_5.bungee.api.connection.*;
-import net.md_5.bungee.api.event.*;
-import net.md_5.bungee.event.*;
-import team.floracore.bungee.listener.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.storage.implementation.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
+import net.md_5.bungee.api.event.PostLoginEvent;
+import net.md_5.bungee.event.EventHandler;
+import team.floracore.bungee.listener.FloraCoreBungeeListener;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.storage.implementation.StorageImplementation;
+import team.floracore.common.storage.misc.floracore.tables.ONLINE;
+import team.floracore.common.storage.misc.floracore.tables.PLAYER;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.UUID;
 
 public class PlayerListener extends FloraCoreBungeeListener {
     public PlayerListener(FloraCorePlugin plugin) {

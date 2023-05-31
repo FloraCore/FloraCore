@@ -1,8 +1,9 @@
 package team.floracore.bukkit;
 
-import team.floracore.common.plugin.scheduler.*;
+import team.floracore.common.plugin.scheduler.AbstractJavaScheduler;
+import team.floracore.common.plugin.scheduler.SchedulerAdapter;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Executor;
 
 public class BukkitSchedulerAdapter extends AbstractJavaScheduler implements SchedulerAdapter {
     private final Executor sync;

@@ -1,8 +1,10 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * A node that represents a method instruction. A method instruction is an instruction that invokes

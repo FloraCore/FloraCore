@@ -1,6 +1,6 @@
 package team.floracore.common.http;
 
-import okhttp3.*;
+import okhttp3.Response;
 
 public class UnsuccessfulRequestException extends Exception {
 

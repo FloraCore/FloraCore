@@ -1,6 +1,8 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.AnnotationVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
 
 /**
  * An {@link AnnotationVisitor} that checks that its methods are properly used.

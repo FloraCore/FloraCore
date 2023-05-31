@@ -1,11 +1,17 @@
 package team.floracore.common.util;
 
-import com.google.common.collect.*;
-import team.floracore.common.config.generic.key.*;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
+import team.floracore.common.config.generic.key.SimpleConfigKey;
 
-import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.Comparator;
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collector;
 
 /**
  * 不可变的收集器。

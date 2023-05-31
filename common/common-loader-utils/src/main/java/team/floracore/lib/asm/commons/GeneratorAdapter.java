@@ -2,7 +2,9 @@ package team.floracore.lib.asm.commons;
 
 import team.floracore.lib.asm.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * A {@link MethodVisitor} with convenient methods to generate code. For example, using this

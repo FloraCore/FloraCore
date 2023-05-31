@@ -1,10 +1,10 @@
 package team.floracore.common.plugin.classpath;
 
-import team.floracore.common.loader.*;
+import team.floracore.common.loader.JarInJarClassLoader;
 
-import java.io.*;
-import java.net.*;
-import java.nio.file.*;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.nio.file.Path;
 
 public class JarInJarClassPathAppender implements ClassPathAppender {
     private final JarInJarClassLoader classLoader;

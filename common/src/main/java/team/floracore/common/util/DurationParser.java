@@ -1,12 +1,13 @@
 package team.floracore.common.util;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableMap;
 
-import java.time.*;
-import java.time.temporal.*;
-import java.util.*;
-import java.util.regex.*;
-import java.util.stream.*;
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 /**
  * Parses durations from a string format

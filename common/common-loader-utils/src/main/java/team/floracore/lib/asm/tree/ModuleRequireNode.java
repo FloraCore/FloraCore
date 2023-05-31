@@ -1,6 +1,6 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ModuleVisitor;
 
 /**
  * A node that represents a required module with its name and access of a module descriptor.

@@ -1,20 +1,32 @@
 package team.floracore.common.extension;
 
-import com.google.gson.*;
-import org.floracore.api.extension.*;
-import org.jetbrains.annotations.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.plugin.classpath.*;
-import team.floracore.common.util.*;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import org.floracore.api.extension.Extension;
+import org.floracore.api.extension.ExtensionManager;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.plugin.classpath.URLClassLoaderAccess;
+import team.floracore.common.util.MoreFiles;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.net.*;
-import java.nio.charset.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.jar.*;
-import java.util.stream.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SimpleExtensionManager implements ExtensionManager, AutoCloseable {
     private final FloraCorePlugin plugin;

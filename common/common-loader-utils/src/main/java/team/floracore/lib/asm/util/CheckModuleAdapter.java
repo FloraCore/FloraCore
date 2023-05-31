@@ -1,8 +1,10 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ClassVisitor;
+import team.floracore.lib.asm.ModuleVisitor;
+import team.floracore.lib.asm.Opcodes;
 
-import java.util.*;
+import java.util.HashSet;
 
 /**
  * A {@link ModuleVisitor} that checks that its methods are properly used.

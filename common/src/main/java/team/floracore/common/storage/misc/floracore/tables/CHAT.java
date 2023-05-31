@@ -1,12 +1,14 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
-import org.floracore.api.data.chat.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.storage.implementation.*;
-import team.floracore.common.storage.misc.floracore.*;
+import org.floracore.api.data.chat.ChatType;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.storage.implementation.StorageImplementation;
+import team.floracore.common.storage.misc.floracore.AbstractFloraCoreTable;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.UUID;
 
 public class CHAT extends AbstractFloraCoreTable {
     private static final String INSERT = "INSERT INTO '{prefix}chat' (type, parameters, uuid, message, time) VALUES(?, ?, ?, ?, ?)";

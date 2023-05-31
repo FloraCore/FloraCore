@@ -1,9 +1,9 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.signature.*;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.signature.SignatureVisitor;
 
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * A {@link SignatureVisitor} that remaps types with a {@link Remapper}.

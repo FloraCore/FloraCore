@@ -1,8 +1,9 @@
 package org.floracore.api.messenger;
 
-import org.floracore.api.messenger.message.*;
-import org.jetbrains.annotations.ApiStatus.*;
-import org.jetbrains.annotations.*;
+import org.floracore.api.messenger.message.Message;
+import org.floracore.api.messenger.message.OutgoingMessage;
+import org.jetbrains.annotations.ApiStatus.NonExtendable;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Encapsulates the FloraCore system which accepts incoming {@link Message}s

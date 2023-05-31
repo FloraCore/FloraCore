@@ -1,8 +1,8 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.MethodVisitor;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * A node that represents a line number declaration. These nodes are pseudo instruction nodes in

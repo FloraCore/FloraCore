@@ -1,20 +1,19 @@
 package team.floracore.common.api.implementation;
 
-import net.kyori.adventure.text.*;
-import org.floracore.api.translation.*;
-import org.jetbrains.annotations.*;
-import team.floracore.common.locale.translation.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
+import net.kyori.adventure.text.Component;
+import org.floracore.api.translation.TranslationAPI;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.common.locale.translation.TranslationManager;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
 
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Path;
+import java.util.UUID;
 
 /**
  * 国际化多语言API的实现类
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/29 18:07
  */
 public class ApiTranslation implements TranslationAPI {
 

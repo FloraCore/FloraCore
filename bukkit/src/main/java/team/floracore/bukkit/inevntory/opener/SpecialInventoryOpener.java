@@ -1,13 +1,14 @@
 package team.floracore.bukkit.inevntory.opener;
 
-import com.google.common.collect.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.*;
-import team.floracore.bukkit.inevntory.*;
+import com.google.common.collect.ImmutableList;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import team.floracore.bukkit.inevntory.InventoryManager;
+import team.floracore.bukkit.inevntory.SmartInventory;
 
-import java.util.*;
+import java.util.List;
 
 public class SpecialInventoryOpener implements InventoryOpener {
 

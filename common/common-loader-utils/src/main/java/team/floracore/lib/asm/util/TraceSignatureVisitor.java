@@ -1,9 +1,11 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.signature.*;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.signature.SignatureVisitor;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A {@link SignatureVisitor} that builds the Java generic type declaration corresponding to the

@@ -1,17 +1,20 @@
 package team.floracore.bungee.messaging.message;
 
-import com.google.gson.*;
-import com.google.gson.reflect.*;
+import com.google.gson.JsonElement;
+import com.google.gson.reflect.TypeToken;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.checkerframework.checker.nullness.qual.*;
-import org.floracore.api.bungee.messenger.message.type.*;
-import org.jetbrains.annotations.*;
-import team.floracore.common.messaging.*;
-import team.floracore.common.messaging.message.*;
-import team.floracore.common.util.gson.*;
+import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.common.messaging.FloraCoreMessagingService;
+import team.floracore.common.messaging.message.AbstractMessage;
+import team.floracore.common.util.gson.GsonProvider;
+import team.floracore.common.util.gson.JObject;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Type;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 public class NoticeMessageImpl extends AbstractMessage implements NoticeMessage {
     public static final String TYPE = "bungee:notice";

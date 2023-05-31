@@ -1,10 +1,11 @@
 package team.floracore.common.config.generic.key;
 
-import com.google.common.collect.*;
-import team.floracore.common.config.generic.adapter.*;
+import com.google.common.collect.ImmutableMap;
+import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.Locale;
+import java.util.Map;
+import java.util.function.Function;
 
 public interface ConfigKeyFactory<T> {
 

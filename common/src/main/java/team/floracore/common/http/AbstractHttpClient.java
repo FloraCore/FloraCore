@@ -1,8 +1,11 @@
 package team.floracore.common.http;
 
-import okhttp3.*;
+import okhttp3.MediaType;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
-import java.io.*;
+import java.io.IOException;
 
 public class AbstractHttpClient {
 

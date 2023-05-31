@@ -1,6 +1,6 @@
 package team.floracore.common.dependencies.relocation;
 
-import java.util.*;
+import java.util.Objects;
 
 public final class Relocation {
     private static final String RELOCATION_PREFIX = "team.floracore.lib.";

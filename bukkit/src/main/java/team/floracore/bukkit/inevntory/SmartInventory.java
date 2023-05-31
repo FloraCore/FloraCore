@@ -1,16 +1,20 @@
 package team.floracore.bukkit.inevntory;
 
-import net.kyori.adventure.text.*;
-import net.kyori.adventure.text.serializer.legacy.*;
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.inevntory.content.*;
-import team.floracore.bukkit.inevntory.opener.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.inevntory.content.InventoryContents;
+import team.floracore.bukkit.inevntory.content.InventoryProvider;
+import team.floracore.bukkit.inevntory.opener.InventoryOpener;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings("unchecked")
 public class SmartInventory {

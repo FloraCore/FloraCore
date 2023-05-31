@@ -1,14 +1,21 @@
 package team.floracore.bukkit.util;
 
-import io.github.karlatemp.unsafeaccessor.*;
-import org.bukkit.event.*;
-import org.bukkit.plugin.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.util.module.*;
-import team.floracore.common.util.*;
+import io.github.karlatemp.unsafeaccessor.Root;
+import org.bukkit.event.Event;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.HandlerList;
+import org.bukkit.event.Listener;
+import org.bukkit.plugin.RegisteredListener;
+import team.floracore.bukkit.FCBukkitBootstrap;
+import team.floracore.bukkit.util.module.AbsModule;
+import team.floracore.bukkit.util.module.IModule;
+import team.floracore.bukkit.util.module.IRegistrar;
+import team.floracore.bukkit.util.module.RegistrarRegistrar;
+import team.floracore.common.util.TypeUtil;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Method;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ListenerRegistrar extends AbsModule implements IRegistrar<Listener> {
     public static ListenerRegistrar instance = new ListenerRegistrar();

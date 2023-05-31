@@ -1,13 +1,15 @@
 package team.floracore.bungee.commands.test;
 
-import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.processing.*;
-import net.kyori.adventure.text.*;
-import net.md_5.bungee.api.*;
-import org.jetbrains.annotations.*;
-import team.floracore.bungee.*;
-import team.floracore.bungee.command.*;
-import team.floracore.common.sender.*;
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.processing.CommandContainer;
+import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.CommandSender;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.bungee.FCBungeePlugin;
+import team.floracore.bungee.command.FloraCoreBungeeCommand;
+import team.floracore.common.sender.Sender;
 
 /**
  * 该类请后续开发者不要删除,这是一个参考实现。几乎实现了Cloud命令框架中存在的所有可能。

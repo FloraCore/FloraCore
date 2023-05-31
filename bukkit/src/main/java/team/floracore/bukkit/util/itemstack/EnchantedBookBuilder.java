@@ -1,7 +1,7 @@
 package team.floracore.bukkit.util.itemstack;
 
-import org.bukkit.inventory.*;
-import team.floracore.bukkit.util.wrappednms.*;
+import org.bukkit.inventory.ItemStack;
+import team.floracore.bukkit.util.wrappednms.NmsNBTTagCompound;
 
 public class EnchantedBookBuilder extends ItemStackBuilder {
     public static final String id = "minecraft:enchanted_book";

@@ -1,9 +1,10 @@
 package team.floracore.bukkit.locale.message.commands;
 
-import net.kyori.adventure.text.*;
-import team.floracore.common.locale.message.*;
+import net.kyori.adventure.text.Component;
+import team.floracore.common.locale.message.AbstractMessage;
 
-import static net.kyori.adventure.text.Component.*;
+import static net.kyori.adventure.text.Component.text;
+import static net.kyori.adventure.text.Component.translatable;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 
 public interface WorldCommandMessage extends AbstractMessage {

@@ -1,13 +1,13 @@
 package team.floracore.bukkit.locale.chat;
 
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.bukkit.event.player.*;
-import org.floracore.api.data.chat.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.listener.*;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.floracore.api.data.chat.ChatType;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.listener.FloraCoreBukkitListener;
 
-import java.util.*;
+import java.util.UUID;
 
 public class ChatManager extends FloraCoreBukkitListener {
 

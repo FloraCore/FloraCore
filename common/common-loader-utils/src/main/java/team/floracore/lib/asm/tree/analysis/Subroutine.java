@@ -1,8 +1,10 @@
 package team.floracore.lib.asm.tree.analysis;
 
-import team.floracore.lib.asm.tree.*;
+import team.floracore.lib.asm.tree.JumpInsnNode;
+import team.floracore.lib.asm.tree.LabelNode;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A method subroutine (corresponds to a JSR instruction).

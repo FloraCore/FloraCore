@@ -1,8 +1,11 @@
 package team.floracore.bukkit.inevntory.content;
 
-import team.floracore.bukkit.inevntory.*;
+import team.floracore.bukkit.inevntory.ClickableItem;
+import team.floracore.bukkit.inevntory.SmartInventory;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Optional;
+import java.util.Set;
 
 public interface SlotIterator {
 

@@ -1,9 +1,9 @@
 package team.floracore.bukkit.util.nothing;
 
-import team.floracore.bukkit.util.*;
-import team.floracore.lib.asm.*;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.lib.asm.Opcodes;
 
-import java.lang.annotation.*;
+import java.lang.annotation.Target;
 
 @Target({})
 public @interface NothingBukkitByteCode {

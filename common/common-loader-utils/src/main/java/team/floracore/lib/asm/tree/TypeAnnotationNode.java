@@ -1,6 +1,8 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.TypePath;
+import team.floracore.lib.asm.TypeReference;
 
 /**
  * A node that represents a type annotation.

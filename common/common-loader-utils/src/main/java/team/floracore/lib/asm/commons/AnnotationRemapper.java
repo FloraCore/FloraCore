@@ -1,6 +1,7 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.AnnotationVisitor;
+import team.floracore.lib.asm.Opcodes;
 
 /**
  * An {@link AnnotationVisitor} that remaps types with a {@link Remapper}.

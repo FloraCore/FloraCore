@@ -1,15 +1,22 @@
 package team.floracore.common.storage.implementation.sql.connection.hikari;
 
-import com.google.common.collect.*;
-import com.zaxxer.hikari.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.plugin.logging.*;
-import team.floracore.common.storage.implementation.sql.connection.*;
-import team.floracore.common.storage.misc.*;
+import com.google.common.collect.ImmutableList;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.plugin.logging.PluginLogger;
+import team.floracore.common.storage.implementation.sql.connection.ConnectionFactory;
+import team.floracore.common.storage.misc.StorageCredentials;
 
-import java.sql.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Abstract {@link ConnectionFactory} using a {@link HikariDataSource}.

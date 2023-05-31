@@ -2,7 +2,8 @@ package team.floracore.lib.asm.commons;
 
 import team.floracore.lib.asm.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A ModuleHashes attribute. This attribute is specific to the OpenJDK and may change in the future.

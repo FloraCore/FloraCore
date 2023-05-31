@@ -1,11 +1,18 @@
 package team.floracore.common.util;
 
 import java.io.*;
-import java.net.*;
-import java.nio.*;
-import java.util.*;
-import java.util.jar.*;
-import java.util.zip.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.zip.DataFormatException;
+import java.util.zip.Deflater;
+import java.util.zip.Inflater;
 
 public final class FileUtil {
     public static int bufSize = 1024;

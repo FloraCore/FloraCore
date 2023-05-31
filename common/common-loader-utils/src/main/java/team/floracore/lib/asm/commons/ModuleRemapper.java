@@ -1,6 +1,7 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ModuleVisitor;
+import team.floracore.lib.asm.Opcodes;
 
 /**
  * A {@link ModuleVisitor} that remaps types with a {@link Remapper}.

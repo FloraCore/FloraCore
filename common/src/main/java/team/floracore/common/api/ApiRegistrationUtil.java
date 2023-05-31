@@ -1,8 +1,9 @@
 package team.floracore.common.api;
 
-import org.floracore.api.*;
+import org.floracore.api.FloraCore;
+import org.floracore.api.FloraCoreProvider;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 
 /**
  * FC API的注册类。

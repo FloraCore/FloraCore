@@ -1,11 +1,16 @@
 package team.floracore.bukkit.inevntory.content;
 
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
-import team.floracore.bukkit.inevntory.*;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import team.floracore.bukkit.inevntory.ClickableItem;
+import team.floracore.bukkit.inevntory.SmartInventory;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
 
 public interface InventoryContents {
     SmartInventory inventory();

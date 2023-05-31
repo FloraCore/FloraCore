@@ -1,11 +1,16 @@
 package team.floracore.bukkit.util;
 
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
-import team.floracore.bukkit.util.wrapper.*;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.EntityEquipment;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
 
 public class Inventories {
     private static final int HELM_SLOT = 39;

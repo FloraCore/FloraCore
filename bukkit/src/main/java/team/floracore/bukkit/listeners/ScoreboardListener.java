@@ -1,20 +1,23 @@
 package team.floracore.bukkit.listeners;
 
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.event.*;
-import team.floracore.bukkit.listener.*;
-import team.floracore.bukkit.scoreboard.model.*;
-import team.floracore.bukkit.util.*;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.event.BodyUpdateEvent;
+import team.floracore.bukkit.event.TitleUpdateEvent;
+import team.floracore.bukkit.listener.FloraCoreBukkitListener;
+import team.floracore.bukkit.scoreboard.model.BoardModel;
+import team.floracore.bukkit.util.BukkitStringReplacer;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 计分板事件监听
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/29 20:09
  */
 public class ScoreboardListener extends FloraCoreBukkitListener {
     public static List<String> offList = new ArrayList<>();

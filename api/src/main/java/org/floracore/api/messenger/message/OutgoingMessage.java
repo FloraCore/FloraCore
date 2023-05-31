@@ -1,7 +1,7 @@
 package org.floracore.api.messenger.message;
 
-import org.floracore.api.messenger.*;
-import org.jetbrains.annotations.*;
+import org.floracore.api.messenger.IncomingMessageConsumer;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents an outgoing {@link Message}.

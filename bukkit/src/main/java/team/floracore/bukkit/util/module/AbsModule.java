@@ -1,11 +1,14 @@
 package team.floracore.bukkit.util.module;
 
-import com.google.common.collect.*;
-import org.bukkit.plugin.*;
-import team.floracore.bukkit.util.*;
-import team.floracore.common.util.*;
+import com.google.common.collect.Sets;
+import org.bukkit.plugin.Plugin;
+import team.floracore.bukkit.util.ListenerRegistrar;
+import team.floracore.common.util.Ref;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public abstract class AbsModule extends Ref<Boolean> implements IModule {
     public Plugin plugin;

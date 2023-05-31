@@ -1,8 +1,9 @@
 package team.floracore.lib.asm.tree.analysis;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * An extended {@link BasicVerifier} that performs more precise verifications. This verifier

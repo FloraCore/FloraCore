@@ -1,11 +1,14 @@
 package team.floracore.bungee.locale.message;
 
-import net.kyori.adventure.text.*;
-import net.kyori.adventure.text.event.*;
-import org.floracore.api.*;
-import team.floracore.common.locale.message.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.event.ClickEvent;
+import org.floracore.api.FloraCoreProvider;
+import team.floracore.common.locale.message.AbstractMessage;
+import team.floracore.common.locale.message.MiscMessage;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;

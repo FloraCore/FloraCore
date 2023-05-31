@@ -1,8 +1,8 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import team.floracore.common.util.wrapper.*;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.util.*;
+import java.util.List;
 
 public interface NmsNBTTag extends NmsNBTBase {
     static NmsNBTTag wrap(Object value) {

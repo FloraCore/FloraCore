@@ -1,9 +1,10 @@
 package team.floracore.common.sender;
 
-import net.kyori.adventure.text.*;
-import team.floracore.common.plugin.*;
+import net.kyori.adventure.text.Component;
+import team.floracore.common.plugin.FloraCorePlugin;
 
-import java.util.*;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Factory class to make a thread-safe sender instance

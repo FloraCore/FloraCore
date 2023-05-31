@@ -1,8 +1,9 @@
 package team.floracore.common.util;
 
-import com.github.benmanes.caffeine.cache.*;
+import com.github.benmanes.caffeine.cache.Caffeine;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Executor;
+import java.util.concurrent.ForkJoinPool;
 
 public final class CaffeineFactory {
     /**

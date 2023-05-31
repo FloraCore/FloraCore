@@ -1,10 +1,11 @@
 package org.floracore.api.extension;
 
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Collection;
 
 /**
  * Manages extensions.

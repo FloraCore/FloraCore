@@ -1,8 +1,8 @@
 package team.floracore.common.util;
 
-import com.google.common.base.*;
+import com.google.common.base.Objects;
 
-import java.util.Map.*;
+import java.util.Map.Entry;
 
 public class MapEntry<K, V> implements Entry<K, V> {
     K key;

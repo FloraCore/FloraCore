@@ -1,8 +1,9 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Label;
+import team.floracore.lib.asm.MethodVisitor;
 
-import java.util.*;
+import java.util.Map;
 
 /**
  * An {@link AbstractInsnNode} that encapsulates a {@link Label}.

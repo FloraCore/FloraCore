@@ -1,11 +1,13 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
-import org.floracore.api.server.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.storage.implementation.*;
-import team.floracore.common.storage.misc.floracore.*;
+import org.floracore.api.server.ServerType;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.storage.implementation.StorageImplementation;
+import team.floracore.common.storage.misc.floracore.AbstractFloraCoreTable;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 public class SERVER extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}server' WHERE name=?";

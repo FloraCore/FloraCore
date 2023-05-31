@@ -1,9 +1,10 @@
 package team.floracore.common.plugin.classpath;
 
-import team.floracore.common.plugin.bootstrap.*;
+import team.floracore.common.plugin.bootstrap.FloraCoreBootstrap;
 
-import java.net.*;
-import java.nio.file.*;
+import java.net.MalformedURLException;
+import java.net.URLClassLoader;
+import java.nio.file.Path;
 
 public class ReflectionClassPathAppender implements ClassPathAppender {
     private final URLClassLoaderAccess classLoaderAccess;

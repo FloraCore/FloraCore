@@ -1,13 +1,15 @@
 package team.floracore.common.dependencies;
 
-import com.google.common.io.*;
+import com.google.common.io.ByteStreams;
 
-import java.io.*;
-import java.net.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
-import java.nio.file.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.nio.file.Path;
+import java.util.Base64;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Represents a repository which contains {@link Dependency}s.

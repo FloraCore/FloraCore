@@ -1,13 +1,14 @@
 package org.floracore.api;
 
-import org.floracore.api.data.*;
-import org.floracore.api.data.chat.*;
-import org.floracore.api.messenger.*;
-import org.floracore.api.platform.*;
-import org.floracore.api.player.*;
-import org.floracore.api.server.*;
-import org.floracore.api.translation.*;
-import org.jetbrains.annotations.*;
+import org.floracore.api.data.DataAPI;
+import org.floracore.api.data.chat.ChatAPI;
+import org.floracore.api.messenger.MessengerProvider;
+import org.floracore.api.platform.Platform;
+import org.floracore.api.platform.PluginMetadata;
+import org.floracore.api.player.PlayerAPI;
+import org.floracore.api.server.ServerAPI;
+import org.floracore.api.translation.TranslationAPI;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * The FloraCore API.

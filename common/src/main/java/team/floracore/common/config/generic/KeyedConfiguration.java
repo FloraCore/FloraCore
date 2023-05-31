@@ -1,11 +1,13 @@
 package team.floracore.common.config.generic;
 
-import team.floracore.common.config.generic.adapter.*;
-import team.floracore.common.config.generic.key.*;
-import team.floracore.common.util.*;
+import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
+import team.floracore.common.config.generic.key.ConfigKey;
+import team.floracore.common.config.generic.key.SimpleConfigKey;
+import team.floracore.common.util.ImmutableCollectors;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
+import java.util.List;
 
 public class KeyedConfiguration {
     private final ConfigurationAdapter adapter;

@@ -1,16 +1,16 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import team.floracore.bukkit.util.*;
+import team.floracore.bukkit.util.VersionName;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.Optional;
-import team.floracore.common.util.*;
-import team.floracore.common.util.wrapper.*;
+import team.floracore.common.util.TypeUtil;
+import team.floracore.common.util.wrapper.WrappedObject;
 
 import java.util.*;
 
 @WrappedBukkitClass({@VersionName(value = "nms.CraftingManager",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.world.item.crafting.CraftingManager",
-                                                             minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.world.item.crafting.CraftingManager",
+        minVer = 17)})
 public interface NmsCraftingManager extends WrappedBukkitObject {
     static Map<Object, Object> getCraftingRecipes() {
         if (BukkitWrapper.version >= 14) {
@@ -153,8 +153,8 @@ public interface NmsCraftingManager extends WrappedBukkitObject {
     NmsRegistryMaterials getRecipes0V_13();
 
     @WrappedBukkitMethod({@VersionName(minVer = 13, value = "addRecipe"), @VersionName(value = "@0",
-                                                                                       minVer = 13,
-                                                                                       maxVer = 14)})
+            minVer = 13,
+            maxVer = 14)})
     void addRecipe0V13(NmsIRecipe recipe);
 
     @WrappedBukkitMethod(@VersionName(maxVer = 13, value = "#0"))

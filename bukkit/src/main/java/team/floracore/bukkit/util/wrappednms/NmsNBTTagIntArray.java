@@ -1,14 +1,17 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import com.google.common.collect.*;
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import com.google.common.collect.Lists;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.common.util.wrapper.WrappedConstructor;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.util.*;
+import java.util.AbstractList;
+import java.util.List;
+import java.util.UUID;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagIntArray",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagIntArray", minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagIntArray", minVer = 17)})
 public interface NmsNBTTagIntArray extends NmsNBTTag {
     static NmsNBTTagIntArray newInstance(UUID uuid) {
         return newInstance((int) (uuid.getMostSignificantBits() >> 32),

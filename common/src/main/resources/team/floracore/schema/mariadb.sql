@@ -51,7 +51,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}report`
     reasons        TEXT               NOT NULL,
     reportTime     BIGINT             NOT NULL,
     status         VARCHAR(36)        NOT NULL,
-    conclusionTime BIGINT NULL
+    conclusionTime BIGINT             NULL
 );
 
 CREATE TABLE IF NOT EXISTS `{prefix}party`
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `{prefix}party`
     members     TEXT               NOT NULL,
     settings    TEXT               NOT NULL,
     createTime  BIGINT             NOT NULL,
-    disbandTime BIGINT NOT NULL
+    disbandTime BIGINT             NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS `{prefix}online`

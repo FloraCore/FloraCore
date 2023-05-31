@@ -1,20 +1,32 @@
 package team.floracore.common.locale.data;
 
-import com.google.gson.*;
-import com.opencsv.*;
-import com.opencsv.exceptions.*;
-import okhttp3.*;
-import team.floracore.common.config.*;
-import team.floracore.common.http.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.util.gson.*;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
+import com.opencsv.CSVReader;
+import com.opencsv.CSVReaderBuilder;
+import com.opencsv.exceptions.CsvValidationException;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
+import team.floracore.common.config.ConfigKeys;
+import team.floracore.common.http.AbstractHttpClient;
+import team.floracore.common.http.UnsuccessfulRequestException;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.util.gson.GsonProvider;
 
-import java.io.*;
-import java.nio.charset.*;
-import java.nio.file.*;
-import java.util.*;
-import java.util.concurrent.*;
-import java.util.function.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 public class NamesRepository {
     private static final String NAMES_DOWNLOAD_ENDPOINT = "https://fc-meta.kinomc.net/data/names";

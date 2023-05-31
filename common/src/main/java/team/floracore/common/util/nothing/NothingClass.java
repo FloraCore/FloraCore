@@ -1,14 +1,18 @@
 package team.floracore.common.util.nothing;
 
-import team.floracore.common.util.Optional;
 import team.floracore.common.util.*;
-import team.floracore.common.util.wrapper.*;
-import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.tree.*;
+import team.floracore.common.util.wrapper.WrappedObject;
+import team.floracore.lib.asm.ClassReader;
+import team.floracore.lib.asm.ClassWriter;
+import team.floracore.lib.asm.tree.ClassNode;
+import team.floracore.lib.asm.tree.MethodNode;
 
-import java.lang.reflect.*;
-import java.util.*;
-import java.util.concurrent.*;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class NothingClass {
     public static Map<Class<?>, NothingClass> classes = new ConcurrentHashMap<>();

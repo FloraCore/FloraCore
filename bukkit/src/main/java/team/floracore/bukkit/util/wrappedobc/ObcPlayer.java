@@ -1,9 +1,10 @@
 package team.floracore.bukkit.util.wrappedobc;
 
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrappednms.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrappednms.NmsEntityPlayer;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitMethod;
+import team.floracore.common.util.wrapper.WrappedMethod;
 
 @WrappedBukkitClass(@VersionName("obc.entity.CraftPlayer"))
 public interface ObcPlayer extends ObcHumanEntity {

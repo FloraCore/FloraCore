@@ -1,8 +1,9 @@
 package team.floracore.bukkit.util.module;
 
-import team.floracore.common.util.*;
+import team.floracore.common.util.TypeUtil;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.List;
 
 public interface IRegistrar<T> {
     List<IRegistrar<?>> registers = new LinkedList<>();

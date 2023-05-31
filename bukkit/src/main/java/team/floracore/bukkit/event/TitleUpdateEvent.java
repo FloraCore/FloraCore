@@ -1,14 +1,14 @@
 package team.floracore.bukkit.event;
 
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.jetbrains.annotations.*;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * 记分板标题更新
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/29 19:33
  */
 public class TitleUpdateEvent extends Event {
     private static final HandlerList handlerList = new HandlerList();

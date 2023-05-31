@@ -1,9 +1,15 @@
 package team.floracore.common.loader;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.net.*;
-import java.nio.file.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Constructor;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 /**
  * Classloader that can load a jar from within another jar file.

@@ -1,9 +1,9 @@
 package team.floracore.bukkit.inevntory;
 
-import org.bukkit.event.inventory.*;
-import org.bukkit.inventory.*;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.ItemStack;
 
-import java.util.function.*;
+import java.util.function.Consumer;
 
 public class ClickableItem {
     private final ItemStack item;

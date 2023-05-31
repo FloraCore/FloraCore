@@ -1,16 +1,15 @@
 package org.floracore.api.translation;
 
-import net.kyori.adventure.text.*;
-import org.jetbrains.annotations.*;
+import net.kyori.adventure.text.Component;
+import org.jetbrains.annotations.NotNull;
 
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Path;
+import java.util.UUID;
 
 /**
  * 国际化多语言API
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/29 18:06
  */
 public interface TranslationAPI {
     /**

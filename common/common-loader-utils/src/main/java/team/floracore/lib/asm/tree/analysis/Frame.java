@@ -1,9 +1,11 @@
 package team.floracore.lib.asm.tree.analysis;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
 import team.floracore.lib.asm.tree.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A symbolic execution stack frame. A stack frame contains a set of local variable slots, and an

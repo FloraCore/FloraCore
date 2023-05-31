@@ -1,7 +1,7 @@
 package team.floracore.common.storage.misc.floracore;
 
-import team.floracore.common.plugin.*;
-import team.floracore.common.storage.implementation.*;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.storage.implementation.StorageImplementation;
 
 public abstract class AbstractFloraCoreTable implements FloraCoreTable {
     private final FloraCorePlugin plugin;

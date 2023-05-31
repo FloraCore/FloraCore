@@ -1,9 +1,9 @@
 package team.floracore.common.util.nothing;
 
 import team.floracore.common.util.*;
-import team.floracore.common.util.wrapper.*;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.lang.reflect.*;
+import java.lang.reflect.Method;
 import java.util.Optional;
 
 public interface Nothing {

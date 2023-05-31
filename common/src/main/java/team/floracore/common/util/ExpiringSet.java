@@ -1,8 +1,8 @@
 package team.floracore.common.util;
 
-import com.github.benmanes.caffeine.cache.*;
+import com.github.benmanes.caffeine.cache.Cache;
 
-import java.util.concurrent.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple expiring set implementation using Caffeine caches

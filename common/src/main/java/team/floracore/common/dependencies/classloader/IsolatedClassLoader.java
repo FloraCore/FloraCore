@@ -1,6 +1,7 @@
 package team.floracore.common.dependencies.classloader;
 
-import java.net.*;
+import java.net.URL;
+import java.net.URLClassLoader;
 
 /**
  * A classloader "isolated" from the rest of the Minecraft server.

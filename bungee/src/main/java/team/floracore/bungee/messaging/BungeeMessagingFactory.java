@@ -1,18 +1,22 @@
 package team.floracore.bungee.messaging;
 
-import com.google.gson.*;
-import net.md_5.bungee.api.connection.*;
-import org.floracore.api.bungee.messenger.message.type.*;
-import org.floracore.api.messenger.message.*;
-import org.floracore.api.messenger.message.type.*;
-import team.floracore.bungee.*;
-import team.floracore.bungee.locale.message.*;
-import team.floracore.bungee.messaging.message.*;
-import team.floracore.common.messaging.*;
-import team.floracore.common.messaging.message.*;
-import team.floracore.common.sender.*;
+import com.google.gson.JsonElement;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.floracore.api.bungee.messenger.message.type.ChatMessage;
+import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
+import org.floracore.api.messenger.message.Message;
+import org.floracore.api.messenger.message.type.ChangeNameMessage;
+import team.floracore.bungee.FCBungeePlugin;
+import team.floracore.bungee.locale.message.SocialSystemsMessage;
+import team.floracore.bungee.messaging.message.ChatMessageImpl;
+import team.floracore.bungee.messaging.message.NoticeMessageImpl;
+import team.floracore.common.messaging.InternalMessagingService;
+import team.floracore.common.messaging.MessagingFactory;
+import team.floracore.common.messaging.message.ChangeNameMessageImpl;
+import team.floracore.common.sender.Sender;
 
-import java.util.*;
+import java.util.List;
+import java.util.UUID;
 
 public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
     public BungeeMessagingFactory(FCBungeePlugin plugin) {

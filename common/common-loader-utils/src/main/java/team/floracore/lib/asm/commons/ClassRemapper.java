@@ -2,7 +2,7 @@ package team.floracore.lib.asm.commons;
 
 import team.floracore.lib.asm.*;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * A {@link ClassVisitor} that remaps types with a {@link Remapper}.

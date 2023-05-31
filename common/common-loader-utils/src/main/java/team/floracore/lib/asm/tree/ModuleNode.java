@@ -1,8 +1,12 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ClassVisitor;
+import team.floracore.lib.asm.ModuleVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A node that represents a module declaration.

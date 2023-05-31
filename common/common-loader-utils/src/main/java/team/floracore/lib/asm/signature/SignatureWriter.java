@@ -1,6 +1,6 @@
 package team.floracore.lib.asm.signature;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Opcodes;
 
 /**
  * A SignatureVisitor that generates signature literals, as defined in the Java Virtual Machine

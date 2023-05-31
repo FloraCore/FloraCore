@@ -2,7 +2,8 @@ package team.floracore.lib.asm.util;
 
 import team.floracore.lib.asm.*;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 /**

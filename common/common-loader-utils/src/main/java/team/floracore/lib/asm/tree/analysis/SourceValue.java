@@ -1,8 +1,8 @@
 package team.floracore.lib.asm.tree.analysis;
 
-import team.floracore.lib.asm.tree.*;
+import team.floracore.lib.asm.tree.AbstractInsnNode;
 
-import java.util.*;
+import java.util.Set;
 
 /**
  * A {@link Value} which keeps track of the bytecode instructions that can produce it.

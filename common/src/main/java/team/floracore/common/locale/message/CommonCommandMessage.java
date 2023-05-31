@@ -1,8 +1,10 @@
 package team.floracore.common.locale.message;
 
-import net.kyori.adventure.text.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;

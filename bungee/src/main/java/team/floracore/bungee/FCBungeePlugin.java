@@ -1,20 +1,21 @@
 package team.floracore.bungee;
 
-import com.google.gson.*;
-import net.md_5.bungee.api.*;
-import net.md_5.bungee.api.connection.*;
-import net.md_5.bungee.api.plugin.*;
-import team.floracore.bungee.command.*;
-import team.floracore.bungee.listener.*;
-import team.floracore.bungee.messaging.*;
-import team.floracore.common.config.generic.adapter.*;
-import team.floracore.common.dependencies.*;
-import team.floracore.common.messaging.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
+import com.google.gson.JsonElement;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Plugin;
+import team.floracore.bungee.command.CommandManager;
+import team.floracore.bungee.listener.ListenerManager;
+import team.floracore.bungee.messaging.BungeeMessagingFactory;
+import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
+import team.floracore.common.dependencies.Dependency;
+import team.floracore.common.messaging.MessagingFactory;
+import team.floracore.common.plugin.AbstractFloraCorePlugin;
+import team.floracore.common.sender.Sender;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.Set;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 /**
  * FloraCore implementation for the Bukkit API.

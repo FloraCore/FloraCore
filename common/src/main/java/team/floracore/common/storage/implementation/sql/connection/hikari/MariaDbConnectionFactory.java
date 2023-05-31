@@ -1,9 +1,9 @@
 package team.floracore.common.storage.implementation.sql.connection.hikari;
 
-import com.zaxxer.hikari.*;
-import team.floracore.common.storage.misc.*;
+import com.zaxxer.hikari.HikariConfig;
+import team.floracore.common.storage.misc.StorageCredentials;
 
-import java.util.function.*;
+import java.util.function.Function;
 
 public class MariaDbConnectionFactory extends HikariConnectionFactory {
     public MariaDbConnectionFactory(StorageCredentials configuration) {

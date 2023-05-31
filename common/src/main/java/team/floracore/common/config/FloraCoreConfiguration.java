@@ -1,8 +1,8 @@
 package team.floracore.common.config;
 
-import team.floracore.common.config.generic.*;
-import team.floracore.common.config.generic.adapter.*;
-import team.floracore.common.plugin.*;
+import team.floracore.common.config.generic.KeyedConfiguration;
+import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
+import team.floracore.common.plugin.FloraCorePlugin;
 
 public class FloraCoreConfiguration extends KeyedConfiguration {
     private final FloraCorePlugin plugin;

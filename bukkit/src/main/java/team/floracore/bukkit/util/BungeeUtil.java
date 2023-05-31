@@ -1,10 +1,11 @@
 package team.floracore.bukkit.util;
 
-import com.google.common.io.*;
-import org.bukkit.*;
-import org.bukkit.entity.*;
-import org.bukkit.plugin.*;
-import team.floracore.bukkit.*;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
+import team.floracore.bukkit.FCBukkitPlugin;
 
 /**
  * 关于BungeeCord的操作类

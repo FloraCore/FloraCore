@@ -1,8 +1,8 @@
 package team.floracore.common.storage;
 
-import com.google.common.collect.*;
+import com.google.common.collect.ImmutableList;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * 数据库链接类型。

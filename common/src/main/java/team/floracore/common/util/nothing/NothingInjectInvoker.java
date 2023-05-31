@@ -1,11 +1,11 @@
 package team.floracore.common.util.nothing;
 
-import team.floracore.common.util.*;
-import team.floracore.common.util.wrapper.*;
+import team.floracore.common.util.TypeUtil;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.lang.invoke.*;
+import java.lang.invoke.MethodHandle;
 import java.util.Optional;
-import java.util.function.*;
+import java.util.function.Function;
 
 public class NothingInjectInvoker implements Function<Object[], Object> {
     public MethodHandle target;

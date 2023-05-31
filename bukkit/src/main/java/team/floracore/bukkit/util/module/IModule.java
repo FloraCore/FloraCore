@@ -1,17 +1,22 @@
 package team.floracore.bukkit.util.module;
 
-import com.google.common.collect.*;
-import org.bukkit.*;
-import org.bukkit.event.*;
-import org.bukkit.event.server.*;
-import org.bukkit.plugin.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.util.event.*;
-import team.floracore.common.util.*;
+import com.google.common.collect.Lists;
+import org.bukkit.Bukkit;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginDisableEvent;
+import org.bukkit.plugin.Plugin;
+import team.floracore.bukkit.FCBukkitBootstrap;
+import team.floracore.bukkit.util.event.ModuleDisableEvent;
+import team.floracore.bukkit.util.event.ModuleEnableEvent;
+import team.floracore.common.util.ClassUtil;
+import team.floracore.common.util.ListUtil;
+import team.floracore.common.util.Ref;
+import team.floracore.common.util.TypeUtil;
 
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 public interface IModule extends Listener {
     Map<Plugin, List<IModule>> modules = new ConcurrentHashMap<>();

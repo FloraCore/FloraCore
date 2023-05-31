@@ -1,11 +1,16 @@
 package team.floracore.common.util;
 
-import net.kyori.adventure.text.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 
-import java.time.*;
-import java.time.format.*;
-import java.time.temporal.*;
-import java.util.*;
+import java.time.Duration;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.Locale;
 
 /**
  * Formats durations to a readable form

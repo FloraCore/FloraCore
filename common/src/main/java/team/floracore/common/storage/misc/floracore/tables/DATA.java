@@ -1,12 +1,14 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
-import org.floracore.api.data.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.storage.implementation.*;
-import team.floracore.common.storage.misc.floracore.*;
+import org.floracore.api.data.DataType;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.storage.implementation.StorageImplementation;
+import team.floracore.common.storage.misc.floracore.AbstractFloraCoreTable;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.UUID;
 
 public class DATA extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}data' WHERE uuid=? LIMIT 100";

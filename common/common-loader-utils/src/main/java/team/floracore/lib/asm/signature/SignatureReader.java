@@ -1,6 +1,7 @@
 package team.floracore.lib.asm.signature;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ClassVisitor;
+import team.floracore.lib.asm.MethodVisitor;
 
 /**
  * A parser for signature literals, as defined in the Java Virtual Machine Specification (JVMS), to

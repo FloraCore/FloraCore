@@ -1,23 +1,27 @@
 package team.floracore.bukkit.util.itemstack;
 
-import com.google.common.collect.*;
-import com.google.gson.*;
-import net.kyori.adventure.text.*;
-import net.kyori.adventure.text.serializer.legacy.*;
-import org.bukkit.*;
-import org.bukkit.enchantments.*;
-import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.*;
-import org.bukkit.material.*;
+import com.google.common.collect.Lists;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
 import team.floracore.bukkit.util.wrappednms.*;
-import team.floracore.bukkit.util.wrappedobc.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.*;
-import team.floracore.common.util.wrapper.*;
+import team.floracore.bukkit.util.wrappedobc.ObcChatMessage;
+import team.floracore.bukkit.util.wrappedobc.ObcItemStack;
+import team.floracore.bukkit.util.wrappedobc.ObcMagicNumbers;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
+import team.floracore.common.util.StringUtil;
+import team.floracore.common.util.wrapper.WrappedObject;
 
 import java.util.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class ItemStackBuilder implements Supplier<ItemStack> {
     public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()

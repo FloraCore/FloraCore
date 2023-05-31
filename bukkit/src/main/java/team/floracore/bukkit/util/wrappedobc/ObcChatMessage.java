@@ -1,9 +1,12 @@
 package team.floracore.bukkit.util.wrappedobc;
 
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrappednms.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrappednms.NmsIChatBaseComponent;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitMethod;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
+import team.floracore.common.util.wrapper.WrappedObject;
 
 @WrappedBukkitClass(@VersionName("obc.util.CraftChatMessage"))
 public interface ObcChatMessage extends WrappedBukkitObject {

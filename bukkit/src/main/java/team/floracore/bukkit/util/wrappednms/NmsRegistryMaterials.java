@@ -1,17 +1,17 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import com.google.common.collect.*;
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrappedobc.*;
+import com.google.common.collect.BiMap;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrappedobc.ObcObject2IntMapV13_18;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.Optional;
-import team.floracore.common.util.wrapper.*;
+import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.util.*;
+import java.util.Map;
 
 @WrappedBukkitClass({@VersionName(value = "nms.RegistryMaterials",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.core.RegistryMaterials",
-                                                             minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.core.RegistryMaterials",
+        minVer = 17)})
 public interface NmsRegistryMaterials extends WrappedBukkitObject {
     default NmsMinecraftKey getKey(WrappedObject value) {
         if (BukkitWrapper.v13) {
@@ -60,8 +60,8 @@ public interface NmsRegistryMaterials extends WrappedBukkitObject {
     BiMap<Object, Object> getKeyMapV13_182();
 
     @WrappedBukkitFieldAccessor({@VersionName(maxVer = 13, value = "a"), @VersionName(minVer = 13,
-                                                                                      maxVer = 16,
-                                                                                      value = "b")})
+            maxVer = 16,
+            value = "b")})
     NmsRegistryID getRegIDV_15();
 
     default Map<Object, Integer> getIdMapV16() {
@@ -103,7 +103,7 @@ public interface NmsRegistryMaterials extends WrappedBukkitObject {
     BiMap<Object, Object> getResourceKeyMapV16_182();
 
     @WrappedBukkitFieldAccessor({@VersionName(minVer = 16, value = "@0", maxVer = 18.2f), @VersionName(minVer = 18.2f,
-                                                                                                       value = "@3")})
+            value = "@3")})
     Map<Object, Object> getLifecycleMapV16();
 
     @WrappedBukkitMethod(@VersionName("@0"))

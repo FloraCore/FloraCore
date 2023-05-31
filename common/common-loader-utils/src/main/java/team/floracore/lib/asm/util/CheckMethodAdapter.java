@@ -1,10 +1,14 @@
 package team.floracore.lib.asm.util;
 
 import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.tree.*;
-import team.floracore.lib.asm.tree.analysis.*;
+import team.floracore.lib.asm.tree.MethodNode;
+import team.floracore.lib.asm.tree.analysis.Analyzer;
+import team.floracore.lib.asm.tree.analysis.AnalyzerException;
+import team.floracore.lib.asm.tree.analysis.BasicValue;
+import team.floracore.lib.asm.tree.analysis.BasicVerifier;
 
-import java.io.*;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.*;
 
 /**

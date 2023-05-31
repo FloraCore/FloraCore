@@ -1,10 +1,11 @@
 package team.floracore.common.api.implementation;
 
-import org.floracore.api.data.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
+import org.floracore.api.data.DataAPI;
+import org.floracore.api.data.DataType;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.storage.misc.floracore.tables.DATA;
 
-import java.util.*;
+import java.util.UUID;
 
 public class ApiData implements DataAPI {
     private final FloraCorePlugin plugin;

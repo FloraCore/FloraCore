@@ -1,6 +1,7 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.AnnotationVisitor;
+import team.floracore.lib.asm.Opcodes;
 
 /**
  * An {@link AnnotationVisitor} that prints the annotations it visits with a {@link Printer}.

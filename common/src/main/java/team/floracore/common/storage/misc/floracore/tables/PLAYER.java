@@ -1,11 +1,13 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
-import team.floracore.common.plugin.*;
-import team.floracore.common.storage.implementation.*;
-import team.floracore.common.storage.misc.floracore.*;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.storage.implementation.StorageImplementation;
+import team.floracore.common.storage.misc.floracore.AbstractFloraCoreTable;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.UUID;
 
 public class PLAYER extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}player' WHERE uuid=?";

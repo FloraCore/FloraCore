@@ -1,11 +1,14 @@
 package team.floracore.common.dependencies.relocation;
 
-import team.floracore.common.dependencies.*;
-import team.floracore.common.dependencies.classloader.*;
+import team.floracore.common.dependencies.Dependency;
+import team.floracore.common.dependencies.DependencyManager;
+import team.floracore.common.dependencies.classloader.IsolatedClassLoader;
 
-import java.io.*;
-import java.lang.reflect.*;
-import java.nio.file.*;
+import java.io.File;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.util.*;
 
 /**

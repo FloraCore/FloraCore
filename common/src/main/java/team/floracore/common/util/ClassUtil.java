@@ -1,17 +1,24 @@
 package team.floracore.common.util;
 
-import com.google.common.collect.*;
-import io.github.karlatemp.unsafeaccessor.*;
-import net.bytebuddy.agent.*;
-import team.floracore.common.util.wrapper.*;
-import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.tree.*;
+import com.google.common.collect.Lists;
+import io.github.karlatemp.unsafeaccessor.Root;
+import net.bytebuddy.agent.ByteBuddyAgent;
+import net.bytebuddy.agent.Installer;
+import team.floracore.common.util.wrapper.WrappedObject;
+import team.floracore.lib.asm.ClassWriter;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.tree.ClassNode;
 
-import javax.tools.*;
-import java.io.*;
-import java.lang.annotation.*;
-import java.lang.instrument.*;
-import java.lang.invoke.*;
+import javax.tools.ToolProvider;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.lang.annotation.Annotation;
+import java.lang.instrument.ClassDefinition;
+import java.lang.instrument.Instrumentation;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.*;
 import java.util.*;
 

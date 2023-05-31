@@ -1,6 +1,7 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ModuleVisitor;
+import team.floracore.lib.asm.Opcodes;
 
 /**
  * A {@link ModuleVisitor} that prints the fields it visits with a {@link Printer}.

@@ -1,7 +1,7 @@
 package team.floracore.bukkit.util.module;
 
-import com.google.common.collect.*;
-import team.floracore.bukkit.*;
+import com.google.common.collect.Lists;
+import team.floracore.bukkit.FCBukkitBootstrap;
 
 public class RegistrarRegistrar extends AbsModule implements IRegistrar<IRegistrar> {
     public static RegistrarRegistrar instance = new RegistrarRegistrar();

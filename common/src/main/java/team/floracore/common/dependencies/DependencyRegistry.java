@@ -1,10 +1,12 @@
 package team.floracore.common.dependencies;
 
-import com.google.common.collect.*;
-import com.google.gson.*;
-import team.floracore.common.storage.*;
+import com.google.common.collect.ImmutableSetMultimap;
+import com.google.common.collect.SetMultimap;
+import com.google.gson.JsonElement;
+import team.floracore.common.storage.StorageType;
 
-import java.util.*;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 /**
  * Applies FloraCore specific behaviour for {@link Dependency}s.

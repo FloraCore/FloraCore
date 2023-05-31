@@ -1,20 +1,24 @@
 package team.floracore.common.util.wrapper;
 
-import com.google.common.collect.*;
-import io.github.karlatemp.unsafeaccessor.*;
+import com.google.common.collect.Lists;
+import io.github.karlatemp.unsafeaccessor.Root;
 import team.floracore.common.util.Optional;
 import team.floracore.common.util.*;
+import team.floracore.lib.asm.ClassWriter;
+import team.floracore.lib.asm.Opcodes;
 import team.floracore.lib.asm.Type;
-import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.tree.*;
+import team.floracore.lib.asm.tree.ClassNode;
+import team.floracore.lib.asm.tree.FieldNode;
+import team.floracore.lib.asm.tree.MethodNode;
 
-import java.io.*;
-import java.lang.annotation.*;
-import java.lang.invoke.*;
+import java.io.FileOutputStream;
+import java.lang.annotation.Annotation;
+import java.lang.invoke.MethodHandle;
+import java.lang.invoke.MethodType;
 import java.lang.reflect.*;
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import static team.floracore.common.util.AsmUtil.*;
 

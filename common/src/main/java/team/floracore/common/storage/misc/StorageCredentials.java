@@ -1,6 +1,7 @@
 package team.floracore.common.storage.misc;
 
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
 
 public class StorageCredentials {
 

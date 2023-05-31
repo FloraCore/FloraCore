@@ -1,13 +1,13 @@
 package team.floracore.common.plugin.scheduler;
 
-import team.floracore.common.plugin.bootstrap.*;
+import team.floracore.common.plugin.bootstrap.FloraCoreBootstrap;
 
-import java.lang.Thread.*;
-import java.util.*;
+import java.lang.Thread.UncaughtExceptionHandler;
+import java.util.Arrays;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.*;
-import java.util.function.*;
-import java.util.stream.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Abstract implementation of {@link SchedulerAdapter} using a {@link java.util.concurrent.ScheduledExecutorService}.

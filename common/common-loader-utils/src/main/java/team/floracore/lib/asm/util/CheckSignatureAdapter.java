@@ -1,9 +1,9 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
-import team.floracore.lib.asm.signature.*;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.signature.SignatureVisitor;
 
-import java.util.*;
+import java.util.EnumSet;
 
 /**
  * A {@link SignatureVisitor} that checks that its methods are properly used.

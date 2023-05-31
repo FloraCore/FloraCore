@@ -1,7 +1,10 @@
 package team.floracore.common.util;
 
-import java.util.*;
-import java.util.function.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Consumer;
+import java.util.function.Function;
 
 public final class Iterators {
 

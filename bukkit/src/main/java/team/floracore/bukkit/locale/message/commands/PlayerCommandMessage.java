@@ -1,14 +1,17 @@
 package team.floracore.bukkit.locale.message.commands;
 
-import net.kyori.adventure.text.*;
-import net.kyori.adventure.text.event.*;
-import team.floracore.common.locale.message.*;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
+import team.floracore.common.locale.message.AbstractMessage;
+import team.floracore.common.locale.message.MiscMessage;
 
-import java.util.*;
+import java.util.UUID;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
-import static net.kyori.adventure.text.format.TextDecoration.*;
+import static net.kyori.adventure.text.format.TextDecoration.BOLD;
+import static net.kyori.adventure.text.format.TextDecoration.UNDERLINED;
 
 public interface PlayerCommandMessage extends AbstractMessage {
     Args2<Boolean, String> COMMAND_FLY = (status, target) -> AbstractMessage.prefixed(translatable()

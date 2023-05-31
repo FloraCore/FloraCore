@@ -2,7 +2,10 @@ package team.floracore.lib.asm.commons;
 
 import team.floracore.lib.asm.*;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A {@link MethodVisitor} to insert before, after and around advices in methods and constructors.

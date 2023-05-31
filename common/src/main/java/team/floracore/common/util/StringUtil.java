@@ -1,9 +1,10 @@
 package team.floracore.common.util;
 
-import com.google.common.collect.*;
-import org.jetbrains.annotations.*;
+import com.google.common.collect.Lists;
+import org.jetbrains.annotations.NotNull;
 
-import java.nio.charset.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public final class StringUtil {

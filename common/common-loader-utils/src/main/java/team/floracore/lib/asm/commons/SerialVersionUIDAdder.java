@@ -1,10 +1,19 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ClassVisitor;
+import team.floracore.lib.asm.FieldVisitor;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
 
-import java.io.*;
-import java.security.*;
-import java.util.*;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 /**
  * A {@link ClassVisitor} that adds a serial version unique identifier to a class if missing. A

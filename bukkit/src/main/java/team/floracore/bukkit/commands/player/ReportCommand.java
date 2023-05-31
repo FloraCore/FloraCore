@@ -1,36 +1,45 @@
 package team.floracore.bukkit.commands.player;
 
-import cloud.commandframework.annotations.*;
-import cloud.commandframework.annotations.specifier.*;
-import de.myzelyam.api.vanish.*;
-import net.kyori.adventure.text.*;
-import net.kyori.adventure.text.format.*;
-import org.bukkit.*;
-import org.bukkit.enchantments.*;
-import org.bukkit.entity.*;
-import org.bukkit.inventory.*;
-import org.floracore.api.bukkit.messenger.message.type.*;
-import org.floracore.api.commands.report.*;
-import org.floracore.api.data.*;
-import org.jetbrains.annotations.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.command.*;
-import team.floracore.bukkit.inevntory.*;
-import team.floracore.bukkit.inevntory.content.*;
-import team.floracore.bukkit.locale.message.*;
-import team.floracore.bukkit.locale.message.commands.*;
-import team.floracore.bukkit.util.itemstack.*;
-import team.floracore.common.locale.message.*;
-import team.floracore.common.locale.translation.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
-import team.floracore.common.util.*;
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.specifier.Greedy;
+import de.myzelyam.api.vanish.VanishAPI;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.floracore.api.bukkit.messenger.message.type.NoticeMessage;
+import org.floracore.api.commands.report.ReportStatus;
+import org.floracore.api.data.DataType;
+import org.jetbrains.annotations.NotNull;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.command.FloraCoreBukkitCommand;
+import team.floracore.bukkit.inevntory.ClickableItem;
+import team.floracore.bukkit.inevntory.SmartInventory;
+import team.floracore.bukkit.inevntory.content.InventoryContents;
+import team.floracore.bukkit.inevntory.content.Pagination;
+import team.floracore.bukkit.locale.message.MenuMessage;
+import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
+import team.floracore.bukkit.util.itemstack.ItemStackBuilder;
+import team.floracore.common.locale.message.AbstractMessage;
+import team.floracore.common.locale.message.MiscMessage;
+import team.floracore.common.locale.translation.TranslationManager;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.storage.misc.floracore.tables.DATA;
+import team.floracore.common.storage.misc.floracore.tables.REPORT;
+import team.floracore.common.util.DurationFormatter;
+import team.floracore.common.util.StringUtil;
 
 import java.util.*;
-import java.util.concurrent.*;
-import java.util.stream.*;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
-import static net.kyori.adventure.text.Component.*;
+import static net.kyori.adventure.text.Component.space;
 
 /**
  * Report命令

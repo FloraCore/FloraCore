@@ -1,21 +1,27 @@
 package team.floracore.common.plugin;
 
-import com.google.gson.*;
-import okhttp3.*;
-import team.floracore.common.api.*;
-import team.floracore.common.config.*;
-import team.floracore.common.dependencies.*;
-import team.floracore.common.extension.*;
-import team.floracore.common.locale.data.*;
-import team.floracore.common.locale.translation.*;
-import team.floracore.common.messaging.*;
-import team.floracore.common.plugin.bootstrap.*;
-import team.floracore.common.plugin.logging.*;
-import team.floracore.common.sender.*;
-import team.floracore.common.storage.*;
+import com.google.gson.JsonElement;
+import okhttp3.OkHttpClient;
+import team.floracore.common.api.FloraCoreApiProvider;
+import team.floracore.common.config.FloraCoreConfiguration;
+import team.floracore.common.dependencies.DependencyManager;
+import team.floracore.common.extension.SimpleExtensionManager;
+import team.floracore.common.locale.data.DataManager;
+import team.floracore.common.locale.data.NamesRepository;
+import team.floracore.common.locale.translation.TranslationManager;
+import team.floracore.common.locale.translation.TranslationRepository;
+import team.floracore.common.messaging.InternalMessagingService;
+import team.floracore.common.plugin.bootstrap.FloraCoreBootstrap;
+import team.floracore.common.plugin.logging.PluginLogger;
+import team.floracore.common.sender.Sender;
+import team.floracore.common.storage.Storage;
+import team.floracore.common.storage.StorageFactory;
 
-import java.util.*;
-import java.util.stream.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Stream;
 
 public interface FloraCorePlugin {
     /**

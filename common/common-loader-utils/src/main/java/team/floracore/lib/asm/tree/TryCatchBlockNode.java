@@ -1,8 +1,9 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Type;
 
-import java.util.*;
+import java.util.List;
 
 /**
  * A node that represents a try catch block.

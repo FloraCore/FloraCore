@@ -1,11 +1,15 @@
 package team.floracore.bukkit.util.wrappednms;
 
-import team.floracore.bukkit.util.*;
-import team.floracore.bukkit.util.wrapper.*;
-import team.floracore.common.util.wrapper.*;
+import team.floracore.bukkit.util.VersionName;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitFieldAccessor;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
+import team.floracore.common.util.wrapper.WrappedMethod;
+import team.floracore.common.util.wrapper.WrappedObject;
 
 @WrappedBukkitClass({@VersionName(value = "nms.IRegistry",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.core.IRegistry", minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.core.IRegistry", minVer = 17)})
 public interface NmsIRegistry extends WrappedBukkitObject {
     static NmsRegistryMaterials getItemsV13_14() {
         return WrappedObject.getStatic(NmsIRegistry.class).staticGetItemsV13().cast(NmsRegistryMaterials.class);
@@ -49,17 +53,17 @@ public interface NmsIRegistry extends WrappedBukkitObject {
     NmsIRegistry staticGetItemsV13_15();
 
     @WrappedBukkitFieldAccessor({@VersionName(minVer = 15, value = "ITEM", maxVer = 19.3f), @VersionName(minVer = 17,
-                                                                                                         value = "#4",
-                                                                                                         maxVer = 19.3f)})
+            value = "#4",
+            maxVer = 19.3f)})
     NmsRegistryBlocks staticGetItemsV15_193();
 
     @WrappedBukkitFieldAccessor({@VersionName(minVer = 13,
-                                              maxVer = 19.3f,
-                                              value = "ENCHANTMENT"), @VersionName(minVer = 17,
-                                                                                   maxVer = 18,
-                                                                                   value = "X"), @VersionName(minVer = 18,
-                                                                                                              maxVer = 18.2f,
-                                                                                                              value = "Y"), @VersionName(
+            maxVer = 19.3f,
+            value = "ENCHANTMENT"), @VersionName(minVer = 17,
+            maxVer = 18,
+            value = "X"), @VersionName(minVer = 18,
+            maxVer = 18.2f,
+            value = "Y"), @VersionName(
             minVer = 18.2f,
             value = "V",
             maxVer = 19), @VersionName(value = "W", minVer = 19, maxVer = 19.3f)})

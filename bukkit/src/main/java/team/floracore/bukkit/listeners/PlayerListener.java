@@ -1,18 +1,22 @@
 package team.floracore.bukkit.listeners;
 
-import org.bukkit.entity.*;
-import org.bukkit.event.*;
-import org.bukkit.event.player.*;
-import org.floracore.api.data.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.config.*;
-import team.floracore.bukkit.listener.*;
-import team.floracore.bukkit.scoreboard.*;
-import team.floracore.common.storage.implementation.*;
-import team.floracore.common.storage.misc.floracore.tables.*;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.floracore.api.data.DataType;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.config.BoardsKeys;
+import team.floracore.bukkit.listener.FloraCoreBukkitListener;
+import team.floracore.bukkit.scoreboard.ScoreBoardManager;
+import team.floracore.common.storage.implementation.StorageImplementation;
+import team.floracore.common.storage.misc.floracore.tables.ONLINE;
+import team.floracore.common.storage.misc.floracore.tables.PLAYER;
 
-import java.sql.*;
-import java.util.*;
+import java.sql.SQLException;
+import java.util.UUID;
 
 public class PlayerListener extends FloraCoreBukkitListener {
     private final FCBukkitPlugin plugin;

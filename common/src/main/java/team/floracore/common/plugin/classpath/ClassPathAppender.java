@@ -1,6 +1,6 @@
 package team.floracore.common.plugin.classpath;
 
-import java.nio.file.*;
+import java.nio.file.Path;
 
 /**
  * Interface which allows access to add URLs to the plugin classpath at runtime.

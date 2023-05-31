@@ -1,6 +1,7 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ClassVisitor;
+import team.floracore.lib.asm.Type;
 
 /**
  * A node that represents an inner class. This inner class is not necessarily a member of the {@link

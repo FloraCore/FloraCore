@@ -1,6 +1,6 @@
 package team.floracore.bukkit.inevntory;
 
-import java.util.function.*;
+import java.util.function.Consumer;
 
 public class InventoryListener<T> {
 

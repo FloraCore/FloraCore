@@ -1,10 +1,13 @@
 package team.floracore.bukkit.util.nothing;
 
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.util.module.*;
-import team.floracore.bukkit.util.wrappednms.*;
-import team.floracore.common.util.*;
-import team.floracore.common.util.nothing.*;
+import team.floracore.bukkit.FCBukkitBootstrap;
+import team.floracore.bukkit.util.module.AbsModule;
+import team.floracore.bukkit.util.module.IRegistrar;
+import team.floracore.bukkit.util.module.RegistrarRegistrar;
+import team.floracore.bukkit.util.wrappednms.NmsEntity;
+import team.floracore.bukkit.util.wrappednms.NmsNetworkManager;
+import team.floracore.common.util.TypeUtil;
+import team.floracore.common.util.nothing.Nothing;
 
 public class NothingRegistrar extends AbsModule implements IRegistrar<Class<? extends Nothing>> {
     public static NothingRegistrar instance = new NothingRegistrar();

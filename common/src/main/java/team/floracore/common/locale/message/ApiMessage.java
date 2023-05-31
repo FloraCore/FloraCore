@@ -1,13 +1,12 @@
 package team.floracore.common.locale.message;
 
-import static net.kyori.adventure.text.Component.*;
-import static net.kyori.adventure.text.format.NamedTextColor.*;
+import static net.kyori.adventure.text.Component.translatable;
+import static net.kyori.adventure.text.format.NamedTextColor.RED;
 
 /**
  * API消息
  *
  * @author xLikeWATCHDOG
- * @date 2023/5/30 22:39
  */
 public interface ApiMessage extends AbstractMessage {
     Args0 API_PLAYER_RANK_CONSUMER_NOT_FOUND = () -> AbstractMessage.prefixed(translatable()

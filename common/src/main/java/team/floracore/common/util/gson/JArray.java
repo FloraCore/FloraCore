@@ -1,8 +1,12 @@
 package team.floracore.common.util.gson;
 
-import com.google.gson.*;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonPrimitive;
 
-import java.util.function.*;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class JArray implements JElement {
     private final JsonArray array = new JsonArray();

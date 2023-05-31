@@ -1,11 +1,12 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
 import team.floracore.lib.asm.tree.*;
-import team.floracore.lib.asm.tree.analysis.Frame;
 import team.floracore.lib.asm.tree.analysis.*;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * An {@link Analyzer} subclass which checks that methods provide stack map frames where expected

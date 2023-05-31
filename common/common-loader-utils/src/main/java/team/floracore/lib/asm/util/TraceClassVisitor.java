@@ -2,7 +2,7 @@ package team.floracore.lib.asm.util;
 
 import team.floracore.lib.asm.*;
 
-import java.io.*;
+import java.io.PrintWriter;
 
 /**
  * A {@link ClassVisitor} that prints the classes it visits with a {@link Printer}. This class

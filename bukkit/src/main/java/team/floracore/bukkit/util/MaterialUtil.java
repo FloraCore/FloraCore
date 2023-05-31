@@ -1,13 +1,18 @@
 package team.floracore.bukkit.util;
 
-import org.bukkit.*;
-import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.*;
-import org.bukkit.material.*;
-import team.floracore.bukkit.util.wrapper.*;
+import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
+import org.bukkit.Material;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.material.MaterialData;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
 
-import java.lang.reflect.*;
-import java.util.*;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.EnumSet;
+import java.util.Set;
 
 public final class MaterialUtil {
     public static final boolean PRE_FLATTENING = BukkitWrapper.version <= 13;

@@ -1,6 +1,9 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Label;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
 import team.floracore.lib.asm.tree.*;
 
 import java.util.*;

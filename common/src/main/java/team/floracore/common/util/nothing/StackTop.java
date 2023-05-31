@@ -1,6 +1,9 @@
 package team.floracore.common.util.nothing;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Take out value at current stack top, then put it back later

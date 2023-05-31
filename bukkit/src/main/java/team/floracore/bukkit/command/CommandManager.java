@@ -1,26 +1,33 @@
 package team.floracore.bukkit.command;
 
-import cloud.commandframework.*;
-import cloud.commandframework.annotations.*;
-import cloud.commandframework.arguments.parser.*;
-import cloud.commandframework.bukkit.*;
-import cloud.commandframework.exceptions.*;
-import cloud.commandframework.execution.*;
-import cloud.commandframework.meta.*;
-import cloud.commandframework.paper.*;
-import org.bukkit.*;
-import org.bukkit.command.*;
-import team.floracore.bukkit.*;
-import team.floracore.bukkit.commands.misc.*;
+import cloud.commandframework.CommandTree;
+import cloud.commandframework.annotations.AnnotationParser;
+import cloud.commandframework.arguments.parser.ParserParameters;
+import cloud.commandframework.arguments.parser.StandardParameters;
+import cloud.commandframework.bukkit.BukkitCommandManager;
+import cloud.commandframework.bukkit.CloudBukkitCapabilities;
+import cloud.commandframework.exceptions.InvalidCommandSenderException;
+import cloud.commandframework.exceptions.InvalidSyntaxException;
+import cloud.commandframework.exceptions.NoPermissionException;
+import cloud.commandframework.execution.CommandExecutionCoordinator;
+import cloud.commandframework.execution.FilteringCommandSuggestionProcessor;
+import cloud.commandframework.meta.CommandMeta;
+import cloud.commandframework.paper.PaperCommandManager;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
+import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.commands.misc.FloraCoreCommand;
+import team.floracore.bukkit.commands.misc.LanguageCommand;
 import team.floracore.bukkit.commands.player.*;
-import team.floracore.bukkit.commands.server.*;
-import team.floracore.bukkit.commands.test.*;
-import team.floracore.bukkit.commands.world.*;
-import team.floracore.common.locale.message.*;
-import team.floracore.common.plugin.*;
-import team.floracore.common.sender.*;
+import team.floracore.bukkit.commands.server.BroadCastCommand;
+import team.floracore.bukkit.commands.test.TestCommand;
+import team.floracore.bukkit.commands.world.TimeCommand;
+import team.floracore.bukkit.commands.world.WeatherCommand;
+import team.floracore.common.locale.message.MiscMessage;
+import team.floracore.common.plugin.FloraCorePlugin;
+import team.floracore.common.sender.Sender;
 
-import java.util.function.*;
+import java.util.function.Function;
 
 /**
  * 命令管理器。
