@@ -35,7 +35,7 @@ public class SidebarBoardPage extends BoardPage {
             Material.valueOf("KELP");
             BOARD_LINE_MAX_CHARS = 64;
             BOARD_LINE_MAX_CHARS_SUB1 = BOARD_LINE_MAX_CHARS - 1;
-            Bukkit.getLogger().info("§a当前服务端支持新版记分板 长度限制为128个字符...");
+            Bukkit.getLogger().info("§a当前服务端支持新版记分板,长度限制为64个字符...");
         } catch (IllegalArgumentException ignored) {
         }
     }
