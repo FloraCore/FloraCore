@@ -44,6 +44,7 @@ public class DurationFormatter {
      * Formats {@code duration} as a {@link net.kyori.adventure.text.Component}.
      *
      * @param duration the duration
+     *
      * @return the formatted component
      */
     public Component format(Duration duration) {

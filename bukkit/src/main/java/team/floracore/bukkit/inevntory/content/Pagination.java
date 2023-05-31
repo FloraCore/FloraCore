@@ -37,8 +37,8 @@ public interface Pagination {
         @Override
         public ClickableItem[] getPageItems() {
             return Arrays.copyOfRange(items,
-                    currentPage * itemsPerPage,
-                    (currentPage + 1) * itemsPerPage);
+                                      currentPage * itemsPerPage,
+                                      (currentPage + 1) * itemsPerPage);
         }
 
         @Override

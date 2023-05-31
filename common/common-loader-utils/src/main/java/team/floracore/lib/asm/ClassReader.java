@@ -142,6 +142,7 @@ public class ClassReader {
      * @param inputStream an input stream of the JVMS ClassFile structure to be read. This input
      *                    stream must contain nothing more than the ClassFile structure itself. It is read from its
      *                    current position to its end.
+     *
      * @throws IOException if a problem occurs during reading.
      */
     public ClassReader(final InputStream inputStream) throws IOException {
@@ -271,6 +272,7 @@ public class ClassReader {
      *
      * @param className the fully qualified name of the class to be read. The ClassFile structure is
      *                  retrieved with the current class loader's {@link ClassLoader#getSystemResourceAsStream}.
+     *
      * @throws IOException if an exception occurs during reading.
      */
     public ClassReader(final String className) throws IOException {
@@ -284,7 +286,9 @@ public class ClassReader {
      *
      * @param inputStream an input stream.
      * @param close       true to close the input stream after reading.
+     *
      * @return the content of the given input stream.
+     *
      * @throws IOException if a problem occurs during reading.
      */
     @SuppressWarnings("PMD.UseTryWithResources")
@@ -336,6 +340,7 @@ public class ClassReader {
      * Attribute} sub classes, and is normally not needed by class generators or adapters.</i>
      *
      * @param offset the start offset of the value to be read in this {@link ClassReader}.
+     *
      * @return the read value.
      */
     public short readShort(final int offset) {
@@ -348,6 +353,7 @@ public class ClassReader {
      * {@link Attribute} sub classes, and is normally not needed by class generators or adapters.</i>
      *
      * @param offset the start index of the value to be read in this {@link ClassReader}.
+     *
      * @return the read value.
      */
     public int readUnsignedShort(final int offset) {
@@ -360,6 +366,7 @@ public class ClassReader {
      *
      * @param maxStringLength a conservative estimate of the maximum length of the strings contained
      *                        in the constant pool of the class.
+     *
      * @return the offsets of the bootstrap methods.
      */
     private int[] readBootstrapMethodsAttribute(final int maxStringLength) {
@@ -449,6 +456,7 @@ public class ClassReader {
      *                   value is the index of a CONSTANT_Utf8 entry in the class's constant pool table.
      * @param charBuffer the buffer to be used to read the string. This buffer must be sufficiently
      *                   large. It is not automatically resized.
+     *
      * @return the String corresponding to the specified CONSTANT_Utf8 entry.
      */
     // DontCheck(AbbreviationAsWordInName): can't be renamed (for backward binary compatibility).
@@ -465,6 +473,7 @@ public class ClassReader {
      * Attribute} sub classes, and is normally not needed by class generators or adapters.</i>
      *
      * @param offset the start offset of the value to be read in this {@link ClassReader}.
+     *
      * @return the read value.
      */
     public int readInt(final int offset) {
@@ -486,6 +495,7 @@ public class ClassReader {
      *                               table.
      * @param charBuffer             the buffer to be used to read the string. This buffer must be sufficiently
      *                               large. It is not automatically resized.
+     *
      * @return the String corresponding to the specified CONSTANT_Utf8 entry.
      */
     final String readUtf(final int constantPoolEntryIndex, final char[] charBuffer) {
@@ -505,6 +515,7 @@ public class ClassReader {
      * @param utfLength  the length of the UTF8 string to be read.
      * @param charBuffer the buffer to be used to read the string. This buffer must be sufficiently
      *                   large. It is not automatically resized.
+     *
      * @return the String corresponding to the specified UTF8 string.
      */
     private String readUtf(final int utfOffset, final int utfLength, final char[] charBuffer) {
@@ -535,6 +546,7 @@ public class ClassReader {
      * and Synthetic flags when bytecode is before 1.5 and those flags are represented by attributes.
      *
      * @return the class access flags.
+     *
      * @see ClassVisitor#visit(int, int, String, String, String, String[])
      */
     public int getAccess() {
@@ -545,6 +557,7 @@ public class ClassReader {
      * Returns the internal name of the class (see {@link Type#getInternalName()}).
      *
      * @return the internal class name.
+     *
      * @see ClassVisitor#visit(int, int, String, String, String, String[])
      */
     public String getClassName() {
@@ -565,6 +578,7 @@ public class ClassReader {
      *                   value is the index of a CONSTANT_Class entry in class's constant pool table.
      * @param charBuffer the buffer to be used to read the item. This buffer must be sufficiently
      *                   large. It is not automatically resized.
+     *
      * @return the String corresponding to the specified CONSTANT_Class entry.
      */
     public String readClass(final int offset, final char[] charBuffer) {
@@ -582,6 +596,7 @@ public class ClassReader {
      *                   CONSTANT_Module or CONSTANT_Package entry in class's constant pool table.
      * @param charBuffer the buffer to be used to read the item. This buffer must be sufficiently
      *                   large. It is not automatically resized.
+     *
      * @return the String corresponding to the specified constant pool entry.
      */
     private String readStringish(final int offset, final char[] charBuffer) {
@@ -595,6 +610,7 @@ public class ClassReader {
      * interfaces, the super class is {@link Object}.
      *
      * @return the internal name of the super class, or {@literal null} for {@link Object} class.
+     *
      * @see ClassVisitor#visit(int, int, String, String, String, String[])
      */
     public String getSuperName() {
@@ -607,6 +623,7 @@ public class ClassReader {
      *
      * @return the internal names of the directly implemented interfaces. Inherited implemented
      * interfaces are not returned.
+     *
      * @see ClassVisitor#visit(int, int, String, String, String, String[])
      */
     public String[] getInterfaces() {
@@ -1097,6 +1114,7 @@ public class ClassReader {
      * @param classVisitor          the current class visitor
      * @param context               information about the class being parsed.
      * @param recordComponentOffset the offset of the current record component.
+     *
      * @return the offset of the first byte following the record component.
      */
     private int readRecordComponent(
@@ -1271,6 +1289,7 @@ public class ClassReader {
      * @param classVisitor    the visitor that must visit the field.
      * @param context         information about the class being parsed.
      * @param fieldInfoOffset the start offset of the field_info structure.
+     *
      * @return the offset of the first byte following the field_info structure.
      */
     private int readField(
@@ -1455,6 +1474,7 @@ public class ClassReader {
      * @param classVisitor     the visitor that must visit the method.
      * @param context          information about the class being parsed.
      * @param methodInfoOffset the start offset of the method_info structure.
+     *
      * @return the offset of the first byte following the method_info structure.
      */
     private int readMethod(
@@ -2895,6 +2915,7 @@ public class ClassReader {
      * @param labels         the already created labels, indexed by their offset. If a label already exists
      *                       for bytecodeOffset this method must not create a new one. Otherwise it must store the new
      *                       label in this array.
+     *
      * @return a non null Label, which must be equal to labels[bytecodeOffset].
      */
     protected Label readLabel(final int bytecodeOffset, final Label[] labels) {
@@ -2911,6 +2932,7 @@ public class ClassReader {
      *
      * @param bytecodeOffset a bytecode offset in a method.
      * @param labels         the already created labels, indexed by their offset.
+     *
      * @return a Label without the {@link Label#FLAG_DEBUG_ONLY} flag set.
      */
     private Label createLabel(final int bytecodeOffset, final Label[] labels) {
@@ -2948,6 +2970,7 @@ public class ClassReader {
      *                                     attribute, excluding the attribute_info's attribute_name_index and attribute_length fields.
      * @param visible                      true if the attribute to parse is a RuntimeVisibleTypeAnnotations attribute,
      *                                     false it is a RuntimeInvisibleTypeAnnotations attribute.
+     *
      * @return the start offset of each entry of the Runtime[In]VisibleTypeAnnotations_attribute's
      * 'annotations' array field.
      */
@@ -3051,6 +3074,7 @@ public class ClassReader {
      * @param typeAnnotationOffsets the offset of each 'type_annotation' entry in a
      *                              Runtime[In]VisibleTypeAnnotations attribute, or {@literal null}.
      * @param typeAnnotationIndex   the index a 'type_annotation' entry in typeAnnotationOffsets.
+     *
      * @return bytecode offset corresponding to the specified JVMS 'type_annotation' structure, or -1
      * if there is no such type_annotation of if it does not have a bytecode offset.
      */
@@ -3076,6 +3100,7 @@ public class ClassReader {
      * @param context              information about the class being parsed. This is where the extracted
      *                             target_type and target_path must be stored.
      * @param typeAnnotationOffset the start offset of a type_annotation structure.
+     *
      * @return the start offset of the rest of the type_annotation structure.
      */
     private int readTypeAnnotationTarget(final Context context, final int typeAnnotationOffset) {
@@ -3200,6 +3225,7 @@ public class ClassReader {
      *                          of a JVMS 'annotation' structure, and false to parse the JVMS 'array_value' of an
      *                          annotation's element_value.
      * @param charBuffer        the buffer used to read strings in the constant pool.
+     *
      * @return the end offset of the JVMS 'annotation' or 'array_value' structure.
      */
     private int readElementValues(
@@ -3239,6 +3265,7 @@ public class ClassReader {
      *                           structure to be read.
      * @param elementName        the name of the element_value structure to be read, or {@literal null}.
      * @param charBuffer         the buffer used to read strings in the constant pool.
+     *
      * @return the end offset of the JVMS 'element_value' structure.
      */
     private int readElementValue(
@@ -3490,6 +3517,7 @@ public class ClassReader {
      *                            structure without its frame_type field.
      * @param expand              if the stack map frame must be expanded. See {@link #EXPAND_FRAMES}.
      * @param context             where the parsed stack map frame must be stored.
+     *
      * @return the end offset of the JVMS 'stack_map_frame' or 'full_frame' structure.
      */
     private int readStackMapFrame(
@@ -3589,6 +3617,7 @@ public class ClassReader {
      * @param labels                     the labels of the method currently being parsed, indexed by their offset. If the
      *                                   parsed type is an ITEM_Uninitialized, a new label for the corresponding NEW instruction is
      *                                   stored in this array if it does not already exist.
+     *
      * @return the end offset of the JVMS 'verification_type_info' structure.
      */
     private int readVerificationTypeInfo(
@@ -3653,6 +3682,7 @@ public class ClassReader {
      *                            account here.
      * @param labels              the labels of the method's code, or {@literal null} if the attribute to be read
      *                            is not a code attribute.
+     *
      * @return the attribute that has been read.
      */
     private Attribute readAttribute(
@@ -3688,6 +3718,7 @@ public class ClassReader {
      *
      * @param constantPoolEntryIndex the index a constant pool entry in the class's constant pool
      *                               table.
+     *
      * @return the start offset in this {@link ClassReader} of the corresponding JVMS 'cp_info'
      * structure, plus one.
      */
@@ -3711,6 +3742,7 @@ public class ClassReader {
      * Attribute} sub classes, and is normally not needed by class generators or adapters.</i>
      *
      * @param offset the start offset of the value to be read in this {@link ClassReader}.
+     *
      * @return the read value.
      */
     public int readByte(final int offset) {
@@ -3722,6 +3754,7 @@ public class ClassReader {
      * Attribute} sub classes, and is normally not needed by class generators or adapters.</i>
      *
      * @param offset the start offset of the value to be read in this {@link ClassReader}.
+     *
      * @return the read value.
      */
     public long readLong(final int offset) {
@@ -3739,6 +3772,7 @@ public class ClassReader {
      *                   value is the index of a CONSTANT_Module entry in class's constant pool table.
      * @param charBuffer the buffer to be used to read the item. This buffer must be sufficiently
      *                   large. It is not automatically resized.
+     *
      * @return the String corresponding to the specified CONSTANT_Module entry.
      */
     public String readModule(final int offset, final char[] charBuffer) {
@@ -3754,6 +3788,7 @@ public class ClassReader {
      *                   value is the index of a CONSTANT_Package entry in class's constant pool table.
      * @param charBuffer the buffer to be used to read the item. This buffer must be sufficiently
      *                   large. It is not automatically resized.
+     *
      * @return the String corresponding to the specified CONSTANT_Package entry.
      */
     public String readPackage(final int offset, final char[] charBuffer) {
@@ -3767,6 +3802,7 @@ public class ClassReader {
      *                               pool table.
      * @param charBuffer             the buffer to be used to read the string. This buffer must be sufficiently
      *                               large. It is not automatically resized.
+     *
      * @return the ConstantDynamic corresponding to the specified CONSTANT_Dynamic entry.
      */
     private ConstantDynamic readConstantDynamic(
@@ -3801,6 +3837,7 @@ public class ClassReader {
      *                               CONSTANT_MethodHandle or CONSTANT_Dynamic entry in the class's constant pool.
      * @param charBuffer             the buffer to be used to read strings. This buffer must be sufficiently
      *                               large. It is not automatically resized.
+     *
      * @return the {@link Integer}, {@link Float}, {@link Long}, {@link Double}, {@link String},
      * {@link Type}, {@link Handle} or {@link ConstantDynamic} corresponding to the specified
      * constant pool entry.

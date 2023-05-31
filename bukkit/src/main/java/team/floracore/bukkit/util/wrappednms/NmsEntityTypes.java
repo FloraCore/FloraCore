@@ -10,8 +10,8 @@ import team.floracore.common.util.wrapper.WrappedObject;
 import java.util.function.Function;
 
 @WrappedBukkitClass({@VersionName(value = "nms.EntityTypes",
-        maxVer = 17), @VersionName(value = "net.minecraft.world.entity.EntityTypes",
-        minVer = 17)})
+                                  maxVer = 17), @VersionName(value = "net.minecraft.world.entity.EntityTypes",
+                                                             minVer = 17)})
 public interface NmsEntityTypes extends WrappedBukkitObject {
     static NmsEntity spawn(NmsNBTTagCompound nbt, NmsWorld world) {
         if (BukkitWrapper.v17) {

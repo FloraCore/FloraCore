@@ -17,6 +17,7 @@ public interface RankConsumer {
      *
      * @param uuid 玩家的UUID。
      * @param rank 要设置的Rank。
+     *
      * @return 一个CompletableFuture对象，表示设置等级的异步操作。
      */
     CompletableFuture<Void> setRank(UUID uuid, String rank);
@@ -25,6 +26,7 @@ public interface RankConsumer {
      * 重置指定玩家的Rank。
      *
      * @param uuid 玩家的UUID。
+     *
      * @return 一个CompletableFuture对象，表示重置等级的异步操作。
      */
     CompletableFuture<Void> resetRank(UUID uuid);

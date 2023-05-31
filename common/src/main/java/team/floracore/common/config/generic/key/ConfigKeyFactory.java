@@ -12,7 +12,7 @@ public interface ConfigKeyFactory<T> {
     ConfigKeyFactory<Boolean> BOOLEAN = ConfigurationAdapter::getBoolean;
     ConfigKeyFactory<String> STRING = ConfigurationAdapter::getString;
     ConfigKeyFactory<String> LOWERCASE_STRING = (adapter, path, def) -> adapter.getString(path, def)
-            .toLowerCase(Locale.ROOT);
+                                                                               .toLowerCase(Locale.ROOT);
     ConfigKeyFactory<Map<String, String>> STRING_MAP = (config, path, def) -> ImmutableMap.copyOf(config.getStringMap(
             path,
             ImmutableMap.of()));
@@ -48,6 +48,7 @@ public interface ConfigKeyFactory<T> {
      * @param config the config
      * @param path   the path where the value is
      * @param def    the default value
+     *
      * @return the value
      */
     T getValue(ConfigurationAdapter config, String path, T def);

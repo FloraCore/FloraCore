@@ -320,6 +320,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param methodVisitor    the method visitor to which this adapter must delegate calls.
      * @param labelInsnIndices the index of the instruction designated by each visited label so far
      *                         (in other methods). This map is updated with the labels from the visited method.
+     *
      * @throws IllegalStateException If a subclass calls this constructor.
      */
     public CheckMethodAdapter(
@@ -561,6 +562,7 @@ public class CheckMethodAdapter extends MethodVisitor {
      * @param descriptor the string to be checked.
      * @param startPos   the index of the first character of the type descriptor (inclusive).
      * @param canBeVoid  whether {@code V} can be considered valid.
+     *
      * @return the index of the last character of the type descriptor, plus one.
      */
     private static int checkDescriptor(

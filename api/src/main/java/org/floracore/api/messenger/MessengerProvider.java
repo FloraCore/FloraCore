@@ -31,6 +31,7 @@ public interface MessengerProvider {
      *
      * @param incomingMessageConsumer the consumer the new instance should pass
      *                                incoming messages to
+     *
      * @return a new messenger agent instance
      */
     @NotNull

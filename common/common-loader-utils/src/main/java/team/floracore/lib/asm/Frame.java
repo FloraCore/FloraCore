@@ -233,6 +233,7 @@ class Frame {
      * @param symbolTable  the type table to use to lookup and store type {@link Symbol}.
      * @param internalName the internal name of a class. This must <i>not</i> be an array type
      *                     descriptor.
+     *
      * @return the abstract type value corresponding to the given internal name.
      */
     static int getAbstractTypeFromInternalName(
@@ -252,6 +253,7 @@ class Frame {
      * @param abstractType an abstract type, restricted to {@link Frame#CONSTANT_KIND}, {@link
      *                     Frame#REFERENCE_KIND} or {@link Frame#UNINITIALIZED_KIND} types.
      * @param output       where the abstract type must be put.
+     *
      * @see <a href="https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.7.4">JVMS
      * 4.7.4</a>
      */
@@ -328,6 +330,7 @@ class Frame {
      * @param symbolTable the type table to use to lookup and store type {@link Symbol}.
      * @param buffer      a string ending with a type descriptor.
      * @param offset      the start offset of the type descriptor in buffer.
+     *
      * @return the abstract type corresponding to the given type descriptor.
      */
     private static int getAbstractTypeFromDescriptor(
@@ -404,6 +407,7 @@ class Frame {
      *                    Opcodes#FLOAT}, {@link Opcodes#LONG}, {@link Opcodes#DOUBLE}, {@link Opcodes#NULL}, or
      *                    {@link Opcodes#UNINITIALIZED_THIS}, or the internal name of a class, or a Label designating
      *                    a NEW instruction (for uninitialized types).
+     *
      * @return the abstract type corresponding to the given frame element type.
      */
     static int getAbstractTypeFromApiFormat(final SymbolTable symbolTable, final Object type) {
@@ -434,6 +438,7 @@ class Frame {
      *                    {@link #REFERENCE_KIND} or {@link #UNINITIALIZED_KIND} kind, with positive or {@literal
      *                    null} array dimensions.
      * @param dstIndex    the index of the type that must be merged in dstTypes.
+     *
      * @return {@literal true} if the type array has been modified by this operation.
      */
     private static boolean merge(
@@ -1111,6 +1116,7 @@ class Frame {
      * Returns the abstract type stored at the given local variable index in the output frame.
      *
      * @param localIndex the index of the local variable whose value must be returned.
+     *
      * @return the abstract type stored at the given local variable index in the output frame.
      */
     private int getLocal(final int localIndex) {
@@ -1240,6 +1246,7 @@ class Frame {
      *                       of a successor, in the control flow graph, of the basic block corresponding to this frame.
      * @param catchTypeIndex if 'frame' corresponds to an exception handler basic block, the type
      *                       table index of the caught exception type, otherwise 0.
+     *
      * @return {@literal true} if the input frame of 'frame' has been changed by this operation.
      */
     final boolean merge(
@@ -1335,6 +1342,7 @@ class Frame {
      * @param abstractOutputType an abstract output type.
      * @param numStack           the size of the input stack, used to resolve abstract output types of
      *                           STACK_KIND kind.
+     *
      * @return the concrete output type corresponding to 'abstractOutputType'.
      */
     private int getConcreteOutputType(final int abstractOutputType, final int numStack) {
@@ -1374,6 +1382,7 @@ class Frame {
      *
      * @param symbolTable  the type table to use to lookup and store type {@link Symbol}.
      * @param abstractType an abstract type.
+     *
      * @return the REFERENCE_KIND abstract type corresponding to abstractType if it is
      * UNINITIALIZED_THIS or an UNINITIALIZED_KIND abstract type for one of the types on which a
      * constructor is invoked in the basic block. Otherwise returns abstractType.

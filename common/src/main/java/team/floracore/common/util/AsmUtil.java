@@ -32,18 +32,18 @@ public class AsmUtil {
 
     public static MethodInsnNode wrapNode() {
         return new MethodInsnNode(Opcodes.INVOKESTATIC,
-                AsmUtil.getType(WrappedObject.class),
-                "wrap",
-                AsmUtil.getDesc(new Class[]{Class.class, Object.class}, WrappedObject.class),
-                true);
+                                  AsmUtil.getType(WrappedObject.class),
+                                  "wrap",
+                                  AsmUtil.getDesc(new Class[]{Class.class, Object.class}, WrappedObject.class),
+                                  true);
     }
 
     public static MethodInsnNode getRawNode() {
         return new MethodInsnNode(Opcodes.INVOKEINTERFACE,
-                AsmUtil.getType(WrappedObject.class),
-                "getRaw",
-                AsmUtil.getDesc(new Class[0], Object.class),
-                true);
+                                  AsmUtil.getType(WrappedObject.class),
+                                  "getRaw",
+                                  AsmUtil.getDesc(new Class[0], Object.class),
+                                  true);
     }
 
     public static VarInsnNode varStoreNode(Class<?> type, int index) {
@@ -372,9 +372,9 @@ public class AsmUtil {
                 }
             } else if (TypeUtil.toPrimitive(src).isPrimitive()) {
                 InsnList r = toList(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,
-                        getType(src),
-                        TypeUtil.toPrimitive(src).getName() + "Value",
-                        getDesc(new Class[0], TypeUtil.toPrimitive(src))));
+                                                       getType(src),
+                                                       TypeUtil.toPrimitive(src).getName() + "Value",
+                                                       getDesc(new Class[0], TypeUtil.toPrimitive(src))));
                 r.add(castNode(tar, TypeUtil.toPrimitive(src)));
                 return r;
             } else {
@@ -384,10 +384,10 @@ public class AsmUtil {
             }
         } else if (src.isPrimitive()) {
             InsnList r = toList(new MethodInsnNode(Opcodes.INVOKESTATIC,
-                    getType(TypeUtil.toWrapper(src)),
-                    "valueOf",
-                    getDesc(new Class[]{src}, TypeUtil.toWrapper(src)),
-                    false));
+                                                   getType(TypeUtil.toWrapper(src)),
+                                                   "valueOf",
+                                                   getDesc(new Class[]{src}, TypeUtil.toWrapper(src)),
+                                                   false));
             r.add(castNode(tar, TypeUtil.toWrapper(src)));
             return r;
         } else if (tar.isAssignableFrom(src)) {

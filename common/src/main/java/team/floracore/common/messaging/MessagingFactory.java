@@ -57,7 +57,7 @@ public class MessagingFactory<P extends FloraCorePlugin> {
 
         if (messagingType.equals("custom")) {
             this.plugin.getLogger()
-                    .info("Messaging service is set to custom. No service is initialized at this stage yet.");
+                       .info("Messaging service is set to custom. No service is initialized at this stage yet.");
             return null;
         }
 

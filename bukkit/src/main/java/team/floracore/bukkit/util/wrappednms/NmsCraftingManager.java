@@ -9,8 +9,8 @@ import team.floracore.common.util.wrapper.WrappedObject;
 import java.util.*;
 
 @WrappedBukkitClass({@VersionName(value = "nms.CraftingManager",
-        maxVer = 17), @VersionName(value = "net.minecraft.world.item.crafting.CraftingManager",
-        minVer = 17)})
+                                  maxVer = 17), @VersionName(value = "net.minecraft.world.item.crafting.CraftingManager",
+                                                             minVer = 17)})
 public interface NmsCraftingManager extends WrappedBukkitObject {
     static Map<Object, Object> getCraftingRecipes() {
         if (BukkitWrapper.version >= 14) {
@@ -24,9 +24,9 @@ public interface NmsCraftingManager extends WrappedBukkitObject {
 
     static Map<Object, Object> getRecipesV_13() {
         return WrappedObject.wrap(NmsCraftingManager.class, null)
-                .getRecipes0V_13()
-                .cast(NmsRegistrySimpleV_13.class)
-                .getMap();
+                            .getRecipes0V_13()
+                            .cast(NmsRegistrySimpleV_13.class)
+                            .getMap();
     }
 
     static void addRecipe(NmsMinecraftKey key, NmsIRecipe recipe) {
@@ -52,9 +52,9 @@ public interface NmsCraftingManager extends WrappedBukkitObject {
     static Map<Object, Object> getCampfireCookingRecipesV13() {
         if (BukkitWrapper.v13) {
             return NmsMinecraftServer.getServer()
-                    .getCraftingManagerV13()
-                    .getRecipesV14()
-                    .get(NmsRecipesV14.campfireCooking());
+                                     .getCraftingManagerV13()
+                                     .getRecipesV14()
+                                     .get(NmsRecipesV14.campfireCooking());
         } else {
             return getRecipesV_13();
         }
@@ -79,9 +79,9 @@ public interface NmsCraftingManager extends WrappedBukkitObject {
     static Map<Object, Object> getStonecuttingRecipesV13() {
         if (BukkitWrapper.v13) {
             return NmsMinecraftServer.getServer()
-                    .getCraftingManagerV13()
-                    .getRecipesV14()
-                    .get(NmsRecipesV14.stonecutting());
+                                     .getCraftingManagerV13()
+                                     .getRecipesV14()
+                                     .get(NmsRecipesV14.stonecutting());
         } else {
             return getRecipesV_13();
         }
@@ -153,8 +153,8 @@ public interface NmsCraftingManager extends WrappedBukkitObject {
     NmsRegistryMaterials getRecipes0V_13();
 
     @WrappedBukkitMethod({@VersionName(minVer = 13, value = "addRecipe"), @VersionName(value = "@0",
-            minVer = 13,
-            maxVer = 14)})
+                                                                                       minVer = 13,
+                                                                                       maxVer = 14)})
     void addRecipe0V13(NmsIRecipe recipe);
 
     @WrappedBukkitMethod(@VersionName(maxVer = 13, value = "#0"))

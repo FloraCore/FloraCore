@@ -51,7 +51,9 @@ abstract class FlatfileConnectionFactory implements ConnectionFactory {
      * Creates a connection to the database.
      *
      * @param file the database file
+     *
      * @return the connection
+     *
      * @throws java.sql.SQLException if any error occurs
      */
     protected abstract Connection createConnection(Path file) throws SQLException;

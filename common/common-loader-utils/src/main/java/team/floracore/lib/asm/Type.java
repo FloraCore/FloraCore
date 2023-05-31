@@ -190,6 +190,7 @@ public final class Type {
      * Returns the method {@link Type} corresponding to the given constructor.
      *
      * @param constructor a {@link Constructor} object.
+     *
      * @return the method {@link Type} corresponding to the given constructor.
      */
     public static Type getType(final Constructor<?> constructor) {
@@ -200,6 +201,7 @@ public final class Type {
      * Returns the {@link Type} corresponding to the given type descriptor.
      *
      * @param typeDescriptor a field or method type descriptor.
+     *
      * @return the {@link Type} corresponding to the given type descriptor.
      */
     public static Type getType(final String typeDescriptor) {
@@ -210,6 +212,7 @@ public final class Type {
      * Returns the descriptor corresponding to the given constructor.
      *
      * @param constructor a {@link Constructor} object.
+     *
      * @return the descriptor of the given constructor.
      */
     public static String getConstructorDescriptor(final Constructor<?> constructor) {
@@ -230,6 +233,7 @@ public final class Type {
      *                         descriptorBuffer.
      * @param descriptorEnd    the end index, exclusive, of the field or method descriptor in
      *                         descriptorBuffer.
+     *
      * @return the {@link Type} corresponding to the given type descriptor.
      */
     private static Type getTypeInternal(
@@ -310,6 +314,7 @@ public final class Type {
      * qualified name, as returned by Class.getName(), where '.' are replaced by '/'.
      *
      * @param clazz an object or array class.
+     *
      * @return the internal name of the given class.
      */
     public static String getInternalName(final Class<?> clazz) {
@@ -320,6 +325,7 @@ public final class Type {
      * Returns the method {@link Type} corresponding to the given method.
      *
      * @param method a {@link Method} object.
+     *
      * @return the method {@link Type} corresponding to the given method.
      */
     public static Type getType(final Method method) {
@@ -330,6 +336,7 @@ public final class Type {
      * Returns the descriptor corresponding to the given method.
      *
      * @param method a {@link Method} object.
+     *
      * @return the descriptor of the given method.
      */
     public static String getMethodDescriptor(final Method method) {
@@ -348,6 +355,7 @@ public final class Type {
      * Returns the {@link Type} corresponding to the given internal name.
      *
      * @param internalName an internal name (see {@link Type#getInternalName()}).
+     *
      * @return the {@link Type} corresponding to the given internal name.
      */
     public static Type getObjectType(final String internalName) {
@@ -360,6 +368,7 @@ public final class Type {
      * Type.getType(methodDescriptor)</code>.
      *
      * @param methodDescriptor a method descriptor.
+     *
      * @return the {@link Type} corresponding to the given method descriptor.
      */
     public static Type getMethodType(final String methodDescriptor) {
@@ -371,6 +380,7 @@ public final class Type {
      *
      * @param returnType    the return type of the method.
      * @param argumentTypes the argument types of the method.
+     *
      * @return the method {@link Type} corresponding to the given argument and return types.
      */
     public static Type getMethodType(final Type returnType, final Type... argumentTypes) {
@@ -382,6 +392,7 @@ public final class Type {
      *
      * @param returnType    the return type of the method.
      * @param argumentTypes the argument types of the method.
+     *
      * @return the descriptor corresponding to the given argument and return types.
      */
     public static String getMethodDescriptor(final Type returnType, final Type... argumentTypes) {
@@ -399,6 +410,7 @@ public final class Type {
      * Returns the {@link Type} values corresponding to the argument types of the given method.
      *
      * @param method a method.
+     *
      * @return the {@link Type} values corresponding to the argument types of the given method.
      */
     public static Type[] getArgumentTypes(final Method method) {
@@ -414,6 +426,7 @@ public final class Type {
      * Returns the {@link Type} corresponding to the given class.
      *
      * @param clazz a class.
+     *
      * @return the {@link Type} corresponding to the given class.
      */
     public static Type getType(final Class<?> clazz) {
@@ -448,6 +461,7 @@ public final class Type {
      * Returns the descriptor corresponding to the given class.
      *
      * @param clazz an object class, a primitive class or an array class.
+     *
      * @return the descriptor corresponding to the given class.
      */
     public static String getDescriptor(final Class<?> clazz) {
@@ -460,6 +474,7 @@ public final class Type {
      * Returns the {@link Type} corresponding to the return type of the given method.
      *
      * @param method a method.
+     *
      * @return the {@link Type} corresponding to the return type of the given method.
      */
     public static Type getReturnType(final Method method) {
@@ -475,6 +490,7 @@ public final class Type {
      * descriptor.
      *
      * @param methodDescriptor a method descriptor.
+     *
      * @return the {@link Type} values corresponding to the argument types of the given method
      * descriptor.
      */
@@ -522,6 +538,7 @@ public final class Type {
      * Returns the {@link Type} corresponding to the return type of the given method descriptor.
      *
      * @param methodDescriptor a method descriptor.
+     *
      * @return the {@link Type} corresponding to the return type of the given method descriptor.
      */
     public static Type getReturnType(final String methodDescriptor) {
@@ -533,6 +550,7 @@ public final class Type {
      * Returns the start index of the return type of the given method descriptor.
      *
      * @param methodDescriptor a method descriptor.
+     *
      * @return the start index of the return type of the given method descriptor.
      */
     static int getReturnTypeOffset(final String methodDescriptor) {
@@ -556,6 +574,7 @@ public final class Type {
      * Computes the size of the arguments and of the return value of a method.
      *
      * @param methodDescriptor a method descriptor.
+     *
      * @return the size of the arguments of the method (plus one for the implicit this argument),
      * argumentsSize, and the size of its return value, returnSize, packed into a single int i =
      * {@code (argumentsSize &lt;&lt; 2) | returnSize} (argumentsSize is therefore equal to {@code
@@ -782,6 +801,7 @@ public final class Type {
      * @param opcode a JVM instruction opcode. This opcode must be one of ILOAD, ISTORE, IALOAD,
      *               IASTORE, IADD, ISUB, IMUL, IDIV, IREM, INEG, ISHL, ISHR, IUSHR, IAND, IOR, IXOR and
      *               IRETURN.
+     *
      * @return an opcode that is similar to the given opcode, but adapted to this {@link Type}. For
      * example, if this type is {@code float} and {@code opcode} is IRETURN, this method returns
      * FRETURN.
@@ -872,6 +892,7 @@ public final class Type {
      * Tests if the given object is equal to this type.
      *
      * @param object the object to be compared to this type.
+     *
      * @return {@literal true} if the given object is equal to this type.
      */
     @Override

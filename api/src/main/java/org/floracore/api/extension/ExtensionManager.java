@@ -23,7 +23,9 @@ public interface ExtensionManager {
      * Loads the extension at the given path.
      *
      * @param path the path to the extension
+     *
      * @return the extension
+     *
      * @throws java.io.IOException if the extension could not be loaded
      */
     @NotNull Extension loadExtension(Path path) throws IOException;

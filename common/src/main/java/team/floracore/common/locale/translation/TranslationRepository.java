@@ -63,6 +63,7 @@ public class TranslationRepository {
      * Gets a list of available languages.
      *
      * @return a list of languages
+     *
      * @throws java.io.IOException          if an i/o error occurs
      * @throws UnsuccessfulRequestException if the http request fails
      */
@@ -72,8 +73,8 @@ public class TranslationRepository {
 
     private MetadataResponse getTranslationsMetadata() throws IOException, UnsuccessfulRequestException {
         Request request = new Request.Builder().header("User-Agent", "floracore")
-                .url(TRANSLATIONS_INFO_ENDPOINT)
-                .build();
+                                               .url(TRANSLATIONS_INFO_ENDPOINT)
+                                               .build();
 
         JsonObject jsonResponse;
         try (Response response = abstractHttpClient.makeHttpRequest(request)) {
@@ -84,7 +85,7 @@ public class TranslationRepository {
 
                 try (InputStream inputStream = new LimitedInputStream(responseBody.byteStream(), MAX_BUNDLE_SIZE)) {
                     try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream,
-                            StandardCharsets.UTF_8))) {
+                                                                                          StandardCharsets.UTF_8))) {
                         jsonResponse = GsonProvider.normal().fromJson(reader, JsonObject.class);
                     }
                 }
@@ -199,8 +200,8 @@ public class TranslationRepository {
             }
 
             Request request = new Request.Builder().header("User-Agent", "floracore")
-                    .url(TRANSLATIONS_DOWNLOAD_ENDPOINT + language.id())
-                    .build();
+                                                   .url(TRANSLATIONS_DOWNLOAD_ENDPOINT + language.id())
+                                                   .build();
 
             Path file = translationsDirectory.resolve(language.locale().toString() + ".properties");
 

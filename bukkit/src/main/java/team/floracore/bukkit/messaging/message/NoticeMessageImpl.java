@@ -34,20 +34,21 @@ public class NoticeMessageImpl extends AbstractMessage implements NoticeMessage 
             throw new IllegalStateException("Missing content");
         }
         UUID receiver = Optional.ofNullable(content.getAsJsonObject().get("receiver"))
-                .map(JsonElement::getAsString)
-                .map(UUID::fromString)
-                .orElseThrow(() -> new IllegalStateException("Incoming message has no receiver argument: " + content));
+                                .map(JsonElement::getAsString)
+                                .map(UUID::fromString)
+                                .orElseThrow(() -> new IllegalStateException(
+                                        "Incoming message has no receiver argument: " + content));
 
         NoticeType type = Optional.ofNullable(content.getAsJsonObject().get("type"))
-                .map(JsonElement::getAsString)
-                .map(NoticeType::valueOf)
-                .orElseThrow(() -> new IllegalStateException("Incoming message has no type argument: " + content));
+                                  .map(JsonElement::getAsString)
+                                  .map(NoticeType::valueOf)
+                                  .orElseThrow(() -> new IllegalStateException("Incoming message has no type argument: " + content));
 
         Type type1 = new TypeToken<List<String>>() {
         }.getType();
         String p = Optional.ofNullable(content.getAsJsonObject().get("parameters"))
-                .map(JsonElement::getAsString)
-                .orElseThrow(() -> new IllegalStateException("Incoming message has no parameters argument: " + content));
+                           .map(JsonElement::getAsString)
+                           .orElseThrow(() -> new IllegalStateException("Incoming message has no parameters argument: " + content));
         List<String> parameters = GsonProvider.normal().fromJson(p, type1);
 
         return new NoticeMessageImpl(id, receiver, type, parameters);
@@ -56,9 +57,12 @@ public class NoticeMessageImpl extends AbstractMessage implements NoticeMessage 
     @Override
     public @NotNull String asEncodedString() {
         return FloraCoreMessagingService.encodeMessageAsString(TYPE, getId(),
-                new JObject().add("receiver", this.receiver.toString())
-                        .add("type", this.type.toString())
-                        .add("parameters", GsonProvider.normal().toJson(this.parameters)).toJson()
+                                                               new JObject().add("receiver", this.receiver.toString())
+                                                                            .add("type", this.type.toString())
+                                                                            .add("parameters",
+                                                                                 GsonProvider.normal()
+                                                                                             .toJson(this.parameters))
+                                                                            .toJson()
         );
     }
 

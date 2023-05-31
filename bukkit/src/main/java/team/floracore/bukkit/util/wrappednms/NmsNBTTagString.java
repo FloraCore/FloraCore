@@ -8,7 +8,7 @@ import team.floracore.common.util.wrapper.WrappedFieldAccessor;
 import team.floracore.common.util.wrapper.WrappedObject;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagString",
-        maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagString", minVer = 17)})
+                                  maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagString", minVer = 17)})
 public interface NmsNBTTagString extends NmsNBTTag {
     static NmsNBTTagString newInstance(String value) {
         return WrappedObject.getStatic(NmsNBTTagString.class).staticNewInstance(value);

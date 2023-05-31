@@ -49,6 +49,7 @@ public interface TranslationAPI {
      *
      * @param component 未翻译的信息组件
      * @param uuid      玩家UUID
+     *
      * @return 已翻译的信息组件
      */
     Component render(Component component, @NotNull UUID uuid);

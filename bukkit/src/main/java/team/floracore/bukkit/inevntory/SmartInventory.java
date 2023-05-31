@@ -19,9 +19,9 @@ import java.util.Optional;
 @SuppressWarnings("unchecked")
 public class SmartInventory {
     public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
-            .hexColors()
-            .useUnusualXRepeatedCharacterHexFormat()
-            .build();
+                                                                                        .hexColors()
+                                                                                        .useUnusualXRepeatedCharacterHexFormat()
+                                                                                        .build();
     private final InventoryManager manager;
     private String id;
     private String title;
@@ -65,9 +65,9 @@ public class SmartInventory {
 
         oldInv.ifPresent(inv -> {
             inv.getListeners().stream()
-                    .filter(listener -> listener.getType() == InventoryCloseEvent.class)
-                    .forEach(listener -> ((InventoryListener<InventoryCloseEvent>) listener)
-                            .accept(new InventoryCloseEvent(player.getOpenInventory())));
+               .filter(listener -> listener.getType() == InventoryCloseEvent.class)
+               .forEach(listener -> ((InventoryListener<InventoryCloseEvent>) listener)
+                       .accept(new InventoryCloseEvent(player.getOpenInventory())));
 
             this.manager.setInventory(player, null);
         });
@@ -86,8 +86,8 @@ public class SmartInventory {
             }
 
             InventoryOpener opener = this.manager.findOpener(type)
-                    .orElseThrow(() -> new IllegalStateException(
-                            "No opener found for the inventory type " + type.name()));
+                                                 .orElseThrow(() -> new IllegalStateException(
+                                                         "No opener found for the inventory type " + type.name()));
             Inventory handle = opener.open(this, player);
 
             this.manager.setInventory(player, this);
@@ -106,9 +106,9 @@ public class SmartInventory {
     @SuppressWarnings("unchecked")
     public void close(Player player) {
         listeners.stream()
-                .filter(listener -> listener.getType() == InventoryCloseEvent.class)
-                .forEach(listener -> ((InventoryListener<InventoryCloseEvent>) listener)
-                        .accept(new InventoryCloseEvent(player.getOpenInventory())));
+                 .filter(listener -> listener.getType() == InventoryCloseEvent.class)
+                 .forEach(listener -> ((InventoryListener<InventoryCloseEvent>) listener)
+                         .accept(new InventoryCloseEvent(player.getOpenInventory())));
 
         this.manager.setInventory(player, null);
         player.closeInventory();
@@ -230,7 +230,7 @@ public class SmartInventory {
 
             if (manager == null) {
                 throw new IllegalStateException("The manager of the SmartInventory.Builder must be set, "
-                        + "or the SmartInvs should be loaded as a plugin.");
+                                                        + "or the SmartInvs should be loaded as a plugin.");
             }
 
             SmartInventory inv = new SmartInventory(manager);

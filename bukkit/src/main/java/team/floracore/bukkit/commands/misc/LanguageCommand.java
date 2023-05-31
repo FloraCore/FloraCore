@@ -61,8 +61,8 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
             String dpl = TranslationManager.localeDisplayName(defaultLanguage);
             Component dc = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(dpl));
             ItemStackBuilder dib = new ItemStackBuilder(Material.PAPER).setName(Component.text(dpl)
-                            .color(NamedTextColor.GREEN))
-                    .setLore(Collections.singletonList(dc));
+                                                                                         .color(NamedTextColor.GREEN))
+                                                                       .setLore(Collections.singletonList(dc));
             items[0] = ClickableItem.of(dib.get(), inventoryClickEvent -> {
                 String value = defaultLanguage.toLanguageTag();
                 getStorageImplementation().insertData(uuid, DataType.FUNCTION, "language", value.replace("-", "_"), 0);
@@ -76,17 +76,17 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
                 Component c = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(pl), l);
                 Component t = Component.text(pl).color(NamedTextColor.GREEN);
                 Component progress = AbstractMessage.OPEN_BRACKET.append(Component.text(language.progress() + "%"))
-                        .append(AbstractMessage.CLOSE_BRACKET);
+                                                                 .append(AbstractMessage.CLOSE_BRACKET);
                 t = t.append(Component.space()).append(progress.color(NamedTextColor.GRAY));
                 ItemStackBuilder itemBuilder = new ItemStackBuilder(Material.PAPER).setName(t)
-                        .setLore(Collections.singletonList(c));
+                                                                                   .setLore(Collections.singletonList(c));
                 items[i] = ClickableItem.of(itemBuilder.get(), inventoryClickEvent -> {
                     String value = language.locale().toLanguageTag();
                     getStorageImplementation().insertData(uuid,
-                            DataType.FUNCTION,
-                            "language",
-                            value.replace("-", "_"),
-                            0);
+                                                          DataType.FUNCTION,
+                                                          "language",
+                                                          value.replace("-", "_"),
+                                                          0);
                     player.closeInventory();
                     MiscCommandMessage.COMMAND_LANGUAGE_CHANGE_SUCCESS.send(s, pl);
                 });
@@ -103,32 +103,36 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
             }
             if (!pagination.isFirst()) {
                 Component previous = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(),
-                        uuid);
+                                                               uuid);
                 Component turn = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()),
-                        uuid);
+                                                           uuid);
                 contents.set(5,
-                        0,
-                        ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(previous)
-                                        .setLore(Collections.singletonList(turn))
-                                        .get(),
-                                event -> getLanguageGui(player).open(player, pagination.previous().getPage())));
+                             0,
+                             ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(previous)
+                                                                                  .setLore(Collections.singletonList(
+                                                                                          turn))
+                                                                                  .get(),
+                                              event -> getLanguageGui(player).open(player,
+                                                                                   pagination.previous().getPage())));
             }
             if (!pagination.isLast()) {
                 Component next = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
                 Component turn = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2),
-                        uuid);
+                                                           uuid);
                 contents.set(5,
-                        8,
-                        ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(next)
-                                        .setLore(Collections.singletonList(turn))
-                                        .get(),
-                                event -> getLanguageGui(player).open(player, pagination.next().getPage())));
+                             8,
+                             ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(next)
+                                                                                  .setLore(Collections.singletonList(
+                                                                                          turn))
+                                                                                  .get(),
+                                              event -> getLanguageGui(player).open(player,
+                                                                                   pagination.next().getPage())));
             }
             Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5,
-                    4,
-                    ClickableItem.of(new ItemStackBuilder(Material.BARRIER).setName(close).get(),
-                            event -> player.closeInventory()));
+                         4,
+                         ClickableItem.of(new ItemStackBuilder(Material.BARRIER).setName(close).get(),
+                                          event -> player.closeInventory()));
         });
         return builder.build();
     }

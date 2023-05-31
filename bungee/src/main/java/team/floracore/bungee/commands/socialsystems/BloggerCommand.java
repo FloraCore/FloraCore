@@ -28,10 +28,14 @@ public class BloggerCommand extends FloraCoreBungeeCommand {
     public void chat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
         UUID uuid = player.getUniqueId();
         getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
-                .pushChatMessage(UUID.randomUUID(),
-                        ChatMessage.ChatMessageType.BLOGGER,
-                        Arrays.asList(uuid.toString(), message)));
+                                                    .pushChatMessage(UUID.randomUUID(),
+                                                                     ChatMessage.ChatMessageType.BLOGGER,
+                                                                     Arrays.asList(uuid.toString(), message)));
         long time = System.currentTimeMillis();
-        getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.BLOGGER, "", uuid, message, time));
+        getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.BLOGGER,
+                                                                               "",
+                                                                               uuid,
+                                                                               message,
+                                                                               time));
     }
 }

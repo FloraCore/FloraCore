@@ -80,10 +80,10 @@ public class SimpleVerifier extends BasicVerifier {
             final boolean isInterface) {
         this(
                 /* latest api = */ ASM9,
-                currentClass,
-                currentSuperClass,
-                currentClassInterfaces,
-                isInterface);
+                                   currentClass,
+                                   currentSuperClass,
+                                   currentClassInterfaces,
+                                   isInterface);
         if (getClass() != SimpleVerifier.class) {
             throw new IllegalStateException();
         }
@@ -277,6 +277,7 @@ public class SimpleVerifier extends BasicVerifier {
      * (unless the given type corresponds to the class being verified).
      *
      * @param type a type.
+     *
      * @return whether 'type' corresponds to an interface.
      */
     protected boolean isInterface(final Type type) {
@@ -292,6 +293,7 @@ public class SimpleVerifier extends BasicVerifier {
      * given type corresponds to the class being verified).
      *
      * @param type a type.
+     *
      * @return the type corresponding to the super class of 'type'.
      */
     protected Type getSuperClass(final Type type) {
@@ -311,6 +313,7 @@ public class SimpleVerifier extends BasicVerifier {
      *
      * @param type1 a type.
      * @param type2 another type.
+     *
      * @return whether the class corresponding to 'type1' is either the same as, or is a superclass or
      * superinterface of the class corresponding to 'type2'.
      */
@@ -350,6 +353,7 @@ public class SimpleVerifier extends BasicVerifier {
      * loader was specified.
      *
      * @param type a type.
+     *
      * @return the class corresponding to 'type'.
      */
     protected Class<?> getClass(final Type type) {

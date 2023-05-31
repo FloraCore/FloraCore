@@ -25,7 +25,9 @@ public class ConfigKeys {
     /**
      * If FloraCore should automatically install translation bundles and periodically update them.
      */
-    public static final ConfigKey<Boolean> AUTO_INSTALL_TRANSLATIONS = notReloadable(booleanKey("auto-install-translations", true));
+    public static final ConfigKey<Boolean> AUTO_INSTALL_TRANSLATIONS = notReloadable(booleanKey(
+            "auto-install-translations",
+            true));
 
     /**
      * The database settings, username, password, etc. for use by any database
@@ -37,18 +39,18 @@ public class ConfigKeys {
         int keepAliveTime = c.getInteger("data.pool-settings.keepalive-time", 0);
         int connectionTimeout = c.getInteger("data.pool-settings.connection-timeout", 5000);
         Map<String, String> props = ImmutableMap.copyOf(c.getStringMap("data.pool-settings.properties",
-                ImmutableMap.of()));
+                                                                       ImmutableMap.of()));
 
         return new StorageCredentials(c.getString("data.address", null),
-                c.getString("data.database", null),
-                c.getString("data.username", null),
-                c.getString("data.password", null),
-                maxPoolSize,
-                minIdle,
-                maxLifetime,
-                keepAliveTime,
-                connectionTimeout,
-                props);
+                                      c.getString("data.database", null),
+                                      c.getString("data.username", null),
+                                      c.getString("data.password", null),
+                                      maxPoolSize,
+                                      minIdle,
+                                      maxLifetime,
+                                      keepAliveTime,
+                                      connectionTimeout,
+                                      props);
     }));
 
     /**
@@ -69,7 +71,7 @@ public class ConfigKeys {
      * The name of the messaging service in use, or "none" if not enabled
      */
     public static final ConfigKey<String> MESSAGING_SERVICE = notReloadable(lowercaseStringKey("messaging-service",
-            "auto"));
+                                                                                               "auto"));
 
     /**
      * If redis messaging is enabled

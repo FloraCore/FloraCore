@@ -39,6 +39,7 @@ public enum DataType {
      * 若不存在,则返回默认值{@link DataType#AUTO_SYNC}
      *
      * @param name 目标字符串
+     *
      * @return 数据类型
      */
     public static DataType parse(String name) {
@@ -52,6 +53,7 @@ public enum DataType {
      *
      * @param name 目标字符串
      * @param def  默认值
+     *
      * @return 数据类型
      */
     public static DataType parse(String name, DataType def) {

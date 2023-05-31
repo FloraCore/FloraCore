@@ -77,7 +77,9 @@ public final class TypeUtil {
         }
         e.printStackTrace(p);
         return (e instanceof Error ? "§4" : "§e") + new String(m.toByteArray(), StandardCharsets.UTF_8).replace("\r",
-                "").replace("\t", "  ");
+                                                                                                                "")
+                                                                                                       .replace("\t",
+                                                                                                                "  ");
     }
 
     @Deprecated

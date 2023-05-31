@@ -76,10 +76,10 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 getStorageImplementation().insertParty(partyUUID, leader, createTime);
                 getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "party", partyUUID.toString(), 0);
                 getStorageImplementation().insertData(uuid,
-                        DataType.SOCIAL_SYSTEMS_PARTY_HISTORY,
-                        String.valueOf(System.currentTimeMillis()),
-                        partyUUID.toString(),
-                        0);
+                                                      DataType.SOCIAL_SYSTEMS_PARTY_HISTORY,
+                                                      String.valueOf(System.currentTimeMillis()),
+                                                      partyUUID.toString(),
+                                                      0);
             });
         } else {
             partyUUID = UUID.fromString(data.getValue());
@@ -115,8 +115,8 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 }
             }
             DATA td = getStorageImplementation().getSpecifiedData(ut,
-                    DataType.SOCIAL_SYSTEMS_PARTY_INVITE,
-                    partyUUID.toString());
+                                                                  DataType.SOCIAL_SYSTEMS_PARTY_INVITE,
+                                                                  partyUUID.toString());
             if (td != null || members.contains(ut)) {
                 SocialSystemsMessage.COMMAND_MISC_PARTY_INVITE_HAS_BEEN_INVITED.send(sender);
                 return;
@@ -128,34 +128,34 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             long expiry = newTime.toEpochMilli();
             // 为了防止处理意外,设置65秒后自毁。
             getStorageImplementation().insertData(ut,
-                    DataType.SOCIAL_SYSTEMS_PARTY_INVITE,
-                    partyUUID.toString(),
-                    uuid.toString(),
-                    expiry);
+                                                  DataType.SOCIAL_SYSTEMS_PARTY_INVITE,
+                                                  partyUUID.toString(),
+                                                  uuid.toString(),
+                                                  expiry);
             getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
                 // 获取目标玩家是否接受,如果未接受,则发送邀请玩家过期信息
                 DATA inviteData = getStorageImplementation().getSpecifiedData(ut,
-                        DataType.SOCIAL_SYSTEMS_PARTY_INVITE,
-                        partyUUID.toString());
+                                                                              DataType.SOCIAL_SYSTEMS_PARTY_INVITE,
+                                                                              partyUUID.toString());
                 if (inviteData != null) {
                     // 邀请已过期
                     getStorageImplementation().deleteDataID(inviteData.getId());
                     getPlugin().getBungeeMessagingFactory()
-                            .pushNoticeMessage(uuid,
-                                    NoticeMessage.NoticeType.PARTY_INVITE_EXPIRED,
-                                    Collections.singletonList(ut.toString()));
+                               .pushNoticeMessage(uuid,
+                                                  NoticeMessage.NoticeType.PARTY_INVITE_EXPIRED,
+                                                  Collections.singletonList(ut.toString()));
                 }
             }, 1, TimeUnit.MINUTES);
             getAsyncExecutor().execute(() -> {
                 getPlugin().getBungeeMessagingFactory()
-                        .pushNoticeMessage(ut,
-                                NoticeMessage.NoticeType.PARTY_ACCEPT,
-                                Arrays.asList(uuid.toString(), partyUUID.toString()));
+                           .pushNoticeMessage(ut,
+                                              NoticeMessage.NoticeType.PARTY_ACCEPT,
+                                              Arrays.asList(uuid.toString(), partyUUID.toString()));
                 for (UUID member : members) {
                     getPlugin().getBungeeMessagingFactory()
-                            .pushNoticeMessage(member,
-                                    NoticeMessage.NoticeType.PARTY_INVITE,
-                                    Arrays.asList(uuid.toString(), ut.toString()));
+                               .pushNoticeMessage(member,
+                                                  NoticeMessage.NoticeType.PARTY_INVITE,
+                                                  Arrays.asList(uuid.toString(), ut.toString()));
                 }
             });
         } else {
@@ -196,9 +196,9 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 }
                 if (dissolved != null) {
                     getPlugin().getBungeeMessagingFactory()
-                            .pushNoticeMessage(member,
-                                    NoticeMessage.NoticeType.PARTY_DISBAND,
-                                    Collections.singletonList(dissolved.toString()));
+                               .pushNoticeMessage(member,
+                                                  NoticeMessage.NoticeType.PARTY_DISBAND,
+                                                  Collections.singletonList(dissolved.toString()));
                 }
             }
         });
@@ -246,13 +246,13 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                     members.remove(ut);
                     party.setMembers(members);
                     getPlugin().getBungeeMessagingFactory()
-                            .pushNoticeMessage(ut,
-                                    NoticeMessage.NoticeType.PARTY_BE_KICKED,
-                                    Collections.singletonList(uuid.toString()));
+                               .pushNoticeMessage(ut,
+                                                  NoticeMessage.NoticeType.PARTY_BE_KICKED,
+                                                  Collections.singletonList(uuid.toString()));
                     members.forEach(member -> getPlugin().getBungeeMessagingFactory()
-                            .pushNoticeMessage(member,
-                                    NoticeMessage.NoticeType.PARTY_KICK,
-                                    Collections.singletonList(ut.toString())));
+                                                         .pushNoticeMessage(member,
+                                                                            NoticeMessage.NoticeType.PARTY_KICK,
+                                                                            Collections.singletonList(ut.toString())));
                 });
             } else {
                 MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
@@ -287,14 +287,14 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             getAsyncExecutor().execute(() -> {
                 getStorageImplementation().deleteDataID(data.getId());
                 getPlugin().getBungeeMessagingFactory()
-                        .pushNoticeMessage(uuid,
-                                NoticeMessage.NoticeType.PARTY_LEAVE,
-                                Collections.singletonList(uuid.toString()));
+                           .pushNoticeMessage(uuid,
+                                              NoticeMessage.NoticeType.PARTY_LEAVE,
+                                              Collections.singletonList(uuid.toString()));
                 members.forEach(member -> {
                     getPlugin().getBungeeMessagingFactory()
-                            .pushNoticeMessage(member,
-                                    NoticeMessage.NoticeType.PARTY_LEAVE,
-                                    Collections.singletonList(uuid.toString()));
+                               .pushNoticeMessage(member,
+                                                  NoticeMessage.NoticeType.PARTY_LEAVE,
+                                                  Collections.singletonList(uuid.toString()));
                 });
             });
 
@@ -318,12 +318,12 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             if (leader.equals(uuid) || moderators.contains(uuid)) {
                 getAsyncExecutor().execute(() -> {
                     List<UUID> newMembers = members.stream()
-                            .filter(member -> isOnline(member) || member.equals(leader))
-                            .collect(Collectors.toList());
+                                                   .filter(member -> isOnline(member) || member.equals(leader))
+                                                   .collect(Collectors.toList());
 
                     List<UUID> offlineMembers = members.stream()
-                            .filter(member -> !isOnline(member) && !member.equals(leader))
-                            .collect(Collectors.toList());
+                                                       .filter(member -> !isOnline(member) && !member.equals(leader))
+                                                       .collect(Collectors.toList());
 
                     if (offlineMembers.isEmpty()) {
                         SocialSystemsMessage.COMMAND_MISC_PARTY_KICKOFFLINE_NO_MEMBERS_AVAILABLE.send(sender);
@@ -334,13 +334,14 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
 
                     offlineMembers.forEach(offlineMember -> {
                         DATA od = getStorageImplementation().getSpecifiedData(offlineMember,
-                                DataType.SOCIAL_SYSTEMS,
-                                "party");
+                                                                              DataType.SOCIAL_SYSTEMS,
+                                                                              "party");
                         getStorageImplementation().deleteDataID(od.getId());
                         newMembers.forEach(member -> getPlugin().getBungeeMessagingFactory()
-                                .pushNoticeMessage(member,
-                                        NoticeMessage.NoticeType.PARTY_KICK,
-                                        Collections.singletonList(offlineMember.toString())));
+                                                                .pushNoticeMessage(member,
+                                                                                   NoticeMessage.NoticeType.PARTY_KICK,
+                                                                                   Collections.singletonList(
+                                                                                           offlineMember.toString())));
                     });
                 });
             } else {
@@ -359,8 +360,8 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             try {
                 UUID partyUUID = UUID.fromString(pu);
                 DATA inviteData = getStorageImplementation().getSpecifiedData(uuid,
-                        DataType.SOCIAL_SYSTEMS_PARTY_INVITE,
-                        partyUUID.toString());
+                                                                              DataType.SOCIAL_SYSTEMS_PARTY_INVITE,
+                                                                              partyUUID.toString());
                 if (inviteData == null) {
                     SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_INVITED.send(sender);
                     return;
@@ -380,16 +381,16 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 getStorageImplementation().deleteDataID(inviteData.getId());
                 getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "party", partyUUID.toString(), 0);
                 getStorageImplementation().insertData(uuid,
-                        DataType.SOCIAL_SYSTEMS_PARTY_HISTORY,
-                        String.valueOf(System.currentTimeMillis()),
-                        partyUUID.toString(),
-                        0);
+                                                      DataType.SOCIAL_SYSTEMS_PARTY_HISTORY,
+                                                      String.valueOf(System.currentTimeMillis()),
+                                                      partyUUID.toString(),
+                                                      0);
                 getAsyncExecutor().execute(() -> {
                     for (UUID member : members) {
                         getPlugin().getBungeeMessagingFactory()
-                                .pushNoticeMessage(member,
-                                        NoticeMessage.NoticeType.PARTY_JOINED,
-                                        Collections.singletonList(uuid.toString()));
+                                   .pushNoticeMessage(member,
+                                                      NoticeMessage.NoticeType.PARTY_JOINED,
+                                                      Collections.singletonList(uuid.toString()));
                     }
                 });
             } catch (IllegalArgumentException e) {
@@ -439,12 +440,16 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             getAsyncExecutor().execute(() -> {
                 for (UUID member : members) {
                     getPlugin().getBungeeMessagingFactory()
-                            .pushChatMessage(member,
-                                    ChatMessage.ChatMessageType.PARTY,
-                                    Arrays.asList(uuid.toString(), message));
+                               .pushChatMessage(member,
+                                                ChatMessage.ChatMessageType.PARTY,
+                                                Arrays.asList(uuid.toString(), message));
                 }
                 long time = System.currentTimeMillis();
-                getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.PARTY, partyUUID.toString(), uuid, message, time));
+                getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.PARTY,
+                                                                                       partyUUID.toString(),
+                                                                                       uuid,
+                                                                                       message,
+                                                                                       time));
             });
         }
     }
@@ -480,21 +485,21 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                         }
                         if (leader.equals(uuid)) {
                             getPlugin().getBungeeMessagingFactory()
-                                    .pushNoticeMessage(member,
-                                            NoticeMessage.NoticeType.PARTY_WARP_LEADER,
-                                            Collections.singletonList(uuid.toString()));
+                                       .pushNoticeMessage(member,
+                                                          NoticeMessage.NoticeType.PARTY_WARP_LEADER,
+                                                          Collections.singletonList(uuid.toString()));
                         } else if (moderators.contains(uuid)) {
                             getPlugin().getBungeeMessagingFactory()
-                                    .pushNoticeMessage(member,
-                                            NoticeMessage.NoticeType.PARTY_WARP_MODERATOR,
-                                            Collections.singletonList(uuid.toString()));
+                                       .pushNoticeMessage(member,
+                                                          NoticeMessage.NoticeType.PARTY_WARP_MODERATOR,
+                                                          Collections.singletonList(uuid.toString()));
                         }
                     }
                     getPlugin().getBootstrap()
-                            .getScheduler()
-                            .asyncLater(() -> partyWarp(party.getUniqueId(), player.getServer().getInfo().getName()),
-                                    1,
-                                    TimeUnit.SECONDS);
+                               .getScheduler()
+                               .asyncLater(() -> partyWarp(party.getUniqueId(), player.getServer().getInfo().getName()),
+                                           1,
+                                           TimeUnit.SECONDS);
                 });
             } else {
                 MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
@@ -578,9 +583,10 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 moderators.add(senderUUID); // 将发送者设为管理员
                 party.setModerators(moderators); // 更新管理员列表数据
                 members.forEach(member -> getPlugin().getBungeeMessagingFactory()
-                        .pushNoticeMessage(member,
-                                NoticeMessage.NoticeType.PARTY_PROMOTE_LEADER,
-                                Arrays.asList(senderUUID.toString(), targetUUID.toString())));
+                                                     .pushNoticeMessage(member,
+                                                                        NoticeMessage.NoticeType.PARTY_PROMOTE_LEADER,
+                                                                        Arrays.asList(senderUUID.toString(),
+                                                                                      targetUUID.toString())));
             });
         }
     }
@@ -625,9 +631,10 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                     moderators.remove(targetUUID); // 目标不再是管理员
                     party.setModerators(moderators); // 更新管理员列表数据
                     members.forEach(member -> getPlugin().getBungeeMessagingFactory()
-                            .pushNoticeMessage(member,
-                                    NoticeMessage.NoticeType.PARTY_DEMOTE,
-                                    Arrays.asList(senderUUID.toString(), targetUUID.toString())));
+                                                         .pushNoticeMessage(member,
+                                                                            NoticeMessage.NoticeType.PARTY_DEMOTE,
+                                                                            Arrays.asList(senderUUID.toString(),
+                                                                                          targetUUID.toString())));
                 });
             } else {
                 SocialSystemsMessage.COMMAND_MISC_PARTY_DEMOTE_ALREADY_IN.send(sender, target);
@@ -677,16 +684,18 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                     moderators.add(senderUUID); // 将发送者设为管理员
                     party.setModerators(moderators); // 更新管理员列表数据
                     members.forEach(member -> getPlugin().getBungeeMessagingFactory()
-                            .pushNoticeMessage(member,
-                                    NoticeMessage.NoticeType.PARTY_PROMOTE_LEADER,
-                                    Arrays.asList(senderUUID.toString(), targetUUID.toString())));
+                                                         .pushNoticeMessage(member,
+                                                                            NoticeMessage.NoticeType.PARTY_PROMOTE_LEADER,
+                                                                            Arrays.asList(senderUUID.toString(),
+                                                                                          targetUUID.toString())));
                 } else {
                     moderators.add(targetUUID);
                     party.setModerators(moderators);
                     members.forEach(member -> getPlugin().getBungeeMessagingFactory()
-                            .pushNoticeMessage(member,
-                                    NoticeMessage.NoticeType.PARTY_PROMOTE_MODERATOR,
-                                    Arrays.asList(senderUUID.toString(), targetUUID.toString())));
+                                                         .pushNoticeMessage(member,
+                                                                            NoticeMessage.NoticeType.PARTY_PROMOTE_MODERATOR,
+                                                                            Arrays.asList(senderUUID.toString(),
+                                                                                          targetUUID.toString())));
                 }
             });
         }

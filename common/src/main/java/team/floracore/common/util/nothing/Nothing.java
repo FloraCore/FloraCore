@@ -12,13 +12,13 @@ public interface Nothing {
     static void init() {
         Ref<Class<?>> nothingData = new Ref<>(null);
         if (TypeUtil.hasThrowable(() -> nothingData.set(Class.forName("team.floracore.common.util.nothing.NothingData",
-                false,
-                ClassUtil.extClassLoader)))) {
+                                                                      false,
+                                                                      ClassUtil.extClassLoader)))) {
             nothingData.set(ClassUtil.loadClass("team.floracore.common.util.nothing.NothingData",
-                    FileUtil.readInputStream(Nothing.class.getClassLoader()
-                            .getResourceAsStream(
-                                    "team/floracore/common/util/nothing/NothingData.class")),
-                    ClassUtil.extClassLoader));
+                                                FileUtil.readInputStream(Nothing.class.getClassLoader()
+                                                                                      .getResourceAsStream(
+                                                                                              "team/floracore/common/util/nothing/NothingData.class")),
+                                                ClassUtil.extClassLoader));
         }
         try {
             nothingData.get().getDeclaredField("data").set(null, data.store);

@@ -46,7 +46,7 @@ public class PingCommand extends FloraCoreBukkitCommand {
     @CommandDescription("获取一名玩家的ping延迟")
     public void other(@NotNull CommandSender s, @NotNull @Argument("target") Player target) {
         PlayerCommandMessage.COMMAND_PING_OTHER.send(getPlugin().getSenderFactory().wrap(s),
-                target.getName(),
-                getPing(target));
+                                                     target.getName(),
+                                                     getPing(target));
     }
 }

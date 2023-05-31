@@ -1042,7 +1042,7 @@ final class MethodWriter extends MethodVisitor {
         Symbol methodrefSymbol = symbolTable.addConstantMethodref(owner, name, descriptor, isInterface);
         if (opcode == Opcodes.INVOKEINTERFACE) {
             code.put12(Opcodes.INVOKEINTERFACE, methodrefSymbol.index)
-                    .put11(methodrefSymbol.getArgumentsAndReturnSizes() >> 2, 0);
+                .put11(methodrefSymbol.getArgumentsAndReturnSizes() >> 2, 0);
         } else {
             code.put12(opcode, methodrefSymbol.index);
         }
@@ -1815,6 +1815,7 @@ final class MethodWriter extends MethodVisitor {
      * @param offset   the bytecode offset of the instruction to which the frame corresponds.
      * @param numLocal the number of local variables in the frame.
      * @param numStack the number of stack elements in the frame.
+     *
      * @return the index of the next element to be written in this frame.
      */
     int visitFrameStart(final int offset, final int numLocal, final int numStack) {
@@ -2010,6 +2011,7 @@ final class MethodWriter extends MethodVisitor {
      *                               method_info JVMS structure from which the attributes of this method might be copied, or 0.
      * @param exceptionsOffset       the offset in 'source.b' of the Exceptions attribute of the method_info
      *                               JVMS structure from which the attributes of this method might be copied, or 0.
+     *
      * @return whether the attributes of this method can be copied from the attributes of the
      * method_info JVMS structure in 'source.b', between 'methodInfoOffset' and 'methodInfoOffset'
      * + 'methodInfoLength'.

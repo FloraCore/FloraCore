@@ -105,15 +105,15 @@ public class DependencyManagerImpl implements DependencyManager {
             }
 
             URL[] urls = set.stream()
-                    .map(this.loaded::get)
-                    .map(file -> {
-                        try {
-                            return file.toUri().toURL();
-                        } catch (MalformedURLException e) {
-                            throw new RuntimeException(e);
-                        }
-                    })
-                    .toArray(URL[]::new);
+                            .map(this.loaded::get)
+                            .map(file -> {
+                                try {
+                                    return file.toUri().toURL();
+                                } catch (MalformedURLException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            })
+                            .toArray(URL[]::new);
 
             classLoader = new IsolatedClassLoader(urls);
             this.loaders.put(set, classLoader);

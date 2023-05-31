@@ -13,6 +13,7 @@ import java.util.List;
  * variables, and with <i>one</i> slot in the operand stack.
  *
  * @param <V> type of the Value used for the analysis.
+ *
  * @author Eric Bruneton
  */
 public class Frame<V extends Value> {
@@ -83,6 +84,7 @@ public class Frame<V extends Value> {
      * Copies the state of the given frame into this frame.
      *
      * @param frame a frame.
+     *
      * @return this frame.
      */
     public Frame<V> init(final Frame<? extends V> frame) {
@@ -145,6 +147,7 @@ public class Frame<V extends Value> {
      *
      * @param index the index of an operand stack slot.
      * @param value the new value of the stack slot.
+     *
      * @throws IndexOutOfBoundsException if the stack slot does not exist.
      */
     public void setStack(final int index, final V value) {
@@ -163,6 +166,7 @@ public class Frame<V extends Value> {
      *
      * @param insn        the instruction to execute.
      * @param interpreter the interpreter to use to compute values from other values.
+     *
      * @throws AnalyzerException if the instruction cannot be executed on this execution frame (e.g. a
      *                           POP on an empty operand stack).
      */
@@ -529,6 +533,7 @@ public class Frame<V extends Value> {
      * Pushes a value into the operand stack of this frame.
      *
      * @param value the value that must be pushed into the stack.
+     *
      * @throws IndexOutOfBoundsException if the operand stack is full.
      */
     @SuppressWarnings("unchecked")
@@ -549,7 +554,9 @@ public class Frame<V extends Value> {
      * variables.
      *
      * @param index a local variable index.
+     *
      * @return the value of the given local variable.
+     *
      * @throws IndexOutOfBoundsException if the variable does not exist.
      */
     public V getLocal(final int index) {
@@ -563,6 +570,7 @@ public class Frame<V extends Value> {
      * Pops a value from the operand stack of this frame.
      *
      * @return the value that has been popped from the stack.
+     *
      * @throws IndexOutOfBoundsException if the operand stack is empty.
      */
     public V pop() {
@@ -578,6 +586,7 @@ public class Frame<V extends Value> {
      *
      * @param index a local variable index.
      * @param value the new value of this local variable.
+     *
      * @throws IndexOutOfBoundsException if the variable does not exist.
      */
     public void setLocal(final int index, final V value) {
@@ -631,8 +640,10 @@ public class Frame<V extends Value> {
      *
      * @param frame       a frame. This frame is left unchanged by this method.
      * @param interpreter the interpreter used to merge values.
+     *
      * @return {@literal true} if this frame has been changed as a result of the merge operation, or
      * {@literal false} otherwise.
+     *
      * @throws AnalyzerException if the frames have incompatible sizes.
      */
     public boolean merge(final Frame<? extends V> frame, final Interpreter<V> interpreter)
@@ -659,6 +670,7 @@ public class Frame<V extends Value> {
      * @param localsUsed the local variables that are read or written by the subroutine. The i-th
      *                   element is true if and only if the local variable at index i is read or written by the
      *                   subroutine.
+     *
      * @return {@literal true} if this frame has been changed as a result of the merge operation, or
      * {@literal false} otherwise.
      */
@@ -715,7 +727,9 @@ public class Frame<V extends Value> {
      * Returns the value of the given operand stack slot.
      *
      * @param index the index of an operand stack slot.
+     *
      * @return the value of the given operand stack slot.
+     *
      * @throws IndexOutOfBoundsException if the operand stack slot does not exist.
      */
     public V getStack(final int index) {

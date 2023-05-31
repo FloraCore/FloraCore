@@ -25,9 +25,9 @@ import java.util.stream.Collectors;
 
 public class ItemStackBuilder implements Supplier<ItemStack> {
     public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
-            .hexColors()
-            .useUnusualXRepeatedCharacterHexFormat()
-            .build();
+                                                                                        .hexColors()
+                                                                                        .useUnusualXRepeatedCharacterHexFormat()
+                                                                                        .build();
     public ObcItemStack item;
 
     public ItemStackBuilder(NmsNBTTagCompound nbt) {
@@ -144,31 +144,32 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
 
     public static ItemStackBuilder questionMark() {
         return newSkull(null,
-                "http://textures.minecraft.net/texture/65b95da1281642daa5d022adbd3e7cb69dc0942c81cd63be9c3857d222e1c8d9");
+                        "http://textures.minecraft.net/texture/65b95da1281642daa5d022adbd3e7cb69dc0942c81cd63be9c3857d222e1c8d9");
     }
 
     public static ItemStackBuilder newSkull(String name, String url) {
         return newSkull(name,
-                UUID.nameUUIDFromBytes(url.getBytes(StringUtil.UTF8)),
-                Base64.getEncoder()
-                        .encodeToString(("{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}").getBytes(StringUtil.UTF8)));
+                        UUID.nameUUIDFromBytes(url.getBytes(StringUtil.UTF8)),
+                        Base64.getEncoder()
+                              .encodeToString(("{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}").getBytes(
+                                      StringUtil.UTF8)));
     }
 
     public static ItemStackBuilder newSkull(String name, UUID id, String value) {
         ItemStackBuilder is = forFlattening("skull", 3, "player_head");
         is.tag()
-                .set("SkullOwner",
-                        NmsNBTTagCompound.newInstance()
+          .set("SkullOwner",
+               NmsNBTTagCompound.newInstance()
                                 .set("Id",
-                                        BukkitWrapper.version < 16 ? NmsNBTTagString.newInstance(id.toString()) : NmsNBTTagIntArray.newInstance(
-                                                id))
+                                     BukkitWrapper.version < 16 ? NmsNBTTagString.newInstance(id.toString()) : NmsNBTTagIntArray.newInstance(
+                                             id))
                                 .set("Properties",
-                                        NmsNBTTagCompound.newInstance()
-                                                .set("textures",
-                                                        NmsNBTTagList.newInstance(NmsNBTTagCompound.newInstance()
-                                                                .set("Value",
-                                                                        NmsNBTTagString.newInstance(
-                                                                                value))))));
+                                     NmsNBTTagCompound.newInstance()
+                                                      .set("textures",
+                                                           NmsNBTTagList.newInstance(NmsNBTTagCompound.newInstance()
+                                                                                                      .set("Value",
+                                                                                                           NmsNBTTagString.newInstance(
+                                                                                                                   value))))));
         if (name != null) {
             is.tag().getCompound("SkullOwner").set("Name", NmsNBTTagString.newInstance(name));
         }
@@ -177,22 +178,22 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
 
     public static ItemStackBuilder returnArrow() {
         return newSkull(null,
-                "http://textures.minecraft.net/texture/d9ed8bcbafbe99787325239048b8099407a098e7077c9b4c3b478b289b9149fd");
+                        "http://textures.minecraft.net/texture/d9ed8bcbafbe99787325239048b8099407a098e7077c9b4c3b478b289b9149fd");
     }
 
     public static ItemStackBuilder leftArrow() {
         return newSkull(null,
-                "http://textures.minecraft.net/texture/3866a889e51ca79c5d200ea6b5cfd0a655f32fea38b8138598c72fb200b97b9");
+                        "http://textures.minecraft.net/texture/3866a889e51ca79c5d200ea6b5cfd0a655f32fea38b8138598c72fb200b97b9");
     }
 
     public static ItemStackBuilder rightArrow() {
         return newSkull(null,
-                "http://textures.minecraft.net/texture/dfbf1402a04064cebaa96b77d5455ee93b685332e264c80ca36415df992fb46c");
+                        "http://textures.minecraft.net/texture/dfbf1402a04064cebaa96b77d5455ee93b685332e264c80ca36415df992fb46c");
     }
 
     public static ItemStackBuilder checkmark() {
         return newSkull(null,
-                "http://textures.minecraft.net/texture/ce2a530f42726fa7a31efab8e43dadee188937cf824af88ea8e4c93a49c57294");
+                        "http://textures.minecraft.net/texture/ce2a530f42726fa7a31efab8e43dadee188937cf824af88ea8e4c93a49c57294");
     }
 
     @SuppressWarnings("deprecation")
@@ -347,6 +348,7 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
      * It doesn't work after The Flattening(MC 1.13)
      *
      * @param childId child ID
+     *
      * @return this
      */
     public ItemStackBuilder setChildId(int childId) {
@@ -475,10 +477,10 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
     public List<String> getLore() {
         if (hasDisplay() && display().containsKey("Lore")) {
             List<String> r = display().getList("Lore")
-                    .values()
-                    .stream()
-                    .map(n -> n.cast(NmsNBTTagString.class).getValue())
-                    .collect(Collectors.toList());
+                                      .values()
+                                      .stream()
+                                      .map(n -> n.cast(NmsNBTTagString.class).getValue())
+                                      .collect(Collectors.toList());
             if (BukkitWrapper.version >= 14) {
                 r = r.stream().map(l -> ObcChatMessage.fromJSONComponentV13(l)).collect(Collectors.toList());
             }
@@ -519,10 +521,10 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
     public ItemStackBuilder setLoreString(List<String> lore) {
         if (BukkitWrapper.version >= 14) {
             lore = lore.stream()
-                    .map(l -> l == null || l.length() == 0 ? "{\"text\":\"\"}" : ObcChatMessage.fromStringOrNullToJSONV13(
-                            l))
-                    .map(l -> setDefaultNonItalic(new JsonParser().parse(l).getAsJsonObject()).toString())
-                    .collect(Collectors.toList());
+                       .map(l -> l == null || l.length() == 0 ? "{\"text\":\"\"}" : ObcChatMessage.fromStringOrNullToJSONV13(
+                               l))
+                       .map(l -> setDefaultNonItalic(new JsonParser().parse(l).getAsJsonObject()).toString())
+                       .collect(Collectors.toList());
         }
         if (lore.isEmpty()) {
             display().remove("Lore");

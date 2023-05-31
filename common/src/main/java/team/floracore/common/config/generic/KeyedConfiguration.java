@@ -24,21 +24,22 @@ public class KeyedConfiguration {
      * Initialises the given pseudo-enum keys class.
      *
      * @param keysClass the keys class
+     *
      * @return the list of keys defined by the class with their ordinal values set
      */
     public static List<SimpleConfigKey<?>> initialise(Class<?> keysClass) {
         // get a list of all keys
         List<SimpleConfigKey<?>> keys = Arrays.stream(keysClass.getFields())
-                .filter(f -> Modifier.isStatic(f.getModifiers()))
-                .filter(f -> ConfigKey.class.equals(f.getType()))
-                .map(f -> {
-                    try {
-                        return f.get(null);
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException(e);
-                    }
-                })
-                .collect(ImmutableCollectors.toList());
+                                              .filter(f -> Modifier.isStatic(f.getModifiers()))
+                                              .filter(f -> ConfigKey.class.equals(f.getType()))
+                                              .map(f -> {
+                                                  try {
+                                                      return f.get(null);
+                                                  } catch (IllegalAccessException e) {
+                                                      throw new RuntimeException(e);
+                                                  }
+                                              })
+                                              .collect(ImmutableCollectors.toList());
 
         // set ordinal values
         for (int i = 0; i < keys.size(); i++) {
@@ -65,6 +66,7 @@ public class KeyedConfiguration {
      *
      * @param key the key
      * @param <T> the key return type
+     *
      * @return the value mapped to the given key. May be null.
      */
     public <T> T get(ConfigKey<T> key) {

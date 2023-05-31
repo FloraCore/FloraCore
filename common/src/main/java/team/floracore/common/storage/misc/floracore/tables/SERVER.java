@@ -55,7 +55,7 @@ public class SERVER extends AbstractFloraCoreTable {
         this.name = name;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                    .apply(UPDATE_NAME))) {
+                                                                                              .apply(UPDATE_NAME))) {
                 ps.setString(1, name);
                 ps.setString(2, name);
                 ps.execute();
@@ -73,7 +73,7 @@ public class SERVER extends AbstractFloraCoreTable {
         this.type = type;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                    .apply(UPDATE_TYPE))) {
+                                                                                              .apply(UPDATE_TYPE))) {
                 ps.setString(1, type.getName());
                 ps.setString(2, name);
                 ps.execute();
@@ -91,7 +91,7 @@ public class SERVER extends AbstractFloraCoreTable {
         this.autoSync1 = autoSync1;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                    .apply(UPDATE_AUTO_SYNC_1))) {
+                                                                                              .apply(UPDATE_AUTO_SYNC_1))) {
                 ps.setBoolean(1, autoSync1);
                 ps.setString(2, name);
                 ps.execute();
@@ -109,7 +109,7 @@ public class SERVER extends AbstractFloraCoreTable {
         this.autoSync2 = autoSync2;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                    .apply(UPDATE_AUTO_SYNC_2))) {
+                                                                                              .apply(UPDATE_AUTO_SYNC_2))) {
                 ps.setBoolean(1, autoSync2);
                 ps.setString(2, name);
                 ps.execute();
@@ -127,7 +127,7 @@ public class SERVER extends AbstractFloraCoreTable {
         this.lastActiveTime = lastActiveTime;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                    .apply(UPDATE_LAST_ACTIVE_TIME))) {
+                                                                                              .apply(UPDATE_LAST_ACTIVE_TIME))) {
                 ps.setLong(1, lastActiveTime);
                 ps.setString(2, name);
                 ps.execute();
@@ -141,7 +141,7 @@ public class SERVER extends AbstractFloraCoreTable {
     public void init() throws SQLException {
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                    .apply(INSERT))) {
+                                                                                              .apply(INSERT))) {
                 ps.setString(1, name);
                 ps.setString(2, type.getName());
                 ps.setBoolean(3, autoSync1);

@@ -22,9 +22,11 @@ import java.util.stream.Collectors;
 
 public class ApiPlayer implements PlayerAPI {
     private static final Cache<UUID, PLAYER> playersCache = CaffeineFactory.newBuilder()
-            .expireAfterWrite(3, TimeUnit.SECONDS).build();
+                                                                           .expireAfterWrite(3, TimeUnit.SECONDS)
+                                                                           .build();
     private static final Cache<String, PLAYER> playerRecordCache = CaffeineFactory.newBuilder()
-            .expireAfterWrite(3, TimeUnit.SECONDS).build();
+                                                                                  .expireAfterWrite(3, TimeUnit.SECONDS)
+                                                                                  .build();
     private final FloraCorePlugin plugin;
     private RankConsumer rankConsumer;
     private PermissionEvaluator permissionEvaluator;

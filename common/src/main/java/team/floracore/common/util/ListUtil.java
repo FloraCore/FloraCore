@@ -110,9 +110,9 @@ public final class ListUtil {
 
     public static <K, V> Map<K, V> toMap(Map<K, V> map, List<Map.Entry<K, V>> list) {
         list.forEach(e ->
-        {
-            map.put(e.getKey(), e.getValue());
-        });
+                     {
+                         map.put(e.getKey(), e.getValue());
+                     });
         return map;
     }
 

@@ -30,7 +30,7 @@ public class SqlStorage implements StorageImplementation {
         this.plugin = plugin;
         this.connectionFactory = connectionFactory;
         this.statementProcessor = connectionFactory.getStatementProcessor()
-                .compose(s -> s.replace("{prefix}", tablePrefix));
+                                                   .compose(s -> s.replace("{prefix}", tablePrefix));
     }
 
     @Override
@@ -63,16 +63,16 @@ public class SqlStorage implements StorageImplementation {
         List<String> statements;
 
         String schemaFileName = "team/floracore/schema/" + this.connectionFactory.getImplementationName()
-                .toLowerCase(Locale.ROOT) + ".sql";
+                                                                                 .toLowerCase(Locale.ROOT) + ".sql";
         try (InputStream is = this.plugin.getBootstrap().getResourceStream(schemaFileName)) {
             if (is == null) {
                 throw new IOException("Couldn't locate schema file for " + this.connectionFactory.getImplementationName());
             }
 
             statements = SchemaReader.getStatements(is)
-                    .stream()
-                    .map(this.statementProcessor)
-                    .collect(Collectors.toList());
+                                     .stream()
+                                     .map(this.statementProcessor)
+                                     .collect(Collectors.toList());
         }
 
         try (Connection connection = this.connectionFactory.getConnection()) {
@@ -131,15 +131,15 @@ public class SqlStorage implements StorageImplementation {
                         long lastLoginTime = rs.getLong("lastLoginTime");
                         long playTime = rs.getLong("playTime");
                         player = new PLAYER(plugin,
-                                this,
-                                id,
-                                UUID.fromString(uuid),
-                                name,
-                                firstLoginIp,
-                                lastLoginIp,
-                                firstLoginTime,
-                                lastLoginTime,
-                                playTime);
+                                            this,
+                                            id,
+                                            UUID.fromString(uuid),
+                                            name,
+                                            firstLoginIp,
+                                            lastLoginIp,
+                                            firstLoginTime,
+                                            lastLoginTime,
+                                            playTime);
                     } else {
                         return null;
                     }
@@ -167,15 +167,15 @@ public class SqlStorage implements StorageImplementation {
                         long lastLoginTime = rs.getLong("lastLoginTime");
                         long playTime = rs.getLong("playTime");
                         player = new PLAYER(plugin,
-                                this,
-                                id,
-                                uuid,
-                                name,
-                                firstLoginIp,
-                                lastLoginIp,
-                                firstLoginTime,
-                                lastLoginTime,
-                                playTime);
+                                            this,
+                                            id,
+                                            uuid,
+                                            name,
+                                            firstLoginIp,
+                                            lastLoginIp,
+                                            firstLoginTime,
+                                            lastLoginTime,
+                                            playTime);
                     } else {
                         return null;
                     }
@@ -327,13 +327,13 @@ public class SqlStorage implements StorageImplementation {
                         boolean autoSync2 = rs.getBoolean("autoSync2");
                         long lastActiveTime = rs.getLong("lastActiveTime");
                         server = new SERVER(plugin,
-                                this,
-                                id,
-                                name,
-                                ServerType.parse(type),
-                                autoSync1,
-                                autoSync2,
-                                lastActiveTime);
+                                            this,
+                                            id,
+                                            name,
+                                            ServerType.parse(type),
+                                            autoSync1,
+                                            autoSync2,
+                                            lastActiveTime);
                     } else {
                         return null;
                     }
@@ -366,15 +366,15 @@ public class SqlStorage implements StorageImplementation {
                         long createTime = rs.getLong("createTime");
                         long disbandTime = rs.getLong("disbandTime");
                         return new PARTY(plugin,
-                                this,
-                                id,
-                                uuid,
-                                leader,
-                                moderators,
-                                members,
-                                settings,
-                                createTime,
-                                disbandTime);
+                                         this,
+                                         id,
+                                         uuid,
+                                         leader,
+                                         moderators,
+                                         members,
+                                         settings,
+                                         createTime,
+                                         disbandTime);
                     } else {
                         return null;
                     }
@@ -398,15 +398,15 @@ public class SqlStorage implements StorageImplementation {
     @Override
     public void insertParty(UUID uuid, UUID leader, long createTime) {
         PARTY party = new PARTY(plugin,
-                this,
-                -1,
-                uuid,
-                leader,
-                Collections.emptyList(),
-                Collections.singletonList(leader),
-                "",
-                createTime,
-                -1);
+                                this,
+                                -1,
+                                uuid,
+                                leader,
+                                Collections.emptyList(),
+                                Collections.singletonList(leader),
+                                "",
+                                createTime,
+                                -1);
         try {
             party.init();
         } catch (SQLException e) {
@@ -479,15 +479,15 @@ public class SqlStorage implements StorageImplementation {
                         ReportStatus status = ReportStatus.valueOf(rs.getString("status"));
                         Long conclusionTime = rs.getLong("conclusionTime");
                         ret.add(new REPORT(plugin,
-                                this,
-                                id,
-                                uuid,
-                                reporters,
-                                reported,
-                                reasons,
-                                reportTime,
-                                status,
-                                conclusionTime));
+                                           this,
+                                           id,
+                                           uuid,
+                                           reporters,
+                                           reported,
+                                           reasons,
+                                           reportTime,
+                                           status,
+                                           conclusionTime));
                     }
                 }
             }
@@ -520,15 +520,15 @@ public class SqlStorage implements StorageImplementation {
                         ReportStatus status = ReportStatus.valueOf(rs.getString("status"));
                         Long conclusionTime = rs.getLong("conclusionTime");
                         ret.add(new REPORT(plugin,
-                                this,
-                                id,
-                                uuid1,
-                                reporters,
-                                reported,
-                                reasons,
-                                reportTime,
-                                status,
-                                conclusionTime));
+                                           this,
+                                           id,
+                                           uuid1,
+                                           reporters,
+                                           reported,
+                                           reasons,
+                                           reportTime,
+                                           status,
+                                           conclusionTime));
                     }
                 }
             }
@@ -560,15 +560,15 @@ public class SqlStorage implements StorageImplementation {
                         ReportStatus status = ReportStatus.valueOf(rs.getString("status"));
                         Long conclusionTime = rs.getLong("conclusionTime");
                         return new REPORT(plugin,
-                                this,
-                                id,
-                                uuid1,
-                                reporters,
-                                reported,
-                                reasons,
-                                reportTime,
-                                status,
-                                conclusionTime);
+                                          this,
+                                          id,
+                                          uuid1,
+                                          reporters,
+                                          reported,
+                                          reasons,
+                                          reportTime,
+                                          status,
+                                          conclusionTime);
                     } else {
                         return null;
                     }
@@ -599,15 +599,15 @@ public class SqlStorage implements StorageImplementation {
         REPORT report = getUnprocessedReports(reported);
         if (getUnprocessedReports(reported) == null) {
             report = new REPORT(plugin,
-                    this,
-                    -1,
-                    uuid,
-                    Collections.singletonList(reporter),
-                    reported,
-                    Collections.singletonList(reason),
-                    reportTime,
-                    ReportStatus.WAITING,
-                    null);
+                                this,
+                                -1,
+                                uuid,
+                                Collections.singletonList(reporter),
+                                reported,
+                                Collections.singletonList(reason),
+                                reportTime,
+                                ReportStatus.WAITING,
+                                null);
             try {
                 report.init();
             } catch (SQLException e) {

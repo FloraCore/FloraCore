@@ -58,6 +58,7 @@ public class RecordComponentNode extends RecordComponentVisitor {
      * @param name       the record component name.
      * @param descriptor the record component descriptor (see {@link Type}).
      * @param signature  the record component signature.
+     *
      * @throws IllegalStateException If a subclass calls this constructor.
      */
     public RecordComponentNode(final String name, final String descriptor, final String signature) {

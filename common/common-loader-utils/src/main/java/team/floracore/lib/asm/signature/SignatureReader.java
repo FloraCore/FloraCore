@@ -34,6 +34,7 @@ public class SignatureReader {
      * @param signature        a string containing the signature that must be parsed.
      * @param startOffset      index of the first character of the signature to parsed.
      * @param signatureVisitor the visitor that must visit this signature.
+     *
      * @return the index of the first character after the parsed signature.
      */
     private static int parseType(

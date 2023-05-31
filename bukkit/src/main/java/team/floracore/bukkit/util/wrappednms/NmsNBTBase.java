@@ -11,16 +11,16 @@ import java.util.List;
 import java.util.Objects;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTBase", maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTBase",
-        minVer = 17)})
+                                                                                    minVer = 17)})
 public interface NmsNBTBase extends WrappedBukkitObject {
     List<Class<? extends NmsNBTBase>> NBTWrappers = Lists.newArrayList(NmsNBTTagByte.class,
-            NmsNBTTagCompound.class,
-            NmsNBTTagInt.class,
-            NmsNBTTagList.class,
-            NmsNBTTagLong.class,
-            NmsNBTTagShort.class,
-            NmsNBTTagDouble.class,
-            NmsNBTTagString.class);
+                                                                       NmsNBTTagCompound.class,
+                                                                       NmsNBTTagInt.class,
+                                                                       NmsNBTTagList.class,
+                                                                       NmsNBTTagLong.class,
+                                                                       NmsNBTTagShort.class,
+                                                                       NmsNBTTagDouble.class,
+                                                                       NmsNBTTagString.class);
 
     static NmsNBTBase wrap(Object nmsNbt) {
         for (Class<? extends NmsNBTBase> w : NBTWrappers) {

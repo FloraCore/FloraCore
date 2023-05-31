@@ -27,6 +27,7 @@ public interface ConfigKey<T> {
      * Resolves and returns the value mapped to this key using the given config instance.
      *
      * @param adapter the config adapter instance
+     *
      * @return the value mapped to this key
      */
     T get(ConfigurationAdapter adapter);

@@ -95,7 +95,7 @@ public interface InventoryContents {
         @Override
         public SlotIterator newIterator(String id, SlotIterator.Type type, int startRow, int startColumn) {
             SlotIterator iterator = new SlotIterator.Impl(this, inv,
-                    type, startRow, startColumn);
+                                                          type, startRow, startColumn);
 
             this.iterators.put(id, iterator);
             return iterator;

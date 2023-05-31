@@ -66,6 +66,7 @@ public class FieldRemapper extends FieldVisitor {
      *
      * @param descriptor        the descriptor of the visited annotation.
      * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
+     *
      * @return the newly created remapper.
      */
     protected AnnotationVisitor createAnnotationRemapper(
@@ -79,7 +80,9 @@ public class FieldRemapper extends FieldVisitor {
      * new {@link AnnotationRemapper}.
      *
      * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
+     *
      * @return the newly created remapper.
+     *
      * @deprecated use {@link #createAnnotationRemapper(String, AnnotationVisitor)} instead.
      */
     @Deprecated

@@ -15,6 +15,7 @@ public interface PlayerAPI {
      * 可能出现的问题是,无法判定这名玩家之前的昵称。
      *
      * @param name 玩家昵称
+     *
      * @return 是否记录状况
      */
     boolean hasPlayerRecord(String name);
@@ -25,6 +26,7 @@ public interface PlayerAPI {
      * 若不存在,则返回null。
      *
      * @param name 玩家昵称
+     *
      * @return 玩家UUID
      */
     UUID getPlayerRecordUUID(String name);
@@ -33,6 +35,7 @@ public interface PlayerAPI {
      * 通过数据库获取玩家最后记录的名字。
      *
      * @param uuid 玩家的UUID
+     *
      * @return 最后记录的名字, 若无返回null
      */
     String getPlayerRecordName(UUID uuid);
@@ -43,6 +46,7 @@ public interface PlayerAPI {
      * 如果不在,再通过数据库获取。
      *
      * @param uuid 玩家的UUID
+     *
      * @return 在线情况
      */
     boolean isOnline(UUID uuid);
@@ -60,6 +64,7 @@ public interface PlayerAPI {
      * @param uuid       要检查权限的 UUID。
      * @param permission 要检查的权限字符串。
      * @param evaluator  权限评估器，用于评估权限。
+     *
      * @return 一个 CompletableFuture 对象，表示权限检查的结果。返回值为布尔类型。如果具有权限，则返回 true；否则返回 false。
      */
     CompletableFuture<Boolean> hasPermissionAsync(UUID uuid, String permission, PermissionEvaluator evaluator);
@@ -69,6 +74,7 @@ public interface PlayerAPI {
      *
      * @param uuid       要检查权限的 UUID。
      * @param permission 要检查的权限字符串。
+     *
      * @return 如果具有权限，则返回 true；否则返回 false。
      */
     boolean hasPermission(UUID uuid, String permission);

@@ -26,15 +26,15 @@ public class BukkitWrapper {
     public static String MCVersion;
     public static float version;
     public static String MCProtocolVersion = Bukkit.getServer()
-            .getClass()
-            .getPackage()
-            .getName()
-            .replace("org.bukkit.craftbukkit.", "");
+                                                   .getClass()
+                                                   .getPackage()
+                                                   .getName()
+                                                   .replace("org.bukkit.craftbukkit.", "");
 
     static {
         v17 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server." + MCProtocolVersion + ".MinecraftServer"));
         v13 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server." + MCProtocolVersion + ".ItemStack")
-                .getDeclaredField("damage"));
+                                               .getDeclaredField("damage"));
         MCVersion = Bukkit.getBukkitVersion().split("-")[0];
         version = Float.parseFloat(BukkitWrapper.MCVersion.split("\\.", 2)[1]);
         v8 = version < 9;
@@ -68,6 +68,6 @@ public class BukkitWrapper {
 
     public static String cov(String clName) {
         return clName.replace("nms.", "net.minecraft.server." + MCProtocolVersion + ".")
-                .replace("obc.", "org.bukkit.craftbukkit." + MCProtocolVersion + ".");
+                     .replace("obc.", "org.bukkit.craftbukkit." + MCProtocolVersion + ".");
     }
 }

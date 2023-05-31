@@ -68,6 +68,7 @@ public class Method {
      * Creates a new {@link Method}.
      *
      * @param method a java.lang.reflect method descriptor
+     *
      * @return a {@link Method} corresponding to the given Java method declaration.
      */
     public static Method getMethod(final java.lang.reflect.Method method) {
@@ -78,6 +79,7 @@ public class Method {
      * Creates a new {@link Method}.
      *
      * @param constructor a java.lang.reflect constructor descriptor
+     *
      * @return a {@link Method} corresponding to the given Java constructor declaration.
      */
     public static Method getMethod(final java.lang.reflect.Constructor<?> constructor) {
@@ -91,7 +93,9 @@ public class Method {
      *               (argumentType1, ... argumentTypeN)", where the types are in plain Java (e.g. "int",
      *               "float", "java.util.List", ...). Classes of the java.lang package can be specified by their
      *               unqualified name; all other classes names must be fully qualified.
+     *
      * @return a {@link Method} corresponding to the given Java method declaration.
+     *
      * @throws IllegalArgumentException if <code>method</code> could not get parsed.
      */
     public static Method getMethod(final String method) {
@@ -109,7 +113,9 @@ public class Method {
      * @param defaultPackage true if unqualified class names belong to the default package, or false
      *                       if they correspond to java.lang classes. For instance "Object" means "Object" if this
      *                       option is true, or "java.lang.Object" otherwise.
+     *
      * @return a {@link Method} corresponding to the given Java method declaration.
+     *
      * @throws IllegalArgumentException if <code>method</code> could not get parsed.
      */
     public static Method getMethod(final String method, final boolean defaultPackage) {
@@ -153,6 +159,7 @@ public class Method {
      * @param defaultPackage true if unqualified class names belong to the default package, or false
      *                       if they correspond to java.lang classes. For instance "Object" means "Object" if this
      *                       option is true, or "java.lang.Object" otherwise.
+     *
      * @return the descriptor corresponding to the given type name.
      */
     private static String getDescriptorInternal(final String type, final boolean defaultPackage) {

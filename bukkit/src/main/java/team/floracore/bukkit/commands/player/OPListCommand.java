@@ -35,8 +35,8 @@ public class OPListCommand extends FloraCoreBukkitCommand {
         }
         PlayerCommandMessage.COMMAND_OPLIST_HEADER.send(sender, ops.size());
         ops.forEach(op -> PlayerCommandMessage.COMMAND_OPLIST_ENTRY.send(sender,
-                op.getName(),
-                op.getUniqueId(),
-                op.isOnline()));
+                                                                         op.getName(),
+                                                                         op.getUniqueId(),
+                                                                         op.isOnline()));
     }
 }

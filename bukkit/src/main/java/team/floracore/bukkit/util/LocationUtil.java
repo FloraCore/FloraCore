@@ -14,18 +14,18 @@ public final class LocationUtil {
     private static final Set<Material> WATER_TYPES = EnumUtil.getAllMatching(Material.class, "FLOWING_WATER", "WATER");
     // Types checked by isBlockDamaging
     private static final Set<Material> DAMAGING_TYPES = EnumUtil.getAllMatching(Material.class,
-            "CACTUS",
-            "CAMPFIRE",
-            "FIRE",
-            "MAGMA_BLOCK",
-            "SOUL_CAMPFIRE",
-            "SOUL_FIRE",
-            "SWEET_BERRY_BUSH",
-            "WITHER_ROSE");
+                                                                                "CACTUS",
+                                                                                "CAMPFIRE",
+                                                                                "FIRE",
+                                                                                "MAGMA_BLOCK",
+                                                                                "SOUL_CAMPFIRE",
+                                                                                "SOUL_FIRE",
+                                                                                "SWEET_BERRY_BUSH",
+                                                                                "WITHER_ROSE");
     private static final Set<Material> LAVA_TYPES = EnumUtil.getAllMatching(Material.class,
-            "FLOWING_LAVA",
-            "LAVA",
-            "STATIONARY_LAVA");
+                                                                            "FLOWING_LAVA",
+                                                                            "LAVA",
+                                                                            "STATIONARY_LAVA");
     private static final Material PORTAL = EnumUtil.getMaterial("NETHER_PORTAL", "PORTAL");
     private static final Material LIGHT = EnumUtil.getMaterial("LIGHT");
 
