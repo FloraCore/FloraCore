@@ -14,6 +14,7 @@ import team.floracore.common.messaging.InternalMessagingService;
 import team.floracore.common.messaging.MessagingFactory;
 import team.floracore.common.messaging.message.ChangeNameMessageImpl;
 import team.floracore.common.sender.Sender;
+import team.floracore.common.storage.misc.floracore.tables.DATA;
 
 import java.util.List;
 import java.util.UUID;
@@ -115,6 +116,11 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
                     }
                 });
                 break;
+            case CUSTOM:
+                getPlugin().getOnlineSenders().forEach(i -> {
+                    List<DATA> dataList = getPlugin().getStorage().getImplementation().selectData(UUID.fromString(parameters.get(0)));
+                    // TODO : 转发消息
+                });
         }
         if (player != null) {
             Sender sender = getPlugin().getSenderFactory().wrap(player);

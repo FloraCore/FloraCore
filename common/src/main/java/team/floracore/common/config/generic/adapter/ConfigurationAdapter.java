@@ -2,6 +2,7 @@ package team.floracore.common.config.generic.adapter;
 
 import team.floracore.common.plugin.FloraCorePlugin;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -25,4 +26,5 @@ public interface ConfigurationAdapter {
 
     Map<String, String> getStringMap(String path, Map<String, String> def);
 
+    Collection<String> getKeys();
 }

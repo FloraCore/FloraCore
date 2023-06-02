@@ -25,8 +25,8 @@
 #                                                                                                              #
 ################################################################################################################
 StaffChat:
-  name: "&9&lStaff&f&lChat"
-  format: "%name%&7 » %player%&7: &f%message%"
+#  name: "&9&lStaff&f&lChat"
+#  format: "%name%&7 » %player%&7: &f%message%"
   enableColorChar: true
   commands:
     - staffchat
@@ -36,6 +36,8 @@ StaffChat:
     - group.helper
     - group.mod
     - group.admin
+  identifiers:
+    - staff
 AdminChat:
   name: "&c&lAdmin&f&lChat"
   format: "%name%&7 » %player%&7: &f%message%"

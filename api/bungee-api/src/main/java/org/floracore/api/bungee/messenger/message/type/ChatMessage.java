@@ -55,5 +55,9 @@ public interface ChatMessage extends Message {
          * 管理员消息
          */
         ADMIN,
+        /**
+         * 自定义消息
+         */
+        CUSTOM,
     }
 }
