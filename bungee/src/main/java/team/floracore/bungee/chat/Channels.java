@@ -9,29 +9,28 @@ import org.floracore.api.bungee.chat.ChannelsAPI;
 import org.floracore.api.bungee.chat.ChatChannel;
 import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.data.DataType;
+import team.floracore.bungee.config.ChatConfiguration;
+import team.floracore.bungee.config.ChatKeys;
 import team.floracore.bungee.messaging.BungeeMessagingFactory;
 import team.floracore.common.storage.implementation.StorageImplementation;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.UUID;
+import java.util.*;
 
 public class Channels implements ChannelsAPI {
     private final CommandManager<CommandSender> manager;
     private final FloraCore api;
     private final StorageImplementation storage;
     private final BungeeMessagingFactory factory;
-    private final ArrayList<ChatChannel> categories;
+    private final List<ChatChannel> categories = new ArrayList<>();
     private final static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm:ss]");
 
-    public Channels(CommandManager<CommandSender> manager, FloraCore api, StorageImplementation storage, BungeeMessagingFactory factory) {
+    public Channels(CommandManager<CommandSender> manager, ChatConfiguration chatConfiguration, FloraCore api, StorageImplementation storage, BungeeMessagingFactory factory) {
         this.manager = manager;
         this.api = api;
         this.storage = storage;
         this.factory = factory;
-        this.categories = new ArrayList<>();
+        chatConfiguration.get(ChatKeys.CHAT_CHANNELS).forEach(this::add);
     }
 
     @Override
