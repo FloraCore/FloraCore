@@ -21,7 +21,7 @@ import static team.floracore.common.config.generic.key.ConfigKeyFactory.key;
 public class BoardsKeys {
     public static final ConfigKey<Integer> UPDATE_TIME = key(c -> c.getInteger("update-time", 10));
     public static final ConfigKey<List<String>> DISABLE_WORLDS = key(c -> c.getStringList("disable-worlds",
-                                                                                          new ArrayList<>()));
+            new ArrayList<>()));
 
     public static final ConfigKey<List<BoardModel>> BOARD_MODELS = key(c -> {
         List<BoardModel> ret = new ArrayList<>();

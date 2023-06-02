@@ -58,7 +58,7 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
 
         PluginLogger logger = plugin.getLogger();
         logger.warn("A " + throwable.getClass()
-                                    .getSimpleName() + " has occurred whilst initialising Hikari. This is likely due to classloading conflicts between other plugins.");
+                .getSimpleName() + " has occurred whilst initialising Hikari. This is likely due to classloading conflicts between other plugins.");
         logger.warn(
                 "Please check for other plugins below (and try loading FloraCore without them installed) before reporting the issue.");
 
@@ -103,11 +103,11 @@ public abstract class HikariConnectionFactory implements ConnectionFactory {
         // allow the implementation to configure the HikariConfig appropriately with these values
         try {
             configureDatabase(config,
-                              address,
-                              port,
-                              this.configuration.getDatabase(),
-                              this.configuration.getUsername(),
-                              this.configuration.getPassword());
+                    address,
+                    port,
+                    this.configuration.getDatabase(),
+                    this.configuration.getUsername(),
+                    this.configuration.getPassword());
         } catch (NoSuchMethodError e) {
             handleClassloadingError(e, plugin);
         }

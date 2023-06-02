@@ -47,15 +47,15 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
                     packet.getRaw().getClass());
             for (EventPriority p : EventPriority.values()) {
                 l.get(p.ordinal()).forEach((c, t) ->
-                                           {
-                                               try {
-                                                   NmsPacket tp = packet.cast(t);
-                                                   c.accept(receiver, TypeUtil.cast(tp), cancelled);
-                                                   packet.setRaw(tp.getRaw());
-                                               } catch (Throwable e) {
-                                                   e.printStackTrace();
-                                               }
-                                           });
+                {
+                    try {
+                        NmsPacket tp = packet.cast(t);
+                        c.accept(receiver, TypeUtil.cast(tp), cancelled);
+                        packet.setRaw(tp.getRaw());
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
             }
             return cancelled.get();
         }
@@ -69,15 +69,15 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
                     packet.getRaw().getClass());
             for (EventPriority p : EventPriority.values()) {
                 l.get(p.ordinal()).forEach((c, t) ->
-                                           {
-                                               try {
-                                                   NmsPacket tp = packet.cast(t);
-                                                   c.accept(sender, TypeUtil.cast(tp), cancelled);
-                                                   packet.setRaw(tp.getRaw());
-                                               } catch (Throwable e) {
-                                                   e.printStackTrace();
-                                               }
-                                           });
+                {
+                    try {
+                        NmsPacket tp = packet.cast(t);
+                        c.accept(sender, TypeUtil.cast(tp), cancelled);
+                        packet.setRaw(tp.getRaw());
+                    } catch (Throwable e) {
+                        e.printStackTrace();
+                    }
+                });
             }
             return cancelled.get();
         }
@@ -93,17 +93,17 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
     public static void sendPacket(Player receiver, NmsPacket packet) {
         if (BukkitWrapper.version >= 12) {
             WrappedObject.wrap(ObcEntity.class, receiver)
-                         .getHandle()
-                         .cast(NmsEntityPlayer.class)
-                         .getPlayerConnection()
-                         .getNetworkManager()
-                         .sendPacket(packet);
+                    .getHandle()
+                    .cast(NmsEntityPlayer.class)
+                    .getPlayerConnection()
+                    .getNetworkManager()
+                    .sendPacket(packet);
         } else {
             WrappedObject.wrap(ObcEntity.class, receiver)
-                         .getHandle()
-                         .cast(NmsEntityPlayer.class)
-                         .getPlayerConnection()
-                         .sendPacket(packet);
+                    .getHandle()
+                    .cast(NmsEntityPlayer.class)
+                    .getPlayerConnection()
+                    .sendPacket(packet);
         }
     }
 

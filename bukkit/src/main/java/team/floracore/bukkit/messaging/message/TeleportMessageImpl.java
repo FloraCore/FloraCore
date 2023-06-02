@@ -30,20 +30,20 @@ public class TeleportMessageImpl extends AbstractMessage implements TeleportMess
         }
 
         UUID sender = Optional.ofNullable(content.getAsJsonObject().get("sender"))
-                              .map(JsonElement::getAsString)
-                              .map(UUID::fromString)
-                              .orElseThrow(() -> new IllegalStateException("Incoming message has no sender argument: " + content));
+                .map(JsonElement::getAsString)
+                .map(UUID::fromString)
+                .orElseThrow(() -> new IllegalStateException("Incoming message has no sender argument: " + content));
 
         UUID recipient = Optional.ofNullable(content.getAsJsonObject().get("recipient"))
-                                 .map(JsonElement::getAsString)
-                                 .map(UUID::fromString)
-                                 .orElseThrow(() -> new IllegalStateException(
-                                         "Incoming message has no recipient argument: " + content));
+                .map(JsonElement::getAsString)
+                .map(UUID::fromString)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Incoming message has no recipient argument: " + content));
 
         String serverName = Optional.ofNullable(content.getAsJsonObject().get("serverName"))
-                                    .map(JsonElement::getAsString)
-                                    .orElseThrow(() -> new IllegalStateException(
-                                            "Incoming message has no serverName argument: " + content));
+                .map(JsonElement::getAsString)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Incoming message has no serverName argument: " + content));
 
         return new TeleportMessageImpl(id, sender, recipient, serverName);
     }
@@ -51,9 +51,9 @@ public class TeleportMessageImpl extends AbstractMessage implements TeleportMess
     @Override
     public @NotNull String asEncodedString() {
         return FloraCoreMessagingService.encodeMessageAsString(TYPE, getId(),
-                                                               new JObject().add("sender", this.sender.toString())
-                                                                            .add("recipient", this.recipient.toString())
-                                                                            .add("serverName", serverName).toJson()
+                new JObject().add("sender", this.sender.toString())
+                        .add("recipient", this.recipient.toString())
+                        .add("serverName", serverName).toJson()
         );
     }
 

@@ -57,7 +57,6 @@ public class ByteVector {
      * Puts a byte into this byte vector. The byte vector is automatically enlarged if necessary.
      *
      * @param byteValue a byte.
-     *
      * @return this byte vector.
      */
     public ByteVector putByte(final int byteValue) {
@@ -91,7 +90,6 @@ public class ByteVector {
      *
      * @param byteValue1 a byte.
      * @param byteValue2 another byte.
-     *
      * @return this byte vector.
      */
     final ByteVector put11(final int byteValue1, final int byteValue2) {
@@ -110,7 +108,6 @@ public class ByteVector {
      * Puts a short into this byte vector. The byte vector is automatically enlarged if necessary.
      *
      * @param shortValue a short.
-     *
      * @return this byte vector.
      */
     public ByteVector putShort(final int shortValue) {
@@ -131,7 +128,6 @@ public class ByteVector {
      *
      * @param byteValue  a byte.
      * @param shortValue a short.
-     *
      * @return this byte vector.
      */
     final ByteVector put12(final int byteValue, final int shortValue) {
@@ -154,7 +150,6 @@ public class ByteVector {
      * @param byteValue1 a byte.
      * @param byteValue2 another byte.
      * @param shortValue a short.
-     *
      * @return this byte vector.
      */
     final ByteVector put112(final int byteValue1, final int byteValue2, final int shortValue) {
@@ -175,7 +170,6 @@ public class ByteVector {
      * Puts an int into this byte vector. The byte vector is automatically enlarged if necessary.
      *
      * @param intValue an int.
-     *
      * @return this byte vector.
      */
     public ByteVector putInt(final int intValue) {
@@ -199,7 +193,6 @@ public class ByteVector {
      * @param byteValue   a byte.
      * @param shortValue1 a short.
      * @param shortValue2 another short.
-     *
      * @return this byte vector.
      */
     final ByteVector put122(final int byteValue, final int shortValue1, final int shortValue2) {
@@ -221,7 +214,6 @@ public class ByteVector {
      * Puts a long into this byte vector. The byte vector is automatically enlarged if necessary.
      *
      * @param longValue a long.
-     *
      * @return this byte vector.
      */
     public ByteVector putLong(final long longValue) {
@@ -249,7 +241,6 @@ public class ByteVector {
      * necessary.
      *
      * @param stringValue a String whose UTF8 encoded length must be less than 65536.
-     *
      * @return this byte vector.
      */
     // DontCheck(AbbreviationAsWordInName): can't be renamed (for backward binary compatibility).
@@ -292,7 +283,6 @@ public class ByteVector {
      *                      to have already been encoded, using only one byte per character.
      * @param maxByteLength the maximum byte length of the encoded string, including the already
      *                      encoded characters.
-     *
      * @return this byte vector.
      */
     final ByteVector encodeUtf8(final String stringValue, final int offset, final int maxByteLength) {
@@ -346,7 +336,6 @@ public class ByteVector {
      *                       bytes into this byte vector.
      * @param byteOffset     index of the first byte of byteArrayValue that must be copied.
      * @param byteLength     number of bytes of byteArrayValue that must be copied.
-     *
      * @return this byte vector.
      */
     public ByteVector putByteArray(

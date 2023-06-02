@@ -38,30 +38,30 @@ public class ReportMessageImpl extends AbstractMessage implements ReportMessage 
             throw new IllegalStateException("Missing content");
         }
         UUID reporter = Optional.ofNullable(content.getAsJsonObject().get("reporter"))
-                                .map(JsonElement::getAsString)
-                                .map(UUID::fromString)
-                                .orElseThrow(() -> new IllegalStateException(
-                                        "Incoming message has no reporter argument: " + content));
+                .map(JsonElement::getAsString)
+                .map(UUID::fromString)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Incoming message has no reporter argument: " + content));
 
         UUID reportedUser = Optional.ofNullable(content.getAsJsonObject().get("reportedUser"))
-                                    .map(JsonElement::getAsString)
-                                    .map(UUID::fromString)
-                                    .orElseThrow(() -> new IllegalStateException(
-                                            "Incoming message has no reportedUser argument: " + content));
+                .map(JsonElement::getAsString)
+                .map(UUID::fromString)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Incoming message has no reportedUser argument: " + content));
 
         String reporterServer = Optional.ofNullable(content.getAsJsonObject().get("reporterServer"))
-                                        .map(JsonElement::getAsString)
-                                        .orElseThrow(() -> new IllegalStateException(
-                                                "Incoming message has no reporterServer argument: " + content));
+                .map(JsonElement::getAsString)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Incoming message has no reporterServer argument: " + content));
 
         String reportedUserServer = Optional.ofNullable(content.getAsJsonObject().get("reportedUserServer"))
-                                            .map(JsonElement::getAsString)
-                                            .orElseThrow(() -> new IllegalStateException(
-                                                    "Incoming message has no reportedUserServer argument: " + content));
+                .map(JsonElement::getAsString)
+                .orElseThrow(() -> new IllegalStateException(
+                        "Incoming message has no reportedUserServer argument: " + content));
 
         String reason = Optional.ofNullable(content.getAsJsonObject().get("reason"))
-                                .map(JsonElement::getAsString)
-                                .orElseThrow(() -> new IllegalStateException("Incoming message has no reason argument: " + content));
+                .map(JsonElement::getAsString)
+                .orElseThrow(() -> new IllegalStateException("Incoming message has no reason argument: " + content));
 
         return new ReportMessageImpl(id, reporter, reportedUser, reporterServer, reportedUserServer, reason);
     }
@@ -69,13 +69,13 @@ public class ReportMessageImpl extends AbstractMessage implements ReportMessage 
     @Override
     public @NotNull String asEncodedString() {
         return FloraCoreMessagingService.encodeMessageAsString(TYPE, getId(),
-                                                               new JObject().add("reporter", this.reporter.toString())
-                                                                            .add("reportedUser",
-                                                                                 this.reportedUser.toString())
-                                                                            .add("reporterServer", this.reporterServer)
-                                                                            .add("reportedUserServer",
-                                                                                 this.reportedUserServer)
-                                                                            .add("reason", this.reason).toJson()
+                new JObject().add("reporter", this.reporter.toString())
+                        .add("reportedUser",
+                                this.reportedUser.toString())
+                        .add("reporterServer", this.reporterServer)
+                        .add("reportedUserServer",
+                                this.reportedUserServer)
+                        .add("reason", this.reason).toJson()
         );
     }
 

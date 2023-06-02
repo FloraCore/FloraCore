@@ -60,7 +60,6 @@ final class Subroutine {
      * subroutine are added as callers of this one (if both have the same start).
      *
      * @param subroutine another subroutine. This subroutine is left unchanged by this method.
-     *
      * @return whether this subroutine has been modified by this method.
      */
     public boolean merge(final Subroutine subroutine) {

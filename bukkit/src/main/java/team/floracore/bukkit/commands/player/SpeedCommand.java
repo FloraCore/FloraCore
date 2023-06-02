@@ -61,14 +61,14 @@ public class SpeedCommand extends FloraCoreBukkitCommand {
                 }
                 if (!(silent != null && silent)) {
                     PlayerCommandMessage.COMMAND_SPEED_OTHER.send(sender,
-                                                                  p.getDisplayName(),
-                                                                  speedType == SpeedType.FLY ? PlayerCommandMessage.COMMAND_MISC_SPEED_FLY.build() : PlayerCommandMessage.COMMAND_MISC_SPEED_WALK.build(),
-                                                                  String.valueOf(speed));
+                            p.getDisplayName(),
+                            speedType == SpeedType.FLY ? PlayerCommandMessage.COMMAND_MISC_SPEED_FLY.build() : PlayerCommandMessage.COMMAND_MISC_SPEED_WALK.build(),
+                            String.valueOf(speed));
                 }
                 PlayerCommandMessage.COMMAND_SPEED.send(sender,
-                                                        target.getDisplayName(),
-                                                        speedType == SpeedType.FLY ? PlayerCommandMessage.COMMAND_MISC_SPEED_FLY.build() : PlayerCommandMessage.COMMAND_MISC_SPEED_WALK.build(),
-                                                        String.valueOf(speed));
+                        target.getDisplayName(),
+                        speedType == SpeedType.FLY ? PlayerCommandMessage.COMMAND_MISC_SPEED_FLY.build() : PlayerCommandMessage.COMMAND_MISC_SPEED_WALK.build(),
+                        String.valueOf(speed));
             } else {
                 switch (speedType) {
                     case FLY:
@@ -79,9 +79,9 @@ public class SpeedCommand extends FloraCoreBukkitCommand {
                         break;
                 }
                 PlayerCommandMessage.COMMAND_SPEED.send(sender,
-                                                        p.getDisplayName(),
-                                                        speedType == SpeedType.FLY ? PlayerCommandMessage.COMMAND_MISC_SPEED_FLY.build() : PlayerCommandMessage.COMMAND_MISC_SPEED_WALK.build(),
-                                                        String.valueOf(speed));
+                        p.getDisplayName(),
+                        speedType == SpeedType.FLY ? PlayerCommandMessage.COMMAND_MISC_SPEED_FLY.build() : PlayerCommandMessage.COMMAND_MISC_SPEED_WALK.build(),
+                        String.valueOf(speed));
             }
         } catch (IllegalArgumentException e) {
             PlayerCommandMessage.COMMAND_SPEED_NO_SUCH.send(sender, type);
@@ -93,8 +93,8 @@ public class SpeedCommand extends FloraCoreBukkitCommand {
         float maxSpeed = 1f;
         if (!isBypass) {
             maxSpeed = (speedType == SpeedType.FLY ? getPlugin().getConfiguration()
-                                                                .get(ConfigKeys.SPEED_MAX_FLY_SPEED) : getPlugin().getConfiguration()
-                                                                                                                  .get(ConfigKeys.SPEED_MAX_WALK_SPEED)).floatValue();
+                    .get(ConfigKeys.SPEED_MAX_FLY_SPEED) : getPlugin().getConfiguration()
+                    .get(ConfigKeys.SPEED_MAX_WALK_SPEED)).floatValue();
         }
 
         if (userSpeed < 1f) {

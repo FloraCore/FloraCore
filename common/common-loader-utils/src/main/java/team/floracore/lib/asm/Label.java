@@ -270,7 +270,6 @@ public class Label {
      * normally not needed by class generators or adapters.</i>
      *
      * @return the bytecode offset corresponding to this label.
-     *
      * @throws IllegalStateException if this label is not resolved yet.
      */
     public int getOffset() {
@@ -412,7 +411,6 @@ public class Label {
      *
      * @param code           the bytecode of the method.
      * @param bytecodeOffset the bytecode offset of this label.
-     *
      * @return {@literal true} if a blank that was left for this label was too small to store the
      * offset. In such a case the corresponding jump instruction is replaced with an equivalent
      * ASM specific instruction using an unsigned two bytes offset. These ASM specific
@@ -504,7 +502,6 @@ public class Label {
      *
      * @param listOfLabelsToProcess a list of basic blocks to process, linked together with their
      *                              {@link #nextListElement} field.
-     *
      * @return the new list of blocks to process.
      */
     private Label pushSuccessors(final Label listOfLabelsToProcess) {

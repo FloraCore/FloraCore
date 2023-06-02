@@ -80,17 +80,17 @@ public interface MenuMessage extends AbstractMessage {
             // 被举报者: {0} {1}
             .key("floracore.command.misc.reports.gui.main.report.reported")
             .args(text(reported, RED),
-                  OPEN_BRACKET.append(translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline"))
-                              .append(CLOSE_BRACKET)
-                              .color(online ? GREEN : RED)).color(GRAY).build();
+                    OPEN_BRACKET.append(translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline"))
+                            .append(CLOSE_BRACKET)
+                            .color(online ? GREEN : RED)).color(GRAY).build();
 
     Args2<String, Boolean> COMMAND_REPORTS_GUI_MAIN_REPORTER_DETAILED = (reported, online) -> translatable()
             // 举报者: {0} {1}
             .key("floracore.command.misc.reports.gui.main.report.reporter.detailed")
             .args(text(reported, RED),
-                  OPEN_BRACKET.append(translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline"))
-                              .append(CLOSE_BRACKET)
-                              .color(online ? GREEN : RED)).color(GRAY).build();
+                    OPEN_BRACKET.append(translatable(online ? "floracore.command.misc.online" : "floracore.command.misc.offline"))
+                            .append(CLOSE_BRACKET)
+                            .color(online ? GREEN : RED)).color(GRAY).build();
 
     Args1<String> COMMAND_REPORTS_GUI_MAIN_REASON = (reason) -> translatable()
             // 原因: {0}
@@ -113,10 +113,10 @@ public interface MenuMessage extends AbstractMessage {
             .key("floracore.command.misc.reports.status.ended").color(RED).build();
 
     Args0 COMMAND_REPORTS_GUI_PROCESSED = () -> OPEN_BRACKET.append(translatable()
-                                                                            // (已处理)
-                                                                            .key("floracore.command.misc.reports.gui.processed"))
-                                                            .append(CLOSE_BRACKET)
-                                                            .color(DARK_AQUA);
+                    // (已处理)
+                    .key("floracore.command.misc.reports.gui.processed"))
+            .append(CLOSE_BRACKET)
+            .color(DARK_AQUA);
 
     Args0 COMMAND_REPORTS_GUI_MAIN_TITLE = () -> translatable()
             // 举报列表

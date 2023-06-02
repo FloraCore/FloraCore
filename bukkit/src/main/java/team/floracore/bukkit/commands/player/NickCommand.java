@@ -174,16 +174,16 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         Collection<Component> bookPages = new ArrayList<>();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_1.build(),
-                                                    uuid);
+                uuid);
         Component line2 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_FINISH_PAGE_LINE_2.build(rank,
-                                                                                                                name),
-                                                    uuid);
+                        name),
+                uuid);
         Component reset = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RESET.build(), uuid);
         Component component = join(joinConfig, line1, space(),
-                                   // line 2
-                                   line2, space(),
-                                   // reset
-                                   reset).asComponent();
+                // line 2
+                line2, space(),
+                // reset
+                reset).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
@@ -193,7 +193,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         NmsEntityPlayer nep = WrappedObject.wrap(ObcEntity.class, player).getHandle().cast(NmsEntityPlayer.class);
         NmsEnumPlayerInfoAction removePlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).REMOVE_PLAYER();
         NmsPacketPlayOutPlayerInfo removePacket = NmsPacketPlayOutPlayerInfo.newInstance(removePlayer,
-                                                                                         Collections.singletonList(nep.getRaw()));
+                Collections.singletonList(nep.getRaw()));
         ProtocolUtil.sendPacketToAllPlayers(removePacket);
         WrappedGameProfile wgp = nep.getGameProfile();
         wgp.setName(name);
@@ -201,7 +201,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         player.setPlayerListName(null);
         NmsEnumPlayerInfoAction addPlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).ADD_PLAYER();
         NmsPacketPlayOutPlayerInfo addPacket = NmsPacketPlayOutPlayerInfo.newInstance(addPlayer,
-                                                                                      Collections.singletonList(nep.getRaw()));
+                Collections.singletonList(nep.getRaw()));
         ProtocolUtil.sendPacketToAllPlayers(addPacket);
         getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
             if (getPlugin().getLoader().getServer().getPluginManager().getPlugin("TAB") != null) {
@@ -281,7 +281,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
         Map<String, String> ranks_permission = getPlugin().getConfiguration()
-                                                          .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
+                .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
         Map<String, String> ranks_prefix = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK_PREFIX);
         boolean custom = p.hasPermission("floracore.command.nick.custom");
         DATA statusData = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.status");
@@ -345,11 +345,11 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                         }
                         if (name.equalsIgnoreCase("reuse")) {
                             DATA data = getStorageImplementation().getSpecifiedData(uuid,
-                                                                                    DataType.FUNCTION,
-                                                                                    "nick.name");
+                                    DataType.FUNCTION,
+                                    "nick.name");
                             nickname = (data != null) ? data.getValue() : getPlugin().getNamesRepository()
-                                                                                     .getRandomNameProperty()
-                                                                                     .getName();
+                                    .getRandomNameProperty()
+                                    .getName();
                         } else if (name.equalsIgnoreCase("random") && !custom) {
                             nickname = getPlugin().getNamesRepository().getRandomNameProperty().getName();
                         }
@@ -439,14 +439,14 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         Component line2 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_2.build(), uuid);
         Component line3 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_3.build(), uuid);
         Component accept = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_START_PAGE_ACCEPT_TEXT.build(),
-                                                     uuid);
+                uuid);
         Component component = join(joinConfig, line1, space(),
-                                   // line 2
-                                   line2,
-                                   // line 3
-                                   line3, space(),
-                                   // accept
-                                   accept).asComponent();
+                // line 2
+                line2,
+                // line 3
+                line3, space(),
+                // accept
+                accept).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
@@ -460,14 +460,14 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_1.build(), uuid);
         Component line2 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_2.build(), uuid);
         Component component = join(joinConfig, line1,
-                                   // line 2
-                                   line2, space()).asComponent();
+                // line 2
+                line2, space()).asComponent();
         Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
         for (Map.Entry<String, String> entry : ranks.entrySet()) {
             String rankName = entry.getKey();
             String rankPermission = getPlugin().getConfiguration()
-                                               .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION)
-                                               .get(rankName);
+                    .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION)
+                    .get(rankName);
             if (player.hasPermission(rankPermission)) {
                 Component rank = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANK_PAGE_RANK.build(
                         rankName,
@@ -487,18 +487,18 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_LINE_1.build(), uuid);
         Component normal = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_NORMAL.build(rank),
-                                                     uuid);
+                uuid);
         Component classic = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_STEVE_ALEX.build(rank),
-                                                      uuid);
+                uuid);
         Component random = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_SKIN_PAGE_RANDOM.build(rank),
-                                                     uuid);
+                uuid);
         Component component = join(joinConfig, line1, space(),
-                                   // normal skin
-                                   normal,
-                                   // steve / alex skin
-                                   classic,
-                                   // random skin
-                                   random).asComponent();
+                // normal skin
+                normal,
+                // steve / alex skin
+                classic,
+                // random skin
+                random).asComponent();
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.skin");
         if (data != null) {
             // reuse skin
@@ -524,24 +524,24 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_LINE_1.build(), uuid);
         Component random = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_RANDOM.build(rank,
-                                                                                                               skin),
-                                                     uuid);
+                        skin),
+                uuid);
         Component component = join(joinConfig, line1, space(),
-                                   // random name
-                                   random).asComponent();
+                // random name
+                random).asComponent();
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "nick.name");
         if (data != null) {
             // reuse name
             Component reuse = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_REUSE.build(rank,
-                                                                                                                 skin,
-                                                                                                                 data.getValue()),
-                                                        uuid);
+                            skin,
+                            data.getValue()),
+                    uuid);
             component = join(joinConfig, component, reuse);
         }
         if (player.hasPermission("floracore.command.nick.custom")) {
             Component custom = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_NAME_PAGE_CUSTOM.build(rank,
-                                                                                                                   skin),
-                                                         uuid);
+                            skin),
+                    uuid);
             component = join(joinConfig, component, custom);
         }
         Component reset = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RESET.build(), uuid);
@@ -557,28 +557,28 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         String nickname = getPlugin().getNamesRepository().getRandomNameProperty().getName();
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         Component line1 = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_LINE_1.build(),
-                                                    uuid);
+                uuid);
         Component name = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_NAME.build(nickname),
-                                                   uuid);
+                uuid);
         Component use = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_USE_NAME.build(rank,
-                                                                                                                skin,
-                                                                                                                nickname),
-                                                  uuid);
+                        skin,
+                        nickname),
+                uuid);
         Component again = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_TRY_AGAIN.build(rank,
-                                                                                                                   skin),
-                                                    uuid);
+                        skin),
+                uuid);
         Component custom = TranslationManager.render(BookMessage.COMMAND_MISC_NICK_BOOK_RANDOM_PAGE_CUSTOM.build(rank,
-                                                                                                                 skin),
-                                                     uuid);
+                        skin),
+                uuid);
         Component component = join(joinConfig, line1,
-                                   // name
-                                   name, space(),
-                                   // use
-                                   use,
-                                   // try
-                                   again, space(),
-                                   // custom
-                                   custom).asComponent();
+                // name
+                name, space(),
+                // use
+                use,
+                // try
+                again, space(),
+                // custom
+                custom).asComponent();
         bookPages.add(component);
         return Book.book(bookTitle, bookAuthor, bookPages);
     }
@@ -594,7 +594,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
             if (nick && p.hasPermission("floracore.command.nick")) {
                 Map<String, String> ranks = getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_RANK);
                 Map<String, String> ranks_permission = getPlugin().getConfiguration()
-                                                                  .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
+                        .get(ConfigKeys.COMMANDS_NICK_RANK_PERMISSION);
                 DATA rankData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.rank");
                 DATA skinData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.skin");
                 DATA nameData = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.name");

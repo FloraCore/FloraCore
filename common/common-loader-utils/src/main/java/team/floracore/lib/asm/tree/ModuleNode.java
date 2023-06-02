@@ -77,7 +77,6 @@ public class ModuleNode extends ModuleVisitor {
      * @param access  the module access flags, among {@code ACC_OPEN}, {@code ACC_SYNTHETIC} and {@code
      *                ACC_MANDATED}.
      * @param version the module version, or {@literal null}.
-     *
      * @throws IllegalStateException If a subclass calls this constructor.
      */
     public ModuleNode(final String name, final int access, final String version) {

@@ -57,12 +57,12 @@ public final class SignGUIAPI {
             material = Material.OAK_WALL_SIGN;
         }
         while (!player.getWorld()
-                      .getBlockAt(x_start, y_start, z_start)
-                      .getType()
-                      .equals(Material.AIR) && !player.getWorld()
-                                                      .getBlockAt(x_start, y_start, z_start)
-                                                      .getType()
-                                                      .equals(material)) {
+                .getBlockAt(x_start, y_start, z_start)
+                .getType()
+                .equals(Material.AIR) && !player.getWorld()
+                .getBlockAt(x_start, y_start, z_start)
+                .getType()
+                .equals(material)) {
             y_start--;
             if (y_start == 1) {
                 return;
@@ -85,7 +85,7 @@ public final class SignGUIAPI {
         }
         this.sign.update(false, false);
         PacketContainer openSign = ProtocolLibrary.getProtocolManager()
-                                                  .createPacket(PacketType.Play.Server.OPEN_SIGN_EDITOR);
+                .createPacket(PacketType.Play.Server.OPEN_SIGN_EDITOR);
         BlockPosition position = new BlockPosition(x_start, y_start, z_start);
 
         openSign.getBlockPositionModifier().write(0, position);
@@ -107,8 +107,8 @@ public final class SignGUIAPI {
             public void onPacketReceiving(PacketEvent event) {
                 if (event.getPlayer().getUniqueId().equals(SignGUIAPI.this.uuid)) {
                     List<String> lines = Stream.of(0, 1, 2, 3)
-                                               .map(line -> getLine(event, line))
-                                               .collect(Collectors.toList());
+                            .map(line -> getLine(event, line))
+                            .collect(Collectors.toList());
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         manager.removePacketListener(this);
                         HandlerList.unregisterAll(SignGUIAPI.this.listener);
@@ -123,12 +123,12 @@ public final class SignGUIAPI {
 
     private String getLine(PacketEvent event, int line) {
         return BukkitWrapper.v8 ? ((WrappedChatComponent[]) event.getPacket()
-                                                                 .getChatComponentArrays()
-                                                                 .read(0))[line].getJson()
-                                                                                .replaceAll("\"",
-                                                                                            "") : ((String[]) event.getPacket()
-                                                                                                                   .getStringArrays()
-                                                                                                                   .read(0))[line];
+                .getChatComponentArrays()
+                .read(0))[line].getJson()
+                .replaceAll("\"",
+                        "") : ((String[]) event.getPacket()
+                .getStringArrays()
+                .read(0))[line];
     }
 
     private class LeaveListener implements Listener {

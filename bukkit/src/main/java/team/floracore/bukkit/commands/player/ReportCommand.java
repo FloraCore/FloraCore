@@ -151,7 +151,7 @@ public class ReportCommand extends FloraCoreBukkitCommand {
             long time = System.currentTimeMillis();
             getStorageImplementation().addReport(uuid, reporter, reportedUser, reason, time);
             getPlugin().getBukkitMessagingFactory()
-                       .pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
+                    .pushReport(reporter, reportedUser, reporterServer, reportedUserServer, reason);
         });
     }
 
@@ -168,18 +168,18 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         List<REPORT> filteredReports;
         if (conclusion) {
             filteredReports = reports.stream()
-                                     .filter(report -> report.getStatus() == ReportStatus.ENDED)
-                                     .sorted(Comparator.comparingInt(REPORT::getId))
-                                     .collect(Collectors.toList());
+                    .filter(report -> report.getStatus() == ReportStatus.ENDED)
+                    .sorted(Comparator.comparingInt(REPORT::getId))
+                    .collect(Collectors.toList());
             title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid)
-                                      .append(space())
-                                      .append(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_PROCESSED.build(),
-                                                                        uuid));
+                    .append(space())
+                    .append(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_PROCESSED.build(),
+                            uuid));
         } else {
             filteredReports = reports.stream()
-                                     .filter(report -> report.getStatus() != ReportStatus.ENDED)
-                                     .sorted(Comparator.comparingInt(REPORT::getId))
-                                     .collect(Collectors.toList());
+                    .filter(report -> report.getStatus() != ReportStatus.ENDED)
+                    .sorted(Comparator.comparingInt(REPORT::getId))
+                    .collect(Collectors.toList());
             title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_TITLE.build(), uuid);
         }
         SmartInventory.Builder builder = SmartInventory.builder();
@@ -193,7 +193,7 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                 REPORT report = filteredReports.get(i);
                 int id = report.getId();
                 Component rt = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_TITLE.build(id),
-                                                         uuid);
+                        uuid);
                 List<Component> lore = getReportLore(report, uuid);
                 lore.add(Component.space());
                 lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
@@ -202,20 +202,20 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                     ri.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
                 }
                 items[i] = ClickableItem.of(ri.get(),
-                                            inventoryClickEvent -> getReportGui(player,
-                                                                                report.getUniqueId(),
-                                                                                conclusion).open(player));
+                        inventoryClickEvent -> getReportGui(player,
+                                report.getUniqueId(),
+                                conclusion).open(player));
             }
             pagination.setItems(items);
             pagination.setItemsPerPage(27);
             Component t = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_PAGE.build(pagination.getPage() + 1),
-                                                    uuid);
+                    uuid);
             contents.set(0,
-                         4,
-                         ClickableItem.empty(new ItemStackBuilder(Material.BOOKSHELF).setName(title)
-                                                                                     .setLore(Collections.singletonList(
-                                                                                             t))
-                                                                                     .get()));
+                    4,
+                    ClickableItem.empty(new ItemStackBuilder(Material.BOOKSHELF).setName(title)
+                            .setLore(Collections.singletonList(
+                                    t))
+                            .get()));
             int i = 18;
             for (ClickableItem pageItem : pagination.getPageItems()) {
                 i++;
@@ -225,22 +225,22 @@ public class ReportCommand extends FloraCoreBukkitCommand {
             if (conclusion) {
                 Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
                 contents.set(5,
-                             5,
-                             ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(back).get(),
-                                              event -> getReportsMainGui(player, false).open(player)));
+                        5,
+                        ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(back).get(),
+                                event -> getReportsMainGui(player, false).open(player)));
             } else {
                 Component t1 = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_PROCESSED.build(), uuid);
                 contents.set(0,
-                             8,
-                             ClickableItem.of(new ItemStackBuilder(Material.CHEST).setName(t1).get(),
-                                              inventoryClickEvent -> getReportsMainGui(player, true).open(player)));
+                        8,
+                        ClickableItem.of(new ItemStackBuilder(Material.CHEST).setName(t1).get(),
+                                inventoryClickEvent -> getReportsMainGui(player, true).open(player)));
             }
             setPageSlot(player, conclusion, uuid, contents, pagination);
             Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5,
-                         4,
-                         ClickableItem.of(new ItemStackBuilder(Material.BARRIER).setName(close).get(),
-                                          event -> player.closeInventory()));
+                    4,
+                    ClickableItem.of(new ItemStackBuilder(Material.BARRIER).setName(close).get(),
+                            event -> player.closeInventory()));
         });
         return builder.build();
     }
@@ -253,28 +253,28 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         if (!pagination.isFirst()) {
             Component previous = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
             Component turn = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage()),
-                                                       uuid);
+                    uuid);
             contents.set(5,
-                         0,
-                         ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(previous)
-                                                                              .setLore(Collections.singletonList(turn))
-                                                                              .get(),
-                                          event -> getReportsMainGui(player, conclusion).open(player,
-                                                                                              pagination.previous()
-                                                                                                        .getPage())));
+                    0,
+                    ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(previous)
+                                    .setLore(Collections.singletonList(turn))
+                                    .get(),
+                            event -> getReportsMainGui(player, conclusion).open(player,
+                                    pagination.previous()
+                                            .getPage())));
         }
         if (!pagination.isLast()) {
             Component next = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
             Component turn = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(pagination.getPage() + 2),
-                                                       uuid);
+                    uuid);
             contents.set(5,
-                         8,
-                         ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(next)
-                                                                              .setLore(Collections.singletonList(turn))
-                                                                              .get(),
-                                          event -> getReportsMainGui(player, conclusion).open(player,
-                                                                                              pagination.next()
-                                                                                                        .getPage())));
+                    8,
+                    ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(next)
+                                    .setLore(Collections.singletonList(turn))
+                                    .get(),
+                            event -> getReportsMainGui(player, conclusion).open(player,
+                                    pagination.next()
+                                            .getPage())));
         }
     }
 
@@ -283,32 +283,32 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         REPORT report = getStorageImplementation().selectReport(reportUUID);
         Component title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_TITLE.build(), uuid);
         Component finalTitle = title.append(Component.space())
-                                    .append(AbstractMessage.ARROW.color(NamedTextColor.GRAY))
-                                    .append(Component.space())
-                                    .append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
+                .append(AbstractMessage.ARROW.color(NamedTextColor.GRAY))
+                .append(Component.space())
+                .append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
         SmartInventory.Builder builder = SmartInventory.builder();
         builder.title(finalTitle);
         builder.closeable(true);
         builder.size(6, 9);
         builder.provider((player1, contents) -> {
             ItemStackBuilder i1 = new ItemStackBuilder(Material.PAPER).setName(finalTitle)
-                                                                      .setLore(getReportLore(report, uuid));
+                    .setLore(getReportLore(report, uuid));
             i1.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
             contents.set(0, 4, ClickableItem.empty(i1.get()));
             String resultRns = getReports(report);
             ItemStack rs = getPlayerItemStackBuilder(report.getReporters().get(0)).setName(TranslationManager.render(
-                                                                                          MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns),
-                                                                                          uuid))
-                                                                                  .setLore(Collections.singletonList(
-                                                                                          TranslationManager.render(
-                                                                                                  MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(),
-                                                                                                  uuid)))
-                                                                                  .get();
+                            MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns),
+                            uuid))
+                    .setLore(Collections.singletonList(
+                            TranslationManager.render(
+                                    MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(),
+                                    uuid)))
+                    .get();
             contents.set(2,
-                         3,
-                         ClickableItem.of(rs,
-                                          inventoryClickEvent -> getReportersGUI(player, reportUUID, conclusion).open(
-                                                  player)));
+                    3,
+                    ClickableItem.of(rs,
+                            inventoryClickEvent -> getReportersGUI(player, reportUUID, conclusion).open(
+                                    player)));
             String r1 = getPlayerRecordName(report.getReported());
             if (r1 == null) {
                 r1 = "UNKNOWN";
@@ -328,15 +328,15 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                 contents.set(2, 5, ClickableItem.empty(rds.get()));
             }
             ItemStack chats = new ItemStackBuilder(Material.BOOKSHELF).setName(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_CHAT.build(),
-                                                                                                         uuid))
-                                                                      .setLore(Collections.singletonList(
-                                                                              TranslationManager.render(MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(),
-                                                                                                        uuid)))
-                                                                      .get();
+                            uuid))
+                    .setLore(Collections.singletonList(
+                            TranslationManager.render(MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(),
+                                    uuid)))
+                    .get();
             switch (report.getStatus()) {
                 case WAITING:
                     Component accepted = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_ACCEPTED.build(),
-                                                                   uuid);
+                            uuid);
                     ItemStack ai = ItemStackBuilder.limeStainedGlassPane().setName(accepted).get();
                     contents.set(3, 4, ClickableItem.of(ai, inventoryClickEvent -> {
                         report.setStatus(ReportStatus.ACCEPTED);
@@ -344,12 +344,12 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                         String reported = getPlayerRecordName(report.getReported());
                         for (UUID reporter : report.getReporters()) {
                             getPlugin().getBukkitMessagingFactory().pushNoticeMessage(reporter,
-                                                                                      NoticeMessage.NoticeType.REPORT_ACCEPTED,
-                                                                                      Collections.singletonList(reported));
+                                    NoticeMessage.NoticeType.REPORT_ACCEPTED,
+                                    Collections.singletonList(reported));
                         }
                         getPlugin().getBukkitMessagingFactory().pushNoticeMessage(UUID.randomUUID(),
-                                                                                  NoticeMessage.NoticeType.REPORT_STAFF_ACCEPTED,
-                                                                                  Arrays.asList(resultRns, reported));
+                                NoticeMessage.NoticeType.REPORT_STAFF_ACCEPTED,
+                                Arrays.asList(resultRns, reported));
                     }));
                     break;
                 case ACCEPTED:
@@ -363,17 +363,17 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                         String reported = getPlayerRecordName(report.getReported());
                         for (UUID reporter : report.getReporters()) {
                             getPlugin().getBukkitMessagingFactory().pushNoticeMessage(reporter,
-                                                                                      NoticeMessage.NoticeType.REPORT_PROCESSED,
-                                                                                      Collections.singletonList(reported));
+                                    NoticeMessage.NoticeType.REPORT_PROCESSED,
+                                    Collections.singletonList(reported));
                         }
                         getPlugin().getBukkitMessagingFactory().pushNoticeMessage(UUID.randomUUID(),
-                                                                                  NoticeMessage.NoticeType.REPORT_STAFF_PROCESSED,
-                                                                                  Arrays.asList(resultRns, reported));
+                                NoticeMessage.NoticeType.REPORT_STAFF_PROCESSED,
+                                Arrays.asList(resultRns, reported));
                     }));
                     break;
                 case ENDED:
                     Component ended = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_ENDED.build(),
-                                                                uuid);
+                            uuid);
                     ItemStack edi = ItemStackBuilder.redStainedGlassPane().setName(ended).get();
                     contents.set(3, 4, ClickableItem.empty(edi));
                     break;
@@ -381,14 +381,14 @@ public class ReportCommand extends FloraCoreBukkitCommand {
             supplementaryMenu(contents);
             Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
             contents.set(5,
-                         8,
-                         ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(back).get(),
-                                          event -> getReportsMainGui(player, conclusion).open(player)));
+                    8,
+                    ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(back).get(),
+                            event -> getReportsMainGui(player, conclusion).open(player)));
             Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5,
-                         4,
-                         ClickableItem.of(new ItemStackBuilder(Material.BARRIER).setName(close).get(),
-                                          event -> player.closeInventory()));
+                    4,
+                    ClickableItem.of(new ItemStackBuilder(Material.BARRIER).setName(close).get(),
+                            event -> player.closeInventory()));
         });
         return builder.build();
     }
@@ -398,9 +398,9 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         REPORT report = getStorageImplementation().selectReport(reportUUID);
         Component title = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER_TITLE.build(), uuid);
         Component finalTitle = title.append(Component.space())
-                                    .append(AbstractMessage.ARROW.color(NamedTextColor.GRAY))
-                                    .append(Component.space())
-                                    .append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
+                .append(AbstractMessage.ARROW.color(NamedTextColor.GRAY))
+                .append(Component.space())
+                .append(Component.text("#" + report.getId()).color(NamedTextColor.RED));
         SmartInventory.Builder builder = SmartInventory.builder();
         builder.title(finalTitle);
         builder.closeable(true);
@@ -408,7 +408,7 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         builder.provider((player1, contents) -> {
             Pagination pagination = contents.pagination();
             ItemStackBuilder i1 = new ItemStackBuilder(Material.PAPER).setName(finalTitle)
-                                                                      .setLore(getReportLore(report, uuid));
+                    .setLore(getReportLore(report, uuid));
             i1.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
             contents.set(0, 4, ClickableItem.empty(i1.get()));
             List<UUID> reporters = report.getReporters();
@@ -444,14 +444,14 @@ public class ReportCommand extends FloraCoreBukkitCommand {
             setPageSlot(player, conclusion, uuid, contents, pagination);
             Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
             contents.set(5,
-                         5,
-                         ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(back).get(),
-                                          event -> getReportGui(player, reportUUID, conclusion).open(player)));
+                    5,
+                    ClickableItem.of(new ItemStackBuilder(Material.ARROW).setName(back).get(),
+                            event -> getReportGui(player, reportUUID, conclusion).open(player)));
             Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
             contents.set(5,
-                         4,
-                         ClickableItem.of(new ItemStackBuilder(Material.BARRIER).setName(close).get(),
-                                          event -> player.closeInventory()));
+                    4,
+                    ClickableItem.of(new ItemStackBuilder(Material.BARRIER).setName(close).get(),
+                            event -> player.closeInventory()));
         });
         return builder.build();
     }
@@ -486,18 +486,18 @@ public class ReportCommand extends FloraCoreBukkitCommand {
             case WAITING:
                 Component waiting = TranslationManager.render(MenuMessage.COMMAND_REPORTS_STATUS_WAITING.build(), uuid);
                 lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(waiting),
-                                                   uuid));
+                        uuid));
                 break;
             case ACCEPTED:
                 Component accepted = TranslationManager.render(MenuMessage.COMMAND_REPORTS_STATUS_ACCEPTED.build(),
-                                                               uuid);
+                        uuid);
                 lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(accepted),
-                                                   uuid));
+                        uuid));
                 break;
             case ENDED:
                 Component ended = TranslationManager.render(MenuMessage.COMMAND_REPORTS_STATUS_ENDED.build(), uuid);
                 lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_STATUS.build(ended),
-                                                   uuid));
+                        uuid));
                 break;
         }
         lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_TIME.build(DurationFormatter.getTimeFromTimestamp(
@@ -511,7 +511,7 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         }
         boolean online = isOnline(report.getReported());
         lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(reported, online),
-                                           uuid));
+                uuid));
         String resultReason = StringUtil.joinList(report.getReasons(), 2);
         lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REASON.build(resultReason), uuid));
         return lore;

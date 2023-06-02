@@ -120,7 +120,6 @@ public abstract class ClassVisitor {
      * @param access  the module access flags, among {@code ACC_OPEN}, {@code ACC_SYNTHETIC} and {@code
      *                ACC_MANDATED}.
      * @param version the module version, or {@literal null}.
-     *
      * @return a visitor to visit the module values, or {@literal null} if this visitor is not
      * interested in visiting this module.
      */
@@ -180,7 +179,6 @@ public abstract class ClassVisitor {
      *
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */
@@ -203,7 +201,6 @@ public abstract class ClassVisitor {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */
@@ -292,7 +289,6 @@ public abstract class ClassVisitor {
      * @param descriptor the record component descriptor (see {@link Type}).
      * @param signature  the record component signature. May be {@literal null} if the record component
      *                   type does not use generic types.
-     *
      * @return a visitor to visit this record component annotations and attributes, or {@literal null}
      * if this class visitor is not interested in visiting these annotations and attributes.
      */
@@ -322,7 +318,6 @@ public abstract class ClassVisitor {
      *                   or {@code String} fields respectively). <i>This parameter is only used for static
      *                   fields</i>. Its value is ignored for non static fields, which must be initialized through
      *                   bytecode instructions in constructors or methods.
-     *
      * @return a visitor to visit field annotations and attributes, or {@literal null} if this class
      * visitor is not interested in visiting these annotations and attributes.
      */
@@ -351,7 +346,6 @@ public abstract class ClassVisitor {
      *                   return type and exceptions do not use generic types.
      * @param exceptions the internal names of the method's exception classes (see {@link
      *                   Type#getInternalName()}). May be {@literal null}.
-     *
      * @return an object to visit the byte code of the method, or {@literal null} if this class
      * visitor is not interested in visiting the code of this method.
      */

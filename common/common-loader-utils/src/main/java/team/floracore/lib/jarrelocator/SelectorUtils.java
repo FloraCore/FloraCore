@@ -43,12 +43,12 @@ final class SelectorUtils {
     private static boolean matchPath(String pattern, String str, String separator, boolean isCaseSensitive) {
         if (isRegexPrefixedPattern(pattern)) {
             pattern = pattern.substring(REGEX_HANDLER_PREFIX.length(),
-                                        pattern.length() - PATTERN_HANDLER_SUFFIX.length());
+                    pattern.length() - PATTERN_HANDLER_SUFFIX.length());
             return str.matches(pattern);
         } else {
             if (isAntPrefixedPattern(pattern)) {
                 pattern = pattern.substring(ANT_HANDLER_PREFIX.length(),
-                                            pattern.length() - PATTERN_HANDLER_SUFFIX.length());
+                        pattern.length() - PATTERN_HANDLER_SUFFIX.length());
             }
             return matchAntPathPattern(pattern, str, separator, isCaseSensitive);
         }

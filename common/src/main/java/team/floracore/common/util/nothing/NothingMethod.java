@@ -67,7 +67,7 @@ public class NothingMethod {
                                                 continue;
                                             }
                                             if (!Lists.newArrayList(i.getKey().byteCode().name())
-                                                      .contains(((MethodInsnNode) raw.get(loc)).name)) {
+                                                    .contains(((MethodInsnNode) raw.get(loc)).name)) {
                                                 continue;
                                             }
                                             Class<?>[] args = i.getKey().byteCode().methodArgs();
@@ -77,7 +77,7 @@ public class NothingMethod {
                                                 }
                                             }
                                             if (!AsmUtil.getDesc(args, void.class)
-                                                        .split("\\)")[0].equals(((MethodInsnNode) raw.get(loc)).desc.split(
+                                                    .split("\\)")[0].equals(((MethodInsnNode) raw.get(loc)).desc.split(
                                                     "\\)")[0])) {
                                                 continue;
                                             }
@@ -91,7 +91,7 @@ public class NothingMethod {
                                                 continue;
                                             }
                                             if (!Lists.newArrayList(i.getKey().byteCode().name())
-                                                      .contains(((FieldInsnNode) raw.get(loc)).name)) {
+                                                    .contains(((FieldInsnNode) raw.get(loc)).name)) {
                                                 continue;
                                             }
                                         } else if (raw.get(loc) instanceof VarInsnNode) {
@@ -100,8 +100,8 @@ public class NothingMethod {
                                             }
                                         } else if (raw.get(loc) instanceof LabelNode) {
                                             if (i.getKey()
-                                                 .byteCode()
-                                                 .label() != labels.indexOf(((LabelNode) raw.get(loc)).getLabel())) {
+                                                    .byteCode()
+                                                    .label() != labels.indexOf(((LabelNode) raw.get(loc)).getLabel())) {
                                                 continue;
                                             }
                                         } else if (raw.get(loc) instanceof JumpInsnNode) {
@@ -117,7 +117,7 @@ public class NothingMethod {
                                 }
                                 if (loc == raw.size()) {
                                     if (i.getKey().optional() || i.getValue()
-                                                                  .getDeclaredAnnotation(team.floracore.common.util.Optional.class) != null) {
+                                            .getDeclaredAnnotation(team.floracore.common.util.Optional.class) != null) {
                                         break;
                                     } else {
                                         throw new IllegalArgumentException(i.getKey() + " " + i.getValue());
@@ -156,7 +156,7 @@ public class NothingMethod {
                                             i.getValue().invoke(null, this, raw, loc1);
                                         } else {
                                             node.instructions.insertBefore(loc1,
-                                                                           injectNode(i.getValue(), new HashMap<>()));
+                                                    injectNode(i.getValue(), new HashMap<>()));
                                         }
                                         break;
                                 }
@@ -176,21 +176,21 @@ public class NothingMethod {
                             } else {
                                 int caught = node.maxLocals++;
                                 node.instructions.insertBefore((AbstractInsnNode) end1.info,
-                                                               AsmUtil.varStoreNode(Throwable.class, caught));
+                                        AsmUtil.varStoreNode(Throwable.class, caught));
 
                                 node.instructions.insertBefore((AbstractInsnNode) end1.info,
-                                                               injectNode(i.getValue(),
-                                                                          ListUtil.toMap(new MapEntry<>(CaughtValue.class,
-                                                                                                        (a, t) -> AsmUtil.toList(
-                                                                                                                new VarInsnNode(
-                                                                                                                        Opcodes.ALOAD,
-                                                                                                                        caught))))));
+                                        injectNode(i.getValue(),
+                                                ListUtil.toMap(new MapEntry<>(CaughtValue.class,
+                                                        (a, t) -> AsmUtil.toList(
+                                                                new VarInsnNode(
+                                                                        Opcodes.ALOAD,
+                                                                        caught))))));
 
                                 node.instructions.insertBefore((AbstractInsnNode) end1.info, AsmUtil.ldcNode(null));
                                 node.instructions.insertBefore((AbstractInsnNode) end1.info,
-                                                               AsmUtil.castNode(method.getReturnType(), Object.class));
+                                        AsmUtil.castNode(method.getReturnType(), Object.class));
                                 node.instructions.insertBefore((AbstractInsnNode) end1.info,
-                                                               AsmUtil.returnNode(method.getReturnType()));
+                                        AsmUtil.returnNode(method.getReturnType()));
                             }
                             break;
                     }
@@ -213,7 +213,7 @@ public class NothingMethod {
             argsWrappers.add(WrappedObject.class.isAssignableFrom(a) ? TypeUtil.cast(a) : null);
         }
         int index = Nothing.data.alloc(new NothingInjectInvoker(ClassUtil.unreflectSpecial(method),
-                                                                TypeUtil.cast(argsWrappers.toArray(new Class[0]))));
+                TypeUtil.cast(argsWrappers.toArray(new Class[0]))));
 
         List<InsnList> args = new ArrayList<>(argsWrappers.size());
         if (!Modifier.isStatic(method.getModifiers())) {
@@ -261,7 +261,7 @@ public class NothingMethod {
                             customVars.put(((CustomVar) a).value(), t);
                             node.instructions.insert(AsmUtil.varStoreNode(Object[].class, t));
                             node.instructions.insert(AsmUtil.arrayNode(AsmUtil.toList(AsmUtil.ldcNode(1)),
-                                                                       Object.class));
+                                    Object.class));
                         }
                         l.add(AsmUtil.varLoadNode(Object[].class, customVars.get(((CustomVar) a).value())));
                         args.add(l);
@@ -301,23 +301,23 @@ public class NothingMethod {
             throw new IllegalArgumentException("Unknown arg of " + method);
         }
         r.add(new FieldInsnNode(Opcodes.GETSTATIC,
-                                AsmUtil.getType(NothingData.class),
-                                "data",
-                                AsmUtil.getDesc(List.class)));
+                AsmUtil.getType(NothingData.class),
+                "data",
+                AsmUtil.getDesc(List.class)));
         r.add(AsmUtil.ldcNode(index));
         r.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE,
-                                 AsmUtil.getType(List.class),
-                                 "get",
-                                 AsmUtil.getDesc(new Class[]{int.class}, Object.class),
-                                 true));
+                AsmUtil.getType(List.class),
+                "get",
+                AsmUtil.getDesc(new Class[]{int.class}, Object.class),
+                true));
         r.add(AsmUtil.castNode(Function.class, Object.class));
         r.add(AsmUtil.arrayNode(Object.class, args.toArray(new InsnList[0])));
 
         r.add(new MethodInsnNode(Opcodes.INVOKEINTERFACE,
-                                 AsmUtil.getType(Function.class),
-                                 "apply",
-                                 AsmUtil.getDesc(new Class[]{Object.class}, Object.class),
-                                 true));
+                AsmUtil.getType(Function.class),
+                "apply",
+                AsmUtil.getDesc(new Class[]{Object.class}, Object.class),
+                true));
         r.add(AsmUtil.dupNode(Optional.class));
         Label end = new Label();
         end.info = new LabelNode(end);
@@ -325,10 +325,10 @@ public class NothingMethod {
         r.add(AsmUtil.castNode(Optional.class, Object.class));
         r.add(AsmUtil.ldcNode(null));
         r.add(new MethodInsnNode(Opcodes.INVOKEVIRTUAL,
-                                 AsmUtil.getType(Optional.class),
-                                 "orElse",
-                                 AsmUtil.getDesc(new Class[]{Object.class}, Object.class),
-                                 false));
+                AsmUtil.getType(Optional.class),
+                "orElse",
+                AsmUtil.getDesc(new Class[]{Object.class}, Object.class),
+                false));
         r.add(AsmUtil.castNode(this.method.getReturnType(), Object.class));
         r.add(AsmUtil.returnNode(this.method.getReturnType()));
         r.add((LabelNode) end.info);

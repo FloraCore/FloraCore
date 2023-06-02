@@ -52,8 +52,8 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
                 getPlugin().getOnlineSenders().forEach(i -> {
                     if (i.hasPermission("floracore.report.staff")) {
                         PlayerCommandMessage.COMMAND_MISC_REPORT_NOTICE_STAFF_ACCEPTED.send(i,
-                                                                                            parameters.get(0),
-                                                                                            parameters.get(1));
+                                parameters.get(0),
+                                parameters.get(1));
                     }
                 });
                 break;
@@ -61,8 +61,8 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
                 getPlugin().getOnlineSenders().forEach(i -> {
                     if (i.hasPermission("floracore.report.staff")) {
                         PlayerCommandMessage.COMMAND_MISC_REPORT_NOTICE_STAFF_PROCESSED.send(i,
-                                                                                             parameters.get(0),
-                                                                                             parameters.get(1));
+                                parameters.get(0),
+                                parameters.get(1));
                     }
                 });
                 break;
@@ -92,23 +92,23 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
                 UUID requestId = service.generatePingId();
                 this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
                 ReportMessageImpl reportMessage = new ReportMessageImpl(requestId,
-                                                                        reporter,
-                                                                        reportedUser,
-                                                                        reporterServer,
-                                                                        reportedUserServer,
-                                                                        reason);
+                        reporter,
+                        reportedUser,
+                        reporterServer,
+                        reportedUserServer,
+                        reason);
                 service.getMessenger().sendOutgoingMessage(reportMessage);
                 String player = getPlayerName(reporter);
                 String target = getPlayerName(reportedUser);
                 boolean playerOnlineStatus = isPlayerOnline(reporter);
                 boolean targetOnlineStatus = isPlayerOnline(reportedUser);
                 notifyStaffReport(player,
-                                  target,
-                                  reporterServer,
-                                  reportedUserServer,
-                                  reason,
-                                  playerOnlineStatus,
-                                  targetOnlineStatus);
+                        target,
+                        reporterServer,
+                        reportedUserServer,
+                        reason,
+                        playerOnlineStatus,
+                        targetOnlineStatus);
 
             });
         });
@@ -132,13 +132,13 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
         getPlugin().getOnlineSenders().forEach(i -> {
             if (i.hasPermission("floracore.report.staff")) {
                 PlayerCommandMessage.COMMAND_MISC_REPORT_BROADCAST.send(i,
-                                                                        reporter,
-                                                                        reportedUser,
-                                                                        reporterServer,
-                                                                        reportedUserServer,
-                                                                        reason,
-                                                                        playerOnlineStatus,
-                                                                        targetOnlineStatus);
+                        reporter,
+                        reportedUser,
+                        reporterServer,
+                        reportedUserServer,
+                        reason,
+                        playerOnlineStatus,
+                        targetOnlineStatus);
             }
         });
     }
@@ -201,9 +201,9 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
                             Sender s = getPlugin().getSenderFactory().wrap(sender);
                             getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
                                 if (getPlugin().getLoader()
-                                               .getServer()
-                                               .getPluginManager()
-                                               .getPlugin("PremiumVanish") != null) {
+                                        .getServer()
+                                        .getPluginManager()
+                                        .getPlugin("PremiumVanish") != null) {
                                     if (!VanishAPI.isInvisible(sender)) {
                                         VanishAPI.hidePlayer(sender);
                                     }

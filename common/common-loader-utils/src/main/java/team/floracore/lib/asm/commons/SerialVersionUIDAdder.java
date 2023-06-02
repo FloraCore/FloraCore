@@ -141,7 +141,6 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * version.
      *
      * @param classVisitor a {@link ClassVisitor} to which this visitor will delegate calls.
-     *
      * @throws IllegalStateException If a subclass calls this constructor.
      */
     public SerialVersionUIDAdder(final ClassVisitor classVisitor) {
@@ -172,7 +171,6 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * @param itemCollection   a collection of items.
      * @param dataOutputStream where the items must be written.
      * @param dotted           whether package names must use dots, instead of slashes.
-     *
      * @throws IOException if an error occurs.
      */
     private static void writeItems(
@@ -342,7 +340,6 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * Computes and returns the value of SVUID.
      *
      * @return the serial version UID.
-     *
      * @throws IOException if an I/O error occurs.
      */
     // DontCheck(AbbreviationAsWordInName): can't be renamed (for backward binary compatibility).
@@ -426,7 +423,6 @@ public class SerialVersionUIDAdder extends ClassVisitor {
      * Returns the SHA-1 message digest of the given value.
      *
      * @param value the value whose SHA message digest must be computed.
-     *
      * @return the SHA-1 message digest of the given value.
      */
     // DontCheck(AbbreviationAsWordInName): can't be renamed (for backward binary compatibility).

@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagCompound",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagCompound", minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagCompound", minVer = 17)})
 public interface NmsNBTTagCompound extends NmsNBTTag {
     static NmsNBTTagCompound newInstance(String json) {
         return NmsMojangsonParser.parse(json);
@@ -29,7 +29,7 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
             return r;
         } else {
             return getTypeV15().read(s, 128, NmsNBTReadLimiter.newInstance(Long.MAX_VALUE))
-                               .cast(NmsNBTTagCompound.class);
+                    .cast(NmsNBTTagCompound.class);
         }
     }
 
@@ -48,7 +48,7 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
     NmsNBTTagCompound staticNewInstance();
 
     @WrappedBukkitFieldAccessor({@VersionName(minVer = 15, maxVer = 16, value = "a"), @VersionName(minVer = 16,
-                                                                                                   value = "b")})
+            value = "b")})
     NmsNBTTagTypeV15 staticGetTypeV15();
 
     default NmsNBTTagCompound set(String key, String value) {

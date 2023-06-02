@@ -22,7 +22,6 @@ public final class StringUtil {
      * 将字符串中的所有§颜色代码去除
      *
      * @param string 字符串
-     *
      * @return 去除后的颜色代码
      */
     public static @NotNull String removeColourCode(@NotNull String string) {
@@ -64,7 +63,6 @@ public final class StringUtil {
      * @param mergeIndex 可以合并的字符串的索引
      * @param stringsNum 合并后的字符串数量
      * @param strings    一些字符串
-     *
      * @return 合并后的字符串, 合并的用空格分开
      */
     public static String[] mergeStrings(int mergeIndex, int stringsNum, String... strings) {
@@ -298,7 +296,6 @@ public final class StringUtil {
      *              count back from the end of the String by this many characters
      * @param end   the position to end at (exclusive), negative means
      *              count back from the end of the String by this many characters
-     *
      * @return substring from start position to end positon,
      * <code>null</code> if null String input
      */

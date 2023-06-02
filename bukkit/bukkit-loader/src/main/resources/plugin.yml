@@ -3,6 +3,7 @@ version: ${version}
 description: A basic plugin with rich functions
 website: https://github.com/FloraCore/FloraCore
 main: team.floracore.bukkit.loader.BukkitLoaderPlugin
+author: xLikeWATCHDOG
 depend:
   - ProtocolLib
 softdepend:

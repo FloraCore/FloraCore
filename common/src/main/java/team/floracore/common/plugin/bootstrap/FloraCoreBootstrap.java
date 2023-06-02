@@ -93,7 +93,6 @@ public interface FloraCoreBootstrap {
      * Checks if a user is online
      *
      * @param uniqueId the users external uuid
-     *
      * @return true if the user is online
      */
     boolean isPlayerOnline(UUID uniqueId);
@@ -102,7 +101,6 @@ public interface FloraCoreBootstrap {
      * Gets a bundled resource file from the jar
      *
      * @param path the path of the file
-     *
      * @return the file as an input stream
      */
     default InputStream getResourceStream(String path) {
@@ -115,9 +113,7 @@ public interface FloraCoreBootstrap {
      * <p>Used for giving more helpful log messages when things break.</p>
      *
      * @param classLoader the classloader to identify
-     *
      * @return the name of the classloader source
-     *
      * @throws Exception anything
      */
     default @Nullable String identifyClassLoader(ClassLoader classLoader) throws Exception {

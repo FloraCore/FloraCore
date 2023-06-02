@@ -15,7 +15,7 @@ import java.util.Collection;
 import java.util.List;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagList",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagList", minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagList", minVer = 17)})
 public interface NmsNBTTagList extends NmsNBTTag {
     static <T extends NmsNBTBase> NmsNBTTagList newInstance(List<T> l) {
         NmsNBTTagList r = newInstance();
@@ -41,9 +41,9 @@ public interface NmsNBTTagList extends NmsNBTTag {
         }
         NmsNBTTagList r = NmsNBTTagList.newInstance();
         values.forEach(v ->
-                       {
-                           r.add(NmsNBTTag.wrapValue(v));
-                       });
+        {
+            r.add(NmsNBTTag.wrapValue(v));
+        });
         return r;
     }
 
@@ -124,8 +124,8 @@ public interface NmsNBTTagList extends NmsNBTTag {
     }
 
     @WrappedBukkitMethod({@VersionName(minVer = 8, maxVer = 12, value = "g"), @VersionName(minVer = 12,
-                                                                                           maxVer = 13,
-                                                                                           value = "i"), @VersionName(
+            maxVer = 13,
+            value = "i"), @VersionName(
             value = "get",
             minVer = 13,
             maxVer = 18), @VersionName(minVer = 18, value = "k")})
@@ -140,8 +140,8 @@ public interface NmsNBTTagList extends NmsNBTTag {
     }
 
     @WrappedBukkitMethod({@VersionName(minVer = 8, value = "a"), @VersionName(minVer = 12,
-                                                                              value = "remove"), @VersionName(minVer = 18,
-                                                                                                              value = "c")})
+            value = "remove"), @VersionName(minVer = 18,
+            value = "c")})
     NmsNBTBase remove(int index);
 
     default boolean remove(NmsNBTBase nbt) {
@@ -262,9 +262,9 @@ public interface NmsNBTTagList extends NmsNBTTag {
     default JsonArray toJson() {
         JsonArray r = new JsonArray();
         this.getList().forEach(nmsNbt ->
-                               {
-                                   r.add(NmsNBTBase.wrap(nmsNbt).toJson());
-                               });
+        {
+            r.add(NmsNBTBase.wrap(nmsNbt).toJson());
+        });
         return r;
     }
 }

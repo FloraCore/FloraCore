@@ -27,43 +27,20 @@ import java.util.function.Predicate;
 public class TranslationRepository {
     private static final long MAX_BUNDLE_SIZE = 1048576L; // 1mb
     private static final long CACHE_MAX_AGE = TimeUnit.HOURS.toMillis(1);
-    private static String TRANSLATIONS_INFO_ENDPOINT;
-    private static String TRANSLATIONS_DOWNLOAD_ENDPOINT;
+    private static final String TRANSLATIONS_INFO_ENDPOINT = "https://data.floracore.cc/data/translations";
+    private static final String TRANSLATIONS_DOWNLOAD_ENDPOINT = "https://data.floracore.cc/translations/";
     private final FloraCorePlugin plugin;
     private final AbstractHttpClient abstractHttpClient;
 
     public TranslationRepository(FloraCorePlugin plugin) {
         this.plugin = plugin;
         this.abstractHttpClient = new AbstractHttpClient(plugin.getHttpClient());
-        String DOMAIN_NAME_URL = getDomainNameURL();
-        TRANSLATIONS_INFO_ENDPOINT = DOMAIN_NAME_URL + "data/translations";
-        TRANSLATIONS_DOWNLOAD_ENDPOINT = DOMAIN_NAME_URL + "translation/";
-    }
-
-    public String getDomainNameURL() {
-        try {
-            StringBuilder domainUrl = new StringBuilder();
-            InputStream inputStream = plugin.getBootstrap().getResourceStream("TRANSLATION_REPOSITORY_URL");
-            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                domainUrl.append(line.trim());
-            }
-            String du = domainUrl.toString();
-            if (!du.endsWith("/")) {
-                du += "/";
-            }
-            return du;
-        } catch (IOException e) {
-            return "https://fc-meta.kinomc.net/";
-        }
     }
 
     /**
      * Gets a list of available languages.
      *
      * @return a list of languages
-     *
      * @throws java.io.IOException          if an i/o error occurs
      * @throws UnsuccessfulRequestException if the http request fails
      */
@@ -73,8 +50,8 @@ public class TranslationRepository {
 
     private MetadataResponse getTranslationsMetadata() throws IOException, UnsuccessfulRequestException {
         Request request = new Request.Builder().header("User-Agent", "floracore")
-                                               .url(TRANSLATIONS_INFO_ENDPOINT)
-                                               .build();
+                .url(TRANSLATIONS_INFO_ENDPOINT)
+                .build();
 
         JsonObject jsonResponse;
         try (Response response = abstractHttpClient.makeHttpRequest(request)) {
@@ -85,7 +62,7 @@ public class TranslationRepository {
 
                 try (InputStream inputStream = new LimitedInputStream(responseBody.byteStream(), MAX_BUNDLE_SIZE)) {
                     try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream,
-                                                                                          StandardCharsets.UTF_8))) {
+                            StandardCharsets.UTF_8))) {
                         jsonResponse = GsonProvider.normal().fromJson(reader, JsonObject.class);
                     }
                 }
@@ -200,8 +177,8 @@ public class TranslationRepository {
             }
 
             Request request = new Request.Builder().header("User-Agent", "floracore")
-                                                   .url(TRANSLATIONS_DOWNLOAD_ENDPOINT + language.id())
-                                                   .build();
+                    .url(TRANSLATIONS_DOWNLOAD_ENDPOINT + language.id())
+                    .build();
 
             Path file = translationsDirectory.resolve(language.locale().toString() + ".properties");
 

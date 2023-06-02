@@ -114,13 +114,13 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
             if (server == null) {
                 ServerType serverType = getConfiguration().get(ConfigKeys.SERVER_TYPE);
                 server = new SERVER(this,
-                                    getStorage().getImplementation(),
-                                    -1,
-                                    getServerName(),
-                                    serverType,
-                                    serverType.isAutoSync1(),
-                                    serverType.isAutoSync2(),
-                                    System.currentTimeMillis());
+                        getStorage().getImplementation(),
+                        -1,
+                        getServerName(),
+                        serverType,
+                        serverType.isAutoSync1(),
+                        serverType.isAutoSync2(),
+                        System.currentTimeMillis());
                 try {
                     server.init();
                 } catch (SQLException e) {
@@ -145,8 +145,8 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     @Override
     protected void setupConfiguration() {
         this.boardsConfiguration = new BoardsConfiguration(this,
-                                                           new BukkitConfigAdapter(this,
-                                                                                   resolveConfig("boards.yml").toFile()));
+                new BukkitConfigAdapter(this,
+                        resolveConfig("boards.yml").toFile()));
         getLogger().info("Loading scoreboard manager...");
         scoreBoardManager = new ScoreBoardManager(this);
         scoreBoardManager.start();

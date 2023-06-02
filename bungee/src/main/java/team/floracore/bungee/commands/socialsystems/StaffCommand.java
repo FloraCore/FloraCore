@@ -34,14 +34,14 @@ public class StaffCommand extends FloraCoreBungeeCommand {
     public void chat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
         UUID uuid = player.getUniqueId();
         getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
-                                                    .pushChatMessage(UUID.randomUUID(),
-                                                                     ChatMessage.ChatMessageType.STAFF,
-                                                                     Arrays.asList(uuid.toString(), message)));
+                .pushChatMessage(UUID.randomUUID(),
+                        ChatMessage.ChatMessageType.STAFF,
+                        Arrays.asList(uuid.toString(), message)));
         long time = System.currentTimeMillis();
         getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.STAFF,
-                                                                               "",
-                                                                               uuid,
-                                                                               message,
-                                                                               time));
+                "",
+                uuid,
+                message,
+                time));
     }
 }

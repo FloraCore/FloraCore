@@ -94,7 +94,6 @@ public final class ConstantDynamic {
      *
      * @param index an argument index, between 0 and {@link #getBootstrapMethodArgumentCount()}
      *              (exclusive).
-     *
      * @return the argument passed to the bootstrap method, with the given index.
      */
     public Object getBootstrapMethodArgument(final int index) {

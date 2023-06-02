@@ -28,9 +28,9 @@ public class ChatManager extends FloraCoreBukkitListener {
         long time = System.currentTimeMillis();
         String message = e.getMessage();
         getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.SERVER,
-                                                                               getPlugin().getServerName(),
-                                                                               uuid,
-                                                                               message,
-                                                                               time));
+                getPlugin().getServerName(),
+                uuid,
+                message,
+                time));
     }
 }

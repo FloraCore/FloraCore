@@ -11,13 +11,13 @@ import java.util.List;
 import java.util.UUID;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagIntArray",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagIntArray", minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagIntArray", minVer = 17)})
 public interface NmsNBTTagIntArray extends NmsNBTTag {
     static NmsNBTTagIntArray newInstance(UUID uuid) {
         return newInstance((int) (uuid.getMostSignificantBits() >> 32),
-                           (int) uuid.getMostSignificantBits(),
-                           (int) (uuid.getLeastSignificantBits() >> 32),
-                           (int) uuid.getLeastSignificantBits());
+                (int) uuid.getMostSignificantBits(),
+                (int) (uuid.getLeastSignificantBits() >> 32),
+                (int) uuid.getLeastSignificantBits());
     }
 
     static NmsNBTTagIntArray newInstance(Integer... list) {

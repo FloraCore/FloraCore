@@ -142,7 +142,6 @@ public abstract class AbstractInsnNode {
      *
      * @param label        a label.
      * @param clonedLabels a map from LabelNodes to cloned LabelNodes.
-     *
      * @return the clone of the given label.
      */
     static LabelNode clone(final LabelNode label, final Map<LabelNode, LabelNode> clonedLabels) {
@@ -154,7 +153,6 @@ public abstract class AbstractInsnNode {
      *
      * @param labels       a list of labels.
      * @param clonedLabels a map from LabelNodes to cloned LabelNodes.
-     *
      * @return the clones of the given labels.
      */
     static LabelNode[] clone(
@@ -238,7 +236,6 @@ public abstract class AbstractInsnNode {
      * Returns a copy of this instruction.
      *
      * @param clonedLabels a map from LabelNodes to cloned LabelNodes.
-     *
      * @return a copy of this instruction. The returned instruction does not belong to any {@link
      * InsnList}.
      */
@@ -248,7 +245,6 @@ public abstract class AbstractInsnNode {
      * Clones the annotations of the given instruction into this instruction.
      *
      * @param insnNode the source instruction.
-     *
      * @return this instruction.
      */
     protected final AbstractInsnNode cloneAnnotations(final AbstractInsnNode insnNode) {

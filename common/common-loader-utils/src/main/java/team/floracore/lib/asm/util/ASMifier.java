@@ -137,7 +137,6 @@ public class ASMifier extends Printer {
      * <p>Usage: ASMifier [-nodebug] &lt;binary class name or class file name&gt;
      *
      * @param args the command line arguments.
-     *
      * @throws IOException if the class cannot be found, or if an IOException occurs.
      */
     public static void main(final String[] args) throws IOException {
@@ -152,7 +151,6 @@ public class ASMifier extends Printer {
      * @param args   the command line arguments.
      * @param output where to print the result.
      * @param logger where to log errors.
-     *
      * @throws IOException if the class cannot be found, or if an IOException occurs.
      */
     static void main(final String[] args, final PrintWriter output, final PrintWriter logger)
@@ -1136,7 +1134,6 @@ public class ASMifier extends Printer {
      *
      * @param visitorVariableName the name of the visitor variable in the produced code.
      * @param annotationVisitorId identifier of the annotation visitor variable in the produced code.
-     *
      * @return a new {@link ASMifier}.
      */
     // DontCheck(AbbreviationAsWordInName): can't be renamed (for backward binary compatibility).
@@ -1364,7 +1361,6 @@ public class ASMifier extends Printer {
      *
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a new {@link ASMifier} to visit the annotation values.
      */
     // DontCheck(OverloadMethodsDeclarationOrder): overloads are semantically different.
@@ -1394,7 +1390,6 @@ public class ASMifier extends Printer {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a new {@link ASMifier} to visit the annotation values.
      */
     public ASMifier visitTypeAnnotation(
@@ -1413,7 +1408,6 @@ public class ASMifier extends Printer {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a new {@link ASMifier} to visit the annotation values.
      */
     public ASMifier visitTypeAnnotation(

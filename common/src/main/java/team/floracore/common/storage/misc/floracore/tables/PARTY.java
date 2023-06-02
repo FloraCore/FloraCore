@@ -74,7 +74,7 @@ public class PARTY extends AbstractFloraCoreTable {
         this.disbandTime = disbandTime;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_DISBAND_TIME))) {
+                    .apply(UPDATE_DISBAND_TIME))) {
                 ps.setLong(1, disbandTime);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -92,7 +92,7 @@ public class PARTY extends AbstractFloraCoreTable {
         this.settings = settings;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_SETTINGS))) {
+                    .apply(UPDATE_SETTINGS))) {
                 ps.setString(1, settings);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -110,7 +110,7 @@ public class PARTY extends AbstractFloraCoreTable {
         this.leader = leader;
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_LEADER))) {
+                    .apply(UPDATE_LEADER))) {
                 ps.setString(1, leader.toString());
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -129,7 +129,7 @@ public class PARTY extends AbstractFloraCoreTable {
         String membersJson = GsonProvider.normal().toJson(members);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_MEMBERS))) {
+                    .apply(UPDATE_MEMBERS))) {
                 ps.setString(1, membersJson);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -148,7 +148,7 @@ public class PARTY extends AbstractFloraCoreTable {
         String moderatorsJson = GsonProvider.normal().toJson(moderators);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(UPDATE_MODERATORS))) {
+                    .apply(UPDATE_MODERATORS))) {
                 ps.setString(1, moderatorsJson);
                 ps.setString(2, uuid.toString());
                 ps.execute();
@@ -164,7 +164,7 @@ public class PARTY extends AbstractFloraCoreTable {
         String membersJson = GsonProvider.normal().toJson(members);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(INSERT))) {
+                    .apply(INSERT))) {
                 ps.setString(1, uuid.toString());
                 ps.setString(2, leader.toString());
                 ps.setString(3, moderatorsJson);

@@ -16,8 +16,8 @@ import java.util.concurrent.TimeUnit;
  */
 public class ApiServer implements ServerAPI {
     private static final Cache<String, SERVER> serverCache = CaffeineFactory.newBuilder()
-                                                                            .expireAfterWrite(10, TimeUnit.SECONDS)
-                                                                            .build();
+            .expireAfterWrite(10, TimeUnit.SECONDS)
+            .build();
     private final FloraCorePlugin plugin;
 
     public ApiServer(FloraCorePlugin plugin) {

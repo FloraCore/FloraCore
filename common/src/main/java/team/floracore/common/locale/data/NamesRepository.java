@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 public class NamesRepository {
-    private static final String NAMES_DOWNLOAD_ENDPOINT = "https://fc-meta.kinomc.net/data/names";
+    private static final String NAMES_DOWNLOAD_ENDPOINT = "https://data.floracore.cc/data/names";
     private static final long CACHE_MAX_AGE = TimeUnit.HOURS.toMillis(6);
     private final FloraCorePlugin plugin;
     private final AbstractHttpClient abstractHttpClient;
@@ -53,7 +53,7 @@ public class NamesRepository {
         }
 
         this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
-            // cleanup old translation files
+            // cleanup old names files
             clearDirectory(this.plugin.getTranslationManager().getTranslationsDirectory(), Files::isRegularFile);
 
             try {
@@ -61,6 +61,7 @@ public class NamesRepository {
                 loadNamesCSVData();
             } catch (Exception e) {
                 // ignore
+                e.printStackTrace();
             }
         });
     }
@@ -93,7 +94,6 @@ public class NamesRepository {
 
     public void loadNamesCSVData() throws IOException, CsvValidationException {
         Path filePath = getNamesCSVFile();
-        int expectedSize = 10000; // 设置预期数据行数
         try (CSVReader reader = new CSVReaderBuilder(Files.newBufferedReader(filePath, StandardCharsets.UTF_8))
                 // 跳过第一行
                 .withSkipLines(1).build()) {

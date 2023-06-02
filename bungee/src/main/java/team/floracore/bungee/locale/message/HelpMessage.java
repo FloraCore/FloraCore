@@ -23,9 +23,9 @@ public interface HelpMessage extends AbstractMessage {
                 .key("floracore.command.description.party").color(GRAY).build();
         Component i = HORIZONTAL_LINE.color(GRAY);
         return join(joinConfig,
-                    MiscMessage.PARTY_HORIZONTAL_LINE.build(),
-                    component.append(space()).append(i).append(space()).append(description),
-                    space());
+                MiscMessage.PARTY_HORIZONTAL_LINE.build(),
+                component.append(space()).append(i).append(space()).append(description),
+                space());
     };
 
     Args2<String, String> HELP_PARTY_SUB_COMMAND = (cmd, path) -> {
@@ -34,17 +34,17 @@ public interface HelpMessage extends AbstractMessage {
         Component i = HORIZONTAL_LINE.color(GRAY);
         ClickEvent clickEvent = ClickEvent.suggestCommand("/" + cmd);
         HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
-                                                                       // Click to put the command in chat
-                                                                       .key("floracore.command.misc.click.suggest-hover")
-                                                                       .color(WHITE)
-                                                                       .build());
+                // Click to put the command in chat
+                .key("floracore.command.misc.click.suggest-hover")
+                .color(WHITE)
+                .build());
         return text().append(component)
-                     .append(space())
-                     .append(i)
-                     .append(space())
-                     .append(description)
-                     .clickEvent(clickEvent)
-                     .hoverEvent(hoverEvent)
-                     .build();
+                .append(space())
+                .append(i)
+                .append(space())
+                .append(description)
+                .clickEvent(clickEvent)
+                .hoverEvent(hoverEvent)
+                .build();
     };
 }

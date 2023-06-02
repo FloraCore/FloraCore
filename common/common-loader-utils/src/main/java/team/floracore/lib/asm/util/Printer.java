@@ -364,7 +364,6 @@ public abstract class Printer {
      * @param printer the printer to convert the class into text.
      * @param output  where to print the result.
      * @param logger  where to log errors.
-     *
      * @throws IOException if the class cannot be found, or if an IOException occurs.
      */
     static void main(
@@ -446,7 +445,6 @@ public abstract class Printer {
      * @param access  the module access flags, among {@code ACC_OPEN}, {@code ACC_SYNTHETIC} and {@code
      *                ACC_MANDATED}.
      * @param version the module version, or {@literal null}.
-     *
      * @return the printer.
      */
     public Printer visitModule(final String name, final int access, final String version) {
@@ -485,7 +483,6 @@ public abstract class Printer {
      *
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return the printer.
      */
     public abstract Printer visitClassAnnotation(String descriptor, boolean visible);
@@ -502,7 +499,6 @@ public abstract class Printer {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return the printer.
      */
     public Printer visitClassTypeAnnotation(
@@ -562,7 +558,6 @@ public abstract class Printer {
      * @param descriptor the record component descriptor (see {@link Type}).
      * @param signature  the record component signature. May be {@literal null} if the record component
      *                   type does not use generic types.
-     *
      * @return a visitor to visit this record component annotations and attributes, or {@literal null}
      * if this class visitor is not interested in visiting these annotations and attributes.
      */
@@ -590,7 +585,6 @@ public abstract class Printer {
      *                   or {@code String} fields respectively). <i>This parameter is only used for static
      *                   fields</i>. Its value is ignored for non static fields, which must be initialized through
      *                   bytecode instructions in constructors or methods.
-     *
      * @return the printer.
      */
     public abstract Printer visitField(
@@ -607,7 +601,6 @@ public abstract class Printer {
      *                   return type and exceptions do not use generic types.
      * @param exceptions the internal names of the method's exception classes (see {@link
      *                   Type#getInternalName()}). May be {@literal null}.
-     *
      * @return the printer.
      */
     public abstract Printer visitMethod(
@@ -738,7 +731,6 @@ public abstract class Printer {
      *
      * @param name       the value name.
      * @param descriptor the class descriptor of the nested annotation class.
-     *
      * @return the printer.
      */
     public abstract Printer visitAnnotation(String name, String descriptor);
@@ -747,7 +739,6 @@ public abstract class Printer {
      * Annotation array value. See {@link AnnotationVisitor#visitArray}.
      *
      * @param name the value name.
-     *
      * @return the printer.
      */
     public abstract Printer visitArray(String name);
@@ -763,7 +754,6 @@ public abstract class Printer {
      *
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */
@@ -788,7 +778,6 @@ public abstract class Printer {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return a visitor to visit the annotation values, or {@literal null} if this visitor is not
      * interested in visiting this annotation.
      */
@@ -821,7 +810,6 @@ public abstract class Printer {
      *
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return the printer.
      */
     public abstract Printer visitFieldAnnotation(String descriptor, boolean visible);
@@ -840,7 +828,6 @@ public abstract class Printer {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return the printer.
      */
     public Printer visitFieldTypeAnnotation(
@@ -883,7 +870,6 @@ public abstract class Printer {
      *
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return the printer.
      */
     public abstract Printer visitMethodAnnotation(String descriptor, boolean visible);
@@ -901,7 +887,6 @@ public abstract class Printer {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return the printer.
      */
     public Printer visitMethodTypeAnnotation(
@@ -921,7 +906,6 @@ public abstract class Printer {
      * @param visible        {@literal true} to define the number of method parameters that can have
      *                       annotations visible at runtime, {@literal false} to define the number of method parameters
      *                       that can have annotations invisible at runtime.
-     *
      * @return the printer.
      */
     public Printer visitAnnotableParameterCount(final int parameterCount, final boolean visible) {
@@ -940,7 +924,6 @@ public abstract class Printer {
      *                   https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.7.18).
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return the printer.
      */
     public abstract Printer visitParameterAnnotation(
@@ -1051,7 +1034,6 @@ public abstract class Printer {
      *                   Type#getInternalName()}).
      * @param name       the method's name.
      * @param descriptor the method's descriptor (see {@link Type}).
-     *
      * @deprecated use {@link #visitMethodInsn(int, String, String, String, boolean)} instead.
      */
     @Deprecated
@@ -1182,7 +1164,6 @@ public abstract class Printer {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return the printer.
      */
     public Printer visitInsnAnnotation(
@@ -1213,7 +1194,6 @@ public abstract class Printer {
      *                   'typeRef' as a whole.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return the printer.
      */
     public Printer visitTryCatchAnnotation(
@@ -1254,7 +1234,6 @@ public abstract class Printer {
      *                   the 'start' array.
      * @param descriptor the class descriptor of the annotation class.
      * @param visible    {@literal true} if the annotation is visible at runtime.
-     *
      * @return the printer.
      */
     public Printer visitLocalVariableAnnotation(

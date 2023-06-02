@@ -76,7 +76,6 @@ public class FieldNode extends FieldVisitor {
      * @param value      the field's initial value. This parameter, which may be {@literal null} if the
      *                   field does not have an initial value, must be an {@link Integer}, a {@link Float}, a {@link
      *                   Long}, a {@link Double} or a {@link String}.
-     *
      * @throws IllegalStateException If a subclass calls this constructor.
      */
     public FieldNode(

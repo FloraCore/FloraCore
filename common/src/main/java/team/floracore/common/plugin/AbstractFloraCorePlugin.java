@@ -130,7 +130,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         // now the configuration is loaded, we can create a storage factory and load initial dependencies
         this.storageFactory = new StorageFactory(this);
         this.dependencyManager.loadStorageDependencies(storageFactory.getRequiredTypes(),
-                                                       getConfiguration().get(ConfigKeys.REDIS_ENABLED));
+                getConfiguration().get(ConfigKeys.REDIS_ENABLED));
 
         // initialise storage
         this.storage = storageFactory.getInstance();
@@ -330,8 +330,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
             String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
             if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
                 MiscMessage.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(),
-                                                                  getBootstrap(),
-                                                                  leastReleaseTagVersion);
+                        getBootstrap(),
+                        leastReleaseTagVersion);
             } else {
                 if (latestNotification) {
                     MiscMessage.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());

@@ -19,7 +19,6 @@ public class InstructionAdapter extends MethodVisitor {
      * Instead, they must use the {@link #InstructionAdapter(int, MethodVisitor)} version.
      *
      * @param methodVisitor the method visitor to which this adapter delegates calls.
-     *
      * @throws IllegalStateException If a subclass calls this constructor.
      */
     public InstructionAdapter(final MethodVisitor methodVisitor) {
@@ -1135,7 +1134,6 @@ public class InstructionAdapter extends MethodVisitor {
      *                   Type#getInternalName()}).
      * @param name       the method's name.
      * @param descriptor the method's descriptor (see {@link Type}).
-     *
      * @deprecated use {@link #invokevirtual(String, String, String, boolean)} instead.
      */
     @Deprecated
@@ -1175,7 +1173,6 @@ public class InstructionAdapter extends MethodVisitor {
      *                   Type#getInternalName()}).
      * @param name       the method's name.
      * @param descriptor the method's descriptor (see {@link Type}).
-     *
      * @deprecated use {@link #invokespecial(String, String, String, boolean)} instead.
      */
     @Deprecated
@@ -1215,7 +1212,6 @@ public class InstructionAdapter extends MethodVisitor {
      *                   Type#getInternalName()}).
      * @param name       the method's name.
      * @param descriptor the method's descriptor (see {@link Type}).
-     *
      * @deprecated use {@link #invokestatic(String, String, String, boolean)} instead.
      */
     @Deprecated

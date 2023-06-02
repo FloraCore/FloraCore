@@ -16,8 +16,8 @@ import team.floracore.common.util.wrapper.WrappedObject;
 import java.util.UUID;
 
 @WrappedBukkitClass({@VersionName(value = "nms.ICommandListener",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.commands.ICommandListener",
-                                                             minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.commands.ICommandListener",
+        minVer = 17)})
 public interface NmsICommandListener extends WrappedBukkitObject {
     static NmsICommandListener fromBukkit(CommandSender sender) {
         if (sender instanceof BlockCommandSender) {
@@ -47,8 +47,8 @@ public interface NmsICommandListener extends WrappedBukkitObject {
     void sendMessageV_16(NmsIChatBaseComponent msg);
 
     @WrappedBukkitMethod({@VersionName(minVer = 16, maxVer = 19, value = "sendMessage"), @VersionName(value = "a",
-                                                                                                      minVer = 18,
-                                                                                                      maxVer = 19)})
+            minVer = 18,
+            maxVer = 19)})
     void sendMessageV16_19(NmsIChatBaseComponent msg, UUID sender);
 
     @WrappedBukkitMethod(@VersionName(value = "a", minVer = 19))

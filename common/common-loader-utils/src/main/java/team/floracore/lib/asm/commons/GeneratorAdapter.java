@@ -215,7 +215,6 @@ public class GeneratorAdapter extends LocalVariablesSorter {
      * @param access        the method's access flags (see {@link Opcodes}).
      * @param name          the method's name.
      * @param descriptor    the method's descriptor (see {@link Type}).
-     *
      * @throws IllegalStateException if a subclass calls this constructor.
      */
     public GeneratorAdapter(
@@ -256,7 +255,6 @@ public class GeneratorAdapter extends LocalVariablesSorter {
      * Returns the internal names of the given types.
      *
      * @param types a set of types.
-     *
      * @return the internal names of the given types (see {@link Type#getInternalName()}).
      */
     private static String[] getInternalNames(final Type[] types) {
@@ -484,7 +482,6 @@ public class GeneratorAdapter extends LocalVariablesSorter {
      * Returns the index of the given method argument in the frame's local variables array.
      *
      * @param arg the index of a method argument.
-     *
      * @return the index of the given method argument in the frame's local variables array.
      */
     private int getArgIndex(final int arg) {
@@ -710,7 +707,6 @@ public class GeneratorAdapter extends LocalVariablesSorter {
      *
      * @param local a local variable identifier, as returned by {@link
      *              LocalVariablesSorter#newLocal(Type)}.
-     *
      * @return the type of the given local variable.
      */
     public Type getLocalType(final int local) {

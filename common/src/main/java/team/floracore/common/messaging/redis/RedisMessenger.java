@@ -34,12 +34,12 @@ public class RedisMessenger implements Messenger {
             this.jedisPool = new JedisPool(new JedisPoolConfig(), host, port, Protocol.DEFAULT_TIMEOUT, password, ssl);
         } else {
             this.jedisPool = new JedisPool(new JedisPoolConfig(),
-                                           host,
-                                           port,
-                                           Protocol.DEFAULT_TIMEOUT,
-                                           username,
-                                           password,
-                                           ssl);
+                    host,
+                    port,
+                    Protocol.DEFAULT_TIMEOUT,
+                    username,
+                    password,
+                    ssl);
         }
 
         this.sub = new Subscription();
@@ -79,8 +79,8 @@ public class RedisMessenger implements Messenger {
                         return;
                     }
                     RedisMessenger.this.plugin.getLogger()
-                                              .warn("Redis pubsub connection dropped, trying to re-open the connection",
-                                                    e);
+                            .warn("Redis pubsub connection dropped, trying to re-open the connection",
+                                    e);
                     try {
                         unsubscribe();
                     } catch (Exception ignored) {

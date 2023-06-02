@@ -42,8 +42,8 @@ public class FireTickCommand extends FloraCoreBukkitCommand {
             PlayerCommandMessage.COMMAND_FIRETICK_OTHER.send(sender, target.getName(), time);
             if (silent == null || !silent) {
                 PlayerCommandMessage.COMMAND_FIRETICK_FROM.send(getPlugin().getSenderFactory().wrap(target),
-                                                                sender.getName(),
-                                                                time);
+                        sender.getName(),
+                        time);
             }
         }
     }

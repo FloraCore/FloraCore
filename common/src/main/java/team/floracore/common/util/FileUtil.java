@@ -65,9 +65,7 @@ public final class FileUtil {
      * 读取整个文件流
      *
      * @param inputStream 文件流
-     *
      * @return 所有字节
-     *
      * @throws IOException 文件流异常
      */
     public static byte[] readInputStream(InputStream inputStream) {

@@ -16,14 +16,22 @@ import java.util.jar.JarOutputStream;
  */
 public final class JarRelocator {
 
-    /** The input jar */
+    /**
+     * The input jar
+     */
     private final File input;
-    /** The output jar */
+    /**
+     * The output jar
+     */
     private final File output;
-    /** The relocating remapper */
+    /**
+     * The relocating remapper
+     */
     private final RelocatingRemapper remapper;
 
-    /** If the {@link #run()} method has been called yet */
+    /**
+     * If the {@link #run()} method has been called yet
+     */
     private final AtomicBoolean used = new AtomicBoolean(false);
 
     /**

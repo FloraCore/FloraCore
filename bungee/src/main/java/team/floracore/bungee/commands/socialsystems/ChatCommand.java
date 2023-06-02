@@ -167,10 +167,10 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                     if (cd == null) {
                         SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
                         getStorageImplementation().insertData(uuid,
-                                                              DataType.SOCIAL_SYSTEMS,
-                                                              "chat",
-                                                              Type.ALL.name(),
-                                                              0);
+                                DataType.SOCIAL_SYSTEMS,
+                                "chat",
+                                Type.ALL.name(),
+                                0);
                         Component tc4 = TranslationManager.render(MiscMessage.PREFIX_ALL_LIGHT, uuid);
                         SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc4);
                     } else {
@@ -181,16 +181,16 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                             getPlugin().getMessagingService().ifPresent(service -> {
                                 for (UUID member : members) {
                                     getPlugin().getBungeeMessagingFactory()
-                                               .pushChatMessage(member,
-                                                                ChatMessage.ChatMessageType.PARTY,
-                                                                Arrays.asList(uuid.toString(), message));
+                                            .pushChatMessage(member,
+                                                    ChatMessage.ChatMessageType.PARTY,
+                                                    Arrays.asList(uuid.toString(), message));
                                 }
                             });
                             getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.PARTY,
-                                                                                                   partyUUID.toString(),
-                                                                                                   uuid,
-                                                                                                   message,
-                                                                                                   time));
+                                    partyUUID.toString(),
+                                    uuid,
+                                    message,
+                                    time));
                         });
                     }
                     break;
@@ -200,15 +200,15 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                         return;
                     }
                     getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
-                                                                .pushChatMessage(UUID.randomUUID(),
-                                                                                 ChatMessage.ChatMessageType.ADMIN,
-                                                                                 Arrays.asList(uuid.toString(),
-                                                                                               message)));
+                            .pushChatMessage(UUID.randomUUID(),
+                                    ChatMessage.ChatMessageType.ADMIN,
+                                    Arrays.asList(uuid.toString(),
+                                            message)));
                     getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.ADMIN,
-                                                                                           "",
-                                                                                           uuid,
-                                                                                           message,
-                                                                                           time));
+                            "",
+                            uuid,
+                            message,
+                            time));
                     break;
                 case STAFF:
                     if (!p.hasPermission("floracore.socialsystems.staff")) {
@@ -216,15 +216,15 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                         return;
                     }
                     getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
-                                                                .pushChatMessage(UUID.randomUUID(),
-                                                                                 ChatMessage.ChatMessageType.STAFF,
-                                                                                 Arrays.asList(uuid.toString(),
-                                                                                               message)));
+                            .pushChatMessage(UUID.randomUUID(),
+                                    ChatMessage.ChatMessageType.STAFF,
+                                    Arrays.asList(uuid.toString(),
+                                            message)));
                     getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.STAFF,
-                                                                                           "",
-                                                                                           uuid,
-                                                                                           message,
-                                                                                           time));
+                            "",
+                            uuid,
+                            message,
+                            time));
                     break;
                 case BLOGGER:
                     if (!p.hasPermission("floracore.socialsystems.blogger")) {
@@ -232,15 +232,15 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                         return;
                     }
                     getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
-                                                                .pushChatMessage(UUID.randomUUID(),
-                                                                                 ChatMessage.ChatMessageType.BLOGGER,
-                                                                                 Arrays.asList(uuid.toString(),
-                                                                                               message)));
+                            .pushChatMessage(UUID.randomUUID(),
+                                    ChatMessage.ChatMessageType.BLOGGER,
+                                    Arrays.asList(uuid.toString(),
+                                            message)));
                     getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.BLOGGER,
-                                                                                           "",
-                                                                                           uuid,
-                                                                                           message,
-                                                                                           time));
+                            "",
+                            uuid,
+                            message,
+                            time));
                     break;
                 case BUILDER:
                     if (!p.hasPermission("floracore.socialsystems.builder")) {
@@ -248,15 +248,15 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                         return;
                     }
                     getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
-                                                                .pushChatMessage(UUID.randomUUID(),
-                                                                                 ChatMessage.ChatMessageType.BUILDER,
-                                                                                 Arrays.asList(uuid.toString(),
-                                                                                               message)));
+                            .pushChatMessage(UUID.randomUUID(),
+                                    ChatMessage.ChatMessageType.BUILDER,
+                                    Arrays.asList(uuid.toString(),
+                                            message)));
                     getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.BUILDER,
-                                                                                           "",
-                                                                                           uuid,
-                                                                                           message,
-                                                                                           time));
+                            "",
+                            uuid,
+                            message,
+                            time));
                     break;
             }
         }

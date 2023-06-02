@@ -34,12 +34,12 @@ public class TranslationManager {
      */
     public static final Locale DEFAULT_LOCALE = Locale.SIMPLIFIED_CHINESE;
     public static final LegacyComponentSerializer SERIALIZER = LegacyComponentSerializer.builder()
-                                                                                        .hexColors()
-                                                                                        .useUnusualXRepeatedCharacterHexFormat()
-                                                                                        .build();
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build();
     private static final Cache<UUID, String> languageCache = CaffeineFactory.newBuilder()
-                                                                            .expireAfterWrite(1, TimeUnit.SECONDS)
-                                                                            .build();
+            .expireAfterWrite(1, TimeUnit.SECONDS)
+            .build();
     private final FloraCorePlugin plugin;
     private final Set<Locale> installed = ConcurrentHashMap.newKeySet();
     private final Path translationsDirectory;
@@ -130,8 +130,8 @@ public class TranslationManager {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean isAdventureDuplicatesException(Exception e) {
         return e instanceof IllegalArgumentException && (e.getMessage().startsWith("Invalid key") || e.getMessage()
-                                                                                                      .startsWith(
-                                                                                                              "Translation already exists"));
+                .startsWith(
+                        "Translation already exists"));
     }
 
     public Path getTranslationsDirectory() {

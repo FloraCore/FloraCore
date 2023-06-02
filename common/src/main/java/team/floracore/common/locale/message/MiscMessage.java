@@ -16,7 +16,7 @@ public interface MiscMessage extends AbstractMessage {
             .color(GRAY)
             .append(text('['))
             .append(text().decoration(BOLD, true)
-                          .append(translatable("floracore.command.misc.server.broadcast.prefix").color(AQUA)))
+                    .append(translatable("floracore.command.misc.server.broadcast.prefix").color(AQUA)))
             .append(text(']'))
             .build();
 
@@ -101,23 +101,23 @@ public interface MiscMessage extends AbstractMessage {
     };
 
     Args1<String> TRANSLATIONS_INSTALLING_SPECIFIC = name -> AbstractMessage.prefixed(translatable()
-                                                                                              // 正在安装语言 {0}...
-                                                                                              .key("floracore.command.translations.installing-specific")
-                                                                                              .color(GREEN)
-                                                                                              .args(text(name)));
+            // 正在安装语言 {0}...
+            .key("floracore.command.translations.installing-specific")
+            .color(GREEN)
+            .args(text(name)));
 
     Args1<String> TRANSLATIONS_DOWNLOAD_ERROR = name -> AbstractMessage.prefixed(text()
-                                                                                         // 无法下载 {0} 的翻译
-                                                                                         .color(RED)
-                                                                                         .append(translatable(
-                                                                                                 "floracore.command.translations.download-error",
-                                                                                                 text(name, DARK_RED)))
-                                                                                         .append(FULL_STOP)
-                                                                                         .append(space())
-                                                                                         // 检查控制台是否有错误
-                                                                                         .append(translatable(
-                                                                                                 "floracore.command.misc.check-console-for-errors"))
-                                                                                         .append(FULL_STOP));
+            // 无法下载 {0} 的翻译
+            .color(RED)
+            .append(translatable(
+                    "floracore.command.translations.download-error",
+                    text(name, DARK_RED)))
+            .append(FULL_STOP)
+            .append(space())
+            // 检查控制台是否有错误
+            .append(translatable(
+                    "floracore.command.misc.check-console-for-errors"))
+            .append(FULL_STOP));
 
     Args1<FloraCoreBootstrap> STARTUP_CHECKING_UPDATE = bootstrap -> AbstractMessage.prefixed(text(
             "Checking FloraCore version information...").color(AQUA));
@@ -127,40 +127,40 @@ public interface MiscMessage extends AbstractMessage {
             "FloraCore version check failed!").color(RED));
     Args2<FloraCoreBootstrap, String> STARTUP_CHECKING_UPDATE_OUTDATED = (bootstrap, version) -> AbstractMessage.prefixed(
             text("The current FloraCore version is outdated! Latest version: ").color(RED)
-                                                                               .append(text("v" + version).color(
-                                                                                       DARK_AQUA)));
+                    .append(text("v" + version).color(
+                            DARK_AQUA)));
 
     Args0 NO_PERMISSION_FOR_SUBCOMMANDS = () -> AbstractMessage.prefixed(translatable()
-                                                                                 // 你没有权限使用任何子命令
-                                                                                 .key("floracore.commandsystem.no-permission-subcommands")
-                                                                                 .color(RED));
+            // 你没有权限使用任何子命令
+            .key("floracore.commandsystem.no-permission-subcommands")
+            .color(RED));
 
     Args0 COMMAND_CURRENT_SERVER_FORBIDDEN = () -> AbstractMessage.prefixed(translatable()
-                                                                                    // 你不能在当前服务器使用此命令!
-                                                                                    .key("floracore.commandsystem.current-server-forbidden")
-                                                                                    .color(RED));
+            // 你不能在当前服务器使用此命令!
+            .key("floracore.commandsystem.current-server-forbidden")
+            .color(RED));
 
     Args0 COMMAND_NO_PERMISSION = () -> AbstractMessage.prefixed(translatable()
-                                                                         // 您没有使用此命令的权限！
-                                                                         .key("floracore.commandsystem.no-permission")
-                                                                         .color(RED));
+            // 您没有使用此命令的权限！
+            .key("floracore.commandsystem.no-permission")
+            .color(RED));
 
     Args1<String> COMMAND_INVALID_COMMAND_SYNTAX = correctSyntax -> AbstractMessage.prefixed(text()
-                                                                                                     // 命令语法错误,您可能想要输入：{0}
-                                                                                                     .color(RED)
-                                                                                                     .append(translatable(
-                                                                                                             "floracore.commandsystem.invalid-command-syntax",
-                                                                                                             text(correctSyntax,
-                                                                                                                  DARK_AQUA)))
-                                                                                                     .append(FULL_STOP));
+            // 命令语法错误,您可能想要输入：{0}
+            .color(RED)
+            .append(translatable(
+                    "floracore.commandsystem.invalid-command-syntax",
+                    text(correctSyntax,
+                            DARK_AQUA)))
+            .append(FULL_STOP));
 
     Args2<String, String> COMMAND_INVALID_COMMAND_SENDER = (commandSender, requiredSender) -> AbstractMessage.prefixed(
             text()
                     // {0} 不允许执行该命令,必须由 {1} 执行
                     .color(RED)
                     .append(translatable("floracore.commandsystem.invalid-command-sender",
-                                         text(commandSender),
-                                         text(requiredSender)))
+                            text(commandSender),
+                            text(requiredSender)))
                     .append(FULL_STOP));
 
     Args0 COMMAND_SERVER_DATA_TYPE = () -> translatable("floracore.command.server.data.type");
@@ -178,42 +178,42 @@ public interface MiscMessage extends AbstractMessage {
     Args0 COMMAND_MISC_WEATHER_STORM = () -> translatable("floracore.command.misc.weather.storm");
 
     Args0 COMMAND_MISC_WORLD_INVALID = () -> AbstractMessage.prefixed(translatable()
-                                                                              // 无效的世界
-                                                                              .key("floracore.command.misc.world.invalid")
-                                                                              .color(RED));
+            // 无效的世界
+            .key("floracore.command.misc.world.invalid")
+            .color(RED));
 
     Args1<String> ILLEGAL_DATE_ERROR = invalid -> AbstractMessage.prefixed(translatable()
-                                                                                   // 无法解析日期 {0}
-                                                                                   .key("floracore.command.misc.date-parse-error")
-                                                                                   .color(RED)
-                                                                                   .args(text(invalid, DARK_RED))
-                                                                                   .append(FULL_STOP));
+            // 无法解析日期 {0}
+            .key("floracore.command.misc.date-parse-error")
+            .color(RED)
+            .args(text(invalid, DARK_RED))
+            .append(FULL_STOP));
 
     Args0 PAST_DATE_ERROR = () -> AbstractMessage.prefixed(translatable()
-                                                                   // 不能设置已经过去的日期\!
-                                                                   .key("floracore.command.misc.date-in-past-error")
-                                                                   .color(RED));
+            // 不能设置已经过去的日期\!
+            .key("floracore.command.misc.date-in-past-error")
+            .color(RED));
 
     Args0 COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION = () -> AbstractMessage.prefixed(translatable()
-                                                                                          // 执行命令异常
-                                                                                          .key("floracore.command.misc.execute-command-exception")
-                                                                                          .color(RED));
+            // 执行命令异常
+            .key("floracore.command.misc.execute-command-exception")
+            .color(RED));
 
     Args1<String> COMMAND_MISC_INVALID_NUMBER = (number) -> AbstractMessage.prefixed(translatable()
-                                                                                             // {0} 不是有效的数字
-                                                                                             .key("floracore.command.misc.invalid-number")
-                                                                                             // {0}
-                                                                                             .args(text(number,
-                                                                                                        DARK_RED))
-                                                                                             .color(RED));
+            // {0} 不是有效的数字
+            .key("floracore.command.misc.invalid-number")
+            // {0}
+            .args(text(number,
+                    DARK_RED))
+            .color(RED));
 
     Args1<String> COMMAND_MISC_INVALID_FORMAT = (format) -> AbstractMessage.prefixed(translatable()
-                                                                                             // {0} 不是有效的格式
-                                                                                             .key("floracore.command.misc.invalid-format")
-                                                                                             // {0}
-                                                                                             .args(text(format,
-                                                                                                        DARK_RED))
-                                                                                             .color(RED));
+            // {0} 不是有效的格式
+            .key("floracore.command.misc.invalid-format")
+            // {0}
+            .args(text(format,
+                    DARK_RED))
+            .color(RED));
 
     Args0 COMMAND_MISC_GUI_PREVIOUS_PAGE = () -> translatable()
             // 上一页
@@ -232,19 +232,19 @@ public interface MiscMessage extends AbstractMessage {
             .key("floracore.command.misc.gui.turn-to-page").args(text(page)).color(GRAY).build();
 
     Args1<String> PLAYER_NOT_FOUND = id -> AbstractMessage.prefixed(translatable()
-                                                                            // 无法找到 {0} 这名玩家
-                                                                            .key("floracore.command.misc.loading.error.player-not-found")
-                                                                            .color(RED)
-                                                                            .args(text(id, DARK_RED))
-                                                                            .append(FULL_STOP));
+            // 无法找到 {0} 这名玩家
+            .key("floracore.command.misc.loading.error.player-not-found")
+            .color(RED)
+            .args(text(id, DARK_RED))
+            .append(FULL_STOP));
 
     Args1<Long> DURATION_FORMAT = (ticks) -> translatable()
             // {0} 或 {1}（或 {2} ）
             .key("floracore.duration.format")
             .color(RED)
             .args(text(DescParseTickFormat.format24(ticks)).color(GREEN),
-                  text(DescParseTickFormat.format12(ticks)).color(GREEN),
-                  text(DescParseTickFormat.formatTicks(ticks)).color(GREEN))
+                    text(DescParseTickFormat.format12(ticks)).color(GREEN),
+                    text(DescParseTickFormat.formatTicks(ticks)).color(GREEN))
             .build();
 
 }

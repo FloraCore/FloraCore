@@ -10,8 +10,8 @@ import team.floracore.common.util.wrapper.WrappedObject;
 import java.util.UUID;
 
 @WrappedBukkitClass({@VersionName(value = "nms.MinecraftKey",
-                                  maxVer = 17), @VersionName(value = "net.minecraft.resources.MinecraftKey",
-                                                             minVer = 17)})
+        maxVer = 17), @VersionName(value = "net.minecraft.resources.MinecraftKey",
+        minVer = 17)})
 public interface NmsMinecraftKey extends WrappedBukkitObject {
     static NmsMinecraftKey newInstance(String s) {
         return WrappedObject.getStatic(NmsMinecraftKey.class).staticNewInstance(s);

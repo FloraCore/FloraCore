@@ -27,13 +27,13 @@ public class ChangeNameMessageImpl extends AbstractMessage implements ChangeName
         }
 
         UUID changer = Optional.ofNullable(content.getAsJsonObject().get("changer"))
-                               .map(JsonElement::getAsString)
-                               .map(UUID::fromString)
-                               .orElseThrow(() -> new IllegalStateException("Incoming message has no changer argument: " + content));
+                .map(JsonElement::getAsString)
+                .map(UUID::fromString)
+                .orElseThrow(() -> new IllegalStateException("Incoming message has no changer argument: " + content));
 
         String name = Optional.ofNullable(content.getAsJsonObject().get("name"))
-                              .map(JsonElement::getAsString)
-                              .orElseThrow(() -> new IllegalStateException("Incoming message has no name argument: " + content));
+                .map(JsonElement::getAsString)
+                .orElseThrow(() -> new IllegalStateException("Incoming message has no name argument: " + content));
 
         return new ChangeNameMessageImpl(id, changer, name);
     }
@@ -41,8 +41,8 @@ public class ChangeNameMessageImpl extends AbstractMessage implements ChangeName
     @Override
     public @NotNull String asEncodedString() {
         return FloraCoreMessagingService.encodeMessageAsString(TYPE, getId(),
-                                                               new JObject().add("changer", this.changer.toString())
-                                                                            .add("name", name).toJson()
+                new JObject().add("changer", this.changer.toString())
+                        .add("name", name).toJson()
         );
     }
 

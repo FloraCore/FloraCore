@@ -34,7 +34,6 @@ public class AnnotationNode extends AnnotationVisitor {
      * Instead, they must use the {@link #AnnotationNode(int, String)} version.
      *
      * @param descriptor the class descriptor of the annotation class.
-     *
      * @throws IllegalStateException If a subclass calls this constructor.
      */
     public AnnotationNode(final String descriptor) {

@@ -7,9 +7,9 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 import team.floracore.common.util.wrapper.WrappedObject;
 
 @WrappedBukkitClass({@VersionName(value = "nms.Recipes",
-                                  minVer = 14,
-                                  maxVer = 17), @VersionName(value = "net.minecraft.world.item.crafting.Recipes",
-                                                             minVer = 17)})
+        minVer = 14,
+        maxVer = 17), @VersionName(value = "net.minecraft.world.item.crafting.Recipes",
+        minVer = 17)})
 public interface NmsRecipesV14 extends WrappedBukkitObject {
     static NmsRecipesV14 crafting() {
         return WrappedObject.getStatic(NmsRecipesV14.class).staticCrafting();

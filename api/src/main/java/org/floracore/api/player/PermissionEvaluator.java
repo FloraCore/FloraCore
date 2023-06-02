@@ -14,7 +14,6 @@ public interface PermissionEvaluator {
      *
      * @param uuid       要评估权限的 UUID
      * @param permission 要评估的权限字符串
-     *
      * @return 一个 CompletableFuture 对象，表示权限评估的结果，返回值为布尔类型。如果具有权限，则返回 true；否则返回 false。
      */
     CompletableFuture<Boolean> evaluate(UUID uuid, String permission);

@@ -47,7 +47,6 @@ public class JSRInlinerAdapter extends MethodNode implements Opcodes {
      * @param signature     the method's signature. May be {@literal null}.
      * @param exceptions    the internal names of the method's exception classes (see {@link
      *                      Type#getInternalName()}). May be {@literal null}.
-     *
      * @throws IllegalStateException if a subclass calls this constructor.
      */
     public JSRInlinerAdapter(
@@ -59,12 +58,12 @@ public class JSRInlinerAdapter extends MethodNode implements Opcodes {
             final String[] exceptions) {
         this(
                 /* latest api = */ Opcodes.ASM9,
-                                   methodVisitor,
-                                   access,
-                                   name,
-                                   descriptor,
-                                   signature,
-                                   exceptions);
+                methodVisitor,
+                access,
+                name,
+                descriptor,
+                signature,
+                exceptions);
         if (getClass() != JSRInlinerAdapter.class) {
             throw new IllegalStateException();
         }
@@ -466,7 +465,6 @@ public class JSRInlinerAdapter extends MethodNode implements Opcodes {
          * (parent instantiations are older than their children).
          *
          * @param insnIndex the index of an instruction in the original code.
-         *
          * @return the "owner" of a particular instruction relative to this instantiation.
          */
         Instantiation findOwner(final int insnIndex) {
@@ -492,7 +490,6 @@ public class JSRInlinerAdapter extends MethodNode implements Opcodes {
          * block or a variable annotation.
          *
          * @param labelNode a label of the original code.
-         *
          * @return a clone of the given label for use by a try/catch block or a variable annotation in
          * the inlined code.
          */
@@ -512,7 +509,6 @@ public class JSRInlinerAdapter extends MethodNode implements Opcodes {
          * instruction.
          *
          * @param labelNode a label of the original code.
-         *
          * @return a clone of the given label for use in a jump instruction in the inlined code.
          */
         LabelNode getClonedLabelForJumpInsn(final LabelNode labelNode) {

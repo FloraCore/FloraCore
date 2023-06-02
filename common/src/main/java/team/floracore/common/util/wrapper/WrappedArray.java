@@ -20,10 +20,10 @@ public interface WrappedArray<T extends WrappedObject> extends WrappedObject {
     @Override
     default void apply(ClassNode cn, Class<? extends WrappedObject> wrapper) {
         MethodNode mn = new MethodNode(Opcodes.ACC_PUBLIC,
-                                       "getElementWrapper",
-                                       AsmUtil.getDesc(new Class[0], Class.class),
-                                       null,
-                                       new String[0]);
+                "getElementWrapper",
+                AsmUtil.getDesc(new Class[0], Class.class),
+                null,
+                new String[0]);
         mn.instructions.add(AsmUtil.ldcNode(getElementWrapper(wrapper)));
         mn.instructions.add(AsmUtil.returnNode(Class.class));
         cn.methods.add(mn);
@@ -52,8 +52,8 @@ public interface WrappedArray<T extends WrappedObject> extends WrappedObject {
 
     default WrappedArray<T> staticNewInstance(int length) {
         return TypeUtil.cast(WrappedObject.wrap(getWrapper(),
-                                                Array.newInstance(WrappedObject.getRawClass(getElementWrapper()),
-                                                                  length)));
+                Array.newInstance(WrappedObject.getRawClass(getElementWrapper()),
+                        length)));
     }
 
     Class<T> getElementWrapper();

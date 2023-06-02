@@ -42,7 +42,7 @@ public class HatCommand extends FloraCoreBukkitCommand {
             return;
         }
         if (BukkitWrapper.version >= 9 && head != null && head.getEnchantments()
-                                                              .containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission(
+                .containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission(
                 "floracore.command.hat.ignore-binding")) {
             PlayerCommandMessage.COMMAND_HAT_CURSE.send(sender);
             return;
@@ -61,7 +61,7 @@ public class HatCommand extends FloraCoreBukkitCommand {
         if (head == null || head.getType() == Material.AIR) {
             PlayerCommandMessage.COMMAND_HAT_EMPTY.send(sender);
         } else if (BukkitWrapper.version >= 9 && head.getEnchantments()
-                                                     .containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission(
+                .containsKey(Enchantment.BINDING_CURSE) && !p.hasPermission(
                 "floracore.command.hat.ignore-binding")) {
             PlayerCommandMessage.COMMAND_HAT_CURSE.send(sender);
         } else {

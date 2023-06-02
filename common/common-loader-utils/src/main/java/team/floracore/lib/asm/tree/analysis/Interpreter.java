@@ -15,7 +15,6 @@ import java.util.List;
  * transfer of values.
  *
  * @param <V> type of the Value used for the analysis.
- *
  * @author Eric Bruneton
  */
 public abstract class Interpreter<V extends Value> {
@@ -45,7 +44,6 @@ public abstract class Interpreter<V extends Value> {
      * @param isInstanceMethod {@literal true} if the method is non-static.
      * @param local            the local variable index.
      * @param type             a primitive or reference type.
-     *
      * @return a value that represents the given type. The size of the returned value must be equal to
      * the size of the given type.
      */
@@ -67,7 +65,6 @@ public abstract class Interpreter<V extends Value> {
      *
      * @param type a primitive or reference type, or {@literal null} to represent an uninitialized
      *             value.
-     *
      * @return a value that represents the given type. The size of the returned value must be equal to
      * the size of the given type.
      */
@@ -80,7 +77,6 @@ public abstract class Interpreter<V extends Value> {
      * <p>By default, calls <code>newValue(type)</code>.
      *
      * @param type a primitive or reference type.
-     *
      * @return a value that represents the given type. The size of the returned value must be equal to
      * the size of the given type.
      */
@@ -96,7 +92,6 @@ public abstract class Interpreter<V extends Value> {
      * <p>By default, calls <code>newValue(null)</code>.
      *
      * @param local the local variable index.
-     *
      * @return a value representing an uninitialized value. The size of the returned value must be
      * equal to 1.
      */
@@ -113,7 +108,6 @@ public abstract class Interpreter<V extends Value> {
      * @param tryCatchBlockNode the exception handler.
      * @param handlerFrame      the exception handler frame.
      * @param exceptionType     the exception type handled by this handler.
-     *
      * @return a value that represents the given {@code exceptionType}. The size of the returned value
      * must be equal to 1.
      */
@@ -133,9 +127,7 @@ public abstract class Interpreter<V extends Value> {
      * GETSTATIC, NEW
      *
      * @param insn the bytecode instruction to be interpreted.
-     *
      * @return the result of the interpretation of the given instruction.
-     *
      * @throws AnalyzerException if an error occurred during the interpretation.
      */
     public abstract V newOperation(AbstractInsnNode insn) throws AnalyzerException;
@@ -149,10 +141,8 @@ public abstract class Interpreter<V extends Value> {
      *
      * @param insn  the bytecode instruction to be interpreted.
      * @param value the value that must be moved by the instruction.
-     *
      * @return the result of the interpretation of the given instruction. The returned value must be
      * {@code equal} to the given value.
-     *
      * @throws AnalyzerException if an error occurred during the interpretation.
      */
     public abstract V copyOperation(AbstractInsnNode insn, V value) throws AnalyzerException;
@@ -168,9 +158,7 @@ public abstract class Interpreter<V extends Value> {
      *
      * @param insn  the bytecode instruction to be interpreted.
      * @param value the argument of the instruction to be interpreted.
-     *
      * @return the result of the interpretation of the given instruction.
-     *
      * @throws AnalyzerException if an error occurred during the interpretation.
      */
     public abstract V unaryOperation(AbstractInsnNode insn, V value) throws AnalyzerException;
@@ -188,9 +176,7 @@ public abstract class Interpreter<V extends Value> {
      * @param insn   the bytecode instruction to be interpreted.
      * @param value1 the first argument of the instruction to be interpreted.
      * @param value2 the second argument of the instruction to be interpreted.
-     *
      * @return the result of the interpretation of the given instruction.
-     *
      * @throws AnalyzerException if an error occurred during the interpretation.
      */
     public abstract V binaryOperation(AbstractInsnNode insn, V value1, V value2)
@@ -206,9 +192,7 @@ public abstract class Interpreter<V extends Value> {
      * @param value1 the first argument of the instruction to be interpreted.
      * @param value2 the second argument of the instruction to be interpreted.
      * @param value3 the third argument of the instruction to be interpreted.
-     *
      * @return the result of the interpretation of the given instruction.
-     *
      * @throws AnalyzerException if an error occurred during the interpretation.
      */
     public abstract V ternaryOperation(AbstractInsnNode insn, V value1, V value2, V value3)
@@ -223,9 +207,7 @@ public abstract class Interpreter<V extends Value> {
      *
      * @param insn   the bytecode instruction to be interpreted.
      * @param values the arguments of the instruction to be interpreted.
-     *
      * @return the result of the interpretation of the given instruction.
-     *
      * @throws AnalyzerException if an error occurred during the interpretation.
      */
     public abstract V naryOperation(AbstractInsnNode insn, List<? extends V> values)
@@ -239,7 +221,6 @@ public abstract class Interpreter<V extends Value> {
      * @param insn     the bytecode instruction to be interpreted.
      * @param value    the argument of the instruction to be interpreted.
      * @param expected the expected return type of the analyzed method.
-     *
      * @throws AnalyzerException if an error occurred during the interpretation.
      */
     public abstract void returnOperation(AbstractInsnNode insn, V value, V expected)
@@ -253,7 +234,6 @@ public abstract class Interpreter<V extends Value> {
      *
      * @param value1 a value.
      * @param value2 another value.
-     *
      * @return the merged value. If the merged value is equal to {@code value1}, this method
      * <i>must</i> return {@code value1}.
      */

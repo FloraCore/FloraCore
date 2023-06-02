@@ -40,11 +40,11 @@ public class FoodCommand extends FloraCoreBukkitCommand {
                 return;
             }
             PlayerCommandMessage.COMMAND_FOOD_GET_OTHER_NUTRITION.send(sender,
-                                                                       target.getName(),
-                                                                       target.getFoodLevel()); // 返回饥饿值
+                    target.getName(),
+                    target.getFoodLevel()); // 返回饥饿值
             PlayerCommandMessage.COMMAND_FOOD_GET_OTHER_SATURATION.send(sender,
-                                                                        target.getName(),
-                                                                        target.getSaturation()); // 返回饱和度
+                    target.getName(),
+                    target.getSaturation()); // 返回饱和度
         }
     }
 
@@ -77,8 +77,8 @@ public class FoodCommand extends FloraCoreBukkitCommand {
             PlayerCommandMessage.COMMAND_FOOD_SET_OTHER_NUTRITION.send(sender, target.getName(), value); // 告知设置成功
             if (silent == null || !silent) { // 非静音模式
                 PlayerCommandMessage.COMMAND_FOOD_SET_FROM_NUTRITION.send(getPlugin().getSenderFactory().wrap(target),
-                                                                          s.getName(),
-                                                                          value); // 告知被设置
+                        s.getName(),
+                        value); // 告知被设置
             }
         }
     }
@@ -112,8 +112,8 @@ public class FoodCommand extends FloraCoreBukkitCommand {
             PlayerCommandMessage.COMMAND_FOOD_SET_OTHER_SATURATION.send(sender, target.getName(), value); // 告知设置成功
             if (silent == null || !silent) { // 非静音模式
                 PlayerCommandMessage.COMMAND_FOOD_SET_FROM_SATURATION.send(getPlugin().getSenderFactory().wrap(target),
-                                                                           s.getName(),
-                                                                           value); // 告知被设置
+                        s.getName(),
+                        value); // 告知被设置
             }
         }
     }

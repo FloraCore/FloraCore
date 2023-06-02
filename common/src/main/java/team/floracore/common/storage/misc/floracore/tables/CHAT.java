@@ -60,7 +60,7 @@ public class CHAT extends AbstractFloraCoreTable {
     public void init() throws SQLException {
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
-                                                                                              .apply(INSERT))) {
+                    .apply(INSERT))) {
                 ps.setString(1, type.name());
                 ps.setString(2, parameters);
                 ps.setString(3, uuid.toString());

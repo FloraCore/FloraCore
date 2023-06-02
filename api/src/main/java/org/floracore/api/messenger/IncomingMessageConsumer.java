@@ -28,7 +28,6 @@ public interface IncomingMessageConsumer {
      * with the same ping id has already been processed.</p>
      *
      * @param encodedString the encoded string
-     *
      * @return true if the plugin accepted the message
      */
     boolean consumeIncomingMessageAsString(@NotNull String encodedString);

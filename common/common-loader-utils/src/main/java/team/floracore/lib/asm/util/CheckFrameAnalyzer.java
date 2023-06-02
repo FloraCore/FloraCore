@@ -53,7 +53,6 @@ import java.util.List;
  * </ul>
  *
  * @param <V> type of the {@link Value} used for the analysis.
- *
  * @author Eric Bruneton
  */
 class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
@@ -83,7 +82,6 @@ class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
      * Returns true if the given instruction node corresponds to a real JVM instruction.
      *
      * @param insnNode an instruction node.
-     *
      * @return true except for label, line number and stack map frame nodes.
      */
     private static boolean isJvmInsnNode(final AbstractInsnNode insnNode) {
@@ -198,7 +196,6 @@ class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
      * @param owner        the internal name of the class to which 'method' belongs.
      * @param method       the method whose frames must be expanded.
      * @param initialFrame the implicit initial frame of 'method'.
-     *
      * @throws AnalyzerException if the stack map frames of 'method', i.e. its FrameNode
      *                           "instructions", are invalid.
      */
@@ -233,9 +230,7 @@ class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
      * @param owner         the internal name of the class to which 'frameNode' belongs.
      * @param previousFrame the frame before 'frameNode', in expanded form.
      * @param frameNode     a possibly compressed stack map frame.
-     *
      * @return the expanded version of 'frameNode'.
-     *
      * @throws AnalyzerException if 'frameNode' is invalid.
      */
     private Frame<V> expandFrame(
@@ -299,9 +294,7 @@ class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
      * @param frameNode the stack map frame to which 'type' belongs.
      * @param type      an Integer, String or LabelNode object representing a primitive, reference or
      *                  uninitialized a stack map frame type, respectively. See {@link FrameNode}.
-     *
      * @return a value that represents the given type.
-     *
      * @throws AnalyzerException if 'type' is an invalid stack map frame type.
      */
     private V newFrameValue(final String owner, final FrameNode frameNode, final Object type)
@@ -345,7 +338,6 @@ class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
      * @param frame        a frame. This frame is left unchanged by this method.
      * @param requireFrame whether a frame must already exist or not in {@link #frames} at
      *                     'insnIndex'.
-     *
      * @throws AnalyzerException if the frames have incompatible sizes or if the frame at 'insnIndex'
      *                           is missing (if required) or not compatible with 'frame'.
      */
@@ -377,7 +369,6 @@ class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
      *
      * @param srcFrame a source frame. This frame is left unchanged by this method.
      * @param dstFrame a destination frame. This frame is left unchanged by this method.
-     *
      * @return an error message if the frames have incompatible sizes, or if a type in the source
      * frame is not a sub type of the corresponding type in the destination frame. Returns
      * {@literal null} otherwise.
@@ -421,7 +412,6 @@ class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
      * existing frame for the next instruction, if any.
      *
      * @param insnIndex an instruction index.
-     *
      * @throws AnalyzerException if 'insnIndex' is not the last instruction and there is no frame at
      *                           'insnIndex' + 1 in {@link #getFrames}.
      */
@@ -436,7 +426,6 @@ class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
      * Returns true if the given instruction is followed by a JVM instruction or a by stack map frame.
      *
      * @param insnIndex an instruction index.
-     *
      * @return true if 'insnIndex' is followed by a JVM instruction or a by stack map frame.
      */
     private boolean hasNextJvmInsnOrFrame(final int insnIndex) {
