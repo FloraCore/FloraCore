@@ -17,9 +17,8 @@ import team.floracore.common.util.wrapper.WrappedObject;
 
 import java.util.Optional;
 
-@WrappedBukkitClass({@VersionName(value = "nms.NetworkManager",
-        maxVer = 17), @VersionName(value = "net.minecraft.network.NetworkManager",
-        minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.NetworkManager", maxVer = 17),
+        @VersionName(value = "net.minecraft.network.NetworkManager", minVer = 17)})
 public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
     static void receivePacketV13(NmsPacket packet, NmsPacketListener listener) {
         WrappedObject.getStatic(NmsNetworkManager.class).staticReceivePacketV13(packet, listener);

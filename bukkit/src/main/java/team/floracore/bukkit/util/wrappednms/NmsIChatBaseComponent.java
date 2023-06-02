@@ -8,9 +8,8 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 import team.floracore.common.util.wrapper.WrappedMethod;
 import team.floracore.common.util.wrapper.WrappedObject;
 
-@WrappedBukkitClass({@VersionName(value = "nms.IChatBaseComponent",
-        maxVer = 17), @VersionName(value = "net.minecraft.network.chat.IChatBaseComponent",
-        minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.IChatBaseComponent", maxVer = 17),
+        @VersionName(value = "net.minecraft.network.chat.IChatBaseComponent", minVer = 17)})
 public interface NmsIChatBaseComponent extends WrappedBukkitObject {
 
     @WrappedBukkitClass({@VersionName(value = "nms.IChatBaseComponent$ChatSerializer",

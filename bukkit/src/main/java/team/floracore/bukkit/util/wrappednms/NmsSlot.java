@@ -11,9 +11,8 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitMethod;
 import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 import team.floracore.common.util.wrapper.WrappedObject;
 
-@WrappedBukkitClass({@VersionName(value = "nms.Slot",
-        maxVer = 17), @VersionName(value = "net.minecraft.world.inventory.Slot",
-        minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.Slot", maxVer = 17),
+        @VersionName(value = "net.minecraft.world.inventory.Slot", minVer = 17)})
 public interface NmsSlot extends WrappedBukkitObject {
 
     default boolean isAllowed(ItemStack item) {

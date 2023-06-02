@@ -8,8 +8,8 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 import team.floracore.common.util.wrapper.WrappedMethod;
 import team.floracore.common.util.wrapper.WrappedObject;
 
-@WrappedBukkitClass({@VersionName(value = "nms.IRegistry",
-        maxVer = 17), @VersionName(value = "net.minecraft.core.IRegistry", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.IRegistry", maxVer = 17),
+        @VersionName(value = "net.minecraft.core.IRegistry", minVer = 17)})
 public interface NmsIRegistry extends WrappedBukkitObject {
     static NmsRegistryMaterials getItemsV13_14() {
         return WrappedObject.getStatic(NmsIRegistry.class).staticGetItemsV13().cast(NmsRegistryMaterials.class);

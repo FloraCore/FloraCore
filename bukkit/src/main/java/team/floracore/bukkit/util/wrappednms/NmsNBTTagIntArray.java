@@ -10,8 +10,8 @@ import java.util.AbstractList;
 import java.util.List;
 import java.util.UUID;
 
-@WrappedBukkitClass({@VersionName(value = "nms.NBTTagIntArray",
-        maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagIntArray", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.NBTTagIntArray", maxVer = 17),
+        @VersionName(value = "net.minecraft.nbt.NBTTagIntArray", minVer = 17)})
 public interface NmsNBTTagIntArray extends NmsNBTTag {
     static NmsNBTTagIntArray newInstance(UUID uuid) {
         return newInstance((int) (uuid.getMostSignificantBits() >> 32),

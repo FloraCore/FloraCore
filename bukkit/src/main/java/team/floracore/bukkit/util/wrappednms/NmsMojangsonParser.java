@@ -7,8 +7,8 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitMethod;
 import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 import team.floracore.common.util.wrapper.WrappedObject;
 
-@WrappedBukkitClass({@VersionName(value = "nms.MojangsonParser",
-        maxVer = 17), @VersionName(value = "net.minecraft.nbt.MojangsonParser", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.MojangsonParser", maxVer = 17),
+        @VersionName(value = "net.minecraft.nbt.MojangsonParser", minVer = 17)})
 public interface NmsMojangsonParser extends WrappedBukkitObject {
     static JsonObject parseNonstandardJson(String json) {
         return parse(json).toJson();

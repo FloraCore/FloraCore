@@ -9,9 +9,8 @@ import team.floracore.common.util.wrapper.WrappedObject;
 
 import java.util.Map;
 
-@WrappedBukkitClass({@VersionName(value = "nms.RegistryMaterials",
-        maxVer = 17), @VersionName(value = "net.minecraft.core.RegistryMaterials",
-        minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.RegistryMaterials", maxVer = 17),
+        @VersionName(value = "net.minecraft.core.RegistryMaterials", minVer = 17)})
 public interface NmsRegistryMaterials extends WrappedBukkitObject {
     default NmsMinecraftKey getKey(WrappedObject value) {
         if (BukkitWrapper.v13) {

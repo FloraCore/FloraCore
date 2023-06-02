@@ -4,8 +4,8 @@ import team.floracore.bukkit.util.VersionName;
 import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.WrappedObject;
 
-@WrappedBukkitClass({@VersionName(value = "nms.Item",
-        maxVer = 17), @VersionName(value = "net.minecraft.world.item.Item", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.Item", maxVer = 17),
+        @VersionName(value = "net.minecraft.world.item.Item", minVer = 17)})
 public interface NmsItem extends WrappedBukkitObject {
     static NmsItem fromId(String id) {
         return fromKey(NmsMinecraftKey.newInstance(id));

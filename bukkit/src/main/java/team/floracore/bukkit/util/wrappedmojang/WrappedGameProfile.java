@@ -7,6 +7,9 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 
 @WrappedBukkitClass(@VersionName(value = "com.mojang.authlib.GameProfile"))
 public interface WrappedGameProfile extends WrappedBukkitObject {
+    @WrappedBukkitFieldAccessor({@VersionName("id")})
+    String getUniqueId();
+
     @WrappedBukkitFieldAccessor({@VersionName("name")})
     String getName();
 

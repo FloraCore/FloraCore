@@ -14,8 +14,8 @@ import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List;
 
-@WrappedBukkitClass({@VersionName(value = "nms.NBTTagList",
-        maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagList", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.NBTTagList", maxVer = 17),
+        @VersionName(value = "net.minecraft.nbt.NBTTagList", minVer = 17)})
 public interface NmsNBTTagList extends NmsNBTTag {
     static <T extends NmsNBTBase> NmsNBTTagList newInstance(List<T> l) {
         NmsNBTTagList r = newInstance();

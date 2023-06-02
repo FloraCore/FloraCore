@@ -56,6 +56,12 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
     public NickCommand(FCBukkitPlugin plugin) {
         super(plugin);
         plugin.getListenerManager().registerListener(this);
+        ProtocolUtil.instance.register(new ProtocolUtil.ReceiveListener(EventPriority.NORMAL, NmsPacketPlayOutPlayerInfo.class, (player, packet, cancelled) -> {
+            NmsPacketPlayOutPlayerInfo playerInfoPacket = (NmsPacketPlayOutPlayerInfo) packet;
+            for (NmsPlayerInfoData nmsPlayerInfoData : playerInfoPacket.getPlayerInfoDataList()) {
+                System.out.println(nmsPlayerInfoData.getGameProfile().getUniqueId());
+            }
+        }));
     }
 
     @CommandMethod("nick")

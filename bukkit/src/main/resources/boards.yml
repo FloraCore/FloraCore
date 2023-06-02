@@ -21,4 +21,4 @@ boards:
     lines:
       - '&6名 称: &a%player_displayname%'
       - ''
-      - '&efloracore.org'
+      - '&efloracore.cc'

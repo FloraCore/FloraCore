@@ -5,9 +5,8 @@ import team.floracore.bukkit.util.wrapper.*;
 import team.floracore.common.util.wrapper.WrappedMethod;
 import team.floracore.common.util.wrapper.WrappedObject;
 
-@WrappedBukkitClass({@VersionName(value = "nms.ItemStack",
-        maxVer = 17), @VersionName(value = "net.minecraft.world.item.ItemStack",
-        minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.ItemStack", maxVer = 17),
+        @VersionName(value = "net.minecraft.world.item.ItemStack", minVer = 17)})
 public interface NmsItemStack extends WrappedBukkitObject {
     static NmsItemStack fromNbt(NmsNBTTagCompound nbt) {
         if (BukkitWrapper.v13) {
@@ -65,12 +64,9 @@ public interface NmsItemStack extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor({@VersionName("tag"), @VersionName(value = "@0", minVer = 17)})
     NmsItemStack setTag(NmsNBTTagCompound tag);
 
-    @WrappedBukkitMethod({@VersionName("cloneItemStack"), @VersionName(value = "m",
-            minVer = 18,
-            maxVer = 18.2f), @VersionName(value = "n",
-            minVer = 18.2f,
-            maxVer = 19), @VersionName(
-            value = "o",
-            minVer = 19)})
+    @WrappedBukkitMethod({@VersionName("cloneItemStack"),
+            @VersionName(value = "m", minVer = 18, maxVer = 18.2f),
+            @VersionName(value = "n", minVer = 18.2f, maxVer = 19),
+            @VersionName(value = "o", minVer = 19)})
     NmsItemStack cloneItemStack();
 }

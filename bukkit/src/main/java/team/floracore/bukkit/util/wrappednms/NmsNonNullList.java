@@ -11,8 +11,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@WrappedBukkitClass({@VersionName(value = "nms.NonNullList",
-        maxVer = 17), @VersionName(value = "net.minecraft.core.NonNullList", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.NonNullList", maxVer = 17),
+        @VersionName(value = "net.minecraft.core.NonNullList", minVer = 17)})
 public interface NmsNonNullList extends WrappedBukkitObject, Iterable<WrappedObject> {
     static NmsNonNullList newInstance(List<? extends WrappedObject> list) {
         NmsNonNullList r = newInstance();

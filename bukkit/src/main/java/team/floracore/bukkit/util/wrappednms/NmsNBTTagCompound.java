@@ -15,8 +15,8 @@ import java.io.DataOutput;
 import java.util.List;
 import java.util.Map;
 
-@WrappedBukkitClass({@VersionName(value = "nms.NBTTagCompound",
-        maxVer = 17), @VersionName(value = "net.minecraft.nbt.NBTTagCompound", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.NBTTagCompound", maxVer = 17),
+        @VersionName(value = "net.minecraft.nbt.NBTTagCompound", minVer = 17)})
 public interface NmsNBTTagCompound extends NmsNBTTag {
     static NmsNBTTagCompound newInstance(String json) {
         return NmsMojangsonParser.parse(json);

@@ -9,8 +9,8 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 
 import java.util.List;
 
-@WrappedBukkitClass({@VersionName(value = "nms.IInventory",
-        maxVer = 17), @VersionName(value = "net.minecraft.world.IInventory", minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.IInventory", maxVer = 17),
+        @VersionName(value = "net.minecraft.world.IInventory", minVer = 17)})
 public interface NmsIInventory extends WrappedBukkitObject {
     @WrappedBukkitMethod(@VersionName("getOwner"))
     InventoryHolder getOwner();

@@ -8,9 +8,8 @@ import team.floracore.common.util.wrapper.WrappedObject;
 
 import java.util.*;
 
-@WrappedBukkitClass({@VersionName(value = "nms.CraftingManager",
-        maxVer = 17), @VersionName(value = "net.minecraft.world.item.crafting.CraftingManager",
-        minVer = 17)})
+@WrappedBukkitClass({@VersionName(value = "nms.CraftingManager", maxVer = 17),
+        @VersionName(value = "net.minecraft.world.item.crafting.CraftingManager", minVer = 17)})
 public interface NmsCraftingManager extends WrappedBukkitObject {
     static Map<Object, Object> getCraftingRecipes() {
         if (BukkitWrapper.version >= 14) {

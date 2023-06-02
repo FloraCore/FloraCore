@@ -38,7 +38,7 @@ public class BukkitStringReplacer {
         while (matcher.find()) {
             // 获取xxx的内容
             String match = matcher.group(1);
-            // 进行替换的加工操作，这里使用了"Replaced(" + match + ")"作为替换字符串
+            // 进行替换的加工操作
             Component component = Component.translatable().key(match).build();
             Component replacement = TranslationManager.render(component, uuid);
             String str = TranslationManager.SERIALIZER.serialize(replacement);
