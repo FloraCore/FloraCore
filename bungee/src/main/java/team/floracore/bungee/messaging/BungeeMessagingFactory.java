@@ -1,21 +1,30 @@
 package team.floracore.bungee.messaging;
 
 import com.google.gson.JsonElement;
+import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import org.floracore.api.FloraCoreProvider;
+import org.floracore.api.bungee.chat.ChatChannel;
 import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
+import org.floracore.api.data.DataType;
 import org.floracore.api.messenger.message.Message;
 import org.floracore.api.messenger.message.type.ChangeNameMessage;
 import team.floracore.bungee.FCBungeePlugin;
+import team.floracore.bungee.chat.Channels;
 import team.floracore.bungee.locale.message.SocialSystemsMessage;
 import team.floracore.bungee.messaging.message.ChatMessageImpl;
 import team.floracore.bungee.messaging.message.NoticeMessageImpl;
+import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.messaging.InternalMessagingService;
 import team.floracore.common.messaging.MessagingFactory;
 import team.floracore.common.messaging.message.ChangeNameMessageImpl;
 import team.floracore.common.sender.Sender;
 import team.floracore.common.storage.misc.floracore.tables.DATA;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -117,8 +126,27 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
                 });
                 break;
             case CUSTOM:
+                UUID uuid = UUID.fromString(parameters.get(0));
+                DATA data = getPlugin().getStorage().getImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "chat-channel");
+                ChatChannel chatChannel = Channels.parse(data.getValue());
+                String rawMessage = chatMsg.getParameters().get(1);
+                String message;
+                if (chatChannel.enableChatColor()) {
+                    message = ChatColor.translateAlternateColorCodes('&', rawMessage);
+                } else {
+                    message = rawMessage;
+                }
+                String time = new SimpleDateFormat("[HH:mm:ss]").format(new Date());
                 getPlugin().getOnlineSenders().forEach(i -> {
-                    List<DATA> dataList = getPlugin().getStorage().getImplementation().selectData(UUID.fromString(parameters.get(0)));
+                    if (Channels.hasChannelPermission(chatChannel, i)) {
+                        String format = AbstractMessage.prefixed(Component.translatable().key("floracore.chatchannels." + chatChannel.getName() + ".format")).content();
+                        format = format.replace("%name%", chatChannel.getName())
+                                .replace("%player%", FloraCoreProvider.get().getPlayerAPI().getPlayerRecordName(uuid))
+                                .replace("%time%", time);
+                        format = ChatColor.translateAlternateColorCodes('&', format);
+                        format = format.replace("%message%", message);
+                        i.sendMessage(Component.text(format));
+                    }
                     // TODO : 转发消息
                 });
         }

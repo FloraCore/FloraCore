@@ -10,16 +10,19 @@ import cloud.commandframework.annotations.suggestions.Suggestions;
 import cloud.commandframework.context.CommandContext;
 import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import org.floracore.api.bungee.chat.ChatChannel;
 import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.data.DataType;
 import org.floracore.api.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
+import team.floracore.bungee.chat.Channels;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
 import team.floracore.bungee.locale.message.SocialSystemsMessage;
 import team.floracore.common.locale.message.MiscMessage;
@@ -45,17 +48,29 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
         Type t = Type.parse(type);
+        ChatChannel channel = null;
         if (t == null) {
-            SocialSystemsMessage.COMMAND_MISC_CHAT_DOES_NOT_EXIST.send(sender, type);
-            return;
+            channel = Channels.parse(type);
+            if (channel == null) {
+                SocialSystemsMessage.COMMAND_MISC_CHAT_DOES_NOT_EXIST.send(sender, type);
+                return;
+            } else {
+                t = Type.CUSTOM;
+            }
         }
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "chat");
         if (data != null) {
             Type nt = Type.valueOf(data.getValue());
             if (t == nt) {
-                // TODO 你当前正处于 {0} 聊天频道中!
-                SocialSystemsMessage.COMMAND_MISC_CHAT_IS_IN.send(sender, t.name().toLowerCase());
-                return;
+                if (t == Type.CUSTOM) {
+                    data = getStorageImplementation().getSpecifiedData(uuid, DataType.FUNCTION, "chat-channel");
+                    ChatChannel presentChannel = Channels.parse(data.getValue());
+                    if (channel == presentChannel) {
+                        // 你当前正处于 {0} 聊天频道中!
+                        SocialSystemsMessage.COMMAND_MISC_CHAT_IS_IN.send(sender, t.name().toLowerCase());
+                        return;
+                    }
+                }
             }
         }
         switch (t) {
@@ -114,6 +129,16 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                 Component tc5 = TranslationManager.render(MiscMessage.PREFIX_ADMIN_LIGHT, uuid);
                 SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc5);
                 break;
+            case CUSTOM:
+                assert channel != null;
+                if (!Channels.hasChannelPermission(channel, sender)) {
+                    MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
+                    return;
+                }
+                getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", t.name(), 0);
+                getStorageImplementation().insertData(uuid, DataType.FUNCTION, "chat-channel", channel.getKey(), 0);
+                SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender,
+                        Component.text(ChatColor.translateAlternateColorCodes('&', channel.getName())));
         }
     }
 
@@ -268,7 +293,8 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
         ADMIN("admin"),
         BLOGGER("blogger"),
         BUILDER("builder"),
-        STAFF("STAFF", "s");
+        STAFF("STAFF", "s"),
+        CUSTOM();
         private final List<String> identifiers;
 
         Type(String... identifiers) {
@@ -277,6 +303,7 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
 
         public static Type parse(String name) {
             for (Type t : values()) {
+                if (t == CUSTOM) continue;
                 for (String id : t.getIdentifiers()) {
                     if (id.equalsIgnoreCase(name)) {
                         return t;

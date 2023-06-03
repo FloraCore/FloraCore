@@ -2,39 +2,31 @@ package team.floracore.bungee.chat;
 
 import cloud.commandframework.CommandManager;
 import cloud.commandframework.arguments.standard.StringArgument;
+import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.floracore.api.FloraCore;
 import org.floracore.api.bungee.chat.ChannelsAPI;
 import org.floracore.api.bungee.chat.ChatChannel;
 import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.data.DataType;
-import team.floracore.bungee.config.ChatConfiguration;
+import team.floracore.bungee.FCBungeePlugin;
+import team.floracore.bungee.command.FloraCoreBungeeCommand;
 import team.floracore.bungee.config.ChatKeys;
-import team.floracore.bungee.messaging.BungeeMessagingFactory;
-import team.floracore.common.storage.implementation.StorageImplementation;
+import team.floracore.bungee.locale.message.SocialSystemsMessage;
+import team.floracore.common.sender.Sender;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class Channels implements ChannelsAPI {
-    private final CommandManager<CommandSender> manager;
-    private final FloraCore api;
-    private final StorageImplementation storage;
-    private final BungeeMessagingFactory factory;
-    private final List<ChatChannel> categories = new ArrayList<>();
-    private final static SimpleDateFormat dateFormat = new SimpleDateFormat("[HH:mm:ss]");
+public class Channels extends FloraCoreBungeeCommand implements ChannelsAPI {
+    private static final List<ChatChannel> categories = new ArrayList<>();
 
-    public Channels(CommandManager<CommandSender> manager, ChatConfiguration chatConfiguration, FloraCore api, StorageImplementation storage, BungeeMessagingFactory factory) {
-        this.manager = manager;
-        this.api = api;
-        this.storage = storage;
-        this.factory = factory;
-        chatConfiguration.get(ChatKeys.CHAT_CHANNELS).forEach(this::add);
+    public Channels(FCBungeePlugin plugin) {
+        super(plugin);
+        plugin.getChatConfiguration().get(ChatKeys.CHAT_CHANNELS).forEach(this::add);
     }
 
-    @Override
-    public ChatChannel parse(String identifierIn) throws IllegalArgumentException {
+    public static ChatChannel parse(String identifierIn) {
         for (ChatChannel category : categories) {
             for (String identifier : category.getIdentifiers()) {
                 if (!identifier.equalsIgnoreCase(identifierIn)) {
@@ -43,80 +35,45 @@ public class Channels implements ChannelsAPI {
                 return category;
             }
         }
-        throw new IllegalArgumentException("No channel named '" + identifierIn + "' found!");
+        return null;
+    }
+
+    public static boolean hasChannelPermission(ChatChannel chatChannel, Sender sender) {
+        boolean hasPermission = false;
+        for (String permission : chatChannel.getPermissions()) {
+            if (sender.hasPermission(permission)) {
+                hasPermission = true;
+                break;
+            }
+        }
+        return hasPermission;
     }
 
     @Override
     public void add(ChatChannel chatChannel) {
-        manager.command(manager.commandBuilder(chatChannel.getName(), chatChannel.getCommands(), this.manager.createDefaultCommandMeta())
+        CommandManager<CommandSender> manager = getPlugin().getCommandManager().getManager();
+        manager.command(manager.commandBuilder(chatChannel.getName(), chatChannel.getCommands(), manager.createDefaultCommandMeta())
                 .senderType(ProxiedPlayer.class)
                 .argument(StringArgument.of("message", StringArgument.StringMode.GREEDY))
                 .handler(commandContext -> {
+                    UUID uuid = ((ProxiedPlayer) commandContext.getSender()).getUniqueId();
                     String messageIn = commandContext.get("message");
-                    String message = chatChannel.getFormat()
-                            .replace("%name%", chatChannel.getName())
-                            .replace("%player%", api.getPlayerAPI().getPlayerRecordName(((ProxiedPlayer) commandContext.getSender()).getUniqueId()))
-                            .replace("%time%", dateFormat.format(new Date()))
-                            .replace("&r", "\247r")
-                            .replace("&0", "\2470")
-                            .replace("&1", "\2471")
-                            .replace("&2", "\2472")
-                            .replace("&3", "\2473")
-                            .replace("&4", "\2474")
-                            .replace("&5", "\2475")
-                            .replace("&6", "\2476")
-                            .replace("&7", "\2477")
-                            .replace("&8", "\2478")
-                            .replace("&9", "\2479")
-                            .replace("&a", "\247a")
-                            .replace("&b", "\247b")
-                            .replace("&c", "\247c")
-                            .replace("&d", "\247d")
-                            .replace("&e", "\247e")
-                            .replace("&f", "\247f")
-                            .replace("&l", "\247l")
-                            .replace("&n", "\247n")
-                            .replace("&o", "\247o")
-                            .replace("&k", "\247k")
-                            .replace("&m", "\247m")
-                            .replace("%message%", messageIn);
-                    if (chatChannel.enableChatColor()) {
-                        message = message.replace("&r", "\247r")
-                                .replace("&0", "\2470")
-                                .replace("&1", "\2471")
-                                .replace("&2", "\2472")
-                                .replace("&3", "\2473")
-                                .replace("&4", "\2474")
-                                .replace("&5", "\2475")
-                                .replace("&6", "\2476")
-                                .replace("&7", "\2477")
-                                .replace("&8", "\2478")
-                                .replace("&9", "\2479")
-                                .replace("&a", "\247a")
-                                .replace("&b", "\247b")
-                                .replace("&c", "\247c")
-                                .replace("&d", "\247d")
-                                .replace("&e", "\247e")
-                                .replace("&f", "\247f")
-                                .replace("&l", "\247l")
-                                .replace("&n", "\247n")
-                                .replace("&o", "\247o")
-                                .replace("&k", "\247k")
-                                .replace("&m", "\247m");
-                    }
-                    factory.pushChatMessage(UUID.randomUUID(),
+                    getPlugin().getBungeeMessagingFactory().pushChatMessage(UUID.randomUUID(),
                             ChatMessage.ChatMessageType.CUSTOM,
-                            Arrays.asList(((ProxiedPlayer) commandContext.getSender()).getUniqueId().toString(), message));
+                            Arrays.asList(uuid.toString(), messageIn));
                 })
         );
 
-        manager.command(manager.commandBuilder(chatChannel.getName(), chatChannel.getCommands(), this.manager.createDefaultCommandMeta())
+        manager.command(manager.commandBuilder(chatChannel.getName(), chatChannel.getCommands(), manager.createDefaultCommandMeta())
                 .senderType(ProxiedPlayer.class)
                 .handler(commandContext -> {
-                    storage.insertData(((ProxiedPlayer) commandContext.getSender()).getUniqueId(),
+                    UUID uuid = ((ProxiedPlayer) commandContext.getSender()).getUniqueId();
+                    getStorageImplementation().insertData(uuid,
                             DataType.FUNCTION,
                             "chat-channel",
-                            chatChannel.getName(), 0);
+                            chatChannel.getKey(), 0);
+                    SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(getPlugin().getSenderFactory().wrap(commandContext.getSender()),
+                            Component.text(ChatColor.translateAlternateColorCodes('&', chatChannel.getName())));
                 })
         );
 

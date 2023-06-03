@@ -34,7 +34,7 @@ public class ChatKeys {
                     identifiers[i] = identifiersIn.get(i);
                 }
             }
-            ret.add(new ChatChannel(name, format, enableChatColor, commands, permissions, identifiers));
+            ret.add(new ChatChannel(key, name, format, enableChatColor, commands, permissions, identifiers));
         }
         return ret;
     });
