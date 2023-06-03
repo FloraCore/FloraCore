@@ -21,6 +21,6 @@ public interface NmsPacketPlayOutPlayerInfo extends NmsPacket {
     NmsPacketPlayOutPlayerInfo staticNewInstance(NmsEnumPlayerInfoAction nmsEnumPlayerInfoAction,
                                                  Iterable nmsEntityPlayers);
 
-    @WrappedBukkitFieldAccessor(@VersionName("@0"))
-    List<NmsPlayerInfoData> getPlayerInfoDataList();
+    @WrappedBukkitFieldAccessor(@VersionName("b"))
+    List<Object> getPlayerInfoDataList();
 }

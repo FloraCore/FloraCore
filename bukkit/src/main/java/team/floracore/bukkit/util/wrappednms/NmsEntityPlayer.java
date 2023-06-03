@@ -12,4 +12,7 @@ public interface NmsEntityPlayer extends NmsEntityHuman {
 
     @WrappedBukkitFieldAccessor(@VersionName("ping"))
     int getPing();
+
+    @WrappedBukkitFieldAccessor(@VersionName("playerInteractManager"))
+    NmsPlayerInteractManager getPlayerInteractManager();
 }

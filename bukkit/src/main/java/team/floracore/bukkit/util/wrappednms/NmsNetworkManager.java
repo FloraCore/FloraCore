@@ -1,5 +1,6 @@
 package team.floracore.bukkit.util.wrappednms;
 
+import io.netty.channel.ChannelHandlerContext;
 import io.netty.util.concurrent.GenericFutureListener;
 import org.bukkit.entity.Player;
 import team.floracore.bukkit.util.ProtocolUtil;
@@ -39,6 +40,11 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
         return Nothing.doContinue();
     }
 
+    @NothingBukkitInject(name = @VersionName(maxVer = 13, value = "a"), args = {ChannelHandlerContext.class, NmsPacket.class}, location = NothingLocation.FRONT)
+    default Optional<Void> beforeReceivePacketV_13(@LocalVar(2) NmsPacket packet) {
+        return beforeReceivePacketV13(packet, this.getPacketListener());
+    }
+
     @WrappedBukkitMethod(@VersionName(minVer = 13, value = "a"))
     void staticReceivePacketV13(NmsPacket packet, NmsPacketListener listener);
 
@@ -74,10 +80,8 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
         return Nothing.doContinue();
     }
 
-    @WrappedBukkitFieldAccessor({@VersionName("packetListener"), @VersionName(maxVer = 13, value = "m"), @VersionName(
-            minVer = 17,
-            maxVer = 18.2f,
-            value = "m"), @VersionName(value = "o", minVer = 18.2f, maxVer = 19), @VersionName(value = "o",
-            minVer = 19)})
+    @WrappedBukkitFieldAccessor({@VersionName("packetListener"),
+            @VersionName(maxVer = 13, value = "m"), @VersionName(minVer = 17, maxVer = 18.2f, value = "m"),
+            @VersionName(value = "o", minVer = 18.2f, maxVer = 19), @VersionName(value = "o", minVer = 19)})
     NmsPacketListener getPacketListener();
 }
