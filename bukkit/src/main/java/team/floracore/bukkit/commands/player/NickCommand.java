@@ -56,12 +56,6 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
     public NickCommand(FCBukkitPlugin plugin) {
         super(plugin);
         plugin.getListenerManager().registerListener(this);
-        ProtocolUtil.instance.register(new ProtocolUtil.ReceiveListener(EventPriority.NORMAL, NmsPacketPlayOutPlayerInfo.class, (player, packet, cancelled) -> {
-            NmsPacketPlayOutPlayerInfo playerInfoPacket = (NmsPacketPlayOutPlayerInfo) packet;
-            for (NmsPlayerInfoData nmsPlayerInfoData : playerInfoPacket.getPlayerInfoDataList()) {
-                System.out.println(nmsPlayerInfoData.getGameProfile().getUniqueId());
-            }
-        }));
     }
 
     @CommandMethod("nick")
@@ -205,9 +199,26 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
         wgp.setName(name);
         player.setDisplayName(name);
         player.setPlayerListName(null);
+        /*World world = player.getWorld();
+        NmsWorldServer nmsWorldServer = WrappedObject.wrap(ObcWorld.class, world).getHandle();
+        int dimension = nmsWorldServer.getDimension();
+        NmsWorldData nmsWorldData = nmsWorldServer.getWorldData();
+        NmsEnumDifficulty nmsEnumDifficulty = nmsWorldData.getDifficulty();
+        NmsWorldType nmsWorldType = nmsWorldData.getType();
+        NmsPlayerInteractManager nmsPlayerInteractManager = nep.getPlayerInteractManager();
+        NmsEnumGamemode nmsEnumGamemode = nmsPlayerInteractManager.getGameMode();
+        NmsPacketPlayOutRespawn respawnPacket = NmsPacketPlayOutRespawn.newInstance(dimension, nmsEnumDifficulty, nmsWorldType, nmsEnumGamemode);
+        ProtocolUtil.sendPacket(player, respawnPacket);*/
         NmsEnumPlayerInfoAction addPlayer = WrappedObject.getStatic(NmsEnumPlayerInfoAction.class).ADD_PLAYER();
         NmsPacketPlayOutPlayerInfo addPacket = NmsPacketPlayOutPlayerInfo.newInstance(addPlayer,
                 Collections.singletonList(nep.getRaw()));
+        List<Object> playerInfoDataList = addPacket.getPlayerInfoDataList();
+        Object onpid = playerInfoDataList.get(0);
+        NmsPlayerInfoData npid = WrappedObject.wrap(NmsPlayerInfoData.class, onpid);
+        /*WrappedGameProfile fakegp = WrappedGameProfile.newInstance(UUID.randomUUID(), name);
+        fakegp.setProperties(wgp.getProperties());
+        fakegp.setLegacy(wgp.isLegacy());*/
+        npid.setGameProfile(wgp);
         ProtocolUtil.sendPacketToAllPlayers(addPacket);
         getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
             if (getPlugin().getLoader().getServer().getPluginManager().getPlugin("TAB") != null) {
@@ -219,6 +230,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                     UnlimitedNametagManager unm = (UnlimitedNametagManager) tm;
                     unm.setName(tp, name);
                 }
+                tp.forceRefresh();
             }
         }, 300, TimeUnit.MILLISECONDS);
         if (getPlugin().getConfiguration().get(ConfigKeys.BUNGEECORD)) {
