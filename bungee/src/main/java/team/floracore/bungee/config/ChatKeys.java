@@ -21,8 +21,7 @@ public class ChatKeys {
         List<ChatChannel> ret = new ArrayList<>();
         for (String key : c.getKeys()) {
             String root = "floracore.chatchannels." + key;
-            String name = c.getString(root, "");
-            String format = c.getString(root + ".format", "%name%&7 » %player%&7: &f%message%");
+            String name = c.getString(root, key);
             boolean enableChatColor = c.getBoolean(root + ".enableColorChar", true);
             List<String> permissions = c.getStringList(root + ".permissions", new ArrayList<>());
             List<String> commands = c.getStringList(root + ".commands", new ArrayList<>());
@@ -34,7 +33,7 @@ public class ChatKeys {
                     identifiers[i] = identifiersIn.get(i);
                 }
             }
-            ret.add(new ChatChannel(key, name, format, enableChatColor, commands, permissions, identifiers));
+            ret.add(new ChatChannel(key, name, enableChatColor, commands, permissions, identifiers));
         }
         return ret;
     });

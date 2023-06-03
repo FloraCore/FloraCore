@@ -47,6 +47,8 @@ AdminChat:
     - ac
   permissions:
     - group.admin
+  identifiers:
+    - admin
 TeamChat:
   name: "&a&lTeam&f&lChat"
   format: "%name%&7 » %player%&7: &f%message%"
@@ -56,3 +58,5 @@ TeamChat:
     - tc
   permissions:
     - sc.all
+  identifiers:
+    - team

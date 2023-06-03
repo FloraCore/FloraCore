@@ -147,7 +147,6 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
                         format = format.replace("%message%", message);
                         i.sendMessage(Component.text(format));
                     }
-                    // TODO : 转发消息
                 });
         }
         if (player != null) {

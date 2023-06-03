@@ -116,6 +116,7 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     protected void setupFramework() {
         this.listenerManager = new ListenerManager(this);
         this.commandManager = new CommandManager(this);
+        channelsAPI = new Channels(this);
     }
 
     @Override
@@ -125,7 +126,6 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
                         resolveConfig("modules/ChatChannels/config.yml").toFile()
                 )
         );
-        channelsAPI = new Channels(this);
     }
 
     public KeyedConfiguration getChatConfiguration() {

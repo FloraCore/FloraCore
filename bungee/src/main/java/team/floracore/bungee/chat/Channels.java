@@ -39,6 +39,7 @@ public class Channels extends FloraCoreBungeeCommand implements ChannelsAPI {
     }
 
     public static boolean hasChannelPermission(ChatChannel chatChannel, Sender sender) {
+        if (chatChannel.getPermissions().isEmpty()) return true;
         boolean hasPermission = false;
         for (String permission : chatChannel.getPermissions()) {
             if (sender.hasPermission(permission)) {
@@ -52,7 +53,7 @@ public class Channels extends FloraCoreBungeeCommand implements ChannelsAPI {
     @Override
     public void add(ChatChannel chatChannel) {
         CommandManager<CommandSender> manager = getPlugin().getCommandManager().getManager();
-        manager.command(manager.commandBuilder(chatChannel.getName(), chatChannel.getCommands(), manager.createDefaultCommandMeta())
+        manager.command(manager.commandBuilder(chatChannel.getKey(), chatChannel.getCommands(), manager.createDefaultCommandMeta())
                 .senderType(ProxiedPlayer.class)
                 .argument(StringArgument.of("message", StringArgument.StringMode.GREEDY))
                 .handler(commandContext -> {
@@ -64,7 +65,7 @@ public class Channels extends FloraCoreBungeeCommand implements ChannelsAPI {
                 })
         );
 
-        manager.command(manager.commandBuilder(chatChannel.getName(), chatChannel.getCommands(), manager.createDefaultCommandMeta())
+        manager.command(manager.commandBuilder(chatChannel.getKey(), chatChannel.getCommands(), manager.createDefaultCommandMeta())
                 .senderType(ProxiedPlayer.class)
                 .handler(commandContext -> {
                     UUID uuid = ((ProxiedPlayer) commandContext.getSender()).getUniqueId();
