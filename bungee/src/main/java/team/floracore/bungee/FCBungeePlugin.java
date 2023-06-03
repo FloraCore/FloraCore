@@ -4,7 +4,10 @@ import com.google.gson.JsonElement;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.floracore.api.bungee.chat.ChannelsAPI;
+import team.floracore.bungee.chat.Channels;
 import team.floracore.bungee.command.CommandManager;
+import team.floracore.bungee.config.ChatConfiguration;
 import team.floracore.bungee.listener.ListenerManager;
 import team.floracore.bungee.messaging.BungeeMessagingFactory;
 import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
@@ -26,6 +29,7 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     private ListenerManager listenerManager;
     private CommandManager commandManager;
     private BungeeMessagingFactory bungeeMessagingFactory;
+    private ChannelsAPI channelsAPI;
 
     public FCBungeePlugin(FCBungeeBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -113,7 +117,12 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 
     @Override
     protected void setupConfiguration() {
-
+        ChatConfiguration chatConfiguration = new ChatConfiguration(this,
+                new BungeeConfigAdapter(this,
+                        resolveConfig("modules/ChatChannels/config.yml").toFile()
+                )
+        );
+        channelsAPI = new Channels(this.commandManager.getManager(), chatConfiguration, this.getApiProvider(), this.getStorage().getImplementation(), this.bungeeMessagingFactory);
     }
 
     @Override

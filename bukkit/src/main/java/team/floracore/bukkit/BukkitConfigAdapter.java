@@ -6,6 +6,7 @@ import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
 import team.floracore.common.plugin.FloraCorePlugin;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -74,5 +75,10 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
             map.put(key, section.getString(key));
         }
         return map;
+    }
+
+    @Override
+    public Collection<String> getKeys() {
+        return this.configuration.getKeys(false);
     }
 }
