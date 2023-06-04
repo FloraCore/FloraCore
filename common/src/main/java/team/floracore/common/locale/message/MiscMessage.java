@@ -235,6 +235,13 @@ public interface MiscMessage extends AbstractMessage {
 			.args(text(id, DARK_RED))
 			.append(FULL_STOP));
 
+	Args1<String> SERVER_NOT_FOUND = id -> AbstractMessage.prefixed(translatable()
+			// 无法找到 {0} 这个服务器
+			.key("floracore.command.misc.loading.error.server-not-found")
+			.color(RED)
+			.args(text(id, DARK_RED))
+			.append(FULL_STOP));
+
 	Args1<Long> DURATION_FORMAT = (ticks) -> translatable()
 			// {0} 或 {1}（或 {2} ）
 			.key("floracore.duration.format")

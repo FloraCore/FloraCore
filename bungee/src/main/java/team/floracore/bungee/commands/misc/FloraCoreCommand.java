@@ -12,6 +12,7 @@ import net.md_5.bungee.api.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
+import team.floracore.bungee.locale.message.commands.MiscCommandMessage;
 import team.floracore.common.http.UnsuccessfulRequestException;
 import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.locale.message.CommonCommandMessage;
@@ -141,12 +142,11 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 		Sender s = getPlugin().getSenderFactory().wrap(sender);
 		SERVER server = getStorageImplementation().selectServer(target);
 		if (server == null) {
-			// TODO 无记录的服务器数据
-			System.out.println(false);
+			MiscMessage.SERVER_NOT_FOUND.send(s, target);
 		} else {
-			// TODO 设置服务器的数据
 			server.setAutoSync1(value);
-			System.out.println(true);
+			MiscCommandMessage.SET_SERVER_DATA.send(s, target, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_1.build(),
+					value);
 		}
 	}
 
@@ -158,12 +158,11 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 		Sender s = getPlugin().getSenderFactory().wrap(sender);
 		SERVER server = getStorageImplementation().selectServer(target);
 		if (server == null) {
-			// TODO 无记录的服务器数据
-			System.out.println(false);
+			MiscMessage.SERVER_NOT_FOUND.send(s, target);
 		} else {
-			// TODO 设置服务器的数据
 			server.setAutoSync2(value);
-			System.out.println(true);
+			MiscCommandMessage.SET_SERVER_DATA.send(s, target, MiscMessage.COMMAND_SERVER_DATA_AUTO_SYNC_2.build(),
+					value);
 		}
 	}
 

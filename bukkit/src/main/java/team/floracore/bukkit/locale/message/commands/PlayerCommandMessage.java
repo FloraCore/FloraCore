@@ -20,7 +20,7 @@ public interface PlayerCommandMessage extends AbstractMessage {
 			.color(AQUA)
 			// 开 / 关
 			.args(translatable(status ? "floracore.command.misc.on" : "floracore.command.misc.off")
-							.color(GREEN),
+							.color(status ? GREEN : RED),
 					text(target).color(RED))
 			.append(FULL_STOP));
 

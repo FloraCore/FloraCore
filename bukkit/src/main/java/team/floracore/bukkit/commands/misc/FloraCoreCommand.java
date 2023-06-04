@@ -296,7 +296,8 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 	}
 
 	@CommandMethod("fc|floracore chat <target>")
-	public void chat(final @NotNull CommandSender sender, final @NotNull @Argument("target") String target) {
+	public void chat(final @NotNull CommandSender sender,
+	                 final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {
 		Sender s = getPlugin().getSenderFactory().wrap(sender);
 		getAsyncExecutor().execute(() -> {
 			boolean has = getPlugin().getApiProvider().getPlayerAPI().hasPlayerRecord(target);
@@ -314,7 +315,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 					MiscMessage.GENERIC_HTTP_UNKNOWN_FAILURE.send(s);
 				} catch (UnsuccessfulRequestException e) {
 					MiscMessage.GENERIC_HTTP_REQUEST_FAILURE.send(s, e.getResponse().code(),
-                            e.getResponse().message());
+							e.getResponse().message());
 				}
 			} else {
 				MiscMessage.PLAYER_NOT_FOUND.send(s, target);
