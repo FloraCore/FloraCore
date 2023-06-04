@@ -10,7 +10,6 @@ import team.floracore.bungee.command.CommandManager;
 import team.floracore.bungee.config.ChatConfiguration;
 import team.floracore.bungee.listener.ListenerManager;
 import team.floracore.bungee.messaging.BungeeMessagingFactory;
-import team.floracore.common.config.FloraCoreConfiguration;
 import team.floracore.common.config.generic.KeyedConfiguration;
 import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
 import team.floracore.common.dependencies.Dependency;

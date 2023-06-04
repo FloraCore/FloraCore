@@ -16,7 +16,10 @@ import team.floracore.bungee.config.ChatKeys;
 import team.floracore.bungee.locale.message.SocialSystemsMessage;
 import team.floracore.common.sender.Sender;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
 
 public class Channels extends FloraCoreBungeeCommand implements ChannelsAPI {
     private static final List<ChatChannel> categories = new ArrayList<>();

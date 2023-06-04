@@ -11,6 +11,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 public class CHAT extends AbstractFloraCoreTable {
+    public static final String SELECT = "SELECT * FROM '{prefix}chat' WHERE uuid=? AND type=? LIMIT 500";
     private static final String INSERT = "INSERT INTO '{prefix}chat' (type, parameters, uuid, message, time) VALUES(?, ?, ?, ?, ?)";
 
     private final int id;

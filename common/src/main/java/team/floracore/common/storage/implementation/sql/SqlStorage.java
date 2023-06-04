@@ -622,4 +622,34 @@ public class SqlStorage implements StorageImplementation {
             report.setReasons(reasons);
         }
     }
+
+    @Override
+    public List<CHAT> selectChat(UUID uuid, ChatType chatType) {
+        List<CHAT> ret = new ArrayList<>();
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(CHAT.SELECT))) {
+                ps.setString(1, uuid.toString());
+                ps.setString(2, chatType.name());
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        String parameters = rs.getString("parameters");
+                        String message = rs.getString("message");
+                        long time = rs.getLong("time");
+                        ret.add(new CHAT(plugin,
+                                this,
+                                id,
+                                chatType,
+                                parameters,
+                                uuid,
+                                message,
+                                time));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ret;
+    }
 }

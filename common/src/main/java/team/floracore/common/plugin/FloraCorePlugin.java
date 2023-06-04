@@ -6,6 +6,8 @@ import team.floracore.common.api.FloraCoreApiProvider;
 import team.floracore.common.config.FloraCoreConfiguration;
 import team.floracore.common.dependencies.DependencyManager;
 import team.floracore.common.extension.SimpleExtensionManager;
+import team.floracore.common.http.BytebinClient;
+import team.floracore.common.http.BytesocksClient;
 import team.floracore.common.locale.data.DataManager;
 import team.floracore.common.locale.data.NamesRepository;
 import team.floracore.common.locale.translation.TranslationManager;
@@ -138,4 +140,8 @@ public interface FloraCorePlugin {
     boolean luckPermsHook();
 
     Sender getSender(UUID uuid);
+
+    BytebinClient getBytebin();
+
+    BytesocksClient getBytesocks();
 }

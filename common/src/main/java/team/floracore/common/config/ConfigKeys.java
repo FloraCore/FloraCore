@@ -121,6 +121,23 @@ public class ConfigKeys {
             "unknown"), ServerType.UNKNOWN)));
 
     public static final ConfigKey<Boolean> CHECK_UPDATE = notReloadable(booleanKey("check-update", true));
+
+    /**
+     * The URL of the bytebin instance used to upload data
+     */
+    public static final ConfigKey<String> BYTEBIN_URL = stringKey("bytebin-url", "https://bytebin.floracore.cc/");
+
+    /**
+     * The host of the bytesocks instance used to communicate with
+     */
+    public static final ConfigKey<String> BYTESOCKS_HOST = stringKey("bytesocks-host", "bytesocks.floracore.cc");
+
+    /**
+     * The URL of the verbose viewer
+     */
+    public static final ConfigKey<String> VERBOSE_VIEWER_URL_PATTERN = stringKey("verbose-viewer-url", "https://floracore.cc/verbose/");
+
+
     /**
      * A list of the keys defined in this class.
      */

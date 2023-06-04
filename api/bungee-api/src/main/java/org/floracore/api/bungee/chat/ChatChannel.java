@@ -8,6 +8,7 @@ public class ChatChannel {
     private final boolean enableChatColor;
     private final List<String> commands;
     private final List<String> permissions;
+    private final String[] identifiers;
 
     public ChatChannel(String key, String name, boolean enableChatColor, List<String> commands, List<String> permissions, String... identifiers) {
         this.key = key;
@@ -21,8 +22,6 @@ public class ChatChannel {
     public String getKey() {
         return key;
     }
-
-    private final String[] identifiers;
 
     public boolean enableChatColor() {
         return enableChatColor;

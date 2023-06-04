@@ -100,4 +100,6 @@ public interface StorageImplementation {
                    UUID reported,
                    String reason,
                    long reportTime);
+
+    List<CHAT> selectChat(UUID uuid, ChatType chatType);
 }

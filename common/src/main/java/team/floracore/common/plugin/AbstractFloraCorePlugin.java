@@ -10,6 +10,8 @@ import team.floracore.common.dependencies.Dependency;
 import team.floracore.common.dependencies.DependencyManager;
 import team.floracore.common.dependencies.DependencyManagerImpl;
 import team.floracore.common.extension.SimpleExtensionManager;
+import team.floracore.common.http.BytebinClient;
+import team.floracore.common.http.BytesocksClient;
 import team.floracore.common.locale.data.DataManager;
 import team.floracore.common.locale.data.NamesRepository;
 import team.floracore.common.locale.message.MiscMessage;
@@ -45,6 +47,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private Storage storage;
     private SimpleExtensionManager extensionManager;
     private OkHttpClient httpClient;
+    private BytebinClient bytebin;
+    private BytesocksClient bytesocks;
     private TranslationRepository translationRepository;
     private NamesRepository namesRepository;
     private StorageFactory storageFactory;
@@ -116,6 +120,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
         // setup a byte bin instance
         this.httpClient = new OkHttpClient.Builder().callTimeout(15, TimeUnit.SECONDS).build();
+        this.bytebin = new BytebinClient(this.httpClient, getConfiguration().get(ConfigKeys.BYTEBIN_URL), "floracore");
+        this.bytesocks = new BytesocksClient(this.httpClient, getConfiguration().get(ConfigKeys.BYTESOCKS_HOST), "floracore/socks");
 
         // init translation repo and update bundle files
         this.translationRepository = new TranslationRepository(this);
@@ -340,5 +346,15 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         } catch (IOException e) {
             MiscMessage.STARTUP_CHECKING_UPDATE_FAILED.send(getConsoleSender(), getBootstrap());
         }
+    }
+
+    @Override
+    public BytebinClient getBytebin() {
+        return bytebin;
+    }
+
+    @Override
+    public BytesocksClient getBytesocks() {
+        return bytesocks;
     }
 }

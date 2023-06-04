@@ -12,6 +12,8 @@ import net.md_5.bungee.api.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
+import team.floracore.common.chat.ChatProvider;
+import team.floracore.common.config.ConfigKeys;
 import team.floracore.common.http.UnsuccessfulRequestException;
 import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.locale.message.CommonCommandMessage;
@@ -23,10 +25,7 @@ import team.floracore.common.storage.misc.floracore.tables.SERVER;
 import team.floracore.common.util.DurationFormatter;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -169,5 +168,28 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
     @Suggestions("servers")
     public List<String> getServers(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
         return new ArrayList<>(getPlugin().getProxy().getServersCopy().keySet());
+    }
+
+
+    @CommandMethod("fcb|floracorebungee chat <player>")
+    public void chat(final @NotNull CommandSender sender, final @NotNull @Argument("player") String player) {
+        Sender s = getPlugin().getSenderFactory().wrap(sender);
+        boolean has = getPlugin().getApiProvider().getPlayerAPI().hasPlayerRecord(player);
+        if (has) {
+            ChatProvider.Uploader uploader = new ChatProvider.Uploader(s.getUniqueId(), s.getName());
+            UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(player);
+            ChatProvider chatProvider = new ChatProvider(getPlugin(), uploader, targetUUID);
+            try {
+                String id = chatProvider.uploadChatData(getPlugin().getBytebin());
+                String url = getPlugin().getConfiguration().get(ConfigKeys.VERBOSE_VIEWER_URL_PATTERN) + id;
+                System.out.println(url);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            } catch (UnsuccessfulRequestException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            System.out.println("不存在这名玩家");
+        }
     }
 }
