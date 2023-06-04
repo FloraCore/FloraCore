@@ -5,6 +5,7 @@ import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.types.PrefixNode;
+import net.luckperms.api.node.types.SuffixNode;
 import org.floracore.api.player.PermissionEvaluator;
 import org.floracore.api.player.PlayerAPI;
 import org.floracore.api.player.rank.RankConsumer;
@@ -14,8 +15,7 @@ import team.floracore.common.storage.misc.floracore.tables.ONLINE;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
 import team.floracore.common.util.CaffeineFactory;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -63,8 +63,10 @@ public class ApiPlayer implements PlayerAPI {
                             LuckPerms luckPerms = LuckPermsProvider.get();
                             User user = luckPerms.getUserManager().getUser(uuid);
                             if (user != null) {
-                                PrefixNode node = PrefixNode.builder(rank, 77665).build();
-                                user.data().add(node);
+                                PrefixNode prefixNode = PrefixNode.builder(rank, Integer.MAX_VALUE).build();
+                                user.data().add(prefixNode);
+                                SuffixNode suffixNode = SuffixNode.builder("", Integer.MAX_VALUE).build();
+                                user.data().add(suffixNode);
                                 luckPerms.getUserManager().saveUser(user);
                             }
                         }
@@ -82,10 +84,14 @@ public class ApiPlayer implements PlayerAPI {
                             LuckPerms luckPerms = LuckPermsProvider.get();
                             User user = luckPerms.getUserManager().getUser(uuid);
                             if (user != null) {
-                                String prefix = user.getCachedData().getMetaData().getPrefix();
-                                prefix = prefix == null ? "" : prefix;
-                                PrefixNode node = PrefixNode.builder(prefix, 77665).build();
-                                user.data().remove(node);
+                                user.data().clear(node -> {
+                                    if (node instanceof PrefixNode) {
+                                        return ((PrefixNode) node).getPriority() == Integer.MAX_VALUE;
+                                    } else if (node instanceof SuffixNode) {
+                                        return ((SuffixNode) node).getPriority() == Integer.MAX_VALUE;
+                                    }
+                                    return false;
+                                });
                                 luckPerms.getUserManager().saveUser(user);
                             }
                         }
@@ -103,7 +109,16 @@ public class ApiPlayer implements PlayerAPI {
                             LuckPerms luckPerms = LuckPermsProvider.get();
                             User user = luckPerms.getUserManager().getUser(uuid);
                             if (user != null) {
-                                String prefix = user.getCachedData().getMetaData().getPrefix();
+                                SortedMap<Integer, String> prefixes = user.getCachedData().getMetaData().getPrefixes();
+                                List<String> values = new ArrayList<>(prefixes.values());
+                                int size = values.size();
+                                String prefix;
+                                if (size >= 2) {
+                                    Collections.sort(values);
+                                    prefix = values.get(size - 2);
+                                } else {
+                                    prefix = user.getCachedData().getMetaData().getPrefix();
+                                }
                                 future.complete(prefix);
                             }
                         }
@@ -120,7 +135,16 @@ public class ApiPlayer implements PlayerAPI {
                             LuckPerms luckPerms = LuckPermsProvider.get();
                             User user = luckPerms.getUserManager().getUser(uuid);
                             if (user != null) {
-                                String suffix = user.getCachedData().getMetaData().getSuffix();
+                                SortedMap<Integer, String> suffixes = user.getCachedData().getMetaData().getSuffixes();
+                                List<String> values = new ArrayList<>(suffixes.values());
+                                int size = values.size();
+                                String suffix;
+                                if (size >= 2) {
+                                    Collections.sort(values);
+                                    suffix = values.get(size - 2);
+                                } else {
+                                    suffix = user.getCachedData().getMetaData().getSuffix();
+                                }
                                 future.complete(suffix);
                             }
                         }

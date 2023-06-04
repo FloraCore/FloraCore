@@ -403,7 +403,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
         String prefix = floraCore.getPlayerAPI().getPrefix(uuid);
         prefix = prefix == null ? "" : prefix + " ";
         String suffix = floraCore.getPlayerAPI().getSuffix(uuid);
-        suffix = suffix == null ? "" : " " + suffix;
+        suffix = suffix == null ? "" : suffix;
         Component s = AbstractMessage.formatColoredValue(prefix).append(text(sender)).append(AbstractMessage.formatColoredValue(suffix));
         return text()
                 .append(MiscMessage.PREFIX_PARTY).append(space())
@@ -418,7 +418,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
         String prefix = floraCore.getPlayerAPI().getPrefix(uuid);
         prefix = prefix == null ? "" : prefix + " ";
         String suffix = floraCore.getPlayerAPI().getSuffix(uuid);
-        suffix = suffix == null ? "" : " " + suffix;
+        suffix = suffix == null ? "" : suffix;
         Component s = AbstractMessage.formatColoredValue(prefix).append(text(sender)).append(AbstractMessage.formatColoredValue(suffix));
         return text()
                 .append(MiscMessage.PREFIX_STAFF).append(space())
@@ -450,7 +450,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
         String prefix = floraCore.getPlayerAPI().getPrefix(uuid);
         prefix = prefix == null ? "" : prefix + " ";
         String suffix = floraCore.getPlayerAPI().getSuffix(uuid);
-        suffix = suffix == null ? "" : " " + suffix;
+        suffix = suffix == null ? "" : suffix;
         Component s = AbstractMessage.formatColoredValue(prefix).append(text(sender)).append(AbstractMessage.formatColoredValue(suffix));
         return text()
                 .append(MiscMessage.PREFIX_ADMIN).append(space())
@@ -466,7 +466,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
         String prefix1 = floraCore.getPlayerAPI().getPrefix(uuid);
         prefix1 = prefix1 == null ? "" : prefix1 + " ";
         String suffix = floraCore.getPlayerAPI().getSuffix(uuid);
-        suffix = suffix == null ? "" : " " + suffix;
+        suffix = suffix == null ? "" : suffix;
         Component s = AbstractMessage.formatColoredValue(prefix1).append(text(sender)).append(AbstractMessage.formatColoredValue(suffix));
         return text()
                 .append(MiscMessage.PREFIX_CUSTOM.build(prefix)).append(space())
