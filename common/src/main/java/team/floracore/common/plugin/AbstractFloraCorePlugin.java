@@ -34,327 +34,328 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
-    // Active plugins on the server
-    private final Map<String, List<String>> loadedPlugins = new HashMap<>();
-    // init during load
-    private DependencyManager dependencyManager;
-    private TranslationManager translationManager;
-    private DataManager dataManager;
-    // init during enable
-    private FloraCoreConfiguration configuration;
-    private FloraCoreApiProvider apiProvider;
-    private InternalMessagingService messagingService = null;
-    private Storage storage;
-    private SimpleExtensionManager extensionManager;
-    private OkHttpClient httpClient;
-    private BytebinClient bytebin;
-    private BytesocksClient bytesocks;
-    private TranslationRepository translationRepository;
-    private NamesRepository namesRepository;
-    private StorageFactory storageFactory;
+	// Active plugins on the server
+	private final Map<String, List<String>> loadedPlugins = new HashMap<>();
+	// init during load
+	private DependencyManager dependencyManager;
+	private TranslationManager translationManager;
+	private DataManager dataManager;
+	// init during enable
+	private FloraCoreConfiguration configuration;
+	private FloraCoreApiProvider apiProvider;
+	private InternalMessagingService messagingService = null;
+	private Storage storage;
+	private SimpleExtensionManager extensionManager;
+	private OkHttpClient httpClient;
+	private BytebinClient bytebin;
+	private BytesocksClient bytesocks;
+	private TranslationRepository translationRepository;
+	private NamesRepository namesRepository;
+	private StorageFactory storageFactory;
 
-    /**
-     * Performs the initial actions to load the plugin
-     */
-    public final void onLoad() {
-        // load dependencies
-        this.dependencyManager = createDependencyManager();
-        this.dependencyManager.loadDependencies(getGlobalDependencies());
+	/**
+	 * Performs the initial actions to load the plugin
+	 */
+	public final void onLoad() {
+		// load dependencies
+		this.dependencyManager = createDependencyManager();
+		this.dependencyManager.loadDependencies(getGlobalDependencies());
 
-        // load translations
-        this.translationManager = new TranslationManager(this);
-        this.translationManager.reload();
+		// load translations
+		this.translationManager = new TranslationManager(this);
+		this.translationManager.reload();
 
-        // load data
-        this.dataManager = new DataManager(this);
-        this.dataManager.reload();
-    }
+		// load data
+		this.dataManager = new DataManager(this);
+		this.dataManager.reload();
+	}
 
-    protected DependencyManager createDependencyManager() {
-        return new DependencyManagerImpl(this);
-    }
+	protected DependencyManager createDependencyManager() {
+		return new DependencyManagerImpl(this);
+	}
 
-    protected Set<Dependency> getGlobalDependencies() {
-        Set<Dependency> ret = EnumSet.of(Dependency.ADVENTURE, Dependency.ADVENTURE_NBT);
-        ret.add(Dependency.BYTE_BUDDY_AGENT);
-        ret.add(Dependency.ADVENTURE_KEY);
-        ret.add(Dependency.ADVENTURE_PLATFORM_API);
-        ret.add(Dependency.ADVENTURE_PLATFORM_FACET);
-        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY);
-        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON);
-        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL);
-        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN);
-        ret.add(Dependency.EXAMINATION_API);
-        ret.add(Dependency.CLOUD_CORE);
-        ret.add(Dependency.CLOUD_ANNOTATIONS);
-        ret.add(Dependency.CLOUD_BRIGADIER);
-        ret.add(Dependency.CLOUD_SERVICES);
-        ret.add(Dependency.CLOUD_TASKS);
-        ret.add(Dependency.GEANTYREF);
-        ret.add(Dependency.OKHTTP);
-        ret.add(Dependency.OKIO);
-        ret.add(Dependency.CAFFEINE);
-        ret.add(Dependency.UNSAFE_ACCESSOR);
-        ret.add(Dependency.OPENCSV);
-        return ret;
-    }
+	protected Set<Dependency> getGlobalDependencies() {
+		Set<Dependency> ret = EnumSet.of(Dependency.ADVENTURE, Dependency.ADVENTURE_NBT);
+		ret.add(Dependency.BYTE_BUDDY_AGENT);
+		ret.add(Dependency.ADVENTURE_KEY);
+		ret.add(Dependency.ADVENTURE_PLATFORM_API);
+		ret.add(Dependency.ADVENTURE_PLATFORM_FACET);
+		ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY);
+		ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON);
+		ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL);
+		ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN);
+		ret.add(Dependency.EXAMINATION_API);
+		ret.add(Dependency.CLOUD_CORE);
+		ret.add(Dependency.CLOUD_ANNOTATIONS);
+		ret.add(Dependency.CLOUD_BRIGADIER);
+		ret.add(Dependency.CLOUD_SERVICES);
+		ret.add(Dependency.CLOUD_TASKS);
+		ret.add(Dependency.GEANTYREF);
+		ret.add(Dependency.OKHTTP);
+		ret.add(Dependency.OKIO);
+		ret.add(Dependency.CAFFEINE);
+		ret.add(Dependency.UNSAFE_ACCESSOR);
+		ret.add(Dependency.OPENCSV);
+		return ret;
+	}
 
-    public final void onEnable() {
-        // load the sender factory instance
-        setupSenderFactory();
+	public final void onEnable() {
+		// load the sender factory instance
+		setupSenderFactory();
 
-        // send the startup banner
-        MiscMessage.STARTUP_BANNER.send(getConsoleSender(), getBootstrap());
+		// send the startup banner
+		MiscMessage.STARTUP_BANNER.send(getConsoleSender(), getBootstrap());
 
-        // load configuration
-        getLogger().info("Loading configuration...");
-        ConfigurationAdapter configFileAdapter = provideConfigurationAdapter();
-        this.configuration = new FloraCoreConfiguration(this, configFileAdapter);
-        setupConfiguration();
+		// load configuration
+		getLogger().info("Loading configuration...");
+		ConfigurationAdapter configFileAdapter = provideConfigurationAdapter();
+		this.configuration = new FloraCoreConfiguration(this, configFileAdapter);
+		setupConfiguration();
 
-        // check update
-        if (this.configuration.get(ConfigKeys.CHECK_UPDATE)) {
-            this.getBootstrap().getScheduler().async().execute(() -> checkUpdate(true));
-            this.getBootstrap().getScheduler().asyncRepeating(() -> checkUpdate(false), 10, TimeUnit.MINUTES);
-        }
+		// check update
+		if (this.configuration.get(ConfigKeys.CHECK_UPDATE)) {
+			this.getBootstrap().getScheduler().async().execute(() -> checkUpdate(true));
+			this.getBootstrap().getScheduler().asyncRepeating(() -> checkUpdate(false), 10, TimeUnit.MINUTES);
+		}
 
-        // setup a byte bin instance
-        this.httpClient = new OkHttpClient.Builder().callTimeout(15, TimeUnit.SECONDS).build();
-        this.bytebin = new BytebinClient(this.httpClient, getConfiguration().get(ConfigKeys.BYTEBIN_URL), "floracore");
-        this.bytesocks = new BytesocksClient(this.httpClient, getConfiguration().get(ConfigKeys.BYTESOCKS_HOST), "floracore/socks");
+		// setup a byte bin instance
+		this.httpClient = new OkHttpClient.Builder().callTimeout(15, TimeUnit.SECONDS).build();
+		this.bytebin = new BytebinClient(this.httpClient, getConfiguration().get(ConfigKeys.BYTEBIN_URL), "floracore");
+		this.bytesocks = new BytesocksClient(this.httpClient, getConfiguration().get(ConfigKeys.BYTESOCKS_HOST),
+				"floracore/socks");
 
-        // init translation repo and update bundle files
-        this.translationRepository = new TranslationRepository(this);
-        this.translationRepository.scheduleRefresh();
-        this.translationRepository.scheduleRefreshRepeating();
+		// init translation repo and update bundle files
+		this.translationRepository = new TranslationRepository(this);
+		this.translationRepository.scheduleRefresh();
+		this.translationRepository.scheduleRefreshRepeating();
 
-        // init data names repo
-        this.namesRepository = new NamesRepository(this);
-        this.namesRepository.scheduleRefresh();
-        this.namesRepository.scheduleRefreshRepeating();
+		// init data names repo
+		this.namesRepository = new NamesRepository(this);
+		this.namesRepository.scheduleRefresh();
+		this.namesRepository.scheduleRefreshRepeating();
 
-        // now the configuration is loaded, we can create a storage factory and load initial dependencies
-        this.storageFactory = new StorageFactory(this);
-        this.dependencyManager.loadStorageDependencies(storageFactory.getRequiredTypes(),
-                getConfiguration().get(ConfigKeys.REDIS_ENABLED));
+		// now the configuration is loaded, we can create a storage factory and load initial dependencies
+		this.storageFactory = new StorageFactory(this);
+		this.dependencyManager.loadStorageDependencies(storageFactory.getRequiredTypes(),
+				getConfiguration().get(ConfigKeys.REDIS_ENABLED));
 
-        // initialise storage
-        this.storage = storageFactory.getInstance();
-        this.messagingService = provideMessagingFactory().getInstance();
+		// initialise storage
+		this.storage = storageFactory.getInstance();
+		this.messagingService = provideMessagingFactory().getInstance();
 
-        getLogger().info("Loading framework...");
-        setupFramework();
+		getLogger().info("Loading framework...");
+		setupFramework();
 
-        // register with the FC API
-        this.apiProvider = new FloraCoreApiProvider(this);
-        this.apiProvider.ensureApiWasLoadedByPlugin();
-        ApiRegistrationUtil.registerProvider(this.apiProvider);
+		// register with the FC API
+		this.apiProvider = new FloraCoreApiProvider(this);
+		this.apiProvider.ensureApiWasLoadedByPlugin();
+		ApiRegistrationUtil.registerProvider(this.apiProvider);
 
-        // setup extension manager
-        this.extensionManager = new SimpleExtensionManager(this);
-        this.extensionManager.loadExtensions(getBootstrap().getConfigDirectory().resolve("extensions"));
+		// setup extension manager
+		this.extensionManager = new SimpleExtensionManager(this);
+		this.extensionManager.loadExtensions(getBootstrap().getConfigDirectory().resolve("extensions"));
 
-        Duration timeTaken = Duration.between(getBootstrap().getStartupTime(), Instant.now());
-        getLogger().info("Successfully enabled. (took " + timeTaken.toMillis() + "ms)");
-    }
+		Duration timeTaken = Duration.between(getBootstrap().getStartupTime(), Instant.now());
+		getLogger().info("Successfully enabled. (took " + timeTaken.toMillis() + "ms)");
+	}
 
-    protected abstract void setupSenderFactory();
+	protected abstract void setupSenderFactory();
 
-    protected abstract ConfigurationAdapter provideConfigurationAdapter();
+	protected abstract ConfigurationAdapter provideConfigurationAdapter();
 
-    protected abstract MessagingFactory<?> provideMessagingFactory();
+	protected abstract MessagingFactory<?> provideMessagingFactory();
 
-    protected abstract void setupFramework();
+	protected abstract void setupFramework();
 
-    protected abstract void setupConfiguration();
+	protected abstract void setupConfiguration();
 
-    public final void onDisable() {
-        getLogger().info("Starting shutdown process...");
+	public final void onDisable() {
+		getLogger().info("Starting shutdown process...");
 
-        // cancel delayed/repeating tasks
-        getBootstrap().getScheduler().shutdownScheduler();
+		// cancel delayed/repeating tasks
+		getBootstrap().getScheduler().shutdownScheduler();
 
-        // close messaging service
-        if (this.messagingService != null) {
-            getLogger().info("Closing messaging service...");
-            this.messagingService.close();
-        }
+		// close messaging service
+		if (this.messagingService != null) {
+			getLogger().info("Closing messaging service...");
+			this.messagingService.close();
+		}
 
-        getLogger().info("Disabling framework...");
-        disableFramework();
+		getLogger().info("Disabling framework...");
+		disableFramework();
 
-        // close storage
-        getLogger().info("Closing storage...");
-        this.storage.shutdown();
+		// close storage
+		getLogger().info("Closing storage...");
+		this.storage.shutdown();
 
-        // unregister api
-        ApiRegistrationUtil.unregisterProvider();
+		// unregister api
+		ApiRegistrationUtil.unregisterProvider();
 
-        // shutdown async executor pool
-        getBootstrap().getScheduler().shutdownExecutor();
+		// shutdown async executor pool
+		getBootstrap().getScheduler().shutdownExecutor();
 
-        // shutdown okhttp
-        this.httpClient.dispatcher().executorService().shutdown();
-        this.httpClient.connectionPool().evictAll();
+		// shutdown okhttp
+		this.httpClient.dispatcher().executorService().shutdown();
+		this.httpClient.connectionPool().evictAll();
 
-        // close isolated loaders for non-relocated dependencies
-        getDependencyManager().close();
-        // close classpath appender
-        getBootstrap().getClassPathAppender().close();
+		// close isolated loaders for non-relocated dependencies
+		getDependencyManager().close();
+		// close classpath appender
+		getBootstrap().getClassPathAppender().close();
 
-        getLogger().info("Goodbye!");
-    }
+		getLogger().info("Goodbye!");
+	}
 
-    protected abstract void disableFramework();
+	protected abstract void disableFramework();
 
-    protected Path resolveConfig(String fileName) {
-        Path configFile = getBootstrap().getConfigDirectory().toAbsolutePath().resolve(fileName);
+	protected Path resolveConfig(String fileName) {
+		Path configFile = getBootstrap().getConfigDirectory().toAbsolutePath().resolve(fileName);
 
-        // if the config doesn't exist, create it based on the template in the resources' dir
-        if (!Files.exists(configFile)) {
-            try {
-                Files.createDirectories(configFile.getParent());
-            } catch (IOException e) {
-                // ignore
-            }
+		// if the config doesn't exist, create it based on the template in the resources' dir
+		if (!Files.exists(configFile)) {
+			try {
+				Files.createDirectories(configFile.getParent());
+			} catch (IOException e) {
+				// ignore
+			}
 
-            try (InputStream is = getBootstrap().getResourceStream(fileName)) {
-                Files.copy(is, configFile);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
+			try (InputStream is = getBootstrap().getResourceStream(fileName)) {
+				Files.copy(is, configFile);
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
 
-        return configFile;
-    }
+		return configFile;
+	}
 
-    @Override
-    public OkHttpClient getHttpClient() {
-        return this.httpClient;
-    }
+	@Override
+	public OkHttpClient getHttpClient() {
+		return this.httpClient;
+	}
 
-    @Override
-    public PluginLogger getLogger() {
-        return getBootstrap().getPluginLogger();
-    }
+	@Override
+	public PluginLogger getLogger() {
+		return getBootstrap().getPluginLogger();
+	}
 
-    @Override
-    public DependencyManager getDependencyManager() {
-        return this.dependencyManager;
-    }
+	@Override
+	public DependencyManager getDependencyManager() {
+		return this.dependencyManager;
+	}
 
-    @Override
-    public FloraCoreConfiguration getConfiguration() {
-        return this.configuration;
-    }
+	@Override
+	public FloraCoreConfiguration getConfiguration() {
+		return this.configuration;
+	}
 
-    @Override
-    public NamesRepository getNamesRepository() {
-        return namesRepository;
-    }
+	@Override
+	public NamesRepository getNamesRepository() {
+		return namesRepository;
+	}
 
-    @Override
-    public Storage getStorage() {
-        return this.storage;
-    }
+	@Override
+	public Storage getStorage() {
+		return this.storage;
+	}
 
-    @Override
-    public void setStorage(Storage storage) {
-        this.storage = storage;
-    }
+	@Override
+	public void setStorage(Storage storage) {
+		this.storage = storage;
+	}
 
-    @Override
-    public FloraCoreApiProvider getApiProvider() {
-        return this.apiProvider;
-    }
+	@Override
+	public FloraCoreApiProvider getApiProvider() {
+		return this.apiProvider;
+	}
 
-    @Override
-    public SimpleExtensionManager getExtensionManager() {
-        return this.extensionManager;
-    }
+	@Override
+	public SimpleExtensionManager getExtensionManager() {
+		return this.extensionManager;
+	}
 
-    @Override
-    public TranslationManager getTranslationManager() {
-        return this.translationManager;
-    }
+	@Override
+	public TranslationManager getTranslationManager() {
+		return this.translationManager;
+	}
 
-    @Override
-    public TranslationRepository getTranslationRepository() {
-        return this.translationRepository;
-    }
+	@Override
+	public TranslationRepository getTranslationRepository() {
+		return this.translationRepository;
+	}
 
-    @Override
-    public DataManager getDataManager() {
-        return dataManager;
-    }
+	@Override
+	public DataManager getDataManager() {
+		return dataManager;
+	}
 
-    @Override
-    public Map<String, List<String>> getLoadedPlugins() {
-        return loadedPlugins;
-    }
+	@Override
+	public Map<String, List<String>> getLoadedPlugins() {
+		return loadedPlugins;
+	}
 
-    @Override
-    public boolean isPluginInstalled(String name) {
-        return loadedPlugins.containsKey(name);
-    }
+	@Override
+	public boolean isPluginInstalled(String name) {
+		return loadedPlugins.containsKey(name);
+	}
 
-    @Override
-    public boolean isPluginInstalled(String name, String author) {
-        if (loadedPlugins.containsKey(name)) {
-            return loadedPlugins.get(name).contains(author);
-        }
-        return false;
-    }
+	@Override
+	public boolean isPluginInstalled(String name, String author) {
+		if (loadedPlugins.containsKey(name)) {
+			return loadedPlugins.get(name).contains(author);
+		}
+		return false;
+	}
 
-    @Override
-    public String getServerName() {
-        return getConfiguration().get(ConfigKeys.SERVER_NAME);
-    }
+	@Override
+	public String getServerName() {
+		return getConfiguration().get(ConfigKeys.SERVER_NAME);
+	}
 
-    @Override
-    public Optional<InternalMessagingService> getMessagingService() {
-        return Optional.ofNullable(this.messagingService);
-    }
+	@Override
+	public Optional<InternalMessagingService> getMessagingService() {
+		return Optional.ofNullable(this.messagingService);
+	}
 
-    @Override
-    public void setMessagingService(InternalMessagingService messagingService) {
-        if (this.messagingService == null) {
-            this.messagingService = messagingService;
-        }
-    }
+	@Override
+	public void setMessagingService(InternalMessagingService messagingService) {
+		if (this.messagingService == null) {
+			this.messagingService = messagingService;
+		}
+	}
 
-    @Override
-    public StorageFactory getStorageFactory() {
-        return storageFactory;
-    }
+	@Override
+	public StorageFactory getStorageFactory() {
+		return storageFactory;
+	}
 
-    public void checkUpdate(boolean latestNotification) {
-        try {
-            if (latestNotification) {
-                MiscMessage.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
-            }
-            String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
-            if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
-                MiscMessage.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(),
-                        getBootstrap(),
-                        leastReleaseTagVersion);
-            } else {
-                if (latestNotification) {
-                    MiscMessage.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());
-                }
-            }
-        } catch (IOException e) {
-            MiscMessage.STARTUP_CHECKING_UPDATE_FAILED.send(getConsoleSender(), getBootstrap());
-        }
-    }
+	public void checkUpdate(boolean latestNotification) {
+		try {
+			if (latestNotification) {
+				MiscMessage.STARTUP_CHECKING_UPDATE.send(getConsoleSender(), getBootstrap());
+			}
+			String leastReleaseTagVersion = GithubUtil.getLeastReleaseTagVersion();
+			if (!GithubUtil.isLatestVersion(leastReleaseTagVersion, this.getBootstrap().getVersion())) {
+				MiscMessage.STARTUP_CHECKING_UPDATE_OUTDATED.send(getConsoleSender(),
+						getBootstrap(),
+						leastReleaseTagVersion);
+			} else {
+				if (latestNotification) {
+					MiscMessage.STARTUP_CHECKING_UPDATE_NEWEST.send(getConsoleSender(), getBootstrap());
+				}
+			}
+		} catch (IOException e) {
+			MiscMessage.STARTUP_CHECKING_UPDATE_FAILED.send(getConsoleSender(), getBootstrap());
+		}
+	}
 
-    @Override
-    public BytebinClient getBytebin() {
-        return bytebin;
-    }
+	@Override
+	public BytebinClient getBytebin() {
+		return bytebin;
+	}
 
-    @Override
-    public BytesocksClient getBytesocks() {
-        return bytesocks;
-    }
+	@Override
+	public BytesocksClient getBytesocks() {
+		return bytesocks;
+	}
 }

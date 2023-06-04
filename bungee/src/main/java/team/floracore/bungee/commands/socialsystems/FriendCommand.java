@@ -8,7 +8,7 @@ import team.floracore.bungee.command.FloraCoreBungeeCommand;
 @CommandContainer
 @CommandPermission("floracore.socialsystems.friend")
 public class FriendCommand extends FloraCoreBungeeCommand {
-    public FriendCommand(FCBungeePlugin plugin) {
-        super(plugin);
-    }
+	public FriendCommand(FCBungeePlugin plugin) {
+		super(plugin);
+	}
 }

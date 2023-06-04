@@ -8,9 +8,9 @@ import team.floracore.common.util.wrapper.WrappedMethod;
 
 @WrappedBukkitClass(@VersionName("obc.entity.CraftPlayer"))
 public interface ObcPlayer extends ObcHumanEntity {
-    @WrappedMethod("getHandle")
-    NmsEntityPlayer getHandle();
+	@WrappedMethod("getHandle")
+	NmsEntityPlayer getHandle();
 
-    @WrappedBukkitMethod(@VersionName(minVer = 17, value = "getPing"))
-    int getPing();
+	@WrappedBukkitMethod(@VersionName(minVer = 17, value = "getPing"))
+	int getPing();
 }

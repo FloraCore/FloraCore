@@ -7,14 +7,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.UUID;
 
 public abstract class AbstractMessage implements Message, OutgoingMessage {
-    private final UUID id;
+	private final UUID id;
 
-    public AbstractMessage(UUID id) {
-        this.id = id;
-    }
+	public AbstractMessage(UUID id) {
+		this.id = id;
+	}
 
-    @Override
-    public @NotNull UUID getId() {
-        return this.id;
-    }
+	@Override
+	public @NotNull UUID getId() {
+		return this.id;
+	}
 }

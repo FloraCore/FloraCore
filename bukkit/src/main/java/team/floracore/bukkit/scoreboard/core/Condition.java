@@ -6,5 +6,5 @@ package team.floracore.bukkit.scoreboard.core;
  * @author xLikeWATCHDOG
  */
 public interface Condition {
-    boolean get();
+	boolean get();
 }

@@ -1,14 +1,14 @@
 package team.floracore.common.util;
 
 public class SimpleLoader extends ClassLoader {
-    public SimpleLoader() {
-    }
+	public SimpleLoader() {
+	}
 
-    public SimpleLoader(ClassLoader parent) {
-        super(parent);
-    }
+	public SimpleLoader(ClassLoader parent) {
+		super(parent);
+	}
 
-    public Class<?> loadClass(String name, byte[] bytes) {
-        return super.defineClass(name, bytes, 0, bytes.length);
-    }
+	public Class<?> loadClass(String name, byte[] bytes) {
+		return super.defineClass(name, bytes, 0, bytes.length);
+	}
 }

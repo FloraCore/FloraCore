@@ -15,33 +15,33 @@ import java.util.concurrent.TimeUnit;
  * @author xLikeWATCHDOG
  */
 public class ApiServer implements ServerAPI {
-    private static final Cache<String, SERVER> serverCache = CaffeineFactory.newBuilder()
-            .expireAfterWrite(10, TimeUnit.SECONDS)
-            .build();
-    private final FloraCorePlugin plugin;
+	private static final Cache<String, SERVER> serverCache = CaffeineFactory.newBuilder()
+	                                                                        .expireAfterWrite(10, TimeUnit.SECONDS)
+	                                                                        .build();
+	private final FloraCorePlugin plugin;
 
-    public ApiServer(FloraCorePlugin plugin) {
-        this.plugin = plugin;
-    }
+	public ApiServer(FloraCorePlugin plugin) {
+		this.plugin = plugin;
+	}
 
-    @Override
-    public ServerType getServerType(String serverName) {
-        SERVER server = getServerData(serverName);
-        if (server == null) {
-            return null;
-        }
-        return server.getType();
-    }
+	@Override
+	public ServerType getServerType(String serverName) {
+		SERVER server = getServerData(serverName);
+		if (server == null) {
+			return null;
+		}
+		return server.getType();
+	}
 
-    public SERVER getServerData(String name) {
-        SERVER server = serverCache.getIfPresent(name);
-        if (server == null) {
-            server = plugin.getStorage().getImplementation().selectServer(name);
-            if (server == null) {
-                return null;
-            }
-            serverCache.put(name, server);
-        }
-        return server;
-    }
+	public SERVER getServerData(String name) {
+		SERVER server = serverCache.getIfPresent(name);
+		if (server == null) {
+			server = plugin.getStorage().getImplementation().selectServer(name);
+			if (server == null) {
+				return null;
+			}
+			serverCache.put(name, server);
+		}
+		return server;
+	}
 }

@@ -5,12 +5,12 @@ package team.floracore.common.loader;
  */
 public interface LoaderBootstrap {
 
-    void onLoad();
+	void onLoad();
 
-    default void onEnable() {
-    }
+	default void onEnable() {
+	}
 
-    default void onDisable() {
-    }
+	default void onDisable() {
+	}
 
 }

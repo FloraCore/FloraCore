@@ -10,14 +10,14 @@ package org.floracore.api.extension;
  */
 public interface Extension {
 
-    /**
-     * Loads the extension.
-     */
-    void load();
+	/**
+	 * Loads the extension.
+	 */
+	void load();
 
-    /**
-     * Unloads the extension.
-     */
-    void unload();
+	/**
+	 * Unloads the extension.
+	 */
+	void unload();
 
 }

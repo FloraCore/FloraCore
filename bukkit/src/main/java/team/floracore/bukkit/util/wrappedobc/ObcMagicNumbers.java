@@ -10,17 +10,17 @@ import team.floracore.common.util.wrapper.WrappedObject;
 
 @WrappedBukkitClass(@VersionName("obc.util.CraftMagicNumbers"))
 public interface ObcMagicNumbers extends WrappedBukkitObject {
-    static NmsItem getItem(Material m) {
-        return WrappedObject.getStatic(ObcMagicNumbers.class).staticGetItem(m);
-    }
+	static NmsItem getItem(Material m) {
+		return WrappedObject.getStatic(ObcMagicNumbers.class).staticGetItem(m);
+	}
 
-    static Material getMaterial(NmsItem item) {
-        return WrappedObject.getStatic(ObcMagicNumbers.class).staticGetMaterial(item);
-    }
+	static Material getMaterial(NmsItem item) {
+		return WrappedObject.getStatic(ObcMagicNumbers.class).staticGetMaterial(item);
+	}
 
-    @WrappedMethod("getItem")
-    NmsItem staticGetItem(Material m);
+	@WrappedMethod("getItem")
+	NmsItem staticGetItem(Material m);
 
-    @WrappedMethod("getMaterial")
-    Material staticGetMaterial(NmsItem item);
+	@WrappedMethod("getMaterial")
+	Material staticGetMaterial(NmsItem item);
 }

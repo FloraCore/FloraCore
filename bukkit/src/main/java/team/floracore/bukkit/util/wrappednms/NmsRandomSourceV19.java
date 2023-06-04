@@ -7,6 +7,6 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 
 @WrappedBukkitClass(@VersionName(value = "net.minecraft.util.RandomSource", minVer = 19))
 public interface NmsRandomSourceV19 extends WrappedBukkitObject {
-    @WrappedBukkitMethod(@VersionName("@0"))
-    float nextFloat();
+	@WrappedBukkitMethod(@VersionName("@0"))
+	float nextFloat();
 }

@@ -12,9 +12,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.PARAMETER)
 public @interface StackTop {
-    /**
-     * The value type at the current stack top
-     * In addition to primitive type, you can use its wrapper class instead(Class&lt;? extends WrappedObject>)
-     */
-    Class<?> value();
+	/**
+	 * The value type at the current stack top
+	 * In addition to primitive type, you can use its wrapper class instead(Class&lt;? extends WrappedObject>)
+	 */
+	Class<?> value();
 }

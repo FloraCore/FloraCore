@@ -12,15 +12,15 @@ import java.util.UUID;
 @NonExtendable
 public interface Message {
 
-    /**
-     * Gets the unique id associated with this message.
-     *
-     * <p>This ID is used to ensure a single server instance doesn't process
-     * the same message twice.</p>
-     *
-     * @return the id of the message
-     */
-    @NotNull
-    UUID getId();
+	/**
+	 * Gets the unique id associated with this message.
+	 *
+	 * <p>This ID is used to ensure a single server instance doesn't process
+	 * the same message twice.</p>
+	 *
+	 * @return the id of the message
+	 */
+	@NotNull
+	UUID getId();
 
 }

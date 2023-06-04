@@ -7,21 +7,21 @@ import java.util.Map;
 import java.util.Set;
 
 public interface ISimpleModule extends IModule {
-    @Override
-    default Plugin getPlugin() {
-        return getEnabledRef().getPlugin();
-    }
+	@Override
+	default Plugin getPlugin() {
+		return getEnabledRef().getPlugin();
+	}
 
-    @Override
-    default Set<IModule> getDepends() {
-        return getEnabledRef().getDepends();
-    }
+	@Override
+	default Set<IModule> getDepends() {
+		return getEnabledRef().getDepends();
+	}
 
-    @Override
-    ModuleData getEnabledRef();
+	@Override
+	ModuleData getEnabledRef();
 
-    @Override
-    default Map<IRegistrar<?>, List<Object>> getRegisteredObjects() {
-        return getEnabledRef().getRegisteredObjects();
-    }
+	@Override
+	default Map<IRegistrar<?>, List<Object>> getRegisteredObjects() {
+		return getEnabledRef().getRegisteredObjects();
+	}
 }

@@ -17,18 +17,18 @@ import team.floracore.common.sender.Sender;
 @CommandPermission("floracore.command.invsee")
 @CommandDescription("打开指定玩家的物品栏")
 public class InvSeeCommand extends FloraCoreBukkitCommand {
-    public InvSeeCommand(FCBukkitPlugin plugin) {
-        super(plugin);
-    }
+	public InvSeeCommand(FCBukkitPlugin plugin) {
+		super(plugin);
+	}
 
-    @CommandMethod("invsee|inv <target>")
-    public void invsee(final @NotNull Player s, final @Argument("target") Player target) {
-        Sender sender = getPlugin().getSenderFactory().wrap(s);
-        if (s.getUniqueId() == target.getUniqueId()) {
-            PlayerCommandMessage.COMMAND_INVSEE_SELF.send(sender);
-            return;
-        }
-        s.openInventory(target.getInventory());
-        PlayerCommandMessage.COMMAND_INVSEE.send(sender, target.getDisplayName());
-    }
+	@CommandMethod("invsee|inv <target>")
+	public void invsee(final @NotNull Player s, final @Argument("target") Player target) {
+		Sender sender = getPlugin().getSenderFactory().wrap(s);
+		if (s.getUniqueId() == target.getUniqueId()) {
+			PlayerCommandMessage.COMMAND_INVSEE_SELF.send(sender);
+			return;
+		}
+		s.openInventory(target.getInventory());
+		PlayerCommandMessage.COMMAND_INVSEE.send(sender, target.getDisplayName());
+	}
 }

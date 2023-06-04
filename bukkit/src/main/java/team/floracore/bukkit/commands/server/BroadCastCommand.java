@@ -20,17 +20,17 @@ import team.floracore.common.sender.Sender;
 @CommandPermission("floracore.command.broadcast")
 @CommandDescription("在服务器发送广播信息")
 public class BroadCastCommand extends FloraCoreBukkitCommand {
-    public BroadCastCommand(FCBukkitPlugin plugin) {
-        super(plugin);
-    }
+	public BroadCastCommand(FCBukkitPlugin plugin) {
+		super(plugin);
+	}
 
-    @CommandMethod("broadcast|bc <contents>")
-    public void broadcast(@NotNull CommandSender s, @NotNull @Argument("contents") @Greedy String contents) {
-        Sender s1 = getPlugin().getConsoleSender();
-        ServerCommandMessage.COMMAND_BROADCAST.send(s1, contents);
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Sender s2 = getPlugin().getSenderFactory().wrap(player);
-            ServerCommandMessage.COMMAND_BROADCAST.send(s2, contents);
-        }
-    }
+	@CommandMethod("broadcast|bc <contents>")
+	public void broadcast(@NotNull CommandSender s, @NotNull @Argument("contents") @Greedy String contents) {
+		Sender s1 = getPlugin().getConsoleSender();
+		ServerCommandMessage.COMMAND_BROADCAST.send(s1, contents);
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			Sender s2 = getPlugin().getSenderFactory().wrap(player);
+			ServerCommandMessage.COMMAND_BROADCAST.send(s2, contents);
+		}
+	}
 }

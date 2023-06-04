@@ -8,21 +8,21 @@ import team.floracore.common.util.wrapper.WrappedConstructor;
 import team.floracore.common.util.wrapper.WrappedObject;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTTagLong", maxVer = 17),
-        @VersionName(value = "net.minecraft.nbt.NBTTagLong", minVer = 17)})
+		@VersionName(value = "net.minecraft.nbt.NBTTagLong", minVer = 17)})
 public interface NmsNBTTagLong extends NmsNBTTag {
-    static NmsNBTTagLong newInstance(long value) {
-        return WrappedObject.getStatic(NmsNBTTagLong.class).staticNewInstance(value);
-    }
+	static NmsNBTTagLong newInstance(long value) {
+		return WrappedObject.getStatic(NmsNBTTagLong.class).staticNewInstance(value);
+	}
 
-    @WrappedConstructor
-    NmsNBTTagLong staticNewInstance(long value);
+	@WrappedConstructor
+	NmsNBTTagLong staticNewInstance(long value);
 
-    @Override
-    default JsonPrimitive toJson() {
-        return new JsonPrimitive(getValue());
-    }
+	@Override
+	default JsonPrimitive toJson() {
+		return new JsonPrimitive(getValue());
+	}
 
-    @WrappedBukkitMethod({@VersionName("asLong"), @VersionName(maxVer = 18, value = {"d"}), @VersionName(minVer = 18,
-            value = {"e"})})
-    long getValue();
+	@WrappedBukkitMethod({@VersionName("asLong"), @VersionName(maxVer = 18, value = {"d"}), @VersionName(minVer = 18,
+			value = {"e"})})
+	long getValue();
 }

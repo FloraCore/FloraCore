@@ -8,7 +8,7 @@ import team.floracore.bungee.command.FloraCoreBungeeCommand;
 @CommandContainer
 @CommandPermission("floracore.socialsystems.guild")
 public class GuildCommand extends FloraCoreBungeeCommand {
-    public GuildCommand(FCBungeePlugin plugin) {
-        super(plugin);
-    }
+	public GuildCommand(FCBungeePlugin plugin) {
+		super(plugin);
+	}
 }

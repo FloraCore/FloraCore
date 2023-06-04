@@ -11,35 +11,35 @@ import java.lang.annotation.*;
 @Target(value = ElementType.METHOD)
 @Repeatable(NothingBukkitInjects.class)
 public @interface NothingBukkitInject {
-    NothingPriority priority() default NothingPriority.NORMAL;
+	NothingPriority priority() default NothingPriority.NORMAL;
 
-    /**
-     * All possible names of target method
-     * Only one method can be matched
-     */
-    VersionName[] name();
+	/**
+	 * All possible names of target method
+	 * Only one method can be matched
+	 */
+	VersionName[] name();
 
-    /**
-     * Args types for matching method
-     *
-     * @see WrappedObject
-     */
-    Class<?>[] args();
+	/**
+	 * Args types for matching method
+	 *
+	 * @see WrappedObject
+	 */
+	Class<?>[] args();
 
-    NothingLocation location();
+	NothingLocation location();
 
-    /**
-     * @see NothingLocation
-     */
-    NothingBukkitByteCode byteCode() default @NothingBukkitByteCode;
+	/**
+	 * @see NothingLocation
+	 */
+	NothingBukkitByteCode byteCode() default @NothingBukkitByteCode;
 
-    /**
-     * For example, 1 means the next bytecode
-     */
-    int shift() default 0;
+	/**
+	 * For example, 1 means the next bytecode
+	 */
+	int shift() default 0;
 
-    /**
-     * @see mz.lib.Optional
-     */
-    boolean optional() default false;
+	/**
+	 * @see mz.lib.Optional
+	 */
+	boolean optional() default false;
 }
