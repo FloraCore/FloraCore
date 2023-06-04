@@ -8,14 +8,12 @@ import cloud.commandframework.annotations.processing.CommandContainer;
 import cloud.commandframework.annotations.specifier.Greedy;
 import cloud.commandframework.annotations.suggestions.Suggestions;
 import cloud.commandframework.context.CommandContext;
-import com.google.common.collect.ImmutableList;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.data.DataType;
 import org.floracore.api.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +42,7 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                      final @NotNull @Argument(value = "type", suggestions = "type") @Greedy String type) {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
-        Type t = Type.parse(type);
+        ChatType t = ChatType.parse(type);
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "chat");
         switch (t) {
             case BUILDER:
@@ -55,15 +53,6 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                 getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", t.name(), 0);
                 Component tc = TranslationManager.render(MiscMessage.PREFIX_BUILDER_LIGHT, uuid);
                 SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc);
-                break;
-            case BLOGGER:
-                if (!player.hasPermission("floracore.socialsystems.blogger")) {
-                    MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
-                    return;
-                }
-                getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", t.name(), 0);
-                Component tc1 = TranslationManager.render(MiscMessage.PREFIX_BLOGGER_LIGHT, uuid);
-                SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc1);
                 break;
             case STAFF:
                 if (!player.hasPermission("floracore.socialsystems.staff")) {
@@ -88,7 +77,7 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                     SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc3);
                 }
                 break;
-            case ALL:
+            case SERVER:
                 getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", t.name(), 0);
                 Component tc4 = TranslationManager.render(MiscMessage.PREFIX_ALL_LIGHT, uuid);
                 SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc4);
@@ -107,23 +96,20 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
 
     @Suggestions("type")
     public List<String> getType(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
-        List<String> ret = new ArrayList<>(Collections.singletonList(Type.ALL.name().toLowerCase()));
+        List<String> ret = new ArrayList<>(Collections.singletonList(ChatType.SERVER.name().toLowerCase()));
         CommandSender s = sender.getSender();
         ProxiedPlayer p = (ProxiedPlayer) s;
         if (p.hasPermission("floracore.socialsystems.admin")) {
-            ret.add(Type.ADMIN.name().toLowerCase());
-        }
-        if (p.hasPermission("floracore.socialsystems.blogger")) {
-            ret.add(Type.BLOGGER.name().toLowerCase());
+            ret.add(ChatType.ADMIN.name().toLowerCase());
         }
         if (p.hasPermission("floracore.socialsystems.builder")) {
-            ret.add(Type.BUILDER.name().toLowerCase());
+            ret.add(ChatType.BUILDER.name().toLowerCase());
         }
         if (p.hasPermission("floracore.socialsystems.party")) {
-            ret.add(Type.PARTY.name().toLowerCase());
+            ret.add(ChatType.PARTY.name().toLowerCase());
         }
         if (p.hasPermission("floracore.socialsystems.staff")) {
-            ret.add(Type.STAFF.name().toLowerCase());
+            ret.add(ChatType.STAFF.name().toLowerCase());
         }
         return ret;
     }
@@ -140,8 +126,8 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "chat");
         long time = System.currentTimeMillis();
         if (data != null) {
-            Type type = Type.valueOf(data.getValue());
-            if (type == Type.ALL) {
+            ChatType type = ChatType.valueOf(data.getValue());
+            if (type == ChatType.SERVER) {
                 return;
             }
             e.setCancelled(true);
@@ -157,7 +143,7 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                         getStorageImplementation().insertData(uuid,
                                 DataType.SOCIAL_SYSTEMS,
                                 "chat",
-                                Type.ALL.name(),
+                                ChatType.SERVER.name(),
                                 0);
                         Component tc4 = TranslationManager.render(MiscMessage.PREFIX_ALL_LIGHT, uuid);
                         SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc4);
@@ -170,7 +156,7 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                                 for (UUID member : members) {
                                     getPlugin().getBungeeMessagingFactory()
                                             .pushChatMessage(member,
-                                                    ChatMessage.ChatMessageType.PARTY,
+                                                    ChatType.PARTY,
                                                     Arrays.asList(uuid.toString(), message));
                                 }
                             });
@@ -189,7 +175,7 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                     }
                     getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
                             .pushChatMessage(UUID.randomUUID(),
-                                    ChatMessage.ChatMessageType.ADMIN,
+                                    ChatType.ADMIN,
                                     Arrays.asList(uuid.toString(),
                                             message)));
                     getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.ADMIN,
@@ -205,7 +191,7 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                     }
                     getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
                             .pushChatMessage(UUID.randomUUID(),
-                                    ChatMessage.ChatMessageType.STAFF,
+                                    ChatType.STAFF,
                                     Arrays.asList(uuid.toString(),
                                             message)));
                     getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.STAFF,
@@ -221,7 +207,7 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                     }
                     getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
                             .pushChatMessage(UUID.randomUUID(),
-                                    ChatMessage.ChatMessageType.BUILDER,
+                                    ChatType.BUILDER,
                                     Arrays.asList(uuid.toString(),
                                             message)));
                     getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.BUILDER,
@@ -231,37 +217,6 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                             time));
                     break;
             }
-        }
-    }
-
-    enum Type {
-        ALL("all", "a"),
-        PARTY("party", "p"),
-        ADMIN("admin"),
-        BLOGGER("blogger"),
-        BUILDER("builder"),
-        STAFF("STAFF", "s"),
-        CUSTOM();
-        private final List<String> identifiers;
-
-        Type(String... identifiers) {
-            this.identifiers = ImmutableList.copyOf(identifiers);
-        }
-
-        public static Type parse(String name) {
-            for (Type t : values()) {
-                if (t == CUSTOM) continue;
-                for (String id : t.getIdentifiers()) {
-                    if (id.equalsIgnoreCase(name)) {
-                        return t;
-                    }
-                }
-            }
-            return null;
-        }
-
-        public List<String> getIdentifiers() {
-            return this.identifiers;
         }
     }
 }

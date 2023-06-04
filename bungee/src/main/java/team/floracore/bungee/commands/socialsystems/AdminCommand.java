@@ -29,7 +29,7 @@ public class AdminCommand extends FloraCoreBungeeCommand {
         UUID uuid = player.getUniqueId();
         getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
                 .pushChatMessage(UUID.randomUUID(),
-                        ChatMessage.ChatMessageType.ADMIN,
+                        ChatType.ADMIN,
                         Arrays.asList(uuid.toString(), message)));
         long time = System.currentTimeMillis();
         getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.ADMIN,

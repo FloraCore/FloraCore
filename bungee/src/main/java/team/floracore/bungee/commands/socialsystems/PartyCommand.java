@@ -441,7 +441,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 for (UUID member : members) {
                     getPlugin().getBungeeMessagingFactory()
                             .pushChatMessage(member,
-                                    ChatMessage.ChatMessageType.PARTY,
+                                    ChatType.PARTY,
                                     Arrays.asList(uuid.toString(), message));
                 }
                 long time = System.currentTimeMillis();

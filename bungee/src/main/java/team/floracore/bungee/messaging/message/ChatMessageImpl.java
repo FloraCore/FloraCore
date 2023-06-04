@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.floracore.api.bungee.messenger.message.type.ChatMessage;
+import org.floracore.api.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.common.messaging.FloraCoreMessagingService;
 import team.floracore.common.messaging.message.AbstractMessage;
@@ -24,10 +25,10 @@ public class ChatMessageImpl extends AbstractMessage implements ChatMessage {
     public static final String TYPE = "bungee:chat";
 
     private final UUID receiver;
-    private final ChatMessageType type;
+    private final ChatType type;
     private final List<String> parameters;
 
-    public ChatMessageImpl(UUID id, UUID receiver, ChatMessageType type, List<String> parameters) {
+    public ChatMessageImpl(UUID id, UUID receiver, ChatType type, List<String> parameters) {
         super(id);
         this.receiver = receiver;
         this.type = type;
@@ -44,9 +45,9 @@ public class ChatMessageImpl extends AbstractMessage implements ChatMessage {
                 .orElseThrow(() -> new IllegalStateException(
                         "Incoming message has no receiver argument: " + content));
 
-        ChatMessageType type = Optional.ofNullable(content.getAsJsonObject().get("type"))
+        ChatType type = Optional.ofNullable(content.getAsJsonObject().get("type"))
                 .map(JsonElement::getAsString)
-                .map(ChatMessageType::valueOf)
+                .map(ChatType::valueOf)
                 .orElseThrow(() -> new IllegalStateException(
                         "Incoming message has no type argument: " + content));
 
@@ -78,7 +79,7 @@ public class ChatMessageImpl extends AbstractMessage implements ChatMessage {
     }
 
     @Override
-    public @NotNull ChatMessageType getType() {
+    public @NotNull ChatType getType() {
         return this.type;
     }
 

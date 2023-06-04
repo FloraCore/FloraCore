@@ -4,6 +4,7 @@ import com.google.gson.JsonElement;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
+import org.floracore.api.data.chat.ChatType;
 import org.floracore.api.messenger.message.Message;
 import org.floracore.api.messenger.message.type.ChangeNameMessage;
 import team.floracore.bungee.FCBungeePlugin;
@@ -82,16 +83,6 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
                         String sn1 = getPlayerName(su1);
                         String mess = parameters.get(1);
                         SocialSystemsMessage.COMMAND_MISC_STAFF_CHAT.send(i, sn1, mess);
-                    }
-                });
-                break;
-            case BLOGGER:
-                getPlugin().getOnlineSenders().forEach(i -> {
-                    if (i.hasPermission("floracore.chat.blogger")) {
-                        UUID su1 = UUID.fromString(parameters.get(0));
-                        String sn1 = getPlayerName(su1);
-                        String mess = parameters.get(1);
-                        SocialSystemsMessage.COMMAND_MISC_BLOGGER_CHAT.send(i, sn1, mess);
                     }
                 });
                 break;
@@ -244,7 +235,7 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
         return getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(uuid);
     }
 
-    public void pushChatMessage(UUID receiver, ChatMessage.ChatMessageType type, List<String> parameters) {
+    public void pushChatMessage(UUID receiver, ChatType type, List<String> parameters) {
         this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> {
             getPlugin().getMessagingService().ifPresent(service -> {
                 UUID requestId = service.generatePingId();

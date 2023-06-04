@@ -1,5 +1,6 @@
 package org.floracore.api.bungee.messenger.message.type;
 
+import org.floracore.api.data.chat.ChatType;
 import org.floracore.api.messenger.message.Message;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +23,7 @@ public interface ChatMessage extends Message {
      *
      * @return 聊天类型
      */
-    @NotNull ChatMessageType getType();
+    @NotNull ChatType getType();
 
     /**
      * 获取参数
@@ -30,34 +31,4 @@ public interface ChatMessage extends Message {
      * @return 参数
      */
     @NotNull List<String> getParameters();
-
-    /**
-     * 通知类型
-     */
-    enum ChatMessageType {
-        /**
-         * 派对消息
-         */
-        PARTY,
-        /**
-         * 博主消息
-         */
-        BLOGGER,
-        /**
-         * 建筑组消息
-         */
-        BUILDER,
-        /**
-         * 员工消息
-         */
-        STAFF,
-        /**
-         * 管理员消息
-         */
-        ADMIN,
-        /**
-         * 自定义消息
-         */
-        CUSTOM,
-    }
 }
