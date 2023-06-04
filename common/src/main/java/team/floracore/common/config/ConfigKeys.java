@@ -135,7 +135,7 @@ public class ConfigKeys {
     /**
      * The URL of the verbose viewer
      */
-    public static final ConfigKey<String> VERBOSE_VIEWER_URL_PATTERN = stringKey("verbose-viewer-url", "https://floracore.cc/verbose/");
+    public static final ConfigKey<String> CHAT_VIEWER_URL_PATTERN = stringKey("chat-viewer-url", "https://floracore.cc/verbose/");
 
 
     /**

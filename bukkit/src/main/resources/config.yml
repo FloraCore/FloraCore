@@ -152,6 +152,3 @@ server:
   type: "lobby"
 
 check-update: true
-
-bytebin-url: https://bytebin.floracore.cc/
-bytesocks-host: bytesocks.floracore.cc

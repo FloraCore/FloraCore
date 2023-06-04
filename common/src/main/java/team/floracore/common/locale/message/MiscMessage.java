@@ -247,4 +247,33 @@ public interface MiscMessage extends AbstractMessage {
                     text(DescParseTickFormat.formatTicks(ticks)).color(GREEN))
             .build();
 
+    Args2<Integer, String> GENERIC_HTTP_REQUEST_FAILURE = (code, message) -> AbstractMessage.prefixed(text()
+            // "&cUnable to communicate with the web app. (response code &4{}&c, message='{}')"
+            .color(RED)
+            .append(translatable("floracore.command.misc.webapp-unable-to-communicate"))
+            .append(FULL_STOP)
+            .append(space())
+            .append(text()
+                    .append(OPEN_BRACKET)
+                    .append(translatable("floracore.command.misc.response-code-key"))
+                    .append(space())
+                    .append(text(code))
+                    .append(text(", "))
+                    .append(translatable("floracore.command.misc.error-message-key"))
+                    .append(text("='"))
+                    .append(text(message))
+                    .append(text("'"))
+                    .append(CLOSE_BRACKET)
+            )
+    );
+
+    Args0 GENERIC_HTTP_UNKNOWN_FAILURE = () -> AbstractMessage.prefixed(text()
+            // "&cUnable to communicate with the web app. Check the console for errors."
+            .color(RED)
+            .append(translatable("floracore.command.misc.webapp-unable-to-communicate"))
+            .append(FULL_STOP)
+            .append(space())
+            .append(translatable("floracore.command.misc.check-console-for-errors"))
+            .append(FULL_STOP)
+    );
 }

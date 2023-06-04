@@ -12,6 +12,7 @@ import net.md_5.bungee.api.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
+import team.floracore.bungee.locale.message.commands.MiscCommandMessage;
 import team.floracore.common.chat.ChatProvider;
 import team.floracore.common.config.ConfigKeys;
 import team.floracore.common.http.UnsuccessfulRequestException;
@@ -171,25 +172,28 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
     }
 
 
-    @CommandMethod("fcb|floracorebungee chat <player>")
-    public void chat(final @NotNull CommandSender sender, final @NotNull @Argument("player") String player) {
+    @CommandMethod("fcb|floracorebungee chat <target>")
+    public void chat(final @NotNull CommandSender sender, final @NotNull @Argument("target") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        boolean has = getPlugin().getApiProvider().getPlayerAPI().hasPlayerRecord(player);
-        if (has) {
-            ChatProvider.Uploader uploader = new ChatProvider.Uploader(s.getUniqueId(), s.getName());
-            UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(player);
-            ChatProvider chatProvider = new ChatProvider(getPlugin(), uploader, targetUUID);
-            try {
-                String id = chatProvider.uploadChatData(getPlugin().getBytebin());
-                String url = getPlugin().getConfiguration().get(ConfigKeys.VERBOSE_VIEWER_URL_PATTERN) + id;
-                System.out.println(url);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (UnsuccessfulRequestException e) {
-                throw new RuntimeException(e);
+        getAsyncExecutor().execute(() -> {
+            boolean has = getPlugin().getApiProvider().getPlayerAPI().hasPlayerRecord(target);
+            if (has) {
+                ChatProvider.Uploader uploader = new ChatProvider.Uploader(s.getUniqueId(), s.getName());
+                UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+                ChatProvider chatProvider = new ChatProvider(getPlugin(), uploader, targetUUID);
+                try {
+                    String id = chatProvider.uploadChatData(getPlugin().getBytebin());
+                    String url = getPlugin().getConfiguration().get(ConfigKeys.CHAT_VIEWER_URL_PATTERN) + id;
+                    MiscCommandMessage.CHAT_RESULTS_URL.send(s, url);
+                } catch (IOException e) {
+                    getPlugin().getLogger().warn("Error uploading data to bytebin", e);
+                    MiscMessage.GENERIC_HTTP_UNKNOWN_FAILURE.send(s);
+                } catch (UnsuccessfulRequestException e) {
+                    MiscMessage.GENERIC_HTTP_REQUEST_FAILURE.send(s, e.getResponse().code(), e.getResponse().message());
+                }
+            } else {
+                MiscMessage.PLAYER_NOT_FOUND.send(s, target);
             }
-        } else {
-            System.out.println("不存在这名玩家");
-        }
+        });
     }
 }
