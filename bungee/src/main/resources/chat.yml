@@ -1,62 +1,27 @@
-################################################################################################################
-#                                                                                                              #
-# Specify Chat Module 2023® by vlouboos belongs to FloraCore                                                   #
-#                                                                                                              #
-# Config.yml                                                                                                   #
-#                                                                                                              #
-# Format:                                                                                                      #
-#                                                                                                              #
-# ID:                                                                                                          #
-#   name: "Your Channel Name" (Color codes are enabled with character '&')                                     #
-#   format: "The message format which will display to the chat" (Color codes are enabled with character '&')   #
-#   enableColorChar: true    Set to "false" to prevent translate '&a' to Green-Colored and so on.              #
-#   commands:     Command "specifychat" isn't allowed to set.                                                  #
-#     - command1                                                                                               #
-#     - command2                                                                                               #
-#   permissions:    Permission "sc.all" means that player can send & receive messages in every channel.        #
-#     - permission1                                                                                            #
-#     - permission2                                                                                            #
-#                                                                                                              #
-# Placeholders:                                                                                                #
-#   %name% - the name of channel                                                                               #
-#   %player% - the name of sender (Console will be displayed as "Console", support LuckPerms)                  #
-#   %message% - the message that sender sent.                                                                  #
-#   %time% - the time that the message was sent.                                                               #
-#                                                                                                              #
-################################################################################################################
-StaffChat:
-  #  name: "&9&lStaff&f&lChat"
-  #  format: "%name%&7 » %player%&7: &f%message%"
-  enableColorChar: true
-  commands:
-    - staffchat
-    - sc
-  permissions:
-    - group.t-helper
-    - group.helper
-    - group.mod
-    - group.admin
-  identifiers:
-    - staff
-AdminChat:
-  name: "&c&lAdmin&f&lChat"
-  format: "%name%&7 » %player%&7: &f%message%"
-  enableColorChar: true
-  commands:
-    - adminchat
-    - ac
-  permissions:
-    - group.admin
-  identifiers:
-    - admin
-TeamChat:
-  name: "&a&lTeam&f&lChat"
-  format: "%name%&7 » %player%&7: &f%message%"
-  enableColorChar: true
-  commands:
-    - teamchat
-    - tc
-  permissions:
-    - sc.all
-  identifiers:
-    - team
+# Specify Chat Module 2023® by vlouboos belongs to FloraCore
+
+# 启用的频道列表
+enabled-channel-list:
+  - custom
+
+# 频道
+channels:
+  # 自定义频道名
+  # 注意:
+  # 1.频道名将作为自带的标识符
+  custom:
+    # 频道前缀
+    # 注意：
+    # 1.所有频道发送消息的格式均统一，为 %prefix% > ...
+    # 2.该部分允许使用颜色字符。
+    # 3.该部分启用自定义国际化设置。使用变量$path$即可设置。
+    prefix: "&6CUSTOM"
+    # 使用该频道所需的权限
+    permission: "floracore.socialsystems.custom"
+    # 该频道标识符。使用/chat <?>进行切换。
+    # 注意:
+    # 1.当标识符有冲突时，将会优先使用默认存在的频道。
+    # 2.当该自定义频道的标识符与其它自定义频道的标识符存在冲突时：
+    #   将会按照加载顺序优先使用对应频道。
+    identifiers:
+      - c

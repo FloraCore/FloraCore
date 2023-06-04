@@ -18,8 +18,12 @@ import org.floracore.api.data.DataType;
 import org.floracore.api.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
+import team.floracore.bungee.chat.ChatModel;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
+import team.floracore.bungee.config.ChatKeys;
 import team.floracore.bungee.locale.message.SocialSystemsMessage;
+import team.floracore.bungee.util.BungeeStringReplacer;
+import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.locale.translation.TranslationManager;
 import team.floracore.common.sender.Sender;
@@ -43,7 +47,69 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
         UUID uuid = player.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(player);
         ChatType t = ChatType.parse(type);
+        ChatModel chatModel = null;
+        List<ChatModel> chatModelList = getPlugin().getChatConfiguration().get(ChatKeys.CHAT_MODELS);
+        if (t == null) {
+            for (ChatModel i : chatModelList) {
+                for (String identifier : i.identifiers) {
+                    if (player.hasPermission(i.permission)) {
+                        if (type.equalsIgnoreCase(identifier) || type.equalsIgnoreCase(i.name)) {
+                            t = ChatType.CUSTOM;
+                            chatModel = i;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (t == null) {
+                SocialSystemsMessage.COMMAND_MISC_CHAT_DOES_NOT_EXIST.send(sender, type);
+                return;
+            }
+        }
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "chat");
+        ChatModel oldChatModel = null;
+        if (data != null) {
+            ChatType nt = ChatType.valueOf(data.getValue());
+            if (t == nt) {
+                if (nt == ChatType.CUSTOM) {
+                    DATA channel = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "chat-custom-channel");
+                    for (ChatModel i : chatModelList) {
+                        if (i.name.equalsIgnoreCase(channel.getValue())) {
+                            oldChatModel = i;
+                        }
+                    }
+                    if (oldChatModel != null && chatModel != null) {
+                        if (oldChatModel.name.equalsIgnoreCase(chatModel.name)) {
+                            String prefix = BungeeStringReplacer.processStringForPlayer(player, chatModel.prefix);
+                            Component i = AbstractMessage.formatColoredValue(prefix);
+                            SocialSystemsMessage.COMMAND_MISC_CHAT_IS_IN.send(sender, i);
+                            return;
+                        }
+                    }
+                } else {
+                    Component i = Component.empty();
+                    switch (t) {
+                        case BUILDER:
+                            i = TranslationManager.render(MiscMessage.PREFIX_BUILDER_LIGHT, uuid);
+                            break;
+                        case STAFF:
+                            i = TranslationManager.render(MiscMessage.PREFIX_STAFF_LIGHT, uuid);
+                            break;
+                        case PARTY:
+                            i = TranslationManager.render(MiscMessage.PREFIX_PARTY_LIGHT, uuid);
+                            break;
+                        case SERVER:
+                            i = TranslationManager.render(MiscMessage.PREFIX_ALL_LIGHT, uuid);
+                            break;
+                        case ADMIN:
+                            i = TranslationManager.render(MiscMessage.PREFIX_ADMIN_LIGHT, uuid);
+                            break;
+                    }
+                    SocialSystemsMessage.COMMAND_MISC_CHAT_IS_IN.send(sender, i);
+                }
+                return;
+            }
+        }
         switch (t) {
             case BUILDER:
                 if (!player.hasPermission("floracore.socialsystems.builder")) {
@@ -91,12 +157,23 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                 Component tc5 = TranslationManager.render(MiscMessage.PREFIX_ADMIN_LIGHT, uuid);
                 SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc5);
                 break;
+            case CUSTOM:
+                if (chatModel == null) {
+                    SocialSystemsMessage.COMMAND_MISC_CHAT_DOES_NOT_EXIST.send(sender, type);
+                    return;
+                }
+                getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat", t.name(), 0);
+                getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "chat-custom-channel", chatModel.name, 0);
+                String prefix = BungeeStringReplacer.processStringForPlayer(player, chatModel.prefix);
+                Component tc6 = AbstractMessage.formatColoredValue(prefix);
+                SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc6);
+                break;
         }
     }
 
     @Suggestions("type")
     public List<String> getType(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
-        List<String> ret = new ArrayList<>(Collections.singletonList(ChatType.SERVER.name().toLowerCase()));
+        List<String> ret = new ArrayList<>(Collections.singletonList(ChatType.SERVER.getIdentifiers().get(0).toLowerCase()));
         CommandSender s = sender.getSender();
         ProxiedPlayer p = (ProxiedPlayer) s;
         if (p.hasPermission("floracore.socialsystems.admin")) {
@@ -110,6 +187,12 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
         }
         if (p.hasPermission("floracore.socialsystems.staff")) {
             ret.add(ChatType.STAFF.name().toLowerCase());
+        }
+        List<ChatModel> chatModelList = getPlugin().getChatConfiguration().get(ChatKeys.CHAT_MODELS);
+        for (ChatModel chatModel : chatModelList) {
+            if (p.hasPermission(chatModel.permission)) {
+                ret.add(chatModel.name.toLowerCase());
+            }
         }
         return ret;
     }
@@ -212,6 +295,36 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                                             message)));
                     getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.BUILDER,
                             "",
+                            uuid,
+                            message,
+                            time));
+                    break;
+                case CUSTOM:
+                    DATA channel = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "chat-custom-channel");
+                    ChatModel chatModel = null;
+                    List<ChatModel> chatModelList = getPlugin().getChatConfiguration().get(ChatKeys.CHAT_MODELS);
+                    for (ChatModel i : chatModelList) {
+                        if (i.name.equalsIgnoreCase(channel.getValue())) {
+                            if (!p.hasPermission(i.permission)) {
+                                MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
+                                return;
+                            }
+                            chatModel = i;
+                        }
+                    }
+                    if (chatModel == null) {
+                        SocialSystemsMessage.COMMAND_MISC_CHAT_DOES_NOT_EXIST.send(sender, channel.getValue());
+                        Component tc4 = TranslationManager.render(MiscMessage.PREFIX_ALL_LIGHT, uuid);
+                        SocialSystemsMessage.COMMAND_MISC_CHAT_SUCCESS.send(sender, tc4);
+                        return;
+                    }
+                    ChatModel finalChatModel = chatModel;
+                    getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
+                            .pushChatMessage(UUID.randomUUID(),
+                                    ChatType.CUSTOM,
+                                    Arrays.asList(uuid.toString(), message, finalChatModel.name)));
+                    getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.CUSTOM,
+                            finalChatModel.name,
                             uuid,
                             message,
                             time));

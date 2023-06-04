@@ -496,10 +496,10 @@ public interface SocialSystemsMessage extends AbstractMessage {
             // {0}
             .args(type).color(AQUA));
 
-    Args1<String> COMMAND_MISC_CHAT_IS_IN = (type) -> AbstractMessage.prefixed(translatable()
+    Args1<Component> COMMAND_MISC_CHAT_IS_IN = (type) -> AbstractMessage.prefixed(translatable()
             // 你当前正处于 {0} 聊天频道中!
             .key("floracore.command.misc.chat.is-in")
             // {0}
-            .args(text(type, DARK_RED))
+            .args(type)
             .color(RED));
 }
