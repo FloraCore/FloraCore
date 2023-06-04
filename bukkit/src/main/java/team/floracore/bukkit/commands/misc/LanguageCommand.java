@@ -116,7 +116,7 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
         gui.addTick(g -> g.refresh(true));
         gui.addAttachedButton(
                 new GuiButton(
-                        Slot.ofGame(1, 4),
+                        Slot.ofGame(1, 6),
                         Button.of(
                                 p -> {
                                     if (gui.pagination().hasLast(gui.page())) {
@@ -143,7 +143,7 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
         );
         gui.addAttachedButton(
                 new GuiButton(
-                        Slot.ofGame(9, 4),
+                        Slot.ofGame(9, 6),
                         Button.of(
                                 p -> {
                                     if (gui.pagination().hasNext(gui.page())) {
