@@ -91,7 +91,6 @@ public class CommandManager {
 
         // social systems
         this.annotationParser.parse(new AdminCommand(plugin));
-        this.annotationParser.parse(new BloggerCommand(plugin));
         this.annotationParser.parse(new BuilderCommand(plugin));
         this.annotationParser.parse(new ChatCommand(plugin));
         this.annotationParser.parse(new FriendCommand(plugin));

@@ -9,7 +9,6 @@ public enum ChatType {
      */
     SERVER,
     ADMIN,
-    BLOGGER,
     BUILDER,
     FRIEND,
     GUILD,
@@ -18,4 +17,5 @@ public enum ChatType {
      */
     PARTY,
     STAFF,
+    CUSTOM,
 }

@@ -45,6 +45,7 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
     public void reload(final @NotNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         getPlugin().getConfiguration().reload();
+        getPlugin().getChatConfiguration().reload();
         getPlugin().getTranslationManager().reload();
         CommonCommandMessage.RELOAD_CONFIG_SUCCESS.send(s);
     }
