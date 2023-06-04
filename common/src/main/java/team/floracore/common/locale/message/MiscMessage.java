@@ -282,4 +282,6 @@ public interface MiscMessage extends AbstractMessage {
             .color(AQUA)
             .append(translatable("floracore.command.misc.getting"))
     );
+
+    Args0 CHECK_CONSOLE_FOR_ERRORS = () -> AbstractMessage.prefixed(translatable().key("floracore.command.misc.check-console-for-errors").color(RED));
 }

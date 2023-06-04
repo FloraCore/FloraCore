@@ -1,6 +1,7 @@
 package team.floracore.bukkit;
 
 import com.google.gson.JsonElement;
+import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -47,6 +48,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private BungeeUtil bungeeUtil;
     private KeyedConfiguration boardsConfiguration;
     private ScoreBoardManager scoreBoardManager;
+    private GuiManager guiManager;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -109,6 +111,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         getLogger().info("Loading inventory manager...");
         inventoryManager = new InventoryManager(getLoader());
         inventoryManager.init();
+        guiManager = new GuiManager(getLoader());
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getLoader(), () -> {
             SERVER server = getStorage().getImplementation().selectServer(getServerName());
@@ -229,5 +232,9 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     public ScoreBoardManager getScoreBoardManager() {
         return scoreBoardManager;
+    }
+
+    public GuiManager getGuiManager() {
+        return guiManager;
     }
 }
