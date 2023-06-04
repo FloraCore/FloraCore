@@ -178,6 +178,7 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
         getAsyncExecutor().execute(() -> {
             boolean has = getPlugin().getApiProvider().getPlayerAPI().hasPlayerRecord(target);
             if (has) {
+                MiscMessage.MISC_GETTING.send(s);
                 ChatProvider.Uploader uploader = new ChatProvider.Uploader(s.getUniqueId(), s.getName());
                 UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
                 ChatProvider chatProvider = new ChatProvider(getPlugin(), uploader, targetUUID);

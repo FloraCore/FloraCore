@@ -276,4 +276,10 @@ public interface MiscMessage extends AbstractMessage {
             .append(translatable("floracore.command.misc.check-console-for-errors"))
             .append(FULL_STOP)
     );
+
+    Args0 MISC_GETTING = () -> AbstractMessage.prefixed(text()
+            // 获取中...
+            .color(AQUA)
+            .append(translatable("floracore.command.misc.getting"))
+    );
 }
