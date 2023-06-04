@@ -8,7 +8,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.floracore.api.server.ServerType;
 import team.floracore.bukkit.command.CommandManager;
 import team.floracore.bukkit.config.BoardsConfiguration;
-import team.floracore.bukkit.inevntory.InventoryManager;
 import team.floracore.bukkit.listener.ListenerManager;
 import team.floracore.bukkit.locale.chat.ChatManager;
 import team.floracore.bukkit.messaging.BukkitMessagingFactory;
@@ -38,7 +37,6 @@ import java.util.stream.Stream;
  * FloraCore implementation for the Bukkit API.
  */
 public class FCBukkitPlugin extends AbstractFloraCorePlugin {
-    private static InventoryManager inventoryManager;
     private final FCBukkitBootstrap bootstrap;
     private ListenerManager listenerManager;
     private CommandManager commandManager;
@@ -69,10 +67,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     private static boolean isAsyncTabCompleteSupported() {
         return classExists("com.destroystokyo.paper.event.server.AsyncTabCompleteEvent");
-    }
-
-    public static InventoryManager getInventoryManager() {
-        return inventoryManager;
     }
 
     public ListenerManager getListenerManager() {
@@ -109,8 +103,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         NothingRegistrar.instance.load();
 
         getLogger().info("Loading inventory manager...");
-        inventoryManager = new InventoryManager(getLoader());
-        inventoryManager.init();
         guiManager = new GuiManager(getLoader());
 
         Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getLoader(), () -> {

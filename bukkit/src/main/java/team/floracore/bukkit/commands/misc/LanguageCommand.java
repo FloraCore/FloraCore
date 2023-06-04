@@ -41,7 +41,7 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
     @CommandMethod("language|lang")
     public void language(final @NotNull Player player) {
         Sender s = getPlugin().getSenderFactory().wrap(player);
-        GuiPage guiPage = getNewLanguageGui(player);
+        GuiPage guiPage = getLanguageGui(player);
         if (guiPage == null) {
             MiscMessage.CHECK_CONSOLE_FOR_ERRORS.send(s);
             return;
@@ -49,7 +49,7 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
         guiPage.openGui();
     }
 
-    public GuiPage getNewLanguageGui(Player player) {
+    public GuiPage getLanguageGui(Player player) {
         Sender s = getPlugin().getSenderFactory().wrap(player);
         UUID uuid = player.getUniqueId();
         List<Button> buttons = new ArrayList<>();
@@ -112,8 +112,6 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
         GuiPage gui = new GuiPage(player, buttons, 16, LINE);
         gui.title(title);
         gui.setPlayer(player);
-        gui.tick(10);
-        gui.addTick(g -> g.refresh(true));
         gui.addAttachedButton(
                 new GuiButton(
                         Slot.ofGame(1, 6),
