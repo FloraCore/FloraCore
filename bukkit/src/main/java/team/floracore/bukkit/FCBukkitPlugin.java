@@ -83,6 +83,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         dependencies.add(Dependency.ADVENTURE_PLATFORM_BUKKIT);
         dependencies.add(Dependency.CLOUD_BUKKIT);
         dependencies.add(Dependency.CLOUD_PAPER);
+        dependencies.add(Dependency.BUKKIT_GUI);
         return dependencies;
     }
 
