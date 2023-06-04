@@ -128,4 +128,4 @@ check-update: true
 
 bytebin-url: https://bytebin.floracore.cc/
 bytesocks-host: bytesocks.floracore.cc
-chat-viewer-url: https://floracore.cc/verbose/
+chat-viewer-url: https://floracore.cc/chat/
