@@ -310,6 +310,7 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
                                 return;
                             }
                             chatModel = i;
+                            break;
                         }
                     }
                     if (chatModel == null) {

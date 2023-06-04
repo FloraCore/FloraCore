@@ -71,6 +71,13 @@ public interface MiscMessage extends AbstractMessage {
             .append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY))
             .build();
 
+    Args1<Component> PREFIX_CUSTOM = (prefix) -> text()
+            // CUSTOM >
+            .append(prefix)
+            .append(space())
+            .append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY))
+            .build();
+
     Component PREFIX_ADMIN_LIGHT = text()
             // 管理
             .append(translatable("floracore.command.misc.admin.prefix", RED)).build();

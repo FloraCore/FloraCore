@@ -27,6 +27,10 @@ public class BungeeStringReplacer {
 
     public static String processStringForPlayer(ProxiedPlayer player, String input) {
         UUID uuid = player.getUniqueId();
+        return processStringForPlayer(uuid, input);
+    }
+
+    public static String processStringForPlayer(UUID uuid, String input) {
         // 匹配以$开头和结尾的内容，括号内为非贪婪匹配
         String regex = "\\$(.*?)\\$";
         Pattern pattern = Pattern.compile(regex);

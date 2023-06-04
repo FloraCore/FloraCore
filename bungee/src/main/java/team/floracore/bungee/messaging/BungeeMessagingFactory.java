@@ -1,6 +1,7 @@
 package team.floracore.bungee.messaging;
 
 import com.google.gson.JsonElement;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
@@ -8,9 +9,13 @@ import org.floracore.api.data.chat.ChatType;
 import org.floracore.api.messenger.message.Message;
 import org.floracore.api.messenger.message.type.ChangeNameMessage;
 import team.floracore.bungee.FCBungeePlugin;
+import team.floracore.bungee.chat.ChatModel;
+import team.floracore.bungee.config.ChatKeys;
 import team.floracore.bungee.locale.message.SocialSystemsMessage;
 import team.floracore.bungee.messaging.message.ChatMessageImpl;
 import team.floracore.bungee.messaging.message.NoticeMessageImpl;
+import team.floracore.bungee.util.BungeeStringReplacer;
+import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.messaging.InternalMessagingService;
 import team.floracore.common.messaging.MessagingFactory;
 import team.floracore.common.messaging.message.ChangeNameMessageImpl;
@@ -75,46 +80,58 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
     public void chat(ChatMessage chatMsg) {
         ProxiedPlayer player = getPlugin().getProxy().getPlayer(chatMsg.getReceiver());
         List<String> parameters = chatMsg.getParameters();
+        UUID su1 = UUID.fromString(parameters.get(0));
+        String senderName = getPlayerName(su1);
+        String message = parameters.get(1);
         switch (chatMsg.getType()) {
             case STAFF:
                 getPlugin().getOnlineSenders().forEach(i -> {
                     if (i.hasPermission("floracore.chat.staff")) {
-                        UUID su1 = UUID.fromString(parameters.get(0));
-                        String sn1 = getPlayerName(su1);
-                        String mess = parameters.get(1);
-                        SocialSystemsMessage.COMMAND_MISC_STAFF_CHAT.send(i, sn1, mess);
+                        SocialSystemsMessage.COMMAND_MISC_STAFF_CHAT.send(i, senderName, message);
                     }
                 });
                 break;
             case BUILDER:
                 getPlugin().getOnlineSenders().forEach(i -> {
                     if (i.hasPermission("floracore.chat.builder")) {
-                        UUID su1 = UUID.fromString(parameters.get(0));
-                        String sn1 = getPlayerName(su1);
-                        String mess = parameters.get(1);
-                        SocialSystemsMessage.COMMAND_MISC_BUILDER_CHAT.send(i, sn1, mess);
+                        SocialSystemsMessage.COMMAND_MISC_BUILDER_CHAT.send(i, senderName, message);
                     }
                 });
                 break;
             case ADMIN:
                 getPlugin().getOnlineSenders().forEach(i -> {
                     if (i.hasPermission("floracore.chat.admin")) {
-                        UUID su1 = UUID.fromString(parameters.get(0));
-                        String sn1 = getPlayerName(su1);
-                        String mess = parameters.get(1);
-                        SocialSystemsMessage.COMMAND_MISC_ADMIN_CHAT.send(i, sn1, mess);
+                        SocialSystemsMessage.COMMAND_MISC_ADMIN_CHAT.send(i, senderName, message);
                     }
                 });
+                break;
+            case CUSTOM:
+                String channel = parameters.get(2);
+                ChatModel chatModel = null;
+                List<ChatModel> chatModelList = getPlugin().getChatConfiguration().get(ChatKeys.CHAT_MODELS);
+                for (ChatModel i : chatModelList) {
+                    if (i.name.equalsIgnoreCase(channel)) {
+                        chatModel = i;
+                        break;
+                    }
+                }
+                if (chatModel != null) {
+                    ChatModel finalChatModel = chatModel;
+                    getPlugin().getOnlineSenders().forEach(i -> {
+                        if (i.hasPermission(finalChatModel.permission)) {
+                            String prefix = BungeeStringReplacer.processStringForPlayer(i.getUniqueId(), finalChatModel.prefix);
+                            Component pi = AbstractMessage.formatColoredValue(prefix);
+                            SocialSystemsMessage.COMMAND_MISC_CUSTOM_CHAT.send(i, pi, senderName, message);
+                        }
+                    });
+                }
                 break;
         }
         if (player != null) {
             Sender sender = getPlugin().getSenderFactory().wrap(player);
             switch (chatMsg.getType()) {
                 case PARTY:
-                    UUID su1 = UUID.fromString(parameters.get(0));
-                    String sn1 = getPlayerName(su1);
-                    String mess = parameters.get(1);
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_CHAT.send(sender, sn1, mess);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_CHAT.send(sender, senderName, message);
                     break;
             }
         }

@@ -435,6 +435,15 @@ public interface SocialSystemsMessage extends AbstractMessage {
             .append(space())
             .append(text(message, WHITE))
             .build();
+
+    Args3<Component, String, String> COMMAND_MISC_CUSTOM_CHAT = (prefix, sender, message) -> text()
+            .append(MiscMessage.PREFIX_CUSTOM.build(prefix)).append(space())
+            .append(text(sender, GRAY))
+            .append(COLON.color(WHITE))
+            .append(space())
+            .append(text(message, WHITE))
+            .build();
+
     Args3<UUID, List<UUID>, List<UUID>> COMMAND_MISC_PARTY_LIST = (leader, moderators, members) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         Component title = translatable("floracore.command.misc.party.list")
