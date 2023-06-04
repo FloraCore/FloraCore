@@ -119,20 +119,4 @@ public interface MiscCommandMessage extends AbstractMessage {
 	Args1<String> COMMAND_LANGUAGE_CHANGE_SUCCESS = (language) -> translatable()
 			// 你已成功将你的显示语言更改为 {0} !
 			.key("floracore.command.language.change.success").args(text(language, GREEN)).color(AQUA).build();
-
-	Args1<String> CHAT_RESULTS_URL = url -> {
-		JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
-		return join(joinConfig,
-				// "&a聊天记录链接"
-				// <link>
-				AbstractMessage.prefixed(translatable()
-						.key("floracore.command.chat.url")
-						.color(AQUA)
-						.append(text(':'))),
-				text()
-						.content(url)
-						.color(GREEN)
-						.clickEvent(ClickEvent.openUrl(url))
-		           );
-	};
 }

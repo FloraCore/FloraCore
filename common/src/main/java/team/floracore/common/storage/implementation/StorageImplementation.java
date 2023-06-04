@@ -102,4 +102,6 @@ public interface StorageImplementation {
 	               long reportTime);
 
 	List<CHAT> selectChat(UUID uuid, ChatType chatType);
+
+	List<CHAT> selectChatServer(String parameters);
 }

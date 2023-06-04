@@ -2,6 +2,7 @@ package team.floracore.common.locale.message;
 
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
+import net.kyori.adventure.text.event.ClickEvent;
 import team.floracore.common.plugin.bootstrap.FloraCoreBootstrap;
 import team.floracore.common.util.DescParseTickFormat;
 
@@ -290,4 +291,21 @@ public interface MiscMessage extends AbstractMessage {
 	Args0 CHECK_CONSOLE_FOR_ERRORS = () -> AbstractMessage.prefixed(translatable().key("floracore.command.misc" +
 			                                                                              ".check-console-for-errors")
 	                                                                              .color(RED));
+
+
+	Args1<String> CHAT_RESULTS_URL = url -> {
+		JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+		return join(joinConfig,
+				// "&a聊天记录链接"
+				// <link>
+				AbstractMessage.prefixed(translatable()
+						.key("floracore.command.chat.url")
+						.color(AQUA)
+						.append(text(':'))),
+				text()
+						.content(url)
+						.color(GREEN)
+						.clickEvent(ClickEvent.openUrl(url))
+		           );
+	};
 }

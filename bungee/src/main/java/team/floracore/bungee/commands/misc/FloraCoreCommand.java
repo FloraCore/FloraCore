@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
 import team.floracore.bungee.locale.message.commands.MiscCommandMessage;
+import team.floracore.common.chat.ChatProvider;
+import team.floracore.common.config.ConfigKeys;
 import team.floracore.common.http.UnsuccessfulRequestException;
 import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.locale.message.CommonCommandMessage;
@@ -169,5 +171,38 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 	@Suggestions("servers")
 	public List<String> getServers(final @NotNull CommandContext<CommandSender> sender, final @NotNull String input) {
 		return new ArrayList<>(getPlugin().getProxy().getServersCopy().keySet());
+	}
+
+	@CommandMethod("fcb|floracorebungee chat server <target>")
+	public void chat(final @NotNull CommandSender sender,
+	                 final @NotNull @Argument(value = "target", suggestions = "servers") String target) {
+		Sender s = getPlugin().getSenderFactory().wrap(sender);
+		getAsyncExecutor().execute(() -> {
+			boolean has = false;
+			for (String s1 : getPlugin().getProxy().getServersCopy().keySet()) {
+				if (s1.equalsIgnoreCase(target)) {
+					has = true;
+					break;
+				}
+			}
+			if (has) {
+				MiscMessage.MISC_GETTING.send(s);
+				ChatProvider.Uploader uploader = new ChatProvider.Uploader(s.getUniqueId(), s.getName());
+				ChatProvider chatProvider = new ChatProvider(getPlugin(), uploader, target);
+				try {
+					String id = chatProvider.uploadChatData(getPlugin().getBytebin());
+					String url = getPlugin().getConfiguration().get(ConfigKeys.CHAT_VIEWER_URL_PATTERN) + id;
+					MiscMessage.CHAT_RESULTS_URL.send(s, url);
+				} catch (IOException e) {
+					getPlugin().getLogger().warn("Error uploading data to bytebin", e);
+					MiscMessage.GENERIC_HTTP_UNKNOWN_FAILURE.send(s);
+				} catch (UnsuccessfulRequestException e) {
+					MiscMessage.GENERIC_HTTP_REQUEST_FAILURE.send(s, e.getResponse().code(),
+							e.getResponse().message());
+				}
+			} else {
+				MiscMessage.SERVER_NOT_FOUND.send(s, target);
+			}
+		});
 	}
 }

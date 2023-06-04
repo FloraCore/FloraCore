@@ -309,7 +309,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 				try {
 					String id = chatProvider.uploadChatData(getPlugin().getBytebin());
 					String url = getPlugin().getConfiguration().get(ConfigKeys.CHAT_VIEWER_URL_PATTERN) + id;
-					MiscCommandMessage.CHAT_RESULTS_URL.send(s, url);
+					MiscMessage.CHAT_RESULTS_URL.send(s, url);
 				} catch (IOException e) {
 					getPlugin().getLogger().warn("Error uploading data to bytebin", e);
 					MiscMessage.GENERIC_HTTP_UNKNOWN_FAILURE.send(s);
