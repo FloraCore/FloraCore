@@ -42,17 +42,6 @@ public interface MiscMessage extends AbstractMessage {
             // 员工
             .append(translatable("floracore.command.misc.staff.prefix", AQUA)).build();
 
-    Component PREFIX_BLOGGER = text()
-            // 博主 >
-            .append(translatable("floracore.command.misc.blogger.prefix", GOLD))
-            .append(space())
-            .append(AbstractMessage.ARROW_LIGHT.color(DARK_GRAY))
-            .build();
-
-    Component PREFIX_BLOGGER_LIGHT = text()
-            // 博主
-            .append(translatable("floracore.command.misc.blogger.prefix", GOLD)).build();
-
     Component PREFIX_BUILDER = text()
             // 建筑组 >
             .append(translatable("floracore.command.misc.builder.prefix", DARK_AQUA))

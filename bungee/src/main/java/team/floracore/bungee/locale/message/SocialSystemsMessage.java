@@ -3,6 +3,7 @@ package team.floracore.bungee.locale.message;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.event.ClickEvent;
+import org.floracore.api.FloraCore;
 import org.floracore.api.FloraCoreProvider;
 import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.locale.message.MiscMessage;
@@ -397,52 +398,84 @@ public interface SocialSystemsMessage extends AbstractMessage {
                 MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
 
-    Args2<String, String> COMMAND_MISC_PARTY_CHAT = (sender, message) -> text()
-            .append(MiscMessage.PREFIX_PARTY).append(space())
-            .append(text(sender, GRAY))
-            .append(COLON.color(WHITE))
-            .append(space())
-            .append(text(message, WHITE))
-            .build();
-    Args2<String, String> COMMAND_MISC_STAFF_CHAT = (sender, message) -> text()
-            .append(MiscMessage.PREFIX_STAFF).append(space())
-            .append(text(sender, GRAY))
-            .append(COLON.color(WHITE))
-            .append(space())
-            .append(text(message, WHITE))
-            .build();
+    Args3<String, String, UUID> COMMAND_MISC_PARTY_CHAT = (sender, message, uuid) -> {
+        FloraCore floraCore = FloraCoreProvider.get();
+        String prefix = floraCore.getPlayerAPI().getPrefix(uuid);
+        prefix = prefix == null ? "" : prefix + " ";
+        String suffix = floraCore.getPlayerAPI().getSuffix(uuid);
+        suffix = suffix == null ? "" : " " + suffix;
+        Component s = AbstractMessage.formatColoredValue(prefix).append(text(sender)).append(AbstractMessage.formatColoredValue(suffix));
+        return text()
+                .append(MiscMessage.PREFIX_PARTY).append(space())
+                .append(s)
+                .append(COLON.color(WHITE))
+                .append(space())
+                .append(text(message, WHITE))
+                .build();
+    };
+    Args3<String, String, UUID> COMMAND_MISC_STAFF_CHAT = (sender, message, uuid) -> {
+        FloraCore floraCore = FloraCoreProvider.get();
+        String prefix = floraCore.getPlayerAPI().getPrefix(uuid);
+        prefix = prefix == null ? "" : prefix + " ";
+        String suffix = floraCore.getPlayerAPI().getSuffix(uuid);
+        suffix = suffix == null ? "" : " " + suffix;
+        Component s = AbstractMessage.formatColoredValue(prefix).append(text(sender)).append(AbstractMessage.formatColoredValue(suffix));
+        return text()
+                .append(MiscMessage.PREFIX_STAFF).append(space())
+                .append(s)
+                .append(COLON.color(WHITE))
+                .append(space())
+                .append(text(message, WHITE))
+                .build();
+    };
 
-    Args2<String, String> COMMAND_MISC_BLOGGER_CHAT = (sender, message) -> text()
-            .append(MiscMessage.PREFIX_BLOGGER).append(space())
-            .append(text(sender, GRAY))
-            .append(COLON.color(WHITE))
-            .append(space())
-            .append(text(message, WHITE))
-            .build();
+    Args3<String, String, UUID> COMMAND_MISC_BUILDER_CHAT = (sender, message, uuid) -> {
+        FloraCore floraCore = FloraCoreProvider.get();
+        String prefix = floraCore.getPlayerAPI().getPrefix(uuid);
+        prefix = prefix == null ? "" : prefix + " ";
+        String suffix = floraCore.getPlayerAPI().getSuffix(uuid);
+        suffix = suffix == null ? "" : suffix;
+        Component s = AbstractMessage.formatColoredValue(prefix).append(text(sender)).append(AbstractMessage.formatColoredValue(suffix));
+        return text()
+                .append(MiscMessage.PREFIX_BUILDER).append(space())
+                .append(s)
+                .append(COLON.color(WHITE))
+                .append(space())
+                .append(text(message, WHITE))
+                .build();
+    };
 
-    Args2<String, String> COMMAND_MISC_BUILDER_CHAT = (sender, message) -> text()
-            .append(MiscMessage.PREFIX_BUILDER).append(space())
-            .append(text(sender, GRAY))
-            .append(COLON.color(WHITE))
-            .append(space())
-            .append(text(message, WHITE))
-            .build();
+    Args3<String, String, UUID> COMMAND_MISC_ADMIN_CHAT = (sender, message, uuid) -> {
+        FloraCore floraCore = FloraCoreProvider.get();
+        String prefix = floraCore.getPlayerAPI().getPrefix(uuid);
+        prefix = prefix == null ? "" : prefix + " ";
+        String suffix = floraCore.getPlayerAPI().getSuffix(uuid);
+        suffix = suffix == null ? "" : " " + suffix;
+        Component s = AbstractMessage.formatColoredValue(prefix).append(text(sender)).append(AbstractMessage.formatColoredValue(suffix));
+        return text()
+                .append(MiscMessage.PREFIX_ADMIN).append(space())
+                .append(s)
+                .append(COLON.color(WHITE))
+                .append(space())
+                .append(text(message, WHITE))
+                .build();
+    };
 
-    Args2<String, String> COMMAND_MISC_ADMIN_CHAT = (sender, message) -> text()
-            .append(MiscMessage.PREFIX_ADMIN).append(space())
-            .append(text(sender, GRAY))
-            .append(COLON.color(WHITE))
-            .append(space())
-            .append(text(message, WHITE))
-            .build();
-
-    Args3<Component, String, String> COMMAND_MISC_CUSTOM_CHAT = (prefix, sender, message) -> text()
-            .append(MiscMessage.PREFIX_CUSTOM.build(prefix)).append(space())
-            .append(text(sender, GRAY))
-            .append(COLON.color(WHITE))
-            .append(space())
-            .append(text(message, WHITE))
-            .build();
+    Args4<Component, String, String, UUID> COMMAND_MISC_CUSTOM_CHAT = (prefix, sender, message, uuid) -> {
+        FloraCore floraCore = FloraCoreProvider.get();
+        String prefix1 = floraCore.getPlayerAPI().getPrefix(uuid);
+        prefix1 = prefix1 == null ? "" : prefix1 + " ";
+        String suffix = floraCore.getPlayerAPI().getSuffix(uuid);
+        suffix = suffix == null ? "" : " " + suffix;
+        Component s = AbstractMessage.formatColoredValue(prefix1).append(text(sender)).append(AbstractMessage.formatColoredValue(suffix));
+        return text()
+                .append(MiscMessage.PREFIX_CUSTOM.build(prefix)).append(space())
+                .append(s)
+                .append(COLON.color(WHITE))
+                .append(space())
+                .append(text(message, WHITE))
+                .build();
+    };
 
     Args3<UUID, List<UUID>, List<UUID>> COMMAND_MISC_PARTY_LIST = (leader, moderators, members) -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();

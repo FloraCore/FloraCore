@@ -94,6 +94,40 @@ public class ApiPlayer implements PlayerAPI {
                     future.complete(null);
                     return future;
                 }
+
+                @Override
+                public CompletableFuture<String> getPrefix(UUID uuid) {
+                    CompletableFuture<String> future = new CompletableFuture<>();
+                    try {
+                        if (plugin.luckPermsHook()) {
+                            LuckPerms luckPerms = LuckPermsProvider.get();
+                            User user = luckPerms.getUserManager().getUser(uuid);
+                            if (user != null) {
+                                String prefix = user.getCachedData().getMetaData().getPrefix();
+                                future.complete(prefix);
+                            }
+                        }
+                    } catch (Throwable ignored) {
+                    }
+                    return future;
+                }
+
+                @Override
+                public CompletableFuture<String> getSuffix(UUID uuid) {
+                    CompletableFuture<String> future = new CompletableFuture<>();
+                    try {
+                        if (plugin.luckPermsHook()) {
+                            LuckPerms luckPerms = LuckPermsProvider.get();
+                            User user = luckPerms.getUserManager().getUser(uuid);
+                            if (user != null) {
+                                String suffix = user.getCachedData().getMetaData().getSuffix();
+                                future.complete(suffix);
+                            }
+                        }
+                    } catch (Throwable ignored) {
+                    }
+                    return future;
+                }
             };
         } catch (Throwable i) {
             this.rankConsumer = null;
@@ -210,5 +244,31 @@ public class ApiPlayer implements PlayerAPI {
             throw new NullPointerException();
         }
         this.rankConsumer = rankConsumer;
+    }
+
+    @Override
+    public String getPrefix(UUID uuid) {
+        return getPrefix(uuid, this.rankConsumer);
+    }
+
+    @Override
+    public String getPrefix(UUID uuid, RankConsumer rankConsumer) {
+        if (rankConsumer == null) {
+            throw new NullPointerException();
+        }
+        return rankConsumer.getPrefix(uuid).join();
+    }
+
+    @Override
+    public String getSuffix(UUID uuid) {
+        return getSuffix(uuid, this.rankConsumer);
+    }
+
+    @Override
+    public String getSuffix(UUID uuid, RankConsumer rankConsumer) {
+        if (rankConsumer == null) {
+            throw new NullPointerException();
+        }
+        return rankConsumer.getSuffix(uuid).join();
     }
 }

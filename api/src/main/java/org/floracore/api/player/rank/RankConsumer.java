@@ -28,4 +28,8 @@ public interface RankConsumer {
      * @return 一个CompletableFuture对象，表示重置等级的异步操作。
      */
     CompletableFuture<Void> resetRank(UUID uuid);
+
+    CompletableFuture<String> getPrefix(UUID uuid);
+
+    CompletableFuture<String> getSuffix(UUID uuid);
 }

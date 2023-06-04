@@ -106,4 +106,10 @@ public interface PlayerAPI {
     void resetRank(UUID uuid) throws NullPointerException;
 
     void setRankConsumer(RankConsumer rankConsumer);
+
+    String getPrefix(UUID uuid);
+    String getPrefix(UUID uuid,RankConsumer rankConsumer);
+
+    String getSuffix(UUID uuid);
+    String getSuffix(UUID uuid,RankConsumer rankConsumer);
 }

@@ -80,28 +80,28 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
     public void chat(ChatMessage chatMsg) {
         ProxiedPlayer player = getPlugin().getProxy().getPlayer(chatMsg.getReceiver());
         List<String> parameters = chatMsg.getParameters();
-        UUID su1 = UUID.fromString(parameters.get(0));
-        String senderName = getPlayerName(su1);
+        UUID senderUUID = UUID.fromString(parameters.get(0));
+        String senderName = getPlayerName(senderUUID);
         String message = parameters.get(1);
         switch (chatMsg.getType()) {
             case STAFF:
                 getPlugin().getOnlineSenders().forEach(i -> {
                     if (i.hasPermission("floracore.chat.staff")) {
-                        SocialSystemsMessage.COMMAND_MISC_STAFF_CHAT.send(i, senderName, message);
+                        SocialSystemsMessage.COMMAND_MISC_STAFF_CHAT.send(i, senderName, message, senderUUID);
                     }
                 });
                 break;
             case BUILDER:
                 getPlugin().getOnlineSenders().forEach(i -> {
                     if (i.hasPermission("floracore.chat.builder")) {
-                        SocialSystemsMessage.COMMAND_MISC_BUILDER_CHAT.send(i, senderName, message);
+                        SocialSystemsMessage.COMMAND_MISC_BUILDER_CHAT.send(i, senderName, message, senderUUID);
                     }
                 });
                 break;
             case ADMIN:
                 getPlugin().getOnlineSenders().forEach(i -> {
                     if (i.hasPermission("floracore.chat.admin")) {
-                        SocialSystemsMessage.COMMAND_MISC_ADMIN_CHAT.send(i, senderName, message);
+                        SocialSystemsMessage.COMMAND_MISC_ADMIN_CHAT.send(i, senderName, message, senderUUID);
                     }
                 });
                 break;
@@ -121,7 +121,7 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
                         if (i.hasPermission(finalChatModel.permission)) {
                             String prefix = BungeeStringReplacer.processStringForPlayer(i.getUniqueId(), finalChatModel.prefix);
                             Component pi = AbstractMessage.formatColoredValue(prefix);
-                            SocialSystemsMessage.COMMAND_MISC_CUSTOM_CHAT.send(i, pi, senderName, message);
+                            SocialSystemsMessage.COMMAND_MISC_CUSTOM_CHAT.send(i, pi, senderName, message, senderUUID);
                         }
                     });
                 }
@@ -131,7 +131,7 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
             Sender sender = getPlugin().getSenderFactory().wrap(player);
             switch (chatMsg.getType()) {
                 case PARTY:
-                    SocialSystemsMessage.COMMAND_MISC_PARTY_CHAT.send(sender, senderName, message);
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_CHAT.send(sender, senderName, message, senderUUID);
                     break;
             }
         }

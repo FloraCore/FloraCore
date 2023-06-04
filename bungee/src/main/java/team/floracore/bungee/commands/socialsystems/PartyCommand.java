@@ -13,7 +13,6 @@ import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import org.floracore.api.FloraCoreProvider;
-import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
 import org.floracore.api.data.DataType;
 import org.floracore.api.data.chat.ChatType;
