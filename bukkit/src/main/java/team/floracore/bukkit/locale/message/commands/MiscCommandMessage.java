@@ -32,13 +32,11 @@ public interface MiscCommandMessage extends AbstractMessage {
                                 .append(OPEN_BRACKET)
                                 .append(translatable()
                                         // 过期时间
-                                        .key("floracore.command.generic" +
-                                                ".info.expires-in")
+                                        .key("floracore.command.generic.info.expires-in")
                                         .color(GRAY)
                                         .append(space())
                                         .append(text().color(AQUA)
-                                                .append(DurationFormatter.CONCISE.format(
-                                                        timeElapsed))))
+                                                .append(DurationFormatter.CONCISE.format(timeElapsed))))
                                 .append(CLOSE_BRACKET));
                     }
                 }));

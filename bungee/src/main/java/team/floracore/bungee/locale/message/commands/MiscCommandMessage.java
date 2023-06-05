@@ -16,7 +16,8 @@ public interface MiscCommandMessage extends AbstractMessage {
                             .color(AQUA)
                             .args(text(server, GREEN), type,
                                     translatable(value ?
-                                            "floracore.command.misc.on" : "floracore.command.misc.off")
+                                            "floracore.command.misc.on" :
+                                            "floracore.command.misc.off")
                                             .color(value ? GREEN : RED))
                             .append(FULL_STOP));
 }

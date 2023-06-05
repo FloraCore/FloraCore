@@ -47,8 +47,8 @@ public interface NmsNBTTagCompound extends NmsNBTTag {
     @WrappedConstructor
     NmsNBTTagCompound staticNewInstance();
 
-    @WrappedBukkitFieldAccessor({@VersionName(minVer = 15, maxVer = 16, value = "a"), @VersionName(minVer = 16,
-            value = "b")})
+    @WrappedBukkitFieldAccessor({@VersionName(minVer = 15, maxVer = 16, value = "a"),
+            @VersionName(minVer = 16, value = "b")})
     NmsNBTTagTypeV15 staticGetTypeV15();
 
     default NmsNBTTagCompound set(String key, String value) {

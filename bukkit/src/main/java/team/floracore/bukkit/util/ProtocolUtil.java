@@ -22,10 +22,8 @@ import java.util.*;
 public final class ProtocolUtil extends AbsModule implements IRegistrar<ProtocolUtil.PacketListener> {
     public static ProtocolUtil instance = new ProtocolUtil();
     public static List<Object> forcePackets = new LinkedList<>();
-    static Map<Class<?>,
-            List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>>> sendListeners = new HashMap<>();
-    static Map<Class<?>,
-            List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>>> receiveListeners = new HashMap<>();
+    static Map<Class<?>, List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>>> sendListeners = new HashMap<>();
+    static Map<Class<?>, List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>>> receiveListeners = new HashMap<>();
 
     public ProtocolUtil() {
         super(FCBukkitBootstrap.loader, RegistrarRegistrar.instance);
@@ -70,8 +68,7 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
         if (receiveListeners.containsKey(packet.getRaw().getClass())) {
             Ref<Boolean> cancelled = new Ref<>(false);
             List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l =
-                    receiveListeners.get(
-                            packet.getRaw().getClass());
+                    receiveListeners.get(packet.getRaw().getClass());
             for (EventPriority p : EventPriority.values()) {
                 l.get(p.ordinal()).forEach((c, t) ->
                 {

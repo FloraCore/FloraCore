@@ -538,8 +538,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
             // 不存在 {0} 这个聊天频道!
             .key("floracore.command.misc.chat.does-not-exist")
             // {0}
-            .args(text(type,
-                    DARK_RED))
+            .args(text(type, DARK_RED))
             .color(RED));
 
     Args1<Component> COMMAND_MISC_CHAT_SUCCESS = (type) -> AbstractMessage.prefixed(translatable()

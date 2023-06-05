@@ -145,16 +145,15 @@ public interface NmsCraftingManager extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor(@VersionName(minVer = 13, value = "recipes", maxVer = 14))
     WrappedObject2ObjectLinkedOpenHashMapV13 getRecipes0V13_14();
 
-    @WrappedBukkitFieldAccessor({@VersionName(minVer = 14, value = "recipes"), @VersionName(minVer = 17, value = "@0"
-    )})
+    @WrappedBukkitFieldAccessor({@VersionName(minVer = 14, value = "recipes"),
+            @VersionName(minVer = 17, value = "@0")})
     Map<Object, Map<Object, Object>> getRecipes0V14();
 
     @WrappedBukkitFieldAccessor(@VersionName(maxVer = 13, value = "recipes"))
     NmsRegistryMaterials getRecipes0V_13();
 
-    @WrappedBukkitMethod({@VersionName(minVer = 13, value = "addRecipe"), @VersionName(value = "@0",
-            minVer = 13,
-            maxVer = 14)})
+    @WrappedBukkitMethod({@VersionName(minVer = 13, value = "addRecipe"),
+            @VersionName(value = "@0", minVer = 13, maxVer = 14)})
     void addRecipe0V13(NmsIRecipe recipe);
 
     @WrappedBukkitMethod(@VersionName(maxVer = 13, value = "#0"))

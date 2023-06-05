@@ -32,10 +32,8 @@ public class BukkitWrapper {
             .replace("org.bukkit.craftbukkit.", "");
 
     static {
-        v17 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server." + MCProtocolVersion +
-                ".MinecraftServer"));
-        v13 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server." + MCProtocolVersion + ".ItemStack")
-                .getDeclaredField("damage"));
+        v17 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server." + MCProtocolVersion + ".MinecraftServer"));
+        v13 = TypeUtil.hasThrowable(() -> Class.forName("net.minecraft.server." + MCProtocolVersion + ".ItemStack").getDeclaredField("damage"));
         MCVersion = Bukkit.getBukkitVersion().split("-")[0];
         version = Float.parseFloat(BukkitWrapper.MCVersion.split("\\.", 2)[1]);
         v8 = version < 9;

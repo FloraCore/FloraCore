@@ -48,15 +48,13 @@ public interface NmsItem extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor(@VersionName(value = "name", minVer = 8))
     String getNameV8();
 
-    @WrappedBukkitFieldAccessor({@VersionName("maxStackSize"), @VersionName(value = "c",
-            minVer = 17,
-            maxVer = 18.2f), @VersionName(value = "d",
-            minVer = 18.2f)})
+    @WrappedBukkitFieldAccessor({@VersionName("maxStackSize"),
+            @VersionName(value = "c", minVer = 17, maxVer = 18.2f),
+            @VersionName(value = "d", minVer = 18.2f)})
     int getMaxStackSize();
 
-    @WrappedBukkitFieldAccessor({@VersionName("maxStackSize"), @VersionName(value = "c",
-            minVer = 17,
-            maxVer = 18.2f), @VersionName(value = "d",
-            minVer = 18.2f)})
+    @WrappedBukkitFieldAccessor({@VersionName("maxStackSize"),
+            @VersionName(value = "c", minVer = 17, maxVer = 18.2f),
+            @VersionName(value = "d", minVer = 18.2f)})
     NmsItem setMaxStackSize(int count);
 }

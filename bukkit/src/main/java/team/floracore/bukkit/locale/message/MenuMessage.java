@@ -1,14 +1,12 @@
 package team.floracore.bukkit.locale.message;
 
 import net.kyori.adventure.text.Component;
-import org.floracore.api.data.chat.ChatType;
 import team.floracore.common.locale.message.AbstractMessage;
 
 import static net.kyori.adventure.text.Component.text;
 import static net.kyori.adventure.text.Component.translatable;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 import static net.kyori.adventure.text.format.TextDecoration.BOLD;
-import static net.kyori.adventure.text.format.TextDecoration.UNDERLINED;
 
 public interface MenuMessage extends AbstractMessage {
     Args1<Integer> COMMAND_REPORTS_GUI_PAGE = (page) -> translatable()
@@ -80,8 +78,9 @@ public interface MenuMessage extends AbstractMessage {
             // 被举报者: {0} {1}
             .key("floracore.command.misc.reports.gui.main.report.reported")
             .args(text(reported, RED),
-                    OPEN_BRACKET.append(translatable(online ? "floracore.command.misc.online" : "floracore.command" +
-                                    ".misc.offline"))
+                    OPEN_BRACKET.append(translatable(online ?
+                                    "floracore.command.misc.online" :
+                                    "floracore.command.misc.offline"))
                             .append(CLOSE_BRACKET)
                             .color(online ? GREEN : RED)).color(GRAY).build();
 
@@ -89,14 +88,16 @@ public interface MenuMessage extends AbstractMessage {
             // 举报者: {0} {1}
             .key("floracore.command.misc.reports.gui.main.report.reporter.detailed")
             .args(text(reported, RED),
-                    OPEN_BRACKET.append(translatable(online ? "floracore.command.misc.online" : "floracore.command" +
-                                    ".misc.offline"))
+                    OPEN_BRACKET.append(translatable(online ?
+                                    "floracore.command.misc.online" :
+                                    "floracore.command.misc.offline"))
                             .append(CLOSE_BRACKET)
                             .color(online ? GREEN : RED)).color(GRAY).build();
 
     Args1<String> COMMAND_REPORTS_GUI_MAIN_REASON = (reason) -> translatable()
             // 原因: {0}
-            .key("floracore.command.misc.reports.gui.main.report.reason").args(text(reason, AQUA)).color(GRAY).build();
+            .key("floracore.command.misc.reports.gui.main.report.reason")
+            .args(text(reason, AQUA)).color(GRAY).build();
 
     Args0 COMMAND_REPORTS_CLICK_TO_LOOK = () -> translatable()
             // 点击查看详情!
@@ -116,8 +117,7 @@ public interface MenuMessage extends AbstractMessage {
 
     Args0 COMMAND_REPORTS_GUI_PROCESSED = () -> OPEN_BRACKET.append(translatable()
                     // (已处理)
-                    .key("floracore.command.misc.reports.gui" +
-                            ".processed"))
+                    .key("floracore.command.misc.reports.gui.processed"))
             .append(CLOSE_BRACKET)
             .color(DARK_AQUA);
 
@@ -152,27 +152,6 @@ public interface MenuMessage extends AbstractMessage {
     Args0 COMMAND_MISC_GUI_CLOSE = () -> translatable()
             // 关闭
             .key("floracore.command.misc.gui.close").color(RED).build();
-
-    Args0 COMMAND_MISC_CHAT = () -> translatable()
-            // 聊天记录
-            .key("floracore.command.misc.chat")
-            .decoration(BOLD, true)
-            .decoration(UNDERLINED, true)
-            .color(BLACK)
-            .build();
-
-    Args1<ChatType> COMMAND_MISC_CHAT_TYPE = (type) -> {
-        Component component = OPEN_BRACKET;
-        switch (type) {
-            case PARTY:
-                component = component.append(text("PARTY")).append(CLOSE_BRACKET).color(BLUE);
-                break;
-            default:
-                component = component.append(text("SERVER")).append(CLOSE_BRACKET).color(GRAY);
-                break;
-        }
-        return component;
-    };
 
     Args0 COMMAND_LANGUAGE_TITLE = () -> translatable()
             // 切换你的显示语言

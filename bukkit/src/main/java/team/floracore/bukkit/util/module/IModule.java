@@ -111,9 +111,8 @@ public interface IModule extends Listener {
                     reged++;
                     if (r instanceof IModule && r != this && !this.getAllDepends().contains(r)) {
                         FCBukkitBootstrap.loader.getLogger()
-                                .warning("The module " + this.getClass()
-                                        .getName() + " should depends module " + r.getClass()
-                                        .getName());
+                                .warning("The module " + this.getClass().getName() +
+                                        " should depends module " + r.getClass().getName());
                     }
                     List<Object> list = getRegisteredObjects().computeIfAbsent(r, k -> new LinkedList<>());
                     list.add(obj);
@@ -225,8 +224,8 @@ public interface IModule extends Listener {
             } catch (Throwable e) {
                 this.getPlugin()
                         .getLogger()
-                        .warning(this.getPlugin().getName() + " has a exception on enabling module " + this.getClass()
-                                .getName());
+                        .warning(this.getPlugin().getName() + " has a exception on enabling module " +
+                                this.getClass().getName());
                 e.printStackTrace();
             }
         }

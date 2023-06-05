@@ -21,10 +21,12 @@ public interface NmsContainer extends WrappedBukkitObject {
         }
     }
 
-    @WrappedBukkitFieldAccessor({@VersionName(value = "slots", minVer = 17), @VersionName(value = "@1", minVer = 17)})
+    @WrappedBukkitFieldAccessor({@VersionName(value = "slots", minVer = 17),
+            @VersionName(value = "@1", minVer = 17)})
     NmsNonNullList getSlotsV17();
 
-    @WrappedBukkitFieldAccessor({@VersionName(value = "slots", maxVer = 17), @VersionName(value = "@0", maxVer = 17)})
+    @WrappedBukkitFieldAccessor({@VersionName(value = "slots", maxVer = 17),
+            @VersionName(value = "@0", maxVer = 17)})
     List<Object> getSlotsV_17();
 
     default void setSlot(int index, NmsSlot slot) {
@@ -34,7 +36,7 @@ public interface NmsContainer extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor({@VersionName("windowId"), @VersionName(minVer = 17, value = "j")})
     int getWindowId();
 
-    @WrappedBukkitMethod({@VersionName(minVer = 17, value = "incrementStateId"), @VersionName(minVer = 18,
-            value = "k")})
+    @WrappedBukkitMethod({@VersionName(minVer = 17, value = "incrementStateId"),
+            @VersionName(minVer = 18, value = "k")})
     int incrementStateIdV17();
 }

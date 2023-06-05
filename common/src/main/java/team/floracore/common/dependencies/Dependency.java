@@ -140,8 +140,8 @@ public enum Dependency {
             Relocation.of("commonspool2", "org{}apache{}commons{}pool2")),
     BUKKIT_GUI("com.huanmeng-qwq",
             "Bukkit-Gui",
-            "1.3.6",
-            "mOKnS/zkO5p6rcd9SsKdyZzZbriN3GZmV4U5zY9/Ws8="),
+            "1.3.7",
+            "PyPbnGRgJ8BIJCRIjArTdT1ZBZFLvWWp8p2JG2+8C+A="),
     ;
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";

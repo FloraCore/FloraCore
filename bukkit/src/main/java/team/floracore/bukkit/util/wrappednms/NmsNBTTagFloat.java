@@ -22,7 +22,7 @@ public interface NmsNBTTagFloat extends NmsNBTTag {
         return new JsonPrimitive(getValue());
     }
 
-    @WrappedBukkitMethod({@VersionName("asFloat"), @VersionName(maxVer = 17, value = "i"), @VersionName(minVer = 17,
-            value = "j")})
+    @WrappedBukkitMethod({@VersionName("asFloat"), @VersionName(maxVer = 17, value = "i"),
+            @VersionName(minVer = 17, value = "j")})
     float getValue();
 }

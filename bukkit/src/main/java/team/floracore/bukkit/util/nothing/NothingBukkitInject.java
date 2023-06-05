@@ -1,6 +1,7 @@
 package team.floracore.bukkit.util.nothing;
 
 import team.floracore.bukkit.util.VersionName;
+import team.floracore.common.util.Optional;
 import team.floracore.common.util.nothing.NothingLocation;
 import team.floracore.common.util.nothing.NothingPriority;
 import team.floracore.common.util.wrapper.WrappedObject;
@@ -39,7 +40,7 @@ public @interface NothingBukkitInject {
     int shift() default 0;
 
     /**
-     * @see mz.lib.Optional
+     * @see Optional
      */
     boolean optional() default false;
 }

@@ -152,8 +152,8 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         return newSkull(name,
                 UUID.nameUUIDFromBytes(url.getBytes(StringUtil.UTF8)),
                 Base64.getEncoder()
-                        .encodeToString(("{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}").getBytes(
-                                StringUtil.UTF8)));
+                        .encodeToString(("{\"textures\":{\"SKIN\":{\"url\":\"" + url + "\"}}}")
+                                .getBytes(StringUtil.UTF8)));
     }
 
     public static ItemStackBuilder newSkull(String name, UUID id, String value) {
@@ -163,16 +163,12 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
                         NmsNBTTagCompound.newInstance()
                                 .set("Id",
                                         BukkitWrapper.version < 16 ? NmsNBTTagString.newInstance(id.toString()) :
-                                                NmsNBTTagIntArray.newInstance(
-                                                        id))
+                                                NmsNBTTagIntArray.newInstance(id))
                                 .set("Properties",
                                         NmsNBTTagCompound.newInstance()
                                                 .set("textures",
                                                         NmsNBTTagList.newInstance(NmsNBTTagCompound.newInstance()
-                                                                .set(
-                                                                        "Value",
-                                                                        NmsNBTTagString.newInstance(
-                                                                                value))))));
+                                                                .set("Value", NmsNBTTagString.newInstance(value))))));
         if (name != null) {
             is.tag().getCompound("SkullOwner").set("Name", NmsNBTTagString.newInstance(name));
         }
@@ -181,26 +177,22 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
 
     public static ItemStackBuilder returnArrow() {
         return newSkull(null,
-                "http://textures.minecraft" +
-                        ".net/texture/d9ed8bcbafbe99787325239048b8099407a098e7077c9b4c3b478b289b9149fd");
+                "http://textures.minecraft.net/texture/d9ed8bcbafbe99787325239048b8099407a098e7077c9b4c3b478b289b9149fd");
     }
 
     public static ItemStackBuilder leftArrow() {
         return newSkull(null,
-                "http://textures.minecraft" +
-                        ".net/texture/3866a889e51ca79c5d200ea6b5cfd0a655f32fea38b8138598c72fb200b97b9");
+                "http://textures.minecraft.net/texture/3866a889e51ca79c5d200ea6b5cfd0a655f32fea38b8138598c72fb200b97b9");
     }
 
     public static ItemStackBuilder rightArrow() {
         return newSkull(null,
-                "http://textures.minecraft" +
-                        ".net/texture/dfbf1402a04064cebaa96b77d5455ee93b685332e264c80ca36415df992fb46c");
+                "http://textures.minecraft.net/texture/dfbf1402a04064cebaa96b77d5455ee93b685332e264c80ca36415df992fb46c");
     }
 
     public static ItemStackBuilder checkmark() {
         return newSkull(null,
-                "http://textures.minecraft" +
-                        ".net/texture/ce2a530f42726fa7a31efab8e43dadee188937cf824af88ea8e4c93a49c57294");
+                "http://textures.minecraft.net/texture/ce2a530f42726fa7a31efab8e43dadee188937cf824af88ea8e4c93a49c57294");
     }
 
     @SuppressWarnings("deprecation")

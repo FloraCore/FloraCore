@@ -24,8 +24,8 @@ public interface NmsIRecipe extends WrappedBukkitObject, Recipe {
         }
     }
 
-    @WrappedBukkitMethod({@VersionName(value = "craftItem", minVer = 13, maxVer = 14), @VersionName(minVer = 14,
-            value = "a")})
+    @WrappedBukkitMethod({@VersionName(value = "craftItem", minVer = 13, maxVer = 14),
+            @VersionName(minVer = 14, value = "a")})
     NmsItemStack getResultV13(NmsIInventory inv);
 
     @WrappedBukkitMethod(@VersionName(maxVer = 13, value = "craftItem"))

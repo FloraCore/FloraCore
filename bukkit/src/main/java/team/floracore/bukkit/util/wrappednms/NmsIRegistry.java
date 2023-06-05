@@ -52,21 +52,15 @@ public interface NmsIRegistry extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor(@VersionName(minVer = 13, value = "ITEM", maxVer = 15))
     NmsIRegistry staticGetItemsV13_15();
 
-    @WrappedBukkitFieldAccessor({@VersionName(minVer = 15, value = "ITEM", maxVer = 19.3f), @VersionName(minVer = 17,
-            value = "#4",
-            maxVer = 19.3f)})
+    @WrappedBukkitFieldAccessor({@VersionName(minVer = 15, value = "ITEM", maxVer = 19.3f),
+            @VersionName(minVer = 17, value = "#4", maxVer = 19.3f)})
     NmsRegistryBlocks staticGetItemsV15_193();
 
-    @WrappedBukkitFieldAccessor({@VersionName(minVer = 13,
-            maxVer = 19.3f,
-            value = "ENCHANTMENT"), @VersionName(minVer = 17,
-            maxVer = 18,
-            value = "X"), @VersionName(minVer = 18,
-            maxVer = 18.2f,
-            value = "Y"), @VersionName(
-            minVer = 18.2f,
-            value = "V",
-            maxVer = 19), @VersionName(value = "W", minVer = 19, maxVer = 19.3f)})
+    @WrappedBukkitFieldAccessor({@VersionName(minVer = 13, maxVer = 19.3f, value = "ENCHANTMENT"),
+            @VersionName(minVer = 17, maxVer = 18, value = "X"),
+            @VersionName(minVer = 18, maxVer = 18.2f, value = "Y"),
+            @VersionName(minVer = 18.2f, value = "V", maxVer = 19),
+            @VersionName(value = "W", minVer = 19, maxVer = 19.3f)})
     NmsIRegistry staticGetEnchantsV13_193();
 
     @WrappedBukkitFieldAccessor(@VersionName(value = {"ENTITY_TYPE", "#12"}, minVer = 13, maxVer = 14))

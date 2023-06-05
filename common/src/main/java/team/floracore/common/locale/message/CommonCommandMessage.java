@@ -19,8 +19,7 @@ public interface CommonCommandMessage extends AbstractMessage {
             // 某些选项仅在服务器重新启动后才应用
             .append(text().color(GRAY)
                     .append(OPEN_BRACKET)
-                    .append(translatable(
-                            "floracore.command.reload-config.restart-note"))
+                    .append(translatable("floracore.command.reload-config.restart-note"))
                     .append(CLOSE_BRACKET)));
 
     Args0 TRANSLATIONS_SEARCHING = () -> AbstractMessage.prefixed(translatable()
@@ -31,13 +30,11 @@ public interface CommonCommandMessage extends AbstractMessage {
     Args0 TRANSLATIONS_SEARCHING_ERROR = () -> AbstractMessage.prefixed(text()
             // 无法获得可用翻译的列表
             .color(RED)
-            .append(translatable(
-                    "floracore.command.translations.searching-error"))
+            .append(translatable("floracore.command.translations.searching-error"))
             .append(FULL_STOP)
             // 检查控制台是否有错误
             .append(space())
-            .append(translatable(
-                    "floracore.command.misc.check-console-for-errors"))
+            .append(translatable("floracore.command.misc.check-console-for-errors"))
             .append(FULL_STOP));
 
     Args1<Collection<String>> INSTALLED_TRANSLATIONS = locales -> AbstractMessage.prefixed(translatable()
@@ -48,12 +45,11 @@ public interface CommonCommandMessage extends AbstractMessage {
             .append(text(':'))
             .append(space())
             // list
-            .append(AbstractMessage.formatStringList(
-                    locales)));
+            .append(AbstractMessage.formatStringList(locales)));
 
     Args4<String, String, Integer, List<String>> AVAILABLE_TRANSLATIONS_ENTRY = (tag, name, percentComplete,
-                                                                                 contributors) -> AbstractMessage.prefixed(
-            text()
+                                                                                 contributors) ->
+            AbstractMessage.prefixed(text()
                     // - {} ({}) - 已翻译{}% - 由 {}
                     .color(GRAY)
                     .append(text('-'))
@@ -125,21 +121,17 @@ public interface CommonCommandMessage extends AbstractMessage {
     Args2<Component, String> SERVER_DATA_ENTRY =
             (key, value) -> AbstractMessage.prefixed(text().append(key.color(GREEN))
                     .append(space())
-                    .append(text("->",
-                            AQUA))
+                    .append(text("->", AQUA))
                     .append(space())
-                    .append(text(value,
-                            WHITE))
+                    .append(text(value, WHITE))
                     .apply(builder -> {
                     }));
-    Args2<Component, Component> SERVER_DATA_ENTRY_1 = (key, value) -> AbstractMessage.prefixed(text().append(key.color(
-                    GREEN))
-            .append(space())
-            .append(text("->",
-                    AQUA))
-            .append(space())
-            .append(value.color(
-                    WHITE))
-            .apply(builder -> {
-            }));
+    Args2<Component, Component> SERVER_DATA_ENTRY_1 = (key, value) -> AbstractMessage.prefixed(
+            text().append(key.color(GREEN))
+                    .append(space())
+                    .append(text("->", AQUA))
+                    .append(space())
+                    .append(value.color(WHITE))
+                    .apply(builder -> {
+                    }));
 }

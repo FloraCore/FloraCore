@@ -189,16 +189,17 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         List<Button> buttons = new ArrayList<>();
         for (REPORT report : filteredReports) {
             int id = report.getId();
-            Component rt = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_TITLE.build(id),
-                    uuid);
-            List<Component> lore = getReportLore(report, uuid);
-            lore.add(Component.space());
-            lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
-            ItemStackBuilder ri = new ItemStackBuilder(Material.PAPER).setName(rt).setLore(lore);
-            if (report.getStatus() == ReportStatus.ACCEPTED) {
-                ri.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
-            }
-            Button d = Button.of(p -> ri.get(), p -> getReportGui(player, report.getUniqueId(), conclusion).openGui());
+            Button d = Button.of(p -> {
+                Component rt = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORT_TITLE.build(id), uuid);
+                List<Component> lore = getReportLore(report, uuid);
+                lore.add(Component.space());
+                lore.add(TranslationManager.render(MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(), uuid));
+                ItemStackBuilder ri = new ItemStackBuilder(Material.PAPER).setName(rt).setLore(lore);
+                if (report.getStatus() == ReportStatus.ACCEPTED) {
+                    ri.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
+                }
+                return ri.get();
+            }, p -> getReportGui(player, report.getUniqueId(), conclusion).openGui());
             buttons.add(d);
         }
         Slots LINE = Slots.pattern(new String[]{
@@ -214,56 +215,61 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         gui.setPlayer(player);
         gui.tick(20);
         gui.addTick(g -> g.refresh(true));
-        Component t = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_PAGE.build(gui.page()),
-                uuid);
-        Button b1 = Button.of(p -> new ItemStackBuilder(Material.BOOKSHELF).setName(title)
-                .setLore(Collections.singletonList(t))
-                .get());
+        Button b1 = Button.of(p -> {
+            Component t = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_PAGE.build(gui.page()),
+                    uuid);
+            return new ItemStackBuilder(Material.BOOKSHELF).setName(title)
+                    .setLore(Collections.singletonList(t)).get();
+        });
         GuiButton gb1 = new GuiButton(Slot.ofGame(5, 1), b1);
         gui.addAttachedButton(gb1);
         supplementaryMenu(gui);
         if (conclusion) {
-            Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
-            Button b2 = Button.of(p -> new ItemStackBuilder(Material.ARROW).setName(back)
-                    .get(), p -> getReportsMainGui(player,
-                    false).openGui());
+            Button b2 = Button.of(p -> {
+                Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
+                return new ItemStackBuilder(Material.ARROW).setName(back).get();
+            }, p -> getReportsMainGui(player, false).openGui());
             GuiButton gb2 = new GuiButton(Slot.ofGame(6, 6), b2);
             gui.addAttachedButton(gb2);
         } else {
-            Component t1 = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_PROCESSED.build(), uuid);
-            Button b2 = Button.of(p -> new ItemStackBuilder(Material.CHEST).setName(t1)
-                    .get(), p -> getReportsMainGui(player,
-                    true).openGui());
+            Button b2 = Button.of(p -> {
+                Component t1 = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_MAIN_PROCESSED.build(), uuid);
+                return new ItemStackBuilder(Material.CHEST).setName(t1).get();
+            }, p -> getReportsMainGui(player, true).openGui());
             GuiButton gb2 = new GuiButton(Slot.ofGame(6, 6), b2);
             gui.addAttachedButton(gb2);
         }
         setPageSlot(uuid, gui);
-        Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
-        Button b2 = Button.of(p -> new ItemStackBuilder(Material.BARRIER).setName(close)
-                .get(), HumanEntity::closeInventory);
+        Button b2 = Button.of(p -> {
+            Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            return new ItemStackBuilder(Material.BARRIER).setName(close).get();
+        }, HumanEntity::closeInventory);
         GuiButton gb2 = new GuiButton(Slot.ofGame(5, 6), b2);
         gui.addAttachedButton(gb2);
         return gui;
     }
 
     private void setPageSlot(UUID uuid, GuiPage gui) {
-        Component previous =
-                TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
-        Component turn =
-                TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() - 1), uuid);
-        ItemStack ip = new ItemStackBuilder(Material.ARROW).setName(previous)
-                .setLore(Collections.singletonList(turn))
-                .get();
-        Button bp = Button.of(p -> ip);
-        Component next =
-                TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
-        Component turn1 =
-                TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() + 1),
-                        uuid);
-        ItemStack n = new ItemStackBuilder(Material.ARROW).setName(next)
-                .setLore(Collections.singletonList(turn1))
-                .get();
-        Button bn = Button.of(p -> n);
+        Button bp = Button.of(p -> {
+            Component previous =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
+            Component turn =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() - 1), uuid);
+            return new ItemStackBuilder(Material.ARROW).setName(previous)
+                    .setLore(Collections.singletonList(turn))
+                    .get();
+        });
+        Button bn = Button.of(p -> {
+            Component next =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
+            Component turn1 =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() + 1),
+                            uuid);
+            ItemStack n = new ItemStackBuilder(Material.ARROW).setName(next)
+                    .setLore(Collections.singletonList(turn1))
+                    .get();
+            return n;
+        });
         gui.pageSetting(PageSettings.normal(gui, bp, bn));
     }
 
@@ -278,22 +284,26 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         GuiCustom gui = new GuiCustom(player);
         gui.title(finalTitle);
         gui.line(6);
-        ItemStackBuilder i1 = new ItemStackBuilder(Material.PAPER).setName(finalTitle)
-                .setLore(getReportLore(report, uuid));
-        i1.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
-        Button button = Button.of(p -> i1.get());
+        Button button = Button.of(p -> {
+            ItemStackBuilder i1 = new ItemStackBuilder(Material.PAPER).setName(finalTitle)
+                    .setLore(getReportLore(report, uuid));
+            i1.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
+            return i1.get();
+        });
         GuiButton guiButton = new GuiButton(Slot.ofGame(5, 1), button);
         gui.addAttachedButton(guiButton);
         String resultRns = getReports(report);
-        ItemStack rs = getPlayerItemStackBuilder(report.getReporters().get(0)).setName(TranslationManager.render(
-                        MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns),
-                        uuid))
-                .setLore(Collections.singletonList(
-                        TranslationManager.render(
-                                MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(),
-                                uuid)))
-                .get();
-        Button b1 = Button.of(p -> rs, p -> getReportersGUI(player, reportUUID, conclusion).openGui());
+        Button b1 = Button.of(p -> {
+            ItemStack rs = getPlayerItemStackBuilder(report.getReporters().get(0)).setName(TranslationManager.render(
+                            MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTER.build(resultRns),
+                            uuid))
+                    .setLore(Collections.singletonList(
+                            TranslationManager.render(
+                                    MenuMessage.COMMAND_REPORTS_CLICK_TO_LOOK.build(),
+                                    uuid)))
+                    .get();
+            return rs;
+        }, p -> getReportersGUI(player, reportUUID, conclusion).openGui());
         GuiButton gb1 = new GuiButton(Slot.ofGame(4, 3), b1);
         gui.addAttachedButton(gb1);
         String r1 = getPlayerRecordName(report.getReported());
@@ -305,9 +315,11 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                 MenuMessage.COMMAND_REPORTS_GUI_MAIN_REPORTED.build(r1, online),
                 uuid));
         if (online) {
-            rds.setLore(Collections.singletonList(TranslationManager.render(MiscMessage.CLICK_TP, uuid)));
             String finalR = r1;
-            Button b2 = Button.of(p -> rds.get(), p -> {
+            Button b2 = Button.of(p -> {
+                rds.setLore(Collections.singletonList(TranslationManager.render(MiscMessage.CLICK_TP, uuid)));
+                return rds.get();
+            }, p -> {
                 reportTeleport(player, finalR);
                 player.closeInventory();
             });
@@ -320,10 +332,11 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         }
         switch (report.getStatus()) {
             case WAITING:
-                Component accepted = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_ACCEPTED.build(),
-                        uuid);
-                ItemStack ai = ItemStackBuilder.limeStainedGlassPane().setName(accepted).get();
-                Button b3 = Button.of(p -> ai, p -> {
+                Button b3 = Button.of(p -> {
+                    Component accepted = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_ACCEPTED.build(),
+                            uuid);
+                    return ItemStackBuilder.limeStainedGlassPane().setName(accepted).get();
+                }, p -> {
                     report.setStatus(ReportStatus.ACCEPTED);
                     getReportGui(player, reportUUID, conclusion).openGui();
                     String reported = getPlayerRecordName(report.getReported());
@@ -340,10 +353,12 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                 gui.addAttachedButton(gb3);
                 break;
             case ACCEPTED:
-                Component end = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_END.build(), uuid);
-                ItemStackBuilder ei = ItemStackBuilder.lightBlueStainedGlassPane().setName(end);
-                ei.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
-                Button b4 = Button.of(p -> ei.get(), p -> {
+                Button b4 = Button.of(p -> {
+                    Component end = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_END.build(), uuid);
+                    ItemStackBuilder ei = ItemStackBuilder.lightBlueStainedGlassPane().setName(end);
+                    ei.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
+                    return ei.get();
+                }, p -> {
                     report.setStatus(ReportStatus.ENDED);
                     report.setConclusionTime(System.currentTimeMillis());
                     getReportGui(player, reportUUID, conclusion).openGui();
@@ -361,24 +376,26 @@ public class ReportCommand extends FloraCoreBukkitCommand {
                 gui.addAttachedButton(gb4);
                 break;
             case ENDED:
-                Component ended = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_ENDED.build(),
-                        uuid);
-                ItemStack edi = ItemStackBuilder.redStainedGlassPane().setName(ended).get();
-                Button b5 = Button.of(p -> edi);
+                Button b5 = Button.of(p -> {
+                    Component ended = TranslationManager.render(MenuMessage.COMMAND_REPORTS_GUI_REPORT_ENDED.build(),
+                            uuid);
+                    return ItemStackBuilder.redStainedGlassPane().setName(ended).get();
+                });
                 GuiButton gb5 = new GuiButton(Slot.ofGame(5, 4), b5);
                 gui.addAttachedButton(gb5);
                 break;
         }
         supplementaryMenu(gui);
-        Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
-        Button b6 = Button.of(p -> new ItemStackBuilder(Material.ARROW).setName(back)
-                .get(), p -> getReportsMainGui(player,
-                conclusion).openGui());
+        Button b6 = Button.of(p -> {
+            Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
+            return new ItemStackBuilder(Material.ARROW).setName(back).get();
+        }, p -> getReportsMainGui(player, conclusion).openGui());
         GuiButton gb6 = new GuiButton(Slot.ofGame(9, 6), b6);
         gui.addAttachedButton(gb6);
-        Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
-        Button b7 = Button.of(p -> new ItemStackBuilder(Material.BARRIER).setName(close)
-                .get(), HumanEntity::closeInventory);
+        Button b7 = Button.of(p -> {
+            Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            return new ItemStackBuilder(Material.BARRIER).setName(close).get();
+        }, HumanEntity::closeInventory);
         GuiButton gb7 = new GuiButton(Slot.ofGame(5, 6), b7);
         gui.addAttachedButton(gb7);
         return gui;
@@ -427,23 +444,26 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         GuiPage gui = new GuiPage(player, buttons, 18, LINE);
         gui.title(finalTitle);
         gui.setPlayer(player);
-        ItemStackBuilder i1 = new ItemStackBuilder(Material.PAPER).setName(finalTitle)
-                .setLore(getReportLore(report, uuid));
-        i1.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
-        Button b = Button.of(p -> i1.get());
+        Button b = Button.of(p -> {
+            ItemStackBuilder i1 = new ItemStackBuilder(Material.PAPER).setName(finalTitle)
+                    .setLore(getReportLore(report, uuid));
+            i1.addEnchantment(Enchantment.PROTECTION_PROJECTILE, 1).setHideEnchants(true);
+            return i1.get();
+        });
         GuiButton gb = new GuiButton(Slot.ofGame(5, 1), b);
         gui.addAttachedButton(gb);
         supplementaryMenu(gui);
         setPageSlot(uuid, gui);
-        Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
-        Button b1 = Button.of(p -> new ItemStackBuilder(Material.ARROW).setName(back)
-                .get(), p -> getReportGui(player, reportUUID,
-                conclusion).openGui());
+        Button b1 = Button.of(p -> {
+            Component back = TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_BACK.build(), uuid);
+            return new ItemStackBuilder(Material.ARROW).setName(back).get();
+        }, p -> getReportGui(player, reportUUID, conclusion).openGui());
         GuiButton gb1 = new GuiButton(Slot.ofGame(6, 6), b1);
         gui.addAttachedButton(gb1);
-        Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
-        Button b2 = Button.of(p -> new ItemStackBuilder(Material.BARRIER).setName(close)
-                .get(), HumanEntity::closeInventory);
+        Button b2 = Button.of(p -> {
+            Component close = TranslationManager.render(MenuMessage.COMMAND_MISC_GUI_CLOSE.build(), uuid);
+            return new ItemStackBuilder(Material.BARRIER).setName(close).get();
+        }, HumanEntity::closeInventory);
         GuiButton gb2 = new GuiButton(Slot.ofGame(5, 6), b2);
         gui.addAttachedButton(gb2);
         return gui;

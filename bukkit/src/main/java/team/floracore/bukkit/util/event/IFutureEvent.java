@@ -1,5 +1,6 @@
 package team.floracore.bukkit.util.event;
 
+import org.bukkit.Bukkit;
 import team.floracore.common.util.TypeUtil;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface IFutureEvent {
             try {
                 task.run();
             } catch (Throwable e) {
-                System.out.println("Err on task " + task.getClass().getName());
+                Bukkit.getLogger().warning("Error on task " + task.getClass().getName());
                 e.printStackTrace();
             }
         }

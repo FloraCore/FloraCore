@@ -43,52 +43,44 @@ public interface NmsSlot extends WrappedBukkitObject {
     @WrappedBukkitFieldAccessor({@VersionName("index"), @VersionName(minVer = 17, value = "a")})
     NmsSlot setIndex(int index);
 
-    @WrappedBukkitFieldAccessor({@VersionName("rawSlotIndex"), @VersionName(minVer = 17,
-            maxVer = 19,
-            value = "d"), @VersionName(minVer = 19,
-            value = "e")})
+    @WrappedBukkitFieldAccessor({@VersionName("rawSlotIndex"),
+            @VersionName(minVer = 17, maxVer = 19, value = "d"),
+            @VersionName(minVer = 19, value = "e")})
     int getRawSlot();
 
-    @WrappedBukkitFieldAccessor({@VersionName("rawSlotIndex"), @VersionName(minVer = 17,
-            maxVer = 19,
-            value = "d"), @VersionName(minVer = 19,
-            value = "e")})
+    @WrappedBukkitFieldAccessor({@VersionName("rawSlotIndex"),
+            @VersionName(minVer = 17, maxVer = 19, value = "d"),
+            @VersionName(minVer = 19, value = "e")})
     NmsSlot setRawSlot(int index);
 
-    @WrappedBukkitFieldAccessor({@VersionName("inventory"), @VersionName(minVer = 17,
-            maxVer = 19,
-            value = "c"), @VersionName(value = "d",
-            minVer = 19)})
+    @WrappedBukkitFieldAccessor({@VersionName("inventory"),
+            @VersionName(minVer = 17, maxVer = 19, value = "c"),
+            @VersionName(value = "d", minVer = 19)})
     NmsIInventory getInventory();
 
-    @WrappedBukkitFieldAccessor({@VersionName("inventory"), @VersionName(minVer = 17,
-            maxVer = 19,
-            value = "c"), @VersionName(value = "d",
-            minVer = 19)})
+    @WrappedBukkitFieldAccessor({@VersionName("inventory"),
+            @VersionName(minVer = 17, maxVer = 19, value = "c"),
+            @VersionName(value = "d", minVer = 19)})
     NmsSlot setInventory(NmsIInventory inv);
 
-    @WrappedBukkitFieldAccessor({@VersionName(maxVer = 14, value = "f"), @VersionName(minVer = 13,
-            maxVer = 19,
-            value = "e"), @VersionName(minVer = 19,
-            value = "f")})
+    @WrappedBukkitFieldAccessor({@VersionName(maxVer = 14, value = "f"),
+            @VersionName(minVer = 13, maxVer = 19, value = "e"),
+            @VersionName(minVer = 19, value = "f")})
     int getX();
 
-    @WrappedBukkitFieldAccessor({@VersionName(maxVer = 14, value = "f"), @VersionName(minVer = 13,
-            maxVer = 19,
-            value = "e"), @VersionName(minVer = 19,
-            value = "f")})
+    @WrappedBukkitFieldAccessor({@VersionName(maxVer = 14, value = "f"),
+            @VersionName(minVer = 13, maxVer = 19, value = "e"),
+            @VersionName(minVer = 19, value = "f")})
     NmsSlot setX(int x);
 
-    @WrappedBukkitFieldAccessor({@VersionName(maxVer = 14, value = "g"), @VersionName(minVer = 13,
-            maxVer = 19,
-            value = "f"), @VersionName(minVer = 19,
-            value = "g")})
+    @WrappedBukkitFieldAccessor({@VersionName(maxVer = 14, value = "g"),
+            @VersionName(minVer = 13, maxVer = 19, value = "f"),
+            @VersionName(minVer = 19, value = "g")})
     int getY();
 
-    @WrappedBukkitFieldAccessor({@VersionName(maxVer = 14, value = "g"), @VersionName(minVer = 13,
-            maxVer = 19,
-            value = "f"), @VersionName(minVer = 19,
-            value = "g")})
+    @WrappedBukkitFieldAccessor({@VersionName(maxVer = 14, value = "g"),
+            @VersionName(minVer = 13, maxVer = 19, value = "f"),
+            @VersionName(minVer = 19, value = "g")})
     NmsSlot setY(int y);
 
     default ItemStack getBukkitItem() {

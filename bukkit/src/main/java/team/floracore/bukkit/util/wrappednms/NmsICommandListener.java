@@ -46,9 +46,8 @@ public interface NmsICommandListener extends WrappedBukkitObject {
     @WrappedBukkitMethod(@VersionName(maxVer = 16, value = "sendMessage"))
     void sendMessageV_16(NmsIChatBaseComponent msg);
 
-    @WrappedBukkitMethod({@VersionName(minVer = 16, maxVer = 19, value = "sendMessage"), @VersionName(value = "a",
-            minVer = 18,
-            maxVer = 19)})
+    @WrappedBukkitMethod({@VersionName(minVer = 16, maxVer = 19, value = "sendMessage"),
+            @VersionName(value = "a", minVer = 18, maxVer = 19)})
     void sendMessageV16_19(NmsIChatBaseComponent msg, UUID sender);
 
     @WrappedBukkitMethod(@VersionName(value = "a", minVer = 19))

@@ -40,8 +40,9 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
         return Nothing.doContinue();
     }
 
-    @NothingBukkitInject(name = @VersionName(maxVer = 13, value = "a"), args = {ChannelHandlerContext.class,
-            NmsPacket.class}, location = NothingLocation.FRONT)
+    @NothingBukkitInject(name = @VersionName(maxVer = 13, value = "a"),
+            args = {ChannelHandlerContext.class, NmsPacket.class},
+            location = NothingLocation.FRONT)
     default Optional<Void> beforeReceivePacketV_13(@LocalVar(2) NmsPacket packet) {
         return beforeReceivePacketV13(packet, this.getPacketListener());
     }
@@ -82,7 +83,9 @@ public interface NmsNetworkManager extends WrappedBukkitObject, NothingBukkit {
     }
 
     @WrappedBukkitFieldAccessor({@VersionName("packetListener"),
-            @VersionName(maxVer = 13, value = "m"), @VersionName(minVer = 17, maxVer = 18.2f, value = "m"),
-            @VersionName(value = "o", minVer = 18.2f, maxVer = 19), @VersionName(value = "o", minVer = 19)})
+            @VersionName(maxVer = 13, value = "m"),
+            @VersionName(minVer = 17, maxVer = 18.2f, value = "m"),
+            @VersionName(value = "o", minVer = 18.2f, maxVer = 19),
+            @VersionName(value = "o", minVer = 19)})
     NmsPacketListener getPacketListener();
 }

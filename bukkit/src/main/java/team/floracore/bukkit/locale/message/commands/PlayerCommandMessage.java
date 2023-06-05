@@ -138,41 +138,40 @@ public interface PlayerCommandMessage extends AbstractMessage {
 
     Args2<String, Integer> COMMAND_AIR_GET_OTHER_REMAINING =
             (target, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.air.get.other" +
-                                    ".remaining")
+                            "floracore.command.air.get.other.remaining")
                     .color(AQUA)
                     .args(text(target).color(GREEN),
                             text(value))
                     .color(GREEN));
 
-    Args1<Integer> COMMAND_AIR_SET_SELF_MAX = value -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.air.set.self.max").color(AQUA).args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_AIR_SET_SELF_MAX = value -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.air.set.self.max").color(AQUA).args(text(value)).color(GREEN));
 
-    Args1<Integer> COMMAND_AIR_SET_SELF_REMAINING = value -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.air.set.self.remaining").color(AQUA).args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_AIR_SET_SELF_REMAINING = value -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.air.set.self.remaining").color(AQUA).args(text(value)).color(GREEN));
 
-    Args2<String, Integer> COMMAND_AIR_SET_OTHER_MAX = (target, value) -> AbstractMessage.prefixed(translatable().key(
-                    "floracore.command.air.set.other.max")
+    Args2<String, Integer> COMMAND_AIR_SET_OTHER_MAX = (target, value) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.air.set.other.max")
             .color(AQUA)
             .args(text(target).color(GREEN),
                     text(value))
             .color(GREEN));
 
     Args2<String, Integer> COMMAND_AIR_SET_OTHER_REMAINING =
-            (target, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.air.set.other" +
-                                    ".remaining")
+            (target, value) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.air.set.other.remaining")
                     .color(AQUA)
                     .args(text(target).color(GREEN),
                             text(value))
                     .color(GREEN));
 
-    Args2<String, Integer> COMMAND_AIR_SET_FROM_MAX = (from, value) -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.air.set.from.max").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Integer> COMMAND_AIR_SET_FROM_MAX = (from, value) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.air.set.from.max").color(AQUA)
+            .args(text(from).color(GREEN), text(value)).color(GREEN));
 
     Args2<String, Integer> COMMAND_AIR_SET_FROM_REMAINING =
-            (from, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.air.set.from.remaining")
+            (from, value) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.air.set.from.remaining")
                     .color(AQUA)
                     .args(text(from).color(GREEN),
                             text(value))
@@ -212,205 +211,198 @@ public interface PlayerCommandMessage extends AbstractMessage {
                     text(realName).color(GREEN))
             .color(AQUA));
 
-    Args1<Integer> COMMAND_AIR_GET_MAX_SELF = value -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.air.get.max.self").color(AQUA).args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_AIR_GET_MAX_SELF = value -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.air.get.max.self").color(AQUA).args(text(value)).color(GREEN));
 
-    Args1<Integer> COMMAND_AIR_GET_REMAINING_SELF = value -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.air.get.remaining.self").color(AQUA).args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_AIR_GET_REMAINING_SELF = value -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.air.get.remaining.self").color(AQUA).args(text(value)).color(GREEN));
 
-    Args2<String, Integer> COMMAND_AIR_GET_MAX_OTHER = (target, value) -> AbstractMessage.prefixed(translatable().key(
-                    "floracore.command.air.get.max.other")
+    Args2<String, Integer> COMMAND_AIR_GET_MAX_OTHER = (target, value) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.air.get.max.other")
             .color(AQUA)
-            .args(text(target).color(GREEN),
-                    text(value))
+            .args(text(target).color(GREEN), text(value))
             .color(GREEN));
 
     Args2<String, Integer> COMMAND_AIR_GET_REMAINING_OTHER =
-            (target, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.air.get.remaining" +
-                                    ".other")
+            (target, value) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.air.get.remaining.other")
                     .color(AQUA)
                     .args(text(target).color(GREEN),
                             text(value))
                     .color(GREEN));
 
-    Args1<Integer> COMMAND_AIR_SET_MAX_SELF = value -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.air.set.max.self").color(AQUA).args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_AIR_SET_MAX_SELF = value -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.air.set.max.self").color(AQUA).args(text(value)).color(GREEN));
 
-    Args1<Integer> COMMAND_AIR_SET_REMAINING_SELF = value -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.air.set.remaining.self").color(AQUA).args(text(value)).color(GREEN));
+    Args1<Integer> COMMAND_AIR_SET_REMAINING_SELF = value -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.air.set.remaining.self").color(AQUA).args(text(value)).color(GREEN));
 
-    Args2<String, Integer> COMMAND_AIR_SET_MAX_OTHER = (target, value) -> AbstractMessage.prefixed(translatable().key(
-                    "floracore.command.air.set.max.other")
+    Args2<String, Integer> COMMAND_AIR_SET_MAX_OTHER = (target, value) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.air.set.max.other")
             .color(AQUA)
             .args(text(target).color(GREEN),
                     text(value))
             .color(GREEN));
 
     Args2<String, Integer> COMMAND_AIR_SET_REMAINING_OTHER =
-            (target, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.air.set.remaining" +
-                                    ".other")
+            (target, value) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.air.set.remaining.other")
                     .color(AQUA)
                     .args(text(target).color(GREEN),
                             text(value))
                     .color(GREEN));
 
-    Args2<String, Integer> COMMAND_AIR_SET_MAX_FROM = (from, value) -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.air.set.max.from").color(AQUA).args(text(from).color(GREEN), text(value)).color(GREEN));
+    Args2<String, Integer> COMMAND_AIR_SET_MAX_FROM = (from, value) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.air.set.max.from").color(AQUA)
+            .args(text(from).color(GREEN), text(value)).color(GREEN));
 
     Args2<String, Integer> COMMAND_AIR_SET_REMAINING_FROM =
-            (from, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.air.set.remaining.from")
+            (from, value) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.air.set.remaining.from")
                     .color(AQUA)
                     .args(text(from).color(GREEN),
                             text(value))
                     .color(GREEN));
 
-    Args0 COMMAND_ENDERCHEST_NOT_PLAYER = () -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.enderchest.not-player").color(RED));
+    Args0 COMMAND_ENDERCHEST_NOT_PLAYER = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.enderchest.not-player").color(RED));
 
-    Args0 COMMAND_ENDERCHEST_OPEN_SELF = () -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.enderchest.open.self").color(AQUA));
+    Args0 COMMAND_ENDERCHEST_OPEN_SELF = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.enderchest.open.self").color(AQUA));
 
-    Args1<String> COMMAND_ENDERCHEST_OPEN_OTHER = target -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.enderchest.open.other").color(AQUA).args(text(target).color(GREEN)));
+    Args1<String> COMMAND_ENDERCHEST_OPEN_OTHER = target -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.enderchest.open.other").color(AQUA).args(text(target).color(GREEN)));
 
-    Args2<String, String> COMMAND_ENDERCHEST_OPEN_FOR = (target, for_) -> AbstractMessage.prefixed(translatable().key(
-                    "floracore.command.enderchest.open.for")
+    Args2<String, String> COMMAND_ENDERCHEST_OPEN_FOR = (target, for_) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.enderchest.open.for")
             .color(AQUA)
             .args(text(target).color(GREEN),
                     text(for_).color(GREEN)));
 
-    Args2<String, String> COMMAND_ENDERCHEST_OPEN_FROM = (from, target) -> AbstractMessage.prefixed(translatable().key(
-                    "floracore.command.enderchest.open.from")
+    Args2<String, String> COMMAND_ENDERCHEST_OPEN_FROM = (from, target) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.enderchest.open.from")
             .color(AQUA)
             .args(text(from).color(GREEN),
                     text(target).color(GREEN)));
 
-    Args0 COMMAND_ENDERCHEST_READONLY_TO = () -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.enderchest.readonly.to").color(YELLOW));
+    Args0 COMMAND_ENDERCHEST_READONLY_TO = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.enderchest.readonly.to").color(YELLOW));
 
-    Args0 COMMAND_ENDERCHEST_READONLY_FROM = () -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.enderchest.readonly.from").color(RED));
+    Args0 COMMAND_ENDERCHEST_READONLY_FROM = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.enderchest.readonly.from").color(RED));
 
-    Args1<Integer> COMMAND_FOOD_GET_SELF_NUTRITION = value -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.food.get.self.nutrition").color(AQUA).args(text(value).color(GREEN)));
+    Args1<Integer> COMMAND_FOOD_GET_SELF_NUTRITION = value -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.food.get.self.nutrition").color(AQUA).args(text(value).color(GREEN)));
 
-    Args1<Float> COMMAND_FOOD_GET_SELF_SATURATION = value -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.food.get.self.saturation").color(AQUA).args(text(value).color(GREEN)));
+    Args1<Float> COMMAND_FOOD_GET_SELF_SATURATION = value -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.food.get.self.saturation").color(AQUA).args(text(value).color(GREEN)));
 
     Args2<String, Integer> COMMAND_FOOD_GET_OTHER_NUTRITION =
-            (target, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.food.get.other" +
-                                    ".nutrition")
+            (target, value) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.food.get.other.nutrition")
                     .color(AQUA)
                     .args(text(target).color(GREEN),
                             text(value).color(GREEN)));
 
     Args2<String, Float> COMMAND_FOOD_GET_OTHER_SATURATION =
-            (target, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.food.get.other" +
-                                    ".saturation")
+            (target, value) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.food.get.other.saturation")
                     .color(AQUA)
                     .args(text(target).color(GREEN),
                             text(value).color(GREEN)));
 
-    Args1<Integer> COMMAND_FOOD_SET_SELF_NUTRITION = value -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.food.set.self.nutrition").color(AQUA).args(text(value).color(GREEN)));
+    Args1<Integer> COMMAND_FOOD_SET_SELF_NUTRITION = value -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.food.set.self.nutrition").color(AQUA).args(text(value).color(GREEN)));
 
-    Args1<Float> COMMAND_FOOD_SET_SELF_SATURATION = value -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.food.set.self.saturation").color(AQUA).args(text(value).color(GREEN)));
+    Args1<Float> COMMAND_FOOD_SET_SELF_SATURATION = value -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.food.set.self.saturation").color(AQUA).args(text(value).color(GREEN)));
 
     Args2<String, Integer> COMMAND_FOOD_SET_OTHER_NUTRITION =
-            (target, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.food.set.other" +
-                                    ".nutrition")
+            (target, value) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.food.set.other.nutrition")
                     .color(AQUA)
                     .args(text(target).color(GREEN),
                             text(value).color(GREEN)));
 
     Args2<String, Float> COMMAND_FOOD_SET_OTHER_SATURATION =
-            (target, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.food.set.other" +
-                                    ".saturation")
+            (target, value) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.food.set.other.saturation")
                     .color(AQUA)
                     .args(text(target).color(GREEN),
                             text(value).color(GREEN)));
 
     Args2<String, Integer> COMMAND_FOOD_SET_FROM_NUTRITION =
-            (from, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.food.set.from" +
-                                    ".nutrition")
+            (from, value) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.food.set.from.nutrition")
                     .color(AQUA)
                     .args(text(from).color(GREEN),
                             text(value).color(GREEN)));
 
     Args2<String, Float> COMMAND_FOOD_SET_FROM_SATURATION =
-            (from, value) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.food.set.from" +
-                                    ".saturation")
+            (from, value) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.food.set.from.saturation")
                     .color(AQUA)
                     .args(text(from).color(GREEN),
                             text(value).color(GREEN)));
 
-    Args0 COMMAND_FOOD_SET_INVALID_VALUE = () -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.food.set.invalid-value").color(RED));
+    Args0 COMMAND_FOOD_SET_INVALID_VALUE = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.food.set.invalid-value").color(RED));
 
     Args2<String, String> COMMAND_HASPERMISSION_YES =
-            (target, permission) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.haspermission" +
-                                    ".yes")
+            (target, permission) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.haspermission.yes")
                     .color(AQUA)
                     .args(text(target).color(GREEN),
                             text(permission))
                     .color(GREEN));
 
     Args2<String, String> COMMAND_HASPERMISSION_NO =
-            (target, permission) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.haspermission" +
-                                    ".no")
+            (target, permission) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.haspermission.no")
                     .color(RED)
                     .args(text(target).color(GREEN),
                             text(permission))
                     .color(GREEN));
 
-    Args0 COMMAND_FEED_SELF = () -> AbstractMessage.prefixed(translatable().key("floracore.command.feed.self")
+    Args0 COMMAND_FEED_SELF = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.feed.self")
             .color(AQUA));
 
-    Args1<String> COMMAND_FEED_OTHER = target -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.feed.other").color(AQUA).args(text(target).color(GREEN)));
+    Args1<String> COMMAND_FEED_OTHER = target -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.feed.other").color(AQUA).args(text(target).color(GREEN)));
 
-    Args1<String> COMMAND_FEED_FROM = from -> AbstractMessage.prefixed(translatable().key("floracore.command.feed" +
-                    ".from")
+    Args1<String> COMMAND_FEED_FROM = from -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.feed.from")
             .color(AQUA)
             .args(text(from).color(GREEN)));
 
-    Args0 COMMAND_HEAL_SELF = () -> AbstractMessage.prefixed(translatable().key("floracore.command.heal.self")
+    Args0 COMMAND_HEAL_SELF = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.heal.self")
             .color(AQUA));
 
-    Args1<String> COMMAND_HEAL_OTHER = target -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.heal.other").color(AQUA).args(text(target).color(GREEN)));
+    Args1<String> COMMAND_HEAL_OTHER = target -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.heal.other").color(AQUA).args(text(target).color(GREEN)));
 
-    Args1<String> COMMAND_HEAL_FROM = from -> AbstractMessage.prefixed(translatable().key("floracore.command.heal" +
-                    ".from")
+    Args1<String> COMMAND_HEAL_FROM = from -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.heal.from")
             .color(AQUA)
             .args(text(from).color(GREEN)));
 
-    Args1<Integer> COMMAND_FIRETICK_SELF = time -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.firetick.self").color(AQUA).args(text(time).color(GREEN)));
+    Args1<Integer> COMMAND_FIRETICK_SELF = time -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.firetick.self").color(AQUA).args(text(time).color(GREEN)));
 
-    Args2<String, Integer> COMMAND_FIRETICK_OTHER = (target, time) -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.firetick.other").color(AQUA).args(text(target).color(GREEN), text(time).color(GREEN)));
+    Args2<String, Integer> COMMAND_FIRETICK_OTHER = (target, time) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.firetick.other").color(AQUA)
+            .args(text(target).color(GREEN), text(time).color(GREEN)));
 
-    Args2<String, Integer> COMMAND_FIRETICK_FROM = (from, time) -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.firetick.from").color(AQUA).args(text(from).color(GREEN), text(time).color(GREEN)));
+    Args2<String, Integer> COMMAND_FIRETICK_FROM = (from, time) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.firetick.from").color(AQUA).args(text(from).color(GREEN), text(time).color(GREEN)));
 
-    Args1<Integer> COMMAND_OPLIST_HEADER = count -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.oplist.header").color(AQUA).args(text(count).color(GREEN)));
+    Args1<Integer> COMMAND_OPLIST_HEADER = count -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.oplist.header").color(AQUA).args(text(count).color(GREEN)));
 
-    Args0 COMMAND_OPLIST_HEADER_NONE = () -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.oplist.header.none").color(AQUA));
+    Args0 COMMAND_OPLIST_HEADER_NONE = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.oplist.header.none").color(AQUA));
 
     Args3<String, UUID, Boolean> COMMAND_OPLIST_ENTRY =
             (name, uuid, online) -> AbstractMessage.prefixed(translatable()
@@ -425,12 +417,12 @@ public interface PlayerCommandMessage extends AbstractMessage {
             .key("floracore.command.ping.self")
             .color(AQUA)
             .args(text(ping)
-                    .color(ping > 250 ?
-                            DARK_RED :
-                            ping > 200 ?
-                                    RED :
-                                    ping > 150 ? GOLD : ping > 100 ? YELLOW : ping > 50 ? GREEN : ping > 0 ?
-                                            DARK_GREEN : WHITE)));
+                    .color(ping > 250 ? DARK_RED :
+                            ping > 200 ? RED :
+                                    ping > 150 ? GOLD :
+                                            ping > 100 ? YELLOW :
+                                                    ping > 50 ? GREEN :
+                                                            ping > 0 ? DARK_GREEN : WHITE)));
 
     Args2<String, Integer> COMMAND_PING_OTHER = (target, ping) -> AbstractMessage.prefixed(translatable()
             .key("floracore.command.ping.other")
@@ -440,8 +432,9 @@ public interface PlayerCommandMessage extends AbstractMessage {
                             .color(ping > 250 ? DARK_RED : ping > 200 ? RED : ping > 150 ? GOLD : ping > 100 ? YELLOW
                                     : ping > 50 ? GREEN : ping > 0 ? DARK_GREEN : WHITE)));
 
-    Args1<Double> COMMAND_MAXHEALTH_GET_SELF = value -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.maxhealth.get.self").color(AQUA).args(text(value).color(GREEN)));
+    Args1<Double> COMMAND_MAXHEALTH_GET_SELF = value -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.maxhealth.get.self").color(AQUA)
+            .args(text(value).color(GREEN)));
 
     Args2<String, Double> COMMAND_MAXHEALTH_GET_OTHER = (target, value) -> AbstractMessage.prefixed(translatable()
             .key("floracore.command.maxhealth.get.other")
@@ -499,75 +492,74 @@ public interface PlayerCommandMessage extends AbstractMessage {
             // {}
             .args(text(target).color(GREEN)).color(AQUA));
 
-    Args0 COMMAND_ITEMFLAG_NOITEM_SELF = () -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemflag.noitem.self").color(RED));
+    Args0 COMMAND_ITEMFLAG_NOITEM_SELF = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.noitem.self").color(RED));
 
-    Args1<String> COMMAND_ITEMFLAG_NOITEM_OTHER = target -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemflag.noitem.other").color(RED).args(text(target).color(GREEN)));
+    Args1<String> COMMAND_ITEMFLAG_NOITEM_OTHER = target -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.noitem.other").color(RED).args(text(target).color(GREEN)));
 
-    Args0 COMMAND_ITEMFLAG_UNSUPPORTED_ITEM = () -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemflag.unsupported-item").color(RED));
+    Args0 COMMAND_ITEMFLAG_UNSUPPORTED_ITEM = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.unsupported-item").color(RED));
 
-    Args1<String> COMMAND_ITEMFLAG_ALREADY_HAS_SELF = flag -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemflag.already-has.self").color(RED).args(text(flag).color(GREEN)));
+    Args1<String> COMMAND_ITEMFLAG_ALREADY_HAS_SELF = flag -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.already-has.self").color(RED).args(text(flag).color(GREEN)));
 
     Args2<String, String> COMMAND_ITEMFLAG_ALREADY_HAS_OTHER =
-            (target, flag) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.itemflag.already-has" +
-                                    ".other")
+            (target, flag) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.itemflag.already-has.other")
                     .color(RED)
                     .args(text(target).color(GREEN),
                             text(flag).color(GREEN)));
 
-    Args1<String> COMMAND_ITEMFLAG_HAS_NO_SELF = flag -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemflag.has-no.self").color(RED).args(text(flag).color(GREEN)));
+    Args1<String> COMMAND_ITEMFLAG_HAS_NO_SELF = flag -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.has-no.self").color(RED).args(text(flag).color(GREEN)));
 
     Args2<String, String> COMMAND_ITEMFLAG_HAS_NO_OTHER =
-            (target, flag) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.itemflag.has-no.other")
+            (target, flag) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.itemflag.has-no.other")
                     .color(RED)
                     .args(text(target).color(GREEN),
                             text(flag).color(GREEN)));
 
-    Args1<String> COMMAND_ITEMFLAG_ADD_SELF = flag -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemflag.add.self").color(AQUA).args(text(flag).color(GREEN)));
+    Args1<String> COMMAND_ITEMFLAG_ADD_SELF = flag -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.add.self").color(AQUA).args(text(flag).color(GREEN)));
 
-    Args2<String, String> COMMAND_ITEMFLAG_ADD_OTHER = (target, flag) -> AbstractMessage.prefixed(translatable().key(
-                    "floracore.command.itemflag.add.other")
+    Args2<String, String> COMMAND_ITEMFLAG_ADD_OTHER = (target, flag) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.add.other")
             .color(AQUA)
             .args(text(target).color(GREEN),
                     text(flag).color(GREEN)));
 
-    Args2<String, String> COMMAND_ITEMFLAG_ADD_FROM = (from, flag) -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemflag.add.from").color(AQUA).args(text(from).color(GREEN), text(flag).color(GREEN)));
+    Args2<String, String> COMMAND_ITEMFLAG_ADD_FROM = (from, flag) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.add.from").color(AQUA).args(text(from).color(GREEN), text(flag).color(GREEN)));
 
-    Args1<String> COMMAND_ITEMFLAG_REMOVE_SELF = flag -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemflag.remove.self").color(AQUA).args(text(flag).color(GREEN)));
+    Args1<String> COMMAND_ITEMFLAG_REMOVE_SELF = flag -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.remove.self").color(AQUA).args(text(flag).color(GREEN)));
 
     Args2<String, String> COMMAND_ITEMFLAG_REMOVE_OTHER =
-            (target, flag) -> AbstractMessage.prefixed(translatable().key(
-                            "floracore.command.itemflag.remove.other")
+            (target, flag) -> AbstractMessage.prefixed(translatable()
+                    .key("floracore.command.itemflag.remove.other")
                     .color(AQUA)
                     .args(text(target).color(GREEN),
                             text(flag).color(GREEN)));
 
-    Args2<String, String> COMMAND_ITEMFLAG_REMOVE_FROM = (from, flag) -> AbstractMessage.prefixed(translatable().key(
-                    "floracore.command.itemflag.remove.from")
+    Args2<String, String> COMMAND_ITEMFLAG_REMOVE_FROM = (from, flag) -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.remove.from")
             .color(AQUA)
             .args(text(from).color(GREEN),
                     text(flag).color(GREEN)));
 
-    Args0 COMMAND_ITEMFLAG_CLEAR_SELF = () -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemflag.clear.self").color(AQUA));
+    Args0 COMMAND_ITEMFLAG_CLEAR_SELF = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.clear.self").color(AQUA));
 
-    Args1<String> COMMAND_ITEMFLAG_CLEAR_OTHER = target -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemflag.clear.other").color(AQUA).args(text(target).color(GREEN)));
+    Args1<String> COMMAND_ITEMFLAG_CLEAR_OTHER = target -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.clear.other").color(AQUA).args(text(target).color(GREEN)));
 
-    Args1<String> COMMAND_ITEMFLAG_CLEAR_FROM = from -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemflag.clear.from").color(AQUA).args(text(from).color(GREEN)));
+    Args1<String> COMMAND_ITEMFLAG_CLEAR_FROM = from -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemflag.clear.from").color(AQUA).args(text(from).color(GREEN)));
 
-    Args0 COMMAND_ITEMNAME_NOITEM_SELF = () -> AbstractMessage.prefixed(translatable().key(
-            "floracore.command.itemname.noitem.self").color(RED));
+    Args0 COMMAND_ITEMNAME_NOITEM_SELF = () -> AbstractMessage.prefixed(translatable()
+            .key("floracore.command.itemname.noitem.self").color(RED));
 
     Args1<String> COMMAND_ITEMNAME_NOITEM_OTHER = player -> AbstractMessage.prefixed(translatable()
             .key("floracore.command.itemname.noitem.other").color(RED).args(text(player).color(GREEN)));
@@ -644,16 +636,16 @@ public interface PlayerCommandMessage extends AbstractMessage {
                 .append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA)
                         // {}
                         .args(text(player).color(GREEN), text(playerServer).color(YELLOW),
-                                OPEN_BRACKET.append(translatable(playerOnlineStatus ? "floracore" +
-                                                ".command" +
-                                                ".misc.online" : "floracore.command.misc.offline"))
+                                OPEN_BRACKET.append(translatable(playerOnlineStatus ?
+                                                "floracore.command.misc.online" :
+                                                "floracore.command.misc.offline"))
                                         .append(CLOSE_BRACKET)
                                         .color(playerOnlineStatus ? GREEN : RED))).append(newline())
                 .append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA)
                         .args(text(target).color(GREEN), text(targetServer).color(YELLOW),
-                                OPEN_BRACKET.append(translatable(targetOnlineStatus ? "floracore" +
-                                                ".command" +
-                                                ".misc.online" : "floracore.command.misc.offline"))
+                                OPEN_BRACKET.append(translatable(targetOnlineStatus ?
+                                                "floracore.command.misc.online" :
+                                                "floracore.command.misc.offline"))
                                         .append(CLOSE_BRACKET)
                                         .color(targetOnlineStatus ? GREEN : RED)))
                 .build();
@@ -665,7 +657,8 @@ public interface PlayerCommandMessage extends AbstractMessage {
         }
         HoverEvent<Component> hoverEvent = HoverEvent.showText(infoLine);
         ClickEvent clickEvent = ClickEvent.runCommand("/report-tp " + target);
-        Component i = AbstractMessage.prefixed(translatable().key("floracore.command.misc.report.broadcast")
+        Component i = AbstractMessage.prefixed(translatable()
+                        .key("floracore.command.misc.report.broadcast")
                         .color(AQUA)
                         // {}
                         .args(text(player).color(GREEN),

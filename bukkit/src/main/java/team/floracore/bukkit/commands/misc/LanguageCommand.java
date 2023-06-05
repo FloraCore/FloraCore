@@ -6,14 +6,12 @@ import cloud.commandframework.annotations.processing.CommandContainer;
 import com.github.benmanes.caffeine.cache.Cache;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.impl.GuiPage;
-import me.huanmeng.opensource.bukkit.gui.impl.page.PageSetting;
 import me.huanmeng.opensource.bukkit.gui.impl.page.PageSettings;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.floracore.api.data.DataType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bukkit.FCBukkitPlugin;
@@ -78,11 +76,13 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
         List<TranslationRepository.LanguageInfo> finalAvailableTranslations = availableTranslations;
         Locale defaultLanguage = TranslationManager.DEFAULT_LOCALE;
         String dpl = TranslationManager.localeDisplayName(defaultLanguage);
-        Component dc = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(dpl));
-        ItemStackBuilder dib = new ItemStackBuilder(Material.PAPER).setName(Component.text(dpl)
-                        .color(NamedTextColor.GREEN))
-                .setLore(Collections.singletonList(dc));
-        Button db = Button.of(p -> dib.get(), p -> {
+        Button db = Button.of(p -> {
+            Component dc = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(dpl));
+            ItemStackBuilder dib = new ItemStackBuilder(Material.PAPER).setName(Component.text(dpl)
+                            .color(NamedTextColor.GREEN))
+                    .setLore(Collections.singletonList(dc));
+            return dib.get();
+        }, p -> {
             {
                 String value = defaultLanguage.toLanguageTag();
                 getStorageImplementation().insertData(uuid, DataType.FUNCTION, "language", value.replace("-", "_"), 0);
@@ -94,14 +94,16 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
         for (TranslationRepository.LanguageInfo language : finalAvailableTranslations) {
             Locale l = language.locale();
             String pl = TranslationManager.localeDisplayName(l);
-            Component c = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(pl), l);
-            Component t = Component.text(pl).color(NamedTextColor.GREEN);
-            Component progress = AbstractMessage.OPEN_BRACKET.append(Component.text(language.progress() + "%"))
-                    .append(AbstractMessage.CLOSE_BRACKET);
-            t = t.append(Component.space()).append(progress.color(NamedTextColor.GRAY));
-            ItemStackBuilder itemBuilder = new ItemStackBuilder(Material.PAPER).setName(t)
-                    .setLore(Collections.singletonList(c));
-            Button b = Button.of(p -> itemBuilder.get(), p -> {
+            Button b = Button.of(p -> {
+                Component c = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(pl), l);
+                Component t = Component.text(pl).color(NamedTextColor.GREEN);
+                Component progress = AbstractMessage.OPEN_BRACKET.append(Component.text(language.progress() + "%"))
+                        .append(AbstractMessage.CLOSE_BRACKET);
+                t = t.append(Component.space()).append(progress.color(NamedTextColor.GRAY));
+                ItemStackBuilder itemBuilder = new ItemStackBuilder(Material.PAPER).setName(t)
+                        .setLore(Collections.singletonList(c));
+                return itemBuilder.get();
+            }, p -> {
                 {
                     String value = language.locale().toLanguageTag();
                     getStorageImplementation().insertData(uuid,
@@ -127,25 +129,26 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
         GuiPage gui = new GuiPage(player, buttons, 16, LINE);
         gui.title(title);
         gui.setPlayer(player);
-        Component previous =
-                TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
-        Component turn =
-                TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() - 1), uuid);
-        ItemStack ip = new ItemStackBuilder(Material.ARROW).setName(previous)
-                .setLore(Collections.singletonList(turn))
-                .get();
-        Button bp = Button.of(p -> ip);
-        Component next =
-                TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
-        Component turn1 =
-                TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() + 1),
-                        uuid);
-        ItemStack n = new ItemStackBuilder(Material.ARROW).setName(next)
-                .setLore(Collections.singletonList(turn1))
-                .get();
-        Button bn = Button.of(p -> n);
-        PageSetting ps = PageSettings.normal(gui, bp, bn);
-        gui.pageSetting(ps);
+        Button bp = Button.of(p -> {
+            Component previous =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
+            Component turn =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() - 1), uuid);
+            return new ItemStackBuilder(Material.ARROW).setName(previous)
+                    .setLore(Collections.singletonList(turn))
+                    .get();
+        });
+        Button bn = Button.of(p -> {
+            Component next =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
+            Component turn1 =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() + 1),
+                            uuid);
+            return new ItemStackBuilder(Material.ARROW).setName(next)
+                    .setLore(Collections.singletonList(turn1))
+                    .get();
+        });
+        gui.pageSetting(PageSettings.normal(gui, bp, bn));
         return gui;
     }
 }

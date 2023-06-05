@@ -12,9 +12,8 @@ import team.floracore.common.util.wrapper.WrappedObject;
         @VersionName(value = "net.minecraft.network.chat.IChatBaseComponent", minVer = 17)})
 public interface NmsIChatBaseComponent extends WrappedBukkitObject {
 
-    @WrappedBukkitClass({@VersionName(value = "nms.IChatBaseComponent$ChatSerializer",
-            maxVer = 17), @VersionName(value = "net.minecraft.network.chat.IChatBaseComponent$ChatSerializer",
-            minVer = 17)})
+    @WrappedBukkitClass({@VersionName(value = "nms.IChatBaseComponent$ChatSerializer", maxVer = 17),
+            @VersionName(value = "net.minecraft.network.chat.IChatBaseComponent$ChatSerializer", minVer = 17)})
     interface NmsChatSerializer extends WrappedBukkitObject {
         static NmsIChatBaseComponent jsonToComponent(String json) {
             return WrappedObject.getStatic(NmsChatSerializer.class).staticJsonToComponent(json);

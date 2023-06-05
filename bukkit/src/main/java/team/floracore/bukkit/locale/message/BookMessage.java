@@ -204,14 +204,6 @@ public interface BookMessage extends AbstractMessage {
                 .build();
     };
 
-    Args4<String, String, String, Boolean> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_CHAT = (time, player, chat,
-                                                                                                   target) -> translatable()
-            // {0} {1} : {2}
-            .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.chat")
-            .args(text(time), text(player).decoration(BOLD, true), text(chat, BLACK).decoration(UNDERLINED, true))
-            .color(target ? RED : BLACK)
-            .build();
-
     Args0 COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_1 = () -> translatable()
             // Nick可以让你用不同的用户名来玩,以免被人认出
             .key("floracore.command.misc.nick.book.start-page.line.1").color(BLACK).append(FULL_STOP).build();

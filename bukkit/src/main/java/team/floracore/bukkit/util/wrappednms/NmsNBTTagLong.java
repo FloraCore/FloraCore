@@ -22,7 +22,7 @@ public interface NmsNBTTagLong extends NmsNBTTag {
         return new JsonPrimitive(getValue());
     }
 
-    @WrappedBukkitMethod({@VersionName("asLong"), @VersionName(maxVer = 18, value = {"d"}), @VersionName(minVer = 18,
-            value = {"e"})})
+    @WrappedBukkitMethod({@VersionName("asLong"), @VersionName(maxVer = 18, value = {"d"}),
+            @VersionName(minVer = 18, value = {"e"})})
     long getValue();
 }

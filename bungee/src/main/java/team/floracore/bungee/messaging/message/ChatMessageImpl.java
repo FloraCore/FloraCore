@@ -42,21 +42,18 @@ public class ChatMessageImpl extends AbstractMessage implements ChatMessage {
         UUID receiver = Optional.ofNullable(content.getAsJsonObject().get("receiver"))
                 .map(JsonElement::getAsString)
                 .map(UUID::fromString)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Incoming message has no receiver argument: " + content));
+                .orElseThrow(() -> new IllegalStateException("Incoming message has no receiver argument: " + content));
 
         ChatType type = Optional.ofNullable(content.getAsJsonObject().get("type"))
                 .map(JsonElement::getAsString)
                 .map(ChatType::valueOf)
-                .orElseThrow(() -> new IllegalStateException(
-                        "Incoming message has no type argument: " + content));
+                .orElseThrow(() -> new IllegalStateException("Incoming message has no type argument: " + content));
 
         Type type1 = new TypeToken<List<String>>() {
         }.getType();
         String p = Optional.ofNullable(content.getAsJsonObject().get("parameters"))
                 .map(JsonElement::getAsString)
-                .orElseThrow(() -> new IllegalStateException("Incoming message has no parameters argument: "
-                        + content));
+                .orElseThrow(() -> new IllegalStateException("Incoming message has no parameters argument: " + content));
         List<String> parameters = GsonProvider.normal().fromJson(p, type1);
 
         return new ChatMessageImpl(id, receiver, type, parameters);
@@ -67,9 +64,7 @@ public class ChatMessageImpl extends AbstractMessage implements ChatMessage {
         return FloraCoreMessagingService.encodeMessageAsString(TYPE, getId(),
                 new JObject().add("receiver", this.receiver.toString())
                         .add("type", this.type.toString())
-                        .add("parameters",
-                                GsonProvider.normal()
-                                        .toJson(this.parameters))
+                        .add("parameters", GsonProvider.normal().toJson(this.parameters))
                         .toJson()
         );
     }
