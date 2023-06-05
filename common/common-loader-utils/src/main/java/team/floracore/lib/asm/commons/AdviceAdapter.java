@@ -33,18 +33,22 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
      * Prefix of the error message when invalid opcodes are found.
      */
     private static final String INVALID_OPCODE = "Invalid opcode ";
-    /**
-     * Whether the visited method is a constructor.
-     */
-    private final boolean isConstructor;
+
     /**
      * The access flags of the visited method.
      */
     protected int methodAccess;
+
     /**
      * The descriptor of the visited method.
      */
     protected String methodDesc;
+
+    /**
+     * Whether the visited method is a constructor.
+     */
+    private final boolean isConstructor;
+
     /**
      * Whether the super class constructor has been called (if the visited method is a constructor),
      * at the current instruction. There can be multiple call sites to the super constructor (e.g. for
@@ -102,6 +106,19 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
             forwardJumpStackFrames = new HashMap<>();
         } else {
             onMethodEnter();
+        }
+    }
+
+    @Override
+    public void visitLabel(final Label label) {
+        super.visitLabel(label);
+        if (isConstructor && forwardJumpStackFrames != null) {
+            List<Object> labelStackFrame = forwardJumpStackFrames.get(label);
+            if (labelStackFrame != null) {
+                stackFrame = labelStackFrame;
+                superClassConstructorCalled = false;
+                forwardJumpStackFrames.remove(label);
+            }
         }
     }
 
@@ -291,19 +308,38 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
     }
 
     @Override
-    public void visitIntInsn(final int opcode, final int operand) {
-        super.visitIntInsn(opcode, operand);
-        if (isConstructor && !superClassConstructorCalled && opcode != NEWARRAY) {
-            pushValue(OTHER);
-        }
-    }
-
-    @Override
-    public void visitTypeInsn(final int opcode, final String type) {
-        super.visitTypeInsn(opcode, type);
-        // ANEWARRAY, CHECKCAST or INSTANCEOF don't change stack.
-        if (isConstructor && !superClassConstructorCalled && opcode == NEW) {
-            pushValue(OTHER);
+    public void visitVarInsn(final int opcode, final int varIndex) {
+        super.visitVarInsn(opcode, varIndex);
+        if (isConstructor && !superClassConstructorCalled) {
+            switch (opcode) {
+                case ILOAD:
+                case FLOAD:
+                    pushValue(OTHER);
+                    break;
+                case LLOAD:
+                case DLOAD:
+                    pushValue(OTHER);
+                    pushValue(OTHER);
+                    break;
+                case ALOAD:
+                    pushValue(varIndex == 0 ? UNINITIALIZED_THIS : OTHER);
+                    break;
+                case ASTORE:
+                case ISTORE:
+                case FSTORE:
+                    popValue();
+                    break;
+                case LSTORE:
+                case DSTORE:
+                    popValue();
+                    popValue();
+                    break;
+                case RET:
+                    endConstructorBasicBlockWithoutSuccessor();
+                    break;
+                default:
+                    throw new IllegalArgumentException(INVALID_OPCODE + opcode);
+            }
         }
     }
 
@@ -342,6 +378,47 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
                 default:
                     throw new IllegalArgumentException(INVALID_OPCODE + opcode);
             }
+        }
+    }
+
+    @Override
+    public void visitIntInsn(final int opcode, final int operand) {
+        super.visitIntInsn(opcode, operand);
+        if (isConstructor && !superClassConstructorCalled && opcode != NEWARRAY) {
+            pushValue(OTHER);
+        }
+    }
+
+    @Override
+    public void visitLdcInsn(final Object value) {
+        super.visitLdcInsn(value);
+        if (isConstructor && !superClassConstructorCalled) {
+            pushValue(OTHER);
+            if (value instanceof Double
+                    || value instanceof Long
+                    || (value instanceof ConstantDynamic && ((ConstantDynamic) value).getSize() == 2)) {
+                pushValue(OTHER);
+            }
+        }
+    }
+
+    @Override
+    public void visitMultiANewArrayInsn(final String descriptor, final int numDimensions) {
+        super.visitMultiANewArrayInsn(descriptor, numDimensions);
+        if (isConstructor && !superClassConstructorCalled) {
+            for (int i = 0; i < numDimensions; i++) {
+                popValue();
+            }
+            pushValue(OTHER);
+        }
+    }
+
+    @Override
+    public void visitTypeInsn(final int opcode, final String type) {
+        super.visitTypeInsn(opcode, type);
+        // ANEWARRAY, CHECKCAST or INSTANCEOF don't change stack.
+        if (isConstructor && !superClassConstructorCalled && opcode == NEW) {
+            pushValue(OTHER);
         }
     }
 
@@ -449,28 +526,12 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
     }
 
     @Override
-    public void visitLabel(final Label label) {
-        super.visitLabel(label);
-        if (isConstructor && forwardJumpStackFrames != null) {
-            List<Object> labelStackFrame = forwardJumpStackFrames.get(label);
-            if (labelStackFrame != null) {
-                stackFrame = labelStackFrame;
-                superClassConstructorCalled = false;
-                forwardJumpStackFrames.remove(label);
-            }
-        }
-    }
-
-    @Override
-    public void visitLdcInsn(final Object value) {
-        super.visitLdcInsn(value);
+    public void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels) {
+        super.visitLookupSwitchInsn(dflt, keys, labels);
         if (isConstructor && !superClassConstructorCalled) {
-            pushValue(OTHER);
-            if (value instanceof Double
-                    || value instanceof Long
-                    || (value instanceof ConstantDynamic && ((ConstantDynamic) value).getSize() == 2)) {
-                pushValue(OTHER);
-            }
+            popValue();
+            addForwardJumps(dflt, labels);
+            endConstructorBasicBlockWithoutSuccessor();
         }
     }
 
@@ -482,27 +543,6 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
             popValue();
             addForwardJumps(dflt, labels);
             endConstructorBasicBlockWithoutSuccessor();
-        }
-    }
-
-    @Override
-    public void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels) {
-        super.visitLookupSwitchInsn(dflt, keys, labels);
-        if (isConstructor && !superClassConstructorCalled) {
-            popValue();
-            addForwardJumps(dflt, labels);
-            endConstructorBasicBlockWithoutSuccessor();
-        }
-    }
-
-    @Override
-    public void visitMultiANewArrayInsn(final String descriptor, final int numDimensions) {
-        super.visitMultiANewArrayInsn(descriptor, numDimensions);
-        if (isConstructor && !superClassConstructorCalled) {
-            for (int i = 0; i < numDimensions; i++) {
-                popValue();
-            }
-            pushValue(OTHER);
         }
     }
 
@@ -537,6 +577,40 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
             return;
         }
         forwardJumpStackFrames.put(label, new ArrayList<>(stackFrame));
+    }
+
+    private void endConstructorBasicBlockWithoutSuccessor() {
+        // The next instruction is not reachable from this instruction. If it is dead code, we
+        // should not try to simulate stack operations, and there is no need to insert advices
+        // here. If it is reachable with a backward jump, the only possible case is that the super
+        // class constructor has already been called (backward jumps are forbidden before it is
+        // called). If it is reachable with a forward jump, there are two sub-cases. Either the
+        // super class constructor has already been called when reaching the next instruction, or
+        // it has not been called. But in this case there must be a forwardJumpStackFrames entry
+        // for a Label designating the next instruction, and superClassConstructorCalled will be
+        // reset to false there. We can therefore always reset this field to true here.
+        superClassConstructorCalled = true;
+    }
+
+    private Object popValue() {
+        return stackFrame.remove(stackFrame.size() - 1);
+    }
+
+    private Object peekValue() {
+        return stackFrame.get(stackFrame.size() - 1);
+    }
+
+    private void pushValue(final Object value) {
+        stackFrame.add(value);
+    }
+
+    /**
+     * Generates the "before" advice for the visited method. The default implementation of this method
+     * does nothing. Subclasses can use or change all the local variables, but should not change state
+     * of the stack. This method is called at the beginning of the method or after super class
+     * constructor has been called (in constructors).
+     */
+    protected void onMethodEnter() {
     }
 
     /**
@@ -575,75 +649,5 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
      *               Opcodes#ATHROW}.
      */
     protected void onMethodExit(final int opcode) {
-    }
-
-    private void endConstructorBasicBlockWithoutSuccessor() {
-        // The next instruction is not reachable from this instruction. If it is dead code, we
-        // should not try to simulate stack operations, and there is no need to insert advices
-        // here. If it is reachable with a backward jump, the only possible case is that the super
-        // class constructor has already been called (backward jumps are forbidden before it is
-        // called). If it is reachable with a forward jump, there are two sub-cases. Either the
-        // super class constructor has already been called when reaching the next instruction, or
-        // it has not been called. But in this case there must be a forwardJumpStackFrames entry
-        // for a Label designating the next instruction, and superClassConstructorCalled will be
-        // reset to false there. We can therefore always reset this field to true here.
-        superClassConstructorCalled = true;
-    }
-
-    private Object popValue() {
-        return stackFrame.remove(stackFrame.size() - 1);
-    }
-
-    private void pushValue(final Object value) {
-        stackFrame.add(value);
-    }
-
-    private Object peekValue() {
-        return stackFrame.get(stackFrame.size() - 1);
-    }
-
-    /**
-     * Generates the "before" advice for the visited method. The default implementation of this method
-     * does nothing. Subclasses can use or change all the local variables, but should not change state
-     * of the stack. This method is called at the beginning of the method or after super class
-     * constructor has been called (in constructors).
-     */
-    protected void onMethodEnter() {
-    }
-
-    @Override
-    public void visitVarInsn(final int opcode, final int varIndex) {
-        super.visitVarInsn(opcode, varIndex);
-        if (isConstructor && !superClassConstructorCalled) {
-            switch (opcode) {
-                case ILOAD:
-                case FLOAD:
-                    pushValue(OTHER);
-                    break;
-                case LLOAD:
-                case DLOAD:
-                    pushValue(OTHER);
-                    pushValue(OTHER);
-                    break;
-                case ALOAD:
-                    pushValue(varIndex == 0 ? UNINITIALIZED_THIS : OTHER);
-                    break;
-                case ASTORE:
-                case ISTORE:
-                case FSTORE:
-                    popValue();
-                    break;
-                case LSTORE:
-                case DSTORE:
-                    popValue();
-                    popValue();
-                    break;
-                case RET:
-                    endConstructorBasicBlockWithoutSuccessor();
-                    break;
-                default:
-                    throw new IllegalArgumentException(INVALID_OPCODE + opcode);
-            }
-        }
     }
 }

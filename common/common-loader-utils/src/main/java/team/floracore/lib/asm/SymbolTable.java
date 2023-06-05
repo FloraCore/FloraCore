@@ -6,9 +6,9 @@ package team.floracore.lib.asm;
  *
  * @author Eric Bruneton
  * @see <a href="https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.4">JVMS
- * 4.4</a>
+ *     4.4</a>
  * @see <a href="https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.7.23">JVMS
- * 4.7.23</a>
+ *     4.7.23</a>
  */
 final class SymbolTable {
 
@@ -24,24 +24,23 @@ final class SymbolTable {
      * constructed from scratch.
      */
     private final ClassReader sourceClassReader;
-    /**
-     * The content of the ClassFile's constant_pool JVMS structure corresponding to this SymbolTable.
-     * The ClassFile's constant_pool_count field is <i>not</i> included.
-     */
-    private final ByteVector constantPool;
+
     /**
      * The major version number of the class to which this symbol table belongs.
      */
     private int majorVersion;
+
     /**
      * The internal name of the class to which this symbol table belongs.
      */
     private String className;
+
     /**
      * The total number of {@link Entry} instances in {@link #entries}. This includes entries that are
      * accessible (recursively) via {@link Entry#next}.
      */
     private int entryCount;
+
     /**
      * A hash set of all the entries in this SymbolTable (this includes the constant pool entries, the
      * bootstrap method entries and the type table entries). Each {@link Entry} instance is stored at
@@ -50,11 +49,19 @@ final class SymbolTable {
      * factory methods of this class make sure that this table does not contain duplicated entries.
      */
     private Entry[] entries;
+
     /**
      * The number of constant pool items in {@link #constantPool}, plus 1. The first constant pool
      * item has index 1, and long and double items count for two items.
      */
     private int constantPoolCount;
+
+    /**
+     * The content of the ClassFile's constant_pool JVMS structure corresponding to this SymbolTable.
+     * The ClassFile's constant_pool_count field is <i>not</i> included.
+     */
+    private final ByteVector constantPool;
+
     /**
      * The number of bootstrap methods in {@link #bootstrapMethods}. Corresponds to the
      * BootstrapMethods_attribute's num_bootstrap_methods field value.
@@ -202,179 +209,6 @@ final class SymbolTable {
         }
     }
 
-    private static int hash(
-            final int tag, final String value1, final String value2, final String value3) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode());
-    }
-
-    private static int hash(final int tag, final int value) {
-        return 0x7FFFFFFF & (tag + value);
-    }
-
-    private static int hash(final int tag, final String value1, final String value2) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode());
-    }
-
-    private static int hash(final int tag, final long value) {
-        return 0x7FFFFFFF & (tag + (int) value + (int) (value >>> 32));
-    }
-
-    private static int hash(final int tag, final String value) {
-        return 0x7FFFFFFF & (tag + value.hashCode());
-    }
-
-    private static int hash(
-            final int tag,
-            final String value1,
-            final String value2,
-            final String value3,
-            final int value4) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode() * value4);
-    }
-
-    private static int hash(
-            final int tag, final String value1, final String value2, final int value3) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * (value3 + 1));
-    }
-
-    private static int hash(final int tag, final String value1, final int value2) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() + value2);
-    }
-
-    /**
-     * Adds a new CONSTANT_Fieldref_info, CONSTANT_Methodref_info or CONSTANT_InterfaceMethodref_info
-     * to the constant pool of this symbol table.
-     *
-     * @param index      the constant pool index of the new Symbol.
-     * @param tag        one of {@link Symbol#CONSTANT_FIELDREF_TAG}, {@link Symbol#CONSTANT_METHODREF_TAG}
-     *                   or {@link Symbol#CONSTANT_INTERFACE_METHODREF_TAG}.
-     * @param owner      the internal name of a class.
-     * @param name       a field or method name.
-     * @param descriptor a field or method descriptor.
-     */
-    private void addConstantMemberReference(
-            final int index,
-            final int tag,
-            final String owner,
-            final String name,
-            final String descriptor) {
-        add(new Entry(index, tag, owner, name, descriptor, 0, hash(tag, owner, name, descriptor)));
-    }
-
-    /**
-     * Adds a new CONSTANT_Integer_info or CONSTANT_Float_info to the constant pool of this symbol
-     * table.
-     *
-     * @param index the constant pool index of the new Symbol.
-     * @param tag   one of {@link Symbol#CONSTANT_INTEGER_TAG} or {@link Symbol#CONSTANT_FLOAT_TAG}.
-     * @param value an int or float.
-     */
-    private void addConstantIntegerOrFloat(final int index, final int tag, final int value) {
-        add(new Entry(index, tag, value, hash(tag, value)));
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Generic symbol table entries management.
-    // -----------------------------------------------------------------------------------------------
-
-    /**
-     * Adds a new CONSTANT_NameAndType_info to the constant pool of this symbol table.
-     *
-     * @param index      the constant pool index of the new Symbol.
-     * @param name       a field or method name.
-     * @param descriptor a field or method descriptor.
-     */
-    private void addConstantNameAndType(final int index, final String name, final String descriptor) {
-        final int tag = Symbol.CONSTANT_NAME_AND_TYPE_TAG;
-        add(new Entry(index, tag, name, descriptor, hash(tag, name, descriptor)));
-    }
-
-    /**
-     * Adds a new CONSTANT_Long_info or CONSTANT_Double_info to the constant pool of this symbol
-     * table.
-     *
-     * @param index the constant pool index of the new Symbol.
-     * @param tag   one of {@link Symbol#CONSTANT_LONG_TAG} or {@link Symbol#CONSTANT_DOUBLE_TAG}.
-     * @param value a long or double.
-     */
-    private void addConstantLongOrDouble(final int index, final int tag, final long value) {
-        add(new Entry(index, tag, value, hash(tag, value)));
-    }
-
-    /**
-     * Adds a new CONSTANT_String_info to the constant pool of this symbol table.
-     *
-     * @param index the constant pool index of the new Symbol.
-     * @param value a string.
-     */
-    private void addConstantUtf8(final int index, final String value) {
-        add(new Entry(index, Symbol.CONSTANT_UTF8_TAG, value, hash(Symbol.CONSTANT_UTF8_TAG, value)));
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Constant pool entries management.
-    // -----------------------------------------------------------------------------------------------
-
-    /**
-     * Adds a new CONSTANT_MethodHandle_info to the constant pool of this symbol table.
-     *
-     * @param index         the constant pool index of the new Symbol.
-     * @param referenceKind one of {@link Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC}, {@link
-     *                      Opcodes#H_PUTFIELD}, {@link Opcodes#H_PUTSTATIC}, {@link Opcodes#H_INVOKEVIRTUAL}, {@link
-     *                      Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL}, {@link
-     *                      Opcodes#H_NEWINVOKESPECIAL} or {@link Opcodes#H_INVOKEINTERFACE}.
-     * @param owner         the internal name of a class of interface.
-     * @param name          a field or method name.
-     * @param descriptor    a field or method descriptor.
-     */
-    private void addConstantMethodHandle(
-            final int index,
-            final int referenceKind,
-            final String owner,
-            final String name,
-            final String descriptor) {
-        final int tag = Symbol.CONSTANT_METHOD_HANDLE_TAG;
-        int hashCode = hash(tag, owner, name, descriptor, referenceKind);
-        add(new Entry(index, tag, owner, name, descriptor, referenceKind, hashCode));
-    }
-
-    /**
-     * Adds a new CONSTANT_Dynamic_info or CONSTANT_InvokeDynamic_info to the constant pool of this
-     * symbol table.
-     *
-     * @param tag                  one of {@link Symbol#CONSTANT_DYNAMIC_TAG} or {@link
-     *                             Symbol#CONSTANT_INVOKE_DYNAMIC_TAG}.
-     * @param index                the constant pool index of the new Symbol.
-     * @param name                 a method name.
-     * @param descriptor           a field descriptor for CONSTANT_DYNAMIC_TAG or a method descriptor for
-     *                             CONSTANT_INVOKE_DYNAMIC_TAG.
-     * @param bootstrapMethodIndex the index of a bootstrap method in the BootstrapMethods attribute.
-     */
-    private void addConstantDynamicOrInvokeDynamicReference(
-            final int tag,
-            final int index,
-            final String name,
-            final String descriptor,
-            final int bootstrapMethodIndex) {
-        int hashCode = hash(tag, name, descriptor, bootstrapMethodIndex);
-        add(new Entry(index, tag, null, name, descriptor, bootstrapMethodIndex, hashCode));
-    }
-
-    /**
-     * Adds a new CONSTANT_Class_info, CONSTANT_String_info, CONSTANT_MethodType_info,
-     * CONSTANT_Module_info or CONSTANT_Package_info to the constant pool of this symbol table.
-     *
-     * @param index the constant pool index of the new Symbol.
-     * @param tag   one of {@link Symbol#CONSTANT_CLASS_TAG}, {@link Symbol#CONSTANT_STRING_TAG}, {@link
-     *              Symbol#CONSTANT_METHOD_TYPE_TAG}, {@link Symbol#CONSTANT_MODULE_TAG} or {@link
-     *              Symbol#CONSTANT_PACKAGE_TAG}.
-     * @param value an internal class name, an arbitrary string, a method descriptor, a module or a
-     *              package name, depending on tag.
-     */
-    private void addConstantUtf8Reference(final int index, final int tag, final String value) {
-        add(new Entry(index, tag, value, hash(tag, value)));
-    }
-
     /**
      * Read the BootstrapMethods 'bootstrap_methods' array binary content and add them as entries of
      * the SymbolTable.
@@ -422,20 +256,6 @@ final class SymbolTable {
     }
 
     /**
-     * Adds the given entry in the {@link #entries} hash set. This method does <i>not</i> check
-     * whether {@link #entries} already contains a similar entry or not, and does <i>not</i> resize
-     * {@link #entries} if necessary.
-     *
-     * @param entry an Entry (which must not already be contained in {@link #entries}).
-     */
-    private void add(final Entry entry) {
-        entryCount++;
-        int index = entry.hashCode % entries.length;
-        entry.next = entries[index];
-        entries[index] = entry;
-    }
-
-    /**
      * Returns the ClassReader from which this SymbolTable was constructed.
      *
      * @return the ClassReader from which this SymbolTable was constructed, or {@literal null} if it
@@ -475,107 +295,6 @@ final class SymbolTable {
         this.majorVersion = majorVersion;
         this.className = className;
         return addConstantClass(className).index;
-    }
-
-    /**
-     * Adds a CONSTANT_Class_info to the constant pool of this symbol table. Does nothing if the
-     * constant pool already contains a similar item.
-     *
-     * @param value the internal name of a class.
-     * @return a new or already existing Symbol with the given value.
-     */
-    Symbol addConstantClass(final String value) {
-        return addConstantUtf8Reference(Symbol.CONSTANT_CLASS_TAG, value);
-    }
-
-    /**
-     * Adds a CONSTANT_Class_info, CONSTANT_String_info, CONSTANT_MethodType_info,
-     * CONSTANT_Module_info or CONSTANT_Package_info to the constant pool of this symbol table. Does
-     * nothing if the constant pool already contains a similar item.
-     *
-     * @param tag   one of {@link Symbol#CONSTANT_CLASS_TAG}, {@link Symbol#CONSTANT_STRING_TAG}, {@link
-     *              Symbol#CONSTANT_METHOD_TYPE_TAG}, {@link Symbol#CONSTANT_MODULE_TAG} or {@link
-     *              Symbol#CONSTANT_PACKAGE_TAG}.
-     * @param value an internal class name, an arbitrary string, a method descriptor, a module or a
-     *              package name, depending on tag.
-     * @return a new or already existing Symbol with the given value.
-     */
-    private Symbol addConstantUtf8Reference(final int tag, final String value) {
-        int hashCode = hash(tag, value);
-        Entry entry = get(hashCode);
-        while (entry != null) {
-            if (entry.tag == tag && entry.hashCode == hashCode && entry.value.equals(value)) {
-                return entry;
-            }
-            entry = entry.next;
-        }
-        constantPool.put12(tag, addConstantUtf8(value));
-        return put(new Entry(constantPoolCount++, tag, value, hashCode));
-    }
-
-    /**
-     * Returns the list of entries which can potentially have the given hash code.
-     *
-     * @param hashCode a {@link Entry#hashCode} value.
-     * @return the list of entries which can potentially have the given hash code. The list is stored
-     * via the {@link Entry#next} field.
-     */
-    private Entry get(final int hashCode) {
-        return entries[hashCode % entries.length];
-    }
-
-    /**
-     * Adds a CONSTANT_Utf8_info to the constant pool of this symbol table. Does nothing if the
-     * constant pool already contains a similar item.
-     *
-     * @param value a string.
-     * @return a new or already existing Symbol with the given value.
-     */
-    int addConstantUtf8(final String value) {
-        int hashCode = hash(Symbol.CONSTANT_UTF8_TAG, value);
-        Entry entry = get(hashCode);
-        while (entry != null) {
-            if (entry.tag == Symbol.CONSTANT_UTF8_TAG
-                    && entry.hashCode == hashCode
-                    && entry.value.equals(value)) {
-                return entry.index;
-            }
-            entry = entry.next;
-        }
-        constantPool.putByte(Symbol.CONSTANT_UTF8_TAG).putUTF8(value);
-        return put(new Entry(constantPoolCount++, Symbol.CONSTANT_UTF8_TAG, value, hashCode)).index;
-    }
-
-    /**
-     * Puts the given entry in the {@link #entries} hash set. This method does <i>not</i> check
-     * whether {@link #entries} already contains a similar entry or not. {@link #entries} is resized
-     * if necessary to avoid hash collisions (multiple entries needing to be stored at the same {@link
-     * #entries} array index) as much as possible, with reasonable memory usage.
-     *
-     * @param entry an Entry (which must not already be contained in {@link #entries}).
-     * @return the given entry
-     */
-    private Entry put(final Entry entry) {
-        if (entryCount > (entries.length * 3) / 4) {
-            int currentCapacity = entries.length;
-            int newCapacity = currentCapacity * 2 + 1;
-            Entry[] newEntries = new Entry[newCapacity];
-            for (int i = currentCapacity - 1; i >= 0; --i) {
-                Entry currentEntry = entries[i];
-                while (currentEntry != null) {
-                    int newCurrentEntryIndex = currentEntry.hashCode % newCapacity;
-                    Entry nextEntry = currentEntry.next;
-                    currentEntry.next = newEntries[newCurrentEntryIndex];
-                    newEntries[newCurrentEntryIndex] = currentEntry;
-                    currentEntry = nextEntry;
-                }
-            }
-            entries = newEntries;
-        }
-        entryCount++;
-        int index = entry.hashCode % entries.length;
-        entry.next = entries[index];
-        return entries[index] = entry;
     }
 
     /**
@@ -637,6 +356,26 @@ final class SymbolTable {
         }
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Generic symbol table entries management.
+    // -----------------------------------------------------------------------------------------------
+
+    private static int hash(final int tag, final int value) {
+        return 0x7FFFFFFF & (tag + value);
+    }
+
+    private static int hash(final int tag, final long value) {
+        return 0x7FFFFFFF & (tag + (int) value + (int) (value >>> 32));
+    }
+
+    private static int hash(final int tag, final String value) {
+        return 0x7FFFFFFF & (tag + value.hashCode());
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Constant pool entries management.
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Adds a number or string constant to the constant pool of this symbol table. Does nothing if the
      * constant pool already contains a similar item.
@@ -693,6 +432,10 @@ final class SymbolTable {
         } else {
             throw new IllegalArgumentException("value " + value);
         }
+    }
+
+    private static int hash(final int tag, final String value1, final int value2) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() + value2);
     }
 
     /**
@@ -755,6 +498,10 @@ final class SymbolTable {
         return put(new Entry(constantPoolCount++, tag, owner, name, descriptor, 0, hashCode));
     }
 
+    private static int hash(final int tag, final String value1, final String value2) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode());
+    }
+
     /**
      * Adds a CONSTANT_String_info to the constant pool of this symbol table. Does nothing if the
      * constant pool already contains a similar item.
@@ -809,6 +556,11 @@ final class SymbolTable {
         return put(new Entry(constantPoolCount++, tag, value, hashCode));
     }
 
+    private static int hash(
+            final int tag, final String value1, final String value2, final int value3) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * (value3 + 1));
+    }
+
     /**
      * Adds a CONSTANT_Long_info to the constant pool of this symbol table. Does nothing if the
      * constant pool already contains a similar item.
@@ -854,9 +606,10 @@ final class SymbolTable {
         return put(new Entry(index, tag, value, hashCode));
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Bootstrap method entries management.
-    // -----------------------------------------------------------------------------------------------
+    private static int hash(
+            final int tag, final String value1, final String value2, final String value3) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode());
+    }
 
     /**
      * Adds a CONSTANT_NameAndType_info to the constant pool of this symbol table. Does nothing if the
@@ -881,6 +634,58 @@ final class SymbolTable {
         }
         constantPool.put122(tag, addConstantUtf8(name), addConstantUtf8(descriptor));
         return put(new Entry(constantPoolCount++, tag, name, descriptor, hashCode)).index;
+    }
+
+    private static int hash(
+            final int tag,
+            final String value1,
+            final String value2,
+            final String value3,
+            final int value4) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode() * value4);
+    }
+
+    /**
+     * Returns the list of entries which can potentially have the given hash code.
+     *
+     * @param hashCode a {@link Entry#hashCode} value.
+     * @return the list of entries which can potentially have the given hash code. The list is stored
+     * via the {@link Entry#next} field.
+     */
+    private Entry get(final int hashCode) {
+        return entries[hashCode % entries.length];
+    }
+
+    /**
+     * Puts the given entry in the {@link #entries} hash set. This method does <i>not</i> check
+     * whether {@link #entries} already contains a similar entry or not. {@link #entries} is resized
+     * if necessary to avoid hash collisions (multiple entries needing to be stored at the same {@link
+     * #entries} array index) as much as possible, with reasonable memory usage.
+     *
+     * @param entry an Entry (which must not already be contained in {@link #entries}).
+     * @return the given entry
+     */
+    private Entry put(final Entry entry) {
+        if (entryCount > (entries.length * 3) / 4) {
+            int currentCapacity = entries.length;
+            int newCapacity = currentCapacity * 2 + 1;
+            Entry[] newEntries = new Entry[newCapacity];
+            for (int i = currentCapacity - 1; i >= 0; --i) {
+                Entry currentEntry = entries[i];
+                while (currentEntry != null) {
+                    int newCurrentEntryIndex = currentEntry.hashCode % newCapacity;
+                    Entry nextEntry = currentEntry.next;
+                    currentEntry.next = newEntries[newCurrentEntryIndex];
+                    newEntries[newCurrentEntryIndex] = currentEntry;
+                    currentEntry = nextEntry;
+                }
+            }
+            entries = newEntries;
+        }
+        entryCount++;
+        int index = entry.hashCode % entries.length;
+        entry.next = entries[index];
+        return entries[index] = entry;
     }
 
     /**
@@ -929,9 +734,19 @@ final class SymbolTable {
                 new Entry(constantPoolCount++, tag, owner, name, descriptor, referenceKind, hashCode));
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Type table entries management.
-    // -----------------------------------------------------------------------------------------------
+    /**
+     * Adds the given entry in the {@link #entries} hash set. This method does <i>not</i> check
+     * whether {@link #entries} already contains a similar entry or not, and does <i>not</i> resize
+     * {@link #entries} if necessary.
+     *
+     * @param entry an Entry (which must not already be contained in {@link #entries}).
+     */
+    private void add(final Entry entry) {
+        entryCount++;
+        int index = entry.hashCode % entries.length;
+        entry.next = entries[index];
+        entries[index] = entry;
+    }
 
     /**
      * Adds a CONSTANT_MethodType_info to the constant pool of this symbol table. Does nothing if the
@@ -1019,6 +834,17 @@ final class SymbolTable {
     }
 
     /**
+     * Adds a CONSTANT_Class_info to the constant pool of this symbol table. Does nothing if the
+     * constant pool already contains a similar item.
+     *
+     * @param value the internal name of a class.
+     * @return a new or already existing Symbol with the given value.
+     */
+    Symbol addConstantClass(final String value) {
+        return addConstantUtf8Reference(Symbol.CONSTANT_CLASS_TAG, value);
+    }
+
+    /**
      * Adds a CONSTANT_Module_info to the constant pool of this symbol table. Does nothing if the
      * constant pool already contains a similar item.
      *
@@ -1028,10 +854,6 @@ final class SymbolTable {
     Symbol addConstantModule(final String moduleName) {
         return addConstantUtf8Reference(Symbol.CONSTANT_MODULE_TAG, moduleName);
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Static helper methods to compute hash codes.
-    // -----------------------------------------------------------------------------------------------
 
     /**
      * Adds a CONSTANT_Package_info to the constant pool of this symbol table. Does nothing if the
@@ -1043,6 +865,42 @@ final class SymbolTable {
     Symbol addConstantPackage(final String packageName) {
         return addConstantUtf8Reference(Symbol.CONSTANT_PACKAGE_TAG, packageName);
     }
+
+    /**
+     * Adds a new CONSTANT_Fieldref_info, CONSTANT_Methodref_info or CONSTANT_InterfaceMethodref_info
+     * to the constant pool of this symbol table.
+     *
+     * @param index      the constant pool index of the new Symbol.
+     * @param tag        one of {@link Symbol#CONSTANT_FIELDREF_TAG}, {@link Symbol#CONSTANT_METHODREF_TAG}
+     *                   or {@link Symbol#CONSTANT_INTERFACE_METHODREF_TAG}.
+     * @param owner      the internal name of a class.
+     * @param name       a field or method name.
+     * @param descriptor a field or method descriptor.
+     */
+    private void addConstantMemberReference(
+            final int index,
+            final int tag,
+            final String owner,
+            final String name,
+            final String descriptor) {
+        add(new Entry(index, tag, owner, name, descriptor, 0, hash(tag, owner, name, descriptor)));
+    }
+
+    /**
+     * Adds a new CONSTANT_Integer_info or CONSTANT_Float_info to the constant pool of this symbol
+     * table.
+     *
+     * @param index the constant pool index of the new Symbol.
+     * @param tag   one of {@link Symbol#CONSTANT_INTEGER_TAG} or {@link Symbol#CONSTANT_FLOAT_TAG}.
+     * @param value an int or float.
+     */
+    private void addConstantIntegerOrFloat(final int index, final int tag, final int value) {
+        add(new Entry(index, tag, value, hash(tag, value)));
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Bootstrap method entries management.
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Adds a bootstrap method to the BootstrapMethods attribute of this symbol table. Does nothing if
@@ -1132,6 +990,10 @@ final class SymbolTable {
         return put(new Entry(bootstrapMethodCount++, Symbol.BOOTSTRAP_METHOD_TAG, offset, hashCode));
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Type table entries management.
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Returns the type table element whose index is given.
      *
@@ -1140,6 +1002,18 @@ final class SymbolTable {
      */
     Symbol getType(final int typeIndex) {
         return typeTable[typeIndex];
+    }
+
+    /**
+     * Adds a new CONSTANT_Long_info or CONSTANT_Double_info to the constant pool of this symbol
+     * table.
+     *
+     * @param index the constant pool index of the new Symbol.
+     * @param tag   one of {@link Symbol#CONSTANT_LONG_TAG} or {@link Symbol#CONSTANT_DOUBLE_TAG}.
+     * @param value a long or double.
+     */
+    private void addConstantLongOrDouble(final int index, final int tag, final long value) {
+        add(new Entry(index, tag, value, hash(tag, value)));
     }
 
     /**
@@ -1165,27 +1039,6 @@ final class SymbolTable {
         }
         return addTypeInternal(
                 new Entry(typeCount, Symbol.UNINITIALIZED_TYPE_TAG, value, bytecodeOffset, hashCode));
-    }
-
-    /**
-     * Adds the given type Symbol to {@link #typeTable}.
-     *
-     * @param entry a {@link Symbol#TYPE_TAG} or {@link Symbol#UNINITIALIZED_TYPE_TAG} type symbol.
-     *              The index of this Symbol must be equal to the current value of {@link #typeCount}.
-     * @return the index in {@link #typeTable} where the given type was added, which is also equal to
-     * entry's index by hypothesis.
-     */
-    private int addTypeInternal(final Entry entry) {
-        if (typeTable == null) {
-            typeTable = new Entry[16];
-        }
-        if (typeCount == typeTable.length) {
-            Entry[] newTypeTable = new Entry[2 * typeTable.length];
-            System.arraycopy(typeTable, 0, newTypeTable, 0, typeTable.length);
-            typeTable = newTypeTable;
-        }
-        typeTable[typeCount++] = entry;
-        return put(entry).index;
     }
 
     /**
@@ -1220,6 +1073,139 @@ final class SymbolTable {
     }
 
     /**
+     * Adds a new CONSTANT_NameAndType_info to the constant pool of this symbol table.
+     *
+     * @param index      the constant pool index of the new Symbol.
+     * @param name       a field or method name.
+     * @param descriptor a field or method descriptor.
+     */
+    private void addConstantNameAndType(final int index, final String name, final String descriptor) {
+        final int tag = Symbol.CONSTANT_NAME_AND_TYPE_TAG;
+        add(new Entry(index, tag, name, descriptor, hash(tag, name, descriptor)));
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Static helper methods to compute hash codes.
+    // -----------------------------------------------------------------------------------------------
+
+    /**
+     * Adds a CONSTANT_Utf8_info to the constant pool of this symbol table. Does nothing if the
+     * constant pool already contains a similar item.
+     *
+     * @param value a string.
+     * @return a new or already existing Symbol with the given value.
+     */
+    int addConstantUtf8(final String value) {
+        int hashCode = hash(Symbol.CONSTANT_UTF8_TAG, value);
+        Entry entry = get(hashCode);
+        while (entry != null) {
+            if (entry.tag == Symbol.CONSTANT_UTF8_TAG
+                    && entry.hashCode == hashCode
+                    && entry.value.equals(value)) {
+                return entry.index;
+            }
+            entry = entry.next;
+        }
+        constantPool.putByte(Symbol.CONSTANT_UTF8_TAG).putUTF8(value);
+        return put(new Entry(constantPoolCount++, Symbol.CONSTANT_UTF8_TAG, value, hashCode)).index;
+    }
+
+    /**
+     * Adds a new CONSTANT_String_info to the constant pool of this symbol table.
+     *
+     * @param index the constant pool index of the new Symbol.
+     * @param value a string.
+     */
+    private void addConstantUtf8(final int index, final String value) {
+        add(new Entry(index, Symbol.CONSTANT_UTF8_TAG, value, hash(Symbol.CONSTANT_UTF8_TAG, value)));
+    }
+
+    /**
+     * Adds a new CONSTANT_MethodHandle_info to the constant pool of this symbol table.
+     *
+     * @param index         the constant pool index of the new Symbol.
+     * @param referenceKind one of {@link Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC}, {@link
+     *                      Opcodes#H_PUTFIELD}, {@link Opcodes#H_PUTSTATIC}, {@link Opcodes#H_INVOKEVIRTUAL}, {@link
+     *                      Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL}, {@link
+     *                      Opcodes#H_NEWINVOKESPECIAL} or {@link Opcodes#H_INVOKEINTERFACE}.
+     * @param owner         the internal name of a class of interface.
+     * @param name          a field or method name.
+     * @param descriptor    a field or method descriptor.
+     */
+    private void addConstantMethodHandle(
+            final int index,
+            final int referenceKind,
+            final String owner,
+            final String name,
+            final String descriptor) {
+        final int tag = Symbol.CONSTANT_METHOD_HANDLE_TAG;
+        int hashCode = hash(tag, owner, name, descriptor, referenceKind);
+        add(new Entry(index, tag, owner, name, descriptor, referenceKind, hashCode));
+    }
+
+    /**
+     * Adds a new CONSTANT_Dynamic_info or CONSTANT_InvokeDynamic_info to the constant pool of this
+     * symbol table.
+     *
+     * @param tag                  one of {@link Symbol#CONSTANT_DYNAMIC_TAG} or {@link
+     *                             Symbol#CONSTANT_INVOKE_DYNAMIC_TAG}.
+     * @param index                the constant pool index of the new Symbol.
+     * @param name                 a method name.
+     * @param descriptor           a field descriptor for CONSTANT_DYNAMIC_TAG or a method descriptor for
+     *                             CONSTANT_INVOKE_DYNAMIC_TAG.
+     * @param bootstrapMethodIndex the index of a bootstrap method in the BootstrapMethods attribute.
+     */
+    private void addConstantDynamicOrInvokeDynamicReference(
+            final int tag,
+            final int index,
+            final String name,
+            final String descriptor,
+            final int bootstrapMethodIndex) {
+        int hashCode = hash(tag, name, descriptor, bootstrapMethodIndex);
+        add(new Entry(index, tag, null, name, descriptor, bootstrapMethodIndex, hashCode));
+    }
+
+    /**
+     * Adds a CONSTANT_Class_info, CONSTANT_String_info, CONSTANT_MethodType_info,
+     * CONSTANT_Module_info or CONSTANT_Package_info to the constant pool of this symbol table. Does
+     * nothing if the constant pool already contains a similar item.
+     *
+     * @param tag   one of {@link Symbol#CONSTANT_CLASS_TAG}, {@link Symbol#CONSTANT_STRING_TAG}, {@link
+     *              Symbol#CONSTANT_METHOD_TYPE_TAG}, {@link Symbol#CONSTANT_MODULE_TAG} or {@link
+     *              Symbol#CONSTANT_PACKAGE_TAG}.
+     * @param value an internal class name, an arbitrary string, a method descriptor, a module or a
+     *              package name, depending on tag.
+     * @return a new or already existing Symbol with the given value.
+     */
+    private Symbol addConstantUtf8Reference(final int tag, final String value) {
+        int hashCode = hash(tag, value);
+        Entry entry = get(hashCode);
+        while (entry != null) {
+            if (entry.tag == tag && entry.hashCode == hashCode && entry.value.equals(value)) {
+                return entry;
+            }
+            entry = entry.next;
+        }
+        constantPool.put12(tag, addConstantUtf8(value));
+        return put(new Entry(constantPoolCount++, tag, value, hashCode));
+    }
+
+    /**
+     * Adds a new CONSTANT_Class_info, CONSTANT_String_info, CONSTANT_MethodType_info,
+     * CONSTANT_Module_info or CONSTANT_Package_info to the constant pool of this symbol table.
+     *
+     * @param index the constant pool index of the new Symbol.
+     * @param tag   one of {@link Symbol#CONSTANT_CLASS_TAG}, {@link Symbol#CONSTANT_STRING_TAG}, {@link
+     *              Symbol#CONSTANT_METHOD_TYPE_TAG}, {@link Symbol#CONSTANT_MODULE_TAG} or {@link
+     *              Symbol#CONSTANT_PACKAGE_TAG}.
+     * @param value an internal class name, an arbitrary string, a method descriptor, a module or a
+     *              package name, depending on tag.
+     */
+    private void addConstantUtf8Reference(final int index, final int tag, final String value) {
+        add(new Entry(index, tag, value, hash(tag, value)));
+    }
+
+    /**
      * Adds a type in the type table of this symbol table. Does nothing if the type table already
      * contains a similar type.
      *
@@ -1236,6 +1222,27 @@ final class SymbolTable {
             entry = entry.next;
         }
         return addTypeInternal(new Entry(typeCount, Symbol.TYPE_TAG, value, hashCode));
+    }
+
+    /**
+     * Adds the given type Symbol to {@link #typeTable}.
+     *
+     * @param entry a {@link Symbol#TYPE_TAG} or {@link Symbol#UNINITIALIZED_TYPE_TAG} type symbol.
+     *              The index of this Symbol must be equal to the current value of {@link #typeCount}.
+     * @return the index in {@link #typeTable} where the given type was added, which is also equal to
+     * entry's index by hypothesis.
+     */
+    private int addTypeInternal(final Entry entry) {
+        if (typeTable == null) {
+            typeTable = new Entry[16];
+        }
+        if (typeCount == typeTable.length) {
+            Entry[] newTypeTable = new Entry[2 * typeTable.length];
+            System.arraycopy(typeTable, 0, newTypeTable, 0, typeTable.length);
+            typeTable = newTypeTable;
+        }
+        typeTable[typeCount++] = entry;
+        return put(entry).index;
     }
 
     /**

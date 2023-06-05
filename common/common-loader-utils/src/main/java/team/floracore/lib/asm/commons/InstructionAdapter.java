@@ -1,3 +1,4 @@
+
 package team.floracore.lib.asm.commons;
 
 import team.floracore.lib.asm.*;
@@ -92,6 +93,303 @@ public class InstructionAdapter extends MethodVisitor {
             }
         }
     }
+
+    @Override
+    public void visitIntInsn(final int opcode, final int operand) {
+        switch (opcode) {
+            case Opcodes.BIPUSH:
+                iconst(operand);
+                break;
+            case Opcodes.SIPUSH:
+                iconst(operand);
+                break;
+            case Opcodes.NEWARRAY:
+                switch (operand) {
+                    case Opcodes.T_BOOLEAN:
+                        newarray(Type.BOOLEAN_TYPE);
+                        break;
+                    case Opcodes.T_CHAR:
+                        newarray(Type.CHAR_TYPE);
+                        break;
+                    case Opcodes.T_BYTE:
+                        newarray(Type.BYTE_TYPE);
+                        break;
+                    case Opcodes.T_SHORT:
+                        newarray(Type.SHORT_TYPE);
+                        break;
+                    case Opcodes.T_INT:
+                        newarray(Type.INT_TYPE);
+                        break;
+                    case Opcodes.T_FLOAT:
+                        newarray(Type.FLOAT_TYPE);
+                        break;
+                    case Opcodes.T_LONG:
+                        newarray(Type.LONG_TYPE);
+                        break;
+                    case Opcodes.T_DOUBLE:
+                        newarray(Type.DOUBLE_TYPE);
+                        break;
+                    default:
+                        throw new IllegalArgumentException();
+                }
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public void visitVarInsn(final int opcode, final int varIndex) {
+        switch (opcode) {
+            case Opcodes.ILOAD:
+                load(varIndex, Type.INT_TYPE);
+                break;
+            case Opcodes.LLOAD:
+                load(varIndex, Type.LONG_TYPE);
+                break;
+            case Opcodes.FLOAD:
+                load(varIndex, Type.FLOAT_TYPE);
+                break;
+            case Opcodes.DLOAD:
+                load(varIndex, Type.DOUBLE_TYPE);
+                break;
+            case Opcodes.ALOAD:
+                load(varIndex, OBJECT_TYPE);
+                break;
+            case Opcodes.ISTORE:
+                store(varIndex, Type.INT_TYPE);
+                break;
+            case Opcodes.LSTORE:
+                store(varIndex, Type.LONG_TYPE);
+                break;
+            case Opcodes.FSTORE:
+                store(varIndex, Type.FLOAT_TYPE);
+                break;
+            case Opcodes.DSTORE:
+                store(varIndex, Type.DOUBLE_TYPE);
+                break;
+            case Opcodes.ASTORE:
+                store(varIndex, OBJECT_TYPE);
+                break;
+            case Opcodes.RET:
+                ret(varIndex);
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public void visitTypeInsn(final int opcode, final String type) {
+        Type objectType = Type.getObjectType(type);
+        switch (opcode) {
+            case Opcodes.NEW:
+                anew(objectType);
+                break;
+            case Opcodes.ANEWARRAY:
+                newarray(objectType);
+                break;
+            case Opcodes.CHECKCAST:
+                checkcast(objectType);
+                break;
+            case Opcodes.INSTANCEOF:
+                instanceOf(objectType);
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public void visitFieldInsn(
+            final int opcode, final String owner, final String name, final String descriptor) {
+        switch (opcode) {
+            case Opcodes.GETSTATIC:
+                getstatic(owner, name, descriptor);
+                break;
+            case Opcodes.PUTSTATIC:
+                putstatic(owner, name, descriptor);
+                break;
+            case Opcodes.GETFIELD:
+                getfield(owner, name, descriptor);
+                break;
+            case Opcodes.PUTFIELD:
+                putfield(owner, name, descriptor);
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public void visitMethodInsn(
+            final int opcodeAndSource,
+            final String owner,
+            final String name,
+            final String descriptor,
+            final boolean isInterface) {
+        if (api < Opcodes.ASM5 && (opcodeAndSource & Opcodes.SOURCE_DEPRECATED) == 0) {
+            // Redirect the call to the deprecated version of this method.
+            super.visitMethodInsn(opcodeAndSource, owner, name, descriptor, isInterface);
+            return;
+        }
+        int opcode = opcodeAndSource & ~Opcodes.SOURCE_MASK;
+
+        switch (opcode) {
+            case Opcodes.INVOKESPECIAL:
+                invokespecial(owner, name, descriptor, isInterface);
+                break;
+            case Opcodes.INVOKEVIRTUAL:
+                invokevirtual(owner, name, descriptor, isInterface);
+                break;
+            case Opcodes.INVOKESTATIC:
+                invokestatic(owner, name, descriptor, isInterface);
+                break;
+            case Opcodes.INVOKEINTERFACE:
+                invokeinterface(owner, name, descriptor);
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public void visitInvokeDynamicInsn(
+            final String name,
+            final String descriptor,
+            final Handle bootstrapMethodHandle,
+            final Object... bootstrapMethodArguments) {
+        invokedynamic(name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments);
+    }
+
+    @Override
+    public void visitJumpInsn(final int opcode, final Label label) {
+        switch (opcode) {
+            case Opcodes.IFEQ:
+                ifeq(label);
+                break;
+            case Opcodes.IFNE:
+                ifne(label);
+                break;
+            case Opcodes.IFLT:
+                iflt(label);
+                break;
+            case Opcodes.IFGE:
+                ifge(label);
+                break;
+            case Opcodes.IFGT:
+                ifgt(label);
+                break;
+            case Opcodes.IFLE:
+                ifle(label);
+                break;
+            case Opcodes.IF_ICMPEQ:
+                ificmpeq(label);
+                break;
+            case Opcodes.IF_ICMPNE:
+                ificmpne(label);
+                break;
+            case Opcodes.IF_ICMPLT:
+                ificmplt(label);
+                break;
+            case Opcodes.IF_ICMPGE:
+                ificmpge(label);
+                break;
+            case Opcodes.IF_ICMPGT:
+                ificmpgt(label);
+                break;
+            case Opcodes.IF_ICMPLE:
+                ificmple(label);
+                break;
+            case Opcodes.IF_ACMPEQ:
+                ifacmpeq(label);
+                break;
+            case Opcodes.IF_ACMPNE:
+                ifacmpne(label);
+                break;
+            case Opcodes.GOTO:
+                goTo(label);
+                break;
+            case Opcodes.JSR:
+                jsr(label);
+                break;
+            case Opcodes.IFNULL:
+                ifnull(label);
+                break;
+            case Opcodes.IFNONNULL:
+                ifnonnull(label);
+                break;
+            default:
+                throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public void visitLabel(final Label label) {
+        mark(label);
+    }
+
+    @Override
+    public void visitLdcInsn(final Object value) {
+        if (api < Opcodes.ASM5
+                && (value instanceof Handle
+                || (value instanceof Type && ((Type) value).getSort() == Type.METHOD))) {
+            throw new UnsupportedOperationException("This feature requires ASM5");
+        }
+        if (api < Opcodes.ASM7 && value instanceof ConstantDynamic) {
+            throw new UnsupportedOperationException("This feature requires ASM7");
+        }
+        if (value instanceof Integer) {
+            iconst((Integer) value);
+        } else if (value instanceof Byte) {
+            iconst(((Byte) value).intValue());
+        } else if (value instanceof Character) {
+            iconst(((Character) value).charValue());
+        } else if (value instanceof Short) {
+            iconst(((Short) value).intValue());
+        } else if (value instanceof Boolean) {
+            iconst(((Boolean) value).booleanValue() ? 1 : 0);
+        } else if (value instanceof Float) {
+            fconst((Float) value);
+        } else if (value instanceof Long) {
+            lconst((Long) value);
+        } else if (value instanceof Double) {
+            dconst((Double) value);
+        } else if (value instanceof String) {
+            aconst(value);
+        } else if (value instanceof Type) {
+            tconst((Type) value);
+        } else if (value instanceof Handle) {
+            hconst((Handle) value);
+        } else if (value instanceof ConstantDynamic) {
+            cconst((ConstantDynamic) value);
+        } else {
+            throw new IllegalArgumentException();
+        }
+    }
+
+    @Override
+    public void visitIincInsn(final int varIndex, final int increment) {
+        iinc(varIndex, increment);
+    }
+
+    @Override
+    public void visitTableSwitchInsn(
+            final int min, final int max, final Label dflt, final Label... labels) {
+        tableswitch(min, max, dflt, labels);
+    }
+
+    @Override
+    public void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels) {
+        lookupswitch(dflt, keys, labels);
+    }
+
+    @Override
+    public void visitMultiANewArrayInsn(final String descriptor, final int numDimensions) {
+        multianewarray(descriptor, numDimensions);
+    }
+
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Generates the instruction to create and push on the stack an array of the given type.
@@ -442,331 +740,11 @@ public class InstructionAdapter extends MethodVisitor {
         }
     }
 
-    @Override
-    public void visitIntInsn(final int opcode, final int operand) {
-        switch (opcode) {
-            case Opcodes.BIPUSH:
-                iconst(operand);
-                break;
-            case Opcodes.SIPUSH:
-                iconst(operand);
-                break;
-            case Opcodes.NEWARRAY:
-                switch (operand) {
-                    case Opcodes.T_BOOLEAN:
-                        newarray(Type.BOOLEAN_TYPE);
-                        break;
-                    case Opcodes.T_CHAR:
-                        newarray(Type.CHAR_TYPE);
-                        break;
-                    case Opcodes.T_BYTE:
-                        newarray(Type.BYTE_TYPE);
-                        break;
-                    case Opcodes.T_SHORT:
-                        newarray(Type.SHORT_TYPE);
-                        break;
-                    case Opcodes.T_INT:
-                        newarray(Type.INT_TYPE);
-                        break;
-                    case Opcodes.T_FLOAT:
-                        newarray(Type.FLOAT_TYPE);
-                        break;
-                    case Opcodes.T_LONG:
-                        newarray(Type.LONG_TYPE);
-                        break;
-                    case Opcodes.T_DOUBLE:
-                        newarray(Type.DOUBLE_TYPE);
-                        break;
-                    default:
-                        throw new IllegalArgumentException();
-                }
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    @Override
-    public void visitVarInsn(final int opcode, final int varIndex) {
-        switch (opcode) {
-            case Opcodes.ILOAD:
-                load(varIndex, Type.INT_TYPE);
-                break;
-            case Opcodes.LLOAD:
-                load(varIndex, Type.LONG_TYPE);
-                break;
-            case Opcodes.FLOAD:
-                load(varIndex, Type.FLOAT_TYPE);
-                break;
-            case Opcodes.DLOAD:
-                load(varIndex, Type.DOUBLE_TYPE);
-                break;
-            case Opcodes.ALOAD:
-                load(varIndex, OBJECT_TYPE);
-                break;
-            case Opcodes.ISTORE:
-                store(varIndex, Type.INT_TYPE);
-                break;
-            case Opcodes.LSTORE:
-                store(varIndex, Type.LONG_TYPE);
-                break;
-            case Opcodes.FSTORE:
-                store(varIndex, Type.FLOAT_TYPE);
-                break;
-            case Opcodes.DSTORE:
-                store(varIndex, Type.DOUBLE_TYPE);
-                break;
-            case Opcodes.ASTORE:
-                store(varIndex, OBJECT_TYPE);
-                break;
-            case Opcodes.RET:
-                ret(varIndex);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    @Override
-    public void visitTypeInsn(final int opcode, final String type) {
-        Type objectType = Type.getObjectType(type);
-        switch (opcode) {
-            case Opcodes.NEW:
-                anew(objectType);
-                break;
-            case Opcodes.ANEWARRAY:
-                newarray(objectType);
-                break;
-            case Opcodes.CHECKCAST:
-                checkcast(objectType);
-                break;
-            case Opcodes.INSTANCEOF:
-                instanceOf(objectType);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    @Override
-    public void visitFieldInsn(
-            final int opcode, final String owner, final String name, final String descriptor) {
-        switch (opcode) {
-            case Opcodes.GETSTATIC:
-                getstatic(owner, name, descriptor);
-                break;
-            case Opcodes.PUTSTATIC:
-                putstatic(owner, name, descriptor);
-                break;
-            case Opcodes.GETFIELD:
-                getfield(owner, name, descriptor);
-                break;
-            case Opcodes.PUTFIELD:
-                putfield(owner, name, descriptor);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    @Override
-    public void visitMethodInsn(
-            final int opcodeAndSource,
-            final String owner,
-            final String name,
-            final String descriptor,
-            final boolean isInterface) {
-        if (api < Opcodes.ASM5 && (opcodeAndSource & Opcodes.SOURCE_DEPRECATED) == 0) {
-            // Redirect the call to the deprecated version of this method.
-            super.visitMethodInsn(opcodeAndSource, owner, name, descriptor, isInterface);
-            return;
-        }
-        int opcode = opcodeAndSource & ~Opcodes.SOURCE_MASK;
-
-        switch (opcode) {
-            case Opcodes.INVOKESPECIAL:
-                invokespecial(owner, name, descriptor, isInterface);
-                break;
-            case Opcodes.INVOKEVIRTUAL:
-                invokevirtual(owner, name, descriptor, isInterface);
-                break;
-            case Opcodes.INVOKESTATIC:
-                invokestatic(owner, name, descriptor, isInterface);
-                break;
-            case Opcodes.INVOKEINTERFACE:
-                invokeinterface(owner, name, descriptor);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    @Override
-    public void visitInvokeDynamicInsn(
-            final String name,
-            final String descriptor,
-            final Handle bootstrapMethodHandle,
-            final Object... bootstrapMethodArguments) {
-        invokedynamic(name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments);
-    }
-
-    @Override
-    public void visitJumpInsn(final int opcode, final Label label) {
-        switch (opcode) {
-            case Opcodes.IFEQ:
-                ifeq(label);
-                break;
-            case Opcodes.IFNE:
-                ifne(label);
-                break;
-            case Opcodes.IFLT:
-                iflt(label);
-                break;
-            case Opcodes.IFGE:
-                ifge(label);
-                break;
-            case Opcodes.IFGT:
-                ifgt(label);
-                break;
-            case Opcodes.IFLE:
-                ifle(label);
-                break;
-            case Opcodes.IF_ICMPEQ:
-                ificmpeq(label);
-                break;
-            case Opcodes.IF_ICMPNE:
-                ificmpne(label);
-                break;
-            case Opcodes.IF_ICMPLT:
-                ificmplt(label);
-                break;
-            case Opcodes.IF_ICMPGE:
-                ificmpge(label);
-                break;
-            case Opcodes.IF_ICMPGT:
-                ificmpgt(label);
-                break;
-            case Opcodes.IF_ICMPLE:
-                ificmple(label);
-                break;
-            case Opcodes.IF_ACMPEQ:
-                ifacmpeq(label);
-                break;
-            case Opcodes.IF_ACMPNE:
-                ifacmpne(label);
-                break;
-            case Opcodes.GOTO:
-                goTo(label);
-                break;
-            case Opcodes.JSR:
-                jsr(label);
-                break;
-            case Opcodes.IFNULL:
-                ifnull(label);
-                break;
-            case Opcodes.IFNONNULL:
-                ifnonnull(label);
-                break;
-            default:
-                throw new IllegalArgumentException();
-        }
-    }
-
-    @Override
-    public void visitLabel(final Label label) {
-        mark(label);
-    }
-
-    @Override
-    public void visitLdcInsn(final Object value) {
-        if (api < Opcodes.ASM5
-                && (value instanceof Handle
-                || (value instanceof Type && ((Type) value).getSort() == Type.METHOD))) {
-            throw new UnsupportedOperationException("This feature requires ASM5");
-        }
-        if (api < Opcodes.ASM7 && value instanceof ConstantDynamic) {
-            throw new UnsupportedOperationException("This feature requires ASM7");
-        }
-        if (value instanceof Integer) {
-            iconst((Integer) value);
-        } else if (value instanceof Byte) {
-            iconst(((Byte) value).intValue());
-        } else if (value instanceof Character) {
-            iconst(((Character) value).charValue());
-        } else if (value instanceof Short) {
-            iconst(((Short) value).intValue());
-        } else if (value instanceof Boolean) {
-            iconst(((Boolean) value).booleanValue() ? 1 : 0);
-        } else if (value instanceof Float) {
-            fconst((Float) value);
-        } else if (value instanceof Long) {
-            lconst((Long) value);
-        } else if (value instanceof Double) {
-            dconst((Double) value);
-        } else if (value instanceof String) {
-            aconst(value);
-        } else if (value instanceof Type) {
-            tconst((Type) value);
-        } else if (value instanceof Handle) {
-            hconst((Handle) value);
-        } else if (value instanceof ConstantDynamic) {
-            cconst((ConstantDynamic) value);
-        } else {
-            throw new IllegalArgumentException();
-        }
-    }
-
-    @Override
-    public void visitIincInsn(final int varIndex, final int increment) {
-        iinc(varIndex, increment);
-    }
-
-    @Override
-    public void visitTableSwitchInsn(
-            final int min, final int max, final Label dflt, final Label... labels) {
-        tableswitch(min, max, dflt, labels);
-    }
-
-    // -----------------------------------------------------------------------------------------------
-
-    @Override
-    public void visitLookupSwitchInsn(final Label dflt, final int[] keys, final Label[] labels) {
-        lookupswitch(dflt, keys, labels);
-    }
-
-    @Override
-    public void visitMultiANewArrayInsn(final String descriptor, final int numDimensions) {
-        multianewarray(descriptor, numDimensions);
-    }
-
-    public void multianewarray(final String descriptor, final int numDimensions) {
-        mv.visitMultiANewArrayInsn(descriptor, numDimensions);
-    }
-
-    public void lookupswitch(final Label dflt, final int[] keys, final Label[] labels) {
-        mv.visitLookupSwitchInsn(dflt, keys, labels);
-    }
-
-    public void tableswitch(final int min, final int max, final Label dflt, final Label... labels) {
-        mv.visitTableSwitchInsn(min, max, dflt, labels);
-    }
-
-    public void iinc(final int varIndex, final int increment) {
-        mv.visitIincInsn(varIndex, increment);
-    }
-
     /**
-     * Generates the instruction to push the given value on the stack.
-     *
-     * @param floatValue the constant to be pushed on the stack.
+     * Generates a nop instruction.
      */
-    public void fconst(final float floatValue) {
-        int bits = Float.floatToIntBits(floatValue);
-        if (bits == 0L || bits == 0x3F800000 || bits == 0x40000000) { // 0..2
-            mv.visitInsn(Opcodes.FCONST_0 + (int) floatValue);
-        } else {
-            mv.visitLdcInsn(floatValue);
-        }
+    public void nop() {
+        mv.visitInsn(Opcodes.NOP);
     }
 
     /**
@@ -785,20 +763,6 @@ public class InstructionAdapter extends MethodVisitor {
     /**
      * Generates the instruction to push the given value on the stack.
      *
-     * @param doubleValue the constant to be pushed on the stack.
-     */
-    public void dconst(final double doubleValue) {
-        long bits = Double.doubleToLongBits(doubleValue);
-        if (bits == 0L || bits == 0x3FF0000000000000L) { // +0.0d and 1.0d
-            mv.visitInsn(Opcodes.DCONST_0 + (int) doubleValue);
-        } else {
-            mv.visitLdcInsn(doubleValue);
-        }
-    }
-
-    /**
-     * Generates the instruction to push the given value on the stack.
-     *
      * @param value the constant to be pushed on the stack. This parameter must be an {@link Integer},
      *              a {@link Float}, a {@link Long}, a {@link Double}, a {@link String}, a {@link Type} of
      *              OBJECT or ARRAY sort for {@code .class} constants, for classes whose version is 49, a
@@ -811,6 +775,20 @@ public class InstructionAdapter extends MethodVisitor {
             mv.visitInsn(Opcodes.ACONST_NULL);
         } else {
             mv.visitLdcInsn(value);
+        }
+    }
+
+    /**
+     * Generates the instruction to push the given value on the stack.
+     *
+     * @param doubleValue the constant to be pushed on the stack.
+     */
+    public void dconst(final double doubleValue) {
+        long bits = Double.doubleToLongBits(doubleValue);
+        if (bits == 0L || bits == 0x3FF0000000000000L) { // +0.0d and 1.0d
+            mv.visitInsn(Opcodes.DCONST_0 + (int) doubleValue);
+        } else {
+            mv.visitLdcInsn(doubleValue);
         }
     }
 
@@ -841,141 +819,12 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitLdcInsn(constantDynamic);
     }
 
-    public void mark(final Label label) {
-        mv.visitLabel(label);
-    }
-
-    public void ifeq(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFEQ, label);
-    }
-
-    public void ifne(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFNE, label);
-    }
-
-    public void iflt(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFLT, label);
-    }
-
-    public void ifge(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFGE, label);
-    }
-
-    public void ifgt(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFGT, label);
-    }
-
-    public void ifle(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFLE, label);
-    }
-
-    public void ificmpeq(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPEQ, label);
-    }
-
-    public void ificmpne(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPNE, label);
-    }
-
-    public void ificmplt(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPLT, label);
-    }
-
-    public void ificmpge(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPGE, label);
-    }
-
-    public void ificmpgt(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPGT, label);
-    }
-
-    public void ificmple(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ICMPLE, label);
-    }
-
-    public void ifacmpeq(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ACMPEQ, label);
-    }
-
-    public void ifacmpne(final Label label) {
-        mv.visitJumpInsn(Opcodes.IF_ACMPNE, label);
-    }
-
-    public void goTo(final Label label) {
-        mv.visitJumpInsn(Opcodes.GOTO, label);
-    }
-
-    public void jsr(final Label label) {
-        mv.visitJumpInsn(Opcodes.JSR, label);
-    }
-
-    public void ifnull(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFNULL, label);
-    }
-
-    public void ifnonnull(final Label label) {
-        mv.visitJumpInsn(Opcodes.IFNONNULL, label);
-    }
-
-    /**
-     * Generates the instruction to call the given dynamic method.
-     *
-     * @param name                     the method's name.
-     * @param descriptor               the method's descriptor (see {@link Type}).
-     * @param bootstrapMethodHandle    the bootstrap method.
-     * @param bootstrapMethodArguments the bootstrap method constant arguments. Each argument must be
-     *                                 an {@link Integer}, {@link Float}, {@link Long}, {@link Double}, {@link String}
-     *                                 , {@link
-     *                                 Type}, {@link Handle} or {@link ConstantDynamic} value. This method is allowed
-     *                                 to modify
-     *                                 the content of the array so a caller should expect that this array may change.
-     */
-    public void invokedynamic(
-            final String name,
-            final String descriptor,
-            final Handle bootstrapMethodHandle,
-            final Object[] bootstrapMethodArguments) {
-        mv.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments);
-    }
-
-    public void getstatic(final String owner, final String name, final String descriptor) {
-        mv.visitFieldInsn(Opcodes.GETSTATIC, owner, name, descriptor);
-    }
-
-    public void putstatic(final String owner, final String name, final String descriptor) {
-        mv.visitFieldInsn(Opcodes.PUTSTATIC, owner, name, descriptor);
-    }
-
-    public void getfield(final String owner, final String name, final String descriptor) {
-        mv.visitFieldInsn(Opcodes.GETFIELD, owner, name, descriptor);
-    }
-
-    public void putfield(final String owner, final String name, final String descriptor) {
-        mv.visitFieldInsn(Opcodes.PUTFIELD, owner, name, descriptor);
-    }
-
-    public void anew(final Type type) {
-        mv.visitTypeInsn(Opcodes.NEW, type.getInternalName());
-    }
-
-    public void checkcast(final Type type) {
-        mv.visitTypeInsn(Opcodes.CHECKCAST, type.getInternalName());
-    }
-
-    public void instanceOf(final Type type) {
-        mv.visitTypeInsn(Opcodes.INSTANCEOF, type.getInternalName());
-    }
-
     public void load(final int varIndex, final Type type) {
         mv.visitVarInsn(type.getOpcode(Opcodes.ILOAD), varIndex);
     }
 
-    public void store(final int varIndex, final Type type) {
-        mv.visitVarInsn(type.getOpcode(Opcodes.ISTORE), varIndex);
-    }
-
-    public void ret(final int varIndex) {
-        mv.visitVarInsn(Opcodes.RET, varIndex);
+    public void aload(final Type type) {
+        mv.visitInsn(type.getOpcode(Opcodes.IALOAD));
     }
 
     /**
@@ -993,26 +842,6 @@ public class InstructionAdapter extends MethodVisitor {
         } else {
             mv.visitLdcInsn(intValue);
         }
-    }
-
-    /**
-     * Generates the instruction to create and push on the stack an array of the given type.
-     *
-     * @param type an array Type.
-     */
-    public void newarray(final Type type) {
-        newarray(mv, type);
-    }
-
-    /**
-     * Generates a nop instruction.
-     */
-    public void nop() {
-        mv.visitInsn(Opcodes.NOP);
-    }
-
-    public void aload(final Type type) {
-        mv.visitInsn(type.getOpcode(Opcodes.IALOAD));
     }
 
     public void astore(final Type type) {
@@ -1104,6 +933,20 @@ public class InstructionAdapter extends MethodVisitor {
     }
 
     /**
+     * Generates the instruction to push the given value on the stack.
+     *
+     * @param floatValue the constant to be pushed on the stack.
+     */
+    public void fconst(final float floatValue) {
+        int bits = Float.floatToIntBits(floatValue);
+        if (bits == 0L || bits == 0x3F800000 || bits == 0x40000000) { // 0..2
+            mv.visitInsn(Opcodes.FCONST_0 + (int) floatValue);
+        } else {
+            mv.visitLdcInsn(floatValue);
+        }
+    }
+
+    /**
      * Generates the instruction to cast from the first given type to the other.
      *
      * @param from a Type.
@@ -1111,6 +954,10 @@ public class InstructionAdapter extends MethodVisitor {
      */
     public void cast(final Type from, final Type to) {
         cast(mv, from, to);
+    }
+
+    public void store(final int varIndex, final Type type) {
+        mv.visitVarInsn(type.getOpcode(Opcodes.ISTORE), varIndex);
     }
 
     public void lcmp() {
@@ -1125,8 +972,100 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitInsn(type == Type.FLOAT_TYPE ? Opcodes.FCMPG : Opcodes.DCMPG);
     }
 
+    public void iinc(final int varIndex, final int increment) {
+        mv.visitIincInsn(varIndex, increment);
+    }
+
+    public void ifeq(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFEQ, label);
+    }
+
+    public void ifne(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFNE, label);
+    }
+
+    public void iflt(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFLT, label);
+    }
+
+    public void ifge(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFGE, label);
+    }
+
+    public void ifgt(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFGT, label);
+    }
+
+    public void ifle(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFLE, label);
+    }
+
+    public void ificmpeq(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPEQ, label);
+    }
+
+    public void ificmpne(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPNE, label);
+    }
+
+    public void ificmplt(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPLT, label);
+    }
+
+    public void ificmpge(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPGE, label);
+    }
+
+    public void ificmpgt(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPGT, label);
+    }
+
+    public void ificmple(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ICMPLE, label);
+    }
+
+    public void ifacmpeq(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ACMPEQ, label);
+    }
+
+    public void ifacmpne(final Label label) {
+        mv.visitJumpInsn(Opcodes.IF_ACMPNE, label);
+    }
+
+    public void goTo(final Label label) {
+        mv.visitJumpInsn(Opcodes.GOTO, label);
+    }
+
+    public void jsr(final Label label) {
+        mv.visitJumpInsn(Opcodes.JSR, label);
+    }
+
+    public void ret(final int varIndex) {
+        mv.visitVarInsn(Opcodes.RET, varIndex);
+    }
+
+    public void tableswitch(final int min, final int max, final Label dflt, final Label... labels) {
+        mv.visitTableSwitchInsn(min, max, dflt, labels);
+    }
+
     public void areturn(final Type type) {
         mv.visitInsn(type.getOpcode(Opcodes.IRETURN));
+    }
+
+    public void lookupswitch(final Label dflt, final int[] keys, final Label[] labels) {
+        mv.visitLookupSwitchInsn(dflt, keys, labels);
+    }
+
+    public void getstatic(final String owner, final String name, final String descriptor) {
+        mv.visitFieldInsn(Opcodes.GETSTATIC, owner, name, descriptor);
+    }
+
+    public void putstatic(final String owner, final String name, final String descriptor) {
+        mv.visitFieldInsn(Opcodes.PUTSTATIC, owner, name, descriptor);
+    }
+
+    public void getfield(final String owner, final String name, final String descriptor) {
+        mv.visitFieldInsn(Opcodes.GETFIELD, owner, name, descriptor);
     }
 
     /**
@@ -1258,6 +1197,42 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitMethodInsn(Opcodes.INVOKEINTERFACE, owner, name, descriptor, true);
     }
 
+    public void putfield(final String owner, final String name, final String descriptor) {
+        mv.visitFieldInsn(Opcodes.PUTFIELD, owner, name, descriptor);
+    }
+
+    /**
+     * Generates the instruction to call the given dynamic method.
+     *
+     * @param name                     the method's name.
+     * @param descriptor               the method's descriptor (see {@link Type}).
+     * @param bootstrapMethodHandle    the bootstrap method.
+     * @param bootstrapMethodArguments the bootstrap method constant arguments. Each argument must be
+     *                                 an {@link Integer}, {@link Float}, {@link Long}, {@link Double}, {@link String}, {@link
+     *                                 Type}, {@link Handle} or {@link ConstantDynamic} value. This method is allowed to modify
+     *                                 the content of the array so a caller should expect that this array may change.
+     */
+    public void invokedynamic(
+            final String name,
+            final String descriptor,
+            final Handle bootstrapMethodHandle,
+            final Object[] bootstrapMethodArguments) {
+        mv.visitInvokeDynamicInsn(name, descriptor, bootstrapMethodHandle, bootstrapMethodArguments);
+    }
+
+    public void anew(final Type type) {
+        mv.visitTypeInsn(Opcodes.NEW, type.getInternalName());
+    }
+
+    /**
+     * Generates the instruction to create and push on the stack an array of the given type.
+     *
+     * @param type an array Type.
+     */
+    public void newarray(final Type type) {
+        newarray(mv, type);
+    }
+
     public void arraylength() {
         mv.visitInsn(Opcodes.ARRAYLENGTH);
     }
@@ -1266,11 +1241,35 @@ public class InstructionAdapter extends MethodVisitor {
         mv.visitInsn(Opcodes.ATHROW);
     }
 
+    public void checkcast(final Type type) {
+        mv.visitTypeInsn(Opcodes.CHECKCAST, type.getInternalName());
+    }
+
+    public void instanceOf(final Type type) {
+        mv.visitTypeInsn(Opcodes.INSTANCEOF, type.getInternalName());
+    }
+
     public void monitorenter() {
         mv.visitInsn(Opcodes.MONITORENTER);
     }
 
     public void monitorexit() {
         mv.visitInsn(Opcodes.MONITOREXIT);
+    }
+
+    public void multianewarray(final String descriptor, final int numDimensions) {
+        mv.visitMultiANewArrayInsn(descriptor, numDimensions);
+    }
+
+    public void ifnull(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFNULL, label);
+    }
+
+    public void ifnonnull(final Label label) {
+        mv.visitJumpInsn(Opcodes.IFNONNULL, label);
+    }
+
+    public void mark(final Label label) {
+        mv.visitLabel(label);
     }
 }

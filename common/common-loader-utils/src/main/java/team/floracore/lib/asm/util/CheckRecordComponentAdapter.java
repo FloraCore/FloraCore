@@ -34,8 +34,7 @@ public class CheckRecordComponentAdapter extends RecordComponentVisitor {
     /**
      * Constructs a new {@link CheckRecordComponentAdapter}.
      *
-     * @param api                    the ASM API version implemented by this visitor. Must be one of
-     *                               {@link Opcodes#ASM8}
+     * @param api                    the ASM API version implemented by this visitor. Must be one of {@link Opcodes#ASM8}
      *                               or {@link Opcodes#ASM9}.
      * @param recordComponentVisitor the record component visitor to which this adapter must delegate
      *                               calls.

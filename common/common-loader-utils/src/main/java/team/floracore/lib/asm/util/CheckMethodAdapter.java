@@ -28,6 +28,11 @@ import java.util.*;
 public class CheckMethodAdapter extends MethodVisitor {
 
     /**
+     * The index of the instruction designated by each visited label.
+     */
+    private final Map<Label, Integer> labelInsnIndices;
+
+    /**
      * The method to use to visit each instruction. Only generic methods are represented here.
      */
     private static final Method[] OPCODE_METHODS = {
@@ -232,6 +237,7 @@ public class CheckMethodAdapter extends MethodVisitor {
             Method.VISIT_JUMP_INSN, // IFNULL
             Method.VISIT_JUMP_INSN // IFNONNULL
     };
+
     private static final String INVALID = "Invalid ";
     private static final String INVALID_DESCRIPTOR = "Invalid descriptor: ";
     private static final String INVALID_TYPE_REFERENCE = "Invalid type reference sort 0x";
@@ -239,10 +245,48 @@ public class CheckMethodAdapter extends MethodVisitor {
     private static final String MUST_NOT_BE_NULL_OR_EMPTY = " (must not be null or empty)";
     private static final String START_LABEL = "start label";
     private static final String END_LABEL = "end label";
+
     /**
-     * The index of the instruction designated by each visited label.
+     * The class version number.
      */
-    private final Map<Label, Integer> labelInsnIndices;
+    public int version;
+
+    /**
+     * The access flags of the visited method.
+     */
+    private int access;
+
+    /**
+     * The number of method parameters that can have runtime visible annotations. 0 means that all the
+     * parameters from the method descriptor can have annotations.
+     */
+    private int visibleAnnotableParameterCount;
+
+    /**
+     * The number of method parameters that can have runtime invisible annotations. 0 means that all
+     * the parameters from the method descriptor can have annotations.
+     */
+    private int invisibleAnnotableParameterCount;
+
+    /**
+     * Whether the {@link #visitCode} method has been called.
+     */
+    private boolean visitCodeCalled;
+
+    /**
+     * Whether the {@link #visitMaxs} method has been called.
+     */
+    private boolean visitMaxCalled;
+
+    /**
+     * Whether the {@link #visitEnd} method has been called.
+     */
+    private boolean visitEndCalled;
+
+    /**
+     * The number of visited instructions so far.
+     */
+    private int insnCount;
     /**
      * The labels referenced by the visited method.
      */
@@ -252,52 +296,94 @@ public class CheckMethodAdapter extends MethodVisitor {
      * exception handler block.
      */
     private final List<Label> handlers;
-    /**
-     * The class version number.
-     */
-    public int version;
-    /**
-     * The access flags of the visited method.
-     */
-    private int access;
-    /**
-     * The number of method parameters that can have runtime visible annotations. 0 means that all the
-     * parameters from the method descriptor can have annotations.
-     */
-    private int visibleAnnotableParameterCount;
-    /**
-     * The number of method parameters that can have runtime invisible annotations. 0 means that all
-     * the parameters from the method descriptor can have annotations.
-     */
-    private int invisibleAnnotableParameterCount;
-    /**
-     * Whether the {@link #visitCode} method has been called.
-     */
-    private boolean visitCodeCalled;
-    /**
-     * Whether the {@link #visitMaxs} method has been called.
-     */
-    private boolean visitMaxCalled;
-    /**
-     * Whether the {@link #visitEnd} method has been called.
-     */
-    private boolean visitEndCalled;
-    /**
-     * The number of visited instructions so far.
-     */
-    private int insnCount;
+
     /**
      * The index of the instruction corresponding to the last visited stack map frame.
      */
     private int lastFrameInsnIndex = -1;
+
     /**
      * The number of visited frames in expanded form.
      */
     private int numExpandedFrames;
+
     /**
      * The number of visited frames in compressed form.
      */
     private int numCompressedFrames;
+
+    /**
+     * Constructs a new {@link CheckMethodAdapter} object. This method adapter will perform basic data
+     * flow checks. For instance in a method whose signature is {@code void m ()}, the invalid
+     * instruction IRETURN, or the invalid sequence IADD L2I will be detected.
+     *
+     * @param api              the ASM API version implemented by this CheckMethodAdapter. Must be one of the
+     *                         {@code ASM}<i>x</i> values in {@link Opcodes}.
+     * @param access           the method's access flags.
+     * @param name             the method's name.
+     * @param descriptor       the method's descriptor (see {@link Type}).
+     * @param methodVisitor    the method visitor to which this adapter must delegate calls.
+     * @param labelInsnIndices the index of the instruction designated by each visited label so far
+     *                         (in other methods). This map is updated with the labels from the visited method.
+     */
+    protected CheckMethodAdapter(
+            final int api,
+            final int access,
+            final String name,
+            final String descriptor,
+            final MethodVisitor methodVisitor,
+            final Map<Label, Integer> labelInsnIndices) {
+        this(
+                api,
+                new MethodNode(api, access, name, descriptor, null, null) {
+                    @Override
+                    public void visitEnd() {
+                        int originalMaxLocals = maxLocals;
+                        int originalMaxStack = maxStack;
+                        boolean checkMaxStackAndLocals = false;
+                        boolean checkFrames = false;
+                        if (methodVisitor instanceof MethodWriterWrapper) {
+                            MethodWriterWrapper methodWriter = (MethodWriterWrapper) methodVisitor;
+                            // If 'methodVisitor' is a MethodWriter of a ClassWriter with no flags to compute the
+                            // max stack and locals nor the stack map frames, we know that valid max stack and
+                            // locals must be provided. Otherwise we assume they are not needed at this stage.
+                            checkMaxStackAndLocals = !methodWriter.computesMaxs();
+                            // If 'methodVisitor' is a MethodWriter of a ClassWriter with no flags to compute the
+                            // stack map frames, we know that valid frames must be provided. Otherwise we assume
+                            // they are not needed at this stage.
+                            checkFrames = methodWriter.requiresFrames() && !methodWriter.computesFrames();
+                        }
+                        Analyzer<BasicValue> analyzer =
+                                checkFrames
+                                        ? new CheckFrameAnalyzer<>(new BasicVerifier())
+                                        : new Analyzer<>(new BasicVerifier());
+                        try {
+                            if (checkMaxStackAndLocals) {
+                                analyzer.analyze("dummy", this);
+                            } else {
+                                analyzer.analyzeAndComputeMaxs("dummy", this);
+                            }
+                        } catch (IndexOutOfBoundsException | AnalyzerException e) {
+                            throwError(analyzer, e);
+                        }
+                        if (methodVisitor != null) {
+                            maxLocals = originalMaxLocals;
+                            maxStack = originalMaxStack;
+                            accept(methodVisitor);
+                        }
+                    }
+
+                    private void throwError(final Analyzer<BasicValue> analyzer, final Exception e) {
+                        StringWriter stringWriter = new StringWriter();
+                        PrintWriter printWriter = new PrintWriter(stringWriter, true);
+                        CheckClassAdapter.printAnalyzerResult(this, analyzer, printWriter);
+                        printWriter.close();
+                        throw new IllegalArgumentException(e.getMessage() + ' ' + stringWriter, e);
+                    }
+                },
+                labelInsnIndices);
+        this.access = access;
+    }
 
     /**
      * Constructs a new {@link CheckMethodAdapter} object. This method adapter will not perform any
@@ -378,362 +464,18 @@ public class CheckMethodAdapter extends MethodVisitor {
     }
 
     /**
-     * Constructs a new {@link CheckMethodAdapter} object. This method adapter will perform basic data
-     * flow checks. For instance in a method whose signature is {@code void m ()}, the invalid
-     * instruction IRETURN, or the invalid sequence IADD L2I will be detected.
-     *
-     * @param api              the ASM API version implemented by this CheckMethodAdapter. Must be one of the
-     *                         {@code ASM}<i>x</i> values in {@link Opcodes}.
-     * @param access           the method's access flags.
-     * @param name             the method's name.
-     * @param descriptor       the method's descriptor (see {@link Type}).
-     * @param methodVisitor    the method visitor to which this adapter must delegate calls.
-     * @param labelInsnIndices the index of the instruction designated by each visited label so far
-     *                         (in other methods). This map is updated with the labels from the visited method.
-     */
-    protected CheckMethodAdapter(
-            final int api,
-            final int access,
-            final String name,
-            final String descriptor,
-            final MethodVisitor methodVisitor,
-            final Map<Label, Integer> labelInsnIndices) {
-        this(
-                api,
-                new MethodNode(api, access, name, descriptor, null, null) {
-                    @Override
-                    public void visitEnd() {
-                        int originalMaxLocals = maxLocals;
-                        int originalMaxStack = maxStack;
-                        boolean checkMaxStackAndLocals = false;
-                        boolean checkFrames = false;
-                        if (methodVisitor instanceof MethodWriterWrapper) {
-                            MethodWriterWrapper methodWriter = (MethodWriterWrapper) methodVisitor;
-                            // If 'methodVisitor' is a MethodWriter of a ClassWriter with no flags to compute the
-                            // max stack and locals nor the stack map frames, we know that valid max stack and
-                            // locals must be provided. Otherwise we assume they are not needed at this stage.
-                            checkMaxStackAndLocals = !methodWriter.computesMaxs();
-                            // If 'methodVisitor' is a MethodWriter of a ClassWriter with no flags to compute the
-                            // stack map frames, we know that valid frames must be provided. Otherwise we assume
-                            // they are not needed at this stage.
-                            checkFrames = methodWriter.requiresFrames() && !methodWriter.computesFrames();
-                        }
-                        Analyzer<BasicValue> analyzer =
-                                checkFrames
-                                        ? new CheckFrameAnalyzer<>(new BasicVerifier())
-                                        : new Analyzer<>(new BasicVerifier());
-                        try {
-                            if (checkMaxStackAndLocals) {
-                                analyzer.analyze("dummy", this);
-                            } else {
-                                analyzer.analyzeAndComputeMaxs("dummy", this);
-                            }
-                        } catch (IndexOutOfBoundsException | AnalyzerException e) {
-                            throwError(analyzer, e);
-                        }
-                        if (methodVisitor != null) {
-                            maxLocals = originalMaxLocals;
-                            maxStack = originalMaxStack;
-                            accept(methodVisitor);
-                        }
-                    }
-
-                    private void throwError(final Analyzer<BasicValue> analyzer, final Exception e) {
-                        StringWriter stringWriter = new StringWriter();
-                        PrintWriter printWriter = new PrintWriter(stringWriter, true);
-                        CheckClassAdapter.printAnalyzerResult(this, analyzer, printWriter);
-                        printWriter.close();
-                        throw new IllegalArgumentException(e.getMessage() + ' ' + stringWriter, e);
-                    }
-                },
-                labelInsnIndices);
-        this.access = access;
-    }
-
-    /**
-     * Checks that the given value is an {@link Integer}, {@link Float}, {@link Long}, {@link Double}
-     * or {@link String} value.
-     *
-     * @param value the value to be checked.
-     */
-    static void checkConstant(final Object value) {
-        if (!(value instanceof Integer)
-                && !(value instanceof Float)
-                && !(value instanceof Long)
-                && !(value instanceof Double)
-                && !(value instanceof String)) {
-            throw new IllegalArgumentException("Invalid constant: " + value);
-        }
-    }
-
-    /**
-     * Checks that the given string is a valid Java identifier.
-     *
-     * @param version the class version.
-     * @param name    the string to be checked.
-     * @param message the message to use in case of error.
-     */
-    static void checkMethodIdentifier(final int version, final String name, final String message) {
-        if (name == null || name.length() == 0) {
-            throw new IllegalArgumentException(INVALID + message + MUST_NOT_BE_NULL_OR_EMPTY);
-        }
-        if ((version & 0xFFFF) >= Opcodes.V1_5) {
-            for (int i = 0; i < name.length(); i = name.offsetByCodePoints(i, 1)) {
-                if (".;[/<>".indexOf(name.codePointAt(i)) != -1) {
-                    throw new IllegalArgumentException(
-                            INVALID + message + " (must be a valid unqualified name): " + name);
-                }
-            }
-            return;
-        }
-        for (int i = 0; i < name.length(); i = name.offsetByCodePoints(i, 1)) {
-            if (i == 0
-                    ? !Character.isJavaIdentifierStart(name.codePointAt(i))
-                    : !Character.isJavaIdentifierPart(name.codePointAt(i))) {
-                throw new IllegalArgumentException(
-                        INVALID
-                                + message
-                                + " (must be a '<init>', '<clinit>' or a valid Java identifier): "
-                                + name);
-            }
-        }
-    }
-
-    /**
-     * Checks that the given string is a valid internal class name or array type descriptor.
-     *
-     * @param version the class version.
-     * @param name    the string to be checked.
-     * @param message the message to use in case of error.
-     */
-    static void checkInternalName(final int version, final String name, final String message) {
-        if (name == null || name.length() == 0) {
-            throw new IllegalArgumentException(INVALID + message + MUST_NOT_BE_NULL_OR_EMPTY);
-        }
-        if (name.charAt(0) == '[') {
-            checkDescriptor(version, name, false);
-        } else {
-            checkInternalClassName(version, name, message);
-        }
-    }
-
-    /**
-     * Checks that the given string is a valid internal class name.
-     *
-     * @param version the class version.
-     * @param name    the string to be checked.
-     * @param message the message to use in case of error.
-     */
-    private static void checkInternalClassName(
-            final int version, final String name, final String message) {
-        try {
-            int startIndex = 0;
-            int slashIndex;
-            while ((slashIndex = name.indexOf('/', startIndex + 1)) != -1) {
-                checkIdentifier(version, name, startIndex, slashIndex, null);
-                startIndex = slashIndex + 1;
-            }
-            checkIdentifier(version, name, startIndex, name.length(), null);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(
-                    INVALID + message + " (must be an internal class name): " + name, e);
-        }
-    }
-
-    /**
-     * Checks that the given string is a valid type descriptor.
-     *
-     * @param version    the class version.
-     * @param descriptor the string to be checked.
-     * @param canBeVoid  {@literal true} if {@code V} can be considered valid.
-     */
-    static void checkDescriptor(final int version, final String descriptor, final boolean canBeVoid) {
-        int endPos = checkDescriptor(version, descriptor, 0, canBeVoid);
-        if (endPos != descriptor.length()) {
-            throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
-        }
-    }
-
-    /**
-     * Checks that the given substring is a valid type descriptor.
-     *
-     * @param version    the class version.
-     * @param descriptor the string to be checked.
-     * @param startPos   the index of the first character of the type descriptor (inclusive).
-     * @param canBeVoid  whether {@code V} can be considered valid.
-     * @return the index of the last character of the type descriptor, plus one.
-     */
-    private static int checkDescriptor(
-            final int version, final String descriptor, final int startPos, final boolean canBeVoid) {
-        if (descriptor == null || startPos >= descriptor.length()) {
-            throw new IllegalArgumentException("Invalid type descriptor (must not be null or empty)");
-        }
-        switch (descriptor.charAt(startPos)) {
-            case 'V':
-                if (canBeVoid) {
-                    return startPos + 1;
-                } else {
-                    throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
-                }
-            case 'Z':
-            case 'C':
-            case 'B':
-            case 'S':
-            case 'I':
-            case 'F':
-            case 'J':
-            case 'D':
-                return startPos + 1;
-            case '[':
-                int pos = startPos + 1;
-                while (pos < descriptor.length() && descriptor.charAt(pos) == '[') {
-                    ++pos;
-                }
-                if (pos < descriptor.length()) {
-                    return checkDescriptor(version, descriptor, pos, false);
-                } else {
-                    throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
-                }
-            case 'L':
-                int endPos = descriptor.indexOf(';', startPos);
-                if (startPos == -1 || endPos - startPos < 2) {
-                    throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
-                }
-                try {
-                    checkInternalClassName(version, descriptor.substring(startPos + 1, endPos), null);
-                } catch (IllegalArgumentException e) {
-                    throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor, e);
-                }
-                return endPos + 1;
-            default:
-                throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
-        }
-    }
-
-    /**
-     * Checks that the given string is a valid method descriptor.
-     *
-     * @param version    the class version.
-     * @param descriptor the string to be checked.
-     */
-    static void checkMethodDescriptor(final int version, final String descriptor) {
-        if (descriptor == null || descriptor.length() == 0) {
-            throw new IllegalArgumentException("Invalid method descriptor (must not be null or empty)");
-        }
-        if (descriptor.charAt(0) != '(' || descriptor.length() < 3) {
-            throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
-        }
-        int pos = 1;
-        if (descriptor.charAt(pos) != ')') {
-            do {
-                if (descriptor.charAt(pos) == 'V') {
-                    throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
-                }
-                pos = checkDescriptor(version, descriptor, pos, false);
-            }
-            while (pos < descriptor.length() && descriptor.charAt(pos) != ')');
-        }
-        pos = checkDescriptor(version, descriptor, pos + 1, true);
-        if (pos != descriptor.length()) {
-            throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
-        }
-    }
-
-    /**
-     * Checks that the given string is a valid unqualified name.
-     *
-     * @param version the class version.
-     * @param name    the string to be checked.
-     * @param message the message to use in case of error.
-     */
-    static void checkUnqualifiedName(final int version, final String name, final String message) {
-        checkIdentifier(version, name, 0, -1, message);
-    }
-
-    /**
-     * Checks that the given substring is a valid Java identifier.
-     *
-     * @param version  the class version.
-     * @param name     the string to be checked.
-     * @param startPos the index of the first character of the identifier (inclusive).
-     * @param endPos   the index of the last character of the identifier (exclusive). -1 is equivalent
-     *                 to {@code name.length()} if name is not {@literal null}.
-     * @param message  the message to use in case of error.
-     */
-    static void checkIdentifier(
-            final int version,
-            final String name,
-            final int startPos,
-            final int endPos,
-            final String message) {
-        if (name == null || (endPos == -1 ? name.length() <= startPos : endPos <= startPos)) {
-            throw new IllegalArgumentException(INVALID + message + MUST_NOT_BE_NULL_OR_EMPTY);
-        }
-        int max = endPos == -1 ? name.length() : endPos;
-        if ((version & 0xFFFF) >= Opcodes.V1_5) {
-            for (int i = startPos; i < max; i = name.offsetByCodePoints(i, 1)) {
-                if (".;[/".indexOf(name.codePointAt(i)) != -1) {
-                    throw new IllegalArgumentException(
-                            INVALID + message + " (must not contain . ; [ or /): " + name);
-                }
-            }
-            return;
-        }
-        for (int i = startPos; i < max; i = name.offsetByCodePoints(i, 1)) {
-            if (i == startPos
-                    ? !Character.isJavaIdentifierStart(name.codePointAt(i))
-                    : !Character.isJavaIdentifierPart(name.codePointAt(i))) {
-                throw new IllegalArgumentException(
-                        INVALID + message + " (must be a valid Java identifier): " + name);
-            }
-        }
-    }
-
-    /**
-     * Checks that the given value is a signed byte.
-     *
-     * @param value   the value to be checked.
-     * @param message the message to use in case of error.
-     */
-    private static void checkSignedByte(final int value, final String message) {
-        if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE) {
-            throw new IllegalArgumentException(message + " (must be a signed byte): " + value);
-        }
-    }
-
-    /**
-     * Checks that the given value is a signed short.
-     *
-     * @param value   the value to be checked.
-     * @param message the message to use in case of error.
-     */
-    private static void checkSignedShort(final int value, final String message) {
-        if (value < Short.MIN_VALUE || value > Short.MAX_VALUE) {
-            throw new IllegalArgumentException(message + " (must be a signed short): " + value);
-        }
-    }
-
-    /**
-     * Checks that the given value is an unsigned short.
-     *
-     * @param value   the value to be checked.
-     * @param message the message to use in case of error.
-     */
-    private static void checkUnsignedShort(final int value, final String message) {
-        if (value < 0 || value > 65535) {
-            throw new IllegalArgumentException(message + " (must be an unsigned short): " + value);
-        }
-    }
-
-    /**
      * Checks that the method to visit the given opcode is equal to the given method.
      *
      * @param opcode the opcode to be checked.
      * @param method the expected visit method.
      */
     private static void checkOpcodeMethod(final int opcode, final Method method) {
-        if (opcode < Opcodes.NOP || opcode > Opcodes.IFNONNULL || OPCODE_METHODS[opcode] != method) {
+        if (opcode < Opcodes.NOP || opcode > Opcodes.IFNONNULL) {
             throw new IllegalArgumentException("Invalid opcode: " + opcode);
+        }
+        if (OPCODE_METHODS[opcode] != method) {
+            throw new IllegalArgumentException(
+                    "Invalid combination of opcode and method: " + opcode + ", " + method);
         }
     }
 
@@ -745,12 +487,6 @@ public class CheckMethodAdapter extends MethodVisitor {
         CheckClassAdapter.checkAccess(
                 access, Opcodes.ACC_FINAL | Opcodes.ACC_MANDATED | Opcodes.ACC_SYNTHETIC);
         super.visitParameter(name, access);
-    }
-
-    @Override
-    public AnnotationVisitor visitAnnotationDefault() {
-        checkVisitEndNotCalled();
-        return new CheckAnnotationAdapter(super.visitAnnotationDefault(), false);
     }
 
     @Override
@@ -777,6 +513,18 @@ public class CheckMethodAdapter extends MethodVisitor {
         CheckMethodAdapter.checkDescriptor(version, descriptor, false);
         return new CheckAnnotationAdapter(
                 super.visitTypeAnnotation(typeRef, typePath, descriptor, visible));
+    }
+
+    /**
+     * Checks that the given value is a signed byte.
+     *
+     * @param value   the value to be checked.
+     * @param message the message to use in case of error.
+     */
+    private static void checkSignedByte(final int value, final String message) {
+        if (value < Byte.MIN_VALUE || value > Byte.MAX_VALUE) {
+            throw new IllegalArgumentException(message + " (must be a signed byte): " + value);
+        }
     }
 
     @Override
@@ -1057,10 +805,6 @@ public class CheckMethodAdapter extends MethodVisitor {
         ++insnCount;
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Utility methods
-    // -----------------------------------------------------------------------------------------------
-
     @Override
     public void visitIincInsn(final int varIndex, final int increment) {
         checkVisitCodeCalled();
@@ -1292,23 +1036,9 @@ public class CheckMethodAdapter extends MethodVisitor {
         super.visitEnd();
     }
 
-    /**
-     * Checks that the given label is not null. This method can also check that the label has been
-     * visited.
-     *
-     * @param label        the label to be checked.
-     * @param checkVisited whether to check that the label has been visited.
-     * @param message      the message to use in case of error.
-     */
-    private void checkLabel(final Label label, final boolean checkVisited, final String message) {
-        if (label == null) {
-            throw new IllegalArgumentException(INVALID + message + " (must not be null)");
-        }
-        if (checkVisited && labelInsnIndices.get(label) == null) {
-            throw new IllegalArgumentException(INVALID + message + " (must be visited first)");
-        }
-        referencedLabels.add(label);
-    }
+    // -----------------------------------------------------------------------------------------------
+    // Utility methods
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Checks that the {@link #visitCode} method has been called.
@@ -1363,6 +1093,96 @@ public class CheckMethodAdapter extends MethodVisitor {
     }
 
     /**
+     * Checks that the given value is a signed short.
+     *
+     * @param value   the value to be checked.
+     * @param message the message to use in case of error.
+     */
+    private static void checkSignedShort(final int value, final String message) {
+        if (value < Short.MIN_VALUE || value > Short.MAX_VALUE) {
+            throw new IllegalArgumentException(message + " (must be a signed short): " + value);
+        }
+    }
+
+    /**
+     * Checks that the given value is an unsigned short.
+     *
+     * @param value   the value to be checked.
+     * @param message the message to use in case of error.
+     */
+    private static void checkUnsignedShort(final int value, final String message) {
+        if (value < 0 || value > 65535) {
+            throw new IllegalArgumentException(message + " (must be an unsigned short): " + value);
+        }
+    }
+
+    /**
+     * Checks that the given value is an {@link Integer}, {@link Float}, {@link Long}, {@link Double}
+     * or {@link String} value.
+     *
+     * @param value the value to be checked.
+     */
+    static void checkConstant(final Object value) {
+        if (!(value instanceof Integer)
+                && !(value instanceof Float)
+                && !(value instanceof Long)
+                && !(value instanceof Double)
+                && !(value instanceof String)) {
+            throw new IllegalArgumentException("Invalid constant: " + value);
+        }
+    }
+
+    /**
+     * Checks that the given string is a valid unqualified name.
+     *
+     * @param version the class version.
+     * @param name    the string to be checked.
+     * @param message the message to use in case of error.
+     */
+    static void checkUnqualifiedName(final int version, final String name, final String message) {
+        checkIdentifier(version, name, 0, -1, message);
+    }
+
+    /**
+     * Checks that the given substring is a valid Java identifier.
+     *
+     * @param version  the class version.
+     * @param name     the string to be checked.
+     * @param startPos the index of the first character of the identifier (inclusive).
+     * @param endPos   the index of the last character of the identifier (exclusive). -1 is equivalent
+     *                 to {@code name.length()} if name is not {@literal null}.
+     * @param message  the message to use in case of error.
+     */
+    static void checkIdentifier(
+            final int version,
+            final String name,
+            final int startPos,
+            final int endPos,
+            final String message) {
+        if (name == null || (endPos == -1 ? name.length() <= startPos : endPos <= startPos)) {
+            throw new IllegalArgumentException(INVALID + message + MUST_NOT_BE_NULL_OR_EMPTY);
+        }
+        int max = endPos == -1 ? name.length() : endPos;
+        if ((version & 0xFFFF) >= Opcodes.V1_5) {
+            for (int i = startPos; i < max; i = name.offsetByCodePoints(i, 1)) {
+                if (".;[/".indexOf(name.codePointAt(i)) != -1) {
+                    throw new IllegalArgumentException(
+                            INVALID + message + " (must not contain . ; [ or /): " + name);
+                }
+            }
+            return;
+        }
+        for (int i = startPos; i < max; i = name.offsetByCodePoints(i, 1)) {
+            if (i == startPos
+                    ? !Character.isJavaIdentifierStart(name.codePointAt(i))
+                    : !Character.isJavaIdentifierPart(name.codePointAt(i))) {
+                throw new IllegalArgumentException(
+                        INVALID + message + " (must be a valid Java identifier): " + name);
+            }
+        }
+    }
+
+    /**
      * Checks that the given value is a valid operand for the LDC instruction.
      *
      * @param value the value to be checked.
@@ -1413,6 +1233,202 @@ public class CheckMethodAdapter extends MethodVisitor {
         } else {
             checkConstant(value);
         }
+    }
+
+    /**
+     * Checks that the given string is a valid Java identifier.
+     *
+     * @param version the class version.
+     * @param name    the string to be checked.
+     * @param message the message to use in case of error.
+     */
+    static void checkMethodIdentifier(final int version, final String name, final String message) {
+        if (name == null || name.length() == 0) {
+            throw new IllegalArgumentException(INVALID + message + MUST_NOT_BE_NULL_OR_EMPTY);
+        }
+        if ((version & 0xFFFF) >= Opcodes.V1_5) {
+            for (int i = 0; i < name.length(); i = name.offsetByCodePoints(i, 1)) {
+                if (".;[/<>".indexOf(name.codePointAt(i)) != -1) {
+                    throw new IllegalArgumentException(
+                            INVALID + message + " (must be a valid unqualified name): " + name);
+                }
+            }
+            return;
+        }
+        for (int i = 0; i < name.length(); i = name.offsetByCodePoints(i, 1)) {
+            if (i == 0
+                    ? !Character.isJavaIdentifierStart(name.codePointAt(i))
+                    : !Character.isJavaIdentifierPart(name.codePointAt(i))) {
+                throw new IllegalArgumentException(
+                        INVALID
+                                + message
+                                + " (must be a '<init>', '<clinit>' or a valid Java identifier): "
+                                + name);
+            }
+        }
+    }
+
+    /**
+     * Checks that the given string is a valid internal class name or array type descriptor.
+     *
+     * @param version the class version.
+     * @param name    the string to be checked.
+     * @param message the message to use in case of error.
+     */
+    static void checkInternalName(final int version, final String name, final String message) {
+        if (name == null || name.length() == 0) {
+            throw new IllegalArgumentException(INVALID + message + MUST_NOT_BE_NULL_OR_EMPTY);
+        }
+        if (name.charAt(0) == '[') {
+            checkDescriptor(version, name, false);
+        } else {
+            checkInternalClassName(version, name, message);
+        }
+    }
+
+    /**
+     * Checks that the given string is a valid internal class name.
+     *
+     * @param version the class version.
+     * @param name    the string to be checked.
+     * @param message the message to use in case of error.
+     */
+    private static void checkInternalClassName(
+            final int version, final String name, final String message) {
+        try {
+            int startIndex = 0;
+            int slashIndex;
+            while ((slashIndex = name.indexOf('/', startIndex + 1)) != -1) {
+                checkIdentifier(version, name, startIndex, slashIndex, null);
+                startIndex = slashIndex + 1;
+            }
+            checkIdentifier(version, name, startIndex, name.length(), null);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    INVALID + message + " (must be an internal class name): " + name, e);
+        }
+    }
+
+    /**
+     * Checks that the given string is a valid type descriptor.
+     *
+     * @param version    the class version.
+     * @param descriptor the string to be checked.
+     * @param canBeVoid  {@literal true} if {@code V} can be considered valid.
+     */
+    static void checkDescriptor(final int version, final String descriptor, final boolean canBeVoid) {
+        int endPos = checkDescriptor(version, descriptor, 0, canBeVoid);
+        if (endPos != descriptor.length()) {
+            throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
+        }
+    }
+
+    /**
+     * Checks that the given substring is a valid type descriptor.
+     *
+     * @param version    the class version.
+     * @param descriptor the string to be checked.
+     * @param startPos   the index of the first character of the type descriptor (inclusive).
+     * @param canBeVoid  whether {@code V} can be considered valid.
+     * @return the index of the last character of the type descriptor, plus one.
+     */
+    private static int checkDescriptor(
+            final int version, final String descriptor, final int startPos, final boolean canBeVoid) {
+        if (descriptor == null || startPos >= descriptor.length()) {
+            throw new IllegalArgumentException("Invalid type descriptor (must not be null or empty)");
+        }
+        switch (descriptor.charAt(startPos)) {
+            case 'V':
+                if (canBeVoid) {
+                    return startPos + 1;
+                } else {
+                    throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
+                }
+            case 'Z':
+            case 'C':
+            case 'B':
+            case 'S':
+            case 'I':
+            case 'F':
+            case 'J':
+            case 'D':
+                return startPos + 1;
+            case '[':
+                int pos = startPos + 1;
+                while (pos < descriptor.length() && descriptor.charAt(pos) == '[') {
+                    ++pos;
+                }
+                if (pos < descriptor.length()) {
+                    return checkDescriptor(version, descriptor, pos, false);
+                } else {
+                    throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
+                }
+            case 'L':
+                int endPos = descriptor.indexOf(';', startPos);
+                if (startPos == -1 || endPos - startPos < 2) {
+                    throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
+                }
+                try {
+                    checkInternalClassName(version, descriptor.substring(startPos + 1, endPos), null);
+                } catch (IllegalArgumentException e) {
+                    throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor, e);
+                }
+                return endPos + 1;
+            default:
+                throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
+        }
+    }
+
+    /**
+     * Checks that the given string is a valid method descriptor.
+     *
+     * @param version    the class version.
+     * @param descriptor the string to be checked.
+     */
+    static void checkMethodDescriptor(final int version, final String descriptor) {
+        if (descriptor == null || descriptor.length() == 0) {
+            throw new IllegalArgumentException("Invalid method descriptor (must not be null or empty)");
+        }
+        if (descriptor.charAt(0) != '(' || descriptor.length() < 3) {
+            throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
+        }
+        int pos = 1;
+        if (descriptor.charAt(pos) != ')') {
+            do {
+                if (descriptor.charAt(pos) == 'V') {
+                    throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
+                }
+                pos = checkDescriptor(version, descriptor, pos, false);
+            } while (pos < descriptor.length() && descriptor.charAt(pos) != ')');
+        }
+        pos = checkDescriptor(version, descriptor, pos + 1, true);
+        if (pos != descriptor.length()) {
+            throw new IllegalArgumentException(INVALID_DESCRIPTOR + descriptor);
+        }
+    }
+
+    @Override
+    public AnnotationVisitor visitAnnotationDefault() {
+        checkVisitEndNotCalled();
+        return new CheckAnnotationAdapter(super.visitAnnotationDefault(), false);
+    }
+
+    /**
+     * Checks that the given label is not null. This method can also check that the label has been
+     * visited.
+     *
+     * @param label        the label to be checked.
+     * @param checkVisited whether to check that the label has been visited.
+     * @param message      the message to use in case of error.
+     */
+    private void checkLabel(final Label label, final boolean checkVisited, final String message) {
+        if (label == null) {
+            throw new IllegalArgumentException(INVALID + message + " (must not be null)");
+        }
+        if (checkVisited && labelInsnIndices.get(label) == null) {
+            throw new IllegalArgumentException(INVALID + message + " (must be visited first)");
+        }
+        referencedLabels.add(label);
     }
 
     /**

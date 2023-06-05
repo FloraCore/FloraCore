@@ -18,21 +18,23 @@ import java.util.*;
 public class JSRInlinerAdapter extends MethodNode implements Opcodes {
 
     /**
-     * The instructions that belong to more that one subroutine. Bit i is set iff instruction at index
-     * i belongs to more than one subroutine.
-     */
-    final BitSet sharedSubroutineInsns = new BitSet();
-    /**
      * The instructions that belong to the main "subroutine". Bit i is set iff instruction at index i
      * belongs to this main "subroutine".
      */
     private final BitSet mainSubroutineInsns = new BitSet();
+
     /**
      * The instructions that belong to each subroutine. For each label which is the target of a JSR
      * instruction, bit i of the corresponding BitSet in this map is set iff instruction at index i
      * belongs to this subroutine.
      */
     private final Map<LabelNode, BitSet> subroutinesInsns = new HashMap<>();
+
+    /**
+     * The instructions that belong to more that one subroutine. Bit i is set iff instruction at index
+     * i belongs to more than one subroutine.
+     */
+    final BitSet sharedSubroutineInsns = new BitSet();
 
     /**
      * Constructs a new {@link JSRInlinerAdapter}. <i>Subclasses must not use this constructor</i>.
@@ -486,25 +488,6 @@ public class JSRInlinerAdapter extends MethodNode implements Opcodes {
         }
 
         /**
-         * Returns the clone of the given original label that is appropriate for use by a try/catch
-         * block or a variable annotation.
-         *
-         * @param labelNode a label of the original code.
-         * @return a clone of the given label for use by a try/catch block or a variable annotation in
-         * the inlined code.
-         */
-        LabelNode getClonedLabel(final LabelNode labelNode) {
-            return clonedLabels.get(labelNode);
-        }
-
-        @Override
-        public LabelNode get(final Object key) {
-            return getClonedLabelForJumpInsn((LabelNode) key);
-        }
-
-        // AbstractMap implementation
-
-        /**
          * Returns the clone of the given original label that is appropriate for use in a jump
          * instruction.
          *
@@ -517,9 +500,28 @@ public class JSRInlinerAdapter extends MethodNode implements Opcodes {
             return findOwner(instructions.indexOf(labelNode)).clonedLabels.get(labelNode);
         }
 
+        /**
+         * Returns the clone of the given original label that is appropriate for use by a try/catch
+         * block or a variable annotation.
+         *
+         * @param labelNode a label of the original code.
+         * @return a clone of the given label for use by a try/catch block or a variable annotation in
+         * the inlined code.
+         */
+        LabelNode getClonedLabel(final LabelNode labelNode) {
+            return clonedLabels.get(labelNode);
+        }
+
+        // AbstractMap implementation
+
         @Override
         public Set<Entry<LabelNode, LabelNode>> entrySet() {
             throw new UnsupportedOperationException();
+        }
+
+        @Override
+        public LabelNode get(final Object key) {
+            return getClonedLabelForJumpInsn((LabelNode) key);
         }
 
         @Override

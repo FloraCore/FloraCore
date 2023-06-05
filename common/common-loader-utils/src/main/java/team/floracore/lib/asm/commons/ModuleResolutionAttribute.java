@@ -1,3 +1,4 @@
+
 package team.floracore.lib.asm.commons;
 
 import team.floracore.lib.asm.*;
@@ -39,14 +40,6 @@ public final class ModuleResolutionAttribute extends Attribute {
     public int resolution;
 
     /**
-     * Constructs an empty {@link ModuleResolutionAttribute}. This object can be passed as a prototype
-     * to the {@link ClassReader#accept(ClassVisitor, Attribute[], int)} method.
-     */
-    public ModuleResolutionAttribute() {
-        this(0);
-    }
-
-    /**
      * Constructs a new {@link ModuleResolutionAttribute}.
      *
      * @param resolution the resolution state of the module. Must be one of {@link
@@ -56,6 +49,14 @@ public final class ModuleResolutionAttribute extends Attribute {
     public ModuleResolutionAttribute(final int resolution) {
         super("ModuleResolution");
         this.resolution = resolution;
+    }
+
+    /**
+     * Constructs an empty {@link ModuleResolutionAttribute}. This object can be passed as a prototype
+     * to the {@link ClassReader#accept(ClassVisitor, Attribute[], int)} method.
+     */
+    public ModuleResolutionAttribute() {
+        this(0);
     }
 
     @Override

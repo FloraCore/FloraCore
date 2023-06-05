@@ -187,16 +187,6 @@ public final class Type {
     // -----------------------------------------------------------------------------------------------
 
     /**
-     * Returns the method {@link Type} corresponding to the given constructor.
-     *
-     * @param constructor a {@link Constructor} object.
-     * @return the method {@link Type} corresponding to the given constructor.
-     */
-    public static Type getType(final Constructor<?> constructor) {
-        return getType(getConstructorDescriptor(constructor));
-    }
-
-    /**
      * Returns the {@link Type} corresponding to the given type descriptor.
      *
      * @param typeDescriptor a field or method type descriptor.
@@ -204,210 +194,6 @@ public final class Type {
      */
     public static Type getType(final String typeDescriptor) {
         return getTypeInternal(typeDescriptor, 0, typeDescriptor.length());
-    }
-
-    /**
-     * Returns the descriptor corresponding to the given constructor.
-     *
-     * @param constructor a {@link Constructor} object.
-     * @return the descriptor of the given constructor.
-     */
-    public static String getConstructorDescriptor(final Constructor<?> constructor) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append('(');
-        Class<?>[] parameters = constructor.getParameterTypes();
-        for (Class<?> parameter : parameters) {
-            appendDescriptor(parameter, stringBuilder);
-        }
-        return stringBuilder.append(")V").toString();
-    }
-
-    /**
-     * Returns the {@link Type} corresponding to the given field or method descriptor.
-     *
-     * @param descriptorBuffer a buffer containing the field or method descriptor.
-     * @param descriptorBegin  the beginning index, inclusive, of the field or method descriptor in
-     *                         descriptorBuffer.
-     * @param descriptorEnd    the end index, exclusive, of the field or method descriptor in
-     *                         descriptorBuffer.
-     * @return the {@link Type} corresponding to the given type descriptor.
-     */
-    private static Type getTypeInternal(
-            final String descriptorBuffer, final int descriptorBegin, final int descriptorEnd) {
-        switch (descriptorBuffer.charAt(descriptorBegin)) {
-            case 'V':
-                return VOID_TYPE;
-            case 'Z':
-                return BOOLEAN_TYPE;
-            case 'C':
-                return CHAR_TYPE;
-            case 'B':
-                return BYTE_TYPE;
-            case 'S':
-                return SHORT_TYPE;
-            case 'I':
-                return INT_TYPE;
-            case 'F':
-                return FLOAT_TYPE;
-            case 'J':
-                return LONG_TYPE;
-            case 'D':
-                return DOUBLE_TYPE;
-            case '[':
-                return new Type(ARRAY, descriptorBuffer, descriptorBegin, descriptorEnd);
-            case 'L':
-                return new Type(OBJECT, descriptorBuffer, descriptorBegin + 1, descriptorEnd - 1);
-            case '(':
-                return new Type(METHOD, descriptorBuffer, descriptorBegin, descriptorEnd);
-            default:
-                throw new IllegalArgumentException("Invalid descriptor: " + descriptorBuffer);
-        }
-    }
-
-    /**
-     * Appends the descriptor of the given class to the given string builder.
-     *
-     * @param clazz         the class whose descriptor must be computed.
-     * @param stringBuilder the string builder to which the descriptor must be appended.
-     */
-    private static void appendDescriptor(final Class<?> clazz, final StringBuilder stringBuilder) {
-        Class<?> currentClass = clazz;
-        while (currentClass.isArray()) {
-            stringBuilder.append('[');
-            currentClass = currentClass.getComponentType();
-        }
-        if (currentClass.isPrimitive()) {
-            char descriptor;
-            if (currentClass == Integer.TYPE) {
-                descriptor = 'I';
-            } else if (currentClass == Void.TYPE) {
-                descriptor = 'V';
-            } else if (currentClass == Boolean.TYPE) {
-                descriptor = 'Z';
-            } else if (currentClass == Byte.TYPE) {
-                descriptor = 'B';
-            } else if (currentClass == Character.TYPE) {
-                descriptor = 'C';
-            } else if (currentClass == Short.TYPE) {
-                descriptor = 'S';
-            } else if (currentClass == Double.TYPE) {
-                descriptor = 'D';
-            } else if (currentClass == Float.TYPE) {
-                descriptor = 'F';
-            } else if (currentClass == Long.TYPE) {
-                descriptor = 'J';
-            } else {
-                throw new AssertionError();
-            }
-            stringBuilder.append(descriptor);
-        } else {
-            stringBuilder.append('L').append(getInternalName(currentClass)).append(';');
-        }
-    }
-
-    /**
-     * Returns the internal name of the given class. The internal name of a class is its fully
-     * qualified name, as returned by Class.getName(), where '.' are replaced by '/'.
-     *
-     * @param clazz an object or array class.
-     * @return the internal name of the given class.
-     */
-    public static String getInternalName(final Class<?> clazz) {
-        return clazz.getName().replace('.', '/');
-    }
-
-    /**
-     * Returns the method {@link Type} corresponding to the given method.
-     *
-     * @param method a {@link Method} object.
-     * @return the method {@link Type} corresponding to the given method.
-     */
-    public static Type getType(final Method method) {
-        return getType(getMethodDescriptor(method));
-    }
-
-    /**
-     * Returns the descriptor corresponding to the given method.
-     *
-     * @param method a {@link Method} object.
-     * @return the descriptor of the given method.
-     */
-    public static String getMethodDescriptor(final Method method) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append('(');
-        Class<?>[] parameters = method.getParameterTypes();
-        for (Class<?> parameter : parameters) {
-            appendDescriptor(parameter, stringBuilder);
-        }
-        stringBuilder.append(')');
-        appendDescriptor(method.getReturnType(), stringBuilder);
-        return stringBuilder.toString();
-    }
-
-    /**
-     * Returns the {@link Type} corresponding to the given internal name.
-     *
-     * @param internalName an internal name (see {@link Type#getInternalName()}).
-     * @return the {@link Type} corresponding to the given internal name.
-     */
-    public static Type getObjectType(final String internalName) {
-        return new Type(
-                internalName.charAt(0) == '[' ? ARRAY : INTERNAL, internalName, 0, internalName.length());
-    }
-
-    /**
-     * Returns the {@link Type} corresponding to the given method descriptor. Equivalent to <code>
-     * Type.getType(methodDescriptor)</code>.
-     *
-     * @param methodDescriptor a method descriptor.
-     * @return the {@link Type} corresponding to the given method descriptor.
-     */
-    public static Type getMethodType(final String methodDescriptor) {
-        return new Type(METHOD, methodDescriptor, 0, methodDescriptor.length());
-    }
-
-    /**
-     * Returns the method {@link Type} corresponding to the given argument and return types.
-     *
-     * @param returnType    the return type of the method.
-     * @param argumentTypes the argument types of the method.
-     * @return the method {@link Type} corresponding to the given argument and return types.
-     */
-    public static Type getMethodType(final Type returnType, final Type... argumentTypes) {
-        return getType(getMethodDescriptor(returnType, argumentTypes));
-    }
-
-    /**
-     * Returns the descriptor corresponding to the given argument and return types.
-     *
-     * @param returnType    the return type of the method.
-     * @param argumentTypes the argument types of the method.
-     * @return the descriptor corresponding to the given argument and return types.
-     */
-    public static String getMethodDescriptor(final Type returnType, final Type... argumentTypes) {
-        StringBuilder stringBuilder = new StringBuilder();
-        stringBuilder.append('(');
-        for (Type argumentType : argumentTypes) {
-            argumentType.appendDescriptor(stringBuilder);
-        }
-        stringBuilder.append(')');
-        returnType.appendDescriptor(stringBuilder);
-        return stringBuilder.toString();
-    }
-
-    /**
-     * Returns the {@link Type} values corresponding to the argument types of the given method.
-     *
-     * @param method a method.
-     * @return the {@link Type} values corresponding to the argument types of the given method.
-     */
-    public static Type[] getArgumentTypes(final Method method) {
-        Class<?>[] classes = method.getParameterTypes();
-        Type[] types = new Type[classes.length];
-        for (int i = classes.length - 1; i >= 0; --i) {
-            types[i] = getType(classes[i]);
-        }
-        return types;
     }
 
     /**
@@ -445,15 +231,71 @@ public final class Type {
     }
 
     /**
-     * Returns the descriptor corresponding to the given class.
+     * Returns the method {@link Type} corresponding to the given constructor.
      *
-     * @param clazz an object class, a primitive class or an array class.
-     * @return the descriptor corresponding to the given class.
+     * @param constructor a {@link Constructor} object.
+     * @return the method {@link Type} corresponding to the given constructor.
      */
-    public static String getDescriptor(final Class<?> clazz) {
-        StringBuilder stringBuilder = new StringBuilder();
-        appendDescriptor(clazz, stringBuilder);
-        return stringBuilder.toString();
+    public static Type getType(final Constructor<?> constructor) {
+        return getType(getConstructorDescriptor(constructor));
+    }
+
+    /**
+     * Returns the method {@link Type} corresponding to the given method.
+     *
+     * @param method a {@link Method} object.
+     * @return the method {@link Type} corresponding to the given method.
+     */
+    public static Type getType(final Method method) {
+        return getType(getMethodDescriptor(method));
+    }
+
+    /**
+     * Returns the {@link Type} values corresponding to the argument types of the given method.
+     *
+     * @param method a method.
+     * @return the {@link Type} values corresponding to the argument types of the given method.
+     */
+    public static Type[] getArgumentTypes(final Method method) {
+        Class<?>[] classes = method.getParameterTypes();
+        Type[] types = new Type[classes.length];
+        for (int i = classes.length - 1; i >= 0; --i) {
+            types[i] = getType(classes[i]);
+        }
+        return types;
+    }
+
+    /**
+     * Returns the {@link Type} corresponding to the given internal name.
+     *
+     * @param internalName an internal name (see {@link Type#getInternalName()}).
+     * @return the {@link Type} corresponding to the given internal name.
+     */
+    public static Type getObjectType(final String internalName) {
+        return new Type(
+                internalName.charAt(0) == '[' ? ARRAY : INTERNAL, internalName, 0, internalName.length());
+    }
+
+    /**
+     * Returns the {@link Type} corresponding to the given method descriptor. Equivalent to <code>
+     * Type.getType(methodDescriptor)</code>.
+     *
+     * @param methodDescriptor a method descriptor.
+     * @return the {@link Type} corresponding to the given method descriptor.
+     */
+    public static Type getMethodType(final String methodDescriptor) {
+        return new Type(METHOD, methodDescriptor, 0, methodDescriptor.length());
+    }
+
+    /**
+     * Returns the method {@link Type} corresponding to the given argument and return types.
+     *
+     * @param returnType    the return type of the method.
+     * @param argumentTypes the argument types of the method.
+     * @return the method {@link Type} corresponding to the given argument and return types.
+     */
+    public static Type getMethodType(final Type returnType, final Type... argumentTypes) {
+        return getType(getMethodDescriptor(returnType, argumentTypes));
     }
 
     /**
@@ -465,10 +307,6 @@ public final class Type {
     public static Type getReturnType(final Method method) {
         return getType(method.getReturnType());
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Methods to get class names, internal names or descriptors.
-    // -----------------------------------------------------------------------------------------------
 
     /**
      * Returns the {@link Type} values corresponding to the argument types of the given method
@@ -519,6 +357,59 @@ public final class Type {
     }
 
     /**
+     * Returns the {@link Type} corresponding to the given field or method descriptor.
+     *
+     * @param descriptorBuffer a buffer containing the field or method descriptor.
+     * @param descriptorBegin  the beginning index, inclusive, of the field or method descriptor in
+     *                         descriptorBuffer.
+     * @param descriptorEnd    the end index, exclusive, of the field or method descriptor in
+     *                         descriptorBuffer.
+     * @return the {@link Type} corresponding to the given type descriptor.
+     */
+    private static Type getTypeInternal(
+            final String descriptorBuffer, final int descriptorBegin, final int descriptorEnd) {
+        switch (descriptorBuffer.charAt(descriptorBegin)) {
+            case 'V':
+                return VOID_TYPE;
+            case 'Z':
+                return BOOLEAN_TYPE;
+            case 'C':
+                return CHAR_TYPE;
+            case 'B':
+                return BYTE_TYPE;
+            case 'S':
+                return SHORT_TYPE;
+            case 'I':
+                return INT_TYPE;
+            case 'F':
+                return FLOAT_TYPE;
+            case 'J':
+                return LONG_TYPE;
+            case 'D':
+                return DOUBLE_TYPE;
+            case '[':
+                return new Type(ARRAY, descriptorBuffer, descriptorBegin, descriptorEnd);
+            case 'L':
+                return new Type(OBJECT, descriptorBuffer, descriptorBegin + 1, descriptorEnd - 1);
+            case '(':
+                return new Type(METHOD, descriptorBuffer, descriptorBegin, descriptorEnd);
+            default:
+                throw new IllegalArgumentException("Invalid descriptor: " + descriptorBuffer);
+        }
+    }
+
+    /**
+     * Returns the internal name of the given class. The internal name of a class is its fully
+     * qualified name, as returned by Class.getName(), where '.' are replaced by '/'.
+     *
+     * @param clazz an object or array class.
+     * @return the internal name of the given class.
+     */
+    public static String getInternalName(final Class<?> clazz) {
+        return clazz.getName().replace('.', '/');
+    }
+
+    /**
      * Returns the {@link Type} corresponding to the return type of the given method descriptor.
      *
      * @param methodDescriptor a method descriptor.
@@ -527,6 +418,18 @@ public final class Type {
     public static Type getReturnType(final String methodDescriptor) {
         return getTypeInternal(
                 methodDescriptor, getReturnTypeOffset(methodDescriptor), methodDescriptor.length());
+    }
+
+    /**
+     * Returns the descriptor corresponding to the given class.
+     *
+     * @param clazz an object class, a primitive class or an array class.
+     * @return the descriptor corresponding to the given class.
+     */
+    public static String getDescriptor(final Class<?> clazz) {
+        StringBuilder stringBuilder = new StringBuilder();
+        appendDescriptor(clazz, stringBuilder);
+        return stringBuilder.toString();
     }
 
     /**
@@ -550,6 +453,154 @@ public final class Type {
             }
         }
         return currentOffset + 1;
+    }
+
+    /**
+     * Returns the descriptor corresponding to the given constructor.
+     *
+     * @param constructor a {@link Constructor} object.
+     * @return the descriptor of the given constructor.
+     */
+    public static String getConstructorDescriptor(final Constructor<?> constructor) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append('(');
+        Class<?>[] parameters = constructor.getParameterTypes();
+        for (Class<?> parameter : parameters) {
+            appendDescriptor(parameter, stringBuilder);
+        }
+        return stringBuilder.append(")V").toString();
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Methods to get class names, internal names or descriptors.
+    // -----------------------------------------------------------------------------------------------
+
+    /**
+     * Returns the binary name of the class corresponding to this type. This method must not be used
+     * on method types.
+     *
+     * @return the binary name of the class corresponding to this type.
+     */
+    public String getClassName() {
+        switch (sort) {
+            case VOID:
+                return "void";
+            case BOOLEAN:
+                return "boolean";
+            case CHAR:
+                return "char";
+            case BYTE:
+                return "byte";
+            case SHORT:
+                return "short";
+            case INT:
+                return "int";
+            case FLOAT:
+                return "float";
+            case LONG:
+                return "long";
+            case DOUBLE:
+                return "double";
+            case ARRAY:
+                StringBuilder stringBuilder = new StringBuilder(getElementType().getClassName());
+                for (int i = getDimensions(); i > 0; --i) {
+                    stringBuilder.append("[]");
+                }
+                return stringBuilder.toString();
+            case OBJECT:
+            case INTERNAL:
+                return valueBuffer.substring(valueBegin, valueEnd).replace('/', '.');
+            default:
+                throw new AssertionError();
+        }
+    }
+
+    /**
+     * Returns the internal name of the class corresponding to this object or array type. The internal
+     * name of a class is its fully qualified name (as returned by Class.getName(), where '.' are
+     * replaced by '/'). This method should only be used for an object or array type.
+     *
+     * @return the internal name of the class corresponding to this object type.
+     */
+    public String getInternalName() {
+        return valueBuffer.substring(valueBegin, valueEnd);
+    }
+
+    /**
+     * Returns the descriptor corresponding to the given argument and return types.
+     *
+     * @param returnType    the return type of the method.
+     * @param argumentTypes the argument types of the method.
+     * @return the descriptor corresponding to the given argument and return types.
+     */
+    public static String getMethodDescriptor(final Type returnType, final Type... argumentTypes) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append('(');
+        for (Type argumentType : argumentTypes) {
+            argumentType.appendDescriptor(stringBuilder);
+        }
+        stringBuilder.append(')');
+        returnType.appendDescriptor(stringBuilder);
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Returns the descriptor corresponding to the given method.
+     *
+     * @param method a {@link Method} object.
+     * @return the descriptor of the given method.
+     */
+    public static String getMethodDescriptor(final Method method) {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append('(');
+        Class<?>[] parameters = method.getParameterTypes();
+        for (Class<?> parameter : parameters) {
+            appendDescriptor(parameter, stringBuilder);
+        }
+        stringBuilder.append(')');
+        appendDescriptor(method.getReturnType(), stringBuilder);
+        return stringBuilder.toString();
+    }
+
+    /**
+     * Appends the descriptor of the given class to the given string builder.
+     *
+     * @param clazz         the class whose descriptor must be computed.
+     * @param stringBuilder the string builder to which the descriptor must be appended.
+     */
+    private static void appendDescriptor(final Class<?> clazz, final StringBuilder stringBuilder) {
+        Class<?> currentClass = clazz;
+        while (currentClass.isArray()) {
+            stringBuilder.append('[');
+            currentClass = currentClass.getComponentType();
+        }
+        if (currentClass.isPrimitive()) {
+            char descriptor;
+            if (currentClass == Integer.TYPE) {
+                descriptor = 'I';
+            } else if (currentClass == Void.TYPE) {
+                descriptor = 'V';
+            } else if (currentClass == Boolean.TYPE) {
+                descriptor = 'Z';
+            } else if (currentClass == Byte.TYPE) {
+                descriptor = 'B';
+            } else if (currentClass == Character.TYPE) {
+                descriptor = 'C';
+            } else if (currentClass == Short.TYPE) {
+                descriptor = 'S';
+            } else if (currentClass == Double.TYPE) {
+                descriptor = 'D';
+            } else if (currentClass == Float.TYPE) {
+                descriptor = 'F';
+            } else if (currentClass == Long.TYPE) {
+                descriptor = 'J';
+            } else {
+                throw new AssertionError();
+            }
+            stringBuilder.append(descriptor);
+        } else {
+            stringBuilder.append('L').append(getInternalName(currentClass)).append(';');
+        }
     }
 
     /**
@@ -594,21 +645,6 @@ public final class Type {
     }
 
     /**
-     * Appends the descriptor corresponding to this type to the given string buffer.
-     *
-     * @param stringBuilder the string builder to which the descriptor must be appended.
-     */
-    private void appendDescriptor(final StringBuilder stringBuilder) {
-        if (sort == OBJECT) {
-            stringBuilder.append(valueBuffer, valueBegin - 1, valueEnd + 1);
-        } else if (sort == INTERNAL) {
-            stringBuilder.append('L').append(valueBuffer, valueBegin, valueEnd).append(';');
-        } else {
-            stringBuilder.append(valueBuffer, valueBegin, valueEnd);
-        }
-    }
-
-    /**
      * Returns the type of the elements of this array type. This method should only be used for an
      * array type.
      *
@@ -630,6 +666,16 @@ public final class Type {
     }
 
     /**
+     * Returns the return type of methods of this type. This method should only be used for method
+     * types.
+     *
+     * @return the return type of methods of this type.
+     */
+    public Type getReturnType() {
+        return getReturnType(getDescriptor());
+    }
+
+    /**
      * Returns the descriptor corresponding to this type.
      *
      * @return the descriptor corresponding to this type.
@@ -644,70 +690,9 @@ public final class Type {
         }
     }
 
-    /**
-     * Returns the return type of methods of this type. This method should only be used for method
-     * types.
-     *
-     * @return the return type of methods of this type.
-     */
-    public Type getReturnType() {
-        return getReturnType(getDescriptor());
-    }
-
-    /**
-     * Returns the binary name of the class corresponding to this type. This method must not be used
-     * on method types.
-     *
-     * @return the binary name of the class corresponding to this type.
-     */
-    public String getClassName() {
-        switch (sort) {
-            case VOID:
-                return "void";
-            case BOOLEAN:
-                return "boolean";
-            case CHAR:
-                return "char";
-            case BYTE:
-                return "byte";
-            case SHORT:
-                return "short";
-            case INT:
-                return "int";
-            case FLOAT:
-                return "float";
-            case LONG:
-                return "long";
-            case DOUBLE:
-                return "double";
-            case ARRAY:
-                StringBuilder stringBuilder = new StringBuilder(getElementType().getClassName());
-                for (int i = getDimensions(); i > 0; --i) {
-                    stringBuilder.append("[]");
-                }
-                return stringBuilder.toString();
-            case OBJECT:
-            case INTERNAL:
-                return valueBuffer.substring(valueBegin, valueEnd).replace('/', '.');
-            default:
-                throw new AssertionError();
-        }
-    }
-
     // -----------------------------------------------------------------------------------------------
     // Methods to get the sort, dimension, size, and opcodes corresponding to a Type or descriptor.
     // -----------------------------------------------------------------------------------------------
-
-    /**
-     * Returns the internal name of the class corresponding to this object or array type. The internal
-     * name of a class is its fully qualified name (as returned by Class.getName(), where '.' are
-     * replaced by '/'). This method should only be used for an object or array type.
-     *
-     * @return the internal name of the class corresponding to this object type.
-     */
-    public String getInternalName() {
-        return valueBuffer.substring(valueBegin, valueEnd);
-    }
 
     /**
      * Returns the sort of this type.
@@ -773,6 +758,21 @@ public final class Type {
      */
     public int getArgumentsAndReturnSizes() {
         return getArgumentsAndReturnSizes(getDescriptor());
+    }
+
+    /**
+     * Appends the descriptor corresponding to this type to the given string buffer.
+     *
+     * @param stringBuilder the string builder to which the descriptor must be appended.
+     */
+    private void appendDescriptor(final StringBuilder stringBuilder) {
+        if (sort == OBJECT) {
+            stringBuilder.append(valueBuffer, valueBegin - 1, valueEnd + 1);
+        } else if (sort == INTERNAL) {
+            stringBuilder.append('L').append(valueBuffer, valueBegin, valueEnd).append(';');
+        } else {
+            stringBuilder.append(valueBuffer, valueBegin, valueEnd);
+        }
     }
 
     /**
@@ -853,22 +853,6 @@ public final class Type {
     // -----------------------------------------------------------------------------------------------
 
     /**
-     * Returns a hash code value for this type.
-     *
-     * @return a hash code value for this type.
-     */
-    @Override
-    public int hashCode() {
-        int hashCode = 13 * (sort == INTERNAL ? OBJECT : sort);
-        if (sort >= ARRAY) {
-            for (int i = valueBegin, end = valueEnd; i < end; i++) {
-                hashCode = 17 * (hashCode + valueBuffer.charAt(i));
-            }
-        }
-        return hashCode;
-    }
-
-    /**
      * Tests if the given object is equal to this type.
      *
      * @param object the object to be compared to this type.
@@ -900,6 +884,22 @@ public final class Type {
             }
         }
         return true;
+    }
+
+    /**
+     * Returns a hash code value for this type.
+     *
+     * @return a hash code value for this type.
+     */
+    @Override
+    public int hashCode() {
+        int hashCode = 13 * (sort == INTERNAL ? OBJECT : sort);
+        if (sort >= ARRAY) {
+            for (int i = valueBegin, end = valueEnd; i < end; i++) {
+                hashCode = 17 * (hashCode + valueBuffer.charAt(i));
+            }
+        }
+        return hashCode;
     }
 
     /**

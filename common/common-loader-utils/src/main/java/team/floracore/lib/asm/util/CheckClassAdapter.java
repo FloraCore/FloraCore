@@ -47,9 +47,9 @@ import java.util.Map;
  * instruction. For example (format is - insnNumber locals : stack):
  *
  * <pre>
- * team.floracore.lib.asm.tree.analysis.AnalyzerException: Error at instruction 71: Expected I, but found .
- *   at team.floracore.lib.asm.tree.analysis.Analyzer.analyze(Analyzer.java:...)
- *   at team.floracore.lib.asm.util.CheckClassAdapter.verify(CheckClassAdapter.java:...)
+ * org.objectweb.asm.tree.analysis.AnalyzerException: Error at instruction 71: Expected I, but found .
+ *   at org.objectweb.asm.tree.analysis.Analyzer.analyze(Analyzer.java:...)
+ *   at org.objectweb.asm.util.CheckClassAdapter.verify(CheckClassAdapter.java:...)
  * ...
  * remove()V
  * 00000 LinkedBlockingQueue$Itr . . . . . . . .  : ICONST_0
@@ -82,43 +82,52 @@ public class CheckClassAdapter extends ClassVisitor {
      * Whether the bytecode must be checked with a BasicVerifier.
      */
     private final boolean checkDataFlow;
-    /**
-     * The index of the instruction designated by each visited label so far.
-     */
-    private final Map<Label, Integer> labelInsnIndices;
+
     /**
      * The class version number.
      */
     private int version;
+
     /**
      * Whether the {@link #visit} method has been called.
      */
     private boolean visitCalled;
+
     /**
      * Whether the {@link #visitModule} method has been called.
      */
     private boolean visitModuleCalled;
+
     /**
      * Whether the {@link #visitSource} method has been called.
      */
     private boolean visitSourceCalled;
+
     /**
      * Whether the {@link #visitOuterClass} method has been called.
      */
     private boolean visitOuterClassCalled;
+
     /**
      * Whether the {@link #visitNestHost} method has been called.
      */
     private boolean visitNestHostCalled;
+
     /**
      * The common package of all the nest members. Not {@literal null} if the visitNestMember method
      * has been called.
      */
     private String nestMemberPackageName;
+
     /**
      * Whether the {@link #visitEnd} method has been called.
      */
     private boolean visitEndCalled;
+
+    /**
+     * The index of the instruction designated by each visited label so far.
+     */
+    private final Map<Label, Integer> labelInsnIndices;
 
     // -----------------------------------------------------------------------------------------------
     // Constructors
@@ -170,6 +179,414 @@ public class CheckClassAdapter extends ClassVisitor {
     // -----------------------------------------------------------------------------------------------
 
     /**
+     * Checks that the given access flags do not contain invalid flags. This method also checks that
+     * mutually incompatible flags are not set simultaneously.
+     *
+     * @param access         the access flags to be checked.
+     * @param possibleAccess the valid access flags.
+     */
+    static void checkAccess(final int access, final int possibleAccess) {
+        if ((access & ~possibleAccess) != 0) {
+            throw new IllegalArgumentException("Invalid access flags: " + access);
+        }
+        int publicProtectedPrivate = Opcodes.ACC_PUBLIC | Opcodes.ACC_PROTECTED | Opcodes.ACC_PRIVATE;
+        if (Integer.bitCount(access & publicProtectedPrivate) > 1) {
+            throw new IllegalArgumentException(
+                    "public, protected and private are mutually exclusive: " + access);
+        }
+        if (Integer.bitCount(access & (Opcodes.ACC_FINAL | Opcodes.ACC_ABSTRACT)) > 1) {
+            throw new IllegalArgumentException("final and abstract are mutually exclusive: " + access);
+        }
+    }
+
+    /**
+     * Checks that the given name is a fully qualified name, using dots.
+     *
+     * @param version the class version.
+     * @param name    the name to be checked.
+     * @param source  the source of 'name' (e.g 'module' for a module name).
+     */
+    static void checkFullyQualifiedName(final int version, final String name, final String source) {
+        try {
+            int startIndex = 0;
+            int dotIndex;
+            while ((dotIndex = name.indexOf('.', startIndex + 1)) != -1) {
+                CheckMethodAdapter.checkIdentifier(version, name, startIndex, dotIndex, null);
+                startIndex = dotIndex + 1;
+            }
+            CheckMethodAdapter.checkIdentifier(version, name, startIndex, name.length(), null);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException(
+                    "Invalid " + source + " (must be a fully qualified name): " + name, e);
+        }
+    }
+
+    /**
+     * Checks the reference to a type in a type annotation.
+     *
+     * @param typeRef a reference to an annotated type.
+     */
+    static void checkTypeRef(final int typeRef) {
+        int mask = 0;
+        switch (typeRef >>> 24) {
+            case TypeReference.CLASS_TYPE_PARAMETER:
+            case TypeReference.METHOD_TYPE_PARAMETER:
+            case TypeReference.METHOD_FORMAL_PARAMETER:
+                mask = 0xFFFF0000;
+                break;
+            case TypeReference.FIELD:
+            case TypeReference.METHOD_RETURN:
+            case TypeReference.METHOD_RECEIVER:
+            case TypeReference.LOCAL_VARIABLE:
+            case TypeReference.RESOURCE_VARIABLE:
+            case TypeReference.INSTANCEOF:
+            case TypeReference.NEW:
+            case TypeReference.CONSTRUCTOR_REFERENCE:
+            case TypeReference.METHOD_REFERENCE:
+                mask = 0xFF000000;
+                break;
+            case TypeReference.CLASS_EXTENDS:
+            case TypeReference.CLASS_TYPE_PARAMETER_BOUND:
+            case TypeReference.METHOD_TYPE_PARAMETER_BOUND:
+            case TypeReference.THROWS:
+            case TypeReference.EXCEPTION_PARAMETER:
+                mask = 0xFFFFFF00;
+                break;
+            case TypeReference.CAST:
+            case TypeReference.CONSTRUCTOR_INVOCATION_TYPE_ARGUMENT:
+            case TypeReference.METHOD_INVOCATION_TYPE_ARGUMENT:
+            case TypeReference.CONSTRUCTOR_REFERENCE_TYPE_ARGUMENT:
+            case TypeReference.METHOD_REFERENCE_TYPE_ARGUMENT:
+                mask = 0xFF0000FF;
+                break;
+            default:
+                break;
+        }
+        if (mask == 0 || (typeRef & ~mask) != 0) {
+            throw new IllegalArgumentException(
+                    "Invalid type reference 0x" + Integer.toHexString(typeRef));
+        }
+    }
+
+    /**
+     * Returns the package name of an internal name.
+     *
+     * @param name an internal name.
+     * @return the package name or "" if there is no package.
+     */
+    private static String packageName(final String name) {
+        int index = name.lastIndexOf('/');
+        if (index == -1) {
+            return "";
+        }
+        return name.substring(0, index);
+    }
+
+    @Override
+    public void visit(
+            final int version,
+            final int access,
+            final String name,
+            final String signature,
+            final String superName,
+            final String[] interfaces) {
+        if (visitCalled) {
+            throw new IllegalStateException("visit must be called only once");
+        }
+        visitCalled = true;
+        checkState();
+        checkAccess(
+                access,
+                Opcodes.ACC_PUBLIC
+                        | Opcodes.ACC_FINAL
+                        | Opcodes.ACC_SUPER
+                        | Opcodes.ACC_INTERFACE
+                        | Opcodes.ACC_ABSTRACT
+                        | Opcodes.ACC_SYNTHETIC
+                        | Opcodes.ACC_ANNOTATION
+                        | Opcodes.ACC_ENUM
+                        | Opcodes.ACC_DEPRECATED
+                        | Opcodes.ACC_RECORD
+                        | Opcodes.ACC_MODULE);
+        if (name == null) {
+            throw new IllegalArgumentException("Illegal class name (null)");
+        }
+        if (!name.endsWith("package-info") && !name.endsWith("module-info")) {
+            CheckMethodAdapter.checkInternalName(version, name, "class name");
+        }
+        if ("java/lang/Object".equals(name)) {
+            if (superName != null) {
+                throw new IllegalArgumentException(
+                        "The super class name of the Object class must be 'null'");
+            }
+        } else if (name.endsWith("module-info")) {
+            if (superName != null) {
+                throw new IllegalArgumentException(
+                        "The super class name of a module-info class must be 'null'");
+            }
+        } else {
+            CheckMethodAdapter.checkInternalName(version, superName, "super class name");
+        }
+        if (signature != null) {
+            checkClassSignature(signature);
+        }
+        if ((access & Opcodes.ACC_INTERFACE) != 0 && !"java/lang/Object".equals(superName)) {
+            throw new IllegalArgumentException(
+                    "The super class name of interfaces must be 'java/lang/Object'");
+        }
+        if (interfaces != null) {
+            for (int i = 0; i < interfaces.length; ++i) {
+                CheckMethodAdapter.checkInternalName(
+                        version, interfaces[i], "interface name at index " + i);
+            }
+        }
+        this.version = version;
+        super.visit(version, access, name, signature, superName, interfaces);
+    }
+
+    @Override
+    public void visitSource(final String file, final String debug) {
+        checkState();
+        if (visitSourceCalled) {
+            throw new IllegalStateException("visitSource can be called only once.");
+        }
+        visitSourceCalled = true;
+        super.visitSource(file, debug);
+    }
+
+    @Override
+    public ModuleVisitor visitModule(final String name, final int access, final String version) {
+        checkState();
+        if (visitModuleCalled) {
+            throw new IllegalStateException("visitModule can be called only once.");
+        }
+        visitModuleCalled = true;
+        checkFullyQualifiedName(this.version, name, "module name");
+        checkAccess(access, Opcodes.ACC_OPEN | Opcodes.ACC_SYNTHETIC | Opcodes.ACC_MANDATED);
+        CheckModuleAdapter checkModuleAdapter =
+                new CheckModuleAdapter(
+                        api, super.visitModule(name, access, version), (access & Opcodes.ACC_OPEN) != 0);
+        checkModuleAdapter.classVersion = this.version;
+        return checkModuleAdapter;
+    }
+
+    @Override
+    public void visitNestHost(final String nestHost) {
+        checkState();
+        CheckMethodAdapter.checkInternalName(version, nestHost, "nestHost");
+        if (visitNestHostCalled) {
+            throw new IllegalStateException("visitNestHost can be called only once.");
+        }
+        if (nestMemberPackageName != null) {
+            throw new IllegalStateException("visitNestHost and visitNestMember are mutually exclusive.");
+        }
+        visitNestHostCalled = true;
+        super.visitNestHost(nestHost);
+    }
+
+    @Override
+    public void visitNestMember(final String nestMember) {
+        checkState();
+        CheckMethodAdapter.checkInternalName(version, nestMember, "nestMember");
+        if (visitNestHostCalled) {
+            throw new IllegalStateException(
+                    "visitMemberOfNest and visitNestHost are mutually exclusive.");
+        }
+        String packageName = packageName(nestMember);
+        if (nestMemberPackageName == null) {
+            nestMemberPackageName = packageName;
+        } else if (!nestMemberPackageName.equals(packageName)) {
+            throw new IllegalStateException(
+                    "nest member " + nestMember + " should be in the package " + nestMemberPackageName);
+        }
+        super.visitNestMember(nestMember);
+    }
+
+    @Override
+    public void visitPermittedSubclass(final String permittedSubclass) {
+        checkState();
+        CheckMethodAdapter.checkInternalName(version, permittedSubclass, "permittedSubclass");
+        super.visitPermittedSubclass(permittedSubclass);
+    }
+
+    @Override
+    public void visitOuterClass(final String owner, final String name, final String descriptor) {
+        checkState();
+        if (visitOuterClassCalled) {
+            throw new IllegalStateException("visitOuterClass can be called only once.");
+        }
+        visitOuterClassCalled = true;
+        if (owner == null) {
+            throw new IllegalArgumentException("Illegal outer class owner");
+        }
+        if (descriptor != null) {
+            CheckMethodAdapter.checkMethodDescriptor(version, descriptor);
+        }
+        super.visitOuterClass(owner, name, descriptor);
+    }
+
+    @Override
+    public void visitInnerClass(
+            final String name, final String outerName, final String innerName, final int access) {
+        checkState();
+        CheckMethodAdapter.checkInternalName(version, name, "class name");
+        if (outerName != null) {
+            CheckMethodAdapter.checkInternalName(version, outerName, "outer class name");
+        }
+        if (innerName != null) {
+            int startIndex = 0;
+            while (startIndex < innerName.length() && Character.isDigit(innerName.charAt(startIndex))) {
+                startIndex++;
+            }
+            if (startIndex == 0 || startIndex < innerName.length()) {
+                CheckMethodAdapter.checkIdentifier(version, innerName, startIndex, -1, "inner class name");
+            }
+        }
+        checkAccess(
+                access,
+                Opcodes.ACC_PUBLIC
+                        | Opcodes.ACC_PRIVATE
+                        | Opcodes.ACC_PROTECTED
+                        | Opcodes.ACC_STATIC
+                        | Opcodes.ACC_FINAL
+                        | Opcodes.ACC_INTERFACE
+                        | Opcodes.ACC_ABSTRACT
+                        | Opcodes.ACC_SYNTHETIC
+                        | Opcodes.ACC_ANNOTATION
+                        | Opcodes.ACC_ENUM);
+        super.visitInnerClass(name, outerName, innerName, access);
+    }
+
+    @Override
+    public RecordComponentVisitor visitRecordComponent(
+            final String name, final String descriptor, final String signature) {
+        checkState();
+        CheckMethodAdapter.checkUnqualifiedName(version, name, "record component name");
+        CheckMethodAdapter.checkDescriptor(version, descriptor, /* canBeVoid = */ false);
+        if (signature != null) {
+            checkFieldSignature(signature);
+        }
+        return new CheckRecordComponentAdapter(
+                api, super.visitRecordComponent(name, descriptor, signature));
+    }
+
+    @Override
+    public FieldVisitor visitField(
+            final int access,
+            final String name,
+            final String descriptor,
+            final String signature,
+            final Object value) {
+        checkState();
+        checkAccess(
+                access,
+                Opcodes.ACC_PUBLIC
+                        | Opcodes.ACC_PRIVATE
+                        | Opcodes.ACC_PROTECTED
+                        | Opcodes.ACC_STATIC
+                        | Opcodes.ACC_FINAL
+                        | Opcodes.ACC_VOLATILE
+                        | Opcodes.ACC_TRANSIENT
+                        | Opcodes.ACC_SYNTHETIC
+                        | Opcodes.ACC_ENUM
+                        | Opcodes.ACC_MANDATED
+                        | Opcodes.ACC_DEPRECATED);
+        CheckMethodAdapter.checkUnqualifiedName(version, name, "field name");
+        CheckMethodAdapter.checkDescriptor(version, descriptor, /* canBeVoid = */ false);
+        if (signature != null) {
+            checkFieldSignature(signature);
+        }
+        if (value != null) {
+            CheckMethodAdapter.checkConstant(value);
+        }
+        return new CheckFieldAdapter(api, super.visitField(access, name, descriptor, signature, value));
+    }
+
+    @Override
+    public MethodVisitor visitMethod(
+            final int access,
+            final String name,
+            final String descriptor,
+            final String signature,
+            final String[] exceptions) {
+        checkState();
+        checkMethodAccess(
+                version,
+                access,
+                Opcodes.ACC_PUBLIC
+                        | Opcodes.ACC_PRIVATE
+                        | Opcodes.ACC_PROTECTED
+                        | Opcodes.ACC_STATIC
+                        | Opcodes.ACC_FINAL
+                        | Opcodes.ACC_SYNCHRONIZED
+                        | Opcodes.ACC_BRIDGE
+                        | Opcodes.ACC_VARARGS
+                        | Opcodes.ACC_NATIVE
+                        | Opcodes.ACC_ABSTRACT
+                        | Opcodes.ACC_STRICT
+                        | Opcodes.ACC_SYNTHETIC
+                        | Opcodes.ACC_MANDATED
+                        | Opcodes.ACC_DEPRECATED);
+        if (!"<init>".equals(name) && !"<clinit>".equals(name)) {
+            CheckMethodAdapter.checkMethodIdentifier(version, name, "method name");
+        }
+        CheckMethodAdapter.checkMethodDescriptor(version, descriptor);
+        if (signature != null) {
+            checkMethodSignature(signature);
+        }
+        if (exceptions != null) {
+            for (int i = 0; i < exceptions.length; ++i) {
+                CheckMethodAdapter.checkInternalName(
+                        version, exceptions[i], "exception name at index " + i);
+            }
+        }
+        CheckMethodAdapter checkMethodAdapter;
+        MethodVisitor methodVisitor =
+                super.visitMethod(access, name, descriptor, signature, exceptions);
+        if (checkDataFlow) {
+            if (cv instanceof ClassWriter) {
+                methodVisitor =
+                        new CheckMethodAdapter.MethodWriterWrapper(
+                                api, version, (ClassWriter) cv, methodVisitor);
+            }
+            checkMethodAdapter =
+                    new CheckMethodAdapter(api, access, name, descriptor, methodVisitor, labelInsnIndices);
+        } else {
+            checkMethodAdapter = new CheckMethodAdapter(api, methodVisitor, labelInsnIndices);
+        }
+        checkMethodAdapter.version = version;
+        return checkMethodAdapter;
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Utility methods
+    // -----------------------------------------------------------------------------------------------
+
+    @Override
+    public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
+        checkState();
+        CheckMethodAdapter.checkDescriptor(version, descriptor, false);
+        return new CheckAnnotationAdapter(super.visitAnnotation(descriptor, visible));
+    }
+
+    @Override
+    public AnnotationVisitor visitTypeAnnotation(
+            final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
+        checkState();
+        int sort = new TypeReference(typeRef).getSort();
+        if (sort != TypeReference.CLASS_TYPE_PARAMETER
+                && sort != TypeReference.CLASS_TYPE_PARAMETER_BOUND
+                && sort != TypeReference.CLASS_EXTENDS) {
+            throw new IllegalArgumentException(
+                    "Invalid type reference sort 0x" + Integer.toHexString(sort));
+        }
+        checkTypeRef(typeRef);
+        CheckMethodAdapter.checkDescriptor(version, descriptor, false);
+        return new CheckAnnotationAdapter(
+                super.visitTypeAnnotation(typeRef, typePath, descriptor, visible));
+    }
+
+    /**
      * Checks that the given access flags do not contain invalid flags for a method. This method also
      * checks that mutually incompatible flags are not set simultaneously.
      *
@@ -184,6 +601,15 @@ public class CheckClassAdapter extends ClassVisitor {
                 && Integer.bitCount(access & (Opcodes.ACC_STRICT | Opcodes.ACC_ABSTRACT)) > 1) {
             throw new IllegalArgumentException("strictfp and abstract are mutually exclusive: " + access);
         }
+    }
+
+    @Override
+    public void visitAttribute(final Attribute attribute) {
+        checkState();
+        if (attribute == null) {
+            throw new IllegalArgumentException("Invalid attribute (must not be null)");
+        }
+        super.visitAttribute(attribute);
     }
 
     /**
@@ -513,8 +939,27 @@ public class CheckClassAdapter extends ClassVisitor {
         return pos < string.length() ? string.charAt(pos) : (char) 0;
     }
 
+    @Override
+    public void visitEnd() {
+        checkState();
+        visitEndCalled = true;
+        super.visitEnd();
+    }
+
+    /**
+     * Checks that the visit method has been called and that visitEnd has not been called.
+     */
+    private void checkState() {
+        if (!visitCalled) {
+            throw new IllegalStateException("Cannot visit member before visit has been called.");
+        }
+        if (visitEndCalled) {
+            throw new IllegalStateException("Cannot visit member after visitEnd has been called.");
+        }
+    }
+
     // -----------------------------------------------------------------------------------------------
-    // Utility methods
+    // Static verification methods
     // -----------------------------------------------------------------------------------------------
 
     /**
@@ -668,442 +1113,6 @@ public class CheckClassAdapter extends ClassVisitor {
                 return name.substring(lastSlashIndex + 1, endIndex);
             }
             return name.substring(0, lastBracketIndex + 1) + name.substring(lastSlashIndex + 1, endIndex);
-        }
-    }
-
-    /**
-     * Checks that the given name is a fully qualified name, using dots.
-     *
-     * @param version the class version.
-     * @param name    the name to be checked.
-     * @param source  the source of 'name' (e.g 'module' for a module name).
-     */
-    static void checkFullyQualifiedName(final int version, final String name, final String source) {
-        try {
-            int startIndex = 0;
-            int dotIndex;
-            while ((dotIndex = name.indexOf('.', startIndex + 1)) != -1) {
-                CheckMethodAdapter.checkIdentifier(version, name, startIndex, dotIndex, null);
-                startIndex = dotIndex + 1;
-            }
-            CheckMethodAdapter.checkIdentifier(version, name, startIndex, name.length(), null);
-        } catch (IllegalArgumentException e) {
-            throw new IllegalArgumentException(
-                    "Invalid " + source + " (must be a fully qualified name): " + name, e);
-        }
-    }
-
-    /**
-     * Checks that the given access flags do not contain invalid flags. This method also checks that
-     * mutually incompatible flags are not set simultaneously.
-     *
-     * @param access         the access flags to be checked.
-     * @param possibleAccess the valid access flags.
-     */
-    static void checkAccess(final int access, final int possibleAccess) {
-        if ((access & ~possibleAccess) != 0) {
-            throw new IllegalArgumentException("Invalid access flags: " + access);
-        }
-        int publicProtectedPrivate = Opcodes.ACC_PUBLIC | Opcodes.ACC_PROTECTED | Opcodes.ACC_PRIVATE;
-        if (Integer.bitCount(access & publicProtectedPrivate) > 1) {
-            throw new IllegalArgumentException(
-                    "public, protected and private are mutually exclusive: " + access);
-        }
-        if (Integer.bitCount(access & (Opcodes.ACC_FINAL | Opcodes.ACC_ABSTRACT)) > 1) {
-            throw new IllegalArgumentException("final and abstract are mutually exclusive: " + access);
-        }
-    }
-
-    /**
-     * Checks the reference to a type in a type annotation.
-     *
-     * @param typeRef a reference to an annotated type.
-     */
-    static void checkTypeRef(final int typeRef) {
-        int mask = 0;
-        switch (typeRef >>> 24) {
-            case TypeReference.CLASS_TYPE_PARAMETER:
-            case TypeReference.METHOD_TYPE_PARAMETER:
-            case TypeReference.METHOD_FORMAL_PARAMETER:
-                mask = 0xFFFF0000;
-                break;
-            case TypeReference.FIELD:
-            case TypeReference.METHOD_RETURN:
-            case TypeReference.METHOD_RECEIVER:
-            case TypeReference.LOCAL_VARIABLE:
-            case TypeReference.RESOURCE_VARIABLE:
-            case TypeReference.INSTANCEOF:
-            case TypeReference.NEW:
-            case TypeReference.CONSTRUCTOR_REFERENCE:
-            case TypeReference.METHOD_REFERENCE:
-                mask = 0xFF000000;
-                break;
-            case TypeReference.CLASS_EXTENDS:
-            case TypeReference.CLASS_TYPE_PARAMETER_BOUND:
-            case TypeReference.METHOD_TYPE_PARAMETER_BOUND:
-            case TypeReference.THROWS:
-            case TypeReference.EXCEPTION_PARAMETER:
-                mask = 0xFFFFFF00;
-                break;
-            case TypeReference.CAST:
-            case TypeReference.CONSTRUCTOR_INVOCATION_TYPE_ARGUMENT:
-            case TypeReference.METHOD_INVOCATION_TYPE_ARGUMENT:
-            case TypeReference.CONSTRUCTOR_REFERENCE_TYPE_ARGUMENT:
-            case TypeReference.METHOD_REFERENCE_TYPE_ARGUMENT:
-                mask = 0xFF0000FF;
-                break;
-            default:
-                break;
-        }
-        if (mask == 0 || (typeRef & ~mask) != 0) {
-            throw new IllegalArgumentException(
-                    "Invalid type reference 0x" + Integer.toHexString(typeRef));
-        }
-    }
-
-    /**
-     * Returns the package name of an internal name.
-     *
-     * @param name an internal name.
-     * @return the package name or "" if there is no package.
-     */
-    private static String packageName(final String name) {
-        int index = name.lastIndexOf('/');
-        if (index == -1) {
-            return "";
-        }
-        return name.substring(0, index);
-    }
-
-    @Override
-    public void visit(
-            final int version,
-            final int access,
-            final String name,
-            final String signature,
-            final String superName,
-            final String[] interfaces) {
-        if (visitCalled) {
-            throw new IllegalStateException("visit must be called only once");
-        }
-        visitCalled = true;
-        checkState();
-        checkAccess(
-                access,
-                Opcodes.ACC_PUBLIC
-                        | Opcodes.ACC_FINAL
-                        | Opcodes.ACC_SUPER
-                        | Opcodes.ACC_INTERFACE
-                        | Opcodes.ACC_ABSTRACT
-                        | Opcodes.ACC_SYNTHETIC
-                        | Opcodes.ACC_ANNOTATION
-                        | Opcodes.ACC_ENUM
-                        | Opcodes.ACC_DEPRECATED
-                        | Opcodes.ACC_RECORD
-                        | Opcodes.ACC_MODULE);
-        if (name == null) {
-            throw new IllegalArgumentException("Illegal class name (null)");
-        }
-        if (!name.endsWith("package-info") && !name.endsWith("module-info")) {
-            CheckMethodAdapter.checkInternalName(version, name, "class name");
-        }
-        if ("java/lang/Object".equals(name)) {
-            if (superName != null) {
-                throw new IllegalArgumentException(
-                        "The super class name of the Object class must be 'null'");
-            }
-        } else if (name.endsWith("module-info")) {
-            if (superName != null) {
-                throw new IllegalArgumentException(
-                        "The super class name of a module-info class must be 'null'");
-            }
-        } else {
-            CheckMethodAdapter.checkInternalName(version, superName, "super class name");
-        }
-        if (signature != null) {
-            checkClassSignature(signature);
-        }
-        if ((access & Opcodes.ACC_INTERFACE) != 0 && !"java/lang/Object".equals(superName)) {
-            throw new IllegalArgumentException(
-                    "The super class name of interfaces must be 'java/lang/Object'");
-        }
-        if (interfaces != null) {
-            for (int i = 0; i < interfaces.length; ++i) {
-                CheckMethodAdapter.checkInternalName(
-                        version, interfaces[i], "interface name at index " + i);
-            }
-        }
-        this.version = version;
-        super.visit(version, access, name, signature, superName, interfaces);
-    }
-
-    @Override
-    public void visitSource(final String file, final String debug) {
-        checkState();
-        if (visitSourceCalled) {
-            throw new IllegalStateException("visitSource can be called only once.");
-        }
-        visitSourceCalled = true;
-        super.visitSource(file, debug);
-    }
-
-    @Override
-    public ModuleVisitor visitModule(final String name, final int access, final String version) {
-        checkState();
-        if (visitModuleCalled) {
-            throw new IllegalStateException("visitModule can be called only once.");
-        }
-        visitModuleCalled = true;
-        checkFullyQualifiedName(this.version, name, "module name");
-        checkAccess(access, Opcodes.ACC_OPEN | Opcodes.ACC_SYNTHETIC | Opcodes.ACC_MANDATED);
-        CheckModuleAdapter checkModuleAdapter =
-                new CheckModuleAdapter(
-                        api, super.visitModule(name, access, version), (access & Opcodes.ACC_OPEN) != 0);
-        checkModuleAdapter.classVersion = this.version;
-        return checkModuleAdapter;
-    }
-
-    @Override
-    public void visitNestHost(final String nestHost) {
-        checkState();
-        CheckMethodAdapter.checkInternalName(version, nestHost, "nestHost");
-        if (visitNestHostCalled) {
-            throw new IllegalStateException("visitNestHost can be called only once.");
-        }
-        if (nestMemberPackageName != null) {
-            throw new IllegalStateException("visitNestHost and visitNestMember are mutually exclusive.");
-        }
-        visitNestHostCalled = true;
-        super.visitNestHost(nestHost);
-    }
-
-    @Override
-    public void visitOuterClass(final String owner, final String name, final String descriptor) {
-        checkState();
-        if (visitOuterClassCalled) {
-            throw new IllegalStateException("visitOuterClass can be called only once.");
-        }
-        visitOuterClassCalled = true;
-        if (owner == null) {
-            throw new IllegalArgumentException("Illegal outer class owner");
-        }
-        if (descriptor != null) {
-            CheckMethodAdapter.checkMethodDescriptor(version, descriptor);
-        }
-        super.visitOuterClass(owner, name, descriptor);
-    }
-
-    @Override
-    public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
-        checkState();
-        CheckMethodAdapter.checkDescriptor(version, descriptor, false);
-        return new CheckAnnotationAdapter(super.visitAnnotation(descriptor, visible));
-    }
-
-    @Override
-    public AnnotationVisitor visitTypeAnnotation(
-            final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
-        checkState();
-        int sort = new TypeReference(typeRef).getSort();
-        if (sort != TypeReference.CLASS_TYPE_PARAMETER
-                && sort != TypeReference.CLASS_TYPE_PARAMETER_BOUND
-                && sort != TypeReference.CLASS_EXTENDS) {
-            throw new IllegalArgumentException(
-                    "Invalid type reference sort 0x" + Integer.toHexString(sort));
-        }
-        checkTypeRef(typeRef);
-        CheckMethodAdapter.checkDescriptor(version, descriptor, false);
-        return new CheckAnnotationAdapter(
-                super.visitTypeAnnotation(typeRef, typePath, descriptor, visible));
-    }
-
-    @Override
-    public void visitAttribute(final Attribute attribute) {
-        checkState();
-        if (attribute == null) {
-            throw new IllegalArgumentException("Invalid attribute (must not be null)");
-        }
-        super.visitAttribute(attribute);
-    }
-
-    @Override
-    public void visitNestMember(final String nestMember) {
-        checkState();
-        CheckMethodAdapter.checkInternalName(version, nestMember, "nestMember");
-        if (visitNestHostCalled) {
-            throw new IllegalStateException(
-                    "visitMemberOfNest and visitNestHost are mutually exclusive.");
-        }
-        String packageName = packageName(nestMember);
-        if (nestMemberPackageName == null) {
-            nestMemberPackageName = packageName;
-        } else if (!nestMemberPackageName.equals(packageName)) {
-            throw new IllegalStateException(
-                    "nest member " + nestMember + " should be in the package " + nestMemberPackageName);
-        }
-        super.visitNestMember(nestMember);
-    }
-
-    @Override
-    public void visitPermittedSubclass(final String permittedSubclass) {
-        checkState();
-        CheckMethodAdapter.checkInternalName(version, permittedSubclass, "permittedSubclass");
-        super.visitPermittedSubclass(permittedSubclass);
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Static verification methods
-    // -----------------------------------------------------------------------------------------------
-
-    @Override
-    public void visitInnerClass(
-            final String name, final String outerName, final String innerName, final int access) {
-        checkState();
-        CheckMethodAdapter.checkInternalName(version, name, "class name");
-        if (outerName != null) {
-            CheckMethodAdapter.checkInternalName(version, outerName, "outer class name");
-        }
-        if (innerName != null) {
-            int startIndex = 0;
-            while (startIndex < innerName.length() && Character.isDigit(innerName.charAt(startIndex))) {
-                startIndex++;
-            }
-            if (startIndex == 0 || startIndex < innerName.length()) {
-                CheckMethodAdapter.checkIdentifier(version, innerName, startIndex, -1, "inner class name");
-            }
-        }
-        checkAccess(
-                access,
-                Opcodes.ACC_PUBLIC
-                        | Opcodes.ACC_PRIVATE
-                        | Opcodes.ACC_PROTECTED
-                        | Opcodes.ACC_STATIC
-                        | Opcodes.ACC_FINAL
-                        | Opcodes.ACC_INTERFACE
-                        | Opcodes.ACC_ABSTRACT
-                        | Opcodes.ACC_SYNTHETIC
-                        | Opcodes.ACC_ANNOTATION
-                        | Opcodes.ACC_ENUM);
-        super.visitInnerClass(name, outerName, innerName, access);
-    }
-
-    @Override
-    public RecordComponentVisitor visitRecordComponent(
-            final String name, final String descriptor, final String signature) {
-        checkState();
-        CheckMethodAdapter.checkUnqualifiedName(version, name, "record component name");
-        CheckMethodAdapter.checkDescriptor(version, descriptor, /* canBeVoid = */ false);
-        if (signature != null) {
-            checkFieldSignature(signature);
-        }
-        return new CheckRecordComponentAdapter(
-                api, super.visitRecordComponent(name, descriptor, signature));
-    }
-
-    @Override
-    public FieldVisitor visitField(
-            final int access,
-            final String name,
-            final String descriptor,
-            final String signature,
-            final Object value) {
-        checkState();
-        checkAccess(
-                access,
-                Opcodes.ACC_PUBLIC
-                        | Opcodes.ACC_PRIVATE
-                        | Opcodes.ACC_PROTECTED
-                        | Opcodes.ACC_STATIC
-                        | Opcodes.ACC_FINAL
-                        | Opcodes.ACC_VOLATILE
-                        | Opcodes.ACC_TRANSIENT
-                        | Opcodes.ACC_SYNTHETIC
-                        | Opcodes.ACC_ENUM
-                        | Opcodes.ACC_MANDATED
-                        | Opcodes.ACC_DEPRECATED);
-        CheckMethodAdapter.checkUnqualifiedName(version, name, "field name");
-        CheckMethodAdapter.checkDescriptor(version, descriptor, /* canBeVoid = */ false);
-        if (signature != null) {
-            checkFieldSignature(signature);
-        }
-        if (value != null) {
-            CheckMethodAdapter.checkConstant(value);
-        }
-        return new CheckFieldAdapter(api, super.visitField(access, name, descriptor, signature, value));
-    }
-
-    @Override
-    public MethodVisitor visitMethod(
-            final int access,
-            final String name,
-            final String descriptor,
-            final String signature,
-            final String[] exceptions) {
-        checkState();
-        checkMethodAccess(
-                version,
-                access,
-                Opcodes.ACC_PUBLIC
-                        | Opcodes.ACC_PRIVATE
-                        | Opcodes.ACC_PROTECTED
-                        | Opcodes.ACC_STATIC
-                        | Opcodes.ACC_FINAL
-                        | Opcodes.ACC_SYNCHRONIZED
-                        | Opcodes.ACC_BRIDGE
-                        | Opcodes.ACC_VARARGS
-                        | Opcodes.ACC_NATIVE
-                        | Opcodes.ACC_ABSTRACT
-                        | Opcodes.ACC_STRICT
-                        | Opcodes.ACC_SYNTHETIC
-                        | Opcodes.ACC_MANDATED
-                        | Opcodes.ACC_DEPRECATED);
-        if (!"<init>".equals(name) && !"<clinit>".equals(name)) {
-            CheckMethodAdapter.checkMethodIdentifier(version, name, "method name");
-        }
-        CheckMethodAdapter.checkMethodDescriptor(version, descriptor);
-        if (signature != null) {
-            checkMethodSignature(signature);
-        }
-        if (exceptions != null) {
-            for (int i = 0; i < exceptions.length; ++i) {
-                CheckMethodAdapter.checkInternalName(
-                        version, exceptions[i], "exception name at index " + i);
-            }
-        }
-        CheckMethodAdapter checkMethodAdapter;
-        MethodVisitor methodVisitor =
-                super.visitMethod(access, name, descriptor, signature, exceptions);
-        if (checkDataFlow) {
-            if (cv instanceof ClassWriter) {
-                methodVisitor =
-                        new CheckMethodAdapter.MethodWriterWrapper(
-                                api, version, (ClassWriter) cv, methodVisitor);
-            }
-            checkMethodAdapter =
-                    new CheckMethodAdapter(api, access, name, descriptor, methodVisitor, labelInsnIndices);
-        } else {
-            checkMethodAdapter = new CheckMethodAdapter(api, methodVisitor, labelInsnIndices);
-        }
-        checkMethodAdapter.version = version;
-        return checkMethodAdapter;
-    }
-
-    @Override
-    public void visitEnd() {
-        checkState();
-        visitEndCalled = true;
-        super.visitEnd();
-    }
-
-    /**
-     * Checks that the visit method has been called and that visitEnd has not been called.
-     */
-    private void checkState() {
-        if (!visitCalled) {
-            throw new IllegalStateException("Cannot visit member before visit has been called.");
-        }
-        if (visitEndCalled) {
-            throw new IllegalStateException("Cannot visit member after visitEnd has been called.");
         }
     }
 }

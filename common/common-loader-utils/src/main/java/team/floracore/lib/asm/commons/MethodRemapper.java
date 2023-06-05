@@ -1,3 +1,4 @@
+
 package team.floracore.lib.asm.commons;
 
 import team.floracore.lib.asm.*;
@@ -109,11 +110,6 @@ public class MethodRemapper extends MethodVisitor {
     }
 
     @Override
-    public void visitTypeInsn(final int opcode, final String type) {
-        super.visitTypeInsn(opcode, remapper.mapType(type));
-    }
-
-    @Override
     public void visitFieldInsn(
             final int opcode, final String owner, final String name, final String descriptor) {
         super.visitFieldInsn(
@@ -158,6 +154,11 @@ public class MethodRemapper extends MethodVisitor {
                 remapper.mapMethodDesc(descriptor),
                 (Handle) remapper.mapValue(bootstrapMethodHandle),
                 remappedBootstrapMethodArguments);
+    }
+
+    @Override
+    public void visitTypeInsn(final int opcode, final String type) {
+        super.visitTypeInsn(opcode, remapper.mapType(type));
     }
 
     @Override
@@ -234,6 +235,19 @@ public class MethodRemapper extends MethodVisitor {
      * Constructs a new remapper for annotations. The default implementation of this method returns a
      * new {@link AnnotationRemapper}.
      *
+     * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
+     * @return the newly created remapper.
+     * @deprecated use {@link #createAnnotationRemapper(String, AnnotationVisitor)} instead.
+     */
+    @Deprecated
+    protected AnnotationVisitor createAnnotationRemapper(final AnnotationVisitor annotationVisitor) {
+        return new AnnotationRemapper(api, /* descriptor = */ null, annotationVisitor, remapper);
+    }
+
+    /**
+     * Constructs a new remapper for annotations. The default implementation of this method returns a
+     * new {@link AnnotationRemapper}.
+     *
      * @param descriptor        the descriptor of the visited annotation.
      * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
      * @return the newly created remapper.
@@ -242,18 +256,5 @@ public class MethodRemapper extends MethodVisitor {
             final String descriptor, final AnnotationVisitor annotationVisitor) {
         return new AnnotationRemapper(api, descriptor, annotationVisitor, remapper)
                 .orDeprecatedValue(createAnnotationRemapper(annotationVisitor));
-    }
-
-    /**
-     * Constructs a new remapper for annotations. The default implementation of this method returns a
-     * new {@link AnnotationRemapper}.
-     *
-     * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
-     * @return the newly created remapper.
-     * @deprecated use {@link #createAnnotationRemapper(String, AnnotationVisitor)} instead.
-     */
-    @Deprecated
-    protected AnnotationVisitor createAnnotationRemapper(final AnnotationVisitor annotationVisitor) {
-        return new AnnotationRemapper(api, /* descriptor = */ null, annotationVisitor, remapper);
     }
 }

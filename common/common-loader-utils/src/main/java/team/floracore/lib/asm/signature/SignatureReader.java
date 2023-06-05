@@ -14,9 +14,7 @@ import team.floracore.lib.asm.MethodVisitor;
  */
 public class SignatureReader {
 
-    /**
-     * The JVMS signature to be read.
-     */
+    /** The JVMS signature to be read. */
     private final String signatureValue;
 
     /**
@@ -31,8 +29,8 @@ public class SignatureReader {
     /**
      * Parses a JavaTypeSignature and makes the given visitor visit it.
      *
-     * @param signature        a string containing the signature that must be parsed.
-     * @param startOffset      index of the first character of the signature to parsed.
+     * @param signature a string containing the signature that must be parsed.
+     * @param startOffset index of the first character of the signature to parsed.
      * @param signatureVisitor the visitor that must visit this signature.
      * @return the index of the first character after the parsed signature.
      */
@@ -121,9 +119,7 @@ public class SignatureReader {
                                     // Extends or Super TypeArgument. Use offset + 1 to skip the '+' or '-'.
                                     offset =
                                             parseType(
-                                                    signature,
-                                                    offset + 1,
-                                                    signatureVisitor.visitTypeArgument(currentChar));
+                                                    signature, offset + 1, signatureVisitor.visitTypeArgument(currentChar));
                                     break;
                                 default:
                                     // Instanceof TypeArgument. The '=' is implicit.
@@ -187,8 +183,7 @@ public class SignatureReader {
                 // (note that currentChar is now the first character of the next TypeParameter, and that
                 // offset points to the second character), unless the character just after this
                 // TypeParameter signals the end of the TypeParameters.
-            }
-            while (currentChar != '>');
+            } while (currentChar != '>');
         } else {
             offset = 0;
         }

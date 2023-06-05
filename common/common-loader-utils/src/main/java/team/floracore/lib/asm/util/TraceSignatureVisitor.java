@@ -283,30 +283,6 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
 
     // -----------------------------------------------------------------------------------------------
 
-    private void endType() {
-        if (arrayStack % 2 == 0) {
-            arrayStack /= 2;
-        } else {
-            while (arrayStack % 2 != 0) {
-                arrayStack /= 2;
-                declaration.append("[]");
-            }
-        }
-    }
-
-    private void endFormals() {
-        if (formalTypeParameterVisited) {
-            declaration.append('>');
-            formalTypeParameterVisited = false;
-        }
-    }
-
-    private void startType() {
-        arrayStack *= 2;
-    }
-
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Returns the Java generic type declaration corresponding to the visited signature.
      *
@@ -332,5 +308,29 @@ public final class TraceSignatureVisitor extends SignatureVisitor {
      */
     public String getExceptions() {
         return exceptions == null ? null : exceptions.toString();
+    }
+
+    // -----------------------------------------------------------------------------------------------
+
+    private void endFormals() {
+        if (formalTypeParameterVisited) {
+            declaration.append('>');
+            formalTypeParameterVisited = false;
+        }
+    }
+
+    private void startType() {
+        arrayStack *= 2;
+    }
+
+    private void endType() {
+        if (arrayStack % 2 == 0) {
+            arrayStack /= 2;
+        } else {
+            while (arrayStack % 2 != 0) {
+                arrayStack /= 2;
+                declaration.append("[]");
+            }
+        }
     }
 }

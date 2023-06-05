@@ -96,15 +96,15 @@ public class CheckAnnotationAdapter extends AnnotationVisitor {
         super.visitEnd();
     }
 
-    private void checkVisitEndNotCalled() {
-        if (visitEndCalled) {
-            throw new IllegalStateException("Cannot call a visit method after visitEnd has been called");
-        }
-    }
-
     private void checkName(final String name) {
         if (useNamedValue && name == null) {
             throw new IllegalArgumentException("Annotation value name must not be null");
+        }
+    }
+
+    private void checkVisitEndNotCalled() {
+        if (visitEndCalled) {
+            throw new IllegalStateException("Cannot call a visit method after visitEnd has been called");
         }
     }
 }

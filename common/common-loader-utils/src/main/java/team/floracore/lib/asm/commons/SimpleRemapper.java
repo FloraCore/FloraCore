@@ -1,3 +1,4 @@
+
 package team.floracore.lib.asm.commons;
 
 import team.floracore.lib.asm.Type;
@@ -48,12 +49,6 @@ public class SimpleRemapper extends Remapper {
     }
 
     @Override
-    public String mapAnnotationAttributeName(final String descriptor, final String name) {
-        String remappedName = map(descriptor + '.' + name);
-        return remappedName == null ? name : remappedName;
-    }
-
-    @Override
     public String mapMethodName(final String owner, final String name, final String descriptor) {
         String remappedName = map(owner + '.' + name + descriptor);
         return remappedName == null ? name : remappedName;
@@ -62,6 +57,12 @@ public class SimpleRemapper extends Remapper {
     @Override
     public String mapInvokeDynamicMethodName(final String name, final String descriptor) {
         String remappedName = map('.' + name + descriptor);
+        return remappedName == null ? name : remappedName;
+    }
+
+    @Override
+    public String mapAnnotationAttributeName(final String descriptor, final String name) {
+        String remappedName = map(descriptor + '.' + name);
         return remappedName == null ? name : remappedName;
     }
 

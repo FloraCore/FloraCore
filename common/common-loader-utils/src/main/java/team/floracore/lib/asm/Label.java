@@ -127,11 +127,7 @@ public class Label {
      * #FLAG_SUBROUTINE_END}.
      */
     short flags;
-    /**
-     * The offset of this label in the bytecode of its method, in bytes. This value is set if and only
-     * if the {@link #FLAG_RESOLVED} flag is set.
-     */
-    int bytecodeOffset;
+
     /**
      * The number of elements in the input stack of the basic block corresponding to this label. This
      * field is computed in {@link MethodWriter#computeMaxStackAndLocal}.
@@ -142,6 +138,12 @@ public class Label {
      * label. This field is only computed for basic blocks that end with a RET instruction.
      */
     short outputStackSize;
+
+    /**
+     * The offset of this label in the bytecode of its method, in bytes. This value is set if and only
+     * if the {@link #FLAG_RESOLVED} flag is set.
+     */
+    int bytecodeOffset;
     /**
      * The maximum height reached by the output stack, relatively to the top of the input stack, in
      * the basic block corresponding to this label. This maximum is always positive or {@literal
@@ -172,50 +174,6 @@ public class Label {
     // The algorithm used to compute the maximum stack size only computes the relative output and
     // absolute input stack heights, while the algorithm used to compute stack map frames computes
     // relative output frames and absolute input frames.
-    /**
-     * The id of the subroutine to which this basic block belongs, or 0. If the basic block belongs to
-     * several subroutines, this is the id of the "oldest" subroutine that contains it (with the
-     * convention that a subroutine calling another one is "older" than the callee). This field is
-     * computed in {@link MethodWriter#computeMaxStackAndLocal}, if the method contains JSR
-     * instructions.
-     */
-    short subroutineId;
-    /**
-     * The input and output stack map frames of the basic block corresponding to this label. This
-     * field is only used when the {@link MethodWriter#COMPUTE_ALL_FRAMES} or {@link
-     * MethodWriter#COMPUTE_INSERTED_FRAMES} option is used.
-     */
-    Frame frame;
-    /**
-     * The successor of this label, in the order they are visited in {@link MethodVisitor#visitLabel}.
-     * This linked list does not include labels used for debug info only. If the {@link
-     * MethodWriter#COMPUTE_ALL_FRAMES} or {@link MethodWriter#COMPUTE_INSERTED_FRAMES} option is used
-     * then it does not contain either successive labels that denote the same bytecode offset (in this
-     * case only the first label appears in this list).
-     */
-    Label nextBasicBlock;
-    /**
-     * The outgoing edges of the basic block corresponding to this label, in the control flow graph of
-     * its method. These edges are stored in a linked list of {@link Edge} objects, linked to each
-     * other by their {@link Edge#nextEdge} field.
-     */
-    Edge outgoingEdges;
-    /**
-     * The next element in the list of labels to which this label belongs, or {@literal null} if it
-     * does not belong to any list. All lists of labels must end with the {@link #EMPTY_LIST}
-     * sentinel, in order to ensure that this field is null if and only if this label does not belong
-     * to a list of labels. Note that there can be several lists of labels at the same time, but that
-     * a label can belong to at most one list at a time (unless some lists share a common tail, but
-     * this is not used in practice).
-     *
-     * <p>List of labels are used in {@link MethodWriter#computeAllFrames} and {@link
-     * MethodWriter#computeMaxStackAndLocal} to compute stack map frames and the maximum stack size,
-     * respectively, as well as in {@link #markSubroutine} and {@link #addSubroutineRetSuccessors} to
-     * compute the basic blocks belonging to subroutines and their outgoing edges. Outside of these
-     * methods, this field should be null (this property is a precondition and a postcondition of
-     * these methods).
-     */
-    Label nextListElement;
     /**
      * The source line number corresponding to this label, if {@link #FLAG_LINE_NUMBER} is set. If
      * there are several source line numbers corresponding to this label, the first one is stored in
@@ -252,6 +210,55 @@ public class Label {
      * the instruction itself).
      */
     private int[] forwardReferences;
+
+    /**
+     * The id of the subroutine to which this basic block belongs, or 0. If the basic block belongs to
+     * several subroutines, this is the id of the "oldest" subroutine that contains it (with the
+     * convention that a subroutine calling another one is "older" than the callee). This field is
+     * computed in {@link MethodWriter#computeMaxStackAndLocal}, if the method contains JSR
+     * instructions.
+     */
+    short subroutineId;
+
+    /**
+     * The input and output stack map frames of the basic block corresponding to this label. This
+     * field is only used when the {@link MethodWriter#COMPUTE_ALL_FRAMES} or {@link
+     * MethodWriter#COMPUTE_INSERTED_FRAMES} option is used.
+     */
+    Frame frame;
+
+    /**
+     * The successor of this label, in the order they are visited in {@link MethodVisitor#visitLabel}.
+     * This linked list does not include labels used for debug info only. If the {@link
+     * MethodWriter#COMPUTE_ALL_FRAMES} or {@link MethodWriter#COMPUTE_INSERTED_FRAMES} option is used
+     * then it does not contain either successive labels that denote the same bytecode offset (in this
+     * case only the first label appears in this list).
+     */
+    Label nextBasicBlock;
+
+    /**
+     * The outgoing edges of the basic block corresponding to this label, in the control flow graph of
+     * its method. These edges are stored in a linked list of {@link Edge} objects, linked to each
+     * other by their {@link Edge#nextEdge} field.
+     */
+    Edge outgoingEdges;
+
+    /**
+     * The next element in the list of labels to which this label belongs, or {@literal null} if it
+     * does not belong to any list. All lists of labels must end with the {@link #EMPTY_LIST}
+     * sentinel, in order to ensure that this field is null if and only if this label does not belong
+     * to a list of labels. Note that there can be several lists of labels at the same time, but that
+     * a label can belong to at most one list at a time (unless some lists share a common tail, but
+     * this is not used in practice).
+     *
+     * <p>List of labels are used in {@link MethodWriter#computeAllFrames} and {@link
+     * MethodWriter#computeMaxStackAndLocal} to compute stack map frames and the maximum stack size,
+     * respectively, as well as in {@link #markSubroutine} and {@link #addSubroutineRetSuccessors} to
+     * compute the basic blocks belonging to subroutines and their outgoing edges. Outside of these
+     * methods, this field should be null (this property is a precondition and a postcondition of
+     * these methods).
+     */
+    Label nextListElement;
 
     // -----------------------------------------------------------------------------------------------
     // Constructor and accessors
@@ -496,34 +503,6 @@ public class Label {
     }
 
     /**
-     * Adds the successors of this label in the method's control flow graph (except those
-     * corresponding to a jsr target, and those already in a list of labels) to the given list of
-     * blocks to process, and returns the new list.
-     *
-     * @param listOfLabelsToProcess a list of basic blocks to process, linked together with their
-     *                              {@link #nextListElement} field.
-     * @return the new list of blocks to process.
-     */
-    private Label pushSuccessors(final Label listOfLabelsToProcess) {
-        Label newListOfLabelsToProcess = listOfLabelsToProcess;
-        Edge outgoingEdge = outgoingEdges;
-        while (outgoingEdge != null) {
-            // By construction, the second outgoing edge of a basic block that ends with a jsr instruction
-            // leads to the jsr target (see {@link #FLAG_SUBROUTINE_CALLER}).
-            boolean isJsrTarget =
-                    (flags & Label.FLAG_SUBROUTINE_CALLER) != 0 && outgoingEdge == outgoingEdges.nextEdge;
-            if (!isJsrTarget && outgoingEdge.successor.nextListElement == null) {
-                // Add this successor to the list of blocks to process, if it does not already belong to a
-                // list of labels.
-                outgoingEdge.successor.nextListElement = newListOfLabelsToProcess;
-                newListOfLabelsToProcess = outgoingEdge.successor;
-            }
-            outgoingEdge = outgoingEdge.nextEdge;
-        }
-        return newListOfLabelsToProcess;
-    }
-
-    /**
      * Finds the basic blocks that end a subroutine starting with the basic block corresponding to
      * this label and, for each one of them, adds an outgoing edge to the basic block following the
      * given subroutine call. In other words, completes the control flow graph by adding the edges
@@ -579,6 +558,34 @@ public class Label {
             listOfProcessedBlocks.nextListElement = null;
             listOfProcessedBlocks = newListOfProcessedBlocks;
         }
+    }
+
+    /**
+     * Adds the successors of this label in the method's control flow graph (except those
+     * corresponding to a jsr target, and those already in a list of labels) to the given list of
+     * blocks to process, and returns the new list.
+     *
+     * @param listOfLabelsToProcess a list of basic blocks to process, linked together with their
+     *                              {@link #nextListElement} field.
+     * @return the new list of blocks to process.
+     */
+    private Label pushSuccessors(final Label listOfLabelsToProcess) {
+        Label newListOfLabelsToProcess = listOfLabelsToProcess;
+        Edge outgoingEdge = outgoingEdges;
+        while (outgoingEdge != null) {
+            // By construction, the second outgoing edge of a basic block that ends with a jsr instruction
+            // leads to the jsr target (see {@link #FLAG_SUBROUTINE_CALLER}).
+            boolean isJsrTarget =
+                    (flags & Label.FLAG_SUBROUTINE_CALLER) != 0 && outgoingEdge == outgoingEdges.nextEdge;
+            if (!isJsrTarget && outgoingEdge.successor.nextListElement == null) {
+                // Add this successor to the list of blocks to process, if it does not already belong to a
+                // list of labels.
+                outgoingEdge.successor.nextListElement = newListOfLabelsToProcess;
+                newListOfLabelsToProcess = outgoingEdge.successor;
+            }
+            outgoingEdge = outgoingEdge.nextEdge;
+        }
+        return newListOfLabelsToProcess;
     }
 
     // -----------------------------------------------------------------------------------------------

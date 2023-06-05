@@ -1,3 +1,4 @@
+
 package team.floracore.lib.asm;
 
 /**
@@ -133,13 +134,6 @@ public final class Handle {
     }
 
     @Override
-    public int hashCode() {
-        return tag
-                + (isInterface ? 64 : 0)
-                + owner.hashCode() * name.hashCode() * descriptor.hashCode();
-    }
-
-    @Override
     public boolean equals(final Object object) {
         if (object == this) {
             return true;
@@ -153,6 +147,13 @@ public final class Handle {
                 && owner.equals(handle.owner)
                 && name.equals(handle.name)
                 && descriptor.equals(handle.descriptor);
+    }
+
+    @Override
+    public int hashCode() {
+        return tag
+                + (isInterface ? 64 : 0)
+                + owner.hashCode() * name.hashCode() * descriptor.hashCode();
     }
 
     /**

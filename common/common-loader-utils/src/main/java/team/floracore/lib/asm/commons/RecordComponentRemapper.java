@@ -1,3 +1,4 @@
+
 package team.floracore.lib.asm.commons;
 
 import team.floracore.lib.asm.AnnotationVisitor;
@@ -67,6 +68,19 @@ public class RecordComponentRemapper extends RecordComponentVisitor {
      * Constructs a new remapper for annotations. The default implementation of this method returns a
      * new {@link AnnotationRemapper}.
      *
+     * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
+     * @return the newly created remapper.
+     * @deprecated use {@link #createAnnotationRemapper(String, AnnotationVisitor)} instead.
+     */
+    @Deprecated
+    protected AnnotationVisitor createAnnotationRemapper(final AnnotationVisitor annotationVisitor) {
+        return new AnnotationRemapper(api, /* descriptor = */ null, annotationVisitor, remapper);
+    }
+
+    /**
+     * Constructs a new remapper for annotations. The default implementation of this method returns a
+     * new {@link AnnotationRemapper}.
+     *
      * @param descriptor        the descriptor sof the visited annotation.
      * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
      * @return the newly created remapper.
@@ -75,18 +89,5 @@ public class RecordComponentRemapper extends RecordComponentVisitor {
             final String descriptor, final AnnotationVisitor annotationVisitor) {
         return new AnnotationRemapper(api, descriptor, annotationVisitor, remapper)
                 .orDeprecatedValue(createAnnotationRemapper(annotationVisitor));
-    }
-
-    /**
-     * Constructs a new remapper for annotations. The default implementation of this method returns a
-     * new {@link AnnotationRemapper}.
-     *
-     * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
-     * @return the newly created remapper.
-     * @deprecated use {@link #createAnnotationRemapper(String, AnnotationVisitor)} instead.
-     */
-    @Deprecated
-    protected AnnotationVisitor createAnnotationRemapper(final AnnotationVisitor annotationVisitor) {
-        return new AnnotationRemapper(api, /* descriptor = */ null, annotationVisitor, remapper);
     }
 }

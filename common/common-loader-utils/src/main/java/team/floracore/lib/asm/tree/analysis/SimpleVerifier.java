@@ -160,6 +160,59 @@ public class SimpleVerifier extends BasicVerifier {
     }
 
     @Override
+    protected boolean isArrayValue(final BasicValue value) {
+        Type type = value.getType();
+        return type != null && (type.getSort() == Type.ARRAY || type.equals(NULL_TYPE));
+    }
+
+    @Override
+    protected BasicValue getElementValue(final BasicValue objectArrayValue) throws AnalyzerException {
+        Type arrayType = objectArrayValue.getType();
+        if (arrayType != null) {
+            if (arrayType.getSort() == Type.ARRAY) {
+                return newValue(Type.getType(arrayType.getDescriptor().substring(1)));
+            } else if (arrayType.equals(NULL_TYPE)) {
+                return objectArrayValue;
+            }
+        }
+        throw new AssertionError();
+    }
+
+    @Override
+    protected boolean isSubTypeOf(final BasicValue value, final BasicValue expected) {
+        Type expectedType = expected.getType();
+        Type type = value.getType();
+        switch (expectedType.getSort()) {
+            case Type.INT:
+            case Type.FLOAT:
+            case Type.LONG:
+            case Type.DOUBLE:
+                return type.equals(expectedType);
+            case Type.ARRAY:
+            case Type.OBJECT:
+                if (type.equals(NULL_TYPE)) {
+                    return true;
+                } else if (type.getSort() == Type.OBJECT || type.getSort() == Type.ARRAY) {
+                    if (isAssignableFrom(expectedType, type)) {
+                        return true;
+                    } else if (getClass(expectedType).isInterface()) {
+                        // The merge of class or interface types can only yield class types (because it is not
+                        // possible in general to find an unambiguous common super interface, due to multiple
+                        // inheritance). Because of this limitation, we need to relax the subtyping check here
+                        // if 'value' is an interface.
+                        return Object.class.isAssignableFrom(getClass(type));
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            default:
+                throw new AssertionError();
+        }
+    }
+
+    @Override
     public BasicValue merge(final BasicValue value1, final BasicValue value2) {
         if (!value1.equals(value2)) {
             Type type1 = value1.getType();
@@ -203,59 +256,6 @@ public class SimpleVerifier extends BasicVerifier {
             return BasicValue.UNINITIALIZED_VALUE;
         }
         return value1;
-    }
-
-    @Override
-    protected BasicValue getElementValue(final BasicValue objectArrayValue) throws AnalyzerException {
-        Type arrayType = objectArrayValue.getType();
-        if (arrayType != null) {
-            if (arrayType.getSort() == Type.ARRAY) {
-                return newValue(Type.getType(arrayType.getDescriptor().substring(1)));
-            } else if (arrayType.equals(NULL_TYPE)) {
-                return objectArrayValue;
-            }
-        }
-        throw new AssertionError();
-    }
-
-    @Override
-    protected boolean isArrayValue(final BasicValue value) {
-        Type type = value.getType();
-        return type != null && (type.getSort() == Type.ARRAY || type.equals(NULL_TYPE));
-    }
-
-    @Override
-    protected boolean isSubTypeOf(final BasicValue value, final BasicValue expected) {
-        Type expectedType = expected.getType();
-        Type type = value.getType();
-        switch (expectedType.getSort()) {
-            case Type.INT:
-            case Type.FLOAT:
-            case Type.LONG:
-            case Type.DOUBLE:
-                return type.equals(expectedType);
-            case Type.ARRAY:
-            case Type.OBJECT:
-                if (type.equals(NULL_TYPE)) {
-                    return true;
-                } else if (type.getSort() == Type.OBJECT || type.getSort() == Type.ARRAY) {
-                    if (isAssignableFrom(expectedType, type)) {
-                        return true;
-                    } else if (getClass(expectedType).isInterface()) {
-                        // The merge of class or interface types can only yield class types (because it is not
-                        // possible in general to find an unambiguous common super interface, due to multiple
-                        // inheritance). Because of this limitation, we need to relax the subtyping check here
-                        // if 'value' is an interface.
-                        return Object.class.isAssignableFrom(getClass(type));
-                    } else {
-                        return false;
-                    }
-                } else {
-                    return false;
-                }
-            default:
-                throw new AssertionError();
-        }
     }
 
     private BasicValue newArrayValue(final Type type, final int dimensions) {

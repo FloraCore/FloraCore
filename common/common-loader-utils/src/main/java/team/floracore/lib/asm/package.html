@@ -30,17 +30,17 @@
  * THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <head>
-    <title>Package team.floracore.lib.asm</title>
+  <title>Package org.objectweb.asm</title>
 </head>
 <body>
 Provides a small and fast bytecode manipulation framework.
 
 <p>
     The <a href="http://asm.ow2.org/">ASM</a> framework is organized
-    around the {@link team.floracore.lib.asm.ClassVisitor ClassVisitor},
-    {@link team.floracore.lib.asm.FieldVisitor FieldVisitor},
-    {@link team.floracore.lib.asm.MethodVisitor MethodVisitor} and
-    {@link team.floracore.lib.asm.AnnotationVisitor AnnotationVisitor} abstract classes,
+    around the {@link org.objectweb.asm.ClassVisitor ClassVisitor},
+    {@link org.objectweb.asm.FieldVisitor FieldVisitor},
+    {@link org.objectweb.asm.MethodVisitor MethodVisitor} and
+    {@link org.objectweb.asm.AnnotationVisitor AnnotationVisitor} abstract classes,
     which allow one to visit the fields, methods and annotations of a class,
     including the bytecode instructions of each method.
 
@@ -53,7 +53,7 @@ Provides a small and fast bytecode manipulation framework.
 
 <p>
     In order to generate a class from scratch, only the {@link
-    team.floracore.lib.asm.ClassWriter ClassWriter} class is necessary. Indeed,
+    org.objectweb.asm.ClassWriter ClassWriter} class is necessary. Indeed,
     in order to generate a class, one must just call its visit<em>Xxx</em>
     methods with the appropriate arguments to generate the desired fields
     and methods.

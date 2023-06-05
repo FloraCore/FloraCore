@@ -41,8 +41,7 @@ public class InvokeDynamicInsnNode extends AbstractInsnNode {
      * @param descriptor               the method's descriptor (see {@link Type}).
      * @param bootstrapMethodHandle    the bootstrap method.
      * @param bootstrapMethodArguments the bootstrap method constant arguments. Each argument must be
-     *                                 an {@link Integer}, {@link Float}, {@link Long}, {@link Double}, {@link String}
-     *                                 , {@link
+     *                                 an {@link Integer}, {@link Float}, {@link Long}, {@link Double}, {@link String}, {@link
      *                                 Type} or {@link Handle} value. This method is allowed to modify the
      *                                 content of the array so a caller should expect that this array may change.
      */

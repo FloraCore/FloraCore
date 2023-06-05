@@ -52,8 +52,8 @@ import java.util.List;
  *       and checks the stack map frames compatibility with {@link #checkMerge}.
  * </ul>
  *
- * @param <V> type of the {@link Value} used for the analysis.
  * @author Eric Bruneton
+ * @param <V> type of the {@link Value} used for the analysis.
  */
 class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
 
@@ -76,16 +76,6 @@ class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
     CheckFrameAnalyzer(final Interpreter<V> interpreter) {
         super(interpreter);
         this.interpreter = interpreter;
-    }
-
-    /**
-     * Returns true if the given instruction node corresponds to a real JVM instruction.
-     *
-     * @param insnNode an instruction node.
-     * @return true except for label, line number and stack map frame nodes.
-     */
-    private static boolean isJvmInsnNode(final AbstractInsnNode insnNode) {
-        return insnNode.getOpcode() >= 0;
     }
 
     @Override
@@ -437,5 +427,15 @@ class CheckFrameAnalyzer<V extends Value> extends Analyzer<V> {
             insn = insn.getNext();
         }
         return false;
+    }
+
+    /**
+     * Returns true if the given instruction node corresponds to a real JVM instruction.
+     *
+     * @param insnNode an instruction node.
+     * @return true except for label, line number and stack map frame nodes.
+     */
+    private static boolean isJvmInsnNode(final AbstractInsnNode insnNode) {
+        return insnNode.getOpcode() >= 0;
     }
 }

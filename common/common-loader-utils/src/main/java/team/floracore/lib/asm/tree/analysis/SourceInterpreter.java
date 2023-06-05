@@ -37,13 +37,6 @@ public class SourceInterpreter extends Interpreter<SourceValue> implements Opcod
         super(api);
     }
 
-    private static <E> boolean containsAll(final Set<E> self, final Set<E> other) {
-        if (self.size() < other.size()) {
-            return false;
-        }
-        return self.containsAll(other);
-    }
-
     @Override
     public SourceValue newValue(final Type type) {
         if (type == Type.VOID_TYPE) {
@@ -186,5 +179,12 @@ public class SourceInterpreter extends Interpreter<SourceValue> implements Opcod
             return new SourceValue(Math.min(value1.size, value2.size), setUnion);
         }
         return value1;
+    }
+
+    private static <E> boolean containsAll(final Set<E> self, final Set<E> other) {
+        if (self.size() < other.size()) {
+            return false;
+        }
+        return self.containsAll(other);
     }
 }

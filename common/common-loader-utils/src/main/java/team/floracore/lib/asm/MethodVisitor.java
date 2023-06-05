@@ -274,8 +274,7 @@ public abstract class MethodVisitor {
      * @param stack    the operand stack types in this frame. This array must not be modified. Its
      *                 content has the same format as the "local" array.
      * @throws IllegalStateException if a frame is visited just after another one, without any
-     *                               instruction between the two (unless this frame is a Opcodes#F_SAME frame, in
-     *                               which case it
+     *                               instruction between the two (unless this frame is a Opcodes#F_SAME frame, in which case it
      *                               is silently ignored).
      */
     public void visitFrame(
@@ -434,10 +433,8 @@ public abstract class MethodVisitor {
      * @param descriptor               the method's descriptor (see {@link Type}).
      * @param bootstrapMethodHandle    the bootstrap method.
      * @param bootstrapMethodArguments the bootstrap method constant arguments. Each argument must be
-     *                                 an {@link Integer}, {@link Float}, {@link Long}, {@link Double}, {@link String}
-     *                                 , {@link
-     *                                 Type}, {@link Handle} or {@link ConstantDynamic} value. This method is allowed
-     *                                 to modify
+     *                                 an {@link Integer}, {@link Float}, {@link Long}, {@link Double}, {@link String}, {@link
+     *                                 Type}, {@link Handle} or {@link ConstantDynamic} value. This method is allowed to modify
      *                                 the content of the array so a caller should expect that this array may change.
      */
     public void visitInvokeDynamicInsn(

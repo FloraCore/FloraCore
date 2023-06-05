@@ -84,11 +84,6 @@ public class BasicValue implements Value {
     }
 
     @Override
-    public int hashCode() {
-        return type == null ? 0 : type.hashCode();
-    }
-
-    @Override
     public boolean equals(final Object value) {
         if (value == this) {
             return true;
@@ -101,6 +96,11 @@ public class BasicValue implements Value {
         } else {
             return false;
         }
+    }
+
+    @Override
+    public int hashCode() {
+        return type == null ? 0 : type.hashCode();
     }
 
     @Override

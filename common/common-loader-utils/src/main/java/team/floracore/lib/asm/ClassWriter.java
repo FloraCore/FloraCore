@@ -46,15 +46,18 @@ public class ClassWriter extends ClassVisitor {
 
     // Note: fields are ordered as in the ClassFile structure, and those related to attributes are
     // ordered as in Section 4.7 of the JVMS.
-    /**
-     * The symbol table for this class (contains the constant_pool and the BootstrapMethods).
-     */
-    private final SymbolTable symbolTable;
+
     /**
      * The minor_version and major_version fields of the JVMS ClassFile structure. minor_version is
      * stored in the 16 most significant bits, and major_version in the 16 least significant bits.
      */
     private int version;
+
+    /**
+     * The symbol table for this class (contains the constant_pool and the BootstrapMethods).
+     */
+    private final SymbolTable symbolTable;
+
     /**
      * The access_flags field of the JVMS ClassFile structure. This field can contain ASM specific
      * access flags, such as {@link Opcodes#ACC_DEPRECATED} or {@link Opcodes#ACC_RECORD}, which are
@@ -1067,8 +1070,7 @@ public class ClassWriter extends ClassVisitor {
         } else {
             do {
                 class1 = class1.getSuperclass();
-            }
-            while (!class1.isAssignableFrom(class2));
+            } while (!class1.isAssignableFrom(class2));
             return class1.getName().replace('.', '/');
         }
     }

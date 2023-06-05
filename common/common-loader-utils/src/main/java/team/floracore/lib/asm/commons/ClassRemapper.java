@@ -1,3 +1,4 @@
+
 package team.floracore.lib.asm.commons;
 
 import team.floracore.lib.asm.*;
@@ -84,19 +85,6 @@ public class ClassRemapper extends ClassVisitor {
     }
 
     @Override
-    public void visitNestHost(final String nestHost) {
-        super.visitNestHost(remapper.mapType(nestHost));
-    }
-
-    @Override
-    public void visitOuterClass(final String owner, final String name, final String descriptor) {
-        super.visitOuterClass(
-                remapper.mapType(owner),
-                name == null ? null : remapper.mapMethodName(owner, name, descriptor),
-                descriptor == null ? null : remapper.mapMethodDesc(descriptor));
-    }
-
-    @Override
     public AnnotationVisitor visitAnnotation(final String descriptor, final boolean visible) {
         AnnotationVisitor annotationVisitor =
                 super.visitAnnotation(remapper.mapDesc(descriptor), visible);
@@ -125,26 +113,6 @@ public class ClassRemapper extends ClassVisitor {
             }
         }
         super.visitAttribute(attribute);
-    }
-
-    @Override
-    public void visitNestMember(final String nestMember) {
-        super.visitNestMember(remapper.mapType(nestMember));
-    }
-
-    @Override
-    public void visitPermittedSubclass(final String permittedSubclass) {
-        super.visitPermittedSubclass(remapper.mapType(permittedSubclass));
-    }
-
-    @Override
-    public void visitInnerClass(
-            final String name, final String outerName, final String innerName, final int access) {
-        super.visitInnerClass(
-                remapper.mapType(name),
-                outerName == null ? null : remapper.mapType(outerName),
-                innerName == null ? null : remapper.mapInnerClassName(name, outerName, innerName),
-                access);
     }
 
     @Override
@@ -195,15 +163,37 @@ public class ClassRemapper extends ClassVisitor {
         return methodVisitor == null ? null : createMethodRemapper(methodVisitor);
     }
 
-    /**
-     * Constructs a new remapper for methods. The default implementation of this method returns a new
-     * {@link MethodRemapper}.
-     *
-     * @param methodVisitor the MethodVisitor the remapper must delegate to.
-     * @return the newly created remapper.
-     */
-    protected MethodVisitor createMethodRemapper(final MethodVisitor methodVisitor) {
-        return new MethodRemapper(api, methodVisitor, remapper);
+    @Override
+    public void visitInnerClass(
+            final String name, final String outerName, final String innerName, final int access) {
+        super.visitInnerClass(
+                remapper.mapType(name),
+                outerName == null ? null : remapper.mapType(outerName),
+                innerName == null ? null : remapper.mapInnerClassName(name, outerName, innerName),
+                access);
+    }
+
+    @Override
+    public void visitOuterClass(final String owner, final String name, final String descriptor) {
+        super.visitOuterClass(
+                remapper.mapType(owner),
+                name == null ? null : remapper.mapMethodName(owner, name, descriptor),
+                descriptor == null ? null : remapper.mapMethodDesc(descriptor));
+    }
+
+    @Override
+    public void visitNestHost(final String nestHost) {
+        super.visitNestHost(remapper.mapType(nestHost));
+    }
+
+    @Override
+    public void visitNestMember(final String nestMember) {
+        super.visitNestMember(remapper.mapType(nestMember));
+    }
+
+    @Override
+    public void visitPermittedSubclass(final String permittedSubclass) {
+        super.visitPermittedSubclass(remapper.mapType(permittedSubclass));
     }
 
     /**
@@ -218,15 +208,27 @@ public class ClassRemapper extends ClassVisitor {
     }
 
     /**
-     * Constructs a new remapper for record components. The default implementation of this method
-     * returns a new {@link RecordComponentRemapper}.
+     * Constructs a new remapper for methods. The default implementation of this method returns a new
+     * {@link MethodRemapper}.
      *
-     * @param recordComponentVisitor the RecordComponentVisitor the remapper must delegate to.
+     * @param methodVisitor the MethodVisitor the remapper must delegate to.
      * @return the newly created remapper.
      */
-    protected RecordComponentVisitor createRecordComponentRemapper(
-            final RecordComponentVisitor recordComponentVisitor) {
-        return new RecordComponentRemapper(api, recordComponentVisitor, remapper);
+    protected MethodVisitor createMethodRemapper(final MethodVisitor methodVisitor) {
+        return new MethodRemapper(api, methodVisitor, remapper);
+    }
+
+    /**
+     * Constructs a new remapper for annotations. The default implementation of this method returns a
+     * new {@link AnnotationRemapper}.
+     *
+     * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
+     * @return the newly created remapper.
+     * @deprecated use {@link #createAnnotationRemapper(String, AnnotationVisitor)} instead.
+     */
+    @Deprecated
+    protected AnnotationVisitor createAnnotationRemapper(final AnnotationVisitor annotationVisitor) {
+        return new AnnotationRemapper(api, /* descriptor = */ null, annotationVisitor, remapper);
     }
 
     /**
@@ -244,19 +246,6 @@ public class ClassRemapper extends ClassVisitor {
     }
 
     /**
-     * Constructs a new remapper for annotations. The default implementation of this method returns a
-     * new {@link AnnotationRemapper}.
-     *
-     * @param annotationVisitor the AnnotationVisitor the remapper must delegate to.
-     * @return the newly created remapper.
-     * @deprecated use {@link #createAnnotationRemapper(String, AnnotationVisitor)} instead.
-     */
-    @Deprecated
-    protected AnnotationVisitor createAnnotationRemapper(final AnnotationVisitor annotationVisitor) {
-        return new AnnotationRemapper(api, /* descriptor = */ null, annotationVisitor, remapper);
-    }
-
-    /**
      * Constructs a new remapper for modules. The default implementation of this method returns a new
      * {@link ModuleRemapper}.
      *
@@ -265,5 +254,17 @@ public class ClassRemapper extends ClassVisitor {
      */
     protected ModuleVisitor createModuleRemapper(final ModuleVisitor moduleVisitor) {
         return new ModuleRemapper(api, moduleVisitor, remapper);
+    }
+
+    /**
+     * Constructs a new remapper for record components. The default implementation of this method
+     * returns a new {@link RecordComponentRemapper}.
+     *
+     * @param recordComponentVisitor the RecordComponentVisitor the remapper must delegate to.
+     * @return the newly created remapper.
+     */
+    protected RecordComponentVisitor createRecordComponentRemapper(
+            final RecordComponentVisitor recordComponentVisitor) {
+        return new RecordComponentRemapper(api, recordComponentVisitor, remapper);
     }
 }

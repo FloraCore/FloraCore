@@ -261,6 +261,18 @@ public abstract class Printer {
      * Message of the UnsupportedOperationException thrown by methods which must be overridden.
      */
     private static final String UNSUPPORTED_OPERATION = "Must be overridden";
+
+    /**
+     * The ASM API version implemented by this class. The value of this field must be one of the
+     * {@code ASM}<i>x</i> values in {@link Opcodes}.
+     */
+    protected final int api;
+
+    /**
+     * The builder used to build strings in the various visit methods.
+     */
+    protected final StringBuilder stringBuilder;
+
     /**
      * The text to be printed. Since the code of methods is not necessarily visited in sequential
      * order, one method after the other, but can be interlaced (some instructions from method one,
@@ -272,15 +284,6 @@ public abstract class Printer {
      * string lists, and so on.
      */
     public final List<Object> text;
-    /**
-     * The ASM API version implemented by this class. The value of this field must be one of the
-     * {@code ASM}<i>x</i> values in {@link Opcodes}.
-     */
-    protected final int api;
-    /**
-     * The builder used to build strings in the various visit methods.
-     */
-    protected final StringBuilder stringBuilder;
 
     // -----------------------------------------------------------------------------------------------
     // Constructor
@@ -301,108 +304,6 @@ public abstract class Printer {
     // -----------------------------------------------------------------------------------------------
     // Classes
     // -----------------------------------------------------------------------------------------------
-
-    /**
-     * Prints the given string tree.
-     *
-     * @param printWriter the writer to be used to print the tree.
-     * @param list        a string tree, i.e., a string list that can contain other string lists, and so on
-     *                    recursively.
-     */
-    static void printList(final PrintWriter printWriter, final List<?> list) {
-        for (Object o : list) {
-            if (o instanceof List) {
-                printList(printWriter, (List<?>) o);
-            } else {
-                printWriter.print(o.toString());
-            }
-        }
-    }
-
-    /**
-     * Appends a quoted string to the given string builder.
-     *
-     * @param stringBuilder the buffer where the string must be added.
-     * @param string        the string to be added.
-     */
-    public static void appendString(final StringBuilder stringBuilder, final String string) {
-        stringBuilder.append('\"');
-        for (int i = 0; i < string.length(); ++i) {
-            char c = string.charAt(i);
-            if (c == '\n') {
-                stringBuilder.append("\\n");
-            } else if (c == '\r') {
-                stringBuilder.append("\\r");
-            } else if (c == '\\') {
-                stringBuilder.append("\\\\");
-            } else if (c == '"') {
-                stringBuilder.append("\\\"");
-            } else if (c < 0x20 || c > 0x7f) {
-                stringBuilder.append("\\u");
-                if (c < 0x10) {
-                    stringBuilder.append("000");
-                } else if (c < 0x100) {
-                    stringBuilder.append("00");
-                } else if (c < 0x1000) {
-                    stringBuilder.append('0');
-                }
-                stringBuilder.append(Integer.toString(c, 16));
-            } else {
-                stringBuilder.append(c);
-            }
-        }
-        stringBuilder.append('\"');
-    }
-
-    /**
-     * Prints the given class to the given output.
-     *
-     * <p>Command line arguments: [-nodebug] &lt;binary class name or class file name &gt;
-     *
-     * @param args    the command line arguments.
-     * @param usage   the help message to show when command line arguments are incorrect.
-     * @param printer the printer to convert the class into text.
-     * @param output  where to print the result.
-     * @param logger  where to log errors.
-     * @throws IOException if the class cannot be found, or if an IOException occurs.
-     */
-    static void main(
-            final String[] args,
-            final String usage,
-            final Printer printer,
-            final PrintWriter output,
-            final PrintWriter logger)
-            throws IOException {
-        if (args.length < 1
-                || args.length > 2
-                || ((args[0].equals("-debug") || args[0].equals("-nodebug")) && args.length != 2)) {
-            logger.println(usage);
-            return;
-        }
-
-        TraceClassVisitor traceClassVisitor = new TraceClassVisitor(null, printer, output);
-
-        String className;
-        int parsingOptions;
-        if (args[0].equals("-nodebug")) {
-            className = args[1];
-            parsingOptions = ClassReader.SKIP_DEBUG;
-        } else {
-            className = args[0];
-            parsingOptions = 0;
-        }
-
-        if (className.endsWith(".class")
-                || className.indexOf('\\') != -1
-                || className.indexOf('/') != -1) {
-            // Can't fix PMD warning for 1.5 compatibility.
-            try (InputStream inputStream = new FileInputStream(className)) { // NOPMD(AvoidFileStream)
-                new ClassReader(inputStream).accept(traceClassVisitor, parsingOptions);
-            }
-        } else {
-            new ClassReader(className).accept(traceClassVisitor, parsingOptions);
-        }
-    }
 
     /**
      * Class header. See {@link ClassVisitor#visit}.
@@ -566,10 +467,6 @@ public abstract class Printer {
         throw new UnsupportedOperationException(UNSUPPORTED_OPERATION);
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Modules
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Class field. See {@link ClassVisitor#visitField}.
      *
@@ -610,6 +507,10 @@ public abstract class Printer {
      * Class end. See {@link ClassVisitor#visitEnd}.
      */
     public abstract void visitClassEnd();
+
+    // -----------------------------------------------------------------------------------------------
+    // Modules
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Module main class. See {@link ModuleVisitor#visitMainClass}.
@@ -668,10 +569,6 @@ public abstract class Printer {
         throw new UnsupportedOperationException(UNSUPPORTED_OPERATION);
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Annotations
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Module use. See {@link ModuleVisitor#visitUse}.
      *
@@ -699,6 +596,10 @@ public abstract class Printer {
         throw new UnsupportedOperationException(UNSUPPORTED_OPERATION);
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Annotations
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Annotation value. See {@link AnnotationVisitor#visit}.
      *
@@ -722,10 +623,6 @@ public abstract class Printer {
      */
     public abstract void visitEnum(String name, String descriptor, String value);
 
-    // -----------------------------------------------------------------------------------------------
-    // Record components
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Nested annotation value. See {@link AnnotationVisitor#visitAnnotation}.
      *
@@ -748,6 +645,10 @@ public abstract class Printer {
      */
     public abstract void visitAnnotationEnd();
 
+    // -----------------------------------------------------------------------------------------------
+    // Record components
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Visits an annotation of the record component. See {@link
      * RecordComponentVisitor#visitAnnotation}.
@@ -760,10 +661,6 @@ public abstract class Printer {
     public Printer visitRecordComponentAnnotation(final String descriptor, final boolean visible) {
         throw new UnsupportedOperationException(UNSUPPORTED_OPERATION);
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Fields
-    // -----------------------------------------------------------------------------------------------
 
     /**
      * Visits an annotation on a type in the record component signature. See {@link
@@ -805,6 +702,10 @@ public abstract class Printer {
         throw new UnsupportedOperationException(UNSUPPORTED_OPERATION);
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Fields
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Field annotation. See {@link FieldVisitor#visitAnnotation}.
      *
@@ -813,10 +714,6 @@ public abstract class Printer {
      * @return the printer.
      */
     public abstract Printer visitFieldAnnotation(String descriptor, boolean visible);
-
-    // -----------------------------------------------------------------------------------------------
-    // Methods
-    // -----------------------------------------------------------------------------------------------
 
     /**
      * Field type annotation. See {@link FieldVisitor#visitTypeAnnotation}.
@@ -846,6 +743,10 @@ public abstract class Printer {
      * Field end. See {@link FieldVisitor#visitEnd}.
      */
     public abstract void visitFieldEnd();
+
+    // -----------------------------------------------------------------------------------------------
+    // Methods
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Method parameter. See {@link MethodVisitor#visitParameter(String, int)}.
@@ -1066,23 +967,21 @@ public abstract class Printer {
     }
 
     /**
-     * Method instruction. See {@link MethodVisitor#visitInvokeDynamicInsn}.
+     * Prints the given string tree.
      *
-     * @param name                     the method's name.
-     * @param descriptor               the method's descriptor (see {@link Type}).
-     * @param bootstrapMethodHandle    the bootstrap method.
-     * @param bootstrapMethodArguments the bootstrap method constant arguments. Each argument must be
-     *                                 an {@link Integer}, {@link Float}, {@link Long}, {@link Double}, {@link String}
-     *                                 , {@link
-     *                                 Type} or {@link Handle} value. This method is allowed to modify the content of
-     *                                 the array so
-     *                                 a caller should expect that this array may change.
+     * @param printWriter the writer to be used to print the tree.
+     * @param list        a string tree, i.e., a string list that can contain other string lists, and so on
+     *                    recursively.
      */
-    public abstract void visitInvokeDynamicInsn(
-            String name,
-            String descriptor,
-            Handle bootstrapMethodHandle,
-            Object... bootstrapMethodArguments);
+    static void printList(final PrintWriter printWriter, final List<?> list) {
+        for (Object o : list) {
+            if (o instanceof List) {
+                printList(printWriter, (List<?>) o);
+            } else {
+                printWriter.print(o.toString());
+            }
+        }
+    }
 
     /**
      * Method jump instruction. See {@link MethodVisitor#visitJumpInsn}.
@@ -1249,10 +1148,6 @@ public abstract class Printer {
         throw new UnsupportedOperationException(UNSUPPORTED_OPERATION);
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Print and utility methods
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Method debug info. See {@link MethodVisitor#visitLineNumber}.
      *
@@ -1275,6 +1170,10 @@ public abstract class Printer {
      */
     public abstract void visitMethodEnd();
 
+    // -----------------------------------------------------------------------------------------------
+    // Print and utility methods
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Returns the text constructed by this visitor.
      *
@@ -1292,4 +1191,106 @@ public abstract class Printer {
     public void print(final PrintWriter printWriter) {
         printList(printWriter, text);
     }
+
+    /**
+     * Appends a quoted string to the given string builder.
+     *
+     * @param stringBuilder the buffer where the string must be added.
+     * @param string        the string to be added.
+     */
+    public static void appendString(final StringBuilder stringBuilder, final String string) {
+        stringBuilder.append('\"');
+        for (int i = 0; i < string.length(); ++i) {
+            char c = string.charAt(i);
+            if (c == '\n') {
+                stringBuilder.append("\\n");
+            } else if (c == '\r') {
+                stringBuilder.append("\\r");
+            } else if (c == '\\') {
+                stringBuilder.append("\\\\");
+            } else if (c == '"') {
+                stringBuilder.append("\\\"");
+            } else if (c < 0x20 || c > 0x7f) {
+                stringBuilder.append("\\u");
+                if (c < 0x10) {
+                    stringBuilder.append("000");
+                } else if (c < 0x100) {
+                    stringBuilder.append("00");
+                } else if (c < 0x1000) {
+                    stringBuilder.append('0');
+                }
+                stringBuilder.append(Integer.toString(c, 16));
+            } else {
+                stringBuilder.append(c);
+            }
+        }
+        stringBuilder.append('\"');
+    }
+
+    /**
+     * Prints the given class to the given output.
+     *
+     * <p>Command line arguments: [-nodebug] &lt;binary class name or class file name &gt;
+     *
+     * @param args    the command line arguments.
+     * @param usage   the help message to show when command line arguments are incorrect.
+     * @param printer the printer to convert the class into text.
+     * @param output  where to print the result.
+     * @param logger  where to log errors.
+     * @throws IOException if the class cannot be found, or if an IOException occurs.
+     */
+    static void main(
+            final String[] args,
+            final String usage,
+            final Printer printer,
+            final PrintWriter output,
+            final PrintWriter logger)
+            throws IOException {
+        if (args.length < 1
+                || args.length > 2
+                || ((args[0].equals("-debug") || args[0].equals("-nodebug")) && args.length != 2)) {
+            logger.println(usage);
+            return;
+        }
+
+        TraceClassVisitor traceClassVisitor = new TraceClassVisitor(null, printer, output);
+
+        String className;
+        int parsingOptions;
+        if (args[0].equals("-nodebug")) {
+            className = args[1];
+            parsingOptions = ClassReader.SKIP_DEBUG;
+        } else {
+            className = args[0];
+            parsingOptions = 0;
+        }
+
+        if (className.endsWith(".class")
+                || className.indexOf('\\') != -1
+                || className.indexOf('/') != -1) {
+            // Can't fix PMD warning for 1.5 compatibility.
+            try (InputStream inputStream = new FileInputStream(className)) { // NOPMD(AvoidFileStream)
+                new ClassReader(inputStream).accept(traceClassVisitor, parsingOptions);
+            }
+        } else {
+            new ClassReader(className).accept(traceClassVisitor, parsingOptions);
+        }
+    }
+
+    /**
+     * Method instruction. See {@link MethodVisitor#visitInvokeDynamicInsn}.
+     *
+     * @param name                     the method's name.
+     * @param descriptor               the method's descriptor (see {@link Type}).
+     * @param bootstrapMethodHandle    the bootstrap method.
+     * @param bootstrapMethodArguments the bootstrap method constant arguments. Each argument must be
+     *                                 an {@link Integer}, {@link Float}, {@link Long}, {@link Double}, {@link String}, {@link
+     *                                 Type} or {@link Handle} value. This method is allowed to modify the content of the array so
+     *                                 a caller should expect that this array may change.
+     */
+    public abstract void visitInvokeDynamicInsn(
+            String name,
+            String descriptor,
+            Handle bootstrapMethodHandle,
+            Object... bootstrapMethodArguments);
 }

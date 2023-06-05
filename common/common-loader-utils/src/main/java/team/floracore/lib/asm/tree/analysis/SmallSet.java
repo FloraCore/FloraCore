@@ -168,6 +168,6 @@ final class SmallSet<T> extends AbstractSet<T> {
         @Override
         public void remove() {
             throw new UnsupportedOperationException();
-        }
     }
+  }
 }

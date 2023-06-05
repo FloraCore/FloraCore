@@ -22,7 +22,7 @@ public class BasicVerifier extends BasicInterpreter {
      * use this constructor</i>. Instead, they must use the {@link #BasicVerifier(int)} version.
      */
     public BasicVerifier() {
-        super(/* latest api = */ Opcodes.ASM9);
+        super(/* latest api = */ ASM9);
         if (getClass() != BasicVerifier.class) {
             throw new IllegalStateException();
         }
@@ -43,28 +43,28 @@ public class BasicVerifier extends BasicInterpreter {
             throws AnalyzerException {
         Value expected;
         switch (insn.getOpcode()) {
-            case Opcodes.ILOAD:
-            case Opcodes.ISTORE:
+            case ILOAD:
+            case ISTORE:
                 expected = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.FLOAD:
-            case Opcodes.FSTORE:
+            case FLOAD:
+            case FSTORE:
                 expected = BasicValue.FLOAT_VALUE;
                 break;
-            case Opcodes.LLOAD:
-            case Opcodes.LSTORE:
+            case LLOAD:
+            case LSTORE:
                 expected = BasicValue.LONG_VALUE;
                 break;
-            case Opcodes.DLOAD:
-            case Opcodes.DSTORE:
+            case DLOAD:
+            case DSTORE:
                 expected = BasicValue.DOUBLE_VALUE;
                 break;
-            case Opcodes.ALOAD:
+            case ALOAD:
                 if (!value.isReference()) {
                     throw new AnalyzerException(insn, null, "an object reference", value);
                 }
                 return value;
-            case Opcodes.ASTORE:
+            case ASTORE:
                 if (!value.isReference() && !BasicValue.RETURNADDRESS_VALUE.equals(value)) {
                     throw new AnalyzerException(insn, null, "an object reference or a return address", value);
                 }
@@ -83,69 +83,69 @@ public class BasicVerifier extends BasicInterpreter {
             throws AnalyzerException {
         BasicValue expected;
         switch (insn.getOpcode()) {
-            case Opcodes.INEG:
-            case Opcodes.IINC:
-            case Opcodes.I2F:
-            case Opcodes.I2L:
-            case Opcodes.I2D:
-            case Opcodes.I2B:
-            case Opcodes.I2C:
-            case Opcodes.I2S:
-            case Opcodes.IFEQ:
-            case Opcodes.IFNE:
-            case Opcodes.IFLT:
-            case Opcodes.IFGE:
-            case Opcodes.IFGT:
-            case Opcodes.IFLE:
-            case Opcodes.TABLESWITCH:
-            case Opcodes.LOOKUPSWITCH:
-            case Opcodes.IRETURN:
-            case Opcodes.NEWARRAY:
-            case Opcodes.ANEWARRAY:
+            case INEG:
+            case IINC:
+            case I2F:
+            case I2L:
+            case I2D:
+            case I2B:
+            case I2C:
+            case I2S:
+            case IFEQ:
+            case IFNE:
+            case IFLT:
+            case IFGE:
+            case IFGT:
+            case IFLE:
+            case TABLESWITCH:
+            case LOOKUPSWITCH:
+            case IRETURN:
+            case NEWARRAY:
+            case ANEWARRAY:
                 expected = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.FNEG:
-            case Opcodes.F2I:
-            case Opcodes.F2L:
-            case Opcodes.F2D:
-            case Opcodes.FRETURN:
+            case FNEG:
+            case F2I:
+            case F2L:
+            case F2D:
+            case FRETURN:
                 expected = BasicValue.FLOAT_VALUE;
                 break;
-            case Opcodes.LNEG:
-            case Opcodes.L2I:
-            case Opcodes.L2F:
-            case Opcodes.L2D:
-            case Opcodes.LRETURN:
+            case LNEG:
+            case L2I:
+            case L2F:
+            case L2D:
+            case LRETURN:
                 expected = BasicValue.LONG_VALUE;
                 break;
-            case Opcodes.DNEG:
-            case Opcodes.D2I:
-            case Opcodes.D2F:
-            case Opcodes.D2L:
-            case Opcodes.DRETURN:
+            case DNEG:
+            case D2I:
+            case D2F:
+            case D2L:
+            case DRETURN:
                 expected = BasicValue.DOUBLE_VALUE;
                 break;
-            case Opcodes.GETFIELD:
+            case GETFIELD:
                 expected = newValue(Type.getObjectType(((FieldInsnNode) insn).owner));
                 break;
-            case Opcodes.ARRAYLENGTH:
+            case ARRAYLENGTH:
                 if (!isArrayValue(value)) {
                     throw new AnalyzerException(insn, null, "an array reference", value);
                 }
                 return super.unaryOperation(insn, value);
-            case Opcodes.CHECKCAST:
-            case Opcodes.ARETURN:
-            case Opcodes.ATHROW:
-            case Opcodes.INSTANCEOF:
-            case Opcodes.MONITORENTER:
-            case Opcodes.MONITOREXIT:
-            case Opcodes.IFNULL:
-            case Opcodes.IFNONNULL:
+            case CHECKCAST:
+            case ARETURN:
+            case ATHROW:
+            case INSTANCEOF:
+            case MONITORENTER:
+            case MONITOREXIT:
+            case IFNULL:
+            case IFNONNULL:
                 if (!value.isReference()) {
                     throw new AnalyzerException(insn, null, "an object reference", value);
                 }
                 return super.unaryOperation(insn, value);
-            case Opcodes.PUTSTATIC:
+            case PUTSTATIC:
                 expected = newValue(Type.getType(((FieldInsnNode) insn).desc));
                 break;
             default:
@@ -164,11 +164,11 @@ public class BasicVerifier extends BasicInterpreter {
         BasicValue expected1;
         BasicValue expected2;
         switch (insn.getOpcode()) {
-            case Opcodes.IALOAD:
+            case IALOAD:
                 expected1 = newValue(Type.getType("[I"));
                 expected2 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.BALOAD:
+            case BALOAD:
                 if (isSubTypeOf(value1, newValue(Type.getType("[Z")))) {
                     expected1 = newValue(Type.getType("[Z"));
                 } else {
@@ -176,94 +176,94 @@ public class BasicVerifier extends BasicInterpreter {
                 }
                 expected2 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.CALOAD:
+            case CALOAD:
                 expected1 = newValue(Type.getType("[C"));
                 expected2 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.SALOAD:
+            case SALOAD:
                 expected1 = newValue(Type.getType("[S"));
                 expected2 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.LALOAD:
+            case LALOAD:
                 expected1 = newValue(Type.getType("[J"));
                 expected2 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.FALOAD:
+            case FALOAD:
                 expected1 = newValue(Type.getType("[F"));
                 expected2 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.DALOAD:
+            case DALOAD:
                 expected1 = newValue(Type.getType("[D"));
                 expected2 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.AALOAD:
+            case AALOAD:
                 expected1 = newValue(Type.getType("[Ljava/lang/Object;"));
                 expected2 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.IADD:
-            case Opcodes.ISUB:
-            case Opcodes.IMUL:
-            case Opcodes.IDIV:
-            case Opcodes.IREM:
-            case Opcodes.ISHL:
-            case Opcodes.ISHR:
-            case Opcodes.IUSHR:
-            case Opcodes.IAND:
-            case Opcodes.IOR:
-            case Opcodes.IXOR:
-            case Opcodes.IF_ICMPEQ:
-            case Opcodes.IF_ICMPNE:
-            case Opcodes.IF_ICMPLT:
-            case Opcodes.IF_ICMPGE:
-            case Opcodes.IF_ICMPGT:
-            case Opcodes.IF_ICMPLE:
+            case IADD:
+            case ISUB:
+            case IMUL:
+            case IDIV:
+            case IREM:
+            case ISHL:
+            case ISHR:
+            case IUSHR:
+            case IAND:
+            case IOR:
+            case IXOR:
+            case IF_ICMPEQ:
+            case IF_ICMPNE:
+            case IF_ICMPLT:
+            case IF_ICMPGE:
+            case IF_ICMPGT:
+            case IF_ICMPLE:
                 expected1 = BasicValue.INT_VALUE;
                 expected2 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.FADD:
-            case Opcodes.FSUB:
-            case Opcodes.FMUL:
-            case Opcodes.FDIV:
-            case Opcodes.FREM:
-            case Opcodes.FCMPL:
-            case Opcodes.FCMPG:
+            case FADD:
+            case FSUB:
+            case FMUL:
+            case FDIV:
+            case FREM:
+            case FCMPL:
+            case FCMPG:
                 expected1 = BasicValue.FLOAT_VALUE;
                 expected2 = BasicValue.FLOAT_VALUE;
                 break;
-            case Opcodes.LADD:
-            case Opcodes.LSUB:
-            case Opcodes.LMUL:
-            case Opcodes.LDIV:
-            case Opcodes.LREM:
-            case Opcodes.LAND:
-            case Opcodes.LOR:
-            case Opcodes.LXOR:
-            case Opcodes.LCMP:
+            case LADD:
+            case LSUB:
+            case LMUL:
+            case LDIV:
+            case LREM:
+            case LAND:
+            case LOR:
+            case LXOR:
+            case LCMP:
                 expected1 = BasicValue.LONG_VALUE;
                 expected2 = BasicValue.LONG_VALUE;
                 break;
-            case Opcodes.LSHL:
-            case Opcodes.LSHR:
-            case Opcodes.LUSHR:
+            case LSHL:
+            case LSHR:
+            case LUSHR:
                 expected1 = BasicValue.LONG_VALUE;
                 expected2 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.DADD:
-            case Opcodes.DSUB:
-            case Opcodes.DMUL:
-            case Opcodes.DDIV:
-            case Opcodes.DREM:
-            case Opcodes.DCMPL:
-            case Opcodes.DCMPG:
+            case DADD:
+            case DSUB:
+            case DMUL:
+            case DDIV:
+            case DREM:
+            case DCMPL:
+            case DCMPG:
                 expected1 = BasicValue.DOUBLE_VALUE;
                 expected2 = BasicValue.DOUBLE_VALUE;
                 break;
-            case Opcodes.IF_ACMPEQ:
-            case Opcodes.IF_ACMPNE:
+            case IF_ACMPEQ:
+            case IF_ACMPNE:
                 expected1 = BasicValue.REFERENCE_VALUE;
                 expected2 = BasicValue.REFERENCE_VALUE;
                 break;
-            case Opcodes.PUTFIELD:
+            case PUTFIELD:
                 FieldInsnNode fieldInsn = (FieldInsnNode) insn;
                 expected1 = newValue(Type.getObjectType(fieldInsn.owner));
                 expected2 = newValue(Type.getType(fieldInsn.desc));
@@ -276,7 +276,7 @@ public class BasicVerifier extends BasicInterpreter {
         } else if (!isSubTypeOf(value2, expected2)) {
             throw new AnalyzerException(insn, "Second argument", expected2, value2);
         }
-        if (insn.getOpcode() == Opcodes.AALOAD) {
+        if (insn.getOpcode() == AALOAD) {
             return getElementValue(value1);
         } else {
             return super.binaryOperation(insn, value1, value2);
@@ -293,11 +293,11 @@ public class BasicVerifier extends BasicInterpreter {
         BasicValue expected1;
         BasicValue expected3;
         switch (insn.getOpcode()) {
-            case Opcodes.IASTORE:
+            case IASTORE:
                 expected1 = newValue(Type.getType("[I"));
                 expected3 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.BASTORE:
+            case BASTORE:
                 if (isSubTypeOf(value1, newValue(Type.getType("[Z")))) {
                     expected1 = newValue(Type.getType("[Z"));
                 } else {
@@ -305,27 +305,27 @@ public class BasicVerifier extends BasicInterpreter {
                 }
                 expected3 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.CASTORE:
+            case CASTORE:
                 expected1 = newValue(Type.getType("[C"));
                 expected3 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.SASTORE:
+            case SASTORE:
                 expected1 = newValue(Type.getType("[S"));
                 expected3 = BasicValue.INT_VALUE;
                 break;
-            case Opcodes.LASTORE:
+            case LASTORE:
                 expected1 = newValue(Type.getType("[J"));
                 expected3 = BasicValue.LONG_VALUE;
                 break;
-            case Opcodes.FASTORE:
+            case FASTORE:
                 expected1 = newValue(Type.getType("[F"));
                 expected3 = BasicValue.FLOAT_VALUE;
                 break;
-            case Opcodes.DASTORE:
+            case DASTORE:
                 expected1 = newValue(Type.getType("[D"));
                 expected3 = BasicValue.DOUBLE_VALUE;
                 break;
-            case Opcodes.AASTORE:
+            case AASTORE:
                 expected1 = value1;
                 expected3 = BasicValue.REFERENCE_VALUE;
                 break;
@@ -348,7 +348,7 @@ public class BasicVerifier extends BasicInterpreter {
             final AbstractInsnNode insn, final List<? extends BasicValue> values)
             throws AnalyzerException {
         int opcode = insn.getOpcode();
-        if (opcode == Opcodes.MULTIANEWARRAY) {
+        if (opcode == MULTIANEWARRAY) {
             for (BasicValue value : values) {
                 if (!BasicValue.INT_VALUE.equals(value)) {
                     throw new AnalyzerException(insn, null, BasicValue.INT_VALUE, value);
@@ -357,14 +357,14 @@ public class BasicVerifier extends BasicInterpreter {
         } else {
             int i = 0;
             int j = 0;
-            if (opcode != Opcodes.INVOKESTATIC && opcode != Opcodes.INVOKEDYNAMIC) {
+            if (opcode != INVOKESTATIC && opcode != INVOKEDYNAMIC) {
                 Type owner = Type.getObjectType(((MethodInsnNode) insn).owner);
                 if (!isSubTypeOf(values.get(i++), newValue(owner))) {
                     throw new AnalyzerException(insn, "Method owner", newValue(owner), values.get(0));
                 }
             }
             String methodDescriptor =
-                    (opcode == Opcodes.INVOKEDYNAMIC)
+                    (opcode == INVOKEDYNAMIC)
                             ? ((InvokeDynamicInsnNode) insn).desc
                             : ((MethodInsnNode) insn).desc;
             Type[] args = Type.getArgumentTypes(methodDescriptor);
@@ -389,6 +389,16 @@ public class BasicVerifier extends BasicInterpreter {
     }
 
     /**
+     * Returns whether the given value corresponds to an array reference.
+     *
+     * @param value a value.
+     * @return whether 'value' corresponds to an array reference.
+     */
+    protected boolean isArrayValue(final BasicValue value) {
+        return value.isReference();
+    }
+
+    /**
      * Returns the value corresponding to the type of the elements of the given array reference value.
      *
      * @param objectArrayValue a value corresponding to array of object (or array) references.
@@ -397,16 +407,6 @@ public class BasicVerifier extends BasicInterpreter {
      */
     protected BasicValue getElementValue(final BasicValue objectArrayValue) throws AnalyzerException {
         return BasicValue.REFERENCE_VALUE;
-    }
-
-    /**
-     * Returns whether the given value corresponds to an array reference.
-     *
-     * @param value a value.
-     * @return whether 'value' corresponds to an array reference.
-     */
-    protected boolean isArrayValue(final BasicValue value) {
-        return value.isReference();
     }
 
     /**

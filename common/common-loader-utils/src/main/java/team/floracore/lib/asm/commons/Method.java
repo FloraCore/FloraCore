@@ -15,6 +15,16 @@ import java.util.Map;
 public class Method {
 
     /**
+     * The method name.
+     */
+    private final String name;
+
+    /**
+     * The method descriptor.
+     */
+    private final String descriptor;
+
+    /**
      * The descriptors of the primitive Java types (plus void).
      */
     private static final Map<String, String> PRIMITIVE_TYPE_DESCRIPTORS;
@@ -34,13 +44,15 @@ public class Method {
     }
 
     /**
-     * The method name.
+     * Constructs a new {@link Method}.
+     *
+     * @param name       the method's name.
+     * @param descriptor the method's descriptor.
      */
-    private final String name;
-    /**
-     * The method descriptor.
-     */
-    private final String descriptor;
+    public Method(final String name, final String descriptor) {
+        this.name = name;
+        this.descriptor = descriptor;
+    }
 
     /**
      * Constructs a new {@link Method}.
@@ -51,17 +63,6 @@ public class Method {
      */
     public Method(final String name, final Type returnType, final Type[] argumentTypes) {
         this(name, Type.getMethodDescriptor(returnType, argumentTypes));
-    }
-
-    /**
-     * Constructs a new {@link Method}.
-     *
-     * @param name       the method's name.
-     * @param descriptor the method's descriptor.
-     */
-    public Method(final String name, final String descriptor) {
-        this.name = name;
-        this.descriptor = descriptor;
     }
 
     /**
@@ -103,10 +104,8 @@ public class Method {
      *
      * @param method         a Java method declaration, without argument names, of the form "returnType name
      *                       (argumentType1, ... argumentTypeN)", where the types are in plain Java (e.g. "int",
-     *                       "float", "java.util.List", ...). Classes of the java.lang package may be specified by
-     *                       their
-     *                       unqualified name, depending on the defaultPackage argument; all other classes names
-     *                       must be
+     *                       "float", "java.util.List", ...). Classes of the java.lang package may be specified by their
+     *                       unqualified name, depending on the defaultPackage argument; all other classes names must be
      *                       fully qualified.
      * @param defaultPackage true if unqualified class names belong to the default package, or false
      *                       if they correspond to java.lang classes. For instance "Object" means "Object" if this
@@ -142,8 +141,7 @@ public class Method {
                 currentArgumentStartIndex = currentArgumentEndIndex + 1;
             }
             stringBuilder.append(argumentDescriptor);
-        }
-        while (currentArgumentEndIndex != -1);
+        } while (currentArgumentEndIndex != -1);
         stringBuilder.append(')').append(getDescriptorInternal(returnType, defaultPackage));
         return new Method(methodName, stringBuilder.toString());
     }
@@ -224,8 +222,8 @@ public class Method {
     }
 
     @Override
-    public int hashCode() {
-        return name.hashCode() ^ descriptor.hashCode();
+    public String toString() {
+        return name + descriptor;
     }
 
     @Override
@@ -238,7 +236,7 @@ public class Method {
     }
 
     @Override
-    public String toString() {
-        return name + descriptor;
+    public int hashCode() {
+        return name.hashCode() ^ descriptor.hashCode();
     }
 }

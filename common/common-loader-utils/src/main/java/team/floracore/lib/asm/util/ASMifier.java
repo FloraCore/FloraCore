@@ -182,19 +182,19 @@ public class ASMifier extends Printer {
                 simpleName = name.substring(lastSlashIndex + 1).replaceAll("[-\\(\\)]", "_");
             }
         }
-        text.add("import team.floracore.lib.asm.AnnotationVisitor;\n");
-        text.add("import team.floracore.lib.asm.Attribute;\n");
-        text.add("import team.floracore.lib.asm.ClassReader;\n");
-        text.add("import team.floracore.lib.asm.ClassWriter;\n");
-        text.add("import team.floracore.lib.asm.ConstantDynamic;\n");
-        text.add("import team.floracore.lib.asm.FieldVisitor;\n");
-        text.add("import team.floracore.lib.asm.Handle;\n");
-        text.add("import team.floracore.lib.asm.Label;\n");
-        text.add("import team.floracore.lib.asm.MethodVisitor;\n");
-        text.add("import team.floracore.lib.asm.Opcodes;\n");
-        text.add("import team.floracore.lib.asm.RecordComponentVisitor;\n");
-        text.add("import team.floracore.lib.asm.Type;\n");
-        text.add("import team.floracore.lib.asm.TypePath;\n");
+        text.add("import org.objectweb.asm.AnnotationVisitor;\n");
+        text.add("import org.objectweb.asm.Attribute;\n");
+        text.add("import org.objectweb.asm.ClassReader;\n");
+        text.add("import org.objectweb.asm.ClassWriter;\n");
+        text.add("import org.objectweb.asm.ConstantDynamic;\n");
+        text.add("import org.objectweb.asm.FieldVisitor;\n");
+        text.add("import org.objectweb.asm.Handle;\n");
+        text.add("import org.objectweb.asm.Label;\n");
+        text.add("import org.objectweb.asm.MethodVisitor;\n");
+        text.add("import org.objectweb.asm.Opcodes;\n");
+        text.add("import org.objectweb.asm.RecordComponentVisitor;\n");
+        text.add("import org.objectweb.asm.Type;\n");
+        text.add("import org.objectweb.asm.TypePath;\n");
         text.add("public class " + simpleName + "Dump implements Opcodes {\n\n");
         text.add("public static byte[] dump () throws Exception {\n\n");
         text.add("ClassWriter classWriter = new ClassWriter(0);\n");
@@ -470,6 +470,25 @@ public class ASMifier extends Printer {
         visitExportOrOpen("moduleVisitor.visitOpen(", packaze, access, modules);
     }
 
+    private void visitExportOrOpen(
+            final String visitMethod, final String packaze, final int access, final String... modules) {
+        stringBuilder.setLength(0);
+        stringBuilder.append(visitMethod);
+        appendConstant(packaze);
+        stringBuilder.append(", ");
+        appendAccessFlags(access | ACCESS_MODULE);
+        if (modules != null && modules.length > 0) {
+            stringBuilder.append(", new String[] {");
+            for (int i = 0; i < modules.length; ++i) {
+                stringBuilder.append(i == 0 ? " " : ", ");
+                appendConstant(modules[i]);
+            }
+            stringBuilder.append(" }");
+        }
+        stringBuilder.append(");\n");
+        text.add(stringBuilder.toString());
+    }
+
     @Override
     public void visitUse(final String service) {
         stringBuilder.setLength(0);
@@ -498,6 +517,10 @@ public class ASMifier extends Printer {
         text.add("moduleVisitor.visitEnd();\n");
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Annotations
+    // -----------------------------------------------------------------------------------------------
+
     // DontCheck(OverloadMethodsDeclarationOrder): overloads are semantically different.
     @Override
     public void visit(final String name, final Object value) {
@@ -509,10 +532,6 @@ public class ASMifier extends Printer {
         stringBuilder.append(");\n");
         text.add(stringBuilder.toString());
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Annotations
-    // -----------------------------------------------------------------------------------------------
 
     @Override
     public void visitEnum(final String name, final String descriptor, final String value) {
@@ -572,14 +591,14 @@ public class ASMifier extends Printer {
         text.add(stringBuilder.toString());
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Record components
+    // -----------------------------------------------------------------------------------------------
+
     @Override
     public ASMifier visitRecordComponentAnnotation(final String descriptor, final boolean visible) {
         return visitAnnotation(descriptor, visible);
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Record components
-    // -----------------------------------------------------------------------------------------------
 
     @Override
     public ASMifier visitRecordComponentTypeAnnotation(
@@ -597,14 +616,14 @@ public class ASMifier extends Printer {
         visitMemberEnd();
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Fields
+    // -----------------------------------------------------------------------------------------------
+
     @Override
     public ASMifier visitFieldAnnotation(final String descriptor, final boolean visible) {
         return visitAnnotation(descriptor, visible);
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Fields
-    // -----------------------------------------------------------------------------------------------
 
     @Override
     public ASMifier visitFieldTypeAnnotation(
@@ -622,6 +641,10 @@ public class ASMifier extends Printer {
         visitMemberEnd();
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Methods
+    // -----------------------------------------------------------------------------------------------
+
     @Override
     public void visitParameter(final String parameterName, final int access) {
         stringBuilder.setLength(0);
@@ -631,10 +654,6 @@ public class ASMifier extends Printer {
         appendAccessFlags(access);
         text.add(stringBuilder.append(");\n").toString());
     }
-
-    // -----------------------------------------------------------------------------------------------
-    // Methods
-    // -----------------------------------------------------------------------------------------------
 
     @Override
     public ASMifier visitAnnotationDefault() {
@@ -1095,39 +1114,125 @@ public class ASMifier extends Printer {
         visitMemberEnd();
     }
 
-    /**
-     * Appends a declaration of the given label to {@link #stringBuilder}. This declaration is of the
-     * form "Label labelXXX = new Label();". Does nothing if the given label has already been
-     * declared.
-     *
-     * @param label a label.
-     */
-    protected void declareLabel(final Label label) {
-        if (labelNames == null) {
-            labelNames = new HashMap<>();
-        }
-        String labelName = labelNames.get(label);
-        if (labelName == null) {
-            labelName = "label" + labelNames.size();
-            labelNames.put(label, labelName);
-            stringBuilder.append("Label ").append(labelName).append(" = new Label();\n");
-        }
-    }
-
     // -----------------------------------------------------------------------------------------------
     // Common methods
     // -----------------------------------------------------------------------------------------------
 
     /**
-     * Appends the name of the given label to {@link #stringBuilder}. The given label <i>must</i>
-     * already have a name. One way to ensure this is to always call {@link #declareLabel} before
-     * calling this method.
+     * Visits a class, field or method annotation.
      *
-     * @param label a label.
+     * @param descriptor the class descriptor of the annotation class.
+     * @param visible    {@literal true} if the annotation is visible at runtime.
+     * @return a new {@link ASMifier} to visit the annotation values.
      */
-    protected void appendLabel(final Label label) {
-        stringBuilder.append(labelNames.get(label));
+    // DontCheck(OverloadMethodsDeclarationOrder): overloads are semantically different.
+    public ASMifier visitAnnotation(final String descriptor, final boolean visible) {
+        stringBuilder.setLength(0);
+        stringBuilder
+                .append("{\n")
+                .append(ANNOTATION_VISITOR0)
+                .append(name)
+                .append(".visitAnnotation(");
+        appendConstant(descriptor);
+        stringBuilder.append(", ").append(visible).append(");\n");
+        text.add(stringBuilder.toString());
+        ASMifier asmifier = createASMifier(ANNOTATION_VISITOR, 0);
+        text.add(asmifier.getText());
+        text.add("}\n");
+        return asmifier;
     }
+
+    /**
+     * Visits a class, field or method type annotation.
+     *
+     * @param typeRef    a reference to the annotated type. The sort of this type reference must be
+     *                   {@link TypeReference#FIELD}. See {@link TypeReference}.
+     * @param typePath   the path to the annotated type argument, wildcard bound, array element type, or
+     *                   static inner type within 'typeRef'. May be {@literal null} if the annotation targets
+     *                   'typeRef' as a whole.
+     * @param descriptor the class descriptor of the annotation class.
+     * @param visible    {@literal true} if the annotation is visible at runtime.
+     * @return a new {@link ASMifier} to visit the annotation values.
+     */
+    public ASMifier visitTypeAnnotation(
+            final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
+        return visitTypeAnnotation("visitTypeAnnotation", typeRef, typePath, descriptor, visible);
+    }
+
+    /**
+     * Visits a class, field, method, instruction or try catch block type annotation.
+     *
+     * @param method     the name of the visit method for this type of annotation.
+     * @param typeRef    a reference to the annotated type. The sort of this type reference must be
+     *                   {@link TypeReference#FIELD}. See {@link TypeReference}.
+     * @param typePath   the path to the annotated type argument, wildcard bound, array element type, or
+     *                   static inner type within 'typeRef'. May be {@literal null} if the annotation targets
+     *                   'typeRef' as a whole.
+     * @param descriptor the class descriptor of the annotation class.
+     * @param visible    {@literal true} if the annotation is visible at runtime.
+     * @return a new {@link ASMifier} to visit the annotation values.
+     */
+    public ASMifier visitTypeAnnotation(
+            final String method,
+            final int typeRef,
+            final TypePath typePath,
+            final String descriptor,
+            final boolean visible) {
+        stringBuilder.setLength(0);
+        stringBuilder
+                .append("{\n")
+                .append(ANNOTATION_VISITOR0)
+                .append(name)
+                .append('.')
+                .append(method)
+                .append('(')
+                .append(typeRef);
+        if (typePath == null) {
+            stringBuilder.append(", null, ");
+        } else {
+            stringBuilder.append(", TypePath.fromString(\"").append(typePath).append("\"), ");
+        }
+        appendConstant(descriptor);
+        stringBuilder.append(", ").append(visible).append(");\n");
+        text.add(stringBuilder.toString());
+        ASMifier asmifier = createASMifier(ANNOTATION_VISITOR, 0);
+        text.add(asmifier.getText());
+        text.add("}\n");
+        return asmifier;
+    }
+
+    /**
+     * Visit a class, field or method attribute.
+     *
+     * @param attribute an attribute.
+     */
+    public void visitAttribute(final Attribute attribute) {
+        stringBuilder.setLength(0);
+        stringBuilder.append("// ATTRIBUTE ").append(attribute.type).append('\n');
+        if (attribute instanceof ASMifierSupport) {
+            if (labelNames == null) {
+                labelNames = new HashMap<>();
+            }
+            stringBuilder.append("{\n");
+            ((ASMifierSupport) attribute).asmify(stringBuilder, "attribute", labelNames);
+            stringBuilder.append(name).append(".visitAttribute(attribute);\n");
+            stringBuilder.append("}\n");
+        }
+        text.add(stringBuilder.toString());
+    }
+
+    /**
+     * Visits the end of a field, record component or method.
+     */
+    private void visitMemberEnd() {
+        stringBuilder.setLength(0);
+        stringBuilder.append(name).append(VISIT_END);
+        text.add(stringBuilder.toString());
+    }
+
+    // -----------------------------------------------------------------------------------------------
+    // Utility methods
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Constructs a new {@link ASMifier}.
@@ -1305,141 +1410,6 @@ public class ASMifier extends Printer {
     }
 
     /**
-     * Visits the end of a field, record component or method.
-     */
-    private void visitMemberEnd() {
-        stringBuilder.setLength(0);
-        stringBuilder.append(name).append(VISIT_END);
-        text.add(stringBuilder.toString());
-    }
-
-    /**
-     * Visit a class, field or method attribute.
-     *
-     * @param attribute an attribute.
-     */
-    public void visitAttribute(final Attribute attribute) {
-        stringBuilder.setLength(0);
-        stringBuilder.append("// ATTRIBUTE ").append(attribute.type).append('\n');
-        if (attribute instanceof ASMifierSupport) {
-            if (labelNames == null) {
-                labelNames = new HashMap<>();
-            }
-            stringBuilder.append("{\n");
-            ((ASMifierSupport) attribute).asmify(stringBuilder, "attribute", labelNames);
-            stringBuilder.append(name).append(".visitAttribute(attribute);\n");
-            stringBuilder.append("}\n");
-        }
-        text.add(stringBuilder.toString());
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Utility methods
-    // -----------------------------------------------------------------------------------------------
-
-    private void visitExportOrOpen(
-            final String visitMethod, final String packaze, final int access, final String... modules) {
-        stringBuilder.setLength(0);
-        stringBuilder.append(visitMethod);
-        appendConstant(packaze);
-        stringBuilder.append(", ");
-        appendAccessFlags(access | ACCESS_MODULE);
-        if (modules != null && modules.length > 0) {
-            stringBuilder.append(", new String[] {");
-            for (int i = 0; i < modules.length; ++i) {
-                stringBuilder.append(i == 0 ? " " : ", ");
-                appendConstant(modules[i]);
-            }
-            stringBuilder.append(" }");
-        }
-        stringBuilder.append(");\n");
-        text.add(stringBuilder.toString());
-    }
-
-    /**
-     * Visits a class, field or method annotation.
-     *
-     * @param descriptor the class descriptor of the annotation class.
-     * @param visible    {@literal true} if the annotation is visible at runtime.
-     * @return a new {@link ASMifier} to visit the annotation values.
-     */
-    // DontCheck(OverloadMethodsDeclarationOrder): overloads are semantically different.
-    public ASMifier visitAnnotation(final String descriptor, final boolean visible) {
-        stringBuilder.setLength(0);
-        stringBuilder
-                .append("{\n")
-                .append(ANNOTATION_VISITOR0)
-                .append(name)
-                .append(".visitAnnotation(");
-        appendConstant(descriptor);
-        stringBuilder.append(", ").append(visible).append(");\n");
-        text.add(stringBuilder.toString());
-        ASMifier asmifier = createASMifier(ANNOTATION_VISITOR, 0);
-        text.add(asmifier.getText());
-        text.add("}\n");
-        return asmifier;
-    }
-
-    /**
-     * Visits a class, field or method type annotation.
-     *
-     * @param typeRef    a reference to the annotated type. The sort of this type reference must be
-     *                   {@link TypeReference#FIELD}. See {@link TypeReference}.
-     * @param typePath   the path to the annotated type argument, wildcard bound, array element type, or
-     *                   static inner type within 'typeRef'. May be {@literal null} if the annotation targets
-     *                   'typeRef' as a whole.
-     * @param descriptor the class descriptor of the annotation class.
-     * @param visible    {@literal true} if the annotation is visible at runtime.
-     * @return a new {@link ASMifier} to visit the annotation values.
-     */
-    public ASMifier visitTypeAnnotation(
-            final int typeRef, final TypePath typePath, final String descriptor, final boolean visible) {
-        return visitTypeAnnotation("visitTypeAnnotation", typeRef, typePath, descriptor, visible);
-    }
-
-    /**
-     * Visits a class, field, method, instruction or try catch block type annotation.
-     *
-     * @param method     the name of the visit method for this type of annotation.
-     * @param typeRef    a reference to the annotated type. The sort of this type reference must be
-     *                   {@link TypeReference#FIELD}. See {@link TypeReference}.
-     * @param typePath   the path to the annotated type argument, wildcard bound, array element type, or
-     *                   static inner type within 'typeRef'. May be {@literal null} if the annotation targets
-     *                   'typeRef' as a whole.
-     * @param descriptor the class descriptor of the annotation class.
-     * @param visible    {@literal true} if the annotation is visible at runtime.
-     * @return a new {@link ASMifier} to visit the annotation values.
-     */
-    public ASMifier visitTypeAnnotation(
-            final String method,
-            final int typeRef,
-            final TypePath typePath,
-            final String descriptor,
-            final boolean visible) {
-        stringBuilder.setLength(0);
-        stringBuilder
-                .append("{\n")
-                .append(ANNOTATION_VISITOR0)
-                .append(name)
-                .append('.')
-                .append(method)
-                .append('(')
-                .append(typeRef);
-        if (typePath == null) {
-            stringBuilder.append(", null, ");
-        } else {
-            stringBuilder.append(", TypePath.fromString(\"").append(typePath).append("\"), ");
-        }
-        appendConstant(descriptor);
-        stringBuilder.append(", ").append(visible).append(");\n");
-        text.add(stringBuilder.toString());
-        ASMifier asmifier = createASMifier(ANNOTATION_VISITOR, 0);
-        text.add(asmifier.getText());
-        text.add("}\n");
-        return asmifier;
-    }
-
-    /**
      * Appends a string representation of the given constant to {@link #stringBuilder}.
      *
      * @param value a {@link String}, {@link Type}, {@link Handle}, {@link Byte}, {@link Short},
@@ -1591,5 +1561,35 @@ public class ASMifier extends Printer {
                 appendLabel((Label) frameTypes[i]);
             }
         }
+    }
+
+    /**
+     * Appends a declaration of the given label to {@link #stringBuilder}. This declaration is of the
+     * form "Label labelXXX = new Label();". Does nothing if the given label has already been
+     * declared.
+     *
+     * @param label a label.
+     */
+    protected void declareLabel(final Label label) {
+        if (labelNames == null) {
+            labelNames = new HashMap<>();
+        }
+        String labelName = labelNames.get(label);
+        if (labelName == null) {
+            labelName = "label" + labelNames.size();
+            labelNames.put(label, labelName);
+            stringBuilder.append("Label ").append(labelName).append(" = new Label();\n");
+        }
+    }
+
+    /**
+     * Appends the name of the given label to {@link #stringBuilder}. The given label <i>must</i>
+     * already have a name. One way to ensure this is to always call {@link #declareLabel} before
+     * calling this method.
+     *
+     * @param label a label.
+     */
+    protected void appendLabel(final Label label) {
+        stringBuilder.append(labelNames.get(label));
     }
 }

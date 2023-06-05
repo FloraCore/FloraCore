@@ -14,13 +14,15 @@ import team.floracore.lib.asm.Opcodes;
 public class StaticInitMerger extends ClassVisitor {
 
     /**
-     * The prefix to use to rename the existing &lt;clinit&gt; methods.
-     */
-    private final String renamedClinitMethodPrefix;
-    /**
      * The internal name of the visited class.
      */
     private String owner;
+
+    /**
+     * The prefix to use to rename the existing &lt;clinit&gt; methods.
+     */
+    private final String renamedClinitMethodPrefix;
+
     /**
      * The number of &lt;clinit&gt; methods visited so far.
      */

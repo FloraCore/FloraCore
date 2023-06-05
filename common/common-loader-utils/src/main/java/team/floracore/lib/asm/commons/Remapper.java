@@ -1,3 +1,4 @@
+
 package team.floracore.lib.asm.commons;
 
 import team.floracore.lib.asm.ConstantDynamic;
@@ -195,9 +196,12 @@ public abstract class Remapper {
      *
      * @param signatureVisitor the SignatureVisitor the remapper must delegate to.
      * @return the newly created remapper.
+     * @deprecated use {@link #createSignatureRemapper} instead.
      */
-    protected SignatureVisitor createSignatureRemapper(final SignatureVisitor signatureVisitor) {
-        return new SignatureRemapper(signatureVisitor, this);
+    @Deprecated
+    protected SignatureVisitor createRemappingSignatureAdapter(
+            final SignatureVisitor signatureVisitor) {
+        return createSignatureRemapper(signatureVisitor);
     }
 
     /**
@@ -206,12 +210,9 @@ public abstract class Remapper {
      *
      * @param signatureVisitor the SignatureVisitor the remapper must delegate to.
      * @return the newly created remapper.
-     * @deprecated use {@link #createSignatureRemapper} instead.
      */
-    @Deprecated
-    protected SignatureVisitor createRemappingSignatureAdapter(
-            final SignatureVisitor signatureVisitor) {
-        return createSignatureRemapper(signatureVisitor);
+    protected SignatureVisitor createSignatureRemapper(final SignatureVisitor signatureVisitor) {
+        return new SignatureRemapper(signatureVisitor, this);
     }
 
     /**

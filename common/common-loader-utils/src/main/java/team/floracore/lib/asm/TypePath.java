@@ -1,3 +1,4 @@
+
 package team.floracore.lib.asm;
 
 /**
@@ -57,6 +58,44 @@ public final class TypePath {
     }
 
     /**
+     * Puts the type_path JVMS structure corresponding to the given TypePath into the given
+     * ByteVector.
+     *
+     * @param typePath a TypePath instance, or {@literal null} for empty paths.
+     * @param output   where the type path must be put.
+     */
+    static void put(final TypePath typePath, final ByteVector output) {
+        if (typePath == null) {
+            output.putByte(0);
+        } else {
+            int length = typePath.typePathContainer[typePath.typePathOffset] * 2 + 1;
+            output.putByteArray(typePath.typePathContainer, typePath.typePathOffset, length);
+        }
+    }
+
+    /**
+     * Returns the length of this path, i.e. its number of steps.
+     *
+     * @return the length of this path.
+     */
+    public int getLength() {
+        // path_length is stored in the first byte of a type_path.
+        return typePathContainer[typePathOffset];
+    }
+
+    /**
+     * Returns the value of the given step of this path.
+     *
+     * @param index an index between 0 and {@link #getLength()}, exclusive.
+     * @return one of {@link #ARRAY_ELEMENT}, {@link #INNER_TYPE}, {@link #WILDCARD_BOUND}, or {@link
+     * #TYPE_ARGUMENT}.
+     */
+    public int getStep(final int index) {
+        // Returns the type_path_kind of the path element of the given index.
+        return typePathContainer[typePathOffset + 2 * index + 1];
+    }
+
+    /**
      * Converts a type path in string form, in the format used by {@link #toString()}, into a TypePath
      * object.
      *
@@ -102,22 +141,6 @@ public final class TypePath {
     }
 
     /**
-     * Puts the type_path JVMS structure corresponding to the given TypePath into the given
-     * ByteVector.
-     *
-     * @param typePath a TypePath instance, or {@literal null} for empty paths.
-     * @param output   where the type path must be put.
-     */
-    static void put(final TypePath typePath, final ByteVector output) {
-        if (typePath == null) {
-            output.putByte(0);
-        } else {
-            int length = typePath.typePathContainer[typePath.typePathOffset] * 2 + 1;
-            output.putByteArray(typePath.typePathContainer, typePath.typePathOffset, length);
-        }
-    }
-
-    /**
      * Returns a string representation of this type path. {@link #ARRAY_ELEMENT} steps are represented
      * with '[', {@link #INNER_TYPE} steps with '.', {@link #WILDCARD_BOUND} steps with '*' and {@link
      * #TYPE_ARGUMENT} steps with their type argument index in decimal form followed by ';'.
@@ -145,28 +168,6 @@ public final class TypePath {
             }
         }
         return result.toString();
-    }
-
-    /**
-     * Returns the length of this path, i.e. its number of steps.
-     *
-     * @return the length of this path.
-     */
-    public int getLength() {
-        // path_length is stored in the first byte of a type_path.
-        return typePathContainer[typePathOffset];
-    }
-
-    /**
-     * Returns the value of the given step of this path.
-     *
-     * @param index an index between 0 and {@link #getLength()}, exclusive.
-     * @return one of {@link #ARRAY_ELEMENT}, {@link #INNER_TYPE}, {@link #WILDCARD_BOUND}, or {@link
-     * #TYPE_ARGUMENT}.
-     */
-    public int getStep(final int index) {
-        // Returns the type_path_kind of the path element of the given index.
-        return typePathContainer[typePathOffset + 2 * index + 1];
     }
 
     /**

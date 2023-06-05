@@ -51,14 +51,15 @@ import java.io.PrintWriter;
 public final class TraceClassVisitor extends ClassVisitor {
 
     /**
+     * The print writer to be used to print the class. May be {@literal null}.
+     */
+    private final PrintWriter printWriter;
+
+    /**
      * The printer to convert the visited class into text.
      */
     // DontCheck(MemberName): can't be renamed (for backward binary compatibility).
     public final Printer p;
-    /**
-     * The print writer to be used to print the class. May be {@literal null}.
-     */
-    private final PrintWriter printWriter;
 
     /**
      * Constructs a new {@link TraceClassVisitor}.

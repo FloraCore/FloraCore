@@ -74,15 +74,19 @@ public class CheckSignatureAdapter extends SignatureVisitor {
      * The valid automaton states for a {@link #visitExceptionType} method call.
      */
     private static final EnumSet<State> VISIT_EXCEPTION_TYPE_STATES = EnumSet.of(State.RETURN);
-    private static final String INVALID = "Invalid ";
-    /**
-     * The type of the visited signature.
-     */
-    private final int type;
+
     /**
      * The visitor to which this adapter must delegate calls. May be {@literal null}.
      */
     private final SignatureVisitor signatureVisitor;
+
+    private static final String INVALID = "Invalid ";
+
+    /**
+     * The type of the visited signature.
+     */
+    private final int type;
+
     /**
      * The current state of the automaton used to check the order of method calls.
      */
@@ -92,6 +96,21 @@ public class CheckSignatureAdapter extends SignatureVisitor {
      * Whether the visited signature can be 'V'.
      */
     private boolean canBeVoid;
+
+    /**
+     * The possible states of the automaton used to check the order of method calls.
+     */
+    private enum State {
+        EMPTY,
+        FORMAL,
+        BOUND,
+        SUPER,
+        PARAM,
+        RETURN,
+        SIMPLE_TYPE,
+        CLASS_TYPE,
+        END
+    }
 
     /**
      * Constructs a new {@link CheckSignatureAdapter}. <i>Subclasses must not use this
@@ -125,6 +144,8 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         this.signatureVisitor = signatureVisitor;
     }
 
+    // class and method signatures
+
     @Override
     public void visitFormalTypeParameter(final String name) {
         if (type == TYPE_SIGNATURE || !VISIT_FORMAL_TYPE_PARAMETER_STATES.contains(state)) {
@@ -136,8 +157,6 @@ public class CheckSignatureAdapter extends SignatureVisitor {
             signatureVisitor.visitFormalTypeParameter(name);
         }
     }
-
-    // class and method signatures
 
     @Override
     public SignatureVisitor visitClassBound() {
@@ -158,6 +177,8 @@ public class CheckSignatureAdapter extends SignatureVisitor {
                 TYPE_SIGNATURE, signatureVisitor == null ? null : signatureVisitor.visitInterfaceBound());
     }
 
+    // class signatures
+
     @Override
     public SignatureVisitor visitSuperclass() {
         if (type != CLASS_SIGNATURE || !VISIT_SUPER_CLASS_STATES.contains(state)) {
@@ -168,8 +189,6 @@ public class CheckSignatureAdapter extends SignatureVisitor {
                 TYPE_SIGNATURE, signatureVisitor == null ? null : signatureVisitor.visitSuperclass());
     }
 
-    // class signatures
-
     @Override
     public SignatureVisitor visitInterface() {
         if (type != CLASS_SIGNATURE || !VISIT_INTERFACE_STATES.contains(state)) {
@@ -178,6 +197,8 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         return new CheckSignatureAdapter(
                 TYPE_SIGNATURE, signatureVisitor == null ? null : signatureVisitor.visitInterface());
     }
+
+    // method signatures
 
     @Override
     public SignatureVisitor visitParameterType() {
@@ -188,8 +209,6 @@ public class CheckSignatureAdapter extends SignatureVisitor {
         return new CheckSignatureAdapter(
                 TYPE_SIGNATURE, signatureVisitor == null ? null : signatureVisitor.visitParameterType());
     }
-
-    // method signatures
 
     @Override
     public SignatureVisitor visitReturnType() {
@@ -213,6 +232,8 @@ public class CheckSignatureAdapter extends SignatureVisitor {
                 TYPE_SIGNATURE, signatureVisitor == null ? null : signatureVisitor.visitExceptionType());
     }
 
+    // type signatures
+
     @Override
     public void visitBaseType(final char descriptor) {
         if (type != TYPE_SIGNATURE || state != State.EMPTY) {
@@ -232,8 +253,6 @@ public class CheckSignatureAdapter extends SignatureVisitor {
             signatureVisitor.visitBaseType(descriptor);
         }
     }
-
-    // type signatures
 
     @Override
     public void visitTypeVariable(final String name) {
@@ -336,20 +355,5 @@ public class CheckSignatureAdapter extends SignatureVisitor {
                         INVALID + message + " (must not contain . ; [ / < > or :): " + name);
             }
         }
-    }
-
-    /**
-     * The possible states of the automaton used to check the order of method calls.
-     */
-    private enum State {
-        EMPTY,
-        FORMAL,
-        BOUND,
-        SUPER,
-        PARAM,
-        RETURN,
-        SIMPLE_TYPE,
-        CLASS_TYPE,
-        END
     }
 }
