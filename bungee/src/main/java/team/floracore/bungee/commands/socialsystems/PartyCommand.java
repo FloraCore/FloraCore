@@ -1,12 +1,15 @@
 package team.floracore.bungee.commands.socialsystems;
 
-import cloud.commandframework.CommandManager;
+import cloud.commandframework.CommandHelpHandler;
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandDescription;
 import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.processing.CommandContainer;
 import cloud.commandframework.annotations.specifier.Greedy;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
@@ -18,7 +21,9 @@ import org.floracore.api.data.DataType;
 import org.floracore.api.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
+import team.floracore.bungee.command.CommandManager;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
+import team.floracore.bungee.locale.message.HelpMessage;
 import team.floracore.bungee.locale.message.SocialSystemsMessage;
 import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.sender.Sender;
@@ -31,6 +36,8 @@ import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
+
+import static net.kyori.adventure.text.Component.newline;
 
 @CommandContainer
 @CommandDescription("floracore.command.description.party")
@@ -699,6 +706,26 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 }
             });
         }
+    }
+
+    @CommandMethod("party|p help")
+    @CommandDescription("floracore.command.description.party.help")
+    public void help(final @NotNull ProxiedPlayer player) {
+        CommandHelpHandler.HelpTopic<CommandSender> partyCmds = this.commandManager.getManager().createCommandHelpHandler().queryHelp(player, "party");
+        CommandHelpHandler.MultiHelpTopic<CommandSender> subCmds = (CommandHelpHandler.MultiHelpTopic<CommandSender>) partyCmds;
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        Component helpComponent = HelpMessage.HELP_PARTY_TITLE.build();
+        Sender sender = getPlugin().getSenderFactory().wrap(player);
+        for (String childSuggestion : subCmds.getChildSuggestions()) {
+            CommandHelpHandler.HelpTopic<CommandSender> subCmd = this.commandManager.getManager().createCommandHelpHandler().queryHelp(player, childSuggestion);
+            CommandHelpHandler.VerboseHelpTopic<CommandSender> subCmdInfo = (CommandHelpHandler.VerboseHelpTopic<CommandSender>) subCmd;
+            String description = subCmdInfo.getDescription();
+            if (!description.equalsIgnoreCase(EMPTY_DESCRIPTION)) {
+                helpComponent = Component.join(joinConfig, helpComponent, HelpMessage.HELP_PARTY_SUB_COMMAND.build(childSuggestion, description));
+            }
+        }
+        helpComponent = Component.join(joinConfig, helpComponent, MiscMessage.PARTY_HORIZONTAL_LINE.build());
+        sender.sendMessage(helpComponent);
     }
 
     @EventHandler
