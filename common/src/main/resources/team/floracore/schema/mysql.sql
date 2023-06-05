@@ -22,6 +22,16 @@ CREATE TABLE IF NOT EXISTS `{prefix}data`
     expiry   BIGINT             NOT NULL
 );
 
+CREATE TABLE IF NOT EXISTS `{prefix}data_int`
+(
+    id       INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+    uuid     VARCHAR(36)        NOT NULL,
+    type     VARCHAR(64)        NOT NULL,
+    data_key VARCHAR(255)       NOT NULL,
+    value    INT                NOT NULL,
+    expiry   BIGINT             NOT NULL
+);
+
 CREATE TABLE IF NOT EXISTS `{prefix}server`
 (
     id             INT AUTO_INCREMENT NOT NULL PRIMARY KEY,

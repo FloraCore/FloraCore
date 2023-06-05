@@ -41,6 +41,7 @@ public class PlayerListener extends FloraCoreBungeeListener {
             p.setLastLoginTime(currentTime);
         }
         storageImplementation.deleteDataExpired(u);
+        storageImplementation.deleteDataIntExpired(u);
     }
 
     @EventHandler

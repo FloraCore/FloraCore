@@ -217,6 +217,23 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
+    public DATA_INT insertDataInt(UUID uuid, DataType type, String key, int value, long expiry) {
+        DATA_INT dataInt = getSpecifiedDataInt(uuid, type, key);
+        if (dataInt == null) {
+            dataInt = new DATA_INT(plugin, this, -1, uuid, type, key, value, expiry);
+            try {
+                dataInt.init();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+        } else {
+            dataInt.setValue(value);
+            dataInt.setExpiry(expiry);
+        }
+        return dataInt;
+    }
+
+    @Override
     public List<DATA> selectData(UUID uuid) {
         List<DATA> ret = new ArrayList<>();
         try (Connection c = this.connectionFactory.getConnection()) {
@@ -230,6 +247,52 @@ public class SqlStorage implements StorageImplementation {
                         String value = rs.getString("value");
                         long expiry = rs.getLong("expiry");
                         ret.add(new DATA(plugin, this, id, uuid, DataType.parse(type), key, value, expiry));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ret;
+    }
+
+    @Override
+    public List<DATA_INT> selectDataInt(UUID uuid) {
+        List<DATA_INT> ret = new ArrayList<>();
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA_INT.SELECT))) {
+                ps.setString(1, uuid.toString());
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        String type = rs.getString("type");
+                        String key = rs.getString("data_key");
+                        int value = rs.getInt("value");
+                        long expiry = rs.getLong("expiry");
+                        ret.add(new DATA_INT(plugin, this, id, uuid, DataType.parse(type), key, value, expiry));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ret;
+    }
+
+    @Override
+    public List<DATA_INT> selectDataIntSorted(DataType dataType, String key, boolean ascending) {
+        List<DATA_INT> ret = new ArrayList<>();
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(ascending ? DATA_INT.SELECT_ASC : DATA_INT.SELECT_DESC))) {
+                ps.setString(1, dataType.getName());
+                ps.setString(2, key);
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        UUID uuid = UUID.fromString(rs.getString("uuid"));
+                        int value = rs.getInt("value");
+                        long expiry = rs.getLong("expiry");
+                        ret.add(new DATA_INT(plugin, this, id, uuid, dataType, key, value, expiry));
                     }
                 }
             }
@@ -254,6 +317,20 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
+    public DATA_INT getSpecifiedDataInt(UUID uuid, DataType type, String key) {
+        List<DATA_INT> ret = selectDataInt(uuid);
+        for (DATA_INT dataInt : ret) {
+            if (dataInt.getType() == type && dataInt.getKey().equalsIgnoreCase(key)) {
+                long currentTime = System.currentTimeMillis();
+                if (dataInt.getExpiry() <= 0 || dataInt.getExpiry() > currentTime) {
+                    return dataInt;
+                }
+            }
+        }
+        return null;
+    }
+
+    @Override
     public List<DATA> getSpecifiedTypeData(UUID uuid, DataType type) {
         List<DATA> ret = new ArrayList<>();
         long currentTime = System.currentTimeMillis();
@@ -266,9 +343,33 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
+    public List<DATA_INT> getSpecifiedTypeDataInt(UUID uuid, DataType type) {
+        List<DATA_INT> ret = new ArrayList<>();
+        long currentTime = System.currentTimeMillis();
+        for (DATA_INT dataInt : selectDataInt(uuid)) {
+            if (dataInt.getType() == type && (dataInt.getExpiry() <= 0 || dataInt.getExpiry() > currentTime)) {
+                ret.add(dataInt);
+            }
+        }
+        return ret;
+    }
+
+    @Override
     public void deleteDataAll(UUID uuid) {
         try (Connection c = this.connectionFactory.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA.DELETE_ALL))) {
+                ps.setString(1, uuid.toString());
+                ps.execute();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteDataIntAll(UUID uuid) {
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA_INT.DELETE_ALL))) {
                 ps.setString(1, uuid.toString());
                 ps.execute();
             }
@@ -291,6 +392,19 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
+    public void deleteDataIntType(UUID uuid, DataType type) {
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA_INT.DELETE_TYPE))) {
+                ps.setString(1, uuid.toString());
+                ps.setString(2, type.getName());
+                ps.execute();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void deleteDataExpired(UUID uuid) {
         List<DATA> ret = selectData(uuid);
         for (DATA data : ret) {
@@ -302,9 +416,32 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
+    public void deleteDataIntExpired(UUID uuid) {
+        List<DATA_INT> ret = selectDataInt(uuid);
+        for (DATA_INT dataInt : ret) {
+            long currentTime = System.currentTimeMillis();
+            if (!(dataInt.getExpiry() <= 0 || dataInt.getExpiry() > currentTime)) {
+                deleteDataIntID(dataInt.getId());
+            }
+        }
+    }
+
+    @Override
     public void deleteDataID(int id) {
         try (Connection c = this.connectionFactory.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA.DELETE_ID))) {
+                ps.setInt(1, id);
+                ps.execute();
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public void deleteDataIntID(int id) {
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA_INT.DELETE_ID))) {
                 ps.setInt(1, id);
                 ps.execute();
             }

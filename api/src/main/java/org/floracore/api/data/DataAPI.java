@@ -2,6 +2,7 @@ package org.floracore.api.data;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
+import java.util.SortedMap;
 import java.util.UUID;
 
 /**
@@ -19,6 +20,8 @@ public interface DataAPI {
      */
     @Nullable String getSpecifiedDataValue(UUID uuid, DataType type, String key);
 
+    Integer getSpecifiedDataIntValue(UUID uuid, DataType type, String key);
+
     /**
      * 获取指定Data的过期时间戳。
      * 若数据不存在,则返回null。
@@ -30,6 +33,8 @@ public interface DataAPI {
      */
     @Nullable Long getSpecifiedDataExpiry(UUID uuid, DataType type, String key);
 
+    Long getSpecifiedDataIntExpiry(UUID uuid, DataType type, String key);
+
     /**
      * 获取指定Data的ID
      * 若数据不存在,则返回null。
@@ -40,6 +45,8 @@ public interface DataAPI {
      * @return ID
      */
     @Nullable Integer getSpecifiedDataID(UUID uuid, DataType type, String key);
+
+    Integer getSpecifiedDataIntID(UUID uuid, DataType type, String key);
 
     /**
      * 插入数据
@@ -58,6 +65,8 @@ public interface DataAPI {
      */
     int insertData(UUID uuid, DataType type, String key, String value, long expiry);
 
+    int insertDataInt(UUID uuid, DataType type, String key, int value, long expiry);
+
     /**
      * 根据ID删除数据
      *
@@ -65,12 +74,16 @@ public interface DataAPI {
      */
     void deleteData(int id);
 
+    void deleteDataInt(int id);
+
     /**
      * 删除一名玩家全部的数据
      *
      * @param uuid 玩家的UUID
      */
     void deleteDataAll(UUID uuid);
+
+    void deleteDataIntAll(UUID uuid);
 
     /**
      * 删除一名玩家关于type的全部数据
@@ -80,10 +93,16 @@ public interface DataAPI {
      */
     void deleteDataType(UUID uuid, DataType type);
 
+    void deleteDataIntType(UUID uuid, DataType type);
+
     /**
      * 删除一名玩家已经给过期的全部数据
      *
      * @param uuid 玩家的UUID
      */
     void deleteDataExpired(UUID uuid);
+
+    void deleteDataIntExpired(UUID uuid);
+
+    SortedMap<UUID, Integer> getDataIntSorted(DataType dataType, String key, boolean ascending);
 }

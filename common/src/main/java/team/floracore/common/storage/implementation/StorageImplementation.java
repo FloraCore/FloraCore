@@ -46,22 +46,49 @@ public interface StorageImplementation {
      */
     DATA insertData(UUID uuid, DataType type, String key, String value, long expiry);
 
+    DATA_INT insertDataInt(UUID uuid, DataType type, String key, int value, long expiry);
+
     List<DATA> selectData(UUID uuid);
+
+    List<DATA_INT> selectDataInt(UUID uuid);
+
+    /**
+     * 获取排序的数据列表
+     * 限制：300条
+     *
+     * @param dataType  数据类型
+     * @param key       数据键
+     * @param ascending 是否升序
+     * @return 排序的数据列表
+     */
+    List<DATA_INT> selectDataIntSorted(DataType dataType, String key, boolean ascending);
 
     /**
      * 如果无该记录,则返回Null。
      */
     DATA getSpecifiedData(UUID uuid, DataType type, String key);
 
+    DATA_INT getSpecifiedDataInt(UUID uuid, DataType type, String key);
+
     List<DATA> getSpecifiedTypeData(UUID uuid, DataType type);
+
+    List<DATA_INT> getSpecifiedTypeDataInt(UUID uuid, DataType type);
 
     void deleteDataAll(UUID uuid);
 
+    void deleteDataIntAll(UUID uuid);
+
     void deleteDataType(UUID uuid, DataType type);
+
+    void deleteDataIntType(UUID uuid, DataType type);
 
     void deleteDataExpired(UUID uuid);
 
+    void deleteDataIntExpired(UUID uuid);
+
     void deleteDataID(int id);
+
+    void deleteDataIntID(int id);
 
     SERVER selectServer(String name);
 
