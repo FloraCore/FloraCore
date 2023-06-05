@@ -13,15 +13,15 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
  */
 @WrappedBukkitClass(@VersionName(maxVer = 17, value = "nms.PacketPlayOutPlayerInfo$PlayerInfoData"))
 public interface NmsPlayerInfoData extends WrappedBukkitObject {
-	@WrappedBukkitFieldAccessor(@VersionName("@0"))
-	WrappedGameProfile getGameProfile();
+    @WrappedBukkitFieldAccessor(@VersionName("@0"))
+    WrappedGameProfile getGameProfile();
 
-	@WrappedBukkitFieldAccessor(@VersionName("@0"))
-	void setGameProfile(WrappedGameProfile gameProfile);
+    @WrappedBukkitFieldAccessor(@VersionName("@0"))
+    void setGameProfile(WrappedGameProfile gameProfile);
 
-	@WrappedBukkitFieldAccessor(@VersionName("@0"))
-	NmsIChatBaseComponent getIChatBaseComponent();
+    @WrappedBukkitFieldAccessor(@VersionName("@0"))
+    NmsIChatBaseComponent getIChatBaseComponent();
 
-	@WrappedBukkitFieldAccessor(@VersionName("@0"))
-	void setIChatBaseComponent(NmsIChatBaseComponent iChatBaseComponent);
+    @WrappedBukkitFieldAccessor(@VersionName("@0"))
+    void setIChatBaseComponent(NmsIChatBaseComponent iChatBaseComponent);
 }

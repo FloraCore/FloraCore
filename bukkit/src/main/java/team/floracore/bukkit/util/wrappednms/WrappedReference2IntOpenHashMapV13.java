@@ -9,6 +9,6 @@ import team.floracore.common.util.Optional;
 @Optional
 @WrappedBukkitClass(@VersionName(value = "it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap", minVer = 13))
 public interface WrappedReference2IntOpenHashMapV13 extends WrappedBukkitObject {
-	@Override
-	Reference2IntOpenHashMap<Object> getRaw();
+    @Override
+    Reference2IntOpenHashMap<Object> getRaw();
 }

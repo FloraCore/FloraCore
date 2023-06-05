@@ -15,45 +15,45 @@ import java.util.UUID;
  */
 public interface PlatformEntity {
 
-	/**
-	 * Gets the unique id of the entity, if it has one.
-	 *
-	 * <p>For players, this returns their uuid assigned by the server.</p>
-	 *
-	 * @return the uuid of the object, if available
-	 */
-	@Nullable UUID getUniqueId();
+    /**
+     * Gets the unique id of the entity, if it has one.
+     *
+     * <p>For players, this returns their uuid assigned by the server.</p>
+     *
+     * @return the uuid of the object, if available
+     */
+    @Nullable UUID getUniqueId();
 
-	/**
-	 * Gets the name of the object
-	 *
-	 * @return the object name
-	 */
-	@NotNull
-	String getName();
+    /**
+     * Gets the name of the object
+     *
+     * @return the object name
+     */
+    @NotNull
+    String getName();
 
-	/**
-	 * Gets the entities type.
-	 *
-	 * @return the type
-	 */
-	@NotNull
-	Type getType();
+    /**
+     * Gets the entities type.
+     *
+     * @return the type
+     */
+    @NotNull
+    Type getType();
 
-	/**
-	 * The different types of {@link PlatformEntity}
-	 */
-	enum Type {
+    /**
+     * The different types of {@link PlatformEntity}
+     */
+    enum Type {
 
-		/**
-		 * Represents a player connected to the server
-		 */
-		PLAYER,
+        /**
+         * Represents a player connected to the server
+         */
+        PLAYER,
 
-		/**
-		 * Represents the server console
-		 */
-		CONSOLE
-	}
+        /**
+         * Represents the server console
+         */
+        CONSOLE
+    }
 
 }

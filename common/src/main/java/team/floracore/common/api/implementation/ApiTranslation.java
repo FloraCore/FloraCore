@@ -17,30 +17,30 @@ import java.util.UUID;
  */
 public class ApiTranslation implements TranslationAPI {
 
-	private final FloraCorePlugin plugin;
+    private final FloraCorePlugin plugin;
 
-	public ApiTranslation(FloraCorePlugin plugin) {
-		this.plugin = plugin;
-	}
+    public ApiTranslation(FloraCorePlugin plugin) {
+        this.plugin = plugin;
+    }
 
-	@Override
-	public void loadCustomLanguageFile(Path directory, boolean suppressDuplicatesError) {
-		plugin.getTranslationManager().loadFromFileSystem(directory, suppressDuplicatesError);
-	}
+    @Override
+    public void loadCustomLanguageFile(Path directory, boolean suppressDuplicatesError) {
+        plugin.getTranslationManager().loadFromFileSystem(directory, suppressDuplicatesError);
+    }
 
-	@Override
-	public void sendMessage(@NotNull Object sender, @NotNull Component component) {
-		Sender s = (Sender) sender;
-		s.sendMessage(component);
-	}
+    @Override
+    public void sendMessage(@NotNull Object sender, @NotNull Component component) {
+        Sender s = (Sender) sender;
+        s.sendMessage(component);
+    }
 
-	@Override
-	public void sendConsoleMessage(@NotNull Component component) {
-		plugin.getConsoleSender().sendMessage(component);
-	}
+    @Override
+    public void sendConsoleMessage(@NotNull Component component) {
+        plugin.getConsoleSender().sendMessage(component);
+    }
 
-	@Override
-	public Component render(Component component, @NotNull UUID uuid) {
-		return TranslationManager.render(component, uuid);
-	}
+    @Override
+    public Component render(Component component, @NotNull UUID uuid) {
+        return TranslationManager.render(component, uuid);
+    }
 }

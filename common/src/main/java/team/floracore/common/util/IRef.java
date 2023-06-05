@@ -1,13 +1,13 @@
 package team.floracore.common.util;
 
 public interface IRef<T> {
-	void set(T obj);
+    void set(T obj);
 
-	T get();
+    T get();
 
-	@Override
-	int hashCode();
+    @Override
+    int hashCode();
 
-	@Override
-	boolean equals(Object obj);
+    @Override
+    boolean equals(Object obj);
 }

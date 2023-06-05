@@ -6,22 +6,22 @@ import team.floracore.common.storage.implementation.StorageImplementation;
 import java.util.concurrent.Executor;
 
 public abstract class AbstractFloraCoreListener implements FloraCoreListener {
-	private final FloraCorePlugin plugin;
+    private final FloraCorePlugin plugin;
 
-	public AbstractFloraCoreListener(FloraCorePlugin plugin) {
-		this.plugin = plugin;
-	}
+    public AbstractFloraCoreListener(FloraCorePlugin plugin) {
+        this.plugin = plugin;
+    }
 
-	public FloraCorePlugin getPlugin() {
-		return plugin;
-	}
+    public FloraCorePlugin getPlugin() {
+        return plugin;
+    }
 
-	public StorageImplementation getStorageImplementation() {
-		return plugin.getStorage().getImplementation();
-	}
+    public StorageImplementation getStorageImplementation() {
+        return plugin.getStorage().getImplementation();
+    }
 
-	@Override
-	public Executor getAsyncExecutor() {
-		return plugin.getBootstrap().getScheduler().async();
-	}
+    @Override
+    public Executor getAsyncExecutor() {
+        return plugin.getBootstrap().getScheduler().async();
+    }
 }

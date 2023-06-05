@@ -12,7 +12,7 @@ import java.util.Set;
  * Applies FloraCore specific behaviour for {@link Dependency}s.
  */
 public class DependencyRegistry {
-	// @formatter:off
+    // @formatter:off
     private static final SetMultimap<StorageType, Dependency> STORAGE_DEPENDENCIES = ImmutableSetMultimap.<StorageType, Dependency>builder()
             .putAll(StorageType.MARIADB,        Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.MARIADB_DRIVER)
             .putAll(StorageType.MYSQL,          Dependency.SLF4J_API, Dependency.SLF4J_SIMPLE, Dependency.HIKARI, Dependency.MYSQL_DRIVER)

@@ -8,6 +8,6 @@ import team.floracore.common.util.wrapper.WrappedMethod;
 
 @WrappedBukkitClass(@VersionName("obc.CraftWorld"))
 public interface ObcWorld extends WrappedBukkitObject {
-	@WrappedMethod("getHandle")
-	NmsWorldServer getHandle();
+    @WrappedMethod("getHandle")
+    NmsWorldServer getHandle();
 }

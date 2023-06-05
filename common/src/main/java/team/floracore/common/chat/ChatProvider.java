@@ -114,6 +114,23 @@ public class ChatProvider {
         counter.set(data.size());
     }
 
+    public ChatProvider(FloraCorePlugin plugin, Uploader uploader, ChatType type) {
+        this.uploader = uploader;
+        target = type.name();
+        truncated = false;
+        StorageImplementation storageImplementation = plugin.getStorage().getImplementation();
+        List<CHAT> chats = storageImplementation.selectChatType(type);
+        Data d = new Data(type, " ");
+        data.add(d);
+        for (CHAT chat : chats) {
+            String name = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(chat.getUniqueId());
+            String ret =
+                    DATE_FORMAT.format(Instant.ofEpochMilli(chat.getTime())) + " > " + name + " : " + chat.getMessage();
+            d.content.add(ret);
+        }
+        counter.set(data.size());
+    }
+
     /**
      * 将聊天数据上传到ByteBin并返回url
      *

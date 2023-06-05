@@ -9,13 +9,13 @@ import org.bukkit.scoreboard.Scoreboard;
  * @author xLikeWATCHDOG
  */
 public abstract class BoardPage {
-	private final Scoreboard board;
+    private final Scoreboard board;
 
-	public BoardPage() {
-		board = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
-	}
+    public BoardPage() {
+        board = Bukkit.getServer().getScoreboardManager().getNewScoreboard();
+    }
 
-	public Scoreboard getBoard() {
-		return board;
-	}
+    public Scoreboard getBoard() {
+        return board;
+    }
 }

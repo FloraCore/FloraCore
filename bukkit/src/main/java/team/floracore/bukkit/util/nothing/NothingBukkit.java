@@ -9,79 +9,79 @@ import java.lang.reflect.Method;
 import java.util.List;
 
 public interface NothingBukkit extends Nothing {
-	@Override
-	default NothingInject[] getInjects(Method method) {
-		List<NothingInject> r = Lists.newArrayList(Nothing.super.getInjects(method));
-		for (NothingBukkitInject inject : method.getDeclaredAnnotationsByType(NothingBukkitInject.class)) {
-			String[] name = BukkitWrapper.inVersion(inject.name());
-			if (name.length > 0) {
-				r.add(new NothingInject() {
-					public Class<? extends Annotation> annotationType() {
-						return NothingInject.class;
-					}
+    @Override
+    default NothingInject[] getInjects(Method method) {
+        List<NothingInject> r = Lists.newArrayList(Nothing.super.getInjects(method));
+        for (NothingBukkitInject inject : method.getDeclaredAnnotationsByType(NothingBukkitInject.class)) {
+            String[] name = BukkitWrapper.inVersion(inject.name());
+            if (name.length > 0) {
+                r.add(new NothingInject() {
+                    public Class<? extends Annotation> annotationType() {
+                        return NothingInject.class;
+                    }
 
-					public NothingPriority priority() {
-						return inject.priority();
-					}
+                    public NothingPriority priority() {
+                        return inject.priority();
+                    }
 
-					public String[] name() {
-						return name;
-					}
+                    public String[] name() {
+                        return name;
+                    }
 
-					public Class<?>[] args() {
-						return inject.args();
-					}
+                    public Class<?>[] args() {
+                        return inject.args();
+                    }
 
-					public NothingLocation location() {
-						return inject.location();
-					}
+                    public NothingLocation location() {
+                        return inject.location();
+                    }
 
-					public NothingByteCode byteCode() {
-						return new NothingByteCode() {
-							public Class<? extends Annotation> annotationType() {
-								return NothingByteCode.class;
-							}
+                    public NothingByteCode byteCode() {
+                        return new NothingByteCode() {
+                            public Class<? extends Annotation> annotationType() {
+                                return NothingByteCode.class;
+                            }
 
-							public int index() {
-								return inject.byteCode().index();
-							}
+                            public int index() {
+                                return inject.byteCode().index();
+                            }
 
-							public int opcode() {
-								return inject.byteCode().opcode();
-							}
+                            public int opcode() {
+                                return inject.byteCode().opcode();
+                            }
 
-							public Class<?> owner() {
-								return inject.byteCode().owner();
-							}
+                            public Class<?> owner() {
+                                return inject.byteCode().owner();
+                            }
 
-							public String[] name() {
-								return BukkitWrapper.inVersion(inject.byteCode().name());
-							}
+                            public String[] name() {
+                                return BukkitWrapper.inVersion(inject.byteCode().name());
+                            }
 
-							public Class<?>[] methodArgs() {
-								return inject.byteCode().methodArgs();
-							}
+                            public Class<?>[] methodArgs() {
+                                return inject.byteCode().methodArgs();
+                            }
 
-							public int var() {
-								return inject.byteCode().var();
-							}
+                            public int var() {
+                                return inject.byteCode().var();
+                            }
 
-							public int label() {
-								return inject.byteCode().label();
-							}
-						};
-					}
+                            public int label() {
+                                return inject.byteCode().label();
+                            }
+                        };
+                    }
 
-					public int shift() {
-						return inject.shift();
-					}
+                    public int shift() {
+                        return inject.shift();
+                    }
 
-					public boolean optional() {
-						return inject.optional();
-					}
-				});
-			}
-		}
-		return r.toArray(new NothingInject[0]);
-	}
+                    public boolean optional() {
+                        return inject.optional();
+                    }
+                });
+            }
+        }
+        return r.toArray(new NothingInject[0]);
+    }
 }

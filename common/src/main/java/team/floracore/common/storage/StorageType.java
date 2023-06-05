@@ -8,40 +8,40 @@ import java.util.List;
  * 数据库链接类型。
  */
 public enum StorageType {
-	// Remote databases
-	MARIADB("MariaDB", "mariadb"),
-	MYSQL("MySQL", "mysql"),
-	POSTGRESQL("PostgreSQL", "postgresql"),
+    // Remote databases
+    MARIADB("MariaDB", "mariadb"),
+    MYSQL("MySQL", "mysql"),
+    POSTGRESQL("PostgreSQL", "postgresql"),
 
-	// Local databases
-	SQLITE("SQLite", "sqlite"),
-	H2("H2", "h2");
+    // Local databases
+    SQLITE("SQLite", "sqlite"),
+    H2("H2", "h2");
 
-	private final String name;
+    private final String name;
 
-	private final List<String> identifiers;
+    private final List<String> identifiers;
 
-	StorageType(String name, String... identifiers) {
-		this.name = name;
-		this.identifiers = ImmutableList.copyOf(identifiers);
-	}
+    StorageType(String name, String... identifiers) {
+        this.name = name;
+        this.identifiers = ImmutableList.copyOf(identifiers);
+    }
 
-	public static StorageType parse(String name, StorageType def) {
-		for (StorageType t : values()) {
-			for (String id : t.getIdentifiers()) {
-				if (id.equalsIgnoreCase(name)) {
-					return t;
-				}
-			}
-		}
-		return def;
-	}
+    public static StorageType parse(String name, StorageType def) {
+        for (StorageType t : values()) {
+            for (String id : t.getIdentifiers()) {
+                if (id.equalsIgnoreCase(name)) {
+                    return t;
+                }
+            }
+        }
+        return def;
+    }
 
-	public List<String> getIdentifiers() {
-		return this.identifiers;
-	}
+    public List<String> getIdentifiers() {
+        return this.identifiers;
+    }
 
-	public String getName() {
-		return this.name;
-	}
+    public String getName() {
+        return this.name;
+    }
 }

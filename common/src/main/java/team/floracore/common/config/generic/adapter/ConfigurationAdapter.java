@@ -8,23 +8,23 @@ import java.util.Map;
 
 public interface ConfigurationAdapter {
 
-	FloraCorePlugin getPlugin();
+    FloraCorePlugin getPlugin();
 
-	void reload();
+    void reload();
 
-	String getString(String path, String def);
+    String getString(String path, String def);
 
-	int getInteger(String path, int def);
+    int getInteger(String path, int def);
 
-	float getFloat(String path, float def);
+    float getFloat(String path, float def);
 
-	double getDouble(String path, double def);
+    double getDouble(String path, double def);
 
-	boolean getBoolean(String path, boolean def);
+    boolean getBoolean(String path, boolean def);
 
-	List<String> getStringList(String path, List<String> def);
+    List<String> getStringList(String path, List<String> def);
 
-	Map<String, String> getStringMap(String path, Map<String, String> def);
+    Map<String, String> getStringMap(String path, Map<String, String> def);
 
-	Collection<String> getKeys();
+    Collection<String> getKeys();
 }

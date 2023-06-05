@@ -14,33 +14,33 @@ import java.util.List;
  * @author xLikeWATCHDOG
  */
 public class BodyUpdateEvent extends Event {
-	private static final HandlerList handlerList = new HandlerList();
-	private final Player player;
-	private List<String> body = Collections.emptyList();
+    private static final HandlerList handlerList = new HandlerList();
+    private final Player player;
+    private List<String> body = Collections.emptyList();
 
-	public BodyUpdateEvent(Player player) {
-		super(true);
-		this.player = player;
-	}
+    public BodyUpdateEvent(Player player) {
+        super(true);
+        this.player = player;
+    }
 
-	public static HandlerList getHandlerList() {
-		return handlerList;
-	}
+    public static HandlerList getHandlerList() {
+        return handlerList;
+    }
 
-	public Player getPlayer() {
-		return player;
-	}
+    public Player getPlayer() {
+        return player;
+    }
 
-	public List<String> getBody() {
-		return body;
-	}
+    public List<String> getBody() {
+        return body;
+    }
 
-	public void setBody(List<String> body) {
-		this.body = body;
-	}
+    public void setBody(List<String> body) {
+        this.body = body;
+    }
 
-	@Override
-	public @NotNull HandlerList getHandlers() {
-		return handlerList;
-	}
+    @Override
+    public @NotNull HandlerList getHandlers() {
+        return handlerList;
+    }
 }

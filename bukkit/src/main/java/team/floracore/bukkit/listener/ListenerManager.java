@@ -9,32 +9,32 @@ import team.floracore.bukkit.listeners.ScoreboardListener;
 import team.floracore.common.plugin.FloraCorePlugin;
 
 public class ListenerManager {
-	private final FCBukkitPlugin plugin;
+    private final FCBukkitPlugin plugin;
 
-	public ListenerManager(FCBukkitPlugin plugin) {
-		this.plugin = plugin;
-		// Create the Listeners
-		this.constructListeners();
-	}
+    public ListenerManager(FCBukkitPlugin plugin) {
+        this.plugin = plugin;
+        // Create the Listeners
+        this.constructListeners();
+    }
 
-	private void constructListeners() {
-		PluginManager pm = getPluginManager();
-		Plugin p = plugin.getBootstrap().getLoader();
-		pm.registerEvents(new PlayerListener(plugin), p);
-		pm.registerEvents(new ScoreboardListener(plugin), p);
-	}
+    private void constructListeners() {
+        PluginManager pm = getPluginManager();
+        Plugin p = plugin.getBootstrap().getLoader();
+        pm.registerEvents(new PlayerListener(plugin), p);
+        pm.registerEvents(new ScoreboardListener(plugin), p);
+    }
 
-	public PluginManager getPluginManager() {
-		return plugin.getBootstrap().getServer().getPluginManager();
-	}
+    public PluginManager getPluginManager() {
+        return plugin.getBootstrap().getServer().getPluginManager();
+    }
 
-	public FloraCorePlugin getPlugin() {
-		return plugin;
-	}
+    public FloraCorePlugin getPlugin() {
+        return plugin;
+    }
 
-	public void registerListener(Listener listener) {
-		PluginManager pm = getPluginManager();
-		Plugin p = plugin.getBootstrap().getLoader();
-		pm.registerEvents(listener, p);
-	}
+    public void registerListener(Listener listener) {
+        PluginManager pm = getPluginManager();
+        Plugin p = plugin.getBootstrap().getLoader();
+        pm.registerEvents(listener, p);
+    }
 }

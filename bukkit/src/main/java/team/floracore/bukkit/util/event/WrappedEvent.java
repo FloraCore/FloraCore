@@ -7,9 +7,9 @@ import team.floracore.common.util.wrapper.WrappedObject;
 
 @WrappedClass("org.bukkit.event.Event")
 public interface WrappedEvent extends WrappedObject {
-	@Override
-	Event getRaw();
+    @Override
+    Event getRaw();
 
-	@WrappedFieldAccessor("async")
-	WrappedEvent setAsync(boolean async);
+    @WrappedFieldAccessor("async")
+    WrappedEvent setAsync(boolean async);
 }

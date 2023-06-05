@@ -5,9 +5,9 @@ package team.floracore.common.plugin.scheduler;
  */
 public interface SchedulerTask {
 
-	/**
-	 * Cancels the task.
-	 */
-	void cancel();
+    /**
+     * Cancels the task.
+     */
+    void cancel();
 
 }

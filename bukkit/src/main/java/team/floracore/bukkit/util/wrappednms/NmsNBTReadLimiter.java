@@ -7,12 +7,12 @@ import team.floracore.common.util.wrapper.WrappedConstructor;
 import team.floracore.common.util.wrapper.WrappedObject;
 
 @WrappedBukkitClass({@VersionName(value = "nms.NBTReadLimiter", maxVer = 17),
-		@VersionName(value = "net.minecraft.nbt.NBTReadLimiter", minVer = 17)})
+        @VersionName(value = "net.minecraft.nbt.NBTReadLimiter", minVer = 17)})
 public interface NmsNBTReadLimiter extends WrappedBukkitObject {
-	static NmsNBTReadLimiter newInstance(long l) {
-		return WrappedObject.getStatic(NmsNBTReadLimiter.class).staticNewInstance(l);
-	}
+    static NmsNBTReadLimiter newInstance(long l) {
+        return WrappedObject.getStatic(NmsNBTReadLimiter.class).staticNewInstance(l);
+    }
 
-	@WrappedConstructor
-	NmsNBTReadLimiter staticNewInstance(long l);
+    @WrappedConstructor
+    NmsNBTReadLimiter staticNewInstance(long l);
 }

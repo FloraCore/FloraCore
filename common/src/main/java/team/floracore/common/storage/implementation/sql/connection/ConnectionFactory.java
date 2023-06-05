@@ -8,14 +8,14 @@ import java.util.function.Function;
 
 public interface ConnectionFactory {
 
-	String getImplementationName();
+    String getImplementationName();
 
-	void init(FloraCorePlugin plugin);
+    void init(FloraCorePlugin plugin);
 
-	void shutdown() throws Exception;
+    void shutdown() throws Exception;
 
-	Function<String, String> getStatementProcessor();
+    Function<String, String> getStatementProcessor();
 
-	Connection getConnection() throws SQLException;
+    Connection getConnection() throws SQLException;
 
 }

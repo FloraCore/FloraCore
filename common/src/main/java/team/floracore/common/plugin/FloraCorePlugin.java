@@ -26,122 +26,122 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 public interface FloraCorePlugin {
-	/**
-	 * Gets the bootstrap plugin instance
-	 *
-	 * @return the bootstrap plugin
-	 */
-	FloraCoreBootstrap getBootstrap();
+    /**
+     * Gets the bootstrap plugin instance
+     *
+     * @return the bootstrap plugin
+     */
+    FloraCoreBootstrap getBootstrap();
 
-	OkHttpClient getHttpClient();
+    OkHttpClient getHttpClient();
 
-	/**
-	 * Gets a wrapped logger instance for the platform.
-	 *
-	 * @return the plugin's logger
-	 */
-	PluginLogger getLogger();
+    /**
+     * Gets a wrapped logger instance for the platform.
+     *
+     * @return the plugin's logger
+     */
+    PluginLogger getLogger();
 
-	/**
-	 * Gets the dependency manager for the plugin
-	 *
-	 * @return the dependency manager
-	 */
-	DependencyManager getDependencyManager();
+    /**
+     * Gets the dependency manager for the plugin
+     *
+     * @return the dependency manager
+     */
+    DependencyManager getDependencyManager();
 
-	/**
-	 * Gets the plugin's configuration
-	 *
-	 * @return the plugin config
-	 */
-	FloraCoreConfiguration getConfiguration();
+    /**
+     * Gets the plugin's configuration
+     *
+     * @return the plugin config
+     */
+    FloraCoreConfiguration getConfiguration();
 
-	NamesRepository getNamesRepository();
+    NamesRepository getNamesRepository();
 
-	/**
-	 * Gets the primary data storage instance. This is likely to be wrapped with extra layers for caching, etc.
-	 *
-	 * @return the storage handler instance
-	 */
-	Storage getStorage();
+    /**
+     * Gets the primary data storage instance. This is likely to be wrapped with extra layers for caching, etc.
+     *
+     * @return the storage handler instance
+     */
+    Storage getStorage();
 
-	void setStorage(Storage storage);
+    void setStorage(Storage storage);
 
-	/**
-	 * Gets a list of online Senders on the platform
-	 *
-	 * @return a {@link java.util.List} of senders online on the platform
-	 */
-	Stream<Sender> getOnlineSenders();
+    /**
+     * Gets a list of online Senders on the platform
+     *
+     * @return a {@link java.util.List} of senders online on the platform
+     */
+    Stream<Sender> getOnlineSenders();
 
-	/**
-	 * Gets the console.
-	 *
-	 * @return the console sender of the instance
-	 */
-	Sender getConsoleSender();
+    /**
+     * Gets the console.
+     *
+     * @return the console sender of the instance
+     */
+    Sender getConsoleSender();
 
-	/**
-	 * Returns the class implementing the FloraCoreAPI on this platform.
-	 *
-	 * @return the api
-	 */
-	FloraCoreApiProvider getApiProvider();
+    /**
+     * Returns the class implementing the FloraCoreAPI on this platform.
+     *
+     * @return the api
+     */
+    FloraCoreApiProvider getApiProvider();
 
-	/**
-	 * Gets the extension manager.
-	 *
-	 * @return the extension manager
-	 */
-	SimpleExtensionManager getExtensionManager();
+    /**
+     * Gets the extension manager.
+     *
+     * @return the extension manager
+     */
+    SimpleExtensionManager getExtensionManager();
 
-	/**
-	 * Gets the instance providing locale translations for the plugin
-	 *
-	 * @return the translation manager
-	 */
-	TranslationManager getTranslationManager();
+    /**
+     * Gets the instance providing locale translations for the plugin
+     *
+     * @return the translation manager
+     */
+    TranslationManager getTranslationManager();
 
-	/**
-	 * Gets the translation repository
-	 *
-	 * @return the translation repository
-	 */
-	TranslationRepository getTranslationRepository();
+    /**
+     * Gets the translation repository
+     *
+     * @return the translation repository
+     */
+    TranslationRepository getTranslationRepository();
 
-	DataManager getDataManager();
+    DataManager getDataManager();
 
-	Map<String, List<String>> getLoadedPlugins();
+    Map<String, List<String>> getLoadedPlugins();
 
-	boolean isPluginInstalled(String name);
+    boolean isPluginInstalled(String name);
 
-	boolean isPluginInstalled(String name, String author);
+    boolean isPluginInstalled(String name, String author);
 
-	String getServerName();
+    String getServerName();
 
-	/**
-	 * Gets the messaging service.
-	 *
-	 * @return the messaging service
-	 */
-	Optional<InternalMessagingService> getMessagingService();
+    /**
+     * Gets the messaging service.
+     *
+     * @return the messaging service
+     */
+    Optional<InternalMessagingService> getMessagingService();
 
-	/**
-	 * Sets the messaging service.
-	 *
-	 * @param service the service
-	 */
-	void setMessagingService(InternalMessagingService service);
+    /**
+     * Sets the messaging service.
+     *
+     * @param service the service
+     */
+    void setMessagingService(InternalMessagingService service);
 
-	boolean processIncomingMessage(String type, JsonElement content, UUID id);
+    boolean processIncomingMessage(String type, JsonElement content, UUID id);
 
-	StorageFactory getStorageFactory();
+    StorageFactory getStorageFactory();
 
-	boolean luckPermsHook();
+    boolean luckPermsHook();
 
-	Sender getSender(UUID uuid);
+    Sender getSender(UUID uuid);
 
-	BytebinClient getBytebin();
+    BytebinClient getBytebin();
 
-	BytesocksClient getBytesocks();
+    BytesocksClient getBytesocks();
 }

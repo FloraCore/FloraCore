@@ -5,14 +5,14 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
 import team.floracore.bukkit.util.wrapper.WrappedBukkitFieldAccessor;
 
 @WrappedBukkitClass({@VersionName(value = "nms.EntityPlayer", maxVer = 17),
-		@VersionName(value = "net.minecraft.server.level.EntityPlayer", minVer = 17)})
+        @VersionName(value = "net.minecraft.server.level.EntityPlayer", minVer = 17)})
 public interface NmsEntityPlayer extends NmsEntityHuman {
-	@WrappedBukkitFieldAccessor({@VersionName("playerConnection"), @VersionName(minVer = 17, value = "b")})
-	NmsPlayerConnection getPlayerConnection();
+    @WrappedBukkitFieldAccessor({@VersionName("playerConnection"), @VersionName(minVer = 17, value = "b")})
+    NmsPlayerConnection getPlayerConnection();
 
-	@WrappedBukkitFieldAccessor(@VersionName("ping"))
-	int getPing();
+    @WrappedBukkitFieldAccessor(@VersionName("ping"))
+    int getPing();
 
-	@WrappedBukkitFieldAccessor(@VersionName("playerInteractManager"))
-	NmsPlayerInteractManager getPlayerInteractManager();
+    @WrappedBukkitFieldAccessor(@VersionName("playerInteractManager"))
+    NmsPlayerInteractManager getPlayerInteractManager();
 }

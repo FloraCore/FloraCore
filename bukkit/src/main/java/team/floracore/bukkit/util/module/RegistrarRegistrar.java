@@ -4,39 +4,39 @@ import com.google.common.collect.Lists;
 import team.floracore.bukkit.FCBukkitBootstrap;
 
 public class RegistrarRegistrar extends AbsModule implements IRegistrar<IRegistrar> {
-	public static RegistrarRegistrar instance = new RegistrarRegistrar();
+    public static RegistrarRegistrar instance = new RegistrarRegistrar();
 
-	public RegistrarRegistrar() {
-		super(FCBukkitBootstrap.loader);
-	}
+    public RegistrarRegistrar() {
+        super(FCBukkitBootstrap.loader);
+    }
 
-	@Override
-	public Class<IRegistrar> getType() {
-		return IRegistrar.class;
-	}
+    @Override
+    public Class<IRegistrar> getType() {
+        return IRegistrar.class;
+    }
 
-	@Override
-	public boolean register(IRegistrar obj) {
-		IRegistrar.registers.add(obj);
-		return true;
-	}
+    @Override
+    public boolean register(IRegistrar obj) {
+        IRegistrar.registers.add(obj);
+        return true;
+    }
 
-	@Override
-	public void unregister(IRegistrar obj) {
-		IRegistrar.registers.remove(obj);
-	}
+    @Override
+    public void unregister(IRegistrar obj) {
+        IRegistrar.registers.remove(obj);
+    }
 
-	@Override
-	public void onEnable() {
-		register(this);
-		this.getRegisteredObjects().put(RegistrarRegistrar.instance, Lists.newLinkedList(Lists.newArrayList(this)));
-	}
+    @Override
+    public void onEnable() {
+        register(this);
+        this.getRegisteredObjects().put(RegistrarRegistrar.instance, Lists.newLinkedList(Lists.newArrayList(this)));
+    }
 
-	@Override
-	public void reg(Object obj) {
-		if (obj == this) {
-			return;
-		}
-		super.reg(obj);
-	}
+    @Override
+    public void reg(Object obj) {
+        if (obj == this) {
+            return;
+        }
+        super.reg(obj);
+    }
 }

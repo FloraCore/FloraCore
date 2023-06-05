@@ -15,20 +15,20 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface OutgoingMessage extends Message {
 
-	/**
-	 * Gets an encoded string form of this message.
-	 *
-	 * <p>The format of this string is likely to change between versions and
-	 * should not be depended on.</p>
-	 *
-	 * <p>Implementations which want to use a standard method of serialisation
-	 * can send outgoing messages using the string returned by this method, and
-	 * pass on the message on the "other side" using
-	 * {@link IncomingMessageConsumer#consumeIncomingMessageAsString(String)}.</p>
-	 *
-	 * @return an encoded string form of the message
-	 */
-	@NotNull
-	String asEncodedString();
+    /**
+     * Gets an encoded string form of this message.
+     *
+     * <p>The format of this string is likely to change between versions and
+     * should not be depended on.</p>
+     *
+     * <p>Implementations which want to use a standard method of serialisation
+     * can send outgoing messages using the string returned by this method, and
+     * pass on the message on the "other side" using
+     * {@link IncomingMessageConsumer#consumeIncomingMessageAsString(String)}.</p>
+     *
+     * @return an encoded string form of the message
+     */
+    @NotNull
+    String asEncodedString();
 
 }

@@ -12,6 +12,6 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
  */
 @WrappedBukkitClass(@VersionName(maxVer = 17, value = "nms.PlayerInteractManager"))
 public interface NmsPlayerInteractManager extends WrappedBukkitObject {
-	@WrappedBukkitMethod(@VersionName("getGameMode"))
-	NmsEnumGamemode getGameMode();
+    @WrappedBukkitMethod(@VersionName("getGameMode"))
+    NmsEnumGamemode getGameMode();
 }
