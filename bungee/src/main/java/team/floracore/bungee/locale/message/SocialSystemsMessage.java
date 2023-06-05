@@ -237,18 +237,12 @@ public interface SocialSystemsMessage extends AbstractMessage {
                         // {}
                         .args(text(target, GRAY), text(5, RED)).color(AQUA).build(),
                 translatable().key("floracore.command.misc.party.offline.leader.transfer.1")
-                        .color(GRAY)
-                        .append(FULL_STOP)
-                        .append(translatable("floracore.command.misc.party.offline.leader.transfer.2"))
-                        .color(GRAY)
-                        .append(FULL_STOP)
-                        .append(translatable("floracore.command.misc.party.offline.leader.transfer.3"))
-                        .color(GRAY)
-                        .append(FULL_STOP)
-                        .color(AQUA)
-                        .build()
-                , MiscMessage.PARTY_HORIZONTAL_LINE.build()
-        );
+                        .color(GRAY).append(FULL_STOP).build(),
+                translatable().key("floracore.command.misc.party.offline.leader.transfer.2")
+                        .color(GRAY).append(FULL_STOP).build(),
+                translatable().key("floracore.command.misc.party.offline.leader.transfer.3")
+                        .color(GRAY).append(FULL_STOP).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build());
     };
 
     Args2<String, String> COMMAND_MISC_PARTY_OFFLINE_TRANSFER = (offlinePlayer, target) -> {
