@@ -61,9 +61,9 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
 		List<TranslationRepository.LanguageInfo> availableTranslations;
 		try {
 			availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
-		} catch (IOException | UnsuccessfulRequestException e) {
+		} catch (IOException | UnsuccessfulRequestException | UnsupportedOperationException e) {
 			getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
-			return null;
+			availableTranslations = new ArrayList<>();
 		}
 		List<TranslationRepository.LanguageInfo> finalAvailableTranslations = availableTranslations;
 		Locale defaultLanguage = TranslationManager.DEFAULT_LOCALE;
