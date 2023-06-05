@@ -7,6 +7,10 @@ import me.huanmeng.opensource.bukkit.gui.GuiButton;
 import me.huanmeng.opensource.bukkit.gui.button.Button;
 import me.huanmeng.opensource.bukkit.gui.button.function.PlayerClickCancelUpdateAllInterface;
 import me.huanmeng.opensource.bukkit.gui.impl.GuiPage;
+import me.huanmeng.opensource.bukkit.gui.impl.page.PageButton;
+import me.huanmeng.opensource.bukkit.gui.impl.page.PageButtonType;
+import me.huanmeng.opensource.bukkit.gui.impl.page.PageSetting;
+import me.huanmeng.opensource.bukkit.gui.impl.page.PageSettings;
 import me.huanmeng.opensource.bukkit.gui.slot.Slot;
 import me.huanmeng.opensource.bukkit.gui.slot.Slots;
 import net.kyori.adventure.text.Component;
@@ -30,6 +34,7 @@ import team.floracore.common.sender.Sender;
 
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Supplier;
 
 @CommandContainer
 @CommandDescription("floracore.command.description.language")
@@ -53,7 +58,7 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
 		Sender s = getPlugin().getSenderFactory().wrap(player);
 		UUID uuid = player.getUniqueId();
 		List<Button> buttons = new ArrayList<>();
-		List<TranslationRepository.LanguageInfo> availableTranslations = new ArrayList<>();
+		List<TranslationRepository.LanguageInfo> availableTranslations;
 		try {
 			availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
 		} catch (IOException | UnsuccessfulRequestException e) {
@@ -112,63 +117,25 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
 		GuiPage gui = new GuiPage(player, buttons, 16, LINE);
 		gui.title(title);
 		gui.setPlayer(player);
-		gui.addAttachedButton(
-				new GuiButton(
-						Slot.ofGame(1, 6),
-						Button.of(
-								p -> {
-									if (gui.pagination().hasLast(gui.page())) {
-										Component previous =
-												TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(),
-												uuid);
-										Component turn =
-												TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() - 1),
-												uuid);
-										return new ItemStackBuilder(Material.ARROW).setName(previous)
-										                                           .setLore(Collections.singletonList(
-												                                           turn))
-										                                           .get();
-									} else {
-										return new ItemStack(Material.AIR);
-									}
-								},
-								/*点击后刷新所有按钮*/
-								(PlayerClickCancelUpdateAllInterface) (p, click, action, slotType, slot, hotBarKey) -> {
-									if (gui.pagination().hasLast(gui.page())) {
-										gui.page(gui.page() - 1);
-									}
-								}
-						         )
-				)
-		                     );
-		gui.addAttachedButton(
-				new GuiButton(
-						Slot.ofGame(9, 6),
-						Button.of(
-								p -> {
-									if (gui.pagination().hasNext(gui.page())) {
-										Component next =
-												TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
-										Component turn =
-												TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() + 1),
-												uuid);
-										return new ItemStackBuilder(Material.ARROW).setName(next)
-										                                           .setLore(Collections.singletonList(
-												                                           turn))
-										                                           .get();
-									} else {
-										return new ItemStack(Material.AIR);
-									}
-								},
-								/*点击后刷新所有按钮*/
-								(PlayerClickCancelUpdateAllInterface) (p, click, action, slotType, slot, hotBarKey) -> {
-									if (gui.pagination().hasNext(gui.page())) {
-										gui.page(gui.page() + 1);
-									}
-								}
-						         )
-				)
-		                     );
+		Component previous =
+				TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
+		Component turn =
+				TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() - 1), uuid);
+		ItemStack ip = new ItemStackBuilder(Material.ARROW).setName(previous)
+				.setLore(Collections.singletonList(turn))
+				.get();
+		Button bp = Button.of(p -> ip);
+		Component next =
+				TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
+		Component turn1 =
+				TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() + 1),
+						uuid);
+		ItemStack n = new ItemStackBuilder(Material.ARROW).setName(next)
+				.setLore(Collections.singletonList(turn1))
+				.get();
+		Button bn = Button.of(p -> n);
+		PageSetting ps = PageSettings.normal(gui, bp, bn);
+		gui.pageSetting(ps);
 		return gui;
 	}
 }
