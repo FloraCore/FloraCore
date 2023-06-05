@@ -41,6 +41,7 @@ shadowJar {
     relocate 'org.apache.commons.pool2', 'team.floracore.lib.commonspool2'
     relocate 'okhttp3', 'team.floracore.lib.okhttp3'
     relocate 'okio', 'team.floracore.lib.okio'
+    relocate 'cloud.commandframework', 'team.floracore.lib.cloud'
 }
 
 artifacts {
