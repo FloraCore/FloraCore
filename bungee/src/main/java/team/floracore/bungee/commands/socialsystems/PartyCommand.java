@@ -245,7 +245,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 }
                 if (leader.equals(ut) || moderators.contains(ut)) {
                     if (!leader.equals(uuid)) {
-                        SocialSystemsMessage.COMMAND_MISC_PARTY_KICK_NOT_PERMISSION.send(sender, target);
+                        SocialSystemsMessage.COMMAND_MISC_PARTY_KICK_NOT_PERMISSION.send(sender, ut);
                         return;
                     }
                 }
@@ -647,7 +647,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                                             targetUUID.toString())));
                 });
             } else {
-                SocialSystemsMessage.COMMAND_MISC_PARTY_DEMOTE_ALREADY_IN.send(sender, target);
+                SocialSystemsMessage.COMMAND_MISC_PARTY_DEMOTE_ALREADY_IN.send(sender, targetUUID);
             }
         }
     }
