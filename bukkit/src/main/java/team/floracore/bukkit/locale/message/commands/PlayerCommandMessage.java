@@ -728,4 +728,51 @@ public interface PlayerCommandMessage extends AbstractMessage {
             .key("floracore.command.misc.nick.name.illegal.character")
             .append(FULL_STOP)
             .color(RED));
+
+    Args1<String> COMMAND_TELEPORT = (target) -> AbstractMessage.prefixed(translatable()
+            // 你已传送至 {0}
+            .key("floracore.command.teleport")
+            .args(text(target, GREEN))
+            .color(AQUA));
+
+    Args2<String, String> COMMAND_TELEPORT_OTHER = (sender, target) -> AbstractMessage.prefixed(translatable()
+            // {0} 将你传送至 {1}
+            .key("floracore.command.teleport.other")
+            .args(text(sender, GREEN), text(target, GREEN))
+            .color(AQUA));
+
+    Args2<String, String> COMMAND_TELEPORT_OTHER_SENDER = (transmitter, target) -> AbstractMessage.prefixed(translatable()
+            // 成功将 {0} 传送至 {1}
+            .key("floracore.command.teleport.other.sender")
+            .args(text(transmitter, GREEN), text(target, GREEN))
+            .color(AQUA));
+
+    Args3<Double, Double, Double> COMMAND_TELEPORT_POSITION = (x, y, z) -> AbstractMessage.prefixed(translatable()
+            // 你已传送至坐标 {0} {1} {2}
+            .key("floracore.command.teleport.position")
+            .args(text(x, GREEN), text(y, GREEN), text(z, GREEN))
+            .color(AQUA));
+
+    Args4<Double, Double, Double, String> COMMAND_TELEPORT_POSITION_OTHER = (x, y, z, sender) -> AbstractMessage.prefixed(translatable()
+            // {3} 将你传送至坐标 {0} {1} {2}
+            .key("floracore.command.teleport.position.other")
+            .args(text(x, GREEN), text(y, GREEN), text(z, GREEN), text(sender, GREEN))
+            .color(AQUA));
+
+    Args4<Double, Double, Double, String> COMMAND_TELEPORT_POSITION_OTHER_SENDER = (x, y, z, transmitter) -> AbstractMessage.prefixed(translatable()
+            // 成功将 {3} 传送至坐标 {0} {1} {2}
+            .key("floracore.command.teleport.position.other.sender")
+            .args(text(x, GREEN), text(y, GREEN), text(z, GREEN), text(transmitter, GREEN))
+            .color(AQUA));
+
+    Args0 COMMAND_TELEPORT_TELEPORTING = () -> AbstractMessage.prefixed(translatable()
+            // 正在传送……
+            .key("floracore.command.teleport.teleporting")
+            .color(AQUA));
+
+    Args0 COMMAND_TELEPORT_INVALID_SCOPE = () -> AbstractMessage.prefixed(translatable()
+            // 传送坐标值超过最大范围 {0}
+            .key("floracore.command.teleport.invalid.scope")
+            .args(text(30000000, DARK_RED))
+            .color(RED));
 }

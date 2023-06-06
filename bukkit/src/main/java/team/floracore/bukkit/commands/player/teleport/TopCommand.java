@@ -1,4 +1,4 @@
-package team.floracore.bukkit.commands.player;
+package team.floracore.bukkit.commands.player.teleport;
 
 import cloud.commandframework.annotations.CommandDescription;
 import cloud.commandframework.annotations.CommandMethod;

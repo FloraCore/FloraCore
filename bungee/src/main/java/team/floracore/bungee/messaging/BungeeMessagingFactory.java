@@ -86,21 +86,21 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
         switch (chatMsg.getType()) {
             case STAFF:
                 getPlugin().getOnlineSenders().forEach(i -> {
-                    if (i.hasPermission("floracore.chat.staff")) {
+                    if (i.hasPermission("floracore.socialsystems.staff")) {
                         SocialSystemsMessage.COMMAND_MISC_STAFF_CHAT.send(i, message, senderUUID);
                     }
                 });
                 break;
             case BUILDER:
                 getPlugin().getOnlineSenders().forEach(i -> {
-                    if (i.hasPermission("floracore.chat.builder")) {
+                    if (i.hasPermission("floracore.socialsystems.builder")) {
                         SocialSystemsMessage.COMMAND_MISC_BUILDER_CHAT.send(i, message, senderUUID);
                     }
                 });
                 break;
             case ADMIN:
                 getPlugin().getOnlineSenders().forEach(i -> {
-                    if (i.hasPermission("floracore.chat.admin")) {
+                    if (i.hasPermission("floracore.socialsystems.admin")) {
                         SocialSystemsMessage.COMMAND_MISC_ADMIN_CHAT.send(i, message, senderUUID);
                     }
                 });
