@@ -14,6 +14,7 @@
 - 开发者需在新分支(或已存在的分支)上编写代码,避免影响主分支。
 - 版本发布由指定人员([@冬花ice](https://github.com/flowerinsnowdh)和[@花花](https://github.com/xLikeWATCHDOG/))完成。
 - 所有的判定非空的注解必须使用@NotNull而不是@NunNull。
+- 所有注解命令注册时，注解的顺序从上倒下依次是`@CommandMethod` `@CommandDescription` `@CommandPermission`
 
 # 附录
 

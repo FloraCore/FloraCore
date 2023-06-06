@@ -16,6 +16,7 @@ import java.util.Arrays;
 import java.util.UUID;
 
 @CommandContainer
+@CommandDescription("floracore.command.description.admin")
 @CommandPermission("floracore.socialsystems.admin")
 public class AdminCommand extends FloraCoreBungeeCommand {
     public AdminCommand(FCBungeePlugin plugin) {
@@ -23,7 +24,7 @@ public class AdminCommand extends FloraCoreBungeeCommand {
     }
 
     @CommandMethod("admin chat <message>")
-    @CommandDescription("让你在管理员频道中发言")
+    @CommandDescription("floracore.command.description.admin.chat")
     public void chat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
         UUID uuid = player.getUniqueId();
         getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()

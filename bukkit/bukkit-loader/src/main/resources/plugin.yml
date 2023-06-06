@@ -14,6 +14,17 @@ softdepend:
 permissions:
   floracore.admin:
     default: op
+  floracore.staff:
+    default: op
+  floracore.command.teleport.*:
+    default: op
+    children:
+      floracore.command.teleport: true
+      floracore.command.teleport.other: true
+      floracore.command.teleport.position: true
+      floracore.command.teleport.position.other: true
+  floracore.command.top:
+    default: op
   floracore.command.air.*:
     default: op
     children:
@@ -113,8 +124,6 @@ permissions:
       floracore.command.speed.other: true
       floracore.command.speed.bypass: false
   floracore.command.suicide:
-    default: op
-  floracore.command.top:
     default: op
   floracore.command.broadcast:
     default: op

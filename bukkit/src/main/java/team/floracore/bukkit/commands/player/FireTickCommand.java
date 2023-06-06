@@ -14,8 +14,8 @@ import team.floracore.common.util.SenderUtil;
 /**
  * FireTick命令
  */
-@CommandPermission("floracore.command.firetick")
 @CommandDescription("floracore.command.description.firetick")
+@CommandPermission("floracore.command.firetick")
 public class FireTickCommand extends FloraCoreBukkitCommand {
     public FireTickCommand(FCBukkitPlugin plugin) {
         super(plugin);

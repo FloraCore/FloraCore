@@ -17,14 +17,14 @@ import team.floracore.common.sender.Sender;
  * Top命令
  */
 @CommandPermission("floracore.command.top")
-@CommandDescription("传送至玩家当前位置的最高点")
+@CommandDescription("floracore.command.description.top")
 public class TopCommand extends FloraCoreBukkitCommand {
     public TopCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("top")
-    @CommandDescription("传送至你当前位置的最高点")
+    @CommandDescription("floracore.command.description.top.do")
     public void top(final @NotNull Player p) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         final int topX = p.getLocation().getBlockX();

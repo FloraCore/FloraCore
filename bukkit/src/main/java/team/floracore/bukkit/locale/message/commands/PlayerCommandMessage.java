@@ -25,7 +25,7 @@ public interface PlayerCommandMessage extends AbstractMessage {
             .append(FULL_STOP));
 
     Args2<Boolean, String> COMMAND_FLY_FROM = (status, from) -> AbstractMessage.prefixed(translatable()
-            // {1} 将您的游戏模式设置为 {0}
+            // {1} 将你的游戏模式设置为 {0}
             .key("floracore.command.fly.from")
             .color(AQUA)
             // 开 / 关
@@ -42,7 +42,7 @@ public interface PlayerCommandMessage extends AbstractMessage {
             .append(FULL_STOP));
 
     Args2<Component, String> COMMAND_GAMEMODE_FROM = (mode, from) -> AbstractMessage.prefixed(translatable()
-            // {1} 将您的游戏模式设置为 {0}
+            // {1} 将你的游戏模式设置为 {0}
             .key("floracore.command.gamemode.from")
             .color(AQUA)
             .args(mode.color(GREEN),
@@ -468,13 +468,13 @@ public interface PlayerCommandMessage extends AbstractMessage {
 
     Args3<String, Component, String> COMMAND_SPEED_OTHER = (sender, type, speed) -> AbstractMessage.prefixed(
             translatable()
-                    // {0} 将您的 {1} 速度设为 {2}
+                    // {0} 将你的 {1} 速度设为 {2}
                     .key("floracore.command.speed.other")
                     // {}
                     .args(text(sender).color(GREEN), type.color(YELLOW), text(speed).color(DARK_GREEN)).color(AQUA));
 
     Args3<String, Component, String> COMMAND_SPEED = (target, type, speed) -> AbstractMessage.prefixed(translatable()
-            // {0} 将您的 {1} 速度设为 {2}
+            // {0} 将你的 {1} 速度设为 {2}
             .key("floracore.command.speed")
             // {}
             .args(text(target).color(GREEN),
@@ -674,7 +674,7 @@ public interface PlayerCommandMessage extends AbstractMessage {
     };
 
     Args2<String, String> COMMAND_REPORT_SUCCESS = (target, reason) -> AbstractMessage.prefixed(translatable()
-            // 你以"{1}"的理由举报了玩家 {0} ,请您耐心等待工作人员处理!
+            // 你以"{1}"的理由举报了玩家 {0} ,请你耐心等待工作人员处理!
             .key("floracore.command.report.success")
             .color(AQUA)
             .args(text(target, RED),

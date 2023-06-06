@@ -22,15 +22,16 @@ import java.util.List;
  *
  * @author xLikeWATCHDOG
  */
-@CommandPermission("floracore.command.teleport")
 @CommandDescription("floracore.command.description.teleport")
+@CommandPermission("floracore.command.teleport")
 public class TeleportCommand extends FloraCoreBukkitCommand {
     public TeleportCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("teleport|tp <target>")
-    @CommandPermission("floracore.command.tp")
+    @CommandDescription("floracore.command.description.teleport.self")
+    @CommandPermission("floracore.command.teleport")
     public void teleport(final @NotNull Player sender,
                          final @NotNull @Argument("target") Player target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
@@ -41,7 +42,8 @@ public class TeleportCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("teleport|tp <target> <transmitter>")
-    @CommandPermission("floracore.command.tp.other")
+    @CommandDescription("floracore.command.description.teleport.other")
+    @CommandPermission("floracore.command.teleport.other")
     public void teleportOther(final @NotNull Player sender,
                               final @NotNull @Argument("target") Player target,
                               final @NotNull @Argument("transmitter") Player transmitter,
@@ -58,7 +60,8 @@ public class TeleportCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("teleportposition|tpp <x> <y> <z>")
-    @CommandPermission("floracore.command.tp.position")
+    @CommandDescription("floracore.command.description.teleport.position.self")
+    @CommandPermission("floracore.command.teleport.position")
     public void teleportPosition(final @NotNull Player sender,
                                  final @NotNull @Argument(value = "x", suggestions = "positions") String x,
                                  final @NotNull @Argument(value = "y", suggestions = "positions") String y,
@@ -78,7 +81,8 @@ public class TeleportCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("teleportposition|tpp <x> <y> <z> <transmitter>")
-    @CommandPermission("floracore.command.tp.position.other")
+    @CommandDescription("floracore.command.description.teleport.position.other")
+    @CommandPermission("floracore.command.teleport.position.other")
     public void teleportPositionOther(final @NotNull Player sender,
                                       final @NotNull @Argument(value = "x", suggestions = "positions") String x,
                                       final @NotNull @Argument(value = "y", suggestions = "positions") String y,

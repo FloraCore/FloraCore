@@ -19,14 +19,15 @@ import team.floracore.common.sender.Sender;
 /**
  * Hat命令
  */
+@CommandDescription("floracore.command.description.hat")
 @CommandPermission("floracore.command.hat")
-@CommandDescription("戴上一些酷炫的帽子")
 public class HatCommand extends FloraCoreBukkitCommand {
     public HatCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("hat")
+    @CommandDescription("floracore.command.description.hat")
     public void hat(final @NotNull Player p) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         PlayerInventory inv = p.getInventory();
@@ -53,7 +54,7 @@ public class HatCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("hat remove")
-    @CommandDescription("移除你现在戴的帽子")
+    @CommandDescription("floracore.command.description.hat.remove")
     public void hatRemove(final @NotNull Player p) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         PlayerInventory inv = p.getInventory();

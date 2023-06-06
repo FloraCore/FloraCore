@@ -6,8 +6,6 @@ import net.kyori.adventure.text.event.HoverEvent;
 import team.floracore.bukkit.commands.player.NickCommand;
 import team.floracore.common.locale.message.AbstractMessage;
 
-import java.util.UUID;
-
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 import static net.kyori.adventure.text.format.TextDecoration.BOLD;
@@ -189,7 +187,7 @@ public interface BookMessage extends AbstractMessage {
     };
 
     Args0 COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_1 = () -> translatable()
-            // 让我们为你设置您的新昵称吧!
+            // 让我们为你设置你的新昵称吧!
             .key("floracore.command.misc.nick.book.rank-page.line.1").color(BLACK).build();
 
     Args0 COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_2 = () -> translatable()
