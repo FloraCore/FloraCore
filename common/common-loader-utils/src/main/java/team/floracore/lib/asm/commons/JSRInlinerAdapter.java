@@ -18,23 +18,21 @@ import java.util.*;
 public class JSRInlinerAdapter extends MethodNode implements Opcodes {
 
     /**
+     * The instructions that belong to more that one subroutine. Bit i is set iff instruction at index
+     * i belongs to more than one subroutine.
+     */
+    final BitSet sharedSubroutineInsns = new BitSet();
+    /**
      * The instructions that belong to the main "subroutine". Bit i is set iff instruction at index i
      * belongs to this main "subroutine".
      */
     private final BitSet mainSubroutineInsns = new BitSet();
-
     /**
      * The instructions that belong to each subroutine. For each label which is the target of a JSR
      * instruction, bit i of the corresponding BitSet in this map is set iff instruction at index i
      * belongs to this subroutine.
      */
     private final Map<LabelNode, BitSet> subroutinesInsns = new HashMap<>();
-
-    /**
-     * The instructions that belong to more that one subroutine. Bit i is set iff instruction at index
-     * i belongs to more than one subroutine.
-     */
-    final BitSet sharedSubroutineInsns = new BitSet();
 
     /**
      * Constructs a new {@link JSRInlinerAdapter}. <i>Subclasses must not use this constructor</i>.

@@ -784,6 +784,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             taskId[0] = scheduler.schedule(getPlugin().getLoader(), new Runnable() {
                 private int secondsElapsed = 1;
                 private boolean offlineNotification = false;
+
                 public void run() {
                     boolean online = isOnline(uuid);
                     PARTY party = getStorageImplementation().selectParty(partyUUID);

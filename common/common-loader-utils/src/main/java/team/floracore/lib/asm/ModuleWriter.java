@@ -34,67 +34,54 @@ final class ModuleWriter extends ModuleVisitor {
      * The module_version_index field of the JVMS Module attribute.
      */
     private final int moduleVersionIndex;
-
-    /**
-     * The requires_count field of the JVMS Module attribute.
-     */
-    private int requiresCount;
-
     /**
      * The binary content of the 'requires' array of the JVMS Module attribute.
      */
     private final ByteVector requires;
-
-    /**
-     * The exports_count field of the JVMS Module attribute.
-     */
-    private int exportsCount;
-
     /**
      * The binary content of the 'exports' array of the JVMS Module attribute.
      */
     private final ByteVector exports;
-
-    /**
-     * The opens_count field of the JVMS Module attribute.
-     */
-    private int opensCount;
-
     /**
      * The binary content of the 'opens' array of the JVMS Module attribute.
      */
     private final ByteVector opens;
-
-    /**
-     * The uses_count field of the JVMS Module attribute.
-     */
-    private int usesCount;
-
     /**
      * The binary content of the 'uses_index' array of the JVMS Module attribute.
      */
     private final ByteVector usesIndex;
-
-    /**
-     * The provides_count field of the JVMS Module attribute.
-     */
-    private int providesCount;
-
     /**
      * The binary content of the 'provides' array of the JVMS Module attribute.
      */
     private final ByteVector provides;
-
-    /**
-     * The provides_count field of the JVMS ModulePackages attribute.
-     */
-    private int packageCount;
-
     /**
      * The binary content of the 'package_index' array of the JVMS ModulePackages attribute.
      */
     private final ByteVector packageIndex;
-
+    /**
+     * The requires_count field of the JVMS Module attribute.
+     */
+    private int requiresCount;
+    /**
+     * The exports_count field of the JVMS Module attribute.
+     */
+    private int exportsCount;
+    /**
+     * The opens_count field of the JVMS Module attribute.
+     */
+    private int opensCount;
+    /**
+     * The uses_count field of the JVMS Module attribute.
+     */
+    private int usesCount;
+    /**
+     * The provides_count field of the JVMS Module attribute.
+     */
+    private int providesCount;
+    /**
+     * The provides_count field of the JVMS ModulePackages attribute.
+     */
+    private int packageCount;
     /**
      * The main_class_index field of the JVMS ModuleMainClass attribute, or 0.
      */

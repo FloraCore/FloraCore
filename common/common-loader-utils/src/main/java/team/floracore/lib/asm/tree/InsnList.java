@@ -12,25 +12,22 @@ import java.util.NoSuchElementException;
 public class InsnList implements Iterable<AbstractInsnNode> {
 
     /**
-     * The number of instructions in this list.
-     */
-    private int size;
-
-    /**
-     * The first instruction in this list. May be {@literal null}.
-     */
-    private AbstractInsnNode firstInsn;
-
-    /**
-     * The last instruction in this list. May be {@literal null}.
-     */
-    private AbstractInsnNode lastInsn;
-
-    /**
      * A cache of the instructions of this list. This cache is used to improve the performance of the
      * {@link #get} method.
      */
     AbstractInsnNode[] cache;
+    /**
+     * The number of instructions in this list.
+     */
+    private int size;
+    /**
+     * The first instruction in this list. May be {@literal null}.
+     */
+    private AbstractInsnNode firstInsn;
+    /**
+     * The last instruction in this list. May be {@literal null}.
+     */
+    private AbstractInsnNode lastInsn;
 
     /**
      * Returns the number of instructions in this list.

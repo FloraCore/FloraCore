@@ -25,6 +25,10 @@ import java.util.Map;
 public class AnalyzerAdapter extends MethodVisitor {
 
     /**
+     * The owner's class name.
+     */
+    private final String owner;
+    /**
      * The local variable slots for the current execution frame. Primitive types are represented by
      * {@link Opcodes#TOP}, {@link Opcodes#INTEGER}, {@link Opcodes#FLOAT}, {@link Opcodes#LONG},
      * {@link Opcodes#DOUBLE},{@link Opcodes#NULL} or {@link Opcodes#UNINITIALIZED_THIS} (long and
@@ -35,7 +39,6 @@ public class AnalyzerAdapter extends MethodVisitor {
      * unreachable instructions.
      */
     public List<Object> locals;
-
     /**
      * The operand stack slots for the current execution frame. Primitive types are represented by
      * {@link Opcodes#TOP}, {@link Opcodes#INTEGER}, {@link Opcodes#FLOAT}, {@link Opcodes#LONG},
@@ -47,12 +50,6 @@ public class AnalyzerAdapter extends MethodVisitor {
      * unreachable instructions.
      */
     public List<Object> stack;
-
-    /**
-     * The labels that designate the next instruction to be visited. May be {@literal null}.
-     */
-    private List<Label> labels;
-
     /**
      * The uninitialized types in the current execution frame. This map associates internal names to
      * Label objects (see {@link Type#getInternalName()}). Each label designates a NEW instruction
@@ -60,21 +57,18 @@ public class AnalyzerAdapter extends MethodVisitor {
      * NEW operand, i.e. the final, initialized type value.
      */
     public Map<Object, Object> uninitializedTypes;
-
+    /**
+     * The labels that designate the next instruction to be visited. May be {@literal null}.
+     */
+    private List<Label> labels;
     /**
      * The maximum stack size of this method.
      */
     private int maxStack;
-
     /**
      * The maximum number of local variables of this method.
      */
     private int maxLocals;
-
-    /**
-     * The owner's class name.
-     */
-    private final String owner;
 
     /**
      * Constructs a new {@link AnalyzerAdapter}. <i>Subclasses must not use this constructor</i>.
@@ -166,6 +160,17 @@ public class AnalyzerAdapter extends MethodVisitor {
         maxLocals = locals.size();
     }
 
+    private static void visitFrameTypes(
+            final int numTypes, final Object[] frameTypes, final List<Object> result) {
+        for (int i = 0; i < numTypes; ++i) {
+            Object frameType = frameTypes[i];
+            result.add(frameType);
+            if (frameType == Opcodes.LONG || frameType == Opcodes.DOUBLE) {
+                result.add(Opcodes.TOP);
+            }
+        }
+    }
+
     @Override
     public void visitFrame(
             final int type,
@@ -191,17 +196,6 @@ public class AnalyzerAdapter extends MethodVisitor {
         visitFrameTypes(numStack, stack, this.stack);
         maxLocals = Math.max(maxLocals, this.locals.size());
         maxStack = Math.max(maxStack, this.stack.size());
-    }
-
-    private static void visitFrameTypes(
-            final int numTypes, final Object[] frameTypes, final List<Object> result) {
-        for (int i = 0; i < numTypes; ++i) {
-            Object frameType = frameTypes[i];
-            result.add(frameType);
-            if (frameType == Opcodes.LONG || frameType == Opcodes.DOUBLE) {
-                result.add(Opcodes.TOP);
-            }
-        }
     }
 
     @Override

@@ -6,9 +6,9 @@ package team.floracore.lib.asm;
  *
  * @author Eric Bruneton
  * @see <a href="https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.4">JVMS
- *     4.4</a>
+ * 4.4</a>
  * @see <a href="https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.7.23">JVMS
- *     4.7.23</a>
+ * 4.7.23</a>
  */
 final class SymbolTable {
 
@@ -24,23 +24,24 @@ final class SymbolTable {
      * constructed from scratch.
      */
     private final ClassReader sourceClassReader;
-
+    /**
+     * The content of the ClassFile's constant_pool JVMS structure corresponding to this SymbolTable.
+     * The ClassFile's constant_pool_count field is <i>not</i> included.
+     */
+    private final ByteVector constantPool;
     /**
      * The major version number of the class to which this symbol table belongs.
      */
     private int majorVersion;
-
     /**
      * The internal name of the class to which this symbol table belongs.
      */
     private String className;
-
     /**
      * The total number of {@link Entry} instances in {@link #entries}. This includes entries that are
      * accessible (recursively) via {@link Entry#next}.
      */
     private int entryCount;
-
     /**
      * A hash set of all the entries in this SymbolTable (this includes the constant pool entries, the
      * bootstrap method entries and the type table entries). Each {@link Entry} instance is stored at
@@ -49,19 +50,11 @@ final class SymbolTable {
      * factory methods of this class make sure that this table does not contain duplicated entries.
      */
     private Entry[] entries;
-
     /**
      * The number of constant pool items in {@link #constantPool}, plus 1. The first constant pool
      * item has index 1, and long and double items count for two items.
      */
     private int constantPoolCount;
-
-    /**
-     * The content of the ClassFile's constant_pool JVMS structure corresponding to this SymbolTable.
-     * The ClassFile's constant_pool_count field is <i>not</i> included.
-     */
-    private final ByteVector constantPool;
-
     /**
      * The number of bootstrap methods in {@link #bootstrapMethods}. Corresponds to the
      * BootstrapMethods_attribute's num_bootstrap_methods field value.
@@ -209,6 +202,45 @@ final class SymbolTable {
         }
     }
 
+    private static int hash(final int tag, final int value) {
+        return 0x7FFFFFFF & (tag + value);
+    }
+
+    private static int hash(final int tag, final long value) {
+        return 0x7FFFFFFF & (tag + (int) value + (int) (value >>> 32));
+    }
+
+    private static int hash(final int tag, final String value) {
+        return 0x7FFFFFFF & (tag + value.hashCode());
+    }
+
+    private static int hash(final int tag, final String value1, final int value2) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() + value2);
+    }
+
+    private static int hash(final int tag, final String value1, final String value2) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode());
+    }
+
+    private static int hash(
+            final int tag, final String value1, final String value2, final int value3) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * (value3 + 1));
+    }
+
+    private static int hash(
+            final int tag, final String value1, final String value2, final String value3) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode());
+    }
+
+    private static int hash(
+            final int tag,
+            final String value1,
+            final String value2,
+            final String value3,
+            final int value4) {
+        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode() * value4);
+    }
+
     /**
      * Read the BootstrapMethods 'bootstrap_methods' array binary content and add them as entries of
      * the SymbolTable.
@@ -265,6 +297,10 @@ final class SymbolTable {
         return sourceClassReader;
     }
 
+    // -----------------------------------------------------------------------------------------------
+    // Generic symbol table entries management.
+    // -----------------------------------------------------------------------------------------------
+
     /**
      * Returns the major version of the class to which this symbol table belongs.
      *
@@ -296,6 +332,10 @@ final class SymbolTable {
         this.className = className;
         return addConstantClass(className).index;
     }
+
+    // -----------------------------------------------------------------------------------------------
+    // Constant pool entries management.
+    // -----------------------------------------------------------------------------------------------
 
     /**
      * Returns the number of items in this symbol table's constant_pool array (plus 1).
@@ -356,26 +396,6 @@ final class SymbolTable {
         }
     }
 
-    // -----------------------------------------------------------------------------------------------
-    // Generic symbol table entries management.
-    // -----------------------------------------------------------------------------------------------
-
-    private static int hash(final int tag, final int value) {
-        return 0x7FFFFFFF & (tag + value);
-    }
-
-    private static int hash(final int tag, final long value) {
-        return 0x7FFFFFFF & (tag + (int) value + (int) (value >>> 32));
-    }
-
-    private static int hash(final int tag, final String value) {
-        return 0x7FFFFFFF & (tag + value.hashCode());
-    }
-
-    // -----------------------------------------------------------------------------------------------
-    // Constant pool entries management.
-    // -----------------------------------------------------------------------------------------------
-
     /**
      * Adds a number or string constant to the constant pool of this symbol table. Does nothing if the
      * constant pool already contains a similar item.
@@ -432,10 +452,6 @@ final class SymbolTable {
         } else {
             throw new IllegalArgumentException("value " + value);
         }
-    }
-
-    private static int hash(final int tag, final String value1, final int value2) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() + value2);
     }
 
     /**
@@ -498,10 +514,6 @@ final class SymbolTable {
         return put(new Entry(constantPoolCount++, tag, owner, name, descriptor, 0, hashCode));
     }
 
-    private static int hash(final int tag, final String value1, final String value2) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode());
-    }
-
     /**
      * Adds a CONSTANT_String_info to the constant pool of this symbol table. Does nothing if the
      * constant pool already contains a similar item.
@@ -556,11 +568,6 @@ final class SymbolTable {
         return put(new Entry(constantPoolCount++, tag, value, hashCode));
     }
 
-    private static int hash(
-            final int tag, final String value1, final String value2, final int value3) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * (value3 + 1));
-    }
-
     /**
      * Adds a CONSTANT_Long_info to the constant pool of this symbol table. Does nothing if the
      * constant pool already contains a similar item.
@@ -606,11 +613,6 @@ final class SymbolTable {
         return put(new Entry(index, tag, value, hashCode));
     }
 
-    private static int hash(
-            final int tag, final String value1, final String value2, final String value3) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode());
-    }
-
     /**
      * Adds a CONSTANT_NameAndType_info to the constant pool of this symbol table. Does nothing if the
      * constant pool already contains a similar item.
@@ -634,15 +636,6 @@ final class SymbolTable {
         }
         constantPool.put122(tag, addConstantUtf8(name), addConstantUtf8(descriptor));
         return put(new Entry(constantPoolCount++, tag, name, descriptor, hashCode)).index;
-    }
-
-    private static int hash(
-            final int tag,
-            final String value1,
-            final String value2,
-            final String value3,
-            final int value4) {
-        return 0x7FFFFFFF & (tag + value1.hashCode() * value2.hashCode() * value3.hashCode() * value4);
     }
 
     /**

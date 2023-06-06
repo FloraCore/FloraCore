@@ -96,6 +96,18 @@ public class FrameNode extends AbstractInsnNode {
         }
     }
 
+    private static Object[] asArray(final List<Object> list) {
+        Object[] array = new Object[list.size()];
+        for (int i = 0, n = array.length; i < n; ++i) {
+            Object o = list.get(i);
+            if (o instanceof LabelNode) {
+                o = ((LabelNode) o).getLabel();
+            }
+            array[i] = o;
+        }
+        return array;
+    }
+
     @Override
     public int getType() {
         return FRAME;
@@ -150,17 +162,5 @@ public class FrameNode extends AbstractInsnNode {
             }
         }
         return clone;
-    }
-
-    private static Object[] asArray(final List<Object> list) {
-        Object[] array = new Object[list.size()];
-        for (int i = 0, n = array.length; i < n; ++i) {
-            Object o = list.get(i);
-            if (o instanceof LabelNode) {
-                o = ((LabelNode) o).getLabel();
-            }
-            array[i] = o;
-        }
-        return array;
     }
 }

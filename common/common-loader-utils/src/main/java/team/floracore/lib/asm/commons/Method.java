@@ -15,16 +15,6 @@ import java.util.Map;
 public class Method {
 
     /**
-     * The method name.
-     */
-    private final String name;
-
-    /**
-     * The method descriptor.
-     */
-    private final String descriptor;
-
-    /**
      * The descriptors of the primitive Java types (plus void).
      */
     private static final Map<String, String> PRIMITIVE_TYPE_DESCRIPTORS;
@@ -42,6 +32,15 @@ public class Method {
         descriptors.put("boolean", "Z");
         PRIMITIVE_TYPE_DESCRIPTORS = descriptors;
     }
+
+    /**
+     * The method name.
+     */
+    private final String name;
+    /**
+     * The method descriptor.
+     */
+    private final String descriptor;
 
     /**
      * Constructs a new {@link Method}.

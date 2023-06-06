@@ -1,4 +1,3 @@
-
 package team.floracore.lib.asm;
 
 /**
@@ -74,28 +73,6 @@ public final class TypePath {
     }
 
     /**
-     * Returns the length of this path, i.e. its number of steps.
-     *
-     * @return the length of this path.
-     */
-    public int getLength() {
-        // path_length is stored in the first byte of a type_path.
-        return typePathContainer[typePathOffset];
-    }
-
-    /**
-     * Returns the value of the given step of this path.
-     *
-     * @param index an index between 0 and {@link #getLength()}, exclusive.
-     * @return one of {@link #ARRAY_ELEMENT}, {@link #INNER_TYPE}, {@link #WILDCARD_BOUND}, or {@link
-     * #TYPE_ARGUMENT}.
-     */
-    public int getStep(final int index) {
-        // Returns the type_path_kind of the path element of the given index.
-        return typePathContainer[typePathOffset + 2 * index + 1];
-    }
-
-    /**
      * Converts a type path in string form, in the format used by {@link #toString()}, into a TypePath
      * object.
      *
@@ -138,6 +115,28 @@ public final class TypePath {
         }
         output.data[0] = (byte) (output.length / 2);
         return new TypePath(output.data, 0);
+    }
+
+    /**
+     * Returns the length of this path, i.e. its number of steps.
+     *
+     * @return the length of this path.
+     */
+    public int getLength() {
+        // path_length is stored in the first byte of a type_path.
+        return typePathContainer[typePathOffset];
+    }
+
+    /**
+     * Returns the value of the given step of this path.
+     *
+     * @param index an index between 0 and {@link #getLength()}, exclusive.
+     * @return one of {@link #ARRAY_ELEMENT}, {@link #INNER_TYPE}, {@link #WILDCARD_BOUND}, or {@link
+     * #TYPE_ARGUMENT}.
+     */
+    public int getStep(final int index) {
+        // Returns the type_path_kind of the path element of the given index.
+        return typePathContainer[typePathOffset + 2 * index + 1];
     }
 
     /**

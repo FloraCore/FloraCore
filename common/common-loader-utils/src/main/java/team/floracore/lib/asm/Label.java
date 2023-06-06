@@ -175,6 +175,50 @@ public class Label {
     // absolute input stack heights, while the algorithm used to compute stack map frames computes
     // relative output frames and absolute input frames.
     /**
+     * The id of the subroutine to which this basic block belongs, or 0. If the basic block belongs to
+     * several subroutines, this is the id of the "oldest" subroutine that contains it (with the
+     * convention that a subroutine calling another one is "older" than the callee). This field is
+     * computed in {@link MethodWriter#computeMaxStackAndLocal}, if the method contains JSR
+     * instructions.
+     */
+    short subroutineId;
+    /**
+     * The input and output stack map frames of the basic block corresponding to this label. This
+     * field is only used when the {@link MethodWriter#COMPUTE_ALL_FRAMES} or {@link
+     * MethodWriter#COMPUTE_INSERTED_FRAMES} option is used.
+     */
+    Frame frame;
+    /**
+     * The successor of this label, in the order they are visited in {@link MethodVisitor#visitLabel}.
+     * This linked list does not include labels used for debug info only. If the {@link
+     * MethodWriter#COMPUTE_ALL_FRAMES} or {@link MethodWriter#COMPUTE_INSERTED_FRAMES} option is used
+     * then it does not contain either successive labels that denote the same bytecode offset (in this
+     * case only the first label appears in this list).
+     */
+    Label nextBasicBlock;
+    /**
+     * The outgoing edges of the basic block corresponding to this label, in the control flow graph of
+     * its method. These edges are stored in a linked list of {@link Edge} objects, linked to each
+     * other by their {@link Edge#nextEdge} field.
+     */
+    Edge outgoingEdges;
+    /**
+     * The next element in the list of labels to which this label belongs, or {@literal null} if it
+     * does not belong to any list. All lists of labels must end with the {@link #EMPTY_LIST}
+     * sentinel, in order to ensure that this field is null if and only if this label does not belong
+     * to a list of labels. Note that there can be several lists of labels at the same time, but that
+     * a label can belong to at most one list at a time (unless some lists share a common tail, but
+     * this is not used in practice).
+     *
+     * <p>List of labels are used in {@link MethodWriter#computeAllFrames} and {@link
+     * MethodWriter#computeMaxStackAndLocal} to compute stack map frames and the maximum stack size,
+     * respectively, as well as in {@link #markSubroutine} and {@link #addSubroutineRetSuccessors} to
+     * compute the basic blocks belonging to subroutines and their outgoing edges. Outside of these
+     * methods, this field should be null (this property is a precondition and a postcondition of
+     * these methods).
+     */
+    Label nextListElement;
+    /**
      * The source line number corresponding to this label, if {@link #FLAG_LINE_NUMBER} is set. If
      * there are several source line numbers corresponding to this label, the first one is stored in
      * this field, and the remaining ones are stored in {@link #otherLineNumbers}.
@@ -210,55 +254,6 @@ public class Label {
      * the instruction itself).
      */
     private int[] forwardReferences;
-
-    /**
-     * The id of the subroutine to which this basic block belongs, or 0. If the basic block belongs to
-     * several subroutines, this is the id of the "oldest" subroutine that contains it (with the
-     * convention that a subroutine calling another one is "older" than the callee). This field is
-     * computed in {@link MethodWriter#computeMaxStackAndLocal}, if the method contains JSR
-     * instructions.
-     */
-    short subroutineId;
-
-    /**
-     * The input and output stack map frames of the basic block corresponding to this label. This
-     * field is only used when the {@link MethodWriter#COMPUTE_ALL_FRAMES} or {@link
-     * MethodWriter#COMPUTE_INSERTED_FRAMES} option is used.
-     */
-    Frame frame;
-
-    /**
-     * The successor of this label, in the order they are visited in {@link MethodVisitor#visitLabel}.
-     * This linked list does not include labels used for debug info only. If the {@link
-     * MethodWriter#COMPUTE_ALL_FRAMES} or {@link MethodWriter#COMPUTE_INSERTED_FRAMES} option is used
-     * then it does not contain either successive labels that denote the same bytecode offset (in this
-     * case only the first label appears in this list).
-     */
-    Label nextBasicBlock;
-
-    /**
-     * The outgoing edges of the basic block corresponding to this label, in the control flow graph of
-     * its method. These edges are stored in a linked list of {@link Edge} objects, linked to each
-     * other by their {@link Edge#nextEdge} field.
-     */
-    Edge outgoingEdges;
-
-    /**
-     * The next element in the list of labels to which this label belongs, or {@literal null} if it
-     * does not belong to any list. All lists of labels must end with the {@link #EMPTY_LIST}
-     * sentinel, in order to ensure that this field is null if and only if this label does not belong
-     * to a list of labels. Note that there can be several lists of labels at the same time, but that
-     * a label can belong to at most one list at a time (unless some lists share a common tail, but
-     * this is not used in practice).
-     *
-     * <p>List of labels are used in {@link MethodWriter#computeAllFrames} and {@link
-     * MethodWriter#computeMaxStackAndLocal} to compute stack map frames and the maximum stack size,
-     * respectively, as well as in {@link #markSubroutine} and {@link #addSubroutineRetSuccessors} to
-     * compute the basic blocks belonging to subroutines and their outgoing edges. Outside of these
-     * methods, this field should be null (this property is a precondition and a postcondition of
-     * these methods).
-     */
-    Label nextListElement;
 
     // -----------------------------------------------------------------------------------------------
     // Constructor and accessors
