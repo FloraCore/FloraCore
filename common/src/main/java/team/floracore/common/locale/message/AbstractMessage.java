@@ -4,10 +4,13 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import org.floracore.api.FloraCore;
+import org.floracore.api.FloraCoreProvider;
 import team.floracore.common.sender.Sender;
 
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.UUID;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
@@ -31,6 +34,18 @@ public abstract interface AbstractMessage {
             .append(text().decoration(BOLD, true).append(text('F', AQUA)).append(text('C', YELLOW)))
             .append(text(']'))
             .build();
+
+    Args1<UUID> RENDER_PLAYER_NAME = (uuid) -> {
+        FloraCore floraCore = FloraCoreProvider.get();
+        String sn = floraCore.getPlayerAPI().getPlayerRecordName(uuid);
+        String prefix = floraCore.getPlayerAPI().getPrefix(uuid);
+        prefix = prefix == null ? "" : prefix + " ";
+        String suffix = floraCore.getPlayerAPI().getSuffix(uuid);
+        suffix = suffix == null ? "" : suffix;
+        return AbstractMessage.formatColoredValue(prefix)
+                .append(text(sn))
+                .append(AbstractMessage.formatColoredValue(suffix));
+    };
 
     static TextComponent prefixed(ComponentLike component) {
         return text().append(PREFIX_COMPONENT).append(space()).append(component).build();

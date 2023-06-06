@@ -14,7 +14,9 @@ import team.floracore.lib.asm.MethodVisitor;
  */
 public class SignatureReader {
 
-    /** The JVMS signature to be read. */
+    /**
+     * The JVMS signature to be read.
+     */
     private final String signatureValue;
 
     /**
@@ -29,8 +31,8 @@ public class SignatureReader {
     /**
      * Parses a JavaTypeSignature and makes the given visitor visit it.
      *
-     * @param signature a string containing the signature that must be parsed.
-     * @param startOffset index of the first character of the signature to parsed.
+     * @param signature        a string containing the signature that must be parsed.
+     * @param startOffset      index of the first character of the signature to parsed.
      * @param signatureVisitor the visitor that must visit this signature.
      * @return the index of the first character after the parsed signature.
      */

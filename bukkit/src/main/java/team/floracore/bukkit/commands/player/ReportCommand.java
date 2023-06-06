@@ -48,8 +48,8 @@ import static net.kyori.adventure.text.Component.space;
 /**
  * Report命令
  */
+@CommandDescription("floracore.command.description.report")
 @CommandPermission("floracore.command.report")
-@CommandDescription("举报一名玩家")
 public class ReportCommand extends FloraCoreBukkitCommand {
     private final List<REPORT> reports = new ArrayList<>();
 
@@ -63,6 +63,7 @@ public class ReportCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("report-tp <target>")
+    @CommandDescription("floracore.command.description.report.tp")
     @CommandPermission("floracore.command.report.staff")
     public void reportTeleport(final @NotNull Player sender, final @Argument("target") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
@@ -101,6 +102,7 @@ public class ReportCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("report <target> <reason>")
+    @CommandDescription("floracore.command.description.report.target")
     public void report(final @NotNull Player sender,
                        final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
                        final @NotNull @Argument("reason") @Greedy String reason) {
@@ -160,6 +162,7 @@ public class ReportCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("reports")
+    @CommandDescription("floracore.command.description.reports")
     @CommandPermission("floracore.command.report.staff")
     public void reports(final @NotNull Player player) {
         Sender s = getPlugin().getSenderFactory().wrap(player);

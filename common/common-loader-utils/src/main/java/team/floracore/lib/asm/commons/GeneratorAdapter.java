@@ -50,130 +50,95 @@ import java.util.List;
  */
 public class GeneratorAdapter extends LocalVariablesSorter {
 
-    private static final String CLASS_DESCRIPTOR = "Ljava/lang/Class;";
-
-    private static final Type BYTE_TYPE = Type.getObjectType("java/lang/Byte");
-
-    private static final Type BOOLEAN_TYPE = Type.getObjectType("java/lang/Boolean");
-
-    private static final Type SHORT_TYPE = Type.getObjectType("java/lang/Short");
-
-    private static final Type CHARACTER_TYPE = Type.getObjectType("java/lang/Character");
-
-    private static final Type INTEGER_TYPE = Type.getObjectType("java/lang/Integer");
-
-    private static final Type FLOAT_TYPE = Type.getObjectType("java/lang/Float");
-
-    private static final Type LONG_TYPE = Type.getObjectType("java/lang/Long");
-
-    private static final Type DOUBLE_TYPE = Type.getObjectType("java/lang/Double");
-
-    private static final Type NUMBER_TYPE = Type.getObjectType("java/lang/Number");
-
-    private static final Type OBJECT_TYPE = Type.getObjectType("java/lang/Object");
-
-    private static final Method BOOLEAN_VALUE = Method.getMethod("boolean booleanValue()");
-
-    private static final Method CHAR_VALUE = Method.getMethod("char charValue()");
-
-    private static final Method INT_VALUE = Method.getMethod("int intValue()");
-
-    private static final Method FLOAT_VALUE = Method.getMethod("float floatValue()");
-
-    private static final Method LONG_VALUE = Method.getMethod("long longValue()");
-
-    private static final Method DOUBLE_VALUE = Method.getMethod("double doubleValue()");
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int ADD = Opcodes.IADD;
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int SUB = Opcodes.ISUB;
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int MUL = Opcodes.IMUL;
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int DIV = Opcodes.IDIV;
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int REM = Opcodes.IREM;
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int NEG = Opcodes.INEG;
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int SHL = Opcodes.ISHL;
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int SHR = Opcodes.ISHR;
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int USHR = Opcodes.IUSHR;
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int AND = Opcodes.IAND;
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int OR = Opcodes.IOR;
-
     /**
      * Constant for the {@link #math} method.
      */
     public static final int XOR = Opcodes.IXOR;
-
     /**
      * Constant for the {@link #ifCmp} method.
      */
     public static final int EQ = Opcodes.IFEQ;
-
     /**
      * Constant for the {@link #ifCmp} method.
      */
     public static final int NE = Opcodes.IFNE;
-
     /**
      * Constant for the {@link #ifCmp} method.
      */
     public static final int LT = Opcodes.IFLT;
-
     /**
      * Constant for the {@link #ifCmp} method.
      */
     public static final int GE = Opcodes.IFGE;
-
     /**
      * Constant for the {@link #ifCmp} method.
      */
     public static final int GT = Opcodes.IFGT;
-
     /**
      * Constant for the {@link #ifCmp} method.
      */
     public static final int LE = Opcodes.IFLE;
-
+    private static final String CLASS_DESCRIPTOR = "Ljava/lang/Class;";
+    private static final Type BYTE_TYPE = Type.getObjectType("java/lang/Byte");
+    private static final Type BOOLEAN_TYPE = Type.getObjectType("java/lang/Boolean");
+    private static final Type SHORT_TYPE = Type.getObjectType("java/lang/Short");
+    private static final Type CHARACTER_TYPE = Type.getObjectType("java/lang/Character");
+    private static final Type INTEGER_TYPE = Type.getObjectType("java/lang/Integer");
+    private static final Type FLOAT_TYPE = Type.getObjectType("java/lang/Float");
+    private static final Type LONG_TYPE = Type.getObjectType("java/lang/Long");
+    private static final Type DOUBLE_TYPE = Type.getObjectType("java/lang/Double");
+    private static final Type NUMBER_TYPE = Type.getObjectType("java/lang/Number");
+    private static final Type OBJECT_TYPE = Type.getObjectType("java/lang/Object");
+    private static final Method BOOLEAN_VALUE = Method.getMethod("boolean booleanValue()");
+    private static final Method CHAR_VALUE = Method.getMethod("char charValue()");
+    private static final Method INT_VALUE = Method.getMethod("int intValue()");
+    private static final Method FLOAT_VALUE = Method.getMethod("float floatValue()");
+    private static final Method LONG_VALUE = Method.getMethod("long longValue()");
+    private static final Method DOUBLE_VALUE = Method.getMethod("double doubleValue()");
     /**
      * The access flags of the visited method.
      */
@@ -300,18 +265,6 @@ public class GeneratorAdapter extends LocalVariablesSorter {
         return names;
     }
 
-    public int getAccess() {
-        return access;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Type getReturnType() {
-        return returnType;
-    }
-
     private static Type getBoxedType(final Type type) {
         switch (type.getSort()) {
             case Type.BYTE:
@@ -333,6 +286,18 @@ public class GeneratorAdapter extends LocalVariablesSorter {
             default:
                 return type;
         }
+    }
+
+    public int getAccess() {
+        return access;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Type getReturnType() {
+        return returnType;
     }
 
     // -----------------------------------------------------------------------------------------------

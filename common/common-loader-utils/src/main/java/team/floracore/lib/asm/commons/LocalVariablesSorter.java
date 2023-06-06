@@ -19,29 +19,25 @@ public class LocalVariablesSorter extends MethodVisitor {
      * The type of the java.lang.Object class.
      */
     private static final Type OBJECT_TYPE = Type.getObjectType("java/lang/Object");
-
+    /**
+     * The index of the first local variable, after formal parameters.
+     */
+    protected final int firstLocal;
+    /**
+     * The index of the next local variable to be created by {@link #newLocal}.
+     */
+    protected int nextLocal;
     /**
      * The mapping from old to new local variable indices. A local variable at index i of size 1 is
      * remapped to 'mapping[2*i]', while a local variable at index i of size 2 is remapped to
      * 'mapping[2*i+1]'.
      */
     private int[] remappedVariableIndices = new int[40];
-
     /**
      * The local variable types after remapping. The format of this array is the same as in {@link
      * MethodVisitor#visitFrame}, except that long and double types use two slots.
      */
     private Object[] remappedLocalTypes = new Object[20];
-
-    /**
-     * The index of the first local variable, after formal parameters.
-     */
-    protected final int firstLocal;
-
-    /**
-     * The index of the next local variable to be created by {@link #newLocal}.
-     */
-    protected int nextLocal;
 
     /**
      * Constructs a new {@link LocalVariablesSorter}. <i>Subclasses must not use this constructor</i>.

@@ -33,6 +33,7 @@ import team.floracore.common.storage.misc.floracore.tables.PARTY;
 import java.util.*;
 
 @CommandContainer
+@CommandDescription("floracore.command.description.chat")
 @CommandPermission("floracore.socialsystems.chat")
 public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
     public ChatCommand(FCBungeePlugin plugin) {
@@ -41,7 +42,7 @@ public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
     }
 
     @CommandMethod("chat <type>")
-    @CommandDescription("Switches you to the <type> chat channel")
+    @CommandDescription("floracore.command.description.chat.channel")
     public void chat(final @NotNull ProxiedPlayer player,
                      final @NotNull @Argument(value = "type", suggestions = "type") @Greedy String type) {
         UUID uuid = player.getUniqueId();

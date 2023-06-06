@@ -22,15 +22,15 @@ import java.util.List;
 /**
  * GameMode命令
  */
+@CommandDescription("floracore.command.description.gamemode")
 @CommandPermission("floracore.command.gamemode")
-@CommandDescription("设置玩家的游戏模式")
 public class GameModeCommand extends FloraCoreBukkitCommand {
     public GameModeCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("gm|gamemode <mode> [target]")
-    @CommandDescription("设置游戏模式")
+    @CommandDescription("floracore.command.description.gamemode")
     public void gamemode(final @NotNull CommandSender s,
                          final @NotNull @Argument(value = "mode", suggestions = "gamemodes") String mode,
                          final @Nullable @Argument("target") Player target,

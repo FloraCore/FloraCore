@@ -17,14 +17,15 @@ import team.floracore.common.sender.Sender;
 /**
  * BroadCast命令
  */
+@CommandDescription("floracore.command.description.broadcast")
 @CommandPermission("floracore.command.broadcast")
-@CommandDescription("在服务器发送广播信息")
 public class BroadCastCommand extends FloraCoreBukkitCommand {
     public BroadCastCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("broadcast|bc <contents>")
+    @CommandDescription("floracore.command.description.broadcast")
     public void broadcast(@NotNull CommandSender s, @NotNull @Argument("contents") @Greedy String contents) {
         Sender s1 = getPlugin().getConsoleSender();
         ServerCommandMessage.COMMAND_BROADCAST.send(s1, contents);

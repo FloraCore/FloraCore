@@ -40,7 +40,6 @@ import java.util.stream.Collectors;
  * FloraCore命令
  */
 @CommandContainer
-@CommandPermission("floracore.admin")
 @CommandDescription("floracore.command.description.floracore")
 public class FloraCoreCommand extends FloraCoreBukkitCommand {
     private static final Cache<UUID, List<DATA>> dataCache = CaffeineFactory.newBuilder()
@@ -57,6 +56,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore reload")
     @CommandDescription("floracore.command.description.floracore.reload")
+    @CommandPermission("floracore.admin")
     public void reload(final @NotNull CommandSender sender) {
         Sender s = plugin.getSenderFactory().wrap(sender);
         plugin.getConfiguration().reload();
@@ -68,6 +68,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore translations")
     @CommandDescription("floracore.command.description.floracore.translations")
+    @CommandPermission("floracore.admin")
     public void translations(final @NotNull CommandSender sender) {
         Sender s = plugin.getSenderFactory().wrap(sender);
         CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
@@ -105,6 +106,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore translations install")
     @CommandDescription("floracore.command.description.floracore.translations.install")
+    @CommandPermission("floracore.admin")
     public void installTranslations(final @NotNull CommandSender sender) {
         Sender s = plugin.getSenderFactory().wrap(sender);
         CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
@@ -124,6 +126,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore data <target> <type>")
     @CommandDescription("floracore.command.description.floracore.data")
+    @CommandPermission("floracore.admin")
     public void data(final @NotNull CommandSender sender,
                      final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
                      @Argument("type") DataType type) {
@@ -166,6 +169,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore data <target> set <key> <value>")
     @CommandDescription("floracore.command.description.floracore.data.set")
+    @CommandPermission("floracore.admin")
     public void dataSet(final @NotNull CommandSender sender,
                         final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
                         final @NotNull @Argument("key") String key,
@@ -193,6 +197,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore data <target> unset <key>")
     @CommandDescription("floracore.command.description.floracore.data.unset")
+    @CommandPermission("floracore.admin")
     public void dataUnSet(final @NotNull CommandSender sender,
                           final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
                           final @NotNull @Argument("key") String key) {
@@ -224,6 +229,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore data <target> settemp <key> <value> <duration>")
     @CommandDescription("floracore.command.description.floracore.data.settemp")
+    @CommandPermission("floracore.admin")
     public void dataSetTemp(final @NotNull CommandSender sender,
                             final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
                             final @NotNull @Argument("key") String key,
@@ -265,6 +271,7 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 
     @CommandMethod("fc|floracore data <target> clear")
     @CommandDescription("floracore.command.description.floracore.data.clear")
+    @CommandPermission("floracore.admin")
     public void dataClear(final @NotNull CommandSender sender,
                           final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
                           final @Nullable @Flag("type") DataType type) {
@@ -296,6 +303,8 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("fc|floracore chat <target>")
+    @CommandDescription("floracore.command.description.floracore.chat")
+    @CommandPermission("floracore.staff")
     public void chat(final @NotNull CommandSender sender,
                      final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);

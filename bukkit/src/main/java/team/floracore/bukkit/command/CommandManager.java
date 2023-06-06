@@ -19,6 +19,8 @@ import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.commands.misc.FloraCoreCommand;
 import team.floracore.bukkit.commands.misc.LanguageCommand;
 import team.floracore.bukkit.commands.player.*;
+import team.floracore.bukkit.commands.player.teleport.TeleportCommand;
+import team.floracore.bukkit.commands.player.teleport.TopCommand;
 import team.floracore.bukkit.commands.server.BroadCastCommand;
 import team.floracore.bukkit.commands.test.TestCommand;
 import team.floracore.bukkit.commands.world.TimeCommand;
@@ -111,6 +113,8 @@ public class CommandManager {
         this.annotationParser.parse(new LanguageCommand(plugin));
 
         // player
+        // teleport
+        this.annotationParser.parse(new TeleportCommand(plugin));
         this.annotationParser.parse(new AirCommand(plugin));
         this.annotationParser.parse(new EnderChestCommand(plugin));
         this.annotationParser.parse(new FeedCommand(plugin));

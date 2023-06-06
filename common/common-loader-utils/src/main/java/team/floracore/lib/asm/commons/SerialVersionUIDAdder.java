@@ -165,6 +165,28 @@ public class SerialVersionUIDAdder extends ClassVisitor {
     // Overridden methods
     // -----------------------------------------------------------------------------------------------
 
+    /**
+     * Sorts the items in the collection and writes it to the given output stream.
+     *
+     * @param itemCollection   a collection of items.
+     * @param dataOutputStream where the items must be written.
+     * @param dotted           whether package names must use dots, instead of slashes.
+     * @throws IOException if an error occurs.
+     */
+    private static void writeItems(
+            final Collection<Item> itemCollection,
+            final DataOutput dataOutputStream,
+            final boolean dotted)
+            throws IOException {
+        Item[] items = itemCollection.toArray(new Item[0]);
+        Arrays.sort(items);
+        for (Item item : items) {
+            dataOutputStream.writeUTF(item.name);
+            dataOutputStream.writeInt(item.access);
+            dataOutputStream.writeUTF(dotted ? item.descriptor.replace('/', '.') : item.descriptor);
+        }
+    }
+
     @Override
     public void visit(
             final int version,
@@ -227,28 +249,6 @@ public class SerialVersionUIDAdder extends ClassVisitor {
         }
 
         return super.visitMethod(access, name, descriptor, signature, exceptions);
-    }
-
-    /**
-     * Sorts the items in the collection and writes it to the given output stream.
-     *
-     * @param itemCollection   a collection of items.
-     * @param dataOutputStream where the items must be written.
-     * @param dotted           whether package names must use dots, instead of slashes.
-     * @throws IOException if an error occurs.
-     */
-    private static void writeItems(
-            final Collection<Item> itemCollection,
-            final DataOutput dataOutputStream,
-            final boolean dotted)
-            throws IOException {
-        Item[] items = itemCollection.toArray(new Item[0]);
-        Arrays.sort(items);
-        for (Item item : items) {
-            dataOutputStream.writeUTF(item.name);
-            dataOutputStream.writeInt(item.access);
-            dataOutputStream.writeUTF(dotted ? item.descriptor.replace('/', '.') : item.descriptor);
-        }
     }
 
     @Override

@@ -14,16 +14,16 @@ import team.floracore.common.util.SenderUtil;
 /**
  * Air命令
  */
-@CommandPermission("floracore.command.air")
 @CommandDescription("floracore.command.description.air")
+@CommandPermission("floracore.command.air")
 public class AirCommand extends FloraCoreBukkitCommand {
     public AirCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("air get")
-    @CommandPermission("floracore.command.air.get")
     @CommandDescription("floracore.command.description.air.get")
+    @CommandPermission("floracore.command.air.get")
     public void getSelf(@NotNull Player s) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         PlayerCommandMessage.COMMAND_AIR_GET_REMAINING_SELF.send(sender, s.getRemainingAir()); // 返回剩余氧气值
@@ -31,8 +31,8 @@ public class AirCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("air get <target>")
-    @CommandPermission("floracore.command.air.get.other")
     @CommandDescription("floracore.command.description.air.get.other")
+    @CommandPermission("floracore.command.air.get.other")
     public void getOther(@NotNull CommandSender s, @NotNull @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         PlayerCommandMessage.COMMAND_AIR_GET_REMAINING_OTHER.send(sender,
@@ -44,8 +44,8 @@ public class AirCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("air setmax <value> [target]")
-    @CommandPermission("floracore.command.air.set.max")
     @CommandDescription("floracore.command.description.air.set.max")
+    @CommandPermission("floracore.command.air.set.max")
     public void setMax(
             @NotNull CommandSender s,
             @Argument("value") int value,

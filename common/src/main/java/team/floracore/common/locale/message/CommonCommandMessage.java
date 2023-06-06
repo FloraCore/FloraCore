@@ -83,7 +83,7 @@ public interface CommonCommandMessage extends AbstractMessage {
                         .args(text("/fc translations install", GREEN))
                         .append(FULL_STOP)),
                 AbstractMessage.prefixed(translatable()
-                        // 请注意, 此操作将会覆盖您对这些语言做出的任何更改
+                        // 请注意, 此操作将会覆盖你对这些语言做出的任何更改
                         .key("floracore.command.translations.download-override-warning")
                         .color(GRAY)
                         .append(FULL_STOP)));

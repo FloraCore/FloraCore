@@ -22,15 +22,15 @@ import java.util.UUID;
 /**
  * HasPermission命令
  */
+@CommandDescription("floracore.command.description.haspermission")
 @CommandPermission("floracore.command.haspermission")
-@CommandDescription("检查玩家是否拥有目标权限")
 public class HasPermissionCommand extends FloraCoreBukkitCommand {
     public HasPermissionCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("haspermission <target> <permission>")
-    @CommandDescription("检查玩家是否拥有目标权限")
+    @CommandDescription("floracore.command.description.haspermission")
     public void execute(@NotNull CommandSender s,
                         @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
                         @NotNull @Argument(value = "permission", suggestions = "permission_list") String permission) {

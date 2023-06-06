@@ -49,7 +49,7 @@ import static net.kyori.adventure.text.Component.*;
  * Nick命令
  */
 @CommandPermission("floracore.command.nick")
-@CommandDescription("修改玩家的昵称")
+@CommandDescription("floracore.command.description.nick")
 public class NickCommand extends FloraCoreBukkitCommand implements Listener {
     private final ConcurrentHashMap<UUID, NmsBlockPosition> signBP = new ConcurrentHashMap<>();
 
@@ -59,14 +59,14 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
     }
 
     @CommandMethod("nick")
-    @CommandDescription("更改你的昵称")
+    @CommandDescription("floracore.command.description.nick")
     public void nick(final @NotNull Player p) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         bookNick(p, 0, null, null, null, null);
     }
 
     @CommandMethod("nick <name>")
-    @CommandDescription("将你的昵称修改为一个指定的昵称")
+    @CommandDescription("floracore.command.description.nick.custom")
     @CommandPermission("floracore.command.nick.custom")
     public void nickSpecifiedName(final @NotNull Player p, final @Argument("name") String name) {
         UUID uuid = p.getUniqueId();
@@ -242,13 +242,13 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
     }
 
     @CommandMethod("nick reset")
-    @CommandDescription("取消你的昵称")
+    @CommandDescription("floracore.command.description.nick.reset")
     public void nickReset(final @NotNull Player p) {
         unNick(p);
     }
 
     @CommandMethod("unnick")
-    @CommandDescription("取消你的昵称")
+    @CommandDescription("floracore.command.description.nick.reset")
     public void unNick(final @NotNull Player p) {
         UUID uuid = p.getUniqueId();
         Sender sender = getPlugin().getSenderFactory().wrap(p);
@@ -289,7 +289,7 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
     }
 
     @CommandMethod("book-nick <page> [rank] [skin] [name] [nickname]")
-    @CommandDescription("根据页面召唤Nick书本")
+    @CommandDescription("floracore.command.description.nick.book")
     public void bookNick(final @NotNull Player p,
                          final @Argument("page") Integer page,
                          final @Argument("rank") String rank,

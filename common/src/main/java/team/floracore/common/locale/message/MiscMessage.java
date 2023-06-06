@@ -137,12 +137,12 @@ public interface MiscMessage extends AbstractMessage {
             .color(RED));
 
     Args0 COMMAND_NO_PERMISSION = () -> AbstractMessage.prefixed(translatable()
-            // 您没有使用此命令的权限！
+            // 你没有使用此命令的权限！
             .key("floracore.commandsystem.no-permission")
             .color(RED));
 
     Args1<String> COMMAND_INVALID_COMMAND_SYNTAX = correctSyntax -> AbstractMessage.prefixed(text()
-            // 命令语法错误,您可能想要输入：{0}
+            // 命令语法错误,你可能想要输入：{0}
             .color(RED)
             .append(translatable("floracore.commandsystem.invalid-command-syntax",
                     text(correctSyntax, DARK_AQUA)))

@@ -12,15 +12,15 @@ import team.floracore.bukkit.command.FloraCoreBukkitCommand;
 import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
 import team.floracore.common.sender.Sender;
 
+@CommandDescription("floracore.command.description.suicide")
 @CommandPermission("floracore.command.suicide")
-@CommandDescription("自杀")
 public class SuicideCommand extends FloraCoreBukkitCommand {
     public SuicideCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("suicide")
-    @CommandDescription("自杀")
+    @CommandDescription("floracore.command.description.suicide")
     public void suicide(@NotNull Player p) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         final EntityDamageEvent ede = new EntityDamageEvent(p, EntityDamageEvent.DamageCause.SUICIDE, Float.MAX_VALUE);

@@ -21,7 +21,7 @@ import java.util.UUID;
  * Fly命令
  */
 @CommandPermission("floracore.command.fly")
-@CommandDescription("设置玩家的飞行状态")
+@CommandDescription("floracore.command.description.fly")
 public class FlyCommand extends FloraCoreBukkitCommand implements Listener {
     public FlyCommand(FCBukkitPlugin plugin) {
         super(plugin);
@@ -29,7 +29,7 @@ public class FlyCommand extends FloraCoreBukkitCommand implements Listener {
     }
 
     @CommandMethod("fly")
-    @CommandDescription("为自己开启飞行状态")
+    @CommandDescription("floracore.command.description.fly.set")
     public void self(final @NotNull Player s) {
         boolean old = s.getAllowFlight();
         s.setAllowFlight(!old);
@@ -44,8 +44,8 @@ public class FlyCommand extends FloraCoreBukkitCommand implements Listener {
     }
 
     @CommandMethod("fly <target>")
+    @CommandDescription("floracore.command.description.fly.set.other")
     @CommandPermission("floracore.command.fly.other")
-    @CommandDescription("为别人开启飞行状态")
     public void other(final @NotNull CommandSender s,
                       final @Argument("target") Player target,
                       final @Nullable @Flag("silent") Boolean silent) {

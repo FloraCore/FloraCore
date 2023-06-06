@@ -14,16 +14,16 @@ import team.floracore.common.util.SenderUtil;
 /**
  * Food命令
  */
+@CommandDescription("floracore.command.description.food")
 @CommandPermission("floracore.command.food")
-@CommandDescription("设置玩家的饥饿度")
 public class FoodCommand extends FloraCoreBukkitCommand {
     public FoodCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("food|hunger get [target]")
+    @CommandDescription("floracore.command.description.food.get")
     @CommandPermission("floracore.command.food.get")
-    @CommandDescription("获取一名玩家的饥饿值")
     public void get(@NotNull CommandSender s, @Nullable @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         if (target == null) { // 目标为空,则目标为自己
@@ -48,9 +48,9 @@ public class FoodCommand extends FloraCoreBukkitCommand {
         }
     }
 
-    @CommandMethod("food|hunger setnutrition <value> [target]")
+    @CommandMethod("food|hunger set nutrition <value> [target]")
+    @CommandDescription("floracore.command.description.food.set.nutrition")
     @CommandPermission("floracore.command.food.set.nutrition")
-    @CommandDescription("设置一名玩家的饥饿值")
     public void setNutrition(@NotNull CommandSender s,
                              @Argument("value") int value,
                              @Nullable @Argument("target") Player target,
@@ -83,9 +83,9 @@ public class FoodCommand extends FloraCoreBukkitCommand {
         }
     }
 
-    @CommandMethod("food|hunger setsaturation <value> [target]")
+    @CommandMethod("food|hunger set saturation <value> [target]")
+    @CommandDescription("floracore.command.description.food.set.saturation")
     @CommandPermission("floracore.command.food.set.saturation")
-    @CommandDescription("设置一名玩家的饱和度")
     public void setSaturation(@NotNull CommandSender s,
                               @Argument("value") float value,
                               @Nullable @Argument("target") Player target,

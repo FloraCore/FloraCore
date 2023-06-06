@@ -20,15 +20,15 @@ import java.util.List;
 /**
  * Weather命令
  */
+@CommandDescription("floracore.command.description.weather")
 @CommandPermission("floracore.command.weather")
-@CommandDescription("设置世界的天气")
 public class WeatherCommand extends FloraCoreBukkitCommand {
     public WeatherCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("weather <weather> [time]")
-    @CommandDescription("设置天气状态并指定持续时间")
+    @CommandDescription("floracore.command.description.weather.set")
     public void weather(final @NotNull Player p,
                         final @NotNull @Argument(value = "weather", suggestions = "weather") String weather,
                         final @Argument(value = "time", suggestions = "commonDurations") String time,
