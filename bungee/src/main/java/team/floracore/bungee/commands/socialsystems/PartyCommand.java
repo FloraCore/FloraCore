@@ -1,6 +1,5 @@
 package team.floracore.bungee.commands.socialsystems;
 
-import cloud.commandframework.CommandManager;
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandDescription;
 import cloud.commandframework.annotations.CommandMethod;
@@ -9,6 +8,7 @@ import cloud.commandframework.annotations.processing.CommandContainer;
 import cloud.commandframework.annotations.specifier.Greedy;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -36,11 +36,9 @@ import java.util.stream.Collectors;
 @CommandDescription("floracore.command.description.party")
 @CommandPermission("floracore.socialsystems.party")
 public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
-    private final CommandManager commandManager;
 
-    public PartyCommand(FCBungeePlugin plugin, CommandManager commandManager) {
+    public PartyCommand(FCBungeePlugin plugin) {
         super(plugin);
-        this.commandManager = commandManager;
         plugin.getListenerManager().registerListener(this);
     }
 
@@ -530,13 +528,20 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             for (UUID member : members) {
                 ProxiedPlayer player = getPlugin().getProxy().getPlayer(member);
                 if (player != null) {
-                    String serverNow = player.getServer().getInfo().getName();
+                    Server presentServer = player.getServer();
+                    if (presentServer == null) {
+                        getPlugin().getProxy().getScheduler().schedule(getPlugin().getLoader(), () -> player.connect(getPlugin().getProxy().getServerInfo(serverName)), 100L, TimeUnit.MILLISECONDS);
+                        return;
+                    }
+                    String serverNow = presentServer.getInfo().getName();
                     if (!serverName.equalsIgnoreCase(serverNow)) {
                         ServerInfo serverInfo = getPlugin().getProxy().getServerInfo(serverName);
                         if (serverInfo != null) {
                             player.connect(serverInfo);
                         }
                     }
+                } else {
+                    throw new IllegalStateException("partyWarp():player is null, this should not happen!");
                 }
             }
         });
