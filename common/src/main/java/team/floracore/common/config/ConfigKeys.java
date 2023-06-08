@@ -29,6 +29,10 @@ public class ConfigKeys {
             "auto-install-translations",
             true));
 
+    public static final ConfigKey<Boolean> COMMANDS_NICK_ENABLE = notReloadable(booleanKey(
+            "commands.nick.enable",
+            true));
+
     /**
      * The database settings, username, password, etc. for use by any database
      */

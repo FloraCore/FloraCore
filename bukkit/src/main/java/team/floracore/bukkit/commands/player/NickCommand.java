@@ -18,6 +18,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.floracore.api.data.DataType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bukkit.FCBukkitPlugin;
@@ -645,6 +646,25 @@ public class NickCommand extends FloraCoreBukkitCommand implements Listener {
                     } else {
                         performUnNick(p);
                     }
+                }
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+        UUID u = p.getUniqueId();
+        DATA data = getStorageImplementation().getSpecifiedData(u, DataType.FUNCTION, "nick.status");
+        if (data != null) {
+            String value = data.getValue();
+            boolean nick = Boolean.parseBoolean(value);
+            if (nick) {
+                // 重置rank
+                try {
+                    getPlugin().getApiProvider().getPlayerAPI().resetRank(u);
+                } catch (NullPointerException ignored) {
+
                 }
             }
         }

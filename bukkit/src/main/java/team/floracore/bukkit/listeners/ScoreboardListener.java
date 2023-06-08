@@ -3,10 +3,15 @@ package team.floracore.bukkit.listeners;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
+import org.bukkit.event.player.PlayerChangedWorldEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.config.BoardsKeys;
 import team.floracore.bukkit.event.BodyUpdateEvent;
 import team.floracore.bukkit.event.TitleUpdateEvent;
 import team.floracore.bukkit.listener.FloraCoreBukkitListener;
+import team.floracore.bukkit.scoreboard.ScoreBoardManager;
 import team.floracore.bukkit.scoreboard.model.BoardModel;
 import team.floracore.bukkit.util.BukkitStringReplacer;
 
@@ -22,10 +27,12 @@ import java.util.List;
 public class ScoreboardListener extends FloraCoreBukkitListener {
     public static List<String> offList = new ArrayList<>();
     private final FCBukkitPlugin plugin;
+    private final ScoreBoardManager manager;
 
     public ScoreboardListener(FCBukkitPlugin plugin) {
         super(plugin);
         this.plugin = plugin;
+        manager = plugin.getScoreBoardManager();
     }
 
     public static boolean check(final Player player, final BoardModel model) {
@@ -57,6 +64,29 @@ public class ScoreboardListener extends FloraCoreBukkitListener {
                 event.setTitle(BukkitStringReplacer.processStringForPlayer(event.getPlayer(), model.title));
                 break;
             }
+        }
+    }
+
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent e) {
+        Player p = e.getPlayer();
+        manager.addTarget(p);
+    }
+
+    @EventHandler
+    public void onQuit(PlayerQuitEvent e) {
+        Player p = e.getPlayer();
+        manager.removeTarget(p);
+    }
+
+    @EventHandler
+    public void onPlayerChangeWorld(PlayerChangedWorldEvent e) {
+        Player player = e.getPlayer();
+        if (plugin.getBoardsConfiguration().get(BoardsKeys.DISABLE_WORLDS).contains(player.getWorld().getName())) {
+            manager.removeTarget(player);
+        } else {
+            manager.addTarget(player);
         }
     }
 }

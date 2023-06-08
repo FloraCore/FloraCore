@@ -8,6 +8,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.floracore.api.server.ServerType;
 import team.floracore.bukkit.command.CommandManager;
 import team.floracore.bukkit.config.BoardsConfiguration;
+import team.floracore.bukkit.config.BoardsKeys;
 import team.floracore.bukkit.listener.ListenerManager;
 import team.floracore.bukkit.locale.chat.ChatManager;
 import team.floracore.bukkit.messaging.BukkitMessagingFactory;
@@ -145,8 +146,10 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
                 new BukkitConfigAdapter(this,
                         resolveConfig("boards.yml").toFile()));
         getLogger().info("Loading scoreboard manager...");
-        scoreBoardManager = new ScoreBoardManager(this);
-        scoreBoardManager.start();
+        if (this.boardsConfiguration.get(BoardsKeys.ENABLE)) {
+            scoreBoardManager = new ScoreBoardManager(this);
+            scoreBoardManager.start();
+        }
     }
 
     @Override
@@ -170,7 +173,9 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         IModule.ModuleModule.instance.unload();
         NothingRegistrar.instance.unload();
 
-        scoreBoardManager.getSidebarBoard().cancel();
+        if (this.boardsConfiguration.get(BoardsKeys.ENABLE)) {
+            scoreBoardManager.getSidebarBoard().cancel();
+        }
 
         chatManager.shutdown();
     }

@@ -122,6 +122,7 @@ auto-install-translations: true
 
 commands:
   nick:
+    enable: true
     rank-permission:
       rank0: "floracore.command.nick.rank.default"
       rank1: "floracore.command.nick.rank.rank1"

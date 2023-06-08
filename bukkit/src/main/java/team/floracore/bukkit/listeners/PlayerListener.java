@@ -3,14 +3,11 @@ package team.floracore.bukkit.listeners;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
-import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.floracore.api.data.DataType;
 import team.floracore.bukkit.FCBukkitPlugin;
-import team.floracore.bukkit.config.BoardsKeys;
 import team.floracore.bukkit.listener.FloraCoreBukkitListener;
-import team.floracore.bukkit.scoreboard.ScoreBoardManager;
 import team.floracore.common.storage.implementation.StorageImplementation;
 import team.floracore.common.storage.misc.floracore.tables.ONLINE;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
@@ -20,12 +17,10 @@ import java.util.UUID;
 
 public class PlayerListener extends FloraCoreBukkitListener {
     private final FCBukkitPlugin plugin;
-    private final ScoreBoardManager manager;
 
     public PlayerListener(FCBukkitPlugin plugin) {
         super(plugin);
         this.plugin = plugin;
-        manager = plugin.getScoreBoardManager();
     }
 
     @EventHandler
@@ -69,7 +64,6 @@ public class PlayerListener extends FloraCoreBukkitListener {
             }
             storageImplementation.insertData(uuid, DataType.FUNCTION, "server-status", getPlugin().getServerName(), 0);
         });
-        manager.addTarget(e.getPlayer());
     }
 
     @EventHandler
@@ -85,16 +79,5 @@ public class PlayerListener extends FloraCoreBukkitListener {
                 online.setStatusFalse(getPlugin().getServerName());
             }
         });
-        manager.removeTarget(e.getPlayer());
-    }
-
-    @EventHandler
-    public void onPlayerChangeWorld(PlayerChangedWorldEvent e) {
-        Player player = e.getPlayer();
-        if (plugin.getBoardsConfiguration().get(BoardsKeys.DISABLE_WORLDS).contains(player.getWorld().getName())) {
-            manager.removeTarget(e.getPlayer());
-        } else {
-            manager.addTarget(e.getPlayer());
-        }
     }
 }

@@ -1,6 +1,5 @@
 package team.floracore.common.locale.translation;
 
-import com.google.errorprone.annotations.ForOverride;
 import com.google.errorprone.annotations.Keep;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -30,8 +29,8 @@ import java.util.stream.Stream;
 public class TranslationRepository {
     private static final long MAX_BUNDLE_SIZE = 1048576L; // 1mb
     private static final long CACHE_MAX_AGE = TimeUnit.HOURS.toMillis(1);
-    private static final String TRANSLATIONS_INFO_ENDPOINT = "https://data.floracore.cc/data/translations";
-    private static final String TRANSLATIONS_DOWNLOAD_ENDPOINT = "https://data.floracore.cc/translations/";
+    private static final String TRANSLATIONS_INFO_ENDPOINT = "https://fc-data.kinomc.net/data/translations";
+    private static final String TRANSLATIONS_DOWNLOAD_ENDPOINT = "https://fc-data.kinomc.net/translations/";
     private final FloraCorePlugin plugin;
     private final AbstractHttpClient abstractHttpClient;
 

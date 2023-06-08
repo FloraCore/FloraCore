@@ -29,7 +29,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
 
 public class NamesRepository {
-    private static final String NAMES_DOWNLOAD_ENDPOINT = "https://data.floracore.cc/data/names";
+    private static final String NAMES_DOWNLOAD_ENDPOINT = "https://fc-data.kinomc.net/data/names";
     private static final long CACHE_MAX_AGE = TimeUnit.HOURS.toMillis(6);
     private final FloraCorePlugin plugin;
     private final AbstractHttpClient abstractHttpClient;

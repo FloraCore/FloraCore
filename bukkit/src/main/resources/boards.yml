@@ -1,3 +1,4 @@
+enable: true
 # 更新时间(单位: Tick)
 update-time: 10
 # 启用的计分板列表

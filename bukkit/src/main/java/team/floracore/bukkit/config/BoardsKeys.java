@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static team.floracore.common.config.generic.key.ConfigKeyFactory.key;
+import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
 
 /**
  * All of the {@link ConfigKey}s used by FloraCore.
@@ -19,6 +19,10 @@ import static team.floracore.common.config.generic.key.ConfigKeyFactory.key;
  * to function a bit like an enum, but with generics.</p>
  */
 public class BoardsKeys {
+
+    public static final ConfigKey<Boolean> ENABLE = notReloadable(booleanKey(
+            "enable",
+            true));
     public static final ConfigKey<Integer> UPDATE_TIME = key(c -> c.getInteger("update-time", 10));
     public static final ConfigKey<List<String>> DISABLE_WORLDS = key(c -> c.getStringList("disable-worlds",
             new ArrayList<>()));
