@@ -12,4 +12,8 @@ public interface ServerCommandMessage extends AbstractMessage {
             .append(AbstractMessage.formatColoredValue(contents))
             .build();
 
+    Args1<String> COMMAND_BROADCAST_WITHOUT_PREFIX = contents -> text()
+            .append(AbstractMessage.formatColoredValue(contents))
+            .build();
+
 }
