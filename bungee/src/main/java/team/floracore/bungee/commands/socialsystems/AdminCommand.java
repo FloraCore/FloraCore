@@ -23,7 +23,13 @@ public class AdminCommand extends FloraCoreBungeeCommand {
         super(plugin);
     }
 
-    @CommandMethod("ac|/admiadmin chat <message>")
+    @CommandMethod("adminchat|ac <Message")
+    @CommandDescription("floracore.command.description.admin.chat")
+    public void adminChat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
+        chat(player, message);
+    }
+
+    @CommandMethod("admin chat <message>")
     @CommandDescription("floracore.command.description.admin.chat")
     public void chat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
         UUID uuid = player.getUniqueId();
