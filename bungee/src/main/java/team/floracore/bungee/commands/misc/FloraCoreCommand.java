@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
  * FloraCore命令
  */
 @CommandContainer
-@CommandPermission("floracore.admin")
 @CommandDescription("floracore.command.description.floracore")
 public class FloraCoreCommand extends FloraCoreBungeeCommand {
     public FloraCoreCommand(FCBungeePlugin plugin) {
@@ -46,6 +45,7 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee reload")
     @CommandDescription("floracore.command.description.floracore.reload")
+    @CommandPermission("floracore.admin")
     public void reload(final @NotNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         getPlugin().getConfiguration().reload();
@@ -56,6 +56,7 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee translations")
     @CommandDescription("floracore.command.description.floracore.translations")
+    @CommandPermission("floracore.admin")
     public void translations(final @NotNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
@@ -93,6 +94,7 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee translations install")
     @CommandDescription("floracore.command.description.floracore.translations.install")
+    @CommandPermission("floracore.admin")
     public void installTranslations(final @NotNull CommandSender sender) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
         CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
@@ -112,6 +114,7 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee server <target>")
     @CommandDescription("floracore.command.description.floracore.server")
+    @CommandPermission("floracore.admin")
     public void server(final @NotNull CommandSender sender,
                        final @NotNull @Argument(value = "target", suggestions = "servers") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
@@ -139,6 +142,7 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee server <target> set autosync1 <value>")
     @CommandDescription("floracore.command.description.floracore.server.set.autosync1")
+    @CommandPermission("floracore.admin")
     public void serverSet1(final @NotNull CommandSender sender,
                            final @NotNull @Argument(value = "target", suggestions = "servers") String target,
                            final @Argument("value") boolean value) {
@@ -155,6 +159,7 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 
     @CommandMethod("fcb|floracorebungee server <target> set autosync2 <value>")
     @CommandDescription("floracore.command.description.floracore.server.set.autosync2")
+    @CommandPermission("floracore.admin")
     public void serverSet2(final @NotNull CommandSender sender,
                            final @NotNull @Argument(value = "target", suggestions = "servers") String target,
                            final @Argument("value") boolean value) {
@@ -175,6 +180,8 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
     }
 
     @CommandMethod("fcb|floracorebungee chat server <target>")
+    @CommandDescription("floracore.command.description.floracore.chat.server")
+    @CommandPermission("floracore.staff")
     public void chat(final @NotNull CommandSender sender,
                      final @NotNull @Argument(value = "target", suggestions = "servers") String target) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
@@ -208,6 +215,8 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
     }
 
     @CommandMethod("fcb|floracorebungee chat type <type>")
+    @CommandDescription("floracore.command.description.floracore.chat.type")
+    @CommandPermission("floracore.staff")
     public void chat(final @NotNull CommandSender sender,
                      final @NotNull @Argument("type") ChatType type) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);

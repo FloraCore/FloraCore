@@ -19,15 +19,15 @@ import team.floracore.common.util.wrapper.WrappedObject;
 /**
  * Ping命令
  */
+@CommandDescription("floracore.command.description.ping")
 @CommandPermission("floracore.command.ping")
-@CommandDescription("获取玩家ping延迟")
 public class PingCommand extends FloraCoreBukkitCommand {
     public PingCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("ping")
-    @CommandDescription("获取您自己的ping延迟")
+    @CommandDescription("floracore.command.description.ping.self")
     public void self(@NotNull Player s) {
         PlayerCommandMessage.COMMAND_PING_SELF.send(getPlugin().getSenderFactory().wrap(s), getPing(s));
     }
@@ -42,8 +42,8 @@ public class PingCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("ping <target>")
+    @CommandDescription("floracore.command.description.ping")
     @CommandPermission("floracore.command.ping.other")
-    @CommandDescription("获取一名玩家的ping延迟")
     public void other(@NotNull CommandSender s, @NotNull @Argument("target") Player target) {
         PlayerCommandMessage.COMMAND_PING_OTHER.send(getPlugin().getSenderFactory().wrap(s),
                 target.getName(),

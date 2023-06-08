@@ -33,22 +33,18 @@ public abstract class AdviceAdapter extends GeneratorAdapter implements Opcodes 
      * Prefix of the error message when invalid opcodes are found.
      */
     private static final String INVALID_OPCODE = "Invalid opcode ";
-
-    /**
-     * The access flags of the visited method.
-     */
-    protected int methodAccess;
-
-    /**
-     * The descriptor of the visited method.
-     */
-    protected String methodDesc;
-
     /**
      * Whether the visited method is a constructor.
      */
     private final boolean isConstructor;
-
+    /**
+     * The access flags of the visited method.
+     */
+    protected int methodAccess;
+    /**
+     * The descriptor of the visited method.
+     */
+    protected String methodDesc;
     /**
      * Whether the super class constructor has been called (if the visited method is a constructor),
      * at the current instruction. There can be multiple call sites to the super constructor (e.g. for

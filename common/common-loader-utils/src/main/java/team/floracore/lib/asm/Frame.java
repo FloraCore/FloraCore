@@ -110,62 +110,55 @@ class Frame {
     private static final int VALUE_SIZE = 32 - DIM_SIZE - KIND_SIZE - FLAGS_SIZE;
 
     private static final int DIM_SHIFT = KIND_SIZE + FLAGS_SIZE + VALUE_SIZE;
-    private static final int KIND_SHIFT = FLAGS_SIZE + VALUE_SIZE;
-    private static final int FLAGS_SHIFT = VALUE_SIZE;
-
-    // Bitmasks to get each field of an abstract type.
-
     private static final int DIM_MASK = ((1 << DIM_SIZE) - 1) << DIM_SHIFT;
-    private static final int KIND_MASK = ((1 << KIND_SIZE) - 1) << KIND_SHIFT;
-    private static final int VALUE_MASK = (1 << VALUE_SIZE) - 1;
-
-    // Constants to manipulate the DIM field of an abstract type.
-
     /**
      * The constant to be added to an abstract type to get one with one more array dimension.
      */
     private static final int ARRAY_OF = +1 << DIM_SHIFT;
 
+    // Bitmasks to get each field of an abstract type.
     /**
      * The constant to be added to an abstract type to get one with one less array dimension.
      */
     private static final int ELEMENT_OF = -1 << DIM_SHIFT;
+    private static final int KIND_SHIFT = FLAGS_SIZE + VALUE_SIZE;
+    private static final int KIND_MASK = ((1 << KIND_SIZE) - 1) << KIND_SHIFT;
+
+    // Constants to manipulate the DIM field of an abstract type.
+    private static final int CONSTANT_KIND = 1 << KIND_SHIFT;
+    private static final int TOP = CONSTANT_KIND | ITEM_TOP;
 
     // Possible values for the KIND field of an abstract type.
+    private static final int BOOLEAN = CONSTANT_KIND | ITEM_ASM_BOOLEAN;
+    private static final int BYTE = CONSTANT_KIND | ITEM_ASM_BYTE;
+    private static final int CHAR = CONSTANT_KIND | ITEM_ASM_CHAR;
+    private static final int SHORT = CONSTANT_KIND | ITEM_ASM_SHORT;
+    private static final int INTEGER = CONSTANT_KIND | ITEM_INTEGER;
 
-    private static final int CONSTANT_KIND = 1 << KIND_SHIFT;
+    // Possible flags for the FLAGS field of an abstract type.
+    private static final int FLOAT = CONSTANT_KIND | ITEM_FLOAT;
+
+    // Useful predefined abstract types (all the possible CONSTANT_KIND types).
+    private static final int LONG = CONSTANT_KIND | ITEM_LONG;
+    private static final int DOUBLE = CONSTANT_KIND | ITEM_DOUBLE;
+    private static final int NULL = CONSTANT_KIND | ITEM_NULL;
+    private static final int UNINITIALIZED_THIS = CONSTANT_KIND | ITEM_UNINITIALIZED_THIS;
     private static final int REFERENCE_KIND = 2 << KIND_SHIFT;
     private static final int UNINITIALIZED_KIND = 3 << KIND_SHIFT;
     private static final int LOCAL_KIND = 4 << KIND_SHIFT;
     private static final int STACK_KIND = 5 << KIND_SHIFT;
-
-    // Possible flags for the FLAGS field of an abstract type.
-
+    private static final int FLAGS_SHIFT = VALUE_SIZE;
     /**
      * A flag used for LOCAL_KIND and STACK_KIND abstract types, indicating that if the resolved,
      * concrete type is LONG or DOUBLE, TOP should be used instead (because the value has been
      * partially overridden with an xSTORE instruction).
      */
     private static final int TOP_IF_LONG_OR_DOUBLE_FLAG = 1 << FLAGS_SHIFT;
-
-    // Useful predefined abstract types (all the possible CONSTANT_KIND types).
-
-    private static final int TOP = CONSTANT_KIND | ITEM_TOP;
-    private static final int BOOLEAN = CONSTANT_KIND | ITEM_ASM_BOOLEAN;
-    private static final int BYTE = CONSTANT_KIND | ITEM_ASM_BYTE;
-    private static final int CHAR = CONSTANT_KIND | ITEM_ASM_CHAR;
-    private static final int SHORT = CONSTANT_KIND | ITEM_ASM_SHORT;
-    private static final int INTEGER = CONSTANT_KIND | ITEM_INTEGER;
-    private static final int FLOAT = CONSTANT_KIND | ITEM_FLOAT;
-    private static final int LONG = CONSTANT_KIND | ITEM_LONG;
-    private static final int DOUBLE = CONSTANT_KIND | ITEM_DOUBLE;
-    private static final int NULL = CONSTANT_KIND | ITEM_NULL;
-    private static final int UNINITIALIZED_THIS = CONSTANT_KIND | ITEM_UNINITIALIZED_THIS;
+    private static final int VALUE_MASK = (1 << VALUE_SIZE) - 1;
 
     // -----------------------------------------------------------------------------------------------
     // Instance fields
     // -----------------------------------------------------------------------------------------------
-
     /**
      * The basic block to which these input and output stack map frames correspond.
      */
@@ -445,6 +438,84 @@ class Frame {
     // -----------------------------------------------------------------------------------------------
 
     /**
+     * Put the given abstract type in the given ByteVector, using the JVMS verification_type_info
+     * format used in StackMapTable attributes.
+     *
+     * @param symbolTable  the type table to use to lookup and store type {@link Symbol}.
+     * @param abstractType an abstract type, restricted to {@link Frame#CONSTANT_KIND}, {@link
+     *                     Frame#REFERENCE_KIND} or {@link Frame#UNINITIALIZED_KIND} types.
+     * @param output       where the abstract type must be put.
+     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.7.4">JVMS
+     * 4.7.4</a>
+     */
+    static void putAbstractType(
+            final SymbolTable symbolTable, final int abstractType, final ByteVector output) {
+        int arrayDimensions = (abstractType & Frame.DIM_MASK) >> DIM_SHIFT;
+        if (arrayDimensions == 0) {
+            int typeValue = abstractType & VALUE_MASK;
+            switch (abstractType & KIND_MASK) {
+                case CONSTANT_KIND:
+                    output.putByte(typeValue);
+                    break;
+                case REFERENCE_KIND:
+                    output
+                            .putByte(ITEM_OBJECT)
+                            .putShort(symbolTable.addConstantClass(symbolTable.getType(typeValue).value).index);
+                    break;
+                case UNINITIALIZED_KIND:
+                    output.putByte(ITEM_UNINITIALIZED).putShort((int) symbolTable.getType(typeValue).data);
+                    break;
+                default:
+                    throw new AssertionError();
+            }
+        } else {
+            // Case of an array type, we need to build its descriptor first.
+            StringBuilder typeDescriptor = new StringBuilder();
+            while (arrayDimensions-- > 0) {
+                typeDescriptor.append('[');
+            }
+            if ((abstractType & KIND_MASK) == REFERENCE_KIND) {
+                typeDescriptor
+                        .append('L')
+                        .append(symbolTable.getType(abstractType & VALUE_MASK).value)
+                        .append(';');
+            } else {
+                switch (abstractType & VALUE_MASK) {
+                    case Frame.ITEM_ASM_BOOLEAN:
+                        typeDescriptor.append('Z');
+                        break;
+                    case Frame.ITEM_ASM_BYTE:
+                        typeDescriptor.append('B');
+                        break;
+                    case Frame.ITEM_ASM_CHAR:
+                        typeDescriptor.append('C');
+                        break;
+                    case Frame.ITEM_ASM_SHORT:
+                        typeDescriptor.append('S');
+                        break;
+                    case Frame.ITEM_INTEGER:
+                        typeDescriptor.append('I');
+                        break;
+                    case Frame.ITEM_FLOAT:
+                        typeDescriptor.append('F');
+                        break;
+                    case Frame.ITEM_LONG:
+                        typeDescriptor.append('J');
+                        break;
+                    case Frame.ITEM_DOUBLE:
+                        typeDescriptor.append('D');
+                        break;
+                    default:
+                        throw new AssertionError();
+                }
+            }
+            output
+                    .putByte(ITEM_OBJECT)
+                    .putShort(symbolTable.addConstantClass(typeDescriptor.toString()).index);
+        }
+    }
+
+    /**
      * Sets the input frame from the given method description. This method is used to initialize the
      * first frame of a method, which is implicit (i.e. not stored explicitly in the StackMapTable
      * attribute).
@@ -528,90 +599,12 @@ class Frame {
         initializationCount = 0;
     }
 
-    final int getInputStackSize() {
-        return inputStack.length;
-    }
-
     // -----------------------------------------------------------------------------------------------
     // Methods related to the output frame
     // -----------------------------------------------------------------------------------------------
 
-    /**
-     * Put the given abstract type in the given ByteVector, using the JVMS verification_type_info
-     * format used in StackMapTable attributes.
-     *
-     * @param symbolTable  the type table to use to lookup and store type {@link Symbol}.
-     * @param abstractType an abstract type, restricted to {@link Frame#CONSTANT_KIND}, {@link
-     *                     Frame#REFERENCE_KIND} or {@link Frame#UNINITIALIZED_KIND} types.
-     * @param output       where the abstract type must be put.
-     * @see <a href="https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-4.html#jvms-4.7.4">JVMS
-     * 4.7.4</a>
-     */
-    static void putAbstractType(
-            final SymbolTable symbolTable, final int abstractType, final ByteVector output) {
-        int arrayDimensions = (abstractType & Frame.DIM_MASK) >> DIM_SHIFT;
-        if (arrayDimensions == 0) {
-            int typeValue = abstractType & VALUE_MASK;
-            switch (abstractType & KIND_MASK) {
-                case CONSTANT_KIND:
-                    output.putByte(typeValue);
-                    break;
-                case REFERENCE_KIND:
-                    output
-                            .putByte(ITEM_OBJECT)
-                            .putShort(symbolTable.addConstantClass(symbolTable.getType(typeValue).value).index);
-                    break;
-                case UNINITIALIZED_KIND:
-                    output.putByte(ITEM_UNINITIALIZED).putShort((int) symbolTable.getType(typeValue).data);
-                    break;
-                default:
-                    throw new AssertionError();
-            }
-        } else {
-            // Case of an array type, we need to build its descriptor first.
-            StringBuilder typeDescriptor = new StringBuilder();
-            while (arrayDimensions-- > 0) {
-                typeDescriptor.append('[');
-            }
-            if ((abstractType & KIND_MASK) == REFERENCE_KIND) {
-                typeDescriptor
-                        .append('L')
-                        .append(symbolTable.getType(abstractType & VALUE_MASK).value)
-                        .append(';');
-            } else {
-                switch (abstractType & VALUE_MASK) {
-                    case Frame.ITEM_ASM_BOOLEAN:
-                        typeDescriptor.append('Z');
-                        break;
-                    case Frame.ITEM_ASM_BYTE:
-                        typeDescriptor.append('B');
-                        break;
-                    case Frame.ITEM_ASM_CHAR:
-                        typeDescriptor.append('C');
-                        break;
-                    case Frame.ITEM_ASM_SHORT:
-                        typeDescriptor.append('S');
-                        break;
-                    case Frame.ITEM_INTEGER:
-                        typeDescriptor.append('I');
-                        break;
-                    case Frame.ITEM_FLOAT:
-                        typeDescriptor.append('F');
-                        break;
-                    case Frame.ITEM_LONG:
-                        typeDescriptor.append('J');
-                        break;
-                    case Frame.ITEM_DOUBLE:
-                        typeDescriptor.append('D');
-                        break;
-                    default:
-                        throw new AssertionError();
-                }
-            }
-            output
-                    .putByte(ITEM_OBJECT)
-                    .putShort(symbolTable.addConstantClass(typeDescriptor.toString()).index);
-        }
+    final int getInputStackSize() {
+        return inputStack.length;
     }
 
     /**

@@ -296,89 +296,93 @@ final class MethodWriter extends MethodVisitor {
     private final String descriptor;
 
     // Code attribute fields and sub attributes:
-
-    /**
-     * The max_stack field of the Code attribute.
-     */
-    private int maxStack;
-
-    /**
-     * The max_locals field of the Code attribute.
-     */
-    private int maxLocals;
-
     /**
      * The 'code' field of the Code attribute.
      */
     private final ByteVector code = new ByteVector();
-
+    /**
+     * The number_of_exceptions field of the Exceptions attribute.
+     */
+    private final int numberOfExceptions;
+    /**
+     * The exception_index_table array of the Exceptions attribute, or {@literal null}.
+     */
+    private final int[] exceptionIndexTable;
+    /**
+     * The signature_index field of the Signature attribute.
+     */
+    private final int signatureIndex;
+    /**
+     * Indicates what must be computed. Must be one of {@link #COMPUTE_ALL_FRAMES}, {@link
+     * #COMPUTE_INSERTED_FRAMES}, {@link COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES}, {@link
+     * #COMPUTE_MAX_STACK_AND_LOCAL} or {@link #COMPUTE_NOTHING}.
+     */
+    private final int compute;
+    /**
+     * The max_stack field of the Code attribute.
+     */
+    private int maxStack;
+    /**
+     * The max_locals field of the Code attribute.
+     */
+    private int maxLocals;
     /**
      * The first element in the exception handler list (used to generate the exception_table of the
      * Code attribute). The next ones can be accessed with the {@link Handler#nextHandler} field. May
      * be {@literal null}.
      */
     private Handler firstHandler;
-
     /**
      * The last element in the exception handler list (used to generate the exception_table of the
      * Code attribute). The next ones can be accessed with the {@link Handler#nextHandler} field. May
      * be {@literal null}.
      */
     private Handler lastHandler;
-
     /**
      * The line_number_table_length field of the LineNumberTable code attribute.
      */
     private int lineNumberTableLength;
-
     /**
      * The line_number_table array of the LineNumberTable code attribute, or {@literal null}.
      */
     private ByteVector lineNumberTable;
-
     /**
      * The local_variable_table_length field of the LocalVariableTable code attribute.
      */
     private int localVariableTableLength;
-
     /**
      * The local_variable_table array of the LocalVariableTable code attribute, or {@literal null}.
      */
     private ByteVector localVariableTable;
-
     /**
      * The local_variable_type_table_length field of the LocalVariableTypeTable code attribute.
      */
     private int localVariableTypeTableLength;
-
     /**
      * The local_variable_type_table array of the LocalVariableTypeTable code attribute, or {@literal
      * null}.
      */
     private ByteVector localVariableTypeTable;
-
     /**
      * The number_of_entries field of the StackMapTable code attribute.
      */
     private int stackMapTableNumberOfEntries;
 
+    // Other method_info attributes:
     /**
      * The 'entries' array of the StackMapTable code attribute.
      */
     private ByteVector stackMapTableEntries;
-
     /**
      * The last runtime visible type annotation of the Code attribute. The previous ones can be
      * accessed with the {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
      */
     private AnnotationWriter lastCodeRuntimeVisibleTypeAnnotation;
-
     /**
      * The last runtime invisible type annotation of the Code attribute. The previous ones can be
      * accessed with the {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
      */
     private AnnotationWriter lastCodeRuntimeInvisibleTypeAnnotation;
-
     /**
      * The first non standard attribute of the Code attribute. The next ones can be accessed with the
      * {@link Attribute#nextAttribute} field. May be {@literal null}.
@@ -389,87 +393,62 @@ final class MethodWriter extends MethodVisitor {
      * reverse order specified by the user.
      */
     private Attribute firstCodeAttribute;
-
-    // Other method_info attributes:
-
-    /**
-     * The number_of_exceptions field of the Exceptions attribute.
-     */
-    private final int numberOfExceptions;
-
-    /**
-     * The exception_index_table array of the Exceptions attribute, or {@literal null}.
-     */
-    private final int[] exceptionIndexTable;
-
-    /**
-     * The signature_index field of the Signature attribute.
-     */
-    private final int signatureIndex;
-
     /**
      * The last runtime visible annotation of this method. The previous ones can be accessed with the
      * {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
      */
     private AnnotationWriter lastRuntimeVisibleAnnotation;
-
     /**
      * The last runtime invisible annotation of this method. The previous ones can be accessed with
      * the {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
      */
     private AnnotationWriter lastRuntimeInvisibleAnnotation;
-
     /**
      * The number of method parameters that can have runtime visible annotations, or 0.
      */
     private int visibleAnnotableParameterCount;
-
     /**
      * The runtime visible parameter annotations of this method. Each array element contains the last
      * annotation of a parameter (which can be {@literal null} - the previous ones can be accessed
      * with the {@link AnnotationWriter#previousAnnotation} field). May be {@literal null}.
      */
     private AnnotationWriter[] lastRuntimeVisibleParameterAnnotations;
-
     /**
      * The number of method parameters that can have runtime visible annotations, or 0.
      */
     private int invisibleAnnotableParameterCount;
-
     /**
      * The runtime invisible parameter annotations of this method. Each array element contains the
      * last annotation of a parameter (which can be {@literal null} - the previous ones can be
      * accessed with the {@link AnnotationWriter#previousAnnotation} field). May be {@literal null}.
      */
     private AnnotationWriter[] lastRuntimeInvisibleParameterAnnotations;
-
     /**
      * The last runtime visible type annotation of this method. The previous ones can be accessed with
      * the {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
      */
     private AnnotationWriter lastRuntimeVisibleTypeAnnotation;
-
     /**
      * The last runtime invisible type annotation of this method. The previous ones can be accessed
      * with the {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
      */
     private AnnotationWriter lastRuntimeInvisibleTypeAnnotation;
-
     /**
      * The default_value field of the AnnotationDefault attribute, or {@literal null}.
      */
     private ByteVector defaultValue;
-
     /**
      * The parameters_count field of the MethodParameters attribute.
      */
     private int parametersCount;
-
     /**
      * The 'parameters' array of the MethodParameters attribute, or {@literal null}.
      */
     private ByteVector parameters;
 
+    // -----------------------------------------------------------------------------------------------
+    // Fields used to compute the maximum stack size and number of locals, and the stack map frames
+    // -----------------------------------------------------------------------------------------------
     /**
      * The first non standard attribute of this method. The next ones can be accessed with the {@link
      * Attribute#nextAttribute} field. May be {@literal null}.
@@ -480,18 +459,6 @@ final class MethodWriter extends MethodVisitor {
      * reverse order specified by the user.
      */
     private Attribute firstAttribute;
-
-    // -----------------------------------------------------------------------------------------------
-    // Fields used to compute the maximum stack size and number of locals, and the stack map frames
-    // -----------------------------------------------------------------------------------------------
-
-    /**
-     * Indicates what must be computed. Must be one of {@link #COMPUTE_ALL_FRAMES}, {@link
-     * #COMPUTE_INSERTED_FRAMES}, {@link COMPUTE_MAX_STACK_AND_LOCAL_FROM_FRAMES}, {@link
-     * #COMPUTE_MAX_STACK_AND_LOCAL} or {@link #COMPUTE_NOTHING}.
-     */
-    private final int compute;
-
     /**
      * The first basic block of the method. The next ones (in bytecode offset order) can be accessed
      * with the {@link Label#nextBasicBlock} field.

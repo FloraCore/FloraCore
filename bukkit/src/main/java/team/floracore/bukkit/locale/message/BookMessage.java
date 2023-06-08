@@ -6,8 +6,6 @@ import net.kyori.adventure.text.event.HoverEvent;
 import team.floracore.bukkit.commands.player.NickCommand;
 import team.floracore.common.locale.message.AbstractMessage;
 
-import java.util.UUID;
-
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 import static net.kyori.adventure.text.format.TextDecoration.BOLD;
@@ -157,53 +155,6 @@ public interface BookMessage extends AbstractMessage {
                 .args(r).build();
     };
 
-    Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_START_TIME_BOOK = (time) -> translatable()
-            // 开始时间: {0}
-            .key("floracore.command.misc.reports.gui.main.report.chats.chat.start-time")
-            .args(text(time, DARK_GREEN))
-            .color(BLACK)
-            .build();
-
-    Args1<String> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_END_TIME_BOOK = (time) -> translatable()
-            // 结束时间: {0}
-            .key("floracore.command.misc.reports.gui.main.report.chats.chat.end-time")
-            .args(text(time, DARK_GREEN))
-            .color(BLACK)
-            .build();
-
-    Args1<Integer> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_1 = (amounts) -> translatable()
-            // 共 {0} 条聊天记录
-            .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.main.line.1")
-            .args(text(amounts).decoration(BOLD, true).decoration(UNDERLINED, true))
-            .color(GOLD)
-            .build();
-
-    Args0 COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_2 = () -> translatable()
-            // 翻页查看
-            .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.main.line.2")
-            .color(RED)
-            .decoration(BOLD, true)
-            .decoration(UNDERLINED, true)
-            .build();
-
-    Args2<UUID, Boolean> COMMAND_REPORTS_GUI_MAIN_REPORT_CHATS_CHAT_BOOK_MAIN_LINE_3 = (uuid, conclusion) -> {
-        HoverEvent<Component> hoverEvent = HoverEvent.showText(translatable()
-                // 点击这里以返回
-                .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.main.line.3.hover")
-                .color(WHITE)
-                .build());
-        ClickEvent clickEvent = ClickEvent.runCommand("/rcs " + uuid.toString() + " " + conclusion);
-        return translatable()
-                // 返回至聊天记录
-                .key("floracore.command.misc.reports.gui.main.report.chats.chat.book.main.line.3")
-                .clickEvent(clickEvent)
-                .hoverEvent(hoverEvent)
-                .color(BLACK)
-                .decoration(BOLD, true)
-                .decoration(UNDERLINED, true)
-                .build();
-    };
-
     Args0 COMMAND_MISC_NICK_BOOK_START_PAGE_LINE_1 = () -> translatable()
             // Nick可以让你用不同的用户名来玩,以免被人认出
             .key("floracore.command.misc.nick.book.start-page.line.1").color(BLACK).append(FULL_STOP).build();
@@ -236,7 +187,7 @@ public interface BookMessage extends AbstractMessage {
     };
 
     Args0 COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_1 = () -> translatable()
-            // 让我们为你设置您的新昵称吧!
+            // 让我们为你设置你的新昵称吧!
             .key("floracore.command.misc.nick.book.rank-page.line.1").color(BLACK).build();
 
     Args0 COMMAND_MISC_NICK_BOOK_RANK_PAGE_LINE_2 = () -> translatable()

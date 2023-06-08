@@ -14,14 +14,15 @@ import team.floracore.common.sender.Sender;
 /**
  * InvSee命令
  */
+@CommandDescription("floracore.command.description.invsee")
 @CommandPermission("floracore.command.invsee")
-@CommandDescription("打开指定玩家的物品栏")
 public class InvSeeCommand extends FloraCoreBukkitCommand {
     public InvSeeCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("invsee|inv <target>")
+    @CommandDescription("floracore.command.description.invsee")
     public void invsee(final @NotNull Player s, final @Argument("target") Player target) {
         Sender sender = getPlugin().getSenderFactory().wrap(s);
         if (s.getUniqueId() == target.getUniqueId()) {

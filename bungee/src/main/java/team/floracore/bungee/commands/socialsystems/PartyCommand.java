@@ -1,16 +1,22 @@
 package team.floracore.bungee.commands.socialsystems;
 
+import cloud.commandframework.CommandHelpHandler;
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandDescription;
 import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.processing.CommandContainer;
 import cloud.commandframework.annotations.specifier.Greedy;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.connection.Server;
+import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.event.EventHandler;
 import org.floracore.api.FloraCoreProvider;
 import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
@@ -19,6 +25,7 @@ import org.floracore.api.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
+import team.floracore.bungee.locale.message.HelpMessage;
 import team.floracore.bungee.locale.message.SocialSystemsMessage;
 import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.sender.Sender;
@@ -30,7 +37,10 @@ import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+
+import static net.kyori.adventure.text.Component.newline;
 
 @CommandContainer
 @CommandDescription("floracore.command.description.party")
@@ -233,7 +243,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 }
                 if (leader.equals(ut) || moderators.contains(ut)) {
                     if (!leader.equals(uuid)) {
-                        SocialSystemsMessage.COMMAND_MISC_PARTY_KICK_NOT_PERMISSION.send(sender, target);
+                        SocialSystemsMessage.COMMAND_MISC_PARTY_KICK_NOT_PERMISSION.send(sender, ut);
                         return;
                     }
                 }
@@ -642,7 +652,7 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                                             targetUUID.toString())));
                 });
             } else {
-                SocialSystemsMessage.COMMAND_MISC_PARTY_DEMOTE_ALREADY_IN.send(sender, target);
+                SocialSystemsMessage.COMMAND_MISC_PARTY_DEMOTE_ALREADY_IN.send(sender, targetUUID);
             }
         }
     }
@@ -706,6 +716,26 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
         }
     }
 
+    @CommandMethod("party|p help")
+    @CommandDescription("floracore.command.description.party.help")
+    public void help(final @NotNull ProxiedPlayer player) {
+        CommandHelpHandler.HelpTopic<CommandSender> partyCmds = getPlugin().getCommandManager().getManager().createCommandHelpHandler().queryHelp(player, "party");
+        CommandHelpHandler.MultiHelpTopic<CommandSender> subCmds = (CommandHelpHandler.MultiHelpTopic<CommandSender>) partyCmds;
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        Component helpComponent = HelpMessage.HELP_PARTY_TITLE.build();
+        Sender sender = getPlugin().getSenderFactory().wrap(player);
+        for (String childSuggestion : subCmds.getChildSuggestions()) {
+            CommandHelpHandler.HelpTopic<CommandSender> subCmd = getPlugin().getCommandManager().getManager().createCommandHelpHandler().queryHelp(player, childSuggestion);
+            CommandHelpHandler.VerboseHelpTopic<CommandSender> subCmdInfo = (CommandHelpHandler.VerboseHelpTopic<CommandSender>) subCmd;
+            String description = subCmdInfo.getDescription();
+            if (!description.equalsIgnoreCase(EMPTY_DESCRIPTION)) {
+                helpComponent = Component.join(joinConfig, helpComponent, HelpMessage.HELP_PARTY_SUB_COMMAND.build(childSuggestion, description));
+            }
+        }
+        helpComponent = Component.join(joinConfig, helpComponent, MiscMessage.PARTY_HORIZONTAL_LINE.build());
+        sender.sendMessage(helpComponent);
+    }
+
     @EventHandler
     public void onPlayerJoin(ServerConnectedEvent e) {
         ProxiedPlayer p = e.getPlayer();
@@ -743,7 +773,74 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                 return member;
             }
         }
-
         return null;
+    }
+
+    @EventHandler
+    public void onQuit(PlayerDisconnectEvent e) {
+        ProxiedPlayer p = e.getPlayer();
+        UUID uuid = p.getUniqueId();
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+        if (data != null) {
+            UUID partyUUID = UUID.fromString(data.getValue());
+            TaskScheduler scheduler = getPlugin().getProxy().getScheduler();
+            AtomicBoolean shouldCancel = new AtomicBoolean(false);
+            final int[] taskId = new int[1];
+            taskId[0] = scheduler.schedule(getPlugin().getLoader(), new Runnable() {
+                private int secondsElapsed = 1;
+                private boolean offlineNotification = false;
+
+                public void run() {
+                    boolean online = isOnline(uuid);
+                    PARTY party = getStorageImplementation().selectParty(partyUUID);
+                    UUID leader = party.getLeader();
+                    List<UUID> moderators = party.getModerators();
+                    List<UUID> members = party.getMembers();
+                    if (shouldCancel.get() || online) {
+                        // 取消任务
+                        if (online && offlineNotification) {
+                            members.forEach(member -> getPlugin().getBungeeMessagingFactory().pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_OFFLINE_RE_ONLINE, Collections.singletonList(uuid.toString())));
+                        }
+                        scheduler.cancel(taskId[0]);
+                        shouldCancel.set(true);
+                        return;
+                    }
+                    if (!offlineNotification) {
+                        members.forEach(member -> {
+                            if (leader.equals(uuid)) {
+                                getPlugin().getBungeeMessagingFactory().pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_OFFLINE_LEADER, Collections.singletonList(uuid.toString()));
+                            } else {
+                                getPlugin().getBungeeMessagingFactory().pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_OFFLINE, Collections.singletonList(uuid.toString()));
+                            }
+                        });
+                        offlineNotification = true;
+                    }
+                    // 如果超过5分钟未上线
+                    if (secondsElapsed >= 300) {
+                        moderators.remove(uuid);
+                        party.setModerators(moderators);
+                        members.remove(uuid);
+                        party.setMembers(members);
+                        shouldCancel.set(true);
+                        DATA od = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+                        getStorageImplementation().deleteDataID(od.getId());
+                        // 执行队伍队长转移。
+                        if (leader.equals(uuid)) {
+                            UUID newLeader = findNewLeader(moderators, members);
+                            if (newLeader == null) {
+                                // 解散队伍
+                                disband(partyUUID, null);
+                                return;
+                            }
+                            party.setLeader(newLeader);
+                            members.forEach(member -> getPlugin().getBungeeMessagingFactory().pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_OFFLINE_TRANSFER, Arrays.asList(uuid.toString(), newLeader.toString())));
+                        } else {
+                            members.forEach(member -> getPlugin().getBungeeMessagingFactory().pushNoticeMessage(member, NoticeMessage.NoticeType.PARTY_OFFLINE_KICK, Collections.singletonList(uuid.toString())));
+                        }
+                    }
+                    secondsElapsed++;
+                }
+            }, 1, 1, TimeUnit.SECONDS).getId();
+        }
     }
 }

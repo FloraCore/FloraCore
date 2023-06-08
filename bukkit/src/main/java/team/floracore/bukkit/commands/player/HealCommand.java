@@ -12,15 +12,15 @@ import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
 /**
  * Heal命令
  */
+@CommandDescription("floracore.command.description.heal")
 @CommandPermission("floracore.command.heal")
-@CommandDescription("治疗一名玩家")
 public class HealCommand extends FloraCoreBukkitCommand {
     public HealCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("heal")
-    @CommandDescription("治疗您自己")
+    @CommandDescription("floracore.command.description.heal.self")
     public void self(@NotNull Player s) {
         heal(s);
         PlayerCommandMessage.COMMAND_HEAL_SELF.send(getPlugin().getSenderFactory().wrap(s));
@@ -31,7 +31,7 @@ public class HealCommand extends FloraCoreBukkitCommand {
     }
 
     @CommandMethod("heal <target>")
-    @CommandDescription("治疗其他玩家")
+    @CommandDescription("floracore.command.description.heal.other")
     @CommandPermission("floracore.command.heal.other")
     public void other(@NotNull CommandSender s,
                       @NotNull @Argument("target") Player target,

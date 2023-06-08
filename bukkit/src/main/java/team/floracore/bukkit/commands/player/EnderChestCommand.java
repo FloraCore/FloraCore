@@ -27,8 +27,8 @@ import java.util.UUID;
 /**
  * EnderChest命令
  */
-@CommandPermission("floracore.command.enderchest")
 @CommandDescription("floracore.command.description.enderchest")
+@CommandPermission("floracore.command.enderchest")
 public class EnderChestCommand extends FloraCoreBukkitCommand implements Listener {
     /**
      * 对应玩家禁止修改的内容

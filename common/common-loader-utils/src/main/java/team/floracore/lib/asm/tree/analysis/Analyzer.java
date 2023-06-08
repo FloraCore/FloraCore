@@ -73,6 +73,56 @@ public class Analyzer<V extends Value> implements Opcodes {
     }
 
     /**
+     * Computes and returns the maximum number of local variables used in the given method.
+     *
+     * @param method a method.
+     * @return the maximum number of local variables used in the given method.
+     */
+    private static int computeMaxLocals(final MethodNode method) {
+        int maxLocals = Type.getArgumentsAndReturnSizes(method.desc) >> 2;
+        if ((method.access & Opcodes.ACC_STATIC) != 0) {
+            maxLocals -= 1;
+        }
+        for (AbstractInsnNode insnNode : method.instructions) {
+            if (insnNode instanceof VarInsnNode) {
+                int local = ((VarInsnNode) insnNode).var;
+                int size =
+                        (insnNode.getOpcode() == Opcodes.LLOAD
+                                || insnNode.getOpcode() == Opcodes.DLOAD
+                                || insnNode.getOpcode() == Opcodes.LSTORE
+                                || insnNode.getOpcode() == Opcodes.DSTORE)
+                                ? 2
+                                : 1;
+                maxLocals = Math.max(maxLocals, local + size);
+            } else if (insnNode instanceof IincInsnNode) {
+                int local = ((IincInsnNode) insnNode).var;
+                maxLocals = Math.max(maxLocals, local + 1);
+            }
+        }
+        return maxLocals;
+    }
+
+    /**
+     * Computes and returns the maximum stack size of a method, given its stack map frames.
+     *
+     * @param frames the stack map frames of a method.
+     * @return the maximum stack size of the given method.
+     */
+    private static int computeMaxStack(final Frame<?>[] frames) {
+        int maxStack = 0;
+        for (Frame<?> frame : frames) {
+            if (frame != null) {
+                int stackSize = 0;
+                for (int i = 0; i < frame.getStackSize(); ++i) {
+                    stackSize += frame.getStack(i).getSize();
+                }
+                maxStack = Math.max(maxStack, stackSize);
+            }
+        }
+        return maxStack;
+    }
+
+    /**
      * Analyzes the given method.
      *
      * @param owner  the internal name of the class to which 'method' belongs (see {@link
@@ -280,56 +330,6 @@ public class Analyzer<V extends Value> implements Opcodes {
         analyze(owner, method);
         method.maxStack = computeMaxStack(frames);
         return frames;
-    }
-
-    /**
-     * Computes and returns the maximum number of local variables used in the given method.
-     *
-     * @param method a method.
-     * @return the maximum number of local variables used in the given method.
-     */
-    private static int computeMaxLocals(final MethodNode method) {
-        int maxLocals = Type.getArgumentsAndReturnSizes(method.desc) >> 2;
-        if ((method.access & Opcodes.ACC_STATIC) != 0) {
-            maxLocals -= 1;
-        }
-        for (AbstractInsnNode insnNode : method.instructions) {
-            if (insnNode instanceof VarInsnNode) {
-                int local = ((VarInsnNode) insnNode).var;
-                int size =
-                        (insnNode.getOpcode() == Opcodes.LLOAD
-                                || insnNode.getOpcode() == Opcodes.DLOAD
-                                || insnNode.getOpcode() == Opcodes.LSTORE
-                                || insnNode.getOpcode() == Opcodes.DSTORE)
-                                ? 2
-                                : 1;
-                maxLocals = Math.max(maxLocals, local + size);
-            } else if (insnNode instanceof IincInsnNode) {
-                int local = ((IincInsnNode) insnNode).var;
-                maxLocals = Math.max(maxLocals, local + 1);
-            }
-        }
-        return maxLocals;
-    }
-
-    /**
-     * Computes and returns the maximum stack size of a method, given its stack map frames.
-     *
-     * @param frames the stack map frames of a method.
-     * @return the maximum stack size of the given method.
-     */
-    private static int computeMaxStack(final Frame<?>[] frames) {
-        int maxStack = 0;
-        for (Frame<?> frame : frames) {
-            if (frame != null) {
-                int stackSize = 0;
-                for (int i = 0; i < frame.getStackSize(); ++i) {
-                    stackSize += frame.getStack(i).getSize();
-                }
-                maxStack = Math.max(maxStack, stackSize);
-            }
-        }
-        return maxStack;
     }
 
     /**

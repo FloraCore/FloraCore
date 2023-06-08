@@ -15,47 +15,39 @@ import java.util.*;
 public class Textifier extends Printer {
 
     /**
+     * The type of internal names (see {@link Type#getInternalName()}). See {@link #appendDescriptor}.
+     */
+    public static final int INTERNAL_NAME = 0;
+    /**
+     * The type of field descriptors. See {@link #appendDescriptor}.
+     */
+    public static final int FIELD_DESCRIPTOR = 1;
+    /**
+     * The type of field signatures. See {@link #appendDescriptor}.
+     */
+    public static final int FIELD_SIGNATURE = 2;
+    /**
+     * The type of method descriptors. See {@link #appendDescriptor}.
+     */
+    public static final int METHOD_DESCRIPTOR = 3;
+    /**
+     * The type of method signatures. See {@link #appendDescriptor}.
+     */
+    public static final int METHOD_SIGNATURE = 4;
+    /**
+     * The type of class signatures. See {@link #appendDescriptor}.
+     */
+    public static final int CLASS_SIGNATURE = 5;
+    /**
+     * The type of method handle descriptors. See {@link #appendDescriptor}.
+     */
+    public static final int HANDLE_DESCRIPTOR = 9;
+    /**
      * The help message shown when command line arguments are incorrect.
      */
     private static final String USAGE =
             "Prints a disassembled view of the given class.\n"
                     + "Usage: Textifier [-nodebug] <fully qualified class name or class file name>";
-
-    /**
-     * The type of internal names (see {@link Type#getInternalName()}). See {@link #appendDescriptor}.
-     */
-    public static final int INTERNAL_NAME = 0;
-
-    /**
-     * The type of field descriptors. See {@link #appendDescriptor}.
-     */
-    public static final int FIELD_DESCRIPTOR = 1;
-
-    /**
-     * The type of field signatures. See {@link #appendDescriptor}.
-     */
-    public static final int FIELD_SIGNATURE = 2;
-
-    /**
-     * The type of method descriptors. See {@link #appendDescriptor}.
-     */
-    public static final int METHOD_DESCRIPTOR = 3;
-
-    /**
-     * The type of method signatures. See {@link #appendDescriptor}.
-     */
-    public static final int METHOD_SIGNATURE = 4;
-
-    /**
-     * The type of class signatures. See {@link #appendDescriptor}.
-     */
-    public static final int CLASS_SIGNATURE = 5;
-
-    /**
-     * The type of method handle descriptors. See {@link #appendDescriptor}.
-     */
-    public static final int HANDLE_DESCRIPTOR = 9;
-
     private static final String CLASS_SUFFIX = ".class";
     private static final String DEPRECATED = "// DEPRECATED\n";
     private static final String RECORD = "// RECORD\n";

@@ -21,22 +21,22 @@ import java.util.List;
 /**
  * Speed命令
  */
+@CommandDescription("floracore.command.description.speed")
 @CommandPermission("floracore.command.speed")
-@CommandDescription("设置玩家的指定类型的速度")
 public class SpeedCommand extends FloraCoreBukkitCommand {
     public SpeedCommand(FCBukkitPlugin plugin) {
         super(plugin);
     }
 
     @CommandMethod("speed <speed>")
-    @CommandDescription("设置你当前状态的速度")
+    @CommandDescription("floracore.command.description.speed.self")
     public void speed(final @NotNull Player p, final @Argument(value = "speed", suggestions = "speeds") float speed) {
         boolean isFlying = p.isFlying();
         speedAdvance(p, speed, isFlying ? SpeedType.FLY.getName() : SpeedType.WALK.getName(), null, null);
     }
 
     @CommandMethod("speed <speed> <type> [target]")
-    @CommandDescription("设置你（或指定玩家）的指定类型的速度")
+    @CommandDescription("floracore.command.description.speed.advance")
     public void speedAdvance(final @NotNull Player p,
                              final @Argument(value = "speed", suggestions = "speeds") float speed,
                              final @Argument(value = "type", suggestions = "types") String type,
