@@ -30,7 +30,7 @@ import java.util.concurrent.TimeUnit;
 @CommandContainer
 @CommandDescription("floracore.command.description.language")
 public class LanguageCommand extends FloraCoreBukkitCommand {
-    private static final Cache<Integer, List<Locale>> languageCache = CaffeineFactory.newBuilder()
+    private static final Cache<Integer, Set<Locale>> languageCache = CaffeineFactory.newBuilder()
             .expireAfterWrite(30,
                     TimeUnit.MINUTES)
             .build();
@@ -54,14 +54,14 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
         Sender s = getPlugin().getSenderFactory().wrap(player);
         UUID uuid = player.getUniqueId();
         List<Button> buttons = new ArrayList<>();
-        List<Locale> availableTranslations = languageCache.getIfPresent(0);
+        Set<Locale> availableTranslations = languageCache.getIfPresent(0);
         if (availableTranslations == null) {
-            availableTranslations = Arrays.asList(getPlugin().getTranslationManager().getInstalledLocales().toArray(new Locale[0]));
+            availableTranslations = getPlugin().getTranslationManager().getInstalledLocales();
             if (!availableTranslations.isEmpty()) {
                 languageCache.put(0, availableTranslations);
             }
         }
-        List<Locale> finalAvailableTranslations = availableTranslations;
+        Set<Locale> finalAvailableTranslations = availableTranslations;
         Locale defaultLanguage = TranslationManager.DEFAULT_LOCALE;
         String dpl = TranslationManager.localeDisplayName(defaultLanguage);
         Button db = Button.of(p -> {
