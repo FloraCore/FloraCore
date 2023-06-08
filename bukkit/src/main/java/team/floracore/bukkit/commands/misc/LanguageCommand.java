@@ -19,22 +19,18 @@ import team.floracore.bukkit.command.FloraCoreBukkitCommand;
 import team.floracore.bukkit.locale.message.MenuMessage;
 import team.floracore.bukkit.locale.message.commands.MiscCommandMessage;
 import team.floracore.bukkit.util.itemstack.ItemStackBuilder;
-import team.floracore.common.http.UnsuccessfulRequestException;
-import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.locale.translation.TranslationManager;
-import team.floracore.common.locale.translation.TranslationRepository;
 import team.floracore.common.sender.Sender;
 import team.floracore.common.util.CaffeineFactory;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @CommandContainer
 @CommandDescription("floracore.command.description.language")
 public class LanguageCommand extends FloraCoreBukkitCommand {
-    private static final Cache<Integer, List<TranslationRepository.LanguageInfo>> languageCache = CaffeineFactory.newBuilder()
+    private static final Cache<Integer, List<Locale>> languageCache = CaffeineFactory.newBuilder()
             .expireAfterWrite(30,
                     TimeUnit.MINUTES)
             .build();
@@ -58,22 +54,14 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
         Sender s = getPlugin().getSenderFactory().wrap(player);
         UUID uuid = player.getUniqueId();
         List<Button> buttons = new ArrayList<>();
-        List<TranslationRepository.LanguageInfo> availableTranslations = languageCache.getIfPresent(0);
+        List<Locale> availableTranslations = languageCache.getIfPresent(0);
         if (availableTranslations == null) {
-            try {
-                availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
-            } catch (IOException | UnsuccessfulRequestException | UnsupportedOperationException e) {
-                getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
-                availableTranslations = new ArrayList<>();
-            }
-            if (availableTranslations == null) {
-                return null;
-            }
+            availableTranslations = Arrays.asList(getPlugin().getTranslationManager().getInstalledLocales().toArray(new Locale[0]));
             if (!availableTranslations.isEmpty()) {
                 languageCache.put(0, availableTranslations);
             }
         }
-        List<TranslationRepository.LanguageInfo> finalAvailableTranslations = availableTranslations;
+        List<Locale> finalAvailableTranslations = availableTranslations;
         Locale defaultLanguage = TranslationManager.DEFAULT_LOCALE;
         String dpl = TranslationManager.localeDisplayName(defaultLanguage);
         Button db = Button.of(p -> {
@@ -91,21 +79,17 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
             }
         });
         buttons.add(db);
-        for (TranslationRepository.LanguageInfo language : finalAvailableTranslations) {
-            Locale l = language.locale();
-            String pl = TranslationManager.localeDisplayName(l);
+        for (Locale languageLocale : finalAvailableTranslations) {
+            String pl = TranslationManager.localeDisplayName(languageLocale);
             Button b = Button.of(p -> {
-                Component c = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(pl), l);
+                Component c = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(pl), languageLocale);
                 Component t = Component.text(pl).color(NamedTextColor.GREEN);
-                Component progress = AbstractMessage.OPEN_BRACKET.append(Component.text(language.progress() + "%"))
-                        .append(AbstractMessage.CLOSE_BRACKET);
-                t = t.append(Component.space()).append(progress.color(NamedTextColor.GRAY));
                 ItemStackBuilder itemBuilder = new ItemStackBuilder(Material.PAPER).setName(t)
                         .setLore(Collections.singletonList(c));
                 return itemBuilder.get();
             }, p -> {
                 {
-                    String value = language.locale().toLanguageTag();
+                    String value = languageLocale.toLanguageTag();
                     getStorageImplementation().insertData(uuid,
                             DataType.FUNCTION,
                             "language",

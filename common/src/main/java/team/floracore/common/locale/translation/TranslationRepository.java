@@ -1,5 +1,6 @@
 package team.floracore.common.locale.translation;
 
+import com.google.errorprone.annotations.Keep;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
@@ -23,6 +24,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public class TranslationRepository {
     private static final long MAX_BUNDLE_SIZE = 1048576L; // 1mb
@@ -48,6 +50,8 @@ public class TranslationRepository {
         return getTranslationsMetadata().languages;
     }
 
+    // "Keep"注解避免反复进行网络调用
+    @Keep
     private MetadataResponse getTranslationsMetadata() throws IOException, UnsuccessfulRequestException {
         Request request = new Request.Builder().header("User-Agent", "floracore")
                 .url(TRANSLATIONS_INFO_ENDPOINT)
@@ -111,8 +115,9 @@ public class TranslationRepository {
     }
 
     private void clearDirectory(Path directory, Predicate<Path> predicate) {
-        try {
-            Files.list(directory).filter(predicate).forEach(p -> {
+        // try-with-resource
+        try (Stream<Path> stream = Files.list(directory)) {
+            stream.filter(predicate).forEach(p -> {
                 try {
                     Files.delete(p);
                 } catch (IOException e) {

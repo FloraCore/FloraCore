@@ -297,12 +297,10 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                         .pushNoticeMessage(uuid,
                                 NoticeMessage.NoticeType.PARTY_LEAVE,
                                 Collections.singletonList(uuid.toString()));
-                members.forEach(member -> {
-                    getPlugin().getBungeeMessagingFactory()
-                            .pushNoticeMessage(member,
-                                    NoticeMessage.NoticeType.PARTY_LEAVE,
-                                    Collections.singletonList(uuid.toString()));
-                });
+                members.forEach(member -> getPlugin().getBungeeMessagingFactory()
+                        .pushNoticeMessage(member,
+                                NoticeMessage.NoticeType.PARTY_LEAVE,
+                                Collections.singletonList(uuid.toString())));
             });
 
         }
