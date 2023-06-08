@@ -5,7 +5,7 @@ plugins {
 }
 
 group 'team.floracore'
-version '2.0.5.1'
+version '2.0.5.2'
 
 subprojects {
     apply plugin: 'java'

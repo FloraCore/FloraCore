@@ -3,6 +3,7 @@ package team.floracore.bungee;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
+import org.bstats.bungeecord.Metrics;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.floracore.api.platform.Platform;
 import team.floracore.common.loader.LoaderBootstrap;
@@ -162,6 +163,8 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         }
         try {
             this.plugin.onLoad();
+            // Since 2.0.5.2
+            Metrics metrics = new Metrics(this.getLoader(), 18688);
         } finally {
             this.loadLatch.countDown();
         }

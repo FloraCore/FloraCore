@@ -1,5 +1,6 @@
 package team.floracore.bukkit;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -171,6 +172,8 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         }
         try {
             this.plugin.onLoad();
+            // Since 2.0.5.2
+            Metrics metrics = new Metrics(this.getLoader(), 18690);
         } finally {
             this.loadLatch.countDown();
         }
