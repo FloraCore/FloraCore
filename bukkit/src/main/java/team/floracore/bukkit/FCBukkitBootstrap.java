@@ -125,7 +125,7 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
     @Override
     public String getVersion() {
-        return this.loader.getDescription().getVersion();
+        return loader.getDescription().getVersion();
     }
 
     @Override
@@ -140,7 +140,7 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
     @Override
     public Path getDataDirectory() {
-        return this.loader.getDataFolder().toPath().toAbsolutePath();
+        return loader.getDataFolder().toPath().toAbsolutePath();
     }
 
     // provide information about the plugin
@@ -173,7 +173,7 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         try {
             this.plugin.onLoad();
             // Since 2.0.5.2
-            Metrics metrics = new Metrics(this.getLoader(), 18690);
+            new Metrics(this.getLoader(), 18690);
         } finally {
             this.loadLatch.countDown();
         }
@@ -182,11 +182,11 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
     @Override
     public void onEnable() {
         if (this.incompatibleVersion) {
-            Logger logger = this.loader.getLogger();
+            Logger logger = loader.getLogger();
             logger.severe("----------------------------------------------------------------------");
             logger.severe("Your server version is not compatible with this build of FloraCore. :(");
             logger.severe("----------------------------------------------------------------------");
-            getServer().getPluginManager().disablePlugin(this.loader);
+            getServer().getPluginManager().disablePlugin(loader);
             return;
         }
 
@@ -197,7 +197,7 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
             this.plugin.onEnable();
 
             // schedule a task to update the 'serverStarting' flag
-            getServer().getScheduler().runTask(this.loader, () -> this.serverStarting = false);
+            getServer().getScheduler().runTask(loader, () -> this.serverStarting = false);
         } finally {
             this.enableLatch.countDown();
         }

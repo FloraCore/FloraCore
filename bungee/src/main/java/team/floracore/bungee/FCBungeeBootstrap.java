@@ -113,7 +113,7 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
     @Override
     public String getVersion() {
-        return this.loader.getDescription().getVersion();
+        return loader.getDescription().getVersion();
     }
 
     @Override
@@ -128,7 +128,7 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
     @Override
     public Path getDataDirectory() {
-        return this.loader.getDataFolder().toPath().toAbsolutePath();
+        return loader.getDataFolder().toPath().toAbsolutePath();
     }
 
     @Override
@@ -164,7 +164,7 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
         try {
             this.plugin.onLoad();
             // Since 2.0.5.2
-            Metrics metrics = new Metrics(this.getLoader(), 18688);
+            new Metrics(this.getLoader(), 18688);
         } finally {
             this.loadLatch.countDown();
         }
@@ -173,7 +173,7 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
     @Override
     public void onEnable() {
         if (this.incompatibleVersion) {
-            Logger logger = this.loader.getLogger();
+            Logger logger = loader.getLogger();
             logger.severe("----------------------------------------------------------------------");
             logger.severe("Your server version is not compatible with this build of FloraCore. :(");
             logger.severe("----------------------------------------------------------------------");
