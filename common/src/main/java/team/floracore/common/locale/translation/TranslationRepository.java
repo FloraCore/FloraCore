@@ -1,5 +1,6 @@
 package team.floracore.common.locale.translation;
 
+import com.google.errorprone.annotations.ForOverride;
 import com.google.errorprone.annotations.Keep;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

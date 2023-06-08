@@ -62,24 +62,8 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
             }
         }
         Set<Locale> finalAvailableTranslations = availableTranslations;
-        Locale defaultLanguage = TranslationManager.DEFAULT_LOCALE;
-        String dpl = TranslationManager.localeDisplayName(defaultLanguage);
-        Button db = Button.of(p -> {
-            Component dc = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(dpl));
-            ItemStackBuilder dib = new ItemStackBuilder(Material.PAPER).setName(Component.text(dpl)
-                            .color(NamedTextColor.GREEN))
-                    .setLore(Collections.singletonList(dc));
-            return dib.get();
-        }, p -> {
-            {
-                String value = defaultLanguage.toLanguageTag();
-                getStorageImplementation().insertData(uuid, DataType.FUNCTION, "language", value.replace("-", "_"), 0);
-                player.closeInventory();
-                MiscCommandMessage.COMMAND_LANGUAGE_CHANGE_SUCCESS.send(s, dpl);
-            }
-        });
-        buttons.add(db);
         for (Locale languageLocale : finalAvailableTranslations) {
+            if (!languageLocale.toLanguageTag().contains("-")) continue;
             String pl = TranslationManager.localeDisplayName(languageLocale);
             Button b = Button.of(p -> {
                 Component c = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(pl), languageLocale);
