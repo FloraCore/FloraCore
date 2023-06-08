@@ -199,6 +199,21 @@ public enum Dependency {
             "Bukkit-Gui",
             "1.3.7",
             "PyPbnGRgJ8BIJCRIjArTdT1ZBZFLvWWp8p2JG2+8C+A="),
+    BSTATS_BUKKIT("org{}bstats",
+            "bstats-bukkit",
+            "3.0.2",
+            "cnhDWq1aF0MzfmH1FU5xDRxAVQndKoke1vYC3ugeslA=",
+            Relocation.of("bstats", "org{}bstats")),
+    BSTATS_BUNGEE("org{}bstats",
+            "bstats-bungeecord",
+            "3.0.2",
+            "5qXlyXgK2Njk+OHPp/ju/ndAdZxuKytHREV/rSYsZIo=",
+            Relocation.of("bstats", "org{}bstats")),
+    BSTATS_BASE("org{}bstats",
+            "bstats-base",
+            "3.0.2",
+            "r4oL2YjL+ZvIXULaTASrt9X4s9+f/JC5dup+dhmEZrk=",
+            Relocation.of("bstats", "org{}bstats")),
     ;
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";

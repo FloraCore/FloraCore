@@ -25,7 +25,7 @@ dependencies {
 
     compileOnly 'com.google.guava:guava:31.1-jre'
     compileOnly 'com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT'
-    implementation 'org.bstats:bstats-bukkit:3.0.2'
+    compileOnly 'org.bstats:bstats-bukkit:3.0.2'
     compileOnly 'com.github.LeonMangler:PremiumVanishAPI:2.8.8'
     compileOnly 'cloud.commandframework:cloud-paper:1.8.3'
     compileOnly 'net.kyori:adventure-platform-bukkit:4.3.0'
@@ -54,6 +54,7 @@ shadowJar {
     relocate 'okhttp3', 'team.floracore.lib.okhttp3'
     relocate 'okio', 'team.floracore.lib.okio'
     relocate 'cloud.commandframework', 'team.floracore.lib.cloud'
+    relocate 'org.bstats', 'team.floracore.lib.bstats'
 }
 
 artifacts {

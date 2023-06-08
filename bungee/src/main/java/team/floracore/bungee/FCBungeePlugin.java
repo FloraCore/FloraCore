@@ -89,6 +89,7 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
         dependencies.add(Dependency.ADVENTURE_PLATFORM_BUNGEECORD);
         dependencies.add(Dependency.ADVENTURE_TEXT_SERIALIZER_BUNGEECORD);
         dependencies.add(Dependency.CLOUD_BUNGEE);
+        dependencies.add(Dependency.BSTATS_BUNGEE);
         return dependencies;
     }
 

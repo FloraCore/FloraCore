@@ -19,7 +19,7 @@ dependencies {
     compileOnly fileTree(dir: './libs', includes: ['*jar'])
 
     compileOnly 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
-    implementation 'org.bstats:bstats-bungeecord:3.0.2'
+    compileOnly 'org.bstats:bstats-bungeecord:3.0.2'
     compileOnly 'cloud.commandframework:cloud-bungee:1.8.3'
     compileOnly 'net.kyori:adventure-platform-bungeecord:4.3.0'
     compileOnly 'net.kyori:adventure-text-serializer-bungeecord:4.3.0'
@@ -43,6 +43,7 @@ shadowJar {
     relocate 'okhttp3', 'team.floracore.lib.okhttp3'
     relocate 'okio', 'team.floracore.lib.okio'
     relocate 'cloud.commandframework', 'team.floracore.lib.cloud'
+    relocate 'org.bstats', 'team.floracore.lib.bstats'
 }
 
 artifacts {
