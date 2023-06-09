@@ -4,6 +4,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
+import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.PrefixNode;
 import net.luckperms.api.node.types.SuffixNode;
 import org.floracore.api.player.PermissionEvaluator;
@@ -15,7 +16,9 @@ import team.floracore.common.storage.misc.floracore.tables.ONLINE;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
 import team.floracore.common.util.CaffeineFactory;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -25,8 +28,7 @@ public class ApiPlayer implements PlayerAPI {
             .expireAfterWrite(3, TimeUnit.SECONDS)
             .build();
     private static final Cache<String, PLAYER> playerRecordCache = CaffeineFactory.newBuilder()
-            .expireAfterWrite(3,
-                    TimeUnit.SECONDS)
+            .expireAfterWrite(3, TimeUnit.SECONDS)
             .build();
     private final FloraCorePlugin plugin;
     private RankConsumer rankConsumer;
@@ -110,13 +112,11 @@ public class ApiPlayer implements PlayerAPI {
                             LuckPerms luckPerms = LuckPermsProvider.get();
                             User user = luckPerms.getUserManager().getUser(uuid);
                             if (user != null) {
-                                SortedMap<Integer, String> prefixes = user.getCachedData().getMetaData().getPrefixes();
-                                List<String> values = new ArrayList<>(prefixes.values());
-                                int size = values.size();
+                                Collection<PrefixNode> prefixNodes = user.getNodes(NodeType.PREFIX);
+                                PrefixNode selectedPrefix = getSelectedPrefix(prefixNodes);
                                 String prefix;
-                                if (size >= 2) {
-                                    Collections.sort(values);
-                                    prefix = values.get(size - 2);
+                                if (selectedPrefix != null) {
+                                    prefix = selectedPrefix.getMetaValue();
                                 } else {
                                     prefix = user.getCachedData().getMetaData().getPrefix();
                                 }
@@ -136,13 +136,11 @@ public class ApiPlayer implements PlayerAPI {
                             LuckPerms luckPerms = LuckPermsProvider.get();
                             User user = luckPerms.getUserManager().getUser(uuid);
                             if (user != null) {
-                                SortedMap<Integer, String> suffixes = user.getCachedData().getMetaData().getSuffixes();
-                                List<String> values = new ArrayList<>(suffixes.values());
-                                int size = values.size();
+                                Collection<SuffixNode> suffixNodes = user.getNodes(NodeType.SUFFIX);
+                                SuffixNode selectedSuffix = getSelectedSuffix(suffixNodes);
                                 String suffix;
-                                if (size >= 2) {
-                                    Collections.sort(values);
-                                    suffix = values.get(size - 2);
+                                if (selectedSuffix != null) {
+                                    suffix = selectedSuffix.getMetaValue();
                                 } else {
                                     suffix = user.getCachedData().getMetaData().getSuffix();
                                 }
@@ -158,6 +156,79 @@ public class ApiPlayer implements PlayerAPI {
             this.rankConsumer = null;
         }
     }
+
+    private static PrefixNode getSelectedPrefix(Collection<PrefixNode> prefixNodes) {
+        int maxPriority = Integer.MIN_VALUE;
+        int secondMaxPriority = Integer.MIN_VALUE;
+        boolean hasMaxPriority = false;
+
+        for (PrefixNode node : prefixNodes) {
+            int priority = node.getPriority();
+
+            if (priority == Integer.MAX_VALUE) {
+                hasMaxPriority = true;
+            }
+
+            if (priority > maxPriority) {
+                secondMaxPriority = maxPriority;
+                maxPriority = priority;
+            } else if (priority > secondMaxPriority && priority != maxPriority) {
+                secondMaxPriority = priority;
+            }
+        }
+
+        if (hasMaxPriority) {
+            return getPrefixNodeByPriority(prefixNodes, secondMaxPriority);
+        } else {
+            return getPrefixNodeByPriority(prefixNodes, maxPriority);
+        }
+    }
+
+    private static PrefixNode getPrefixNodeByPriority(Collection<PrefixNode> prefixNodes, int priority) {
+        for (PrefixNode node : prefixNodes) {
+            if (node.getPriority() == priority) {
+                return node;
+            }
+        }
+        return null;
+    }
+
+    private static SuffixNode getSelectedSuffix(Collection<SuffixNode> suffixNodes) {
+        int maxPriority = Integer.MIN_VALUE;
+        int secondMaxPriority = Integer.MIN_VALUE;
+        boolean hasMaxPriority = false;
+
+        for (SuffixNode node : suffixNodes) {
+            int priority = node.getPriority();
+
+            if (priority == Integer.MAX_VALUE) {
+                hasMaxPriority = true;
+            }
+
+            if (priority > maxPriority) {
+                secondMaxPriority = maxPriority;
+                maxPriority = priority;
+            } else if (priority > secondMaxPriority && priority != maxPriority) {
+                secondMaxPriority = priority;
+            }
+        }
+
+        if (hasMaxPriority) {
+            return getSuffixNodeByPriority(suffixNodes, secondMaxPriority);
+        } else {
+            return getSuffixNodeByPriority(suffixNodes, maxPriority);
+        }
+    }
+
+    private static SuffixNode getSuffixNodeByPriority(Collection<SuffixNode> suffixNodes, int priority) {
+        for (SuffixNode node : suffixNodes) {
+            if (node.getPriority() == priority) {
+                return node;
+            }
+        }
+        return null;
+    }
+
 
     @Override
     public boolean hasPlayerRecord(String name) {
