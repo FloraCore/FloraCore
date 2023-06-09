@@ -21,6 +21,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -51,6 +52,7 @@ public class ChatProvider {
         StorageImplementation storageImplementation = plugin.getStorage().getImplementation();
         for (ChatType value : ChatType.values()) {
             List<CHAT> chats = storageImplementation.selectChat(uuid, value);
+            chats.sort(Comparator.comparingLong(CHAT::getTime));
             if (chats.isEmpty()) {
                 continue;
             }
@@ -103,6 +105,7 @@ public class ChatProvider {
         truncated = false;
         StorageImplementation storageImplementation = plugin.getStorage().getImplementation();
         List<CHAT> chats = storageImplementation.selectChatServer(server);
+        chats.sort(Comparator.comparingLong(CHAT::getTime));
         Data d = new Data(ChatType.SERVER, server);
         data.add(d);
         for (CHAT chat : chats) {
@@ -120,6 +123,7 @@ public class ChatProvider {
         truncated = false;
         StorageImplementation storageImplementation = plugin.getStorage().getImplementation();
         List<CHAT> chats = storageImplementation.selectChatType(type);
+        chats.sort(Comparator.comparingLong(CHAT::getTime));
         Data d = new Data(type, " ");
         data.add(d);
         for (CHAT chat : chats) {
