@@ -7,8 +7,6 @@ import team.floracore.common.util.ExpiringSet;
 import java.util.UUID;
 
 public interface InternalMessagingService {
-    void pushChangeName(UUID changer, String name);
-
     /**
      * Gets the name of this messaging service
      *

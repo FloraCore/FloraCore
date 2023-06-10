@@ -7,7 +7,6 @@ import org.floracore.api.messenger.IncomingMessageConsumer;
 import org.floracore.api.messenger.Messenger;
 import org.floracore.api.messenger.MessengerProvider;
 import org.jetbrains.annotations.NotNull;
-import team.floracore.common.messaging.message.ChangeNameMessageImpl;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.util.ExpiringSet;
 import team.floracore.common.util.gson.GsonProvider;
@@ -46,16 +45,6 @@ public class FloraCoreMessagingService implements InternalMessagingService, Inco
                 .toJson();
 
         return GsonProvider.normal().toJson(json);
-    }
-
-    @Override
-    public void pushChangeName(UUID changer, String name) {
-        this.plugin.getBootstrap().getScheduler().executeAsync(() -> {
-            UUID requestId = generatePingId();
-            this.plugin.getLogger().info("[Messaging] Sending ping with id: " + requestId);
-            ChangeNameMessageImpl changeNameMessage = new ChangeNameMessageImpl(requestId, changer, name);
-            this.messenger.sendOutgoingMessage(changeNameMessage);
-        });
     }
 
     @Override

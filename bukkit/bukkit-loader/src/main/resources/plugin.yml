@@ -11,6 +11,7 @@ softdepend:
   - TAB
   - PlaceholderAPI
   - LuckPerms
+  - Vault
 permissions:
   floracore.admin:
     default: op

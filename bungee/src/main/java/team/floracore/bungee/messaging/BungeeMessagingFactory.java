@@ -7,7 +7,6 @@ import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
 import org.floracore.api.data.chat.ChatType;
 import org.floracore.api.messenger.message.Message;
-import org.floracore.api.messenger.message.type.ChangeNameMessage;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.commands.socialsystems.chat.ChatModel;
 import team.floracore.bungee.config.ChatKeys;
@@ -18,7 +17,6 @@ import team.floracore.bungee.util.BungeeStringReplacer;
 import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.messaging.InternalMessagingService;
 import team.floracore.common.messaging.MessagingFactory;
-import team.floracore.common.messaging.message.ChangeNameMessageImpl;
 import team.floracore.common.sender.Sender;
 
 import java.util.List;
@@ -44,9 +42,6 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
             case NoticeMessageImpl.TYPE:
                 decoded = NoticeMessageImpl.decode(content, id);
                 break;
-            case ChangeNameMessageImpl.TYPE:
-                decoded = ChangeNameMessageImpl.decode(content, id);
-                break;
             default:
                 return false;
 
@@ -64,14 +59,6 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
         } else if (message instanceof NoticeMessage) {
             NoticeMessage noticeMsg = (NoticeMessage) message;
             notice(noticeMsg);
-        } else if (message instanceof ChangeNameMessage) {
-            ChangeNameMessage changeNameMsg = (ChangeNameMessage) message;
-            UUID changer = changeNameMsg.getChanger();
-            String name = changeNameMsg.getName();
-            ProxiedPlayer player = getPlugin().getProxy().getPlayer(changer);
-            if (player != null) {
-                player.setDisplayName(name);
-            }
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }
