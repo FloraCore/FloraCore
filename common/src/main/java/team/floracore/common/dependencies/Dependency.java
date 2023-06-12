@@ -214,6 +214,10 @@ public enum Dependency {
             "3.0.2",
             "r4oL2YjL+ZvIXULaTASrt9X4s9+f/JC5dup+dhmEZrk=",
             Relocation.of("bstats", "org{}bstats")),
+    COMMONS_IO("commons-io",
+            "commons-io",
+            "2.13.0",
+            "Zx6qOWiNrC/6pGRbPJmAri0OokceSual2hmc0VriNmY="),
     ;
 
     private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";

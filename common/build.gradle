@@ -34,6 +34,8 @@ dependencies {
     compileOnly 'net.luckperms:api:5.4'
     compileOnly fileTree(dir: '../libs', includes: ['*jar'])
 
+    api 'commons-io:commons-io:2.13.0'
+
     api 'net.kyori:adventure-api:4.13.0'
     api 'net.kyori:adventure-text-serializer-plain:4.13.1'
     api 'net.kyori:adventure-text-serializer-legacy:4.13.1'
