@@ -121,29 +121,6 @@ messaging-service: auto
 auto-install-translations: true
 
 commands:
-  nick:
-    enable: true
-    rank-permission:
-      rank0: "floracore.command.nick.rank.default"
-      rank1: "floracore.command.nick.rank.rank1"
-      rank2: "floracore.command.nick.rank.rank2"
-      rank3: "floracore.command.nick.rank.rank3"
-      rank4: "floracore.command.nick.rank.rank4"
-      rank5: "floracore.command.nick.rank.rank5"
-    rank:
-      rank0: "&7DEFAULT"
-      rank1: "&aVIP"
-      rank2: "&aVIP&6+"
-      rank3: "&bMVP"
-      rank4: "&bMVP&c+"
-      rank5: "&6MVP&c++"
-    rank-prefix:
-      rank0: "&7"
-      rank1: "&a[VIP]"
-      rank2: "&a[VIP&6+&a]"
-      rank3: "&b[MVP]"
-      rank4: "&b[MVP&c+&b]"
-      rank5: "&6[MVP&c++&6]"
   speed:
     max-fly-speed: 0.8
     max-walk-speed: 0.8

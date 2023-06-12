@@ -10,7 +10,6 @@ import java.util.UUID;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
-import static net.kyori.adventure.text.format.TextDecoration.BOLD;
 import static net.kyori.adventure.text.format.TextDecoration.UNDERLINED;
 
 public interface PlayerCommandMessage extends AbstractMessage {
@@ -99,30 +98,6 @@ public interface PlayerCommandMessage extends AbstractMessage {
             // 已传送到顶部
             .key("floracore.command.teleport.top")
             .color(AQUA)).append(FULL_STOP);
-
-    Args1<Component> COMMAND_NICK_SETUP_SKIN = (skin) -> AbstractMessage.prefixed(translatable()
-            // 你的皮肤已设置为 {0} !
-            .key("floracore.command.nick.setup.skin")
-            // {}
-            .args(skin.color(GREEN))
-            .color(AQUA));
-
-    Args0 COMMAND_UNNICK_SUCCESS = () -> AbstractMessage.prefixed(translatable()
-            // 你的昵称已移除！
-            .key("floracore.command.unnick.success")
-            .color(AQUA));
-
-    Args0 COMMAND_UNNICK_NOT_IN = () -> AbstractMessage.prefixed(translatable()
-            // 你当前未处于昵称状态！
-            .key("floracore.command.unnick.not-in")
-            .color(RED));
-
-    Args0 COMMAND_MISC_NICK_ALREADY_NICKED = () -> translatable()
-            // 你已经修改了昵称,若要继续使用该功能,请输入{0}以恢复到平常状态
-            .key("floracore.command.misc.nick.already-nicked")
-            // {0}
-            .args(text("/nick reset", DARK_RED).decoration(BOLD, true)).append(FULL_STOP).color(RED).build();
-
     Args1<Integer> COMMAND_AIR_GET_SELF_MAX = value -> AbstractMessage.prefixed(translatable().key(
             "floracore.command.air.get.self.max").color(AQUA).args(text(value)).color(GREEN));
 
@@ -176,32 +151,6 @@ public interface PlayerCommandMessage extends AbstractMessage {
                     .args(text(from).color(GREEN),
                             text(value))
                     .color(GREEN));
-
-    Args0 COMMAND_MISC_NICK_ACTION_BAR = () -> translatable()
-            // 当前已 {0}
-            .key("floracore.command.misc.nick.action-bar").color(WHITE)
-            // 匿名
-            .args(translatable("floracore.command.misc.nick.action-bar.nick").color(RED)).build();
-
-    Args1<String> COMMAND_MISC_NICK_RANK_UNKNOWN = (rank) -> AbstractMessage.prefixed(translatable()
-            // {0} {1} 不存在!
-            .key("floracore.command.misc.nick.rank.unknown")
-            // {0}
-            .args(translatable(
-                            "floracore.command.misc.nick.book.rank-page.rank"),
-                    text(rank).color(DARK_RED)
-                            .decoration(BOLD, true))
-            .color(RED));
-
-    Args1<String> COMMAND_MISC_NICK_RANK_NO_PERMISSION = (rank) -> AbstractMessage.prefixed(translatable()
-            // 你没有 {0} {1} 的使用权限!
-            .key("floracore.command.misc.nick.rank.no-permission")
-            // {0}
-            .args(translatable(
-                            "floracore.command.misc.nick.book.rank-page.rank"),
-                    text(rank).color(DARK_RED)
-                            .decoration(BOLD, true))
-            .color(RED));
 
     Args2<String, String> COMMAND_REALNAME_SUCCESS = (name, realName) -> AbstractMessage.prefixed(translatable()
             // 玩家 {0} 的真实昵称为 {1}
@@ -709,24 +658,6 @@ public interface PlayerCommandMessage extends AbstractMessage {
     Args0 COMMAND_REPORT_ABNORMAL = () -> AbstractMessage.prefixed(translatable()
             // 这名玩家的数据异常!
             .key("floracore.command.report.abnormal")
-            .color(RED));
-
-    Args0 COMMAND_MISC_NICK_NAME_ILLEGAL_SPACE = () -> AbstractMessage.prefixed(translatable()
-            // 请确保你输入的昵称内不含空格
-            .key("floracore.command.misc.nick.name.illegal.space")
-            .append(FULL_STOP)
-            .color(RED));
-
-    Args0 COMMAND_MISC_NICK_NAME_ILLEGAL_LENGTH = () -> AbstractMessage.prefixed(translatable()
-            // 请确保昵称长度在3到16个字符之间
-            .key("floracore.command.misc.nick.name.illegal.length")
-            .append(FULL_STOP)
-            .color(RED));
-
-    Args0 COMMAND_MISC_NICK_NAME_ILLEGAL_CHARACTER = () -> AbstractMessage.prefixed(translatable()
-            // 你输入的昵称不符合Minecraft的命名规则
-            .key("floracore.command.misc.nick.name.illegal.character")
-            .append(FULL_STOP)
             .color(RED));
 
     Args1<String> COMMAND_TELEPORT = (target) -> AbstractMessage.prefixed(translatable()

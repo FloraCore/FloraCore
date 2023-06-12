@@ -13,7 +13,6 @@ import team.floracore.common.extension.SimpleExtensionManager;
 import team.floracore.common.http.BytebinClient;
 import team.floracore.common.http.BytesocksClient;
 import team.floracore.common.locale.data.DataManager;
-import team.floracore.common.locale.data.NamesRepository;
 import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.locale.translation.TranslationManager;
 import team.floracore.common.locale.translation.TranslationRepository;
@@ -50,7 +49,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     private BytebinClient bytebin;
     private BytesocksClient bytesocks;
     private TranslationRepository translationRepository;
-    private NamesRepository namesRepository;
     private StorageFactory storageFactory;
 
     /**
@@ -129,11 +127,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.translationRepository = new TranslationRepository(this);
         this.translationRepository.scheduleRefresh();
         this.translationRepository.scheduleRefreshRepeating();
-
-        // init data names repo
-        this.namesRepository = new NamesRepository(this);
-        this.namesRepository.scheduleRefresh();
-        this.namesRepository.scheduleRefreshRepeating();
 
         // now the configuration is loaded, we can create a storage factory and load initial dependencies
         this.storageFactory = new StorageFactory(this);
@@ -248,11 +241,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public FloraCoreConfiguration getConfiguration() {
         return this.configuration;
-    }
-
-    @Override
-    public NamesRepository getNamesRepository() {
-        return namesRepository;
     }
 
     @Override

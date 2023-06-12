@@ -29,10 +29,6 @@ public class ConfigKeys {
             "auto-install-translations",
             true));
 
-    public static final ConfigKey<Boolean> COMMANDS_NICK_ENABLE = notReloadable(booleanKey(
-            "commands.nick.enable",
-            true));
-
     /**
      * The database settings, username, password, etc. for use by any database
      */
@@ -99,13 +95,6 @@ public class ConfigKeys {
      * If the redis connection should use SSL
      */
     public static final ConfigKey<Boolean> REDIS_SSL = notReloadable(booleanKey("redis.ssl", false));
-
-    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK_PERMISSION = mapKey(
-            "commands.nick.rank-permission");
-
-    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK = mapKey("commands.nick.rank");
-    public static final ConfigKey<Map<String, String>> COMMANDS_NICK_RANK_PREFIX = mapKey(
-            "commands.nick.rank-prefix");
 
     public static final ConfigKey<Double> SPEED_MAX_FLY_SPEED = key(c -> {
         final double maxSpeed = c.getDouble("commands.speed.max-fly-speed", 0.8);

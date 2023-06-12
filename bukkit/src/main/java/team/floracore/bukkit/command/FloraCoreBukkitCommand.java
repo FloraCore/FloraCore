@@ -2,6 +2,7 @@ package team.floracore.bukkit.command;
 
 import cloud.commandframework.annotations.suggestions.Suggestions;
 import cloud.commandframework.context.CommandContext;
+import com.comphenix.protocol.ProtocolManager;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -88,5 +89,9 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
 
     public ServerType getServerType() {
         return getServer().getType();
+    }
+
+    public ProtocolManager getProtocolManager() {
+        return plugin.getProtocolManager();
     }
 }

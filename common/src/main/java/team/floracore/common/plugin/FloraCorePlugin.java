@@ -9,7 +9,6 @@ import team.floracore.common.extension.SimpleExtensionManager;
 import team.floracore.common.http.BytebinClient;
 import team.floracore.common.http.BytesocksClient;
 import team.floracore.common.locale.data.DataManager;
-import team.floracore.common.locale.data.NamesRepository;
 import team.floracore.common.locale.translation.TranslationManager;
 import team.floracore.common.locale.translation.TranslationRepository;
 import team.floracore.common.messaging.InternalMessagingService;
@@ -55,8 +54,6 @@ public interface FloraCorePlugin {
      * @return the plugin config
      */
     FloraCoreConfiguration getConfiguration();
-
-    NamesRepository getNamesRepository();
 
     /**
      * Gets the primary data storage instance. This is likely to be wrapped with extra layers for caching, etc.

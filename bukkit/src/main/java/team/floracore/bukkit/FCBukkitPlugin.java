@@ -1,5 +1,7 @@
 package team.floracore.bukkit;
 
+import com.comphenix.protocol.ProtocolLibrary;
+import com.comphenix.protocol.ProtocolManager;
 import com.google.gson.JsonElement;
 import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import org.bukkit.Bukkit;
@@ -48,6 +50,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private KeyedConfiguration boardsConfiguration;
     private ScoreBoardManager scoreBoardManager;
     private GuiManager guiManager;
+    private ProtocolManager protocolManager;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -103,6 +106,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         ListenerRegistrar.instance.load();
         IModule.ModuleModule.instance.load();
         NothingRegistrar.instance.load();
+        protocolManager = ProtocolLibrary.getProtocolManager();
 
         getLogger().info("Loading inventory manager...");
         guiManager = new GuiManager(getLoader());
@@ -214,6 +218,10 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     public ChatManager getChatManager() {
         return chatManager;
+    }
+
+    public ProtocolManager getProtocolManager() {
+        return protocolManager;
     }
 
     public BukkitMessagingFactory getBukkitMessagingFactory() {

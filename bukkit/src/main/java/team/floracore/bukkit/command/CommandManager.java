@@ -25,7 +25,6 @@ import team.floracore.bukkit.commands.server.BroadCastCommand;
 import team.floracore.bukkit.commands.test.TestCommand;
 import team.floracore.bukkit.commands.world.TimeCommand;
 import team.floracore.bukkit.commands.world.WeatherCommand;
-import team.floracore.common.config.ConfigKeys;
 import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.sender.Sender;
@@ -129,9 +128,7 @@ public class CommandManager {
         this.annotationParser.parse(new HealCommand(plugin));
         this.annotationParser.parse(new InvSeeCommand(plugin));
         // this.annotationParser.parse(new MaxHealthCommand(plugin));
-        if (getPlugin().getConfiguration().get(ConfigKeys.COMMANDS_NICK_ENABLE)) {
-            this.annotationParser.parse(new NickCommand(plugin)); // TODO 命令测试中 未测试：Rank设置 未完善：Skin设置
-        }
+
         // (目前已经将Rank设置和Skin设置移除)
         this.annotationParser.parse(new OPListCommand(plugin));
         this.annotationParser.parse(new PingCommand(plugin));

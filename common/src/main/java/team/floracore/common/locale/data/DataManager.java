@@ -9,7 +9,6 @@ import java.nio.file.Path;
 public class DataManager {
     private final FloraCorePlugin plugin;
     private final Path dataDirectory;
-    private final NamesRepository namesRepository;
 
     public DataManager(FloraCorePlugin plugin) {
         this.plugin = plugin;
@@ -20,16 +19,10 @@ public class DataManager {
         } catch (IOException e) {
             // ignore
         }
-
-        this.namesRepository = new NamesRepository(plugin);
     }
 
     public Path getDataDirectory() {
         return dataDirectory;
-    }
-
-    public NamesRepository getNamesRepository() {
-        return namesRepository;
     }
 
     public void reload() {
