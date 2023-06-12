@@ -29,12 +29,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.EnumSet;
+import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
-    // Active plugins on the server
-    private final Map<String, List<String>> loadedPlugins = new HashMap<>();
     // init during load
     private DependencyManager dependencyManager;
     private TranslationManager translationManager;
@@ -276,24 +276,6 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     @Override
     public DataManager getDataManager() {
         return dataManager;
-    }
-
-    @Override
-    public Map<String, List<String>> getLoadedPlugins() {
-        return loadedPlugins;
-    }
-
-    @Override
-    public boolean isPluginInstalled(String name) {
-        return loadedPlugins.containsKey(name);
-    }
-
-    @Override
-    public boolean isPluginInstalled(String name, String author) {
-        if (loadedPlugins.containsKey(name)) {
-            return loadedPlugins.get(name).contains(author);
-        }
-        return false;
     }
 
     @Override

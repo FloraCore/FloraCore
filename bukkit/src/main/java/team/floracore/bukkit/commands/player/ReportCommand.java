@@ -85,7 +85,7 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         if (getPlugin().getServerName().equalsIgnoreCase(server)) {
             Player t = Bukkit.getPlayer(target);
             if (t != null) {
-                if (getPlugin().isPluginInstalled("PremiumVanish")) {
+                if (Bukkit.getPluginManager().getPlugin("PremiumVanish") != null) {
                     if (!VanishAPI.isInvisible(sender)) {
                         VanishAPI.hidePlayer(sender);
                     }

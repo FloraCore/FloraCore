@@ -18,8 +18,6 @@ import team.floracore.common.sender.Sender;
 import team.floracore.common.storage.Storage;
 import team.floracore.common.storage.StorageFactory;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
@@ -107,12 +105,6 @@ public interface FloraCorePlugin {
     TranslationRepository getTranslationRepository();
 
     DataManager getDataManager();
-
-    Map<String, List<String>> getLoadedPlugins();
-
-    boolean isPluginInstalled(String name);
-
-    boolean isPluginInstalled(String name, String author);
 
     String getServerName();
 

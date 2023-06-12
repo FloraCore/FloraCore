@@ -158,7 +158,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
     @Override
     public boolean luckPermsHook() {
-        return getLoader().getServer().getPluginManager().getPlugin("LuckPerms") != null;
+        return Bukkit.getPluginManager().getPlugin("LuckPerms") != null;
     }
 
     @Override
