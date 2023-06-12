@@ -7,6 +7,8 @@ import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.floracore.api.FloraCore;
+import org.floracore.api.FloraCoreProvider;
 import org.floracore.api.server.ServerType;
 import team.floracore.bukkit.command.CommandManager;
 import team.floracore.bukkit.config.BoardsConfiguration;
@@ -136,6 +138,12 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         this.listenerManager = new ListenerManager(this);
         this.commandManager = new CommandManager(this);
         this.chatManager = new ChatManager(this);
+    }
+
+    @Override
+    protected void expandApi() {
+        FloraCore floraCore = FloraCoreProvider.get();
+        floraCore.getPlatform().setFloraCorePlatformPlugin(this);
     }
 
     @Override

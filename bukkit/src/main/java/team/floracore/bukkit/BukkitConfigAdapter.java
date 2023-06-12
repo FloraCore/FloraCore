@@ -13,11 +13,11 @@ import java.util.Map;
 
 
 public class BukkitConfigAdapter implements ConfigurationAdapter {
-    private final FCBukkitPlugin plugin;
+    private final FloraCorePlugin plugin;
     private final File file;
     private YamlConfiguration configuration;
 
-    public BukkitConfigAdapter(FCBukkitPlugin plugin, File file) {
+    public BukkitConfigAdapter(FloraCorePlugin plugin, File file) {
         this.plugin = plugin;
         this.file = file;
         reload();

@@ -104,4 +104,6 @@ public interface FloraCore {
      * @param messengerProvider the messenger provider.
      */
     void registerMessengerProvider(@NotNull MessengerProvider messengerProvider);
+
+    Object getFloraCorePlugin();
 }

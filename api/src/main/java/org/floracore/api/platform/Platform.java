@@ -24,6 +24,10 @@ public interface Platform {
     @NotNull
     Instant getStartTime();
 
+    Object getFloraCorePlatformPlugin();
+
+    void setFloraCorePlatformPlugin(Object plugin);
+
     /**
      * Represents a type of platform which FloraCore can run on.
      */

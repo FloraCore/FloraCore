@@ -4,6 +4,8 @@ import com.google.gson.JsonElement;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.floracore.api.FloraCore;
+import org.floracore.api.FloraCoreProvider;
 import team.floracore.bungee.command.CommandManager;
 import team.floracore.bungee.config.ChatConfiguration;
 import team.floracore.bungee.listener.ListenerManager;
@@ -113,6 +115,12 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     protected void setupFramework() {
         this.listenerManager = new ListenerManager(this);
         this.commandManager = new CommandManager(this);
+    }
+
+    @Override
+    protected void expandApi() {
+        FloraCore floraCore = FloraCoreProvider.get();
+        floraCore.getPlatform().setFloraCorePlatformPlugin(this);
     }
 
     @Override

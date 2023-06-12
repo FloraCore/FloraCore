@@ -145,6 +145,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         this.apiProvider = new FloraCoreApiProvider(this);
         this.apiProvider.ensureApiWasLoadedByPlugin();
         ApiRegistrationUtil.registerProvider(this.apiProvider);
+        expandApi();
 
         // setup extension manager
         this.extensionManager = new SimpleExtensionManager(this);
@@ -161,6 +162,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
     protected abstract MessagingFactory<?> provideMessagingFactory();
 
     protected abstract void setupFramework();
+
+    protected abstract void expandApi();
 
     protected abstract void setupConfiguration();
 

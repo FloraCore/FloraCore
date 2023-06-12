@@ -121,4 +121,9 @@ public class FloraCoreApiProvider implements FloraCore {
             this.plugin.setMessagingService(new FloraCoreMessagingService(this.plugin, messengerProvider));
         }
     }
+
+    @Override
+    public Object getFloraCorePlugin() {
+        return this.plugin;
+    }
 }
