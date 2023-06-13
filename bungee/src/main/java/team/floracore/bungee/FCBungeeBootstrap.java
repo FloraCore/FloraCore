@@ -10,7 +10,7 @@ import team.floracore.common.loader.LoaderBootstrap;
 import team.floracore.common.plugin.bootstrap.BootstrappedWithLoader;
 import team.floracore.common.plugin.bootstrap.FloraCoreBootstrap;
 import team.floracore.common.plugin.classpath.ClassPathAppender;
-import team.floracore.common.plugin.classpath.JarInJarClassPathAppender;
+import team.floracore.common.plugin.classpath.ReflectionClassPathAppender;
 import team.floracore.common.plugin.logging.JavaPluginLogger;
 import team.floracore.common.plugin.logging.PluginLogger;
 
@@ -64,7 +64,7 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
         this.logger = new JavaPluginLogger(loader.getLogger());
         this.schedulerAdapter = new BungeeSchedulerAdapter(this);
-        this.classPathAppender = new JarInJarClassPathAppender(getClass().getClassLoader());
+        this.classPathAppender = new ReflectionClassPathAppender(getClass().getClassLoader());
         this.plugin = new FCBungeePlugin(this);
     }
 

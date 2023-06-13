@@ -13,6 +13,9 @@ repositories {
 dependencies {
     compileOnly 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
 
+    compileOnly project(':common')
+    compileOnly project(':bungee')
+
     implementation project(':api')
     implementation project(':api:bungee-api')
     implementation project(':common:common-loader-utils')
@@ -30,7 +33,7 @@ shadowJar {
     archiveFileName = "FloraCore-Bungee-${rootProject.version}.jar"
 
     from {
-        project(':bungee').tasks.shadowJar.archiveFile
+        project(':bungee').tasks.shadowJar
     }
 }
 

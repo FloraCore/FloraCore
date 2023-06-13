@@ -40,8 +40,6 @@ dependencies {
 
 
 shadowJar {
-    archiveFileName = 'floracore-bukkit.jarinjar'
-
     dependencies {
         include(dependency('team.floracore:.*'))
     }

@@ -28,8 +28,6 @@ dependencies {
 
 
 shadowJar {
-    archiveFileName = 'floracore-bungee.jarinjar'
-
     dependencies {
         include(dependency('team.floracore:.*'))
     }

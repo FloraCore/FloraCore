@@ -14,6 +14,9 @@ repositories {
 dependencies {
     compileOnly 'com.destroystokyo.paper:paper-api:1.15.2-R0.1-SNAPSHOT'
 
+    compileOnly project(':common')
+    compileOnly project(':bukkit')
+
     implementation project(':api')
     implementation project(':api:bukkit-api')
     implementation project(':common:common-loader-utils')
@@ -31,7 +34,7 @@ shadowJar {
     archiveFileName = "FloraCore-Bukkit-${rootProject.version}.jar"
 
     from {
-        project(':bukkit').tasks.shadowJar.archiveFile
+        project(':bukkit').tasks.shadowJar
     }
 }
 
