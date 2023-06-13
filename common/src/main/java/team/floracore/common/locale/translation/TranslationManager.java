@@ -130,8 +130,7 @@ public class TranslationManager {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     private static boolean isAdventureDuplicatesException(Exception e) {
         return e instanceof IllegalArgumentException && (e.getMessage().startsWith("Invalid key") || e.getMessage()
-                .startsWith(
-                        "Translation already exists"));
+                .startsWith("Translation already exists"));
     }
 
     public Path getTranslationsDirectory() {
@@ -217,8 +216,12 @@ public class TranslationManager {
      */
     private void loadFromResourceBundle() {
         ResourceBundle bundle = ResourceBundle.getBundle("floracore", DEFAULT_LOCALE, UTF8ResourceBundleControl.get());
+        loadFromResourceBundle(bundle, DEFAULT_LOCALE);
+    }
+
+    public void loadFromResourceBundle(ResourceBundle bundle, Locale locale) {
         try {
-            this.registry.registerAll(DEFAULT_LOCALE, bundle, false);
+            this.registry.registerAll(locale, bundle, false);
         } catch (IllegalArgumentException e) {
             if (!isAdventureDuplicatesException(e)) {
                 this.plugin.getLogger().warn("Error loading default locale file", e);

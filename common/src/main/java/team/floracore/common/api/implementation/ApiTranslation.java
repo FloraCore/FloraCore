@@ -8,6 +8,8 @@ import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.sender.Sender;
 
 import java.nio.file.Path;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 /**
@@ -26,6 +28,11 @@ public class ApiTranslation implements TranslationAPI {
     @Override
     public void loadCustomLanguageFile(Path directory, boolean suppressDuplicatesError) {
         plugin.getTranslationManager().loadFromFileSystem(directory, suppressDuplicatesError);
+    }
+
+    @Override
+    public void loadFromResourceBundle(ResourceBundle bundle, Locale locale) {
+        plugin.getTranslationManager().loadFromResourceBundle(bundle, locale);
     }
 
     @Override

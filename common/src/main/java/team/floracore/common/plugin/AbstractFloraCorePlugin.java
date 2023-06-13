@@ -163,6 +163,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
     protected abstract void setupFramework();
 
+
     protected abstract void expandApi();
 
     protected abstract void setupConfiguration();

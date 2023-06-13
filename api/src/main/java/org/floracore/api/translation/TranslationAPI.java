@@ -4,6 +4,8 @@ import net.kyori.adventure.text.Component;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
+import java.util.Locale;
+import java.util.ResourceBundle;
 import java.util.UUID;
 
 /**
@@ -27,6 +29,8 @@ public interface TranslationAPI {
      * @param suppressDuplicatesError 是否抑制重复错误
      */
     void loadCustomLanguageFile(Path directory, boolean suppressDuplicatesError);
+
+    void loadFromResourceBundle(ResourceBundle bundle, Locale locale);
 
     /**
      * 注意：参数"sender",必须为Sender的子类。
