@@ -3,7 +3,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-group 'org.floracore'
+group 'team.floracore'
 version rootProject.version
 
 repositories {
@@ -22,7 +22,7 @@ shadowJar {
     archiveFileName = "FloraCore-Bungee-API-${rootProject.version}.jar"
 
     dependencies {
-        include(dependency('org.floracore:.*'))
+        include(dependency('team.floracore:.*'))
     }
 }
 

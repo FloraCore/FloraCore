@@ -4,8 +4,8 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ComponentLike;
 import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import org.floracore.api.FloraCore;
-import org.floracore.api.FloraCoreProvider;
+import team.floracore.api.FloraCore;
+import team.floracore.api.FloraCoreProvider;
 import team.floracore.common.sender.Sender;
 
 import java.util.Collection;

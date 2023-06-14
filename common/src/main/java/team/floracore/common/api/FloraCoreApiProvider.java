@@ -1,15 +1,15 @@
 package team.floracore.common.api;
 
-import org.floracore.api.FloraCore;
-import org.floracore.api.FloraCoreProvider;
-import org.floracore.api.data.DataAPI;
-import org.floracore.api.data.chat.ChatAPI;
-import org.floracore.api.messenger.MessengerProvider;
-import org.floracore.api.platform.PluginMetadata;
-import org.floracore.api.player.PlayerAPI;
-import org.floracore.api.server.ServerAPI;
-import org.floracore.api.translation.TranslationAPI;
 import org.jetbrains.annotations.NotNull;
+import team.floracore.api.FloraCore;
+import team.floracore.api.FloraCoreProvider;
+import team.floracore.api.data.DataAPI;
+import team.floracore.api.data.chat.ChatAPI;
+import team.floracore.api.messenger.MessengerProvider;
+import team.floracore.api.platform.PluginMetadata;
+import team.floracore.api.player.PlayerAPI;
+import team.floracore.api.server.ServerAPI;
+import team.floracore.api.translation.TranslationAPI;
 import team.floracore.common.api.implementation.*;
 import team.floracore.common.config.ConfigKeys;
 import team.floracore.common.messaging.FloraCoreMessagingService;

@@ -1,8 +1,8 @@
 package team.floracore.common.api.implementation;
 
-import org.floracore.api.platform.Platform;
-import org.floracore.api.platform.PluginMetadata;
 import org.jetbrains.annotations.NotNull;
+import team.floracore.api.platform.Platform;
+import team.floracore.api.platform.PluginMetadata;
 import team.floracore.common.plugin.FloraCorePlugin;
 
 import java.time.Instant;

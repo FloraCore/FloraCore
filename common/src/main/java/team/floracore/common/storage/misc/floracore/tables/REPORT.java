@@ -1,6 +1,6 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
-import org.floracore.api.commands.report.ReportStatus;
+import team.floracore.api.commands.report.ReportStatus;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
 import team.floracore.common.storage.misc.floracore.AbstractFloraCoreTable;

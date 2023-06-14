@@ -1,6 +1,6 @@
 package team.floracore.bukkit.locale.message.commands;
 
-import org.floracore.api.data.DataType;
+import team.floracore.api.data.DataType;
 import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.util.DurationFormatter;
 

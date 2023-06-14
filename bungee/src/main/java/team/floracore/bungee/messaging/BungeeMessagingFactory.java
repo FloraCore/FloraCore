@@ -3,10 +3,10 @@ package team.floracore.bungee.messaging;
 import com.google.gson.JsonElement;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.floracore.api.bungee.messenger.message.type.ChatMessage;
-import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
-import org.floracore.api.data.chat.ChatType;
-import org.floracore.api.messenger.message.Message;
+import team.floracore.api.bungee.messenger.message.type.ChatMessage;
+import team.floracore.api.bungee.messenger.message.type.NoticeMessage;
+import team.floracore.api.data.chat.ChatType;
+import team.floracore.api.messenger.message.Message;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.commands.socialsystems.chat.ChatModel;
 import team.floracore.bungee.config.ChatKeys;
@@ -52,7 +52,7 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
     }
 
 
-    private void processIncomingMessage(org.floracore.api.messenger.message.Message message) {
+    private void processIncomingMessage(Message message) {
         if (message instanceof ChatMessage) {
             ChatMessage chatMsg = (ChatMessage) message;
             chat(chatMsg);

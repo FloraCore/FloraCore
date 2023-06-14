@@ -1,7 +1,7 @@
 package team.floracore.common.messaging;
 
-import org.floracore.api.messenger.Messenger;
-import org.floracore.api.messenger.MessengerProvider;
+import team.floracore.api.messenger.Messenger;
+import team.floracore.api.messenger.MessengerProvider;
 import team.floracore.common.util.ExpiringSet;
 
 import java.util.UUID;

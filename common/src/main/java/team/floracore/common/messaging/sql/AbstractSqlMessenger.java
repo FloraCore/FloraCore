@@ -1,9 +1,9 @@
 package team.floracore.common.messaging.sql;
 
-import org.floracore.api.messenger.IncomingMessageConsumer;
-import org.floracore.api.messenger.Messenger;
-import org.floracore.api.messenger.message.OutgoingMessage;
 import org.jetbrains.annotations.NotNull;
+import team.floracore.api.messenger.IncomingMessageConsumer;
+import team.floracore.api.messenger.Messenger;
+import team.floracore.api.messenger.message.OutgoingMessage;
 
 import java.sql.*;
 import java.util.concurrent.locks.ReadWriteLock;

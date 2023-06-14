@@ -3,7 +3,7 @@ package team.floracore.bungee.locale.message;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import net.kyori.adventure.text.event.ClickEvent;
-import org.floracore.api.FloraCoreProvider;
+import team.floracore.api.FloraCoreProvider;
 import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.locale.message.MiscMessage;
 

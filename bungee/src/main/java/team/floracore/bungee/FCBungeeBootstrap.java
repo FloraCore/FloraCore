@@ -5,7 +5,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
 import org.bstats.bungeecord.Metrics;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.floracore.api.platform.Platform;
+import team.floracore.api.platform.Platform;
 import team.floracore.common.loader.LoaderBootstrap;
 import team.floracore.common.plugin.bootstrap.BootstrappedWithLoader;
 import team.floracore.common.plugin.bootstrap.FloraCoreBootstrap;

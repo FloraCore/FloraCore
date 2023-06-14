@@ -1,8 +1,8 @@
 package team.floracore.common.api.implementation;
 
 import net.kyori.adventure.text.Component;
-import org.floracore.api.translation.TranslationAPI;
 import org.jetbrains.annotations.NotNull;
+import team.floracore.api.translation.TranslationAPI;
 import team.floracore.common.locale.translation.TranslationManager;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.sender.Sender;

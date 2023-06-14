@@ -1,5 +1,6 @@
 package team.floracore.bukkit.listener;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -10,24 +11,21 @@ import team.floracore.bukkit.listeners.ScoreboardListener;
 
 public class ListenerManager {
     private final FCBukkitPlugin plugin;
+    private final Plugin loader;
+    private final PluginManager pluginManager = Bukkit.getPluginManager();
 
     public ListenerManager(FCBukkitPlugin plugin) {
         this.plugin = plugin;
+        this.loader = plugin.getLoader();
         // Create the Listeners
         this.constructListeners();
     }
 
     private void constructListeners() {
-        PluginManager pm = getPluginManager();
-        Plugin p = plugin.getBootstrap().getLoader();
-        pm.registerEvents(new PlayerListener(plugin), p);
+        registerListener(new PlayerListener(plugin));
         if (getPlugin().getBoardsConfiguration().get(BoardsKeys.ENABLE)) {
-            pm.registerEvents(new ScoreboardListener(plugin), p);
+            registerListener(new ScoreboardListener(plugin));
         }
-    }
-
-    public PluginManager getPluginManager() {
-        return plugin.getBootstrap().getServer().getPluginManager();
     }
 
     public FCBukkitPlugin getPlugin() {
@@ -35,8 +33,10 @@ public class ListenerManager {
     }
 
     public void registerListener(Listener listener) {
-        PluginManager pm = getPluginManager();
-        Plugin p = plugin.getBootstrap().getLoader();
-        pm.registerEvents(listener, p);
+        pluginManager.registerEvents(listener, loader);
+    }
+
+    public PluginManager getPluginManager() {
+        return pluginManager;
     }
 }

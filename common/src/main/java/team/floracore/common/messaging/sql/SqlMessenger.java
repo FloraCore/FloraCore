@@ -1,7 +1,7 @@
 package team.floracore.common.messaging.sql;
 
 
-import org.floracore.api.messenger.IncomingMessageConsumer;
+import team.floracore.api.messenger.IncomingMessageConsumer;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.plugin.scheduler.SchedulerAdapter;
 import team.floracore.common.plugin.scheduler.SchedulerTask;

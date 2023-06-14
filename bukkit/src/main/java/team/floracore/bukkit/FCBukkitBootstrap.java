@@ -6,7 +6,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import org.floracore.api.platform.Platform;
+import team.floracore.api.platform.Platform;
 import team.floracore.bukkit.commands.player.EnderChestCommand;
 import team.floracore.common.loader.LoaderBootstrap;
 import team.floracore.common.plugin.bootstrap.BootstrappedWithLoader;

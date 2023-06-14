@@ -1,8 +1,8 @@
 package team.floracore.common.messaging.message;
 
-import org.floracore.api.messenger.message.Message;
-import org.floracore.api.messenger.message.OutgoingMessage;
 import org.jetbrains.annotations.NotNull;
+import team.floracore.api.messenger.message.Message;
+import team.floracore.api.messenger.message.OutgoingMessage;
 
 import java.util.UUID;
 

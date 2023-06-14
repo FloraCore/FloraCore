@@ -1,7 +1,7 @@
 package team.floracore.common.api;
 
-import org.floracore.api.FloraCore;
-import org.floracore.api.FloraCoreProvider;
+import team.floracore.api.FloraCore;
+import team.floracore.api.FloraCoreProvider;
 
 import java.lang.reflect.Method;
 
