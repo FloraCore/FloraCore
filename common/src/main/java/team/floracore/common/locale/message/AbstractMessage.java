@@ -23,6 +23,7 @@ public abstract interface AbstractMessage {
     TextComponent ARROW = Component.text('➤');
     TextComponent ARROW_LIGHT = Component.text(">");
     TextComponent CIRCLE = Component.text('●');
+    TextComponent BOX = Component.text('■');
     TextComponent COLON = Component.text(':');
     TextComponent HORIZONTAL_LINE = Component.text('-');
     TextComponent HORIZONTAL_LINES = text("-----------------------------------------------------");
@@ -45,6 +46,28 @@ public abstract interface AbstractMessage {
         return AbstractMessage.formatColoredValue(prefix)
                 .append(text(sn))
                 .append(AbstractMessage.formatColoredValue(suffix));
+    };
+
+    Args3<Integer, Integer, Integer> PROGRESS = (len, now, total) -> {
+        Component c1 = text().color(AQUA).build();
+        Component c2 = text().color(GRAY).build();
+
+        if (now >= total) {
+            for (int i = 0; i < len; i++) {
+                c1 = c1.append(BOX);
+            }
+        } else {
+            int completedLen = now / total * len;
+            int remainingLen = len - completedLen;
+            for (int a = 0; a < completedLen; a++) {
+                c1 = c1.append(BOX);
+            }
+            for (int b = 0; b < remainingLen; b++) {
+                c2 = c2.append(BOX);
+            }
+        }
+
+        return c1.append(c2);
     };
 
     static TextComponent prefixed(ComponentLike component) {
