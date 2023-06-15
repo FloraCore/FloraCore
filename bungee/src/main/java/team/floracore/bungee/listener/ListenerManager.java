@@ -4,7 +4,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginManager;
 import team.floracore.bungee.FCBungeePlugin;
-import team.floracore.bungee.listeners.PlayerListener;
+import team.floracore.bungee.listener.impl.PlayerListener;
 import team.floracore.common.plugin.FloraCorePlugin;
 
 public class ListenerManager {

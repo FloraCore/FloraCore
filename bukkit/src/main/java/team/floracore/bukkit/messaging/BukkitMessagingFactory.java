@@ -9,6 +9,7 @@ import team.floracore.api.bukkit.messenger.message.type.NoticeMessage;
 import team.floracore.api.bukkit.messenger.message.type.TeleportMessage;
 import team.floracore.api.messenger.message.Message;
 import team.floracore.bukkit.FCBukkitPlugin;
+import team.floracore.bukkit.locale.message.commands.MiscCommandMessage;
 import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
 import team.floracore.bukkit.messaging.message.NoticeMessageImpl;
 import team.floracore.bukkit.messaging.message.ReportMessageImpl;
@@ -33,15 +34,13 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
     }
 
     public void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, List<String> parameters) {
-        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> {
-            getPlugin().getMessagingService().ifPresent(service -> {
-                UUID requestId = service.generatePingId();
-                this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
-                NoticeMessageImpl noticeMessage = new NoticeMessageImpl(requestId, receiver, type, parameters);
-                service.getMessenger().sendOutgoingMessage(noticeMessage);
-                notice(noticeMessage);
-            });
-        });
+        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> getPlugin().getMessagingService().ifPresent(service -> {
+            UUID requestId = service.generatePingId();
+            this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            NoticeMessageImpl noticeMessage = new NoticeMessageImpl(requestId, receiver, type, parameters);
+            service.getMessenger().sendOutgoingMessage(noticeMessage);
+            notice(noticeMessage);
+        }));
     }
 
     public void notice(NoticeMessage noticeMsg) {
@@ -87,31 +86,29 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
                            String reporterServer,
                            String reportedUserServer,
                            String reason) {
-        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> {
-            getPlugin().getMessagingService().ifPresent(service -> {
-                UUID requestId = service.generatePingId();
-                this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
-                ReportMessageImpl reportMessage = new ReportMessageImpl(requestId,
-                        reporter,
-                        reportedUser,
-                        reporterServer,
-                        reportedUserServer,
-                        reason);
-                service.getMessenger().sendOutgoingMessage(reportMessage);
-                String player = getPlayerName(reporter);
-                String target = getPlayerName(reportedUser);
-                boolean playerOnlineStatus = isPlayerOnline(reporter);
-                boolean targetOnlineStatus = isPlayerOnline(reportedUser);
-                notifyStaffReport(player,
-                        target,
-                        reporterServer,
-                        reportedUserServer,
-                        reason,
-                        playerOnlineStatus,
-                        targetOnlineStatus);
+        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> getPlugin().getMessagingService().ifPresent(service -> {
+            UUID requestId = service.generatePingId();
+            this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            ReportMessageImpl reportMessage = new ReportMessageImpl(requestId,
+                    reporter,
+                    reportedUser,
+                    reporterServer,
+                    reportedUserServer,
+                    reason);
+            service.getMessenger().sendOutgoingMessage(reportMessage);
+            String player = getPlayerName(reporter);
+            String target = getPlayerName(reportedUser);
+            boolean playerOnlineStatus = isPlayerOnline(reporter);
+            boolean targetOnlineStatus = isPlayerOnline(reportedUser);
+            notifyStaffReport(player,
+                    target,
+                    reporterServer,
+                    reportedUserServer,
+                    reason,
+                    playerOnlineStatus,
+                    targetOnlineStatus);
 
-            });
-        });
+        }));
     }
 
     private String getPlayerName(UUID uuid) {
@@ -144,15 +141,13 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
     }
 
     public void pushTeleport(UUID sender, UUID recipient, String serverName) {
-        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> {
-            getPlugin().getMessagingService().ifPresent(service -> {
-                UUID requestId = service.generatePingId();
-                this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
-                TeleportMessageImpl teleportMessage = new TeleportMessageImpl(requestId, sender, recipient,
-                        serverName);
-                service.getMessenger().sendOutgoingMessage(teleportMessage);
-            });
-        });
+        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> getPlugin().getMessagingService().ifPresent(service -> {
+            UUID requestId = service.generatePingId();
+            this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            TeleportMessageImpl teleportMessage = new TeleportMessageImpl(requestId, sender, recipient,
+                    serverName);
+            service.getMessenger().sendOutgoingMessage(teleportMessage);
+        }));
     }
 
     public boolean processIncomingMessage(String type, JsonElement content, UUID id) {
@@ -201,17 +196,12 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
                         if (sender != null) {
                             Sender s = getPlugin().getSenderFactory().wrap(sender);
                             getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
-                                if (getPlugin().getLoader()
-                                        .getServer()
-                                        .getPluginManager()
-                                        .getPlugin("PremiumVanish") != null) {
-                                    if (!VanishAPI.isInvisible(sender)) {
-                                        VanishAPI.hidePlayer(sender);
-                                    }
-                                }
+                                checkVanish(sender);
+                                Bukkit.getScheduler().runTask(getPlugin().getLoader(), () -> {
+                                    sender.teleport(recipient.getLocation());
+                                    PlayerCommandMessage.COMMAND_REPORT_TP_SUCCESS.send(s, recipient.getDisplayName());
+                                });
                             }, 300, TimeUnit.MILLISECONDS);
-                            sender.teleport(recipient.getLocation());
-                            PlayerCommandMessage.COMMAND_REPORT_TP_SUCCESS.send(s, recipient.getDisplayName());
                             shouldCancel.set(true);
                         }
                         secondsElapsed++;
@@ -220,6 +210,22 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
             }
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
+        }
+    }
+
+    @SuppressWarnings("all")
+    private void checkVanish(Player player) {
+        if (getPlugin().getLoader()
+                .getServer()
+                .getPluginManager()
+                .getPlugin("PremiumVanish") != null) {
+            // I hate the lazy author having made this annoying API...
+            // I don't wanna see this warning again...
+            if (!VanishAPI.isInvisible(player)) {
+                VanishAPI.hidePlayer(player);
+                Sender sender = getPlugin().getSenderFactory().wrap(player);
+                MiscCommandMessage.COMMAND_REPORT_VANISH.send(sender);
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import team.floracore.bukkit.FCBukkitBootstrap;
 import team.floracore.bukkit.FCBukkitPlugin;
-import team.floracore.bukkit.config.BoardsKeys;
+import team.floracore.bukkit.config.boards.BoardsKeys;
 import team.floracore.bukkit.scoreboard.core.Condition;
 import team.floracore.bukkit.scoreboard.core.SidebarBoard;
 import team.floracore.bukkit.scoreboard.model.BoardModel;
