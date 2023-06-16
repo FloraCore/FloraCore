@@ -11,6 +11,7 @@ import team.floracore.api.messenger.message.Message;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.locale.message.commands.MiscCommandMessage;
 import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
+import team.floracore.bukkit.messaging.message.KickMessageImpl;
 import team.floracore.bukkit.messaging.message.NoticeMessageImpl;
 import team.floracore.bukkit.messaging.message.ReportMessageImpl;
 import team.floracore.bukkit.messaging.message.TeleportMessageImpl;
@@ -147,6 +148,15 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
             TeleportMessageImpl teleportMessage = new TeleportMessageImpl(requestId, sender, recipient,
                     serverName);
             service.getMessenger().sendOutgoingMessage(teleportMessage);
+        }));
+    }
+
+    public void submitKick(UUID recipient, String reason) {
+        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> getPlugin().getMessagingService().ifPresent(service -> {
+            UUID requestId = service.generatePingId();
+            this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            KickMessageImpl kickMessage = new KickMessageImpl(requestId, recipient, reason);
+            service.getMessenger().sendOutgoingMessage(kickMessage);
         }));
     }
 

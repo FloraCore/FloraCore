@@ -19,6 +19,7 @@ public class BungeeUtil {
         Bukkit.getMessenger().registerOutgoingPluginChannel(p, "BungeeCord");
     }
 
+    @SuppressWarnings("all")
     public void connect(Player player, String serverName) {
         Plugin p = plugin.getLoader();
         ByteArrayDataOutput out = ByteStreams.newDataOutput();
