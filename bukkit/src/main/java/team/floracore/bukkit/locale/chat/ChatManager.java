@@ -3,7 +3,7 @@ package team.floracore.bukkit.locale.chat;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
-import team.floracore.api.data.chat.ChatType;
+import org.floracore.api.data.chat.ChatType;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.listener.FloraCoreBukkitListener;
 

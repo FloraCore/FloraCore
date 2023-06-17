@@ -2,21 +2,16 @@ package team.floracore.bungee.messaging;
 
 import com.google.gson.JsonElement;
 import net.kyori.adventure.text.Component;
-import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import team.floracore.api.bungee.messenger.message.type.ChatMessage;
-import team.floracore.api.bungee.messenger.message.type.KickMessage;
-import team.floracore.api.bungee.messenger.message.type.NoticeMessage;
-import team.floracore.api.data.chat.ChatType;
-import team.floracore.api.messenger.message.Message;
+import org.floracore.api.bungee.messenger.message.type.ChatMessage;
+import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
+import org.floracore.api.data.chat.ChatType;
+import org.floracore.api.messenger.message.Message;
 import team.floracore.bungee.FCBungeePlugin;
-import team.floracore.bungee.messaging.chat.ChatModel;
 import team.floracore.bungee.config.chat.ChatKeys;
 import team.floracore.bungee.locale.message.SocialSystemsMessage;
+import team.floracore.bungee.messaging.chat.ChatModel;
 import team.floracore.bungee.messaging.message.ChatMessageImpl;
-import team.floracore.bungee.messaging.message.KickMessageImpl;
 import team.floracore.bungee.messaging.message.NoticeMessageImpl;
 import team.floracore.bungee.util.BungeeStringReplacer;
 import team.floracore.common.locale.message.AbstractMessage;
@@ -47,9 +42,6 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
             case NoticeMessageImpl.TYPE:
                 decoded = NoticeMessageImpl.decode(content, id);
                 break;
-            case KickMessageImpl.TYPE:
-                decoded = KickMessageImpl.decode(content, id);
-                break;
             default:
                 return false;
 
@@ -67,9 +59,6 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
         } else if (message instanceof NoticeMessage) {
             NoticeMessage noticeMsg = (NoticeMessage) message;
             notice(noticeMsg);
-        } else if (message instanceof KickMessage) {
-            KickMessage kickMsg = (KickMessage) message;
-            kick(kickMsg);
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }
@@ -220,13 +209,6 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
                     break;
             }
         }
-    }
-
-    private void kick(KickMessage kickMessage) {
-        UUID target = kickMessage.getReceiver();
-        BaseComponent component = new TextComponent(ChatColor.translateAlternateColorCodes('&', kickMessage.getReason()));
-        ProxiedPlayer player = getPlugin().getProxy().getPlayer(target);
-        player.disconnect(component);
     }
 
     private String getPlayerName(UUID uuid) {

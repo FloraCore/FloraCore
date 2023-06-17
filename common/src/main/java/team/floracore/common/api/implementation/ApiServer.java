@@ -1,8 +1,8 @@
 package team.floracore.common.api.implementation;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import team.floracore.api.server.ServerAPI;
-import team.floracore.api.server.ServerType;
+import org.floracore.api.server.ServerAPI;
+import org.floracore.api.server.ServerType;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.misc.floracore.tables.SERVER;
 import team.floracore.common.util.CaffeineFactory;

@@ -1,7 +1,7 @@
 package team.floracore.common.config;
 
 import com.google.common.collect.ImmutableMap;
-import team.floracore.api.server.ServerType;
+import org.floracore.api.server.ServerType;
 import team.floracore.common.config.generic.KeyedConfiguration;
 import team.floracore.common.config.generic.key.ConfigKey;
 import team.floracore.common.config.generic.key.SimpleConfigKey;

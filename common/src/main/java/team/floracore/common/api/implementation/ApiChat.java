@@ -1,6 +1,6 @@
 package team.floracore.common.api.implementation;
 
-import team.floracore.api.data.chat.ChatAPI;
+import org.floracore.api.data.chat.ChatAPI;
 import team.floracore.common.plugin.FloraCorePlugin;
 
 public class ApiChat implements ChatAPI {

@@ -5,12 +5,12 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
 import org.bstats.bungeecord.Metrics;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import team.floracore.api.platform.Platform;
+import org.floracore.api.platform.Platform;
 import team.floracore.common.loader.LoaderBootstrap;
 import team.floracore.common.plugin.bootstrap.BootstrappedWithLoader;
 import team.floracore.common.plugin.bootstrap.FloraCoreBootstrap;
 import team.floracore.common.plugin.classpath.ClassPathAppender;
-import team.floracore.common.plugin.classpath.ReflectionClassPathAppender;
+import team.floracore.common.plugin.classpath.JarInJarClassPathAppender;
 import team.floracore.common.plugin.logging.JavaPluginLogger;
 import team.floracore.common.plugin.logging.PluginLogger;
 
@@ -64,7 +64,7 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
         this.logger = new JavaPluginLogger(loader.getLogger());
         this.schedulerAdapter = new BungeeSchedulerAdapter(this);
-        this.classPathAppender = new ReflectionClassPathAppender(getClass().getClassLoader());
+        this.classPathAppender = new JarInJarClassPathAppender(getClass().getClassLoader());
         this.plugin = new FCBungeePlugin(this);
     }
 

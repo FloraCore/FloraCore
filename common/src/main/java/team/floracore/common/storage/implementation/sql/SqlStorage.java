@@ -1,10 +1,10 @@
 package team.floracore.common.storage.implementation.sql;
 
 import com.google.gson.reflect.TypeToken;
-import team.floracore.api.commands.report.ReportStatus;
-import team.floracore.api.data.DataType;
-import team.floracore.api.data.chat.ChatType;
-import team.floracore.api.server.ServerType;
+import org.floracore.api.commands.report.ReportStatus;
+import org.floracore.api.data.DataType;
+import org.floracore.api.data.chat.ChatType;
+import org.floracore.api.server.ServerType;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
 import team.floracore.common.storage.implementation.sql.connection.ConnectionFactory;
