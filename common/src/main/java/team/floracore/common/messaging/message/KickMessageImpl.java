@@ -1,11 +1,10 @@
-package team.floracore.bungee.messaging.message;
+package team.floracore.common.messaging.message;
 
 import com.google.gson.JsonElement;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
-import team.floracore.api.bungee.messenger.message.type.KickMessage;
+import team.floracore.api.messenger.message.type.KickMessage;
 import team.floracore.common.messaging.FloraCoreMessagingService;
-import team.floracore.common.messaging.message.AbstractMessage;
 import team.floracore.common.util.gson.JObject;
 
 import java.util.Optional;
