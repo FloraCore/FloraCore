@@ -1,8 +1,8 @@
 package team.floracore.common.api.implementation;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import team.floracore.api.data.DataAPI;
-import team.floracore.api.data.DataType;
+import org.floracore.api.data.DataAPI;
+import org.floracore.api.data.DataType;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.misc.floracore.tables.DATA;
 import team.floracore.common.storage.misc.floracore.tables.DATA_INT;

@@ -2,9 +2,9 @@ package team.floracore.common.extension;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.floracore.api.extension.Extension;
+import org.floracore.api.extension.ExtensionManager;
 import org.jetbrains.annotations.NotNull;
-import team.floracore.api.extension.Extension;
-import team.floracore.api.extension.ExtensionManager;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.plugin.classpath.URLClassLoaderAccess;
 import team.floracore.common.util.MoreFiles;

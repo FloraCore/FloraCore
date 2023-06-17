@@ -1,10 +1,10 @@
 package team.floracore.common.messaging.redis;
 
+import org.floracore.api.messenger.IncomingMessageConsumer;
+import org.floracore.api.messenger.Messenger;
+import org.floracore.api.messenger.message.OutgoingMessage;
 import org.jetbrains.annotations.NotNull;
 import redis.clients.jedis.*;
-import team.floracore.api.messenger.IncomingMessageConsumer;
-import team.floracore.api.messenger.Messenger;
-import team.floracore.api.messenger.message.OutgoingMessage;
 import team.floracore.common.plugin.FloraCorePlugin;
 
 /**

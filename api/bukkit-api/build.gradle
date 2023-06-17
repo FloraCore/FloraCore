@@ -3,7 +3,7 @@ plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1"
 }
 
-group 'team.floracore'
+group 'org.floracore'
 version rootProject.version
 
 repositories {
@@ -23,7 +23,7 @@ shadowJar {
     archiveFileName = "FloraCore-Bukkit-API-${rootProject.version}.jar"
 
     dependencies {
-        include(dependency('team.floracore:.*'))
+        include(dependency('org.floracore:.*'))
     }
 }
 

@@ -6,7 +6,7 @@ import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.checkerframework.checker.nullness.qual.Nullable;
-import team.floracore.api.platform.Platform;
+import org.floracore.api.platform.Platform;
 import team.floracore.bukkit.command.impl.player.EnderChestCommand;
 import team.floracore.common.loader.LoaderBootstrap;
 import team.floracore.common.plugin.bootstrap.BootstrappedWithLoader;
@@ -71,7 +71,7 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 
         this.logger = new JavaPluginLogger(loader.getLogger());
         this.schedulerAdapter = new BukkitSchedulerAdapter(this);
-        this.classPathAppender = new ReflectionClassPathAppender(getClass().getClassLoader());
+        this.classPathAppender = new ReflectionClassPathAppender(this);
         this.console = getServer().getConsoleSender();
         this.plugin = new FCBukkitPlugin(this);
     }

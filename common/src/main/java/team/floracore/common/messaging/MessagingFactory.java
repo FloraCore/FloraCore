@@ -1,9 +1,9 @@
 package team.floracore.common.messaging;
 
+import org.floracore.api.messenger.IncomingMessageConsumer;
+import org.floracore.api.messenger.Messenger;
+import org.floracore.api.messenger.MessengerProvider;
 import org.jetbrains.annotations.NotNull;
-import team.floracore.api.messenger.IncomingMessageConsumer;
-import team.floracore.api.messenger.Messenger;
-import team.floracore.api.messenger.MessengerProvider;
 import team.floracore.common.config.ConfigKeys;
 import team.floracore.common.config.FloraCoreConfiguration;
 import team.floracore.common.messaging.redis.RedisMessenger;

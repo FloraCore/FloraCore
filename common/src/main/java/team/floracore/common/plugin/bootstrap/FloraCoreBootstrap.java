@@ -1,7 +1,7 @@
 package team.floracore.common.plugin.bootstrap;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
-import team.floracore.api.platform.Platform;
+import org.floracore.api.platform.Platform;
 import team.floracore.common.plugin.classpath.ClassPathAppender;
 import team.floracore.common.plugin.logging.PluginLogger;
 import team.floracore.common.plugin.scheduler.SchedulerAdapter;

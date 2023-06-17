@@ -1,6 +1,6 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
-import team.floracore.api.data.chat.ChatType;
+import org.floracore.api.data.chat.ChatType;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
 import team.floracore.common.storage.misc.floracore.AbstractFloraCoreTable;

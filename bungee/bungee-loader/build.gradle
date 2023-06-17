@@ -33,7 +33,7 @@ shadowJar {
     archiveFileName = "FloraCore-Bungee-${rootProject.version}.jar"
 
     from {
-        project(':bungee').tasks.shadowJar
+        project(':bungee').tasks.shadowJar.archiveFile
     }
 }
 

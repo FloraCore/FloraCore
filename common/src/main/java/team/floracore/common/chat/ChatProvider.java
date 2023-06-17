@@ -1,7 +1,7 @@
 package team.floracore.common.chat;
 
 import com.google.gson.JsonObject;
-import team.floracore.api.data.chat.ChatType;
+import org.floracore.api.data.chat.ChatType;
 import team.floracore.common.http.AbstractHttpClient;
 import team.floracore.common.http.BytebinClient;
 import team.floracore.common.http.UnsuccessfulRequestException;
