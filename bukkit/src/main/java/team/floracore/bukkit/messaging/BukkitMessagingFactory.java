@@ -11,12 +11,12 @@ import team.floracore.api.messenger.message.Message;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.locale.message.commands.MiscCommandMessage;
 import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
-import team.floracore.bukkit.messaging.message.KickMessageImpl;
 import team.floracore.bukkit.messaging.message.NoticeMessageImpl;
 import team.floracore.bukkit.messaging.message.ReportMessageImpl;
 import team.floracore.bukkit.messaging.message.TeleportMessageImpl;
 import team.floracore.common.messaging.InternalMessagingService;
 import team.floracore.common.messaging.MessagingFactory;
+import team.floracore.common.messaging.message.KickMessageImpl;
 import team.floracore.common.sender.Sender;
 
 import java.util.List;

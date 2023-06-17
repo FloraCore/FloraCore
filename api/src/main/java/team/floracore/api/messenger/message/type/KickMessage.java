@@ -1,4 +1,4 @@
-package team.floracore.api.bukkit.messenger.message.type;
+package team.floracore.api.messenger.message.type;
 
 import org.jetbrains.annotations.NotNull;
 import team.floracore.api.messenger.message.Message;
