@@ -2,11 +2,15 @@ package team.floracore.bungee.messaging;
 
 import com.google.gson.JsonElement;
 import net.kyori.adventure.text.Component;
+import net.md_5.bungee.api.ChatColor;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
 import org.floracore.api.data.chat.ChatType;
 import org.floracore.api.messenger.message.Message;
+import org.floracore.api.messenger.message.type.KickMessage;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.config.chat.ChatKeys;
 import team.floracore.bungee.locale.message.SocialSystemsMessage;
@@ -17,6 +21,7 @@ import team.floracore.bungee.util.BungeeStringReplacer;
 import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.messaging.InternalMessagingService;
 import team.floracore.common.messaging.MessagingFactory;
+import team.floracore.common.messaging.message.KickMessageImpl;
 import team.floracore.common.sender.Sender;
 
 import java.util.List;
@@ -42,6 +47,9 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
             case NoticeMessageImpl.TYPE:
                 decoded = NoticeMessageImpl.decode(content, id);
                 break;
+            case KickMessageImpl.TYPE:
+                decoded = KickMessageImpl.decode(content, id);
+                break;
             default:
                 return false;
 
@@ -59,16 +67,25 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
         } else if (message instanceof NoticeMessage) {
             NoticeMessage noticeMsg = (NoticeMessage) message;
             notice(noticeMsg);
-        } else {
+        } else if (message instanceof KickMessage) {
+            KickMessage kickMsg = (KickMessage) message;
+            kick(kickMsg);
+        }  else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }
+    }
+
+    private void kick(KickMessage kickMessage) {
+        UUID target = kickMessage.getReceiver();
+        BaseComponent component = new TextComponent(ChatColor.translateAlternateColorCodes('&', kickMessage.getReason()));
+        ProxiedPlayer player = getPlugin().getProxy().getPlayer(target);
+        player.disconnect(component);
     }
 
     public void chat(ChatMessage chatMsg) {
         ProxiedPlayer player = getPlugin().getProxy().getPlayer(chatMsg.getReceiver());
         List<String> parameters = chatMsg.getParameters();
         UUID senderUUID = UUID.fromString(parameters.get(0));
-        String senderName = getPlayerName(senderUUID);
         String message = parameters.get(1);
         switch (chatMsg.getType()) {
             case STAFF:
@@ -211,34 +228,27 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
         }
     }
 
-    private String getPlayerName(UUID uuid) {
-        return getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(uuid);
-    }
-
     public void pushChatMessage(UUID receiver, ChatType type, List<String> parameters) {
-        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> {
-            getPlugin().getMessagingService().ifPresent(service -> {
-                UUID requestId = service.generatePingId();
-                this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
-                ChatMessageImpl chatMessage = new ChatMessageImpl(requestId, receiver, type, parameters);
-                service.getMessenger().sendOutgoingMessage(chatMessage);
-                chat(chatMessage);
-            });
-        });
+        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> getPlugin().getMessagingService().ifPresent(service -> {
+            UUID requestId = service.generatePingId();
+            this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            ChatMessageImpl chatMessage = new ChatMessageImpl(requestId, receiver, type, parameters);
+            service.getMessenger().sendOutgoingMessage(chatMessage);
+            chat(chatMessage);
+        }));
     }
 
     public void pushNoticeMessage(UUID receiver, NoticeMessage.NoticeType type, List<String> parameters) {
-        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> {
-            getPlugin().getMessagingService().ifPresent(service -> {
-                UUID requestId = service.generatePingId();
-                this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
-                NoticeMessageImpl noticeMessage = new NoticeMessageImpl(requestId, receiver, type, parameters);
-                service.getMessenger().sendOutgoingMessage(noticeMessage);
-                notice(noticeMessage);
-            });
-        });
+        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> getPlugin().getMessagingService().ifPresent(service -> {
+            UUID requestId = service.generatePingId();
+            this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            NoticeMessageImpl noticeMessage = new NoticeMessageImpl(requestId, receiver, type, parameters);
+            service.getMessenger().sendOutgoingMessage(noticeMessage);
+            notice(noticeMessage);
+        }));
     }
 
+    @SuppressWarnings("unused")
     private boolean isPlayerOnline(UUID uuid) {
         return getPlugin().getApiProvider().getPlayerAPI().isOnline(uuid);
     }
