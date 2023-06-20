@@ -6,6 +6,7 @@ import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
 import team.floracore.common.plugin.FloraCorePlugin;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -85,5 +86,10 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
     @Override
     public void set(String path, Object value) {
         this.configuration.set(path, value);
+        try {
+            this.configuration.save(file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

@@ -88,5 +88,10 @@ public class BungeeConfigAdapter implements ConfigurationAdapter {
     @Override
     public void set(String path, Object value) {
         this.configuration.set(path, value);
+        try {
+            ConfigurationProvider.getProvider(YamlConfiguration.class).save(configuration, this.file);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
