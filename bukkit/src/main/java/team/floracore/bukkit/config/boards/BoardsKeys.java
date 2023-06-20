@@ -20,12 +20,9 @@ import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
  */
 public class BoardsKeys {
 
-    public static final ConfigKey<Boolean> ENABLE = notReloadable(booleanKey(
-            "enable",
-            true));
+    public static final ConfigKey<Boolean> ENABLE = notReloadable(booleanKey("enable", true));
     public static final ConfigKey<Integer> UPDATE_TIME = key(c -> c.getInteger("update-time", 10));
-    public static final ConfigKey<List<String>> DISABLE_WORLDS = key(c -> c.getStringList("disable-worlds",
-            new ArrayList<>()));
+    public static final ConfigKey<List<String>> DISABLE_WORLDS = key(c -> c.getStringList("disable-worlds", new ArrayList<>()));
 
     public static final ConfigKey<List<BoardModel>> BOARD_MODELS = key(c -> {
         List<BoardModel> ret = new ArrayList<>();
