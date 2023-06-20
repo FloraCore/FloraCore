@@ -1,3 +1,4 @@
+<!--- @formatter:off --->
 <div align="center">
 
 ![Header](https://capsule-render.vercel.app/api?type=Waving&color=timeGradient&height=200&animation=fadeIn&section=header&text=FloraCore&fontSize=100)
@@ -26,12 +27,9 @@ FC的框架是基于[LuckPerms](https://luckperms.net/)
 （简称LP）,进行了少数修改。保留了以下功能,用法几乎一致,可以在LP的相关[Wiki](https://luckperms.net/wiki)中进行查看用法。
 
 - 依赖的下载和加载（[Wiki](https://luckperms.net/wiki/Extensions)）
--
-配置文件的加载及其用法（[GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/config)）
--
-数据库的加载及其用法（[GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/storage)）
--
-拓展的加载及其用法（[GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/extension)）
+- 配置文件的加载及其用法（[GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/config)）
+- 数据库的加载及其用法（[GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/storage)）
+- 拓展的加载及其用法（[GitHub](https://github.com/LuckPerms/LuckPerms/tree/master/common/src/main/java/me/lucko/luckperms/common/extension)）
 
 为了优雅地实现反射,FC采用了[MzLib](https://github.com/BugCleanser/MzLib_old)。
 
