@@ -84,4 +84,9 @@ public class BungeeConfigAdapter implements ConfigurationAdapter {
     public Collection<String> getKeys() {
         return this.configuration.getKeys();
     }
+
+    @Override
+    public void set(String path, Object value) {
+        this.configuration.set(path, value);
+    }
 }

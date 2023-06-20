@@ -70,7 +70,7 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
         } else if (message instanceof KickMessage) {
             KickMessage kickMsg = (KickMessage) message;
             kick(kickMsg);
-        }  else {
+        } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }
     }

@@ -63,6 +63,29 @@ public class ReportCommand extends FloraCoreBukkitCommand {
         }, 3, TimeUnit.SECONDS);
     }
 
+    public static void createPageButtons(UUID uuid, GuiPage gui) {
+        Button bp = Button.of(p -> {
+            Component previous =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
+            Component turn =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() - 1), uuid);
+            return new ItemStackBuilder(Material.ARROW).setName(previous)
+                    .setLore(Collections.singletonList(turn))
+                    .get();
+        });
+        Button bn = Button.of(p -> {
+            Component next =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
+            Component turn1 =
+                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() + 1),
+                            uuid);
+            return new ItemStackBuilder(Material.ARROW).setName(next)
+                    .setLore(Collections.singletonList(turn1))
+                    .get();
+        });
+        gui.pageSetting(PageSettings.normal(gui, bp, bn));
+    }
+
     @CommandMethod("report-tp <target>")
     @CommandDescription("floracore.command.description.report.tp")
     @CommandPermission("floracore.command.report.staff")
@@ -258,29 +281,6 @@ public class ReportCommand extends FloraCoreBukkitCommand {
 
     private void setPageSlot(UUID uuid, GuiPage gui) {
         createPageButtons(uuid, gui);
-    }
-
-    public static void createPageButtons(UUID uuid, GuiPage gui) {
-        Button bp = Button.of(p -> {
-            Component previous =
-                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_PREVIOUS_PAGE.build(), uuid);
-            Component turn =
-                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() - 1), uuid);
-            return new ItemStackBuilder(Material.ARROW).setName(previous)
-                    .setLore(Collections.singletonList(turn))
-                    .get();
-        });
-        Button bn = Button.of(p -> {
-            Component next =
-                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_NEXT_PAGE.build(), uuid);
-            Component turn1 =
-                    TranslationManager.render(MiscMessage.COMMAND_MISC_GUI_TURN_TO_PAGE.build(gui.page() + 1),
-                            uuid);
-            return new ItemStackBuilder(Material.ARROW).setName(next)
-                    .setLore(Collections.singletonList(turn1))
-                    .get();
-        });
-        gui.pageSetting(PageSettings.normal(gui, bp, bn));
     }
 
     private GuiCustom getReportGui(Player player, UUID reportUUID, boolean conclusion) {

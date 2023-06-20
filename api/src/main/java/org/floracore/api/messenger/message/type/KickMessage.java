@@ -12,6 +12,7 @@ public interface KickMessage extends Message {
      * @return 接收者的UUID
      */
     @NotNull UUID getReceiver();
+
     /**
      * 获取原因
      *

@@ -81,4 +81,9 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
     public Collection<String> getKeys() {
         return this.configuration.getKeys(false);
     }
+
+    @Override
+    public void set(String path, Object value) {
+        this.configuration.set(path, value);
+    }
 }

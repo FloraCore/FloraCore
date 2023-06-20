@@ -27,4 +27,6 @@ public interface ConfigurationAdapter {
     Map<String, String> getStringMap(String path, Map<String, String> def);
 
     Collection<String> getKeys();
+
+    void set(String path, Object value);
 }
