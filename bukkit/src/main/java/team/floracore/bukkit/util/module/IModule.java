@@ -24,7 +24,7 @@ public interface IModule extends Listener {
     static <T extends IModule> T enable(Class<T> interfase) {
         synchronized (IModule.class) {
             if (!interfase.isInterface()) {
-                throw new IllegalArgumentException("Arg interfase must be a interface");
+                throw new IllegalArgumentException("Arg interface must be a interface");
             }
             T r = ClassUtil.newInstance(interfase);
             r.enable();
@@ -207,11 +207,7 @@ public interface IModule extends Listener {
             for (IModule depend : this.getDepends()) {
                 depend.load();
             }
-            List<IModule> ms = modules.get(this.getPlugin());
-            if (ms == null) {
-                ms = new LinkedList<>();
-                modules.put(this.getPlugin(), ms);
-            }
+            List<IModule> ms = modules.computeIfAbsent(this.getPlugin(), k -> new LinkedList<>());
             ms.add(this);
         }
     }

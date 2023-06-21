@@ -144,8 +144,7 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
 
     public static ItemStackBuilder questionMark() {
         return newSkull(null,
-                "http://textures.minecraft" +
-                        ".net/texture/65b95da1281642daa5d022adbd3e7cb69dc0942c81cd63be9c3857d222e1c8d9");
+                "http://textures.minecraft.net/texture/65b95da1281642daa5d022adbd3e7cb69dc0942c81cd63be9c3857d222e1c8d9");
     }
 
     public static ItemStackBuilder newSkull(String name, String url) {
@@ -161,14 +160,12 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         is.tag()
                 .set("SkullOwner",
                         NmsNBTTagCompound.newInstance()
-                                .set("Id",
-                                        BukkitWrapper.version < 16 ? NmsNBTTagString.newInstance(id.toString()) :
-                                                NmsNBTTagIntArray.newInstance(id))
-                                .set("Properties",
-                                        NmsNBTTagCompound.newInstance()
-                                                .set("textures",
-                                                        NmsNBTTagList.newInstance(NmsNBTTagCompound.newInstance()
-                                                                .set("Value", NmsNBTTagString.newInstance(value))))));
+                                .set("Id", BukkitWrapper.version < 16 ?
+                                        NmsNBTTagString.newInstance(id.toString()) :
+                                        NmsNBTTagIntArray.newInstance(id))
+                                .set("Properties", NmsNBTTagCompound.newInstance().set("textures",
+                                        NmsNBTTagList.newInstance(NmsNBTTagCompound.newInstance()
+                                                .set("Value", NmsNBTTagString.newInstance(value))))));
         if (name != null) {
             is.tag().getCompound("SkullOwner").set("Name", NmsNBTTagString.newInstance(name));
         }
@@ -344,7 +341,7 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
     }
 
     /**
-     * It doesn't work after The Flattening(MC 1.13)
+     * It doesn't work after The Flattening (MC 1.13)
      *
      * @param childId child ID
      * @return this
@@ -520,8 +517,7 @@ public class ItemStackBuilder implements Supplier<ItemStack> {
         if (BukkitWrapper.version >= 14) {
             lore = lore.stream()
                     .map(l -> l == null || l.length() == 0 ? "{\"text\":\"\"}" :
-                            ObcChatMessage.fromStringOrNullToJSONV13(
-                                    l))
+                            ObcChatMessage.fromStringOrNullToJSONV13(l))
                     .map(l -> setDefaultNonItalic(new JsonParser().parse(l).getAsJsonObject()).toString())
                     .collect(Collectors.toList());
         }
