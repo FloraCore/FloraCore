@@ -12,6 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.command.FloraCoreBukkitCommand;
+import team.floracore.bukkit.config.boards.BoardsKeys;
 import team.floracore.bukkit.locale.message.commands.MiscCommandMessage;
 import team.floracore.common.chat.ChatProvider;
 import team.floracore.common.config.ConfigKeys;
@@ -62,7 +63,9 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
         plugin.getConfiguration().reload();
         plugin.getBoardsConfiguration().reload();
         plugin.getTranslationManager().reload();
-        plugin.getScoreBoardManager().reload();
+        if (plugin.getBoardsConfiguration().get(BoardsKeys.ENABLE)) {
+            plugin.getScoreBoardManager().reload();
+        }
         CommonCommandMessage.RELOAD_CONFIG_SUCCESS.send(s);
     }
 

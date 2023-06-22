@@ -14,6 +14,7 @@ import team.floracore.bukkit.command.CommandManager;
 import team.floracore.bukkit.config.BukkitConfigAdapter;
 import team.floracore.bukkit.config.boards.BoardsConfiguration;
 import team.floracore.bukkit.config.boards.BoardsKeys;
+import team.floracore.bukkit.hooks.placeholderapi.PlaceholderAPIHook;
 import team.floracore.bukkit.listener.ListenerManager;
 import team.floracore.bukkit.locale.chat.ChatManager;
 import team.floracore.bukkit.messaging.BukkitMessagingFactory;
@@ -54,6 +55,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     private ScoreBoardManager scoreBoardManager;
     private GuiManager guiManager;
     private ProtocolManager protocolManager;
+    private PlaceholderAPIHook placeholderAPIHook;
 
     public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
         this.bootstrap = bootstrap;
@@ -139,6 +141,12 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
         this.listenerManager = new ListenerManager(this);
         this.commandManager = new CommandManager(this);
         this.chatManager = new ChatManager(this);
+
+        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+            getLogger().info("Hooking PlaceholderAPI...");
+            this.placeholderAPIHook = new PlaceholderAPIHook(this);
+            this.placeholderAPIHook.register();
+        }
     }
 
     @Override
