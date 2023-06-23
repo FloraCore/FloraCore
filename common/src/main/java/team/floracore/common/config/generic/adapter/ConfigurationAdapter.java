@@ -26,6 +26,12 @@ public interface ConfigurationAdapter {
 
     Map<String, String> getStringMap(String path, Map<String, String> def);
 
+    Map<String, Boolean> getBooleanMap(String path, Map<String, Boolean> def);
+
+    Map<String, Integer> getIntegerMap(String path, Map<String, Integer> def);
+
+    Map<String, Double> getDoubleMap(String path, Map<String, Double> def);
+
     Collection<String> getKeys();
 
     void set(String path, Object value);

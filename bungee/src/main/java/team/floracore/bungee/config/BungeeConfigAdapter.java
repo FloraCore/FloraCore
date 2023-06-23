@@ -74,9 +74,50 @@ public class BungeeConfigAdapter implements ConfigurationAdapter {
         }
 
         for (String key : section.getKeys()) {
-            map.put(key, section.get(key).toString());
+            map.put(key, section.getString(key));
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Boolean> getBooleanMap(String path, Map<String, Boolean> def) {
+        Map<String, Boolean> map = new HashMap<>();
+        Configuration section = this.configuration.getSection(path);
+        if (section == null) {
+            return def;
         }
 
+        for (String key : section.getKeys()) {
+            map.put(key, section.getBoolean(key));
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Integer> getIntegerMap(String path, Map<String, Integer> def) {
+        Map<String, Integer> map = new HashMap<>();
+        Configuration section = this.configuration.getSection(path);
+        if (section == null) {
+            return def;
+        }
+
+        for (String key : section.getKeys()) {
+            map.put(key, section.getInt(key));
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Double> getDoubleMap(String path, Map<String, Double> def) {
+        Map<String, Double> map = new HashMap<>();
+        Configuration section = this.configuration.getSection(path);
+        if (section == null) {
+            return def;
+        }
+
+        for (String key : section.getKeys()) {
+            map.put(key, section.getDouble(key));
+        }
         return map;
     }
 

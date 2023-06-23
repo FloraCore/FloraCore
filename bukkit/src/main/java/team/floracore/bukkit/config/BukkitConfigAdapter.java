@@ -79,6 +79,45 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
     }
 
     @Override
+    public Map<String, Boolean> getBooleanMap(String path, Map<String, Boolean> def) {
+        Map<String, Boolean> map = new HashMap<>();
+        ConfigurationSection section = this.configuration.getConfigurationSection(path);
+        if (section == null) {
+            return def;
+        }
+        for (String key : section.getKeys(false)) {
+            map.put(key, section.getBoolean(key));
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Integer> getIntegerMap(String path, Map<String, Integer> def) {
+        Map<String, Integer> map = new HashMap<>();
+        ConfigurationSection section = this.configuration.getConfigurationSection(path);
+        if (section == null) {
+            return def;
+        }
+        for (String key : section.getKeys(false)) {
+            map.put(key, section.getInt(key));
+        }
+        return map;
+    }
+
+    @Override
+    public Map<String, Double> getDoubleMap(String path, Map<String, Double> def) {
+        Map<String, Double> map = new HashMap<>();
+        ConfigurationSection section = this.configuration.getConfigurationSection(path);
+        if (section == null) {
+            return def;
+        }
+        for (String key : section.getKeys(false)) {
+            map.put(key, section.getDouble(key));
+        }
+        return map;
+    }
+
+    @Override
     public Collection<String> getKeys() {
         return this.configuration.getKeys(false);
     }
