@@ -5,6 +5,7 @@ import team.floracore.common.plugin.FloraCorePlugin;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface ConfigurationAdapter {
 
@@ -31,6 +32,8 @@ public interface ConfigurationAdapter {
     Map<String, Integer> getIntegerMap(String path, Map<String, Integer> def);
 
     Map<String, Double> getDoubleMap(String path, Map<String, Double> def);
+
+    Set<String> getKeys(String path, Set<String> def);
 
     Collection<String> getKeys();
 

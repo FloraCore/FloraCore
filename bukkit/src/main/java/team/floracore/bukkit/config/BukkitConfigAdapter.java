@@ -7,10 +7,7 @@ import team.floracore.common.plugin.FloraCorePlugin;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 public class BukkitConfigAdapter implements ConfigurationAdapter {
@@ -115,6 +112,15 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
             map.put(key, section.getDouble(key));
         }
         return map;
+    }
+
+    @Override
+    public Set<String> getKeys(String path, Set<String> def) {
+        ConfigurationSection section = this.configuration.getConfigurationSection(path);
+        if (section == null) {
+            return def;
+        }
+        return new HashSet<>(section.getKeys(false));
     }
 
     @Override

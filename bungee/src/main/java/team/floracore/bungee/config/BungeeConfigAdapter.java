@@ -121,6 +121,16 @@ public class BungeeConfigAdapter implements ConfigurationAdapter {
         return map;
     }
 
+
+    @Override
+    public Set<String> getKeys(String path, Set<String> def) {
+        Configuration section = this.configuration.getSection(path);
+        if (section == null) {
+            return def;
+        }
+        return new HashSet<>(section.getKeys());
+    }
+
     @Override
     public Collection<String> getKeys() {
         return this.configuration.getKeys();
