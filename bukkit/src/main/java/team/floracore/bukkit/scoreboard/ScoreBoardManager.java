@@ -40,6 +40,15 @@ public class ScoreBoardManager {
         return bms;
     }
 
+    public void clearModels() {
+        bms.clear();
+    }
+
+    public void addModel(BoardModel boardModel) {
+        bms.add(boardModel);
+        bms.sort(Comparator.comparing(o -> o.index));
+    }
+
     public void reload() {
         sbd.cancel();
         load();

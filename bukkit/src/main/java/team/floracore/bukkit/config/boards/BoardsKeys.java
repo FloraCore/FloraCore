@@ -6,9 +6,7 @@ import team.floracore.common.config.generic.key.ConfigKey;
 import team.floracore.common.config.generic.key.SimpleConfigKey;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
 
@@ -26,11 +24,11 @@ public class BoardsKeys {
 
     public static final ConfigKey<List<BoardModel>> BOARD_MODELS = key(c -> {
         List<BoardModel> ret = new ArrayList<>();
-        List<String> boards = c.getStringList("enabled-board-list", new ArrayList<>());
+        Set<String> boards = c.getKeys("boards", new HashSet<>());
         for (String board : boards) {
             int index = c.getInteger("boards." + board + ".index", Integer.MAX_VALUE);
             String title = c.getString("boards." + board + ".title", "null");
-            String permission = c.getString("boards." + board + ".permission", "floracore.scoreboard.default");
+            String permission = c.getString("boards." + board + ".permission", null);
             List<String> lines = c.getStringList("boards." + board + ".lines", new ArrayList<>());
             String startTime = c.getString("boards." + board + ".time.start", null);
             String endTime = c.getString("boards." + board + ".time.end", null);

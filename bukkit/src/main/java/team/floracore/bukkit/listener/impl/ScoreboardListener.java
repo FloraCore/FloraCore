@@ -36,7 +36,7 @@ public class ScoreboardListener extends FloraCoreBukkitListener {
     }
 
     public static boolean check(final Player player, final BoardModel model) {
-        return player.hasPermission(model.permission) && dataCheck(model) && !offList.contains(player.getName());
+        return (model.permission == null || player.hasPermission(model.permission)) && dataCheck(model) && !offList.contains(player.getName());
     }
 
     public static boolean dataCheck(final BoardModel model) {

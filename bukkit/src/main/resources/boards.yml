@@ -1,9 +1,6 @@
 enable: true
 # 更新时间(单位: Tick)
 update-time: 10
-# 启用的计分板列表
-enabled-board-list:
-  - default
 # 记分板
 boards:
   # 默认记分板

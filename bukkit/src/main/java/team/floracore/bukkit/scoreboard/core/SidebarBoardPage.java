@@ -50,7 +50,7 @@ public class SidebarBoardPage extends BoardPage {
         objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         for (int i = 0; i < COLORS.size(); i++) {
             final String name = COLORS.get(i) + String.valueOf(ChatColor.RESET);
-            final Team team = getBoard().registerNewTeam("MiaoboardLine" + i);
+            final Team team = getBoard().registerNewTeam("FCBoardLine" + i);
             boardLines.add(new BoardLine(name, team));
         }
     }

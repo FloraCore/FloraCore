@@ -18,6 +18,7 @@ public class BoardModel {
     @Nullable
     public final Date time_end;
     public final String title;
+    @Nullable
     public final String permission;
     public final List<String> lines;
 
@@ -26,7 +27,7 @@ public class BoardModel {
                       @Nullable Date timeStart,
                       @Nullable Date timeEnd,
                       String title,
-                      String permission,
+                      @Nullable String permission,
                       List<String> lines) {
         this.name = name;
         this.index = index;
