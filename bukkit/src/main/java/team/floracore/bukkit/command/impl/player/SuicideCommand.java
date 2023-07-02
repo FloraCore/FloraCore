@@ -24,7 +24,7 @@ public class SuicideCommand extends FloraCoreBukkitCommand {
     public void suicide(@NotNull Player p) {
         Sender sender = getPlugin().getSenderFactory().wrap(p);
         final EntityDamageEvent ede = new EntityDamageEvent(p, EntityDamageEvent.DamageCause.SUICIDE, Float.MAX_VALUE);
-        getPlugin().getListenerManager().getPluginManager().callEvent(ede);
+        Bukkit.getPluginManager().callEvent(ede);
         ede.getEntity().setLastDamageCause(ede);
         p.setHealth(0);
         PlayerCommandMessage.COMMAND_SUICIDE.send(sender);

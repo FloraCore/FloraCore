@@ -125,6 +125,21 @@ commands:
     max-fly-speed: 0.8
     max-walk-speed: 0.8
 
+# 支持以该玩家获取的papi变量。
+module:
+  join-message: "&a[+] %player%"
+  quit-message: "&c[-] %player%"
+  # 无天气
+  no-weather: true
+  # 无掉落伤害
+  no-fall: true
+  # 掉落虚空直接死亡
+  void-suicide: true
+  # 判定虚空的Y值
+  void-y: 0
+  # 无饥饿
+  no-hungry: true
+
 server:
   name: "global"
   type: "lobby"

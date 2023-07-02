@@ -3,8 +3,8 @@ package team.floracore.bukkit.scoreboard.core;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-import team.floracore.bukkit.event.BodyUpdateEvent;
-import team.floracore.bukkit.event.TitleUpdateEvent;
+import team.floracore.bukkit.event.scoreboard.BodyUpdateEvent;
+import team.floracore.bukkit.event.scoreboard.TitleUpdateEvent;
 
 /**
  * 侧边栏计分板

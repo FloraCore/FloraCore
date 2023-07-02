@@ -1,4 +1,4 @@
-package team.floracore.bukkit.event;
+package team.floracore.bukkit.event.scoreboard;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

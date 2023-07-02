@@ -126,9 +126,21 @@ public class ConfigKeys {
     /**
      * The URL of the verbose viewer
      */
-    public static final ConfigKey<String> CHAT_VIEWER_URL_PATTERN = stringKey("chat-viewer-url", "https://floracore" +
-            ".cc/chat/");
+    public static final ConfigKey<String> CHAT_VIEWER_URL_PATTERN = stringKey("chat-viewer-url", "https://floracore.cc/chat/");
 
+    public static final ConfigKey<String> MODULE_JOIN_MESSAGE = stringKey("module.join-message", "&a[+] %player%");
+
+    public static final ConfigKey<String> MODULE_QUIT_MESSAGE = stringKey("module.quit-message", "&c[-] %player%");
+
+    public static final ConfigKey<Boolean> MODULE_NO_WEATHER = booleanKey("module.no-weather", true);
+
+    public static final ConfigKey<Boolean> MODULE_NO_FALL = booleanKey("module.no-fall", true);
+
+    public static final ConfigKey<Boolean> MODULE_VOID_SUICIDE = booleanKey("module.void-suicide", true);
+
+    public static final ConfigKey<Double> MODULE_VOID_Y = key(k -> k.getDouble("module.void-y", 0));
+
+    public static final ConfigKey<Boolean> MODULE_NO_HUNGRY = booleanKey("module.no-hungry", true);
 
     /**
      * A list of the keys defined in this class.
