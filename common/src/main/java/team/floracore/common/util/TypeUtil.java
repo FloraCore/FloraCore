@@ -151,7 +151,7 @@ public final class TypeUtil {
                 return "null";
             }
             throw new IllegalArgumentException();
-        } else if (!(tar.isPrimitive() && valueType.isPrimitive())) {
+        } else if (!tar.isPrimitive()) {
             return "((" + ClassUtil.getName(tar) + ")" + valueCode + ")";
         } else {
             return "";

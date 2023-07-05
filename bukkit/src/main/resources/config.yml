@@ -127,8 +127,12 @@ commands:
 
 # 支持以该玩家获取的papi变量。
 module:
-  join-message: "&a[+] %player%"
-  quit-message: "&c[-] %player%"
+  join-message:
+    enable: true
+    message: "&a[+] %player%"
+  quit-message:
+    enable: true
+    message: "&c[-] %player%"
   # 无天气
   no-weather: true
   # 无掉落伤害
@@ -139,6 +143,18 @@ module:
   void-y: 0
   # 无饥饿
   no-hungry: true
+  # 无火焰伤害
+  no-fire-damage: true
+  # 死亡信息
+  death-message:
+    enable: false
+    message: "%player% BOOM!"
+  # 生物生成
+  mob-spawn: false
+  # 放置方块
+  place-block: false
+  # 破坏方块
+  break-block: false
 
 server:
   name: "global"

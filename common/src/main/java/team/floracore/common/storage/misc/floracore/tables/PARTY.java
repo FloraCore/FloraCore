@@ -1,5 +1,6 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
+import org.floracore.api.socialsystems.party.PartySettings;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
 import team.floracore.common.storage.misc.floracore.AbstractFloraCoreTable;
@@ -31,7 +32,7 @@ public class PARTY extends AbstractFloraCoreTable {
      * 包括leader、moderators和members
      */
     private List<UUID> members;
-    private String settings;
+    private PartySettings settings;
     private long disbandTime;
 
     public PARTY(FloraCorePlugin plugin,
@@ -41,7 +42,7 @@ public class PARTY extends AbstractFloraCoreTable {
                  UUID leader,
                  List<UUID> moderators,
                  List<UUID> members,
-                 String settings,
+                 PartySettings settings,
                  long createTime,
                  long disbandTime) {
         super(plugin, storageImplementation);
@@ -85,16 +86,17 @@ public class PARTY extends AbstractFloraCoreTable {
         }
     }
 
-    public String getSettings() {
+    public PartySettings getSettings() {
         return settings;
     }
 
-    public void setSettings(String settings) {
+    public void setSettings(PartySettings settings) {
         this.settings = settings;
+        String settingsJson = GsonProvider.normal().toJson(settings);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
                     .apply(UPDATE_SETTINGS))) {
-                ps.setString(1, settings);
+                ps.setString(1, settingsJson);
                 ps.setString(2, uuid.toString());
                 ps.execute();
             }
@@ -163,6 +165,7 @@ public class PARTY extends AbstractFloraCoreTable {
     public void init() throws SQLException {
         String moderatorsJson = GsonProvider.normal().toJson(moderators);
         String membersJson = GsonProvider.normal().toJson(members);
+        String settingsJson = GsonProvider.normal().toJson(settings);
         try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
             try (PreparedStatement ps = connection.prepareStatement(getStorageImplementation().getStatementProcessor()
                     .apply(INSERT))) {
@@ -170,7 +173,7 @@ public class PARTY extends AbstractFloraCoreTable {
                 ps.setString(2, leader.toString());
                 ps.setString(3, moderatorsJson);
                 ps.setString(4, membersJson);
-                ps.setString(5, settings);
+                ps.setString(5, settingsJson);
                 ps.setLong(6, createTime);
                 ps.setLong(7, disbandTime);
                 ps.execute();

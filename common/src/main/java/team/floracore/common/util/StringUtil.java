@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public final class StringUtil {
@@ -296,7 +297,7 @@ public final class StringUtil {
      *              count back from the end of the String by this many characters
      * @param end   the position to end at (exclusive), negative means
      *              count back from the end of the String by this many characters
-     * @return substring from start position to end positon,
+     * @return substring from start position to end position,
      * <code>null</code> if null String input
      */
     public static String substring(String str, int start, int end) {
@@ -330,5 +331,32 @@ public final class StringUtil {
         }
 
         return str.substring(start, end);
+    }
+
+    public static String convertToRoman(int number) {
+        if (number < 1 || number > 3999) {
+            throw new IllegalArgumentException("The number must be between 1 and 3999.");
+        }
+
+        StringBuilder roman = new StringBuilder();
+
+        // 定义罗马数字对应的字符和数值
+        String[] romanNumerals = {"M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I"};
+        int[] values = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+
+        // 遍历数值数组，从大到小尽可能多地减去对应的数值
+        for (int i = 0; i < values.length; i++) {
+            while (number >= values[i]) {
+                roman.append(romanNumerals[i]);
+                number -= values[i];
+            }
+        }
+
+        return roman.toString();
+    }
+
+    public static String formatNumberWithCommas(int number) {
+        DecimalFormat decimalFormat = new DecimalFormat("#,###");
+        return decimalFormat.format(number);
     }
 }

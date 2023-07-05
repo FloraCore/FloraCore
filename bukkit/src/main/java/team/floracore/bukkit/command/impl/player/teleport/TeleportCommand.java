@@ -49,13 +49,13 @@ public class TeleportCommand extends FloraCoreBukkitCommand {
                               final @NotNull @Argument("transmitter") Player transmitter,
                               final @Nullable @Flag("silent") Boolean silent) {
         Sender s = getPlugin().getSenderFactory().wrap(sender);
-        Sender t = getPlugin().getSenderFactory().wrap(transmitter);
-        Location location = target.getLocation();
+        Sender t = getPlugin().getSenderFactory().wrap(target);
+        Location location = transmitter.getLocation();
         PlayerCommandMessage.COMMAND_TELEPORT_TELEPORTING.send(s);
-        transmitter.teleport(location);
-        PlayerCommandMessage.COMMAND_TELEPORT_OTHER_SENDER.send(s, transmitter.getDisplayName(), target.getDisplayName());
+        target.teleport(location);
+        PlayerCommandMessage.COMMAND_TELEPORT_OTHER_SENDER.send(s, target.getDisplayName(), transmitter.getDisplayName());
         if (silent == null || !silent) {
-            PlayerCommandMessage.COMMAND_TELEPORT_OTHER.send(t, sender.getDisplayName(), target.getDisplayName());
+            PlayerCommandMessage.COMMAND_TELEPORT_OTHER.send(t, sender.getDisplayName(), transmitter.getDisplayName());
         }
     }
 

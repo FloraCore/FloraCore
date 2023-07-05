@@ -291,6 +291,28 @@ public interface SocialSystemsMessage extends AbstractMessage {
         );
     };
 
+    Args1<UUID> COMMAND_MISC_PARTY_SETTINGS_ALL_JOIN_TRUE = (target) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // {0} 已允许其它玩家通过/party join 命令加入组队!
+                        .key("floracore.command.misc.party.settings.all-join.true")
+                        // {}
+                        .args(RENDER_PLAYER_NAME.build(target)).color(AQUA).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build()
+        );
+    };
+
+    Args1<UUID> COMMAND_MISC_PARTY_SETTINGS_ALL_JOIN_FALSE = (target) -> {
+        JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+        return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()
+                        // {0} 已禁止其它玩家通过/party join 命令加入组队!
+                        .key("floracore.command.misc.party.settings.all-join.false")
+                        // {}
+                        .args(RENDER_PLAYER_NAME.build(target)).color(RED).build(),
+                MiscMessage.PARTY_HORIZONTAL_LINE.build()
+        );
+    };
+
     Args0 COMMAND_MISC_PARTY_TARGET_NOT_IN = () -> {
         JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
         return join(joinConfig, MiscMessage.PARTY_HORIZONTAL_LINE.build(), translatable()

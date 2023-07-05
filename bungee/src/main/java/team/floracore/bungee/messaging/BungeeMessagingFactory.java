@@ -224,6 +224,17 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
                     UUID s19 = UUID.fromString(parameters.get(0));
                     SocialSystemsMessage.COMMAND_MISC_PARTY_OFFLINE_RE_ONLINE.send(sender, s19);
                     break;
+                case PARTY_SETTING_ALL_JOIN:
+                    UUID s20 = UUID.fromString(parameters.get(0));
+                    try {
+                        boolean b1 = Boolean.parseBoolean(parameters.get(0));
+                        if (b1) {
+                            SocialSystemsMessage.COMMAND_MISC_PARTY_SETTINGS_ALL_JOIN_TRUE.send(sender, s20);
+                        } else {
+                            SocialSystemsMessage.COMMAND_MISC_PARTY_SETTINGS_ALL_JOIN_FALSE.send(sender, s20);
+                        }
+                    } catch (Throwable ignored) {
+                    }
             }
         }
     }

@@ -128,9 +128,13 @@ public class ConfigKeys {
      */
     public static final ConfigKey<String> CHAT_VIEWER_URL_PATTERN = stringKey("chat-viewer-url", "https://floracore.cc/chat/");
 
-    public static final ConfigKey<String> MODULE_JOIN_MESSAGE = stringKey("module.join-message", "&a[+] %player%");
+    public static final ConfigKey<String> MODULE_JOIN_MESSAGE = stringKey("module.join-message.message", "&a[+] %player%");
 
-    public static final ConfigKey<String> MODULE_QUIT_MESSAGE = stringKey("module.quit-message", "&c[-] %player%");
+    public static final ConfigKey<Boolean> MODULE_JOIN_MESSAGE_ENABLE = booleanKey("module.join-message.enable", true);
+
+    public static final ConfigKey<String> MODULE_QUIT_MESSAGE = stringKey("module.quit-message.message", "&c[-] %player%");
+
+    public static final ConfigKey<Boolean> MODULE_QUIT_MESSAGE_ENABLE = booleanKey("module.quit-message.enable", true);
 
     public static final ConfigKey<Boolean> MODULE_NO_WEATHER = booleanKey("module.no-weather", true);
 
@@ -141,6 +145,16 @@ public class ConfigKeys {
     public static final ConfigKey<Double> MODULE_VOID_Y = key(k -> k.getDouble("module.void-y", 0));
 
     public static final ConfigKey<Boolean> MODULE_NO_HUNGRY = booleanKey("module.no-hungry", true);
+
+    public static final ConfigKey<Boolean> MODULE_NO_FIRE_DAMAGE = booleanKey("module.no-fire-damage", true);
+
+    public static final ConfigKey<String> MODULE_DEATH_MESSAGE = stringKey("module.death-message.message", "%player% BOOM!");
+
+    public static final ConfigKey<Boolean> MODULE_DEATH_MESSAGE_ENABLE = booleanKey("module.death-message.enable", false);
+
+    public static final ConfigKey<Boolean> MODULE_MOB_SPAWN = booleanKey("module.mob-spawn", false);
+    public static final ConfigKey<Boolean> MODULE_PLACE_BLOCK = booleanKey("module.place-block", false);
+    public static final ConfigKey<Boolean> MODULE_BREAK_BLOCK = booleanKey("module.break-block", false);
 
     /**
      * A list of the keys defined in this class.

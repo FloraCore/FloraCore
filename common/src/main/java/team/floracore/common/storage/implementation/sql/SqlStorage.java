@@ -5,6 +5,7 @@ import org.floracore.api.commands.report.ReportStatus;
 import org.floracore.api.data.DataType;
 import org.floracore.api.data.chat.ChatType;
 import org.floracore.api.server.ServerType;
+import org.floracore.api.socialsystems.party.PartySettings;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
 import team.floracore.common.storage.implementation.sql.connection.ConnectionFactory;
@@ -499,7 +500,8 @@ public class SqlStorage implements StorageImplementation {
                         Type type2 = new TypeToken<List<UUID>>() {
                         }.getType();
                         List<UUID> members = GsonProvider.normal().fromJson(membersJson, type2);
-                        String settings = rs.getString("settings");
+                        String settingsJson = rs.getString("settings");
+                        PartySettings settings = GsonProvider.normal().fromJson(settingsJson, PartySettings.class);
                         long createTime = rs.getLong("createTime");
                         long disbandTime = rs.getLong("disbandTime");
                         return new PARTY(plugin,
@@ -541,7 +543,7 @@ public class SqlStorage implements StorageImplementation {
                 leader,
                 Collections.emptyList(),
                 Collections.singletonList(leader),
-                "",
+                new PartySettings(),
                 createTime,
                 -1);
         try {

@@ -22,6 +22,8 @@ import org.floracore.api.FloraCoreProvider;
 import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
 import org.floracore.api.data.DataType;
 import org.floracore.api.data.chat.ChatType;
+import org.floracore.api.socialsystems.party.PartySettings;
+import org.floracore.api.socialsystems.party.Setting;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
@@ -456,6 +458,89 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
                         message,
                         time));
             });
+        }
+    }
+
+    @CommandMethod("party|p join <target>")
+    @CommandDescription("floracore.command.description.party.join")
+    public void join(final @NotNull ProxiedPlayer player,
+                     final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {
+        UUID uuid = player.getUniqueId();
+        Sender sender = getPlugin().getSenderFactory().wrap(player);
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+        if (data == null) {
+            UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            if (ut == null) {
+                MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
+                return;
+            }
+            DATA td = getStorageImplementation().getSpecifiedData(ut, DataType.SOCIAL_SYSTEMS, "party");
+            if (td == null) {
+                SocialSystemsMessage.COMMAND_MISC_PARTY_TARGET_NOT_IN.send(sender);
+            } else {
+                UUID partyUUID = UUID.fromString(td.getValue());
+                PARTY party = getStorageImplementation().selectParty(partyUUID);
+                if (party.getSettings().allJoin) {
+                    List<UUID> members = party.getMembers();
+                    members.add(uuid);
+                    party.setMembers(members);
+                    getStorageImplementation().insertData(uuid, DataType.SOCIAL_SYSTEMS, "party", partyUUID.toString(), 0);
+                    getStorageImplementation().insertData(uuid,
+                            DataType.SOCIAL_SYSTEMS_PARTY_HISTORY,
+                            String.valueOf(System.currentTimeMillis()),
+                            partyUUID.toString(),
+                            0);
+                    getAsyncExecutor().execute(() -> {
+                        for (UUID member : members) {
+                            getPlugin().getBungeeMessagingFactory()
+                                    .pushNoticeMessage(member,
+                                            NoticeMessage.NoticeType.PARTY_JOINED,
+                                            Collections.singletonList(uuid.toString()));
+                        }
+                    });
+                } else {
+                    SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_INVITED.send(sender);
+                }
+            }
+        } else {
+            SocialSystemsMessage.COMMAND_MISC_PARTY_ALREADY_IN_THE_TEAM.send(sender);
+        }
+    }
+
+
+    @CommandMethod("party|p settings <setting> <value>")
+    @CommandDescription("floracore.command.description.party.settings")
+    public void settings(final @NotNull ProxiedPlayer player,
+                         final @NotNull @Argument("setting") Setting setting,
+                         final @NotNull @Argument("value") boolean value) {
+        UUID uuid = player.getUniqueId();
+        Sender sender = getPlugin().getSenderFactory().wrap(player);
+        DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
+        if (data == null) {
+            SocialSystemsMessage.COMMAND_MISC_PARTY_NOT_IN.send(sender);
+        } else {
+            UUID partyUUID = UUID.fromString(data.getValue());
+            PARTY party = getStorageImplementation().selectParty(partyUUID);
+            UUID leader = party.getLeader();
+            List<UUID> moderators = party.getModerators();
+            PartySettings partySettings = party.getSettings();
+            if (leader.equals(uuid) || moderators.contains(uuid)) {
+                if (setting == Setting.ALL_JOIN) {
+                    partySettings.allJoin = value;
+                    party.setSettings(partySettings);
+                    List<UUID> members = party.getMembers();
+                    getAsyncExecutor().execute(() -> {
+                        for (UUID member : members) {
+                            getPlugin().getBungeeMessagingFactory()
+                                    .pushNoticeMessage(member,
+                                            NoticeMessage.NoticeType.PARTY_SETTING_ALL_JOIN,
+                                            Arrays.asList(uuid.toString(), String.valueOf(value)));
+                        }
+                    });
+                }
+            } else {
+                MiscMessage.NO_PERMISSION_FOR_SUBCOMMANDS.send(sender);
+            }
         }
     }
 

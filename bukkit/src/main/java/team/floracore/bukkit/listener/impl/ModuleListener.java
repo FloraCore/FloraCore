@@ -4,8 +4,12 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -29,35 +33,46 @@ public class ModuleListener extends FloraCoreBukkitListener {
 
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent e) {
-        Player p = e.getPlayer();
-        String jm = plugin.getConfiguration().get(ConfigKeys.MODULE_JOIN_MESSAGE);
-        jm = jm.replace("%player%", p.getName());
-        jm = BukkitStringReplacer.processStringForPlayer(p, jm);
-        e.setJoinMessage(jm);
+        if (plugin.getConfiguration().get(ConfigKeys.MODULE_JOIN_MESSAGE_ENABLE)) {
+            Player p = e.getPlayer();
+            String jm = plugin.getConfiguration().get(ConfigKeys.MODULE_JOIN_MESSAGE);
+            jm = jm.replace("%player%", p.getName());
+            jm = BukkitStringReplacer.processStringForPlayer(p, jm);
+            e.setJoinMessage(jm);
+        }
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent e) {
-        Player p = e.getPlayer();
-        String qm = plugin.getConfiguration().get(ConfigKeys.MODULE_QUIT_MESSAGE);
-        qm = qm.replace("%player%", p.getName());
-        qm = BukkitStringReplacer.processStringForPlayer(p, qm);
-        e.setQuitMessage(qm);
+        if (plugin.getConfiguration().get(ConfigKeys.MODULE_QUIT_MESSAGE_ENABLE)) {
+            Player p = e.getPlayer();
+            String qm = plugin.getConfiguration().get(ConfigKeys.MODULE_QUIT_MESSAGE);
+            qm = qm.replace("%player%", p.getName());
+            qm = BukkitStringReplacer.processStringForPlayer(p, qm);
+            e.setQuitMessage(qm);
+        }
     }
 
 
     @EventHandler
     public void onWeatherChange(WeatherChangeEvent e) {
         if (plugin.getConfiguration().get(ConfigKeys.MODULE_NO_WEATHER)) {
-            e.setCancelled(true);
+            if (e.toWeatherState()) {
+                e.setCancelled(true);
+            }
         }
     }
 
     @EventHandler
     public void entityDamageEvent(EntityDamageEvent event) {
         if (event.getEntityType() == EntityType.PLAYER) {
-            if (event.getCause() == EntityDamageEvent.DamageCause.FALL) {
+            EntityDamageEvent.DamageCause damageCause = event.getCause();
+            if (damageCause == EntityDamageEvent.DamageCause.FALL) {
                 if (plugin.getConfiguration().get(ConfigKeys.MODULE_NO_FALL)) {
+                    event.setCancelled(true);
+                }
+            } else if (damageCause == EntityDamageEvent.DamageCause.FIRE || damageCause == EntityDamageEvent.DamageCause.FIRE_TICK) {
+                if (plugin.getConfiguration().get(ConfigKeys.MODULE_NO_FIRE_DAMAGE)) {
                     event.setCancelled(true);
                 }
             }
@@ -82,10 +97,44 @@ public class ModuleListener extends FloraCoreBukkitListener {
 
     @EventHandler
     public void noHungry(FoodLevelChangeEvent e) {
-        if (e.getEntityType() != EntityType.PLAYER) return;
+        if (e.getEntityType() != EntityType.PLAYER) {
+            return;
+        }
         Player player = (Player) e.getEntity();
         if (plugin.getConfiguration().get(ConfigKeys.MODULE_NO_HUNGRY)) {
             player.setFoodLevel(20);
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDeath(PlayerDeathEvent e) {
+        if (plugin.getConfiguration().get(ConfigKeys.MODULE_DEATH_MESSAGE_ENABLE)) {
+            Player p = e.getEntity();
+            String dm = plugin.getConfiguration().get(ConfigKeys.MODULE_DEATH_MESSAGE);
+            dm = dm.replace("%player%", p.getName());
+            dm = BukkitStringReplacer.processStringForPlayer(p, dm);
+            e.setDeathMessage(dm);
+        }
+    }
+
+    @EventHandler
+    public void onSpawn(CreatureSpawnEvent e) {
+        if (!plugin.getConfiguration().get(ConfigKeys.MODULE_MOB_SPAWN)) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onPlaceBlock(BlockPlaceEvent e) {
+        if (!plugin.getConfiguration().get(ConfigKeys.MODULE_PLACE_BLOCK)) {
+            e.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    public void onBreakBlock(BlockBreakEvent e) {
+        if (!plugin.getConfiguration().get(ConfigKeys.MODULE_BREAK_BLOCK)) {
             e.setCancelled(true);
         }
     }

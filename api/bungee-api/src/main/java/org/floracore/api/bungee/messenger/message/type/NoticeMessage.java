@@ -58,6 +58,10 @@ public interface NoticeMessage extends Message {
          */
         PARTY_JOINED,
         /**
+         * 队伍开启/关闭其它玩家通过/p join 加入
+         */
+        PARTY_SETTING_ALL_JOIN,
+        /**
          * 踢出组队
          */
         PARTY_KICK,
