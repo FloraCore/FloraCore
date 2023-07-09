@@ -1,6 +1,5 @@
 package team.floracore.bukkit.listener.impl;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,11 +10,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.weather.WeatherChangeEvent;
 import team.floracore.bukkit.FCBukkitPlugin;
-import team.floracore.bukkit.event.PlayerVoidDeathEvent;
 import team.floracore.bukkit.listener.FloraCoreBukkitListener;
 import team.floracore.bukkit.util.BukkitStringReplacer;
 import team.floracore.common.config.ConfigKeys;
@@ -74,22 +71,6 @@ public class ModuleListener extends FloraCoreBukkitListener {
             } else if (damageCause == EntityDamageEvent.DamageCause.FIRE || damageCause == EntityDamageEvent.DamageCause.FIRE_TICK) {
                 if (plugin.getConfiguration().get(ConfigKeys.MODULE_NO_FIRE_DAMAGE)) {
                     event.setCancelled(true);
-                }
-            }
-        }
-    }
-
-    @EventHandler
-    public void onPlayerMove(PlayerMoveEvent e) {
-        Player player = e.getPlayer();
-        double y = plugin.getConfiguration().get(ConfigKeys.MODULE_VOID_Y);
-        boolean enableVoidDeath = plugin.getConfiguration().get(ConfigKeys.MODULE_VOID_SUICIDE);
-        if (enableVoidDeath) {
-            PlayerVoidDeathEvent playerVoidDeathEvent = new PlayerVoidDeathEvent(player);
-            Bukkit.getPluginManager().callEvent(playerVoidDeathEvent);
-            if (!playerVoidDeathEvent.isCancelled()) {
-                if (player.getLocation().getY() <= y) {
-                    player.setHealth(0);
                 }
             }
         }

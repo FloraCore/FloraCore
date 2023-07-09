@@ -140,10 +140,6 @@ public class ConfigKeys {
 
     public static final ConfigKey<Boolean> MODULE_NO_FALL = booleanKey("module.no-fall", true);
 
-    public static final ConfigKey<Boolean> MODULE_VOID_SUICIDE = booleanKey("module.void-suicide", true);
-
-    public static final ConfigKey<Double> MODULE_VOID_Y = key(k -> k.getDouble("module.void-y", 0));
-
     public static final ConfigKey<Boolean> MODULE_NO_HUNGRY = booleanKey("module.no-hungry", true);
 
     public static final ConfigKey<Boolean> MODULE_NO_FIRE_DAMAGE = booleanKey("module.no-fire-damage", true);

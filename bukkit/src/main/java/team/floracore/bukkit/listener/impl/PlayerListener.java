@@ -47,6 +47,7 @@ public class PlayerListener extends FloraCoreBukkitListener {
         // 清除过期数据
         storageImplementation.deleteDataExpired(u);
         storageImplementation.deleteDataIntExpired(u);
+        storageImplementation.deleteDataLongExpired(u);
     }
 
     @EventHandler

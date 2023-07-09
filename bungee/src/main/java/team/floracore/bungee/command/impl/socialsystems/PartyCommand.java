@@ -48,7 +48,6 @@ import static net.kyori.adventure.text.Component.newline;
 @CommandDescription("floracore.command.description.party")
 @CommandPermission("floracore.socialsystems.party")
 public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
-
     public PartyCommand(FCBungeePlugin plugin) {
         super(plugin);
         plugin.getListenerManager().registerListener(this);
@@ -98,7 +97,13 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             members = party.getMembers();
         }
         if (leader.equals(uuid) || moderators.contains(uuid)) {
-            UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            ProxiedPlayer tp = getPlugin().getProxy().getPlayer(target);
+            UUID ut;
+            if (tp == null) {
+                ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            } else {
+                ut = tp.getUniqueId();
+            }
             if (ut == null) {
                 MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
                 return;
@@ -233,7 +238,13 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             UUID leader = party.getLeader();
             List<UUID> moderators = party.getModerators();
             List<UUID> members = party.getMembers();
-            UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            ProxiedPlayer tp = getPlugin().getProxy().getPlayer(target);
+            UUID ut;
+            if (tp == null) {
+                ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            } else {
+                ut = tp.getUniqueId();
+            }
             if (leader.equals(uuid) || moderators.contains(uuid)) {
                 if (ut == null) {
                     MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
@@ -469,7 +480,13 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
         Sender sender = getPlugin().getSenderFactory().wrap(player);
         DATA data = getStorageImplementation().getSpecifiedData(uuid, DataType.SOCIAL_SYSTEMS, "party");
         if (data == null) {
-            UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            ProxiedPlayer tp = getPlugin().getProxy().getPlayer(target);
+            UUID ut;
+            if (tp == null) {
+                ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            } else {
+                ut = tp.getUniqueId();
+            }
             if (ut == null) {
                 MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
                 return;
@@ -652,7 +669,13 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             UUID partyUUID = UUID.fromString(data.getValue());
             PARTY party = getStorageImplementation().selectParty(partyUUID);
             UUID leaderUUID = party.getLeader();
-            UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            ProxiedPlayer tp = getPlugin().getProxy().getPlayer(target);
+            UUID targetUUID;
+            if (tp == null) {
+                targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            } else {
+                targetUUID = tp.getUniqueId();
+            }
             List<UUID> members = party.getMembers();
             if (members.size() == 1) {
                 SocialSystemsMessage.COMMAND_MISC_PARTY_WARP_NOT_ENOUGH_PEOPLE.send(sender);
@@ -701,7 +724,13 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             UUID partyUUID = UUID.fromString(data.getValue());
             PARTY party = getStorageImplementation().selectParty(partyUUID);
             UUID leaderUUID = party.getLeader();
-            UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            ProxiedPlayer tp = getPlugin().getProxy().getPlayer(target);
+            UUID targetUUID;
+            if (tp == null) {
+                targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            } else {
+                targetUUID = tp.getUniqueId();
+            }
             List<UUID> members = party.getMembers();
             List<UUID> moderators = party.getModerators();
             if (members.size() == 1) {
@@ -752,7 +781,13 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
             UUID partyUUID = UUID.fromString(data.getValue());
             PARTY party = getStorageImplementation().selectParty(partyUUID);
             UUID leaderUUID = party.getLeader();
-            UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            ProxiedPlayer tp = getPlugin().getProxy().getPlayer(target);
+            UUID targetUUID;
+            if (tp == null) {
+                targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+            } else {
+                targetUUID = tp.getUniqueId();
+            }
             List<UUID> members = party.getMembers();
             List<UUID> moderators = party.getModerators();
             if (members.size() == 1) {

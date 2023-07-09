@@ -137,10 +137,6 @@ module:
   no-weather: true
   # 无掉落伤害
   no-fall: true
-  # 掉落虚空直接死亡
-  void-suicide: true
-  # 判定虚空的Y值
-  void-y: 0
   # 无饥饿
   no-hungry: true
   # 无火焰伤害

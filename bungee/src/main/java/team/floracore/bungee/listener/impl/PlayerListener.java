@@ -42,6 +42,7 @@ public class PlayerListener extends FloraCoreBungeeListener {
         }
         storageImplementation.deleteDataExpired(u);
         storageImplementation.deleteDataIntExpired(u);
+        storageImplementation.deleteDataLongExpired(u);
     }
 
     @EventHandler

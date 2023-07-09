@@ -52,6 +52,8 @@ public interface StorageImplementation {
 
     List<DATA_INT> selectDataInt(UUID uuid);
 
+    List<DATA_LONG> selectDataLong(UUID uuid);
+
     /**
      * 获取排序的数据列表
      * 限制：300条
@@ -63,6 +65,8 @@ public interface StorageImplementation {
      */
     List<DATA_INT> selectDataIntSorted(DataType dataType, String key, boolean ascending);
 
+    List<DATA_LONG> selectDataLongSorted(DataType dataType, String key, boolean ascending);
+
     /**
      * 如果无该记录,则返回Null。
      */
@@ -70,25 +74,37 @@ public interface StorageImplementation {
 
     DATA_INT getSpecifiedDataInt(UUID uuid, DataType type, String key);
 
+    DATA_LONG getSpecifiedDataLong(UUID uuid, DataType type, String key);
+
     List<DATA> getSpecifiedTypeData(UUID uuid, DataType type);
 
     List<DATA_INT> getSpecifiedTypeDataInt(UUID uuid, DataType type);
+
+    List<DATA_LONG> getSpecifiedTypeDataLong(UUID uuid, DataType type);
 
     void deleteDataAll(UUID uuid);
 
     void deleteDataIntAll(UUID uuid);
 
+    void deleteDataLongAll(UUID uuid);
+
     void deleteDataType(UUID uuid, DataType type);
 
     void deleteDataIntType(UUID uuid, DataType type);
+
+    void deleteDataLongType(UUID uuid, DataType type);
 
     void deleteDataExpired(UUID uuid);
 
     void deleteDataIntExpired(UUID uuid);
 
+    void deleteDataLongExpired(UUID uuid);
+
     void deleteDataID(int id);
 
     void deleteDataIntID(int id);
+
+    void deleteDataLongID(int id);
 
     SERVER selectServer(String name);
 
