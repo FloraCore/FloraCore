@@ -81,6 +81,8 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
         ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_LEGACY);
         ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON);
         ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_GSON_LEGACY_IMPL);
+        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_JSON);
+        ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_JSON_LEGACY_IMPL);
         ret.add(Dependency.ADVENTURE_TEXT_SERIALIZER_PLAIN);
         ret.add(Dependency.EXAMINATION_API);
         ret.add(Dependency.COMMONS_IO);
