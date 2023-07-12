@@ -32,11 +32,11 @@ public enum DependencyRepository {
             return connection;
         }
     },
-
     /**
      * Maven Central.
      */
-    MAVEN_CENTRAL("https://repo1.maven.org/maven2/");
+    MAVEN_CENTRAL("https://repo1.maven.org/maven2/"),
+    JIT_PACK("https://jitpack.io/");
 
     private final String url;
 
@@ -45,7 +45,7 @@ public enum DependencyRepository {
     }
 
     /**
-     * Downloads the the {@code dependency} to the {@code file}, ensuring the
+     * Downloads the {@code dependency} to the {@code file}, ensuring the
      * downloaded bytes match the checksum.
      *
      * @param dependency the dependency to download
