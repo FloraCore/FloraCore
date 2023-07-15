@@ -29,25 +29,27 @@ public class PlayerListener extends FloraCoreBukkitListener {
         String name = e.getName();
         String ip = e.getAddress().getHostAddress();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        // 初始化玩家数据
-        PLAYER p = storageImplementation.selectPlayer(u);
-        if (p == null) {
-            p = new PLAYER(getPlugin(), storageImplementation, -1, u, name, ip);
-            try {
-                p.init();
-            } catch (SQLException ex) {
-                throw new RuntimeException("玩家初始化失败！");
+        getAsyncExecutor().execute(() -> {
+            // 初始化玩家数据
+            PLAYER p = storageImplementation.selectPlayer(u);
+            if (p == null) {
+                p = new PLAYER(getPlugin(), storageImplementation, -1, u, name, ip);
+                try {
+                    p.init();
+                } catch (SQLException ex) {
+                    throw new RuntimeException("玩家初始化失败！");
+                }
+            } else {
+                p.setName(name);
+                p.setLastLoginIp(ip);
+                long currentTime = System.currentTimeMillis();
+                p.setLastLoginTime(currentTime);
             }
-        } else {
-            p.setName(name);
-            p.setLastLoginIp(ip);
-            long currentTime = System.currentTimeMillis();
-            p.setLastLoginTime(currentTime);
-        }
-        // 清除过期数据
-        storageImplementation.deleteDataExpired(u);
-        storageImplementation.deleteDataIntExpired(u);
-        storageImplementation.deleteDataLongExpired(u);
+            // 清除过期数据
+            storageImplementation.deleteDataExpired(u);
+            storageImplementation.deleteDataIntExpired(u);
+            storageImplementation.deleteDataLongExpired(u);
+        });
     }
 
     @EventHandler
@@ -55,7 +57,7 @@ public class PlayerListener extends FloraCoreBukkitListener {
         Player p = e.getPlayer();
         UUID uuid = p.getUniqueId();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        getPlugin().getBootstrap().getScheduler().async().execute(() -> {
+        getAsyncExecutor().execute(() -> {
             ONLINE online = storageImplementation.selectOnline(uuid);
             if (online == null) {
                 storageImplementation.insertOnline(uuid, true, getPlugin().getServerName());
@@ -72,7 +74,7 @@ public class PlayerListener extends FloraCoreBukkitListener {
         Player p = e.getPlayer();
         UUID uuid = p.getUniqueId();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        getPlugin().getBootstrap().getScheduler().async().execute(() -> {
+        getAsyncExecutor().execute(() -> {
             ONLINE online = storageImplementation.selectOnline(uuid);
             if (online == null) {
                 storageImplementation.insertOnline(uuid, false, getPlugin().getServerName());

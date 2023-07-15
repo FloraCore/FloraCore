@@ -77,11 +77,11 @@ public class ChatProvider {
             } else {
                 for (CHAT chat : chats) {
                     String details = chat.getParameters();
-                    details = details.isEmpty() ? " " : details;
+                    details = details.isEmpty() ? chat.getType().name() : details;
                     Data d = new Data(value, details);
                     boolean i = true;
                     for (Data di : data) {
-                        if (di.type == value && di.details.equalsIgnoreCase(chat.getParameters())) {
+                        if (di.type == value && di.details.equalsIgnoreCase(details)) {
                             d = di;
                             i = false;
                             break;
@@ -124,7 +124,7 @@ public class ChatProvider {
         StorageImplementation storageImplementation = plugin.getStorage().getImplementation();
         List<CHAT> chats = storageImplementation.selectChatType(type);
         chats.sort(Comparator.comparingLong(CHAT::getTime));
-        Data d = new Data(type, " ");
+        Data d = new Data(type, type.name());
         data.add(d);
         for (CHAT chat : chats) {
             String name = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(chat.getUniqueId());

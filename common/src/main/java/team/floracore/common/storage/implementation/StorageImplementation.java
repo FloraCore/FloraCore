@@ -108,6 +108,8 @@ public interface StorageImplementation {
 
     SERVER selectServer(String name);
 
+    List<SERVER> selectServerList();
+
     PARTY selectParty(UUID uuid);
 
     PARTY selectEffectiveParty(UUID uuid);

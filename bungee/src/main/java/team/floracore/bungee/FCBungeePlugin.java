@@ -10,6 +10,7 @@ import team.floracore.bungee.command.CommandManager;
 import team.floracore.bungee.config.BungeeConfigAdapter;
 import team.floracore.bungee.config.chat.ChatConfiguration;
 import team.floracore.bungee.listener.ListenerManager;
+import team.floracore.bungee.locale.chat.ChatManager;
 import team.floracore.bungee.messaging.BungeeMessagingFactory;
 import team.floracore.common.config.generic.KeyedConfiguration;
 import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
@@ -31,6 +32,7 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     private ListenerManager listenerManager;
     private CommandManager commandManager;
     private BungeeMessagingFactory bungeeMessagingFactory;
+    private ChatManager chatManager;
     private KeyedConfiguration chatConfiguration;
 
     public FCBungeePlugin(FCBungeeBootstrap bootstrap) {
@@ -116,6 +118,7 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
     protected void setupFramework() {
         this.listenerManager = new ListenerManager(this);
         this.commandManager = new CommandManager(this);
+        this.chatManager = new ChatManager(this);
     }
 
     @Override

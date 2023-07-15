@@ -50,7 +50,7 @@ public class PlayerListener extends FloraCoreBungeeListener {
         ProxiedPlayer p = e.getPlayer();
         UUID uuid = p.getUniqueId();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        getPlugin().getBootstrap().getScheduler().async().execute(() -> {
+        getAsyncExecutor().execute(() -> {
             ONLINE online = storageImplementation.selectOnline(uuid);
             if (online == null) {
                 storageImplementation.insertOnline(uuid, true, getPlugin().getServerName());
@@ -66,7 +66,7 @@ public class PlayerListener extends FloraCoreBungeeListener {
         ProxiedPlayer p = e.getPlayer();
         UUID uuid = p.getUniqueId();
         StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        getPlugin().getBootstrap().getScheduler().async().execute(() -> {
+        getAsyncExecutor().execute(() -> {
             ONLINE online = storageImplementation.selectOnline(uuid);
             if (online == null) {
                 storageImplementation.insertOnline(uuid, false, getPlugin().getServerName());

@@ -604,6 +604,37 @@ public class SqlStorage implements StorageImplementation {
     }
 
     @Override
+    public List<SERVER> selectServerList() {
+        List<SERVER> ret = new ArrayList<>();
+        try (Connection c = this.connectionFactory.getConnection()) {
+            try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(SERVER.SELECT_ALL))) {
+                try (ResultSet rs = ps.executeQuery()) {
+                    while (rs.next()) {
+                        int id = rs.getInt("id");
+                        String name = rs.getString("name");
+                        String type = rs.getString("type");
+                        boolean autoSync1 = rs.getBoolean("autoSync1");
+                        boolean autoSync2 = rs.getBoolean("autoSync2");
+                        long lastActiveTime = rs.getLong("lastActiveTime");
+                        SERVER server = new SERVER(plugin,
+                                this,
+                                id,
+                                name,
+                                ServerType.parse(type),
+                                autoSync1,
+                                autoSync2,
+                                lastActiveTime);
+                        ret.add(server);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ret;
+    }
+
+    @Override
     public PARTY selectParty(UUID uuid) {
         try (Connection c = this.connectionFactory.getConnection()) {
             try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(PARTY.SELECT_UUID))) {

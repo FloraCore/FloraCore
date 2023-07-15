@@ -11,6 +11,7 @@ import java.sql.SQLException;
 
 public class SERVER extends AbstractFloraCoreTable {
     public static final String SELECT = "SELECT * FROM '{prefix}server' WHERE name=?";
+    public static final String SELECT_ALL = "SELECT * FROM '{prefix}server'";
     public static final String DELETE = "DELETE FROM '{prefix}server' WHERE name=?";
     private static final String UPDATE_NAME = "UPDATE '{prefix}server' SET name=? WHERE name=?";
     private static final String UPDATE_TYPE = "UPDATE '{prefix}server' SET type=? WHERE name=?";
