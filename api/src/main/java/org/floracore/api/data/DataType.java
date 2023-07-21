@@ -23,6 +23,7 @@ public enum DataType {
      * 社交系统-Party邀请
      */
     SOCIAL_SYSTEMS_PARTY_INVITE("social-systems-party-invite"),
+    SIGN("sign"),
     /**
      * 自定义
      * 用于命令
