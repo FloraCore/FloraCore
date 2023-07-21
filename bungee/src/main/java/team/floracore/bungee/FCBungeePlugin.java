@@ -164,4 +164,8 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
         }
         return getSenderFactory().wrap(player);
     }
+
+    public ChatManager getChatManager() {
+        return chatManager;
+    }
 }

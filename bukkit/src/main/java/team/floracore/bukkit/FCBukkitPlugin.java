@@ -260,4 +260,8 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
     public GuiManager getGuiManager() {
         return guiManager;
     }
+
+    public CommandManager getCommandManager() {
+        return commandManager;
+    }
 }
