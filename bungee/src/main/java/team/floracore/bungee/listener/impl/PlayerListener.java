@@ -8,9 +8,7 @@ import team.floracore.bungee.listener.FloraCoreBungeeListener;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
 import team.floracore.common.storage.misc.floracore.tables.ONLINE;
-import team.floracore.common.storage.misc.floracore.tables.PLAYER;
 
-import java.sql.SQLException;
 import java.util.UUID;
 
 public class PlayerListener extends FloraCoreBungeeListener {
@@ -18,7 +16,7 @@ public class PlayerListener extends FloraCoreBungeeListener {
         super(plugin);
     }
 
-    @EventHandler
+    /*@EventHandler
     public void onLogin(PostLoginEvent e) {
         ProxiedPlayer player = e.getPlayer();
         UUID u = player.getUniqueId();
@@ -43,7 +41,7 @@ public class PlayerListener extends FloraCoreBungeeListener {
         storageImplementation.deleteDataExpired(u);
         storageImplementation.deleteDataIntExpired(u);
         storageImplementation.deleteDataLongExpired(u);
-    }
+    }*/
 
     @EventHandler
     public void onJoin(PostLoginEvent e) {
