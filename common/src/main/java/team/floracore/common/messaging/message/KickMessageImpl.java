@@ -11,7 +11,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 public class KickMessageImpl extends AbstractMessage implements KickMessage {
-    public static final String TYPE = "bukkit:kick";
+    public static final String TYPE = "common:kick";
 
     private final UUID receiver;
     private final String reason;
@@ -32,14 +32,15 @@ public class KickMessageImpl extends AbstractMessage implements KickMessage {
                 .orElseThrow(() -> new IllegalStateException("Incoming message has no receiver argument: " + content));
         String reason = Optional.ofNullable(content.getAsJsonObject().get("reason"))
                 .map(JsonElement::getAsString)
-                .orElseThrow(() -> new IllegalStateException("Incoming message has no receiver argument: " + content));
+                .orElseThrow(() -> new IllegalStateException("Incoming message has no reason argument: " + content));
         return new KickMessageImpl(id, receiver, reason);
     }
 
     @Override
     public @NotNull String asEncodedString() {
         return FloraCoreMessagingService.encodeMessageAsString(TYPE, getId(),
-                new JObject().add("receiver", this.receiver.toString()).toJson()
+                new JObject().add("receiver", this.receiver.toString())
+                        .add("reason", this.reason).toJson()
         );
     }
 

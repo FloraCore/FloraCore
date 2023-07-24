@@ -16,6 +16,7 @@ import team.floracore.bukkit.messaging.message.ReportMessageImpl;
 import team.floracore.bukkit.messaging.message.TeleportMessageImpl;
 import team.floracore.common.messaging.InternalMessagingService;
 import team.floracore.common.messaging.MessagingFactory;
+import team.floracore.common.messaging.message.BungeeCommandImpl;
 import team.floracore.common.messaging.message.KickMessageImpl;
 import team.floracore.common.sender.Sender;
 
@@ -157,6 +158,15 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
             this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
             KickMessageImpl kickMessage = new KickMessageImpl(requestId, recipient, reason);
             service.getMessenger().sendOutgoingMessage(kickMessage);
+        }));
+    }
+
+    public void bungeeCommand(String command) {
+        this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> getPlugin().getMessagingService().ifPresent(service -> {
+            UUID requestId = service.generatePingId();
+            this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
+            BungeeCommandImpl bungeeCommand = new BungeeCommandImpl(requestId, command);
+            service.getMessenger().sendOutgoingMessage(bungeeCommand);
         }));
     }
 

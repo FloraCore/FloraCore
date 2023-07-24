@@ -10,6 +10,7 @@ import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
 import org.floracore.api.data.chat.ChatType;
 import org.floracore.api.messenger.message.Message;
+import org.floracore.api.messenger.message.type.BungeeCommandMessage;
 import org.floracore.api.messenger.message.type.KickMessage;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.config.chat.ChatKeys;
@@ -70,6 +71,9 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
         } else if (message instanceof KickMessage) {
             KickMessage kickMsg = (KickMessage) message;
             kick(kickMsg);
+        } else if (message instanceof BungeeCommandMessage) {
+            BungeeCommandMessage bungeeCommandMsg = (BungeeCommandMessage) message;
+            getPlugin().getProxy().getPluginManager().dispatchCommand(getPlugin().getProxy().getConsole(), bungeeCommandMsg.getCommand());
         } else {
             throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
         }

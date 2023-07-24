@@ -22,6 +22,7 @@ import team.floracore.bukkit.command.impl.player.*;
 import team.floracore.bukkit.command.impl.player.teleport.TeleportCommand;
 import team.floracore.bukkit.command.impl.player.teleport.TopCommand;
 import team.floracore.bukkit.command.impl.server.BroadCastCommand;
+import team.floracore.bukkit.command.impl.server.BungeeCommand;
 import team.floracore.bukkit.command.impl.server.KickFromBungeeCommand;
 import team.floracore.bukkit.command.impl.test.TestCommand;
 import team.floracore.bukkit.command.impl.world.TimeCommand;
@@ -141,6 +142,7 @@ public class CommandManager {
 
         // server
         this.annotationParser.parse(new BroadCastCommand(plugin));
+        this.annotationParser.parse(new BungeeCommand(plugin));
         this.annotationParser.parse(new KickFromBungeeCommand(plugin));
 
         // world
