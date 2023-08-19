@@ -10,8 +10,8 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 public class PLAYER extends AbstractFloraCoreTable {
-    public static final String SELECT = "SELECT * FROM '{prefix}player' WHERE uuid=?";
-    public static final String SELECT_NAME = "SELECT * FROM '{prefix}player' WHERE name=?";
+    public static final String SELECT = "SELECT * FROM '{prefix}player' WHERE uuid=? ORDER BY id DESC";
+    public static final String SELECT_NAME = "SELECT * FROM '{prefix}player' WHERE name=? ORDER BY id DESC";
     public static final String DELETE = "DELETE FROM '{prefix}player' WHERE uuid=?";
     private static final String UPDATE_NAME = "UPDATE '{prefix}player' SET name=? WHERE uuid=?";
     private static final String UPDATE_LAST_LOGIN_IP = "UPDATE '{prefix}player' SET lastLoginIp=? WHERE uuid=?";
