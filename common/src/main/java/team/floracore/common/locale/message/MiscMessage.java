@@ -8,8 +8,7 @@ import team.floracore.common.util.DescParseTickFormat;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
-import static net.kyori.adventure.text.format.TextDecoration.BOLD;
-import static net.kyori.adventure.text.format.TextDecoration.STRIKETHROUGH;
+import static net.kyori.adventure.text.format.TextDecoration.*;
 
 public interface MiscMessage extends AbstractMessage {
     Component PREFIX_BROADCAST = text()

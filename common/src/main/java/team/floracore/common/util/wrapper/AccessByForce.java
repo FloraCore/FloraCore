@@ -3,8 +3,8 @@ package team.floracore.common.util.wrapper;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
-import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.*;
 
 /**
  * Acquiescently, wrapped method or field accessor will try to access the raw method or field directly if the raw

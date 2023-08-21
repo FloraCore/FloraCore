@@ -1,6 +1,10 @@
 package team.floracore.bukkit.command.impl.player.teleport;
 
-import cloud.commandframework.annotations.*;
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.Flag;
 import cloud.commandframework.annotations.suggestions.Suggestions;
 import cloud.commandframework.context.CommandContext;
 import org.bukkit.Location;

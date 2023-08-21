@@ -2,7 +2,11 @@ package team.floracore.common.util.nothing;
 
 import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.lang.annotation.*;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Repeatable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
  * Sign an injecting

@@ -1,10 +1,22 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Attribute;
+import team.floracore.lib.asm.ConstantDynamic;
+import team.floracore.lib.asm.Handle;
+import team.floracore.lib.asm.Label;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
+import team.floracore.lib.asm.TypePath;
+import team.floracore.lib.asm.TypeReference;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * A {@link Printer} that prints the ASM code to generate the classes it visits.

@@ -4,7 +4,11 @@ import org.floracore.api.messenger.IncomingMessageConsumer;
 import org.floracore.api.messenger.Messenger;
 import org.floracore.api.messenger.message.OutgoingMessage;
 import org.jetbrains.annotations.NotNull;
-import redis.clients.jedis.*;
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.JedisPoolConfig;
+import redis.clients.jedis.JedisPubSub;
+import redis.clients.jedis.Protocol;
 import team.floracore.common.plugin.FloraCorePlugin;
 
 /**

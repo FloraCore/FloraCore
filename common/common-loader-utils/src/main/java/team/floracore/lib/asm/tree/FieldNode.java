@@ -1,6 +1,12 @@
 package team.floracore.lib.asm.tree;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.AnnotationVisitor;
+import team.floracore.lib.asm.Attribute;
+import team.floracore.lib.asm.ClassVisitor;
+import team.floracore.lib.asm.FieldVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
+import team.floracore.lib.asm.TypePath;
 
 import java.util.List;
 

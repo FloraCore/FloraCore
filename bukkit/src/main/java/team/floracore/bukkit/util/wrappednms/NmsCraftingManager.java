@@ -1,12 +1,21 @@
 package team.floracore.bukkit.util.wrappednms;
 
 import team.floracore.bukkit.util.VersionName;
-import team.floracore.bukkit.util.wrapper.*;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitFieldAccessor;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitMethod;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 import team.floracore.common.util.Optional;
 import team.floracore.common.util.TypeUtil;
 import team.floracore.common.util.wrapper.WrappedObject;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.AbstractSet;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 @WrappedBukkitClass({@VersionName(value = "nms.CraftingManager", maxVer = 17),
         @VersionName(value = "net.minecraft.world.item.crafting.CraftingManager", minVer = 17)})

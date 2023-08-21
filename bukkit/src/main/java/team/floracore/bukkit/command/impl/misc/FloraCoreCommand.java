@@ -1,6 +1,10 @@
 package team.floracore.bukkit.command.impl.misc;
 
-import cloud.commandframework.annotations.*;
+import cloud.commandframework.annotations.Argument;
+import cloud.commandframework.annotations.CommandDescription;
+import cloud.commandframework.annotations.CommandMethod;
+import cloud.commandframework.annotations.CommandPermission;
+import cloud.commandframework.annotations.Flag;
 import cloud.commandframework.annotations.processing.CommandContainer;
 import com.github.benmanes.caffeine.cache.Cache;
 import net.kyori.adventure.text.Component;

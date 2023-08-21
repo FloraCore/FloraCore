@@ -8,7 +8,7 @@ import team.floracore.common.config.generic.key.SimpleConfigKey;
 import java.util.ArrayList;
 import java.util.List;
 
-import static team.floracore.common.config.generic.key.ConfigKeyFactory.key;
+import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
 
 /**
  * All of the {@link ConfigKey}s used by FloraCore.

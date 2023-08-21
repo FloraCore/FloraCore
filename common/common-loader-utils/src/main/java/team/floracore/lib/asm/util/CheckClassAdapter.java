@@ -1,11 +1,27 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.AnnotationVisitor;
+import team.floracore.lib.asm.Attribute;
+import team.floracore.lib.asm.ClassReader;
+import team.floracore.lib.asm.ClassVisitor;
+import team.floracore.lib.asm.ClassWriter;
+import team.floracore.lib.asm.FieldVisitor;
+import team.floracore.lib.asm.Label;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.ModuleVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.RecordComponentVisitor;
+import team.floracore.lib.asm.Type;
+import team.floracore.lib.asm.TypePath;
+import team.floracore.lib.asm.TypeReference;
 import team.floracore.lib.asm.tree.ClassNode;
 import team.floracore.lib.asm.tree.MethodNode;
 import team.floracore.lib.asm.tree.TryCatchBlockNode;
+import team.floracore.lib.asm.tree.analysis.Analyzer;
+import team.floracore.lib.asm.tree.analysis.AnalyzerException;
+import team.floracore.lib.asm.tree.analysis.BasicValue;
 import team.floracore.lib.asm.tree.analysis.Frame;
-import team.floracore.lib.asm.tree.analysis.*;
+import team.floracore.lib.asm.tree.analysis.SimpleVerifier;
 
 import java.io.FileInputStream;
 import java.io.IOException;

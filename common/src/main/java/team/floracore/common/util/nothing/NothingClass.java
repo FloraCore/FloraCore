@@ -1,6 +1,10 @@
 package team.floracore.common.util.nothing;
 
-import team.floracore.common.util.*;
+import team.floracore.common.util.AsmUtil;
+import team.floracore.common.util.ClassUtil;
+import team.floracore.common.util.FileUtil;
+import team.floracore.common.util.Optional;
+import team.floracore.common.util.TypeUtil;
 import team.floracore.common.util.wrapper.WrappedObject;
 import team.floracore.lib.asm.ClassReader;
 import team.floracore.lib.asm.ClassWriter;

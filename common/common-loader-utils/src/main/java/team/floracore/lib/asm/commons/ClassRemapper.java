@@ -1,6 +1,14 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.AnnotationVisitor;
+import team.floracore.lib.asm.Attribute;
+import team.floracore.lib.asm.ClassVisitor;
+import team.floracore.lib.asm.FieldVisitor;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.ModuleVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.RecordComponentVisitor;
+import team.floracore.lib.asm.TypePath;
 
 import java.util.List;
 

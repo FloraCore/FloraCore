@@ -6,7 +6,7 @@ import org.junit.jupiter.params.provider.EnumSource;
 
 import java.util.Base64;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class DependencyChecksumTest {
     @ParameterizedTest

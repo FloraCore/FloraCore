@@ -40,11 +40,16 @@ import team.floracore.common.storage.misc.floracore.tables.REPORT;
 import team.floracore.common.util.DurationFormatter;
 import team.floracore.common.util.StringUtil;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static net.kyori.adventure.text.Component.space;
+import static net.kyori.adventure.text.Component.*;
 
 /**
  * Report命令

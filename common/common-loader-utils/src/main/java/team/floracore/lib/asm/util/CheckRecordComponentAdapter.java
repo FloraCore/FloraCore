@@ -1,6 +1,11 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.AnnotationVisitor;
+import team.floracore.lib.asm.Attribute;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.RecordComponentVisitor;
+import team.floracore.lib.asm.TypePath;
+import team.floracore.lib.asm.TypeReference;
 
 /**
  * A {@link RecordComponentVisitor} that checks that its methods are properly used.

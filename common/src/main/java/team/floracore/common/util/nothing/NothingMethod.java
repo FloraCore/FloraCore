@@ -1,17 +1,33 @@
 package team.floracore.common.util.nothing;
 
 import com.google.common.collect.Lists;
-import team.floracore.common.util.*;
+import team.floracore.common.util.AsmUtil;
+import team.floracore.common.util.ClassUtil;
+import team.floracore.common.util.ListUtil;
+import team.floracore.common.util.MapEntry;
+import team.floracore.common.util.TypeUtil;
 import team.floracore.common.util.wrapper.WrappedObject;
 import team.floracore.lib.asm.Label;
 import team.floracore.lib.asm.Opcodes;
-import team.floracore.lib.asm.tree.*;
+import team.floracore.lib.asm.tree.AbstractInsnNode;
+import team.floracore.lib.asm.tree.FieldInsnNode;
+import team.floracore.lib.asm.tree.InsnList;
+import team.floracore.lib.asm.tree.InsnNode;
+import team.floracore.lib.asm.tree.JumpInsnNode;
+import team.floracore.lib.asm.tree.LabelNode;
+import team.floracore.lib.asm.tree.MethodInsnNode;
+import team.floracore.lib.asm.tree.MethodNode;
+import team.floracore.lib.asm.tree.VarInsnNode;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
 import java.util.Optional;
-import java.util.*;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 

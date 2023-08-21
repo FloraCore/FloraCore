@@ -2,7 +2,7 @@ package org.floracore.api;
 
 import org.jetbrains.annotations.NotNull;
 
-import static org.jetbrains.annotations.ApiStatus.Internal;
+import static org.jetbrains.annotations.ApiStatus.*;
 
 /**
  * Provides static access to the {@link FloraCore} API.

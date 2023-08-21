@@ -4,9 +4,25 @@ import team.floracore.lib.asm.Label;
 import team.floracore.lib.asm.MethodVisitor;
 import team.floracore.lib.asm.Opcodes;
 import team.floracore.lib.asm.Type;
-import team.floracore.lib.asm.tree.*;
+import team.floracore.lib.asm.tree.AbstractInsnNode;
+import team.floracore.lib.asm.tree.InsnList;
+import team.floracore.lib.asm.tree.InsnNode;
+import team.floracore.lib.asm.tree.JumpInsnNode;
+import team.floracore.lib.asm.tree.LabelNode;
+import team.floracore.lib.asm.tree.LocalVariableNode;
+import team.floracore.lib.asm.tree.LookupSwitchInsnNode;
+import team.floracore.lib.asm.tree.MethodNode;
+import team.floracore.lib.asm.tree.TableSwitchInsnNode;
+import team.floracore.lib.asm.tree.TryCatchBlockNode;
 
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.BitSet;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A {@link MethodVisitor} that removes JSR instructions and inlines the

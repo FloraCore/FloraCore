@@ -1,6 +1,10 @@
 package team.floracore.bukkit.util.wrapper;
 
-import team.floracore.common.util.wrapper.*;
+import team.floracore.common.util.wrapper.WrappedClass;
+import team.floracore.common.util.wrapper.WrappedConstructor;
+import team.floracore.common.util.wrapper.WrappedFieldAccessor;
+import team.floracore.common.util.wrapper.WrappedMethod;
+import team.floracore.common.util.wrapper.WrappedObject;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Member;

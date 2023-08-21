@@ -2,7 +2,16 @@ package team.floracore.lib.asm.tree.analysis;
 
 import team.floracore.lib.asm.Opcodes;
 import team.floracore.lib.asm.Type;
-import team.floracore.lib.asm.tree.*;
+import team.floracore.lib.asm.tree.AbstractInsnNode;
+import team.floracore.lib.asm.tree.IincInsnNode;
+import team.floracore.lib.asm.tree.InsnList;
+import team.floracore.lib.asm.tree.JumpInsnNode;
+import team.floracore.lib.asm.tree.LabelNode;
+import team.floracore.lib.asm.tree.LookupSwitchInsnNode;
+import team.floracore.lib.asm.tree.MethodNode;
+import team.floracore.lib.asm.tree.TableSwitchInsnNode;
+import team.floracore.lib.asm.tree.TryCatchBlockNode;
+import team.floracore.lib.asm.tree.VarInsnNode;
 
 import java.util.ArrayList;
 import java.util.HashMap;

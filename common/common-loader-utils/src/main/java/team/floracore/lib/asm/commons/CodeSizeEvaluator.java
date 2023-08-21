@@ -1,6 +1,10 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.ConstantDynamic;
+import team.floracore.lib.asm.Handle;
+import team.floracore.lib.asm.Label;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
 
 /**
  * A {@link MethodVisitor} that approximates the size of the methods it visits.

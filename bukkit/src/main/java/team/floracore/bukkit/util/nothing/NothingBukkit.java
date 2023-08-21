@@ -2,7 +2,11 @@ package team.floracore.bukkit.util.nothing;
 
 import com.google.common.collect.Lists;
 import team.floracore.bukkit.util.wrapper.BukkitWrapper;
-import team.floracore.common.util.nothing.*;
+import team.floracore.common.util.nothing.Nothing;
+import team.floracore.common.util.nothing.NothingByteCode;
+import team.floracore.common.util.nothing.NothingInject;
+import team.floracore.common.util.nothing.NothingLocation;
+import team.floracore.common.util.nothing.NothingPriority;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;

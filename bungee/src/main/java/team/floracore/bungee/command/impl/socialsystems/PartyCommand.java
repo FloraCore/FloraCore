@@ -37,12 +37,16 @@ import team.floracore.common.util.StringUtil;
 
 import java.time.Duration;
 import java.time.Instant;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
 
-import static net.kyori.adventure.text.Component.newline;
+import static net.kyori.adventure.text.Component.*;
 
 @CommandContainer
 @CommandDescription("floracore.command.description.party")

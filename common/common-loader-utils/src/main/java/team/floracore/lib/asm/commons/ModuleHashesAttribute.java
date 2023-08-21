@@ -1,6 +1,11 @@
 package team.floracore.lib.asm.commons;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.Attribute;
+import team.floracore.lib.asm.ByteVector;
+import team.floracore.lib.asm.ClassReader;
+import team.floracore.lib.asm.ClassVisitor;
+import team.floracore.lib.asm.ClassWriter;
+import team.floracore.lib.asm.Label;
 
 import java.util.ArrayList;
 import java.util.List;

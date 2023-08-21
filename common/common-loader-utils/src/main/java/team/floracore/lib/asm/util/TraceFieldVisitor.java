@@ -1,6 +1,10 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.AnnotationVisitor;
+import team.floracore.lib.asm.Attribute;
+import team.floracore.lib.asm.FieldVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.TypePath;
 
 /**
  * A {@link FieldVisitor} that prints the fields it visits with a {@link Printer}.

@@ -1,6 +1,16 @@
 package team.floracore.lib.asm.util;
 
-import team.floracore.lib.asm.*;
+import team.floracore.lib.asm.AnnotationVisitor;
+import team.floracore.lib.asm.Attribute;
+import team.floracore.lib.asm.ClassWriter;
+import team.floracore.lib.asm.ConstantDynamic;
+import team.floracore.lib.asm.Handle;
+import team.floracore.lib.asm.Label;
+import team.floracore.lib.asm.MethodVisitor;
+import team.floracore.lib.asm.Opcodes;
+import team.floracore.lib.asm.Type;
+import team.floracore.lib.asm.TypePath;
+import team.floracore.lib.asm.TypeReference;
 import team.floracore.lib.asm.tree.MethodNode;
 import team.floracore.lib.asm.tree.analysis.Analyzer;
 import team.floracore.lib.asm.tree.analysis.AnalyzerException;
@@ -9,7 +19,12 @@ import team.floracore.lib.asm.tree.analysis.BasicVerifier;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * A {@link MethodVisitor} that checks that its methods are properly used. More precisely this

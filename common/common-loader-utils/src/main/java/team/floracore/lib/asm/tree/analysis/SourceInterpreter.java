@@ -2,7 +2,11 @@ package team.floracore.lib.asm.tree.analysis;
 
 import team.floracore.lib.asm.Opcodes;
 import team.floracore.lib.asm.Type;
-import team.floracore.lib.asm.tree.*;
+import team.floracore.lib.asm.tree.AbstractInsnNode;
+import team.floracore.lib.asm.tree.FieldInsnNode;
+import team.floracore.lib.asm.tree.InvokeDynamicInsnNode;
+import team.floracore.lib.asm.tree.LdcInsnNode;
+import team.floracore.lib.asm.tree.MethodInsnNode;
 
 import java.util.HashSet;
 import java.util.List;

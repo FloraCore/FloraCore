@@ -1,7 +1,11 @@
 package team.floracore.bukkit.util.wrappednms;
 
 import team.floracore.bukkit.util.VersionName;
-import team.floracore.bukkit.util.wrapper.*;
+import team.floracore.bukkit.util.wrapper.BukkitWrapper;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitClass;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitFieldAccessor;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitMethod;
+import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 import team.floracore.common.util.wrapper.WrappedObject;
 
 import java.util.List;
