@@ -15,9 +15,9 @@ import org.floracore.api.data.DataType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.command.FloraCoreBukkitCommand;
-import team.floracore.bukkit.command.impl.player.ReportCommand;
 import team.floracore.bukkit.locale.message.MenuMessage;
 import team.floracore.bukkit.locale.message.commands.MiscCommandMessage;
+import team.floracore.bukkit.util.GuiUtil;
 import team.floracore.bukkit.util.itemstack.ItemStackBuilder;
 import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.locale.translation.TranslationManager;
@@ -104,7 +104,7 @@ public class LanguageCommand extends FloraCoreBukkitCommand {
 		GuiPage gui = new GuiPage(player, buttons, 16, LINE);
 		gui.title(title);
 		gui.setPlayer(player);
-		ReportCommand.createPageButtons(uuid, gui);
+		GuiUtil.createPageButtons(uuid, gui);
 		return gui;
 	}
 }

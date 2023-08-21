@@ -115,8 +115,4 @@ public interface MiscCommandMessage extends AbstractMessage {
 	Args1<String> COMMAND_LANGUAGE_CHANGE_SUCCESS = (language) -> translatable()
 			// 你已成功将你的显示语言更改为 {0} !
 			.key("floracore.command.language.change.success").args(text(language, GREEN)).color(AQUA).build();
-
-	Args0 COMMAND_REPORT_VANISH = () -> translatable()
-			// 你不是隐身状态，已将你切换为隐身状态!
-			.key("floracore.command.report.vanish").color(AQUA).build();
 }

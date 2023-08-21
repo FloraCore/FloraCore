@@ -9,11 +9,11 @@ import java.time.Instant;
 
 public class ApiPlatform implements Platform, PluginMetadata {
 	private final FloraCorePlugin plugin;
-	private Object fcplugin;
+	private Object fcPlugin;
 
 	public ApiPlatform(FloraCorePlugin plugin) {
 		this.plugin = plugin;
-		this.fcplugin = plugin;
+		this.fcPlugin = plugin;
 	}
 
 	@Override
@@ -39,11 +39,11 @@ public class ApiPlatform implements Platform, PluginMetadata {
 
 	@Override
 	public Object getFloraCorePlatformPlugin() {
-		return fcplugin;
+		return fcPlugin;
 	}
 
 	@Override
 	public void setFloraCorePlatformPlugin(Object plugin) {
-		this.fcplugin = plugin;
+		this.fcPlugin = plugin;
 	}
 }

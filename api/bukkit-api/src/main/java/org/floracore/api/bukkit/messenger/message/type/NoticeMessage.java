@@ -35,25 +35,5 @@ public interface NoticeMessage extends Message {
 	 * 通知类型
 	 */
 	enum NoticeType {
-		/**
-		 * 举报受理通知
-		 * 通知的玩家为举报者。
-		 */
-		REPORT_ACCEPTED,
-		/**
-		 * 举报处理通知
-		 * 通知的玩家为举报者。
-		 */
-		REPORT_PROCESSED,
-		/**
-		 * 举报受理通知
-		 * 通知的玩家为在线的STAFF。
-		 */
-		REPORT_STAFF_ACCEPTED,
-		/**
-		 * 举报处理通知
-		 * 通知的玩家为在线的STAFF。
-		 */
-		REPORT_STAFF_PROCESSED,
 	}
 }

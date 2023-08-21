@@ -1,7 +1,6 @@
 package team.floracore.common.storage.implementation.sql;
 
 import com.google.gson.reflect.TypeToken;
-import org.floracore.api.commands.report.ReportStatus;
 import org.floracore.api.data.DataType;
 import org.floracore.api.data.chat.ChatType;
 import org.floracore.api.server.ServerType;
@@ -16,7 +15,6 @@ import team.floracore.common.storage.misc.floracore.tables.DATA_LONG;
 import team.floracore.common.storage.misc.floracore.tables.ONLINE;
 import team.floracore.common.storage.misc.floracore.tables.PARTY;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
-import team.floracore.common.storage.misc.floracore.tables.REPORT;
 import team.floracore.common.storage.misc.floracore.tables.SERVER;
 import team.floracore.common.util.gson.GsonProvider;
 
@@ -760,174 +758,6 @@ public class SqlStorage implements StorageImplementation {
 			chat.init();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
-		}
-	}
-
-
-	@Override
-	public List<REPORT> getReports() {
-		List<REPORT> ret = new ArrayList<>();
-		try (Connection c = this.connectionFactory.getConnection()) {
-			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(REPORT.SELECT))) {
-				try (ResultSet rs = ps.executeQuery()) {
-					while (rs.next()) {
-						int id = rs.getInt("id");
-						UUID uuid = UUID.fromString(rs.getString("uuid"));
-						String reportersJson = rs.getString("reporters");
-						Type type1 = new TypeToken<List<UUID>>() {
-						}.getType();
-						List<UUID> reporters = GsonProvider.normal().fromJson(reportersJson, type1);
-						UUID reported = UUID.fromString(rs.getString("reported"));
-						String reasonJson = rs.getString("reasons");
-						Type type2 = new TypeToken<List<String>>() {
-						}.getType();
-						List<String> reasons = GsonProvider.normal().fromJson(reasonJson, type2);
-						long reportTime = rs.getLong("reportTime");
-						ReportStatus status = ReportStatus.valueOf(rs.getString("status"));
-						Long conclusionTime = rs.getLong("conclusionTime");
-						ret.add(new REPORT(plugin,
-								this,
-								id,
-								uuid,
-								reporters,
-								reported,
-								reasons,
-								reportTime,
-								status,
-								conclusionTime));
-					}
-				}
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-		return ret;
-	}
-
-	@Override
-	public List<REPORT> selectReports(UUID uuid) {
-		List<REPORT> ret = new ArrayList<>();
-		try (Connection c = this.connectionFactory.getConnection()) {
-			try (PreparedStatement ps =
-					     c.prepareStatement(this.statementProcessor.apply(REPORT.SELECT_REPORTED_UUID))) {
-				ps.setString(1, uuid.toString());
-				try (ResultSet rs = ps.executeQuery()) {
-					while (rs.next()) {
-						int id = rs.getInt("id");
-						UUID uuid1 = UUID.fromString(rs.getString("uuid"));
-						String reportersJson = rs.getString("reporters");
-						Type type1 = new TypeToken<List<UUID>>() {
-						}.getType();
-						List<UUID> reporters = GsonProvider.normal().fromJson(reportersJson, type1);
-						UUID reported = UUID.fromString(rs.getString("reported"));
-						String reasonJson = rs.getString("reasons");
-						Type type2 = new TypeToken<List<String>>() {
-						}.getType();
-						List<String> reasons = GsonProvider.normal().fromJson(reasonJson, type2);
-						long reportTime = rs.getLong("reportTime");
-						ReportStatus status = ReportStatus.valueOf(rs.getString("status"));
-						Long conclusionTime = rs.getLong("conclusionTime");
-						ret.add(new REPORT(plugin,
-								this,
-								id,
-								uuid1,
-								reporters,
-								reported,
-								reasons,
-								reportTime,
-								status,
-								conclusionTime));
-					}
-				}
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-		return ret;
-	}
-
-	@Override
-	public REPORT selectReport(UUID uuid) {
-		try (Connection c = this.connectionFactory.getConnection()) {
-			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(REPORT.SELECT_UUID))) {
-				ps.setString(1, uuid.toString());
-				try (ResultSet rs = ps.executeQuery()) {
-					if (rs.next()) {
-						int id = rs.getInt("id");
-						UUID uuid1 = UUID.fromString(rs.getString("uuid"));
-						String reportersJson = rs.getString("reporters");
-						Type type1 = new TypeToken<List<UUID>>() {
-						}.getType();
-						List<UUID> reporters = GsonProvider.normal().fromJson(reportersJson, type1);
-						UUID reported = UUID.fromString(rs.getString("reported"));
-						String reasonJson = rs.getString("reasons");
-						Type type2 = new TypeToken<List<String>>() {
-						}.getType();
-						List<String> reasons = GsonProvider.normal().fromJson(reasonJson, type2);
-						long reportTime = rs.getLong("reportTime");
-						ReportStatus status = ReportStatus.valueOf(rs.getString("status"));
-						Long conclusionTime = rs.getLong("conclusionTime");
-						return new REPORT(plugin,
-								this,
-								id,
-								uuid1,
-								reporters,
-								reported,
-								reasons,
-								reportTime,
-								status,
-								conclusionTime);
-					} else {
-						return null;
-					}
-				}
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
-	public REPORT getUnprocessedReports(UUID uuid) {
-		List<REPORT> reports = selectReports(uuid);
-		for (REPORT report : reports) {
-			if (report.getStatus() != ReportStatus.ENDED) {
-				return report;
-			}
-		}
-		return null;
-	}
-
-	@Override
-	public void addReport(UUID uuid,
-	                      UUID reporter,
-	                      UUID reported,
-	                      String reason,
-	                      long reportTime) {
-		REPORT report = getUnprocessedReports(reported);
-		if (getUnprocessedReports(reported) == null) {
-			report = new REPORT(plugin,
-					this,
-					-1,
-					uuid,
-					Collections.singletonList(reporter),
-					reported,
-					Collections.singletonList(reason),
-					reportTime,
-					ReportStatus.WAITING,
-					null);
-			try {
-				report.init();
-			} catch (SQLException e) {
-				throw new RuntimeException(e);
-			}
-		} else {
-			List<UUID> reporters = report.getReporters();
-			reporters.add(reporter);
-			report.setReporters(reporters);
-			List<String> reasons = report.getReasons();
-			reasons.add(reason);
-			report.setReasons(reasons);
 		}
 	}
 

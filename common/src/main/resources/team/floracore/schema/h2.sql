@@ -62,18 +62,6 @@ CREATE TABLE IF NOT EXISTS `{prefix}chat`
     time       BIGINT             NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `{prefix}report`
-(
-    id             INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
-    uuid           VARCHAR(36)        NOT NULL,
-    reporters      TEXT               NOT NULL,
-    reported       VARCHAR(36)        NOT NULL,
-    reasons        TEXT               NOT NULL,
-    reportTime     BIGINT             NOT NULL,
-    status         VARCHAR(36)        NOT NULL,
-    conclusionTime BIGINT             NULL
-);
-
 CREATE TABLE IF NOT EXISTS `{prefix}party`
 (
     id          INT AUTO_INCREMENT NOT NULL PRIMARY KEY,

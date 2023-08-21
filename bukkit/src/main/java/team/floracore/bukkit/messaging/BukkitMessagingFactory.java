@@ -1,7 +1,6 @@
 package team.floracore.bukkit.messaging;
 
 import com.google.gson.JsonElement;
-import de.myzelyam.api.vanish.VanishAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
@@ -9,10 +8,7 @@ import org.floracore.api.bukkit.messenger.message.type.NoticeMessage;
 import org.floracore.api.bukkit.messenger.message.type.TeleportMessage;
 import org.floracore.api.messenger.message.Message;
 import team.floracore.bukkit.FCBukkitPlugin;
-import team.floracore.bukkit.locale.message.commands.MiscCommandMessage;
-import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
 import team.floracore.bukkit.messaging.message.NoticeMessageImpl;
-import team.floracore.bukkit.messaging.message.ReportMessageImpl;
 import team.floracore.bukkit.messaging.message.TeleportMessageImpl;
 import team.floracore.common.messaging.InternalMessagingService;
 import team.floracore.common.messaging.MessagingFactory;
@@ -48,69 +44,6 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
 	public void notice(NoticeMessage noticeMsg) {
 		Player player = Bukkit.getPlayer(noticeMsg.getReceiver());
 		List<String> parameters = noticeMsg.getParameters();
-		switch (noticeMsg.getType()) {
-			case REPORT_STAFF_ACCEPTED:
-				getPlugin().getOnlineSenders().forEach(i -> {
-					if (i.hasPermission("floracore.report.staff")) {
-						PlayerCommandMessage.COMMAND_MISC_REPORT_NOTICE_STAFF_ACCEPTED.send(i,
-								parameters.get(0),
-								parameters.get(1));
-					}
-				});
-				break;
-			case REPORT_STAFF_PROCESSED:
-				getPlugin().getOnlineSenders().forEach(i -> {
-					if (i.hasPermission("floracore.report.staff")) {
-						PlayerCommandMessage.COMMAND_MISC_REPORT_NOTICE_STAFF_PROCESSED.send(i,
-								parameters.get(0),
-								parameters.get(1));
-					}
-				});
-				break;
-		}
-		if (player != null) {
-			Sender sender = getPlugin().getSenderFactory().wrap(player);
-			switch (noticeMsg.getType()) {
-				case REPORT_ACCEPTED:
-					PlayerCommandMessage.COMMAND_MISC_REPORT_NOTICE_ACCEPTED.send(sender, parameters.get(0));
-					PlayerCommandMessage.COMMAND_MISC_REPORT_THANKS.send(sender);
-					break;
-				case REPORT_PROCESSED:
-					PlayerCommandMessage.COMMAND_MISC_REPORT_NOTICE_PROCESSED.send(sender, parameters.get(0));
-					PlayerCommandMessage.COMMAND_MISC_REPORT_THANKS.send(sender);
-					break;
-			}
-		}
-	}
-
-	public void pushReport(UUID reporter,
-	                       UUID reportedUser,
-	                       String reporterServer,
-	                       String reportedUserServer,
-	                       String reason) {
-		this.getPlugin().getBootstrap().getScheduler().executeAsync(() -> getPlugin().getMessagingService().ifPresent(service -> {
-			UUID requestId = service.generatePingId();
-			this.getPlugin().getLogger().info("[Messaging] Sending ping with id: " + requestId);
-			ReportMessageImpl reportMessage = new ReportMessageImpl(requestId,
-					reporter,
-					reportedUser,
-					reporterServer,
-					reportedUserServer,
-					reason);
-			service.getMessenger().sendOutgoingMessage(reportMessage);
-			String player = getPlayerName(reporter);
-			String target = getPlayerName(reportedUser);
-			boolean playerOnlineStatus = isPlayerOnline(reporter);
-			boolean targetOnlineStatus = isPlayerOnline(reportedUser);
-			notifyStaffReport(player,
-					target,
-					reporterServer,
-					reportedUserServer,
-					reason,
-					playerOnlineStatus,
-					targetOnlineStatus);
-
-		}));
 	}
 
 	private String getPlayerName(UUID uuid) {
@@ -119,27 +52,6 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
 
 	private boolean isPlayerOnline(UUID uuid) {
 		return getPlugin().getApiProvider().getPlayerAPI().isOnline(uuid);
-	}
-
-	public void notifyStaffReport(String reporter,
-	                              String reportedUser,
-	                              String reporterServer,
-	                              String reportedUserServer,
-	                              String reason,
-	                              boolean playerOnlineStatus,
-	                              boolean targetOnlineStatus) {
-		getPlugin().getOnlineSenders().forEach(i -> {
-			if (i.hasPermission("floracore.report.staff")) {
-				PlayerCommandMessage.COMMAND_MISC_REPORT_BROADCAST.send(i,
-						reporter,
-						reportedUser,
-						reporterServer,
-						reportedUserServer,
-						reason,
-						playerOnlineStatus,
-						targetOnlineStatus);
-			}
-		});
 	}
 
 	public void pushTeleport(UUID sender, UUID recipient, String serverName) {
@@ -216,10 +128,8 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
 						if (sender != null) {
 							Sender s = getPlugin().getSenderFactory().wrap(sender);
 							getPlugin().getBootstrap().getScheduler().asyncLater(() -> {
-								checkVanish(sender);
 								Bukkit.getScheduler().runTask(getPlugin().getLoader(), () -> {
 									sender.teleport(recipient.getLocation());
-									PlayerCommandMessage.COMMAND_REPORT_TP_SUCCESS.send(s, recipient.getDisplayName());
 								});
 							}, 300, TimeUnit.MILLISECONDS);
 							shouldCancel.set(true);
@@ -230,22 +140,6 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
 			}
 		} else {
 			throw new IllegalArgumentException("Unknown message type: " + message.getClass().getName());
-		}
-	}
-
-	@SuppressWarnings("all")
-	private void checkVanish(Player player) {
-		if (getPlugin().getLoader()
-				.getServer()
-				.getPluginManager()
-				.getPlugin("PremiumVanish") != null) {
-			// I hate the lazy author having made this annoying API...
-			// I don't wanna see this warning again...
-			if (!VanishAPI.isInvisible(player)) {
-				VanishAPI.hidePlayer(player);
-				Sender sender = getPlugin().getSenderFactory().wrap(player);
-				MiscCommandMessage.COMMAND_REPORT_VANISH.send(sender);
-			}
 		}
 	}
 }

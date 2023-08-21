@@ -11,7 +11,6 @@ import team.floracore.common.storage.misc.floracore.tables.DATA_LONG;
 import team.floracore.common.storage.misc.floracore.tables.ONLINE;
 import team.floracore.common.storage.misc.floracore.tables.PARTY;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
-import team.floracore.common.storage.misc.floracore.tables.REPORT;
 import team.floracore.common.storage.misc.floracore.tables.SERVER;
 
 import java.util.List;
@@ -135,24 +134,6 @@ public interface StorageImplementation {
 	 * 3.若type为{@link ChatType#PARTY},则该参数内容为组队UUID。
 	 */
 	void insertChat(ChatType type, String parameters, UUID uuid, String message, long time);
-
-
-	List<REPORT> getReports();
-
-	List<REPORT> selectReports(UUID uuid);
-
-	REPORT selectReport(UUID uuid);
-
-	/**
-	 * @return 返回未处理的举报；若无,则返回null。
-	 */
-	REPORT getUnprocessedReports(UUID uuid);
-
-	void addReport(UUID uuid,
-	               UUID reporter,
-	               UUID reported,
-	               String reason,
-	               long reportTime);
 
 	List<CHAT> selectChat(UUID uuid, ChatType chatType);
 

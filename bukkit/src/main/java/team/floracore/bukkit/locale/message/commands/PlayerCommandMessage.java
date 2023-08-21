@@ -1,16 +1,12 @@
 package team.floracore.bukkit.locale.message.commands;
 
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.HoverEvent;
 import team.floracore.common.locale.message.AbstractMessage;
-import team.floracore.common.locale.message.MiscMessage;
 
 import java.util.UUID;
 
 import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
-import static net.kyori.adventure.text.format.TextDecoration.*;
 
 public interface PlayerCommandMessage extends AbstractMessage {
 	Args2<Boolean, String> COMMAND_FLY = (status, target) -> AbstractMessage.prefixed(translatable()
@@ -553,112 +549,6 @@ public interface PlayerCommandMessage extends AbstractMessage {
 					text(item).color(WHITE),
 					text(player).color(GREEN)
 			));
-
-	Args1<String> COMMAND_MISC_REPORT_NOTICE_ACCEPTED = target -> AbstractMessage.prefixed(translatable()
-			.key("floracore.command.misc.report.notice.accepted").color(AQUA).args(text(target).color(RED)));
-
-	Args1<String> COMMAND_MISC_REPORT_NOTICE_PROCESSED = (target) -> AbstractMessage.prefixed(translatable()
-			.key("floracore.command.misc.report.notice.processed").color(AQUA).args(text(target).color(RED)));
-
-	Args2<String, String> COMMAND_MISC_REPORT_NOTICE_STAFF_ACCEPTED = (reporter, target) -> AbstractMessage.prefixed(
-			// 玩家 {0} 对玩家 {1} 的举报已被受理
-			translatable().key("floracore.command.misc.report.notice.staff.accepted")
-					.color(AQUA)
-					.args(text(reporter).color(GREEN), text(target).color(RED)));
-
-	Args2<String, String> COMMAND_MISC_REPORT_NOTICE_STAFF_PROCESSED = (reporter, target) -> AbstractMessage.prefixed(
-			// 玩家 {0} 对玩家 {1} 的举报已被处理
-			translatable().key("floracore.command.misc.report.notice.staff.processed")
-					.color(AQUA)
-					.args(text(reporter).color(GREEN), text(target).color(RED)));
-
-	Args0 COMMAND_MISC_REPORT_THANKS = () -> AbstractMessage.prefixed(translatable().key(
-			"floracore.command.misc.report.thanks").color(AQUA));
-
-	Args7<String, String, String, String, String, Boolean, Boolean> COMMAND_MISC_REPORT_BROADCAST = (player, target,
-	                                                                                                 playerServer,
-	                                                                                                 targetServer,
-	                                                                                                 reason,
-	                                                                                                 playerOnlineStatus, targetOnlineStatus) -> {
-		Component infoLine = text()
-				// 玩家 {0} 所在的服务器: {1} {2}
-				.append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA)
-						// {}
-						.args(text(player).color(GREEN), text(playerServer).color(YELLOW),
-								OPEN_BRACKET.append(translatable(playerOnlineStatus ?
-												"floracore.command.misc.online" :
-												"floracore.command.misc.offline"))
-										.append(CLOSE_BRACKET)
-										.color(playerOnlineStatus ? GREEN : RED))).append(newline())
-				.append(translatable().key("floracore.command.misc.report.broadcast.hover.line.1").color(AQUA)
-						.args(text(target).color(GREEN), text(targetServer).color(YELLOW),
-								OPEN_BRACKET.append(translatable(targetOnlineStatus ?
-												"floracore.command.misc.online" :
-												"floracore.command.misc.offline"))
-										.append(CLOSE_BRACKET)
-										.color(targetOnlineStatus ? GREEN : RED)))
-				.build();
-		if (targetOnlineStatus) {
-			infoLine = infoLine.append(newline())
-					.append(ARROW)
-					.append(space())
-					.append(MiscMessage.CLICK_TP.decoration(UNDERLINED, true));
-		}
-		HoverEvent<Component> hoverEvent = HoverEvent.showText(infoLine);
-		ClickEvent clickEvent = ClickEvent.runCommand("/report-tp " + target);
-		Component i = AbstractMessage.prefixed(translatable()
-						.key("floracore.command.misc.report.broadcast")
-						.color(AQUA)
-						// {}
-						.args(text(player).color(GREEN),
-								text(target).color(RED),
-								text(reason).color(YELLOW)))
-				// hoverEvent
-				.hoverEvent(hoverEvent);
-		if (targetOnlineStatus) {
-			i = i.clickEvent(clickEvent);
-		}
-		// 玩家 {0} 以 {2} 的理由举报了玩家 {1}
-		return i;
-	};
-
-	Args2<String, String> COMMAND_REPORT_SUCCESS = (target, reason) -> AbstractMessage.prefixed(translatable()
-			// 你以"{1}"的理由举报了玩家 {0} ,请你耐心等待工作人员处理!
-			.key("floracore.command.report.success")
-			.color(AQUA)
-			.args(text(target, RED),
-					text(reason, YELLOW)));
-
-	Args0 COMMAND_REPORT_REPEAT = () -> AbstractMessage.prefixed(translatable()
-			// 你已经举报过这名玩家了!
-			.key("floracore.command.report.repeat")
-			.color(RED));
-
-	Args1<String> COMMAND_REPORT_TP_SUCCESS = id -> AbstractMessage.prefixed(translatable()
-			// 已将你传送至玩家 {0} 的旁边!
-			.key("floracore.command.report.tp.success")
-			.color(AQUA)
-			.args(text(id, GREEN)));
-
-	Args0 COMMAND_REPORT_TP_TRANSMITTING = () -> AbstractMessage.prefixed(translatable()
-			// 传送中...
-			.key("floracore.command.report.tp.transmitting")
-			.color(AQUA));
-
-	Args0 COMMAND_REPORT_NOT_PERMISSION = () -> AbstractMessage.prefixed(translatable()
-			// 你不能举报这名玩家!
-			.key("floracore.command.report.no-permission")
-			.color(RED));
-
-	Args0 COMMAND_REPORT_SELF = () -> AbstractMessage.prefixed(translatable()
-			// 你不能举报你自己!
-			.key("floracore.command.report.self")
-			.color(RED));
-
-	Args0 COMMAND_REPORT_ABNORMAL = () -> AbstractMessage.prefixed(translatable()
-			// 这名玩家的数据异常!
-			.key("floracore.command.report.abnormal")
-			.color(RED));
 
 	Args1<String> COMMAND_TELEPORT = (target) -> AbstractMessage.prefixed(translatable()
 			// 你已传送至 {0}
