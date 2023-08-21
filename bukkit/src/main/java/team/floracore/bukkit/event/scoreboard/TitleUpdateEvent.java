@@ -11,33 +11,33 @@ import org.jetbrains.annotations.NotNull;
  * @author xLikeWATCHDOG
  */
 public class TitleUpdateEvent extends Event {
-    private static final HandlerList handlerList = new HandlerList();
-    private final Player player;
-    private String title;
+	private static final HandlerList handlerList = new HandlerList();
+	private final Player player;
+	private String title;
 
-    public TitleUpdateEvent(Player player) {
-        super(true);
-        this.player = player;
-    }
+	public TitleUpdateEvent(Player player) {
+		super(true);
+		this.player = player;
+	}
 
-    public static HandlerList getHandlerList() {
-        return handlerList;
-    }
+	public static HandlerList getHandlerList() {
+		return handlerList;
+	}
 
-    public Player getPlayer() {
-        return player;
-    }
+	public Player getPlayer() {
+		return player;
+	}
 
-    public String getTitle() {
-        return title;
-    }
+	public String getTitle() {
+		return title;
+	}
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
+	public void setTitle(String title) {
+		this.title = title;
+	}
 
-    @Override
-    public @NotNull HandlerList getHandlers() {
-        return handlerList;
-    }
+	@Override
+	public @NotNull HandlerList getHandlers() {
+		return handlerList;
+	}
 }

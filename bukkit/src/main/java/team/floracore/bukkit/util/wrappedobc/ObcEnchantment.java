@@ -8,6 +8,6 @@ import team.floracore.common.util.wrapper.WrappedMethod;
 
 @WrappedBukkitClass(@VersionName("obc.enchantments.CraftEnchantment"))
 public interface ObcEnchantment extends WrappedBukkitObject {
-    @WrappedMethod("getHandle")
-    NmsEnchantment getHandle();
+	@WrappedMethod("getHandle")
+	NmsEnchantment getHandle();
 }

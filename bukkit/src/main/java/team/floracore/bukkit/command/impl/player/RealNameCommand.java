@@ -20,18 +20,18 @@ import java.util.UUID;
 @CommandDescription("floracore.command.description.realname")
 @CommandPermission("floracore.command.realname")
 public class RealNameCommand extends FloraCoreBukkitCommand {
-    public RealNameCommand(FCBukkitPlugin plugin) {
-        super(plugin);
-    }
+	public RealNameCommand(FCBukkitPlugin plugin) {
+		super(plugin);
+	}
 
-    @CommandMethod("realname <target>")
-    @CommandDescription("floracore.command.description.realname")
-    public void realName(final @NotNull Player s, final @Argument("target") Player target) {
-        Sender sender = getPlugin().getSenderFactory().wrap(s);
-        UUID tu = target.getUniqueId();
-        PLAYER ps = getStorageImplementation().selectPlayer(tu);
-        String name = target.getDisplayName();
-        String realName = ps.getName();
-        PlayerCommandMessage.COMMAND_REALNAME_SUCCESS.send(sender, name, realName);
-    }
+	@CommandMethod("realname <target>")
+	@CommandDescription("floracore.command.description.realname")
+	public void realName(final @NotNull Player s, final @Argument("target") Player target) {
+		Sender sender = getPlugin().getSenderFactory().wrap(s);
+		UUID tu = target.getUniqueId();
+		PLAYER ps = getStorageImplementation().selectPlayer(tu);
+		String name = target.getDisplayName();
+		String realName = ps.getName();
+		PlayerCommandMessage.COMMAND_REALNAME_SUCCESS.send(sender, name, realName);
+	}
 }

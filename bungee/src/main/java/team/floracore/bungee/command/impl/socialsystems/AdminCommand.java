@@ -19,29 +19,29 @@ import java.util.UUID;
 @CommandDescription("floracore.command.description.admin")
 @CommandPermission("floracore.socialsystems.admin")
 public class AdminCommand extends FloraCoreBungeeCommand {
-    public AdminCommand(FCBungeePlugin plugin) {
-        super(plugin);
-    }
+	public AdminCommand(FCBungeePlugin plugin) {
+		super(plugin);
+	}
 
-    @CommandMethod("adminchat|ac <message>")
-    @CommandDescription("floracore.command.description.admin.chat")
-    public void adminChat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
-        chat(player, message);
-    }
+	@CommandMethod("adminchat|ac <message>")
+	@CommandDescription("floracore.command.description.admin.chat")
+	public void adminChat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
+		chat(player, message);
+	}
 
-    @CommandMethod("admin|a chat <message>")
-    @CommandDescription("floracore.command.description.admin.chat")
-    public void chat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
-        UUID uuid = player.getUniqueId();
-        getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
-                .pushChatMessage(UUID.randomUUID(),
-                        ChatType.ADMIN,
-                        Arrays.asList(uuid.toString(), message)));
-        long time = System.currentTimeMillis();
-        getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.ADMIN,
-                "",
-                uuid,
-                message,
-                time));
-    }
+	@CommandMethod("admin|a chat <message>")
+	@CommandDescription("floracore.command.description.admin.chat")
+	public void chat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
+		UUID uuid = player.getUniqueId();
+		getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
+				.pushChatMessage(UUID.randomUUID(),
+						ChatType.ADMIN,
+						Arrays.asList(uuid.toString(), message)));
+		long time = System.currentTimeMillis();
+		getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.ADMIN,
+				"",
+				uuid,
+				message,
+				time));
+	}
 }

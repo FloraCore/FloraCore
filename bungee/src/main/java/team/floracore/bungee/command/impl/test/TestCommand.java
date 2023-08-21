@@ -20,14 +20,14 @@ import team.floracore.common.sender.Sender;
 @CommandContainer
 @CommandPermission("admin.test")
 public class TestCommand extends FloraCoreBungeeCommand {
-    public TestCommand(FCBungeePlugin plugin) {
-        super(plugin);
-    }
+	public TestCommand(FCBungeePlugin plugin) {
+		super(plugin);
+	}
 
-    @CommandMethod("test-bc i18n <text>")
-    public void i18n(final @NotNull CommandSender sender, @NotNull @Argument("text") String text) {
-        Sender s = getPlugin().getSenderFactory().wrap(sender);
-        Component component = Component.translatable().key(text).build();
-        s.sendMessage(component);
-    }
+	@CommandMethod("test-bc i18n <text>")
+	public void i18n(final @NotNull CommandSender sender, @NotNull @Argument("text") String text) {
+		Sender s = getPlugin().getSenderFactory().wrap(sender);
+		Component component = Component.translatable().key(text).build();
+		s.sendMessage(component);
+	}
 }

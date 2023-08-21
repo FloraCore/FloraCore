@@ -9,5 +9,5 @@ import static java.lang.annotation.RetentionPolicy.*;
 @Retention(RUNTIME)
 @Target(TYPE)
 public @interface WrappedClass {
-    String[] value();
+	String[] value();
 }

@@ -17,19 +17,19 @@ import team.floracore.common.sender.Sender;
 @CommandDescription("floracore.command.description.invsee")
 @CommandPermission("floracore.command.invsee")
 public class InvSeeCommand extends FloraCoreBukkitCommand {
-    public InvSeeCommand(FCBukkitPlugin plugin) {
-        super(plugin);
-    }
+	public InvSeeCommand(FCBukkitPlugin plugin) {
+		super(plugin);
+	}
 
-    @CommandMethod("invsee|inv <target>")
-    @CommandDescription("floracore.command.description.invsee")
-    public void invSee(final @NotNull Player s, final @Argument("target") Player target) {
-        Sender sender = getPlugin().getSenderFactory().wrap(s);
-        if (s.getUniqueId() == target.getUniqueId()) {
-            PlayerCommandMessage.COMMAND_INVSEE_SELF.send(sender);
-            return;
-        }
-        s.openInventory(target.getInventory());
-        PlayerCommandMessage.COMMAND_INVSEE.send(sender, target.getDisplayName());
-    }
+	@CommandMethod("invsee|inv <target>")
+	@CommandDescription("floracore.command.description.invsee")
+	public void invSee(final @NotNull Player s, final @Argument("target") Player target) {
+		Sender sender = getPlugin().getSenderFactory().wrap(s);
+		if (s.getUniqueId() == target.getUniqueId()) {
+			PlayerCommandMessage.COMMAND_INVSEE_SELF.send(sender);
+			return;
+		}
+		s.openInventory(target.getInventory());
+		PlayerCommandMessage.COMMAND_INVSEE.send(sender, target.getDisplayName());
+	}
 }

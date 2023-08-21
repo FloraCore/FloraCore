@@ -12,24 +12,24 @@ import java.util.concurrent.CompletableFuture;
  * @author xLikeWATCHDOG
  */
 public interface RankConsumer {
-    /**
-     * 设置指定玩家的Rank。
-     *
-     * @param uuid 玩家的UUID。
-     * @param rank 要设置的Rank。
-     * @return 一个CompletableFuture对象，表示设置等级的异步操作。
-     */
-    CompletableFuture<Void> setRank(UUID uuid, String rank);
+	/**
+	 * 设置指定玩家的Rank。
+	 *
+	 * @param uuid 玩家的UUID。
+	 * @param rank 要设置的Rank。
+	 * @return 一个CompletableFuture对象，表示设置等级的异步操作。
+	 */
+	CompletableFuture<Void> setRank(UUID uuid, String rank);
 
-    /**
-     * 重置指定玩家的Rank。
-     *
-     * @param uuid 玩家的UUID。
-     * @return 一个CompletableFuture对象，表示重置等级的异步操作。
-     */
-    CompletableFuture<Void> resetRank(UUID uuid);
+	/**
+	 * 重置指定玩家的Rank。
+	 *
+	 * @param uuid 玩家的UUID。
+	 * @return 一个CompletableFuture对象，表示重置等级的异步操作。
+	 */
+	CompletableFuture<Void> resetRank(UUID uuid);
 
-    CompletableFuture<String> getPrefix(UUID uuid);
+	CompletableFuture<String> getPrefix(UUID uuid);
 
-    CompletableFuture<String> getSuffix(UUID uuid);
+	CompletableFuture<String> getSuffix(UUID uuid);
 }

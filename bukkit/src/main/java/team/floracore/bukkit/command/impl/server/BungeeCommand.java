@@ -16,14 +16,14 @@ import team.floracore.common.sender.Sender;
  */
 @CommandPermission("floracore.command.bungeecommand")
 public class BungeeCommand extends FloraCoreBukkitCommand {
-    public BungeeCommand(FCBukkitPlugin plugin) {
-        super(plugin);
-    }
+	public BungeeCommand(FCBukkitPlugin plugin) {
+		super(plugin);
+	}
 
-    @CommandMethod("bungeecommand|bcmd <command>")
-    public void bungeeCommand(@NotNull CommandSender s, @NotNull @Argument("command") @Greedy String command) {
-        Sender sender = getPlugin().getSenderFactory().wrap(s);
-        getPlugin().getBukkitMessagingFactory().bungeeCommand(command);
-        ServerCommandMessage.COMMAND_BUNGEE_COMMAND.send(sender, sender.getName(), command);
-    }
+	@CommandMethod("bungeecommand|bcmd <command>")
+	public void bungeeCommand(@NotNull CommandSender s, @NotNull @Argument("command") @Greedy String command) {
+		Sender sender = getPlugin().getSenderFactory().wrap(s);
+		getPlugin().getBukkitMessagingFactory().bungeeCommand(command);
+		ServerCommandMessage.COMMAND_BUNGEE_COMMAND.send(sender, sender.getName(), command);
+	}
 }

@@ -35,74 +35,76 @@ import java.util.concurrent.TimeUnit;
 @CommandContainer
 @CommandDescription("floracore.command.description.language")
 public class LanguageCommand extends FloraCoreBukkitCommand {
-    private static final Cache<Integer, Set<Locale>> languageCache = CaffeineFactory.newBuilder()
-            .expireAfterWrite(30,
-                    TimeUnit.MINUTES)
-            .build();
+	private static final Cache<Integer, Set<Locale>> languageCache = CaffeineFactory.newBuilder()
+			.expireAfterWrite(30,
+					TimeUnit.MINUTES)
+			.build();
 
-    public LanguageCommand(FCBukkitPlugin plugin) {
-        super(plugin);
-    }
+	public LanguageCommand(FCBukkitPlugin plugin) {
+		super(plugin);
+	}
 
-    @CommandMethod("language|lang")
-    public void language(final @NotNull Player player) {
-        Sender s = getPlugin().getSenderFactory().wrap(player);
-        GuiPage guiPage = getLanguageGui(player);
-        if (guiPage == null) {
-            MiscMessage.CHECK_CONSOLE_FOR_ERRORS.send(s);
-            return;
-        }
-        guiPage.openGui();
-    }
+	@CommandMethod("language|lang")
+	public void language(final @NotNull Player player) {
+		Sender s = getPlugin().getSenderFactory().wrap(player);
+		GuiPage guiPage = getLanguageGui(player);
+		if (guiPage == null) {
+			MiscMessage.CHECK_CONSOLE_FOR_ERRORS.send(s);
+			return;
+		}
+		guiPage.openGui();
+	}
 
-    public GuiPage getLanguageGui(Player player) {
-        Sender s = getPlugin().getSenderFactory().wrap(player);
-        UUID uuid = player.getUniqueId();
-        List<Button> buttons = new ArrayList<>();
-        Set<Locale> availableTranslations = languageCache.getIfPresent(0);
-        if (availableTranslations == null) {
-            availableTranslations = getPlugin().getTranslationManager().getInstalledLocales();
-            if (!availableTranslations.isEmpty()) {
-                languageCache.put(0, availableTranslations);
-            }
-        }
-        Set<Locale> finalAvailableTranslations = availableTranslations;
-        for (Locale languageLocale : finalAvailableTranslations) {
-            if (!languageLocale.toLanguageTag().contains("-")) continue;
-            String pl = TranslationManager.localeDisplayName(languageLocale);
-            Button b = Button.of(p -> {
-                Component c = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(pl), languageLocale);
-                Component t = Component.text(pl).color(NamedTextColor.GREEN);
-                ItemStackBuilder itemBuilder = new ItemStackBuilder(Material.PAPER).setName(t)
-                        .setLore(Collections.singletonList(c));
-                return itemBuilder.get();
-            }, p -> {
-                {
-                    String value = languageLocale.toLanguageTag();
-                    getStorageImplementation().insertData(uuid,
-                            DataType.FUNCTION,
-                            "language",
-                            value.replace("-", "_"),
-                            0);
-                    player.closeInventory();
-                    MiscCommandMessage.COMMAND_LANGUAGE_CHANGE_SUCCESS.send(s, pl);
-                }
-            });
-            buttons.add(b);
-        }
-        Component title = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_TITLE.build(), uuid);
-        Slots LINE = Slots.pattern(new String[]{
-                "---------",
-                "-x-x-x-x-",
-                "-x-x-x-x-",
-                "-x-x-x-x-",
-                "-x-x-x-x-",
-                "---------"
-        }, 'x');
-        GuiPage gui = new GuiPage(player, buttons, 16, LINE);
-        gui.title(title);
-        gui.setPlayer(player);
-        ReportCommand.createPageButtons(uuid, gui);
-        return gui;
-    }
+	public GuiPage getLanguageGui(Player player) {
+		Sender s = getPlugin().getSenderFactory().wrap(player);
+		UUID uuid = player.getUniqueId();
+		List<Button> buttons = new ArrayList<>();
+		Set<Locale> availableTranslations = languageCache.getIfPresent(0);
+		if (availableTranslations == null) {
+			availableTranslations = getPlugin().getTranslationManager().getInstalledLocales();
+			if (!availableTranslations.isEmpty()) {
+				languageCache.put(0, availableTranslations);
+			}
+		}
+		Set<Locale> finalAvailableTranslations = availableTranslations;
+		for (Locale languageLocale : finalAvailableTranslations) {
+			if (!languageLocale.toLanguageTag().contains("-")) {
+				continue;
+			}
+			String pl = TranslationManager.localeDisplayName(languageLocale);
+			Button b = Button.of(p -> {
+				Component c = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_CHANGE.build(pl), languageLocale);
+				Component t = Component.text(pl).color(NamedTextColor.GREEN);
+				ItemStackBuilder itemBuilder = new ItemStackBuilder(Material.PAPER).setName(t)
+						.setLore(Collections.singletonList(c));
+				return itemBuilder.get();
+			}, p -> {
+				{
+					String value = languageLocale.toLanguageTag();
+					getStorageImplementation().insertData(uuid,
+							DataType.FUNCTION,
+							"language",
+							value.replace("-", "_"),
+							0);
+					player.closeInventory();
+					MiscCommandMessage.COMMAND_LANGUAGE_CHANGE_SUCCESS.send(s, pl);
+				}
+			});
+			buttons.add(b);
+		}
+		Component title = TranslationManager.render(MenuMessage.COMMAND_LANGUAGE_TITLE.build(), uuid);
+		Slots LINE = Slots.pattern(new String[]{
+				"---------",
+				"-x-x-x-x-",
+				"-x-x-x-x-",
+				"-x-x-x-x-",
+				"-x-x-x-x-",
+				"---------"
+		}, 'x');
+		GuiPage gui = new GuiPage(player, buttons, 16, LINE);
+		gui.title(title);
+		gui.setPlayer(player);
+		ReportCommand.createPageButtons(uuid, gui);
+		return gui;
+	}
 }

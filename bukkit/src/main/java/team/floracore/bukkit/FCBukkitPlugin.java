@@ -44,224 +44,224 @@ import java.util.stream.Stream;
  * FloraCore implementation for the Bukkit API.
  */
 public class FCBukkitPlugin extends AbstractFloraCorePlugin {
-    private final FCBukkitBootstrap bootstrap;
-    private ListenerManager listenerManager;
-    private CommandManager commandManager;
-    private BukkitSenderFactory senderFactory;
-    private BukkitMessagingFactory bukkitMessagingFactory;
-    private ChatManager chatManager;
-    private BungeeUtil bungeeUtil;
-    private KeyedConfiguration boardsConfiguration;
-    private ScoreBoardManager scoreBoardManager;
-    private GuiManager guiManager;
-    private ProtocolManager protocolManager;
-    private PlaceholderAPIHook placeholderAPIHook;
+	private final FCBukkitBootstrap bootstrap;
+	private ListenerManager listenerManager;
+	private CommandManager commandManager;
+	private BukkitSenderFactory senderFactory;
+	private BukkitMessagingFactory bukkitMessagingFactory;
+	private ChatManager chatManager;
+	private BungeeUtil bungeeUtil;
+	private KeyedConfiguration boardsConfiguration;
+	private ScoreBoardManager scoreBoardManager;
+	private GuiManager guiManager;
+	private ProtocolManager protocolManager;
+	private PlaceholderAPIHook placeholderAPIHook;
 
-    public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
-        this.bootstrap = bootstrap;
-    }
+	public FCBukkitPlugin(FCBukkitBootstrap bootstrap) {
+		this.bootstrap = bootstrap;
+	}
 
-    private static boolean isBrigadierSupported() {
-        return classExists("com.mojang.brigadier.CommandDispatcher");
-    }
+	private static boolean isBrigadierSupported() {
+		return classExists("com.mojang.brigadier.CommandDispatcher");
+	}
 
-    private static boolean classExists(String className) {
-        try {
-            Class.forName(className);
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
-        }
-    }
+	private static boolean classExists(String className) {
+		try {
+			Class.forName(className);
+			return true;
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+	}
 
-    private static boolean isAsyncTabCompleteSupported() {
-        return classExists("com.destroystokyo.paper.event.server.AsyncTabCompleteEvent");
-    }
+	private static boolean isAsyncTabCompleteSupported() {
+		return classExists("com.destroystokyo.paper.event.server.AsyncTabCompleteEvent");
+	}
 
-    public ListenerManager getListenerManager() {
-        return listenerManager;
-    }
+	public ListenerManager getListenerManager() {
+		return listenerManager;
+	}
 
-    @Override
-    protected Set<Dependency> getGlobalDependencies() {
-        Set<Dependency> dependencies = super.getGlobalDependencies();
-        dependencies.add(Dependency.ADVENTURE_PLATFORM_BUKKIT);
-        dependencies.add(Dependency.CLOUD_BUKKIT);
-        dependencies.add(Dependency.CLOUD_PAPER);
-        dependencies.add(Dependency.BUKKIT_GUI);
-        dependencies.add(Dependency.BSTATS_BUKKIT);
-        return dependencies;
-    }
+	@Override
+	protected Set<Dependency> getGlobalDependencies() {
+		Set<Dependency> dependencies = super.getGlobalDependencies();
+		dependencies.add(Dependency.ADVENTURE_PLATFORM_BUKKIT);
+		dependencies.add(Dependency.CLOUD_BUKKIT);
+		dependencies.add(Dependency.CLOUD_PAPER);
+		dependencies.add(Dependency.BUKKIT_GUI);
+		dependencies.add(Dependency.BSTATS_BUKKIT);
+		return dependencies;
+	}
 
-    @Override
-    protected void setupSenderFactory() {
-        this.senderFactory = new BukkitSenderFactory(this);
-    }
+	@Override
+	protected void setupSenderFactory() {
+		this.senderFactory = new BukkitSenderFactory(this);
+	}
 
-    @Override
-    protected ConfigurationAdapter provideConfigurationAdapter() {
-        return new BukkitConfigAdapter(this, resolveConfig("config.yml").toFile());
-    }
+	@Override
+	protected ConfigurationAdapter provideConfigurationAdapter() {
+		return new BukkitConfigAdapter(this, resolveConfig("config.yml").toFile());
+	}
 
-    @Override
-    protected void setupFramework() {
-        this.bungeeUtil = new BungeeUtil(this);
+	@Override
+	protected void setupFramework() {
+		this.bungeeUtil = new BungeeUtil(this);
 
-        RegistrarRegistrar.instance.load();
-        ListenerRegistrar.instance.load();
-        IModule.ModuleModule.instance.load();
-        NothingRegistrar.instance.load();
-        protocolManager = ProtocolLibrary.getProtocolManager();
+		RegistrarRegistrar.instance.load();
+		ListenerRegistrar.instance.load();
+		IModule.ModuleModule.instance.load();
+		NothingRegistrar.instance.load();
+		protocolManager = ProtocolLibrary.getProtocolManager();
 
-        getLogger().info("Loading inventory manager...");
-        guiManager = new GuiManager(getLoader());
+		getLogger().info("Loading inventory manager...");
+		guiManager = new GuiManager(getLoader());
 
-        Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getLoader(), () -> {
-            SERVER server = getStorage().getImplementation().selectServer(getServerName());
-            if (server == null) {
-                ServerType serverType = getConfiguration().get(ConfigKeys.SERVER_TYPE);
-                server = new SERVER(this,
-                        getStorage().getImplementation(),
-                        -1,
-                        getServerName(),
-                        serverType,
-                        serverType.isAutoSync1(),
-                        serverType.isAutoSync2(),
-                        System.currentTimeMillis());
-                try {
-                    server.init();
-                } catch (SQLException e) {
-                    throw new RuntimeException();
-                }
-            } else {
-                server.setLastActiveTime(System.currentTimeMillis());
-            }
-        }, 0, 20 * 60 * 10);
+		Bukkit.getScheduler().runTaskTimerAsynchronously(getBootstrap().getLoader(), () -> {
+			SERVER server = getStorage().getImplementation().selectServer(getServerName());
+			if (server == null) {
+				ServerType serverType = getConfiguration().get(ConfigKeys.SERVER_TYPE);
+				server = new SERVER(this,
+						getStorage().getImplementation(),
+						-1,
+						getServerName(),
+						serverType,
+						serverType.isAutoSync1(),
+						serverType.isAutoSync2(),
+						System.currentTimeMillis());
+				try {
+					server.init();
+				} catch (SQLException e) {
+					throw new RuntimeException();
+				}
+			} else {
+				server.setLastActiveTime(System.currentTimeMillis());
+			}
+		}, 0, 20 * 60 * 10);
 
-        this.listenerManager = new ListenerManager(this);
-        this.commandManager = new CommandManager(this);
-        this.chatManager = new ChatManager(this);
+		this.listenerManager = new ListenerManager(this);
+		this.commandManager = new CommandManager(this);
+		this.chatManager = new ChatManager(this);
 
-        if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
-            getLogger().info("Hooking PlaceholderAPI...");
-            this.placeholderAPIHook = new PlaceholderAPIHook(this);
-            this.placeholderAPIHook.register();
-        }
-    }
+		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
+			getLogger().info("Hooking PlaceholderAPI...");
+			this.placeholderAPIHook = new PlaceholderAPIHook(this);
+			this.placeholderAPIHook.register();
+		}
+	}
 
-    @Override
-    protected void expandApi() {
-        FloraCore floraCore = FloraCoreProvider.get();
-        floraCore.getPlatform().setFloraCorePlatformPlugin(this);
-    }
+	@Override
+	protected void expandApi() {
+		FloraCore floraCore = FloraCoreProvider.get();
+		floraCore.getPlatform().setFloraCorePlatformPlugin(this);
+	}
 
-    @Override
-    public MessagingFactory<?> provideMessagingFactory() {
-        this.bukkitMessagingFactory = new BukkitMessagingFactory(this);
-        return this.bukkitMessagingFactory;
-    }
+	@Override
+	public MessagingFactory<?> provideMessagingFactory() {
+		this.bukkitMessagingFactory = new BukkitMessagingFactory(this);
+		return this.bukkitMessagingFactory;
+	}
 
-    @Override
-    protected void setupConfiguration() {
-        this.boardsConfiguration = new BoardsConfiguration(this,
-                new BukkitConfigAdapter(this,
-                        resolveConfig("boards.yml").toFile()));
-        getLogger().info("Loading scoreboard manager...");
-        if (this.boardsConfiguration.get(BoardsKeys.ENABLE)) {
-            scoreBoardManager = new ScoreBoardManager(this);
-            scoreBoardManager.start();
-        }
-    }
+	@Override
+	protected void setupConfiguration() {
+		this.boardsConfiguration = new BoardsConfiguration(this,
+				new BukkitConfigAdapter(this,
+						resolveConfig("boards.yml").toFile()));
+		getLogger().info("Loading scoreboard manager...");
+		if (this.boardsConfiguration.get(BoardsKeys.ENABLE)) {
+			scoreBoardManager = new ScoreBoardManager(this);
+			scoreBoardManager.start();
+		}
+	}
 
-    @Override
-    public boolean luckPermsHook() {
-        return Bukkit.getPluginManager().getPlugin("LuckPerms") != null;
-    }
+	@Override
+	public boolean luckPermsHook() {
+		return Bukkit.getPluginManager().getPlugin("LuckPerms") != null;
+	}
 
-    @Override
-    public Sender getSender(UUID uuid) {
-        Player player = Bukkit.getPlayer(uuid);
-        if (player == null) {
-            return null;
-        }
-        return getSenderFactory().wrap(player);
-    }
+	@Override
+	public Sender getSender(UUID uuid) {
+		Player player = Bukkit.getPlayer(uuid);
+		if (player == null) {
+			return null;
+		}
+		return getSenderFactory().wrap(player);
+	}
 
-    @Override
-    protected void disableFramework() {
-        RegistrarRegistrar.instance.unload();
-        ListenerRegistrar.instance.unload();
-        IModule.ModuleModule.instance.unload();
-        NothingRegistrar.instance.unload();
+	@Override
+	protected void disableFramework() {
+		RegistrarRegistrar.instance.unload();
+		ListenerRegistrar.instance.unload();
+		IModule.ModuleModule.instance.unload();
+		NothingRegistrar.instance.unload();
 
-        if (this.boardsConfiguration.get(BoardsKeys.ENABLE)) {
-            scoreBoardManager.getSidebarBoard().cancel();
-        }
+		if (this.boardsConfiguration.get(BoardsKeys.ENABLE)) {
+			scoreBoardManager.getSidebarBoard().cancel();
+		}
 
-        chatManager.shutdown();
-    }
+		chatManager.shutdown();
+	}
 
-    public JavaPlugin getLoader() {
-        return this.bootstrap.getLoader();
-    }
+	public JavaPlugin getLoader() {
+		return this.bootstrap.getLoader();
+	}
 
-    @Override
-    public FCBukkitBootstrap getBootstrap() {
-        return this.bootstrap;
-    }
+	@Override
+	public FCBukkitBootstrap getBootstrap() {
+		return this.bootstrap;
+	}
 
-    @Override
-    public Stream<Sender> getOnlineSenders() {
-        List<Player> players = new ArrayList<>(this.bootstrap.getServer().getOnlinePlayers());
-        return Stream.concat(
-                Stream.of(getConsoleSender()),
-                players.stream().map(p -> getSenderFactory().wrap(p))
-        );
-    }
+	@Override
+	public Stream<Sender> getOnlineSenders() {
+		List<Player> players = new ArrayList<>(this.bootstrap.getServer().getOnlinePlayers());
+		return Stream.concat(
+				Stream.of(getConsoleSender()),
+				players.stream().map(p -> getSenderFactory().wrap(p))
+		);
+	}
 
-    @Override
-    public Sender getConsoleSender() {
-        return getSenderFactory().wrap(this.bootstrap.getConsole());
-    }
+	@Override
+	public Sender getConsoleSender() {
+		return getSenderFactory().wrap(this.bootstrap.getConsole());
+	}
 
-    @Override
-    public boolean processIncomingMessage(String type, JsonElement content, UUID id) {
-        return bukkitMessagingFactory.processIncomingMessage(type, content, id);
-    }
+	@Override
+	public boolean processIncomingMessage(String type, JsonElement content, UUID id) {
+		return bukkitMessagingFactory.processIncomingMessage(type, content, id);
+	}
 
-    public BukkitSenderFactory getSenderFactory() {
-        return this.senderFactory;
-    }
+	public BukkitSenderFactory getSenderFactory() {
+		return this.senderFactory;
+	}
 
-    public ChatManager getChatManager() {
-        return chatManager;
-    }
+	public ChatManager getChatManager() {
+		return chatManager;
+	}
 
-    public ProtocolManager getProtocolManager() {
-        return protocolManager;
-    }
+	public ProtocolManager getProtocolManager() {
+		return protocolManager;
+	}
 
-    public BukkitMessagingFactory getBukkitMessagingFactory() {
-        return bukkitMessagingFactory;
-    }
+	public BukkitMessagingFactory getBukkitMessagingFactory() {
+		return bukkitMessagingFactory;
+	}
 
-    public BungeeUtil getBungeeUtil() {
-        return bungeeUtil;
-    }
+	public BungeeUtil getBungeeUtil() {
+		return bungeeUtil;
+	}
 
-    public KeyedConfiguration getBoardsConfiguration() {
-        return boardsConfiguration;
-    }
+	public KeyedConfiguration getBoardsConfiguration() {
+		return boardsConfiguration;
+	}
 
-    public ScoreBoardManager getScoreBoardManager() {
-        return scoreBoardManager;
-    }
+	public ScoreBoardManager getScoreBoardManager() {
+		return scoreBoardManager;
+	}
 
-    public GuiManager getGuiManager() {
-        return guiManager;
-    }
+	public GuiManager getGuiManager() {
+		return guiManager;
+	}
 
-    public CommandManager getCommandManager() {
-        return commandManager;
-    }
+	public CommandManager getCommandManager() {
+		return commandManager;
+	}
 }

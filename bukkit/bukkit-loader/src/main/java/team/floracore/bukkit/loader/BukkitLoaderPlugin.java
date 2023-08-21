@@ -5,25 +5,25 @@ import team.floracore.bukkit.FCBukkitBootstrap;
 import team.floracore.common.loader.LoaderBootstrap;
 
 public class BukkitLoaderPlugin extends JavaPlugin {
-    private final LoaderBootstrap plugin;
+	private final LoaderBootstrap plugin;
 
-    public BukkitLoaderPlugin() {
-        this.plugin = new FCBukkitBootstrap(this);
-    }
+	public BukkitLoaderPlugin() {
+		this.plugin = new FCBukkitBootstrap(this);
+	}
 
-    @Override
-    public void onLoad() {
-        this.plugin.onLoad();
-    }
+	@Override
+	public void onLoad() {
+		this.plugin.onLoad();
+	}
 
-    @Override
-    public void onDisable() {
-        this.plugin.onDisable();
-    }
+	@Override
+	public void onDisable() {
+		this.plugin.onDisable();
+	}
 
-    @Override
-    public void onEnable() {
-        this.plugin.onEnable();
-    }
+	@Override
+	public void onEnable() {
+		this.plugin.onEnable();
+	}
 
 }

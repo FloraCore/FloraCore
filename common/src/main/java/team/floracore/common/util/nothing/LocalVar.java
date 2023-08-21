@@ -13,9 +13,9 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target(value = ElementType.PARAMETER)
 public @interface LocalVar {
-    /**
-     * The index of target variable
-     * For non-static methods, 0 is this
-     */
-    int value();
+	/**
+	 * The index of target variable
+	 * For non-static methods, 0 is this
+	 */
+	int value();
 }

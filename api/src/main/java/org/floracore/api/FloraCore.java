@@ -30,80 +30,80 @@ import org.jetbrains.annotations.NotNull;
  */
 public interface FloraCore {
 
-    /**
-     * Gets the name of this server.
-     *
-     * <p>This is defined in the FloraCore configuration file, and is used for
-     * server specific permission handling.</p>
-     *
-     * <p>The default server name is "global".</p>
-     *
-     * @return the server name
-     */
-    String getServerName();
+	/**
+	 * Gets the name of this server.
+	 *
+	 * <p>This is defined in the FloraCore configuration file, and is used for
+	 * server specific permission handling.</p>
+	 *
+	 * <p>The default server name is "global".</p>
+	 *
+	 * @return the server name
+	 */
+	String getServerName();
 
-    /**
-     * 获取数据API
-     *
-     * @return 数据API
-     */
-    DataAPI getDataAPI();
+	/**
+	 * 获取数据API
+	 *
+	 * @return 数据API
+	 */
+	DataAPI getDataAPI();
 
-    /**
-     * 获取玩家API
-     *
-     * @return 玩家API
-     */
-    PlayerAPI getPlayerAPI();
+	/**
+	 * 获取玩家API
+	 *
+	 * @return 玩家API
+	 */
+	PlayerAPI getPlayerAPI();
 
-    /**
-     * 获取聊天API
-     *
-     * @return 聊天API
-     */
-    ChatAPI getChatAPI();
+	/**
+	 * 获取聊天API
+	 *
+	 * @return 聊天API
+	 */
+	ChatAPI getChatAPI();
 
-    /**
-     * 获取服务器API
-     *
-     * @return 服务器API
-     */
-    ServerAPI getServerAPI();
+	/**
+	 * 获取服务器API
+	 *
+	 * @return 服务器API
+	 */
+	ServerAPI getServerAPI();
 
-    /**
-     * 获取国际化多语言API
-     *
-     * @return 国际化多语言API
-     */
-    TranslationAPI getTranslationAPI();
+	/**
+	 * 获取国际化多语言API
+	 *
+	 * @return 国际化多语言API
+	 */
+	TranslationAPI getTranslationAPI();
 
-    /**
-     * Gets the {@link Platform}, which represents the server platform the
-     * plugin is running on.
-     *
-     * @return the platform
-     */
-    @NotNull
-    Platform getPlatform();
+	/**
+	 * Gets the {@link Platform}, which represents the server platform the
+	 * plugin is running on.
+	 *
+	 * @return the platform
+	 */
+	@NotNull
+	Platform getPlatform();
 
-    /**
-     * Gets the {@link PluginMetadata}, responsible for providing metadata about
-     * the FloraCore plugin currently running.
-     *
-     * @return the plugin metadata
-     */
-    @NotNull
-    PluginMetadata getPluginMetadata();
+	/**
+	 * Gets the {@link PluginMetadata}, responsible for providing metadata about
+	 * the FloraCore plugin currently running.
+	 *
+	 * @return the plugin metadata
+	 */
+	@NotNull
+	PluginMetadata getPluginMetadata();
 
-    /**
-     * Registers a {@link MessengerProvider} for use by the platform.
-     *
-     * <p>Note that the mere action of registering a provider doesn't
-     * necessarily mean that it will be used.</p>
-     *
-     * @param messengerProvider the messenger provider.
-     */
-    void registerMessengerProvider(@NotNull MessengerProvider messengerProvider);
+	/**
+	 * Registers a {@link MessengerProvider} for use by the platform.
+	 *
+	 * <p>Note that the mere action of registering a provider doesn't
+	 * necessarily mean that it will be used.</p>
+	 *
+	 * @param messengerProvider the messenger provider.
+	 */
+	void registerMessengerProvider(@NotNull MessengerProvider messengerProvider);
 
-    Object getFloraCorePlugin();
+	Object getFloraCorePlugin();
 }

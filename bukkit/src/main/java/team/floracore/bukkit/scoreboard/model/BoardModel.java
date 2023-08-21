@@ -11,30 +11,30 @@ import java.util.List;
  * @author xLikeWATCHDOG
  */
 public class BoardModel {
-    public final transient String name;
-    public final int index;
-    @Nullable
-    public final Date time_start;
-    @Nullable
-    public final Date time_end;
-    public final String title;
-    @Nullable
-    public final String permission;
-    public final List<String> lines;
+	public final transient String name;
+	public final int index;
+	@Nullable
+	public final Date time_start;
+	@Nullable
+	public final Date time_end;
+	public final String title;
+	@Nullable
+	public final String permission;
+	public final List<String> lines;
 
-    public BoardModel(String name,
-                      int index,
-                      @Nullable Date timeStart,
-                      @Nullable Date timeEnd,
-                      String title,
-                      @Nullable String permission,
-                      List<String> lines) {
-        this.name = name;
-        this.index = index;
-        time_start = timeStart;
-        time_end = timeEnd;
-        this.title = title;
-        this.permission = permission;
-        this.lines = lines;
-    }
+	public BoardModel(String name,
+	                  int index,
+	                  @Nullable Date timeStart,
+	                  @Nullable Date timeEnd,
+	                  String title,
+	                  @Nullable String permission,
+	                  List<String> lines) {
+		this.name = name;
+		this.index = index;
+		time_start = timeStart;
+		time_end = timeEnd;
+		this.title = title;
+		this.permission = permission;
+		this.lines = lines;
+	}
 }

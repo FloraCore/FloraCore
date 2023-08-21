@@ -21,43 +21,43 @@ import team.floracore.common.sender.Sender;
 @CommandDescription("floracore.command.description.broadcast")
 @CommandPermission("floracore.command.broadcast")
 public class BroadCastCommand extends FloraCoreBukkitCommand {
-    public BroadCastCommand(FCBukkitPlugin plugin) {
-        super(plugin);
-    }
+	public BroadCastCommand(FCBukkitPlugin plugin) {
+		super(plugin);
+	}
 
-    @CommandMethod("broadcast|bc <contents>")
-    @CommandDescription("floracore.command.description.broadcast")
-    public void broadcast(@NotNull CommandSender s, @NotNull @Argument("contents") @Greedy String contents) {
-        Sender consoleSender = getPlugin().getConsoleSender();
-        AbstractMessage.Args1<String> message = ServerCommandMessage.COMMAND_BROADCAST;
-        message.send(consoleSender, contents);
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Sender sender = getPlugin().getSenderFactory().wrap(player);
-            message.send(sender, contents);
-        }
-    }
+	@CommandMethod("broadcast|bc <contents>")
+	@CommandDescription("floracore.command.description.broadcast")
+	public void broadcast(@NotNull CommandSender s, @NotNull @Argument("contents") @Greedy String contents) {
+		Sender consoleSender = getPlugin().getConsoleSender();
+		AbstractMessage.Args1<String> message = ServerCommandMessage.COMMAND_BROADCAST;
+		message.send(consoleSender, contents);
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			Sender sender = getPlugin().getSenderFactory().wrap(player);
+			message.send(sender, contents);
+		}
+	}
 
-    @CommandMethod("notice <contents>")
-    @CommandDescription("floracore.command.description.broadcast")
-    public void broadcastW0(@NotNull CommandSender s, @NotNull @Argument("contents") @Greedy String contents) {
-        Sender consoleSender = getPlugin().getConsoleSender();
-        AbstractMessage.Args1<String> message = ServerCommandMessage.COMMAND_BROADCAST_WITHOUT_PREFIX;
-        message.send(consoleSender, contents);
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Sender sender = getPlugin().getSenderFactory().wrap(player);
-            message.send(sender, contents);
-        }
-    }
+	@CommandMethod("notice <contents>")
+	@CommandDescription("floracore.command.description.broadcast")
+	public void broadcastW0(@NotNull CommandSender s, @NotNull @Argument("contents") @Greedy String contents) {
+		Sender consoleSender = getPlugin().getConsoleSender();
+		AbstractMessage.Args1<String> message = ServerCommandMessage.COMMAND_BROADCAST_WITHOUT_PREFIX;
+		message.send(consoleSender, contents);
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			Sender sender = getPlugin().getSenderFactory().wrap(player);
+			message.send(sender, contents);
+		}
+	}
 
-    @CommandMethod("nbc <contents>")
-    @CommandDescription("floracore.command.description.broadcast")
-    public void broadcastW1(@NotNull CommandSender s, @NotNull @Argument("contents") @Greedy String contents) {
-        Sender consoleSender = getPlugin().getConsoleSender();
-        AbstractMessage.Args1<String> message = ServerCommandMessage.COMMAND_BROADCAST_WITHOUT_PREFIX;
-        message.send(consoleSender, contents);
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            Sender sender = getPlugin().getSenderFactory().wrap(player);
-            message.send(sender, contents);
-        }
-    }
+	@CommandMethod("nbc <contents>")
+	@CommandDescription("floracore.command.description.broadcast")
+	public void broadcastW1(@NotNull CommandSender s, @NotNull @Argument("contents") @Greedy String contents) {
+		Sender consoleSender = getPlugin().getConsoleSender();
+		AbstractMessage.Args1<String> message = ServerCommandMessage.COMMAND_BROADCAST_WITHOUT_PREFIX;
+		message.send(consoleSender, contents);
+		for (Player player : Bukkit.getOnlinePlayers()) {
+			Sender sender = getPlugin().getSenderFactory().wrap(player);
+			message.send(sender, contents);
+		}
+	}
 }

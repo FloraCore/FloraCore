@@ -6,8 +6,8 @@ import team.floracore.bukkit.util.wrapper.WrappedBukkitFieldAccessor;
 import team.floracore.bukkit.util.wrapper.WrappedBukkitObject;
 
 @WrappedBukkitClass({@VersionName(value = "nms.World", maxVer = 17),
-        @VersionName(value = "net.minecraft.world.level.World", minVer = 17)})
+		@VersionName(value = "net.minecraft.world.level.World", minVer = 17)})
 public interface NmsWorld extends WrappedBukkitObject {
-    @WrappedBukkitFieldAccessor(@VersionName("worldData"))
-    NmsWorldData getWorldData();
+	@WrappedBukkitFieldAccessor(@VersionName("worldData"))
+	NmsWorldData getWorldData();
 }

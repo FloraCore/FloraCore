@@ -19,30 +19,30 @@ import java.util.UUID;
 @CommandDescription("floracore.command.description.staff")
 @CommandPermission("floracore.socialsystems.staff")
 public class StaffCommand extends FloraCoreBungeeCommand {
-    public StaffCommand(FCBungeePlugin plugin) {
-        super(plugin);
-    }
+	public StaffCommand(FCBungeePlugin plugin) {
+		super(plugin);
+	}
 
-    @CommandMethod("staffchat|sc <message>")
-    @CommandDescription("floracore.command.description.staff.chat")
-    public void staffChat(final @NotNull ProxiedPlayer player,
-                          final @NotNull @Argument("message") @Greedy String message) {
-        chat(player, message);
-    }
+	@CommandMethod("staffchat|sc <message>")
+	@CommandDescription("floracore.command.description.staff.chat")
+	public void staffChat(final @NotNull ProxiedPlayer player,
+	                      final @NotNull @Argument("message") @Greedy String message) {
+		chat(player, message);
+	}
 
-    @CommandMethod("staff|s chat <message>")
-    @CommandDescription("floracore.command.description.staff.chat")
-    public void chat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
-        UUID uuid = player.getUniqueId();
-        getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
-                .pushChatMessage(UUID.randomUUID(),
-                        ChatType.STAFF,
-                        Arrays.asList(uuid.toString(), message)));
-        long time = System.currentTimeMillis();
-        getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.STAFF,
-                "",
-                uuid,
-                message,
-                time));
-    }
+	@CommandMethod("staff|s chat <message>")
+	@CommandDescription("floracore.command.description.staff.chat")
+	public void chat(final @NotNull ProxiedPlayer player, final @NotNull @Argument("message") @Greedy String message) {
+		UUID uuid = player.getUniqueId();
+		getAsyncExecutor().execute(() -> getPlugin().getBungeeMessagingFactory()
+				.pushChatMessage(UUID.randomUUID(),
+						ChatType.STAFF,
+						Arrays.asList(uuid.toString(), message)));
+		long time = System.currentTimeMillis();
+		getAsyncExecutor().execute(() -> getStorageImplementation().insertChat(ChatType.STAFF,
+				"",
+				uuid,
+				message,
+				time));
+	}
 }

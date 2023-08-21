@@ -18,35 +18,35 @@ import java.lang.annotation.Target;
 @Target(value = ElementType.METHOD)
 @Repeatable(NothingInjects.class)
 public @interface NothingInject {
-    NothingPriority priority() default NothingPriority.NORMAL;
+	NothingPriority priority() default NothingPriority.NORMAL;
 
-    /**
-     * All possible names of target method
-     * Only one method can be matched
-     */
-    String[] name();
+	/**
+	 * All possible names of target method
+	 * Only one method can be matched
+	 */
+	String[] name();
 
-    /**
-     * Args types for matching method
-     *
-     * @see WrappedObject
-     */
-    Class<?>[] args();
+	/**
+	 * Args types for matching method
+	 *
+	 * @see WrappedObject
+	 */
+	Class<?>[] args();
 
-    NothingLocation location();
+	NothingLocation location();
 
-    /**
-     * @see NothingLocation
-     */
-    NothingByteCode byteCode() default @NothingByteCode;
+	/**
+	 * @see NothingLocation
+	 */
+	NothingByteCode byteCode() default @NothingByteCode;
 
-    /**
-     * For example, 1 means the next bytecode
-     */
-    int shift() default 0;
+	/**
+	 * For example, 1 means the next bytecode
+	 */
+	int shift() default 0;
 
-    /**
-     * @see mz.lib.Optional
-     */
-    boolean optional() default false;
+	/**
+	 * @see mz.lib.Optional
+	 */
+	boolean optional() default false;
 }

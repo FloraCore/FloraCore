@@ -6,8 +6,8 @@ import team.floracore.common.util.wrapper.WrappedObject;
 
 @WrappedArrayClass(NmsIChatBaseComponent.class)
 public interface NmsIChatBaseComponentArray extends WrappedArray<NmsIChatBaseComponent> {
-    static NmsIChatBaseComponentArray newInstance(int length) {
-        return (NmsIChatBaseComponentArray) WrappedObject.getStatic(NmsIChatBaseComponentArray.class)
-                .staticNewInstance(length);
-    }
+	static NmsIChatBaseComponentArray newInstance(int length) {
+		return (NmsIChatBaseComponentArray) WrappedObject.getStatic(NmsIChatBaseComponentArray.class)
+				.staticNewInstance(length);
+	}
 }

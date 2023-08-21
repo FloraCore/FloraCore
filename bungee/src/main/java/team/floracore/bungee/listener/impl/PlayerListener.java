@@ -12,9 +12,9 @@ import team.floracore.common.storage.misc.floracore.tables.ONLINE;
 import java.util.UUID;
 
 public class PlayerListener extends FloraCoreBungeeListener {
-    public PlayerListener(FloraCorePlugin plugin) {
-        super(plugin);
-    }
+	public PlayerListener(FloraCorePlugin plugin) {
+		super(plugin);
+	}
 
     /*@EventHandler
     public void onLogin(PostLoginEvent e) {
@@ -43,34 +43,34 @@ public class PlayerListener extends FloraCoreBungeeListener {
         storageImplementation.deleteDataLongExpired(u);
     }*/
 
-    @EventHandler
-    public void onJoin(PostLoginEvent e) {
-        ProxiedPlayer p = e.getPlayer();
-        UUID uuid = p.getUniqueId();
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        getAsyncExecutor().execute(() -> {
-            ONLINE online = storageImplementation.selectOnline(uuid);
-            if (online == null) {
-                storageImplementation.insertOnline(uuid, true, getPlugin().getServerName());
-            } else {
-                online.setServerName(getPlugin().getServerName());
-                online.setStatusTrue();
-            }
-        });
-    }
+	@EventHandler
+	public void onJoin(PostLoginEvent e) {
+		ProxiedPlayer p = e.getPlayer();
+		UUID uuid = p.getUniqueId();
+		StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+		getAsyncExecutor().execute(() -> {
+			ONLINE online = storageImplementation.selectOnline(uuid);
+			if (online == null) {
+				storageImplementation.insertOnline(uuid, true, getPlugin().getServerName());
+			} else {
+				online.setServerName(getPlugin().getServerName());
+				online.setStatusTrue();
+			}
+		});
+	}
 
-    @EventHandler
-    public void onQuit(PlayerDisconnectEvent e) {
-        ProxiedPlayer p = e.getPlayer();
-        UUID uuid = p.getUniqueId();
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        getAsyncExecutor().execute(() -> {
-            ONLINE online = storageImplementation.selectOnline(uuid);
-            if (online == null) {
-                storageImplementation.insertOnline(uuid, false, getPlugin().getServerName());
-            } else {
-                online.setStatusFalse(getPlugin().getServerName());
-            }
-        });
-    }
+	@EventHandler
+	public void onQuit(PlayerDisconnectEvent e) {
+		ProxiedPlayer p = e.getPlayer();
+		UUID uuid = p.getUniqueId();
+		StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
+		getAsyncExecutor().execute(() -> {
+			ONLINE online = storageImplementation.selectOnline(uuid);
+			if (online == null) {
+				storageImplementation.insertOnline(uuid, false, getPlugin().getServerName());
+			} else {
+				online.setStatusFalse(getPlugin().getServerName());
+			}
+		});
+	}
 }

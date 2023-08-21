@@ -23,27 +23,27 @@ import java.util.UUID;
 @CommandDescription("floracore.command.description.kick-from-bungee")
 @CommandPermission("floracore.command.kick-from-bungee")
 public class KickFromBungeeCommand extends FloraCoreBukkitCommand {
-    public KickFromBungeeCommand(FCBukkitPlugin plugin) {
-        super(plugin);
-    }
+	public KickFromBungeeCommand(FCBukkitPlugin plugin) {
+		super(plugin);
+	}
 
-    @CommandMethod("kickfrombungee|kick-from-bungee <player> [reason]")
-    @CommandDescription("floracore.command.description.kick-from-bungee")
-    public void kickPlayerFromBungee(@NotNull CommandSender s, @Argument("player") @NotNull String playerName, @Nullable @Greedy @Argument("reason") String reason) {
-        Sender sender = getPlugin().getSenderFactory().wrap(s);
-        UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(playerName);
-        if (targetUUID == null) {
-            MiscMessage.PLAYER_NOT_FOUND.send(sender, playerName);
-            return;
-        }
-        DATA data = getStorageImplementation().getSpecifiedData(targetUUID, DataType.FUNCTION, "server-status");
-        if (data == null) {
-            MiscMessage.PLAYER_NOT_FOUND.send(sender, playerName);
-            return;
-        }
-        if (reason == null) {
-            reason = "&fKicked by an operator.";
-        }
-        getPlugin().getBukkitMessagingFactory().submitKick(targetUUID, reason);
-    }
+	@CommandMethod("kickfrombungee|kick-from-bungee <player> [reason]")
+	@CommandDescription("floracore.command.description.kick-from-bungee")
+	public void kickPlayerFromBungee(@NotNull CommandSender s, @Argument("player") @NotNull String playerName, @Nullable @Greedy @Argument("reason") String reason) {
+		Sender sender = getPlugin().getSenderFactory().wrap(s);
+		UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(playerName);
+		if (targetUUID == null) {
+			MiscMessage.PLAYER_NOT_FOUND.send(sender, playerName);
+			return;
+		}
+		DATA data = getStorageImplementation().getSpecifiedData(targetUUID, DataType.FUNCTION, "server-status");
+		if (data == null) {
+			MiscMessage.PLAYER_NOT_FOUND.send(sender, playerName);
+			return;
+		}
+		if (reason == null) {
+			reason = "&fKicked by an operator.";
+		}
+		getPlugin().getBukkitMessagingFactory().submitKick(targetUUID, reason);
+	}
 }

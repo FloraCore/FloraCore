@@ -6,26 +6,26 @@ import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
 import team.floracore.common.plugin.FloraCorePlugin;
 
 public class ChatConfiguration extends KeyedConfiguration {
-    private final FCBungeePlugin plugin;
+	private final FCBungeePlugin plugin;
 
-    public ChatConfiguration(FCBungeePlugin plugin, ConfigurationAdapter adapter) {
-        super(adapter, ChatKeys.getKeys());
-        this.plugin = plugin;
+	public ChatConfiguration(FCBungeePlugin plugin, ConfigurationAdapter adapter) {
+		super(adapter, ChatKeys.getKeys());
+		this.plugin = plugin;
 
-        init();
-    }
+		init();
+	}
 
-    @Override
-    protected void load(boolean initial) {
-        super.load(initial);
-    }
+	@Override
+	protected void load(boolean initial) {
+		super.load(initial);
+	}
 
-    @Override
-    public void reload() {
-        super.reload();
-    }
+	@Override
+	public void reload() {
+		super.reload();
+	}
 
-    public FloraCorePlugin getPlugin() {
-        return this.plugin;
-    }
+	public FloraCorePlugin getPlugin() {
+		return this.plugin;
+	}
 }
