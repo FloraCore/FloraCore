@@ -12,8 +12,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.command.FloraCoreBukkitCommand;
+import team.floracore.bukkit.config.features.FeaturesKeys;
 import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
-import team.floracore.common.config.ConfigKeys;
 import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.sender.Sender;
 
@@ -99,10 +99,10 @@ public class SpeedCommand extends FloraCoreBukkitCommand {
 		final float defaultSpeed = speedType == SpeedType.FLY ? 0.1f : 0.2f;
 		float maxSpeed = 1f;
 		if (!isBypass) {
-			maxSpeed = (speedType == SpeedType.FLY ? getPlugin().getConfiguration()
-					.get(ConfigKeys.SPEED_MAX_FLY_SPEED) :
-					getPlugin().getConfiguration()
-							.get(ConfigKeys.SPEED_MAX_WALK_SPEED)).floatValue();
+			maxSpeed = (speedType == SpeedType.FLY ? getPlugin().getFeaturesConfiguration()
+					.get(FeaturesKeys.SPEED_MAX_FLY_SPEED) :
+					getPlugin().getFeaturesConfiguration()
+							.get(FeaturesKeys.SPEED_MAX_WALK_SPEED)).floatValue();
 		}
 
 		if (userSpeed < 1f) {

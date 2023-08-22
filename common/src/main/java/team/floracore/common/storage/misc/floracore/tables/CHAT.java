@@ -1,5 +1,6 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
+import lombok.Getter;
 import org.floracore.api.data.chat.ChatType;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
@@ -16,11 +17,16 @@ public class CHAT extends AbstractFloraCoreTable {
 	public static final String SELECT_TYPE = "SELECT * FROM '{prefix}chat' WHERE type=? ORDER BY time DESC LIMIT 1000";
 	private static final String INSERT = "INSERT INTO '{prefix}chat' (type, parameters, uuid, message, time) VALUES(?, ?, ?, ?, ?)";
 
+	@Getter
 	private final int id;
+	@Getter
 	private final ChatType type;
+	@Getter
 	private final String parameters;
 	private final UUID uuid;
+	@Getter
 	private final String message;
+	@Getter
 	private final long time;
 
 	public CHAT(FloraCorePlugin plugin,
@@ -35,28 +41,8 @@ public class CHAT extends AbstractFloraCoreTable {
 		this.time = time;
 	}
 
-	public int getId() {
-		return id;
-	}
-
 	public UUID getUniqueId() {
 		return uuid;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public long getTime() {
-		return time;
-	}
-
-	public ChatType getType() {
-		return type;
-	}
-
-	public String getParameters() {
-		return parameters;
 	}
 
 	@Override

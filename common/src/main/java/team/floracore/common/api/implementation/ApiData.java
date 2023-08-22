@@ -1,6 +1,7 @@
 package team.floracore.common.api.implementation;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import lombok.Getter;
 import org.floracore.api.data.DataAPI;
 import org.floracore.api.data.DataType;
 import team.floracore.common.plugin.FloraCorePlugin;
@@ -14,6 +15,7 @@ import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+@Getter
 public class ApiData implements DataAPI {
 	private static final Cache<String, SortedMap<UUID, Integer>> sortedDataIntCache = CaffeineFactory.newBuilder()
 			.expireAfterWrite(5,
@@ -151,7 +153,4 @@ public class ApiData implements DataAPI {
 	}
 
 
-	public FloraCorePlugin getPlugin() {
-		return plugin;
-	}
 }

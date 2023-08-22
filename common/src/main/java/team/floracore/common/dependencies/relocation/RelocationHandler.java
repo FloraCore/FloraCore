@@ -20,7 +20,7 @@ public class RelocationHandler {
 			mappings.put(relocation.getPattern(), relocation.getRelocatedPattern());
 		}
 
-		// create and invoke a new relocator
+		// create and invoke a new relocation
 		JarRelocator jarRelocator = new JarRelocator(input.toFile(), output.toFile(), mappings);
 		jarRelocator.run();
 	}

@@ -1,6 +1,7 @@
 package team.floracore.bungee;
 
 import com.google.gson.JsonElement;
+import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -28,11 +29,17 @@ import java.util.stream.Stream;
  */
 public class FCBungeePlugin extends AbstractFloraCorePlugin {
 	private final FCBungeeBootstrap bootstrap;
+	@Getter
 	private BungeeSenderFactory senderFactory;
+	@Getter
 	private ListenerManager listenerManager;
+	@Getter
 	private CommandManager commandManager;
+	@Getter
 	private BungeeMessagingFactory bungeeMessagingFactory;
+	@Getter
 	private ChatManager chatManager;
+	@Getter
 	private KeyedConfiguration chatConfiguration;
 
 	public FCBungeePlugin(FCBungeeBootstrap bootstrap) {
@@ -78,14 +85,6 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 
 	public Plugin getLoader() {
 		return this.bootstrap.getLoader();
-	}
-
-	public ListenerManager getListenerManager() {
-		return listenerManager;
-	}
-
-	public CommandManager getCommandManager() {
-		return commandManager;
 	}
 
 	@Override
@@ -134,21 +133,9 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 		);
 	}
 
-	public KeyedConfiguration getChatConfiguration() {
-		return chatConfiguration;
-	}
-
 	@Override
 	protected void disableFramework() {
 
-	}
-
-	public BungeeMessagingFactory getBungeeMessagingFactory() {
-		return bungeeMessagingFactory;
-	}
-
-	public BungeeSenderFactory getSenderFactory() {
-		return this.senderFactory;
 	}
 
 	@Override
@@ -165,7 +152,4 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 		return getSenderFactory().wrap(player);
 	}
 
-	public ChatManager getChatManager() {
-		return chatManager;
-	}
 }

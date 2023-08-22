@@ -1,5 +1,6 @@
 package team.floracore.common.storage;
 
+import lombok.Getter;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
 import team.floracore.common.util.Throwing;
@@ -16,15 +17,12 @@ import java.util.concurrent.CompletionException;
  */
 public class Storage {
 	private final FloraCorePlugin plugin;
+	@Getter
 	private final StorageImplementation implementation;
 
 	public Storage(FloraCorePlugin plugin, StorageImplementation implementation) {
 		this.plugin = plugin;
 		this.implementation = implementation;
-	}
-
-	public StorageImplementation getImplementation() {
-		return this.implementation;
 	}
 
 	public Collection<StorageImplementation> getImplementations() {

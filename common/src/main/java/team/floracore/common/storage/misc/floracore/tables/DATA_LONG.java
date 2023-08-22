@@ -1,5 +1,6 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
+import lombok.Getter;
 import org.floracore.api.data.DataType;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
@@ -23,11 +24,16 @@ public class DATA_LONG extends AbstractFloraCoreTable {
 			"data_key=?";
 	private static final String INSERT = "INSERT INTO '{prefix}data_long' (uuid, type, data_key, value, expiry) VALUES(?, " +
 			"?, ?, ?, ?)";
+	@Getter
 	private final int id;
 	private final UUID uuid;
+	@Getter
 	private final DataType type;
+	@Getter
 	private final String key;
+	@Getter
 	private long value;
+	@Getter
 	private long expiry;
 
 	public DATA_LONG(FloraCorePlugin plugin,
@@ -47,24 +53,8 @@ public class DATA_LONG extends AbstractFloraCoreTable {
 		this.expiry = expiry;
 	}
 
-	public int getId() {
-		return id;
-	}
-
 	public UUID getUniqueId() {
 		return uuid;
-	}
-
-	public DataType getType() {
-		return type;
-	}
-
-	public String getKey() {
-		return key;
-	}
-
-	public long getValue() {
-		return value;
 	}
 
 	public void setValue(long value) {
@@ -81,10 +71,6 @@ public class DATA_LONG extends AbstractFloraCoreTable {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public long getExpiry() {
-		return expiry;
 	}
 
 	public void setExpiry(long expiry) {

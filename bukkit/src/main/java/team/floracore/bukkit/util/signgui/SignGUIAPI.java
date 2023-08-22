@@ -77,11 +77,9 @@ public final class SignGUIAPI {
 		}
 		if (BukkitWrapper.v13) {
 			this.sign.setEditable(true);
-		} else if (BukkitWrapper.v8) {
+		} else {
 			NmsTileEntitySign ntes = WrappedObject.wrap(ObcSign.class, this.sign).getTileEntitySign();
 			ntes.setEditable(true);
-		} else {
-			// v9~v12 去你的
 		}
 		this.sign.update(false, false);
 		PacketContainer openSign = ProtocolLibrary.getProtocolManager()

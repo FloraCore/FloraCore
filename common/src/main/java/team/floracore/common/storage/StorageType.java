@@ -1,12 +1,14 @@
 package team.floracore.common.storage;
 
 import com.google.common.collect.ImmutableList;
+import lombok.Getter;
 
 import java.util.List;
 
 /**
  * 数据库链接类型。
  */
+@Getter
 public enum StorageType {
 	// Remote databases
 	MARIADB("MariaDB", "mariadb"),
@@ -37,11 +39,4 @@ public enum StorageType {
 		return def;
 	}
 
-	public List<String> getIdentifiers() {
-		return this.identifiers;
-	}
-
-	public String getName() {
-		return this.name;
-	}
 }

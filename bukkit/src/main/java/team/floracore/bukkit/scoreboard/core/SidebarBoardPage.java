@@ -1,5 +1,6 @@
 package team.floracore.bukkit.scoreboard.core;
 
+import lombok.Getter;
 import org.apache.commons.lang3.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -40,6 +41,7 @@ public class SidebarBoardPage extends BoardPage {
 		}
 	}
 
+	@Getter
 	private final Objective objective;
 	private final List<BoardLine> boardLines = new ArrayList<>();
 	private int currentSize;
@@ -53,10 +55,6 @@ public class SidebarBoardPage extends BoardPage {
 			final Team team = getBoard().registerNewTeam("FCBoardLine" + i);
 			boardLines.add(new BoardLine(name, team));
 		}
-	}
-
-	public Objective getObjective() {
-		return objective;
 	}
 
 	public void setTitle(String title) {
@@ -115,7 +113,9 @@ public class SidebarBoardPage extends BoardPage {
 	}
 
 	static class BoardLine {
+		@Getter
 		private final String name;
+		@Getter
 		private final Team team;
 		private final OfflinePlayer player;
 
@@ -134,12 +134,5 @@ public class SidebarBoardPage extends BoardPage {
 			}
 		}
 
-		public String getName() {
-			return name;
-		}
-
-		public Team getTeam() {
-			return team;
-		}
 	}
 }

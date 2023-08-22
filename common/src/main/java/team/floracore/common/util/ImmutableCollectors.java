@@ -62,10 +62,8 @@ public final class ImmutableCollectors {
 				ImmutableSortedSet.Builder::build);
 	}
 
-	public static <T, K, V> Collector<T, ImmutableMap.Builder<K, V>, ImmutableMap<K, V>> toMap(Function<? super T, ?
-			extends K> keyMapper,
-	                                                                                           Function<? super T, ?
-			                                                                                           extends V> valueMapper) {
+	public static <T, K, V> Collector<T, ImmutableMap.Builder<K, V>, ImmutableMap<K, V>> toMap(Function<? super T, ? extends K> keyMapper,
+	                                                                                           Function<? super T, ? extends V> valueMapper) {
 		return Collector.of(ImmutableMap.Builder<K, V>::new,
 				(r, t) -> r.put(keyMapper.apply(t), valueMapper.apply(t)),
 				(l, r) -> l.putAll(r.build()),
@@ -73,12 +71,8 @@ public final class ImmutableCollectors {
 	}
 
 	public static <T, K extends Enum<K>, V> Collector<T, EnumMap<K, V>, ImmutableMap<K, V>> toEnumMap(Class<K> clazz,
-	                                                                                                  Function<?
-			                                                                                                  super T,
-			                                                                                                  ? extends K> keyMapper,
-	                                                                                                  Function<?
-			                                                                                                  super T,
-			                                                                                                  ? extends V> valueMapper) {
+	                                                                                                  Function<? super T, ? extends K> keyMapper,
+	                                                                                                  Function<? super T, ? extends V> valueMapper) {
 		return Collector.of(() -> new EnumMap<>(clazz),
 				(r, t) -> r.put(keyMapper.apply(t), valueMapper.apply(t)),
 				(l, r) -> {

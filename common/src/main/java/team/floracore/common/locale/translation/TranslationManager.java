@@ -2,6 +2,7 @@ package team.floracore.common.locale.translation;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import com.google.common.collect.Maps;
+import lombok.Getter;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -50,8 +51,10 @@ public class TranslationManager {
 			.build();
 	private final FloraCorePlugin plugin;
 	private final Set<Locale> installed = ConcurrentHashMap.newKeySet();
+	@Getter
 	private final Path translationsDirectory;
 	private final Path configTranslationsDirectory;
+	@Getter
 	private final Path repositoryTranslationsDirectory;
 	private final Path customTranslationsDirectory;
 	private TranslationRegistry registry;
@@ -139,14 +142,6 @@ public class TranslationManager {
 	private static boolean isAdventureDuplicatesException(Exception e) {
 		return e instanceof IllegalArgumentException && (e.getMessage().startsWith("Invalid key") || e.getMessage()
 				.startsWith("Translation already exists"));
-	}
-
-	public Path getTranslationsDirectory() {
-		return this.translationsDirectory;
-	}
-
-	public Path getRepositoryTranslationsDirectory() {
-		return this.repositoryTranslationsDirectory;
 	}
 
 	public Path getRepositoryStatusFile() {

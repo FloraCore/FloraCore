@@ -1,5 +1,6 @@
 package team.floracore.common.locale.data;
 
+import lombok.Getter;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.util.MoreFiles;
 
@@ -8,6 +9,7 @@ import java.nio.file.Path;
 
 public class DataManager {
 	private final FloraCorePlugin plugin;
+	@Getter
 	private final Path dataDirectory;
 
 	public DataManager(FloraCorePlugin plugin) {
@@ -19,10 +21,6 @@ public class DataManager {
 		} catch (IOException e) {
 			// ignore
 		}
-	}
-
-	public Path getDataDirectory() {
-		return dataDirectory;
 	}
 
 	public void reload() {

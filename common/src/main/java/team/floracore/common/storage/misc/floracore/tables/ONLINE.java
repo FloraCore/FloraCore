@@ -1,5 +1,6 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
+import lombok.Getter;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
 import team.floracore.common.storage.misc.floracore.AbstractFloraCoreTable;
@@ -20,6 +21,7 @@ public class ONLINE extends AbstractFloraCoreTable {
 
 	private final UUID uuid;
 	private boolean status;
+	@Getter
 	private String serverName;
 
 	public ONLINE(FloraCorePlugin plugin,
@@ -35,10 +37,6 @@ public class ONLINE extends AbstractFloraCoreTable {
 
 	public UUID getUniqueId() {
 		return uuid;
-	}
-
-	public String getServerName() {
-		return serverName;
 	}
 
 	public void setServerName(String serverName) {

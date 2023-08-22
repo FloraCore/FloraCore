@@ -1,5 +1,7 @@
 package team.floracore.common.storage.misc;
 
+import lombok.Getter;
+
 import java.util.Map;
 import java.util.Objects;
 
@@ -9,11 +11,17 @@ public class StorageCredentials {
 	private final String database;
 	private final String username;
 	private final String password;
+	@Getter
 	private final int maxPoolSize;
+	@Getter
 	private final int minIdleConnections;
+	@Getter
 	private final int maxLifetime;
+	@Getter
 	private final int keepAliveTime;
+	@Getter
 	private final int connectionTimeout;
+	@Getter
 	private final Map<String, String> properties;
 
 	public StorageCredentials(String address,
@@ -54,27 +62,4 @@ public class StorageCredentials {
 		return Objects.requireNonNull(this.password, "password");
 	}
 
-	public int getMaxPoolSize() {
-		return this.maxPoolSize;
-	}
-
-	public int getMinIdleConnections() {
-		return this.minIdleConnections;
-	}
-
-	public int getMaxLifetime() {
-		return this.maxLifetime;
-	}
-
-	public int getKeepAliveTime() {
-		return this.keepAliveTime;
-	}
-
-	public int getConnectionTimeout() {
-		return this.connectionTimeout;
-	}
-
-	public Map<String, String> getProperties() {
-		return this.properties;
-	}
 }

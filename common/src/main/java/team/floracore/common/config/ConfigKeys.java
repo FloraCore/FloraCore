@@ -96,16 +96,6 @@ public class ConfigKeys {
 	 */
 	public static final ConfigKey<Boolean> REDIS_SSL = notReloadable(booleanKey("redis.ssl", false));
 
-	public static final ConfigKey<Double> SPEED_MAX_FLY_SPEED = key(c -> {
-		final double maxSpeed = c.getDouble("commands.speed.max-fly-speed", 0.8);
-		return maxSpeed > 1.0 ? 1.0 : Math.abs(maxSpeed);
-	});
-
-	public static final ConfigKey<Double> SPEED_MAX_WALK_SPEED = key(c -> {
-		final double maxSpeed = c.getDouble("commands.speed.max-walk-speed", 0.8);
-		return maxSpeed > 1.0 ? 1.0 : Math.abs(maxSpeed);
-	});
-
 	public static final ConfigKey<String> SERVER_NAME = notReloadable(stringKey("server.name", "unknown"));
 	public static final ConfigKey<ServerType> SERVER_TYPE = notReloadable(key(c -> ServerType.parse(c.getString(
 			"server.type",

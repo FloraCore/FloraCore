@@ -24,7 +24,7 @@ public enum DependencyRepository {
 			URLConnection connection = super.openConnection(dependency);
 			connection.setRequestProperty("User-Agent", "FloraCore");
 
-			// Set a connect/read timeout, so if the mirror goes offline we can fallback
+			// Set a connect/read timeout, so if the mirror goes offline we can fall back
 			// to Maven Central within a reasonable time.
 			connection.setConnectTimeout((int) TimeUnit.SECONDS.toMillis(5));
 			connection.setReadTimeout((int) TimeUnit.SECONDS.toMillis(10));

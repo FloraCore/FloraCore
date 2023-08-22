@@ -4,10 +4,12 @@ import com.google.errorprone.annotations.Keep;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
+import lombok.Getter;
 import okhttp3.Request;
 import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.checkerframework.checker.nullness.qual.Nullable;
+import org.jetbrains.annotations.NotNull;
 import team.floracore.common.config.ConfigKeys;
 import team.floracore.common.http.AbstractHttpClient;
 import team.floracore.common.http.UnsuccessfulRequestException;
@@ -236,6 +238,7 @@ public class TranslationRepository {
 	}
 
 	private static final class MetadataResponse {
+		@Getter
 		private final long cacheMaxAge;
 		private final List<LanguageInfo> languages;
 
@@ -243,6 +246,7 @@ public class TranslationRepository {
 			this.cacheMaxAge = cacheMaxAge;
 			this.languages = languages;
 		}
+
 	}
 
 	public static final class LanguageInfo {
@@ -310,7 +314,7 @@ public class TranslationRepository {
 		}
 
 		@Override
-		public int read(byte[] b, int off, int len) throws IOException {
+		public int read(byte @NotNull [] b, int off, int len) throws IOException {
 			int res = super.read(b, off, len);
 			if (res > 0) {
 				this.count += res;

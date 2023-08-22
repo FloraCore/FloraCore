@@ -1,5 +1,6 @@
 package team.floracore.bungee;
 
+import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
@@ -53,7 +54,9 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 	 * The time when the plugin was enabled
 	 */
 	private Instant startTime;
+	@Getter
 	private boolean serverStarting = true;
+	@Getter
 	private boolean serverStopping = false;
 
 	// if the plugin has been loaded on an incompatible version
@@ -201,11 +204,4 @@ public class FCBungeeBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 		this.plugin.onDisable();
 	}
 
-	public boolean isServerStarting() {
-		return this.serverStarting;
-	}
-
-	public boolean isServerStopping() {
-		return this.serverStopping;
-	}
 }

@@ -1,5 +1,6 @@
 package team.floracore.bukkit.scoreboard.core;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -17,6 +18,7 @@ import java.util.Set;
  */
 
 public abstract class Board implements Iterable<Player> {
+	@Getter
 	private final Plugin plugin;
 	private final HashMap<Player, BoardPage> targets = new HashMap<>();
 	private final Set<Player> removeQueue = new HashSet<>();
@@ -47,10 +49,6 @@ public abstract class Board implements Iterable<Player> {
 
 	public BoardPage getBoardPage(final Player player) {
 		return this.targets.get(player);
-	}
-
-	public Plugin getPlugin() {
-		return plugin;
 	}
 
 	public Set<Player> getTargets() {

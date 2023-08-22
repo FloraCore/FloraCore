@@ -13,6 +13,8 @@ repositories {
 
 dependencies {
     implementation project(':common')
+    implementation 'org.projectlombok:lombok:1.18.28'
+    annotationProcessor 'org.projectlombok:lombok:1.18.28'
     compileOnly project(':common:common-loader-utils')
     compileOnly project(':api:bungee-api')
     compileOnly fileTree(dir: '../libs', includes: ['*jar'])

@@ -1,5 +1,6 @@
 package team.floracore.bukkit;
 
+import lombok.Getter;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Server;
 import org.bukkit.command.ConsoleCommandSender;
@@ -42,6 +43,7 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 	 * A null-safe console instance which delegates to the server logger
 	 * if {@link Server#getConsoleSender()} returns null.
 	 */
+	@Getter
 	private final ConsoleCommandSender console;
 
 	/**
@@ -60,7 +62,9 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 	 * The time when the plugin was enabled
 	 */
 	private Instant startTime;
+	@Getter
 	private boolean serverStarting = true;
+	@Getter
 	private boolean serverStopping = false;
 
 	// if the plugin has been loaded on an incompatible version
@@ -213,17 +217,5 @@ public class FCBukkitBootstrap implements FloraCoreBootstrap, LoaderBootstrap, B
 		this.plugin.onDisable();
 
 		EnderChestCommand.READONLY_MAP.clear();
-	}
-
-	public boolean isServerStarting() {
-		return this.serverStarting;
-	}
-
-	public boolean isServerStopping() {
-		return this.serverStopping;
-	}
-
-	public ConsoleCommandSender getConsole() {
-		return this.console;
 	}
 }

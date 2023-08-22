@@ -1,6 +1,7 @@
 package team.floracore.common.dependencies;
 
 import com.google.common.collect.ImmutableList;
+import lombok.Getter;
 import team.floracore.common.dependencies.relocation.Relocation;
 import team.floracore.common.dependencies.relocation.RelocationHelper;
 
@@ -231,7 +232,9 @@ public enum Dependency {
 	private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";
 	private final String mavenRepoPath;
 	private final String version;
+	@Getter
 	private final byte[] checksum;
+	@Getter
 	private final List<Relocation> relocations;
 
 	Dependency(String groupId, String artifactId, String version, String checksum) {
@@ -279,16 +282,8 @@ public enum Dependency {
 		return this.mavenRepoPath;
 	}
 
-	public byte[] getChecksum() {
-		return this.checksum;
-	}
-
 	public boolean checksumMatches(byte[] hash) {
 		return Arrays.equals(this.checksum, hash);
-	}
-
-	public List<Relocation> getRelocations() {
-		return this.relocations;
 	}
 
 }

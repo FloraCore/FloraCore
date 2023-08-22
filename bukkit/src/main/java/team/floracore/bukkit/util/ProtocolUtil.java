@@ -46,29 +46,14 @@ public final class ProtocolUtil extends AbsModule implements IRegistrar<Protocol
 		if (forcePackets.remove(packet.getRaw())) {
 			return false;
 		}
-		if (sendListeners.containsKey(packet.getRaw().getClass())) {
-			Ref<Boolean> cancelled = new Ref<>(false);
-			List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l =
-					sendListeners.get(
-							packet.getRaw().getClass());
-			for (EventPriority p : EventPriority.values()) {
-				l.get(p.ordinal()).forEach((c, t) ->
-				{
-					try {
-						NmsPacket tp = packet.cast(t);
-						c.accept(receiver, TypeUtil.cast(tp), cancelled);
-						packet.setRaw(tp.getRaw());
-					} catch (Throwable e) {
-						e.printStackTrace();
-					}
-				});
-			}
-			return cancelled.get();
-		}
-		return false;
+		return handlePacketSendEventListeners(receiver, packet, sendListeners);
 	}
 
 	public static boolean onPacketReceive(Player sender, NmsPacket packet) {
+		return handlePacketSendEventListeners(sender, packet, receiveListeners);
+	}
+
+	private static boolean handlePacketSendEventListeners(Player sender, NmsPacket packet, Map<Class<?>, List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>>> receiveListeners) {
 		if (receiveListeners.containsKey(packet.getRaw().getClass())) {
 			Ref<Boolean> cancelled = new Ref<>(false);
 			List<Map<TriConsumer<Player, ? extends NmsPacket, Ref<Boolean>>, Class<? extends NmsPacket>>> l =

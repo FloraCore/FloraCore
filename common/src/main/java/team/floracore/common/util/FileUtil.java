@@ -71,7 +71,6 @@ public final class FileUtil {
 	 *
 	 * @param inputStream 文件流
 	 * @return 所有字节
-	 * @throws IOException 文件流异常
 	 */
 	public static byte[] readInputStream(InputStream inputStream) {
 		byte[] buffer = new byte[bufSize];

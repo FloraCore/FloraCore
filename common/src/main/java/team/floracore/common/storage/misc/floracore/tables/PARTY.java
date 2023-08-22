@@ -1,5 +1,6 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
+import lombok.Getter;
 import org.floracore.api.socialsystems.party.PartySettings;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
@@ -23,16 +24,23 @@ public class PARTY extends AbstractFloraCoreTable {
 	private static final String INSERT = "INSERT INTO '{prefix}party' (uuid, leader, moderators, members, settings, " +
 			"createTime, disbandTime) VALUES(?, ?, ?, ?, ?, ?, ?)";
 
+	@Getter
 	private final int id;
 	private final UUID uuid;
+	@Getter
 	private final long createTime;
+	@Getter
 	private UUID leader;
+	@Getter
 	private List<UUID> moderators;
 	/**
 	 * 包括leader、moderators和members
 	 */
+	@Getter
 	private List<UUID> members;
+	@Getter
 	private PartySettings settings;
+	@Getter
 	private long disbandTime;
 
 	public PARTY(FloraCorePlugin plugin,
@@ -56,20 +64,8 @@ public class PARTY extends AbstractFloraCoreTable {
 		this.disbandTime = disbandTime;
 	}
 
-	public int getId() {
-		return id;
-	}
-
 	public UUID getUniqueId() {
 		return uuid;
-	}
-
-	public long getCreateTime() {
-		return createTime;
-	}
-
-	public long getDisbandTime() {
-		return disbandTime;
 	}
 
 	public void setDisbandTime(long disbandTime) {
@@ -84,10 +80,6 @@ public class PARTY extends AbstractFloraCoreTable {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public PartySettings getSettings() {
-		return settings;
 	}
 
 	public void setSettings(PartySettings settings) {
@@ -105,10 +97,6 @@ public class PARTY extends AbstractFloraCoreTable {
 		}
 	}
 
-	public UUID getLeader() {
-		return leader;
-	}
-
 	public void setLeader(UUID leader) {
 		this.leader = leader;
 		try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
@@ -121,10 +109,6 @@ public class PARTY extends AbstractFloraCoreTable {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public List<UUID> getMembers() {
-		return members;
 	}
 
 	public void setMembers(List<UUID> members) {
@@ -140,10 +124,6 @@ public class PARTY extends AbstractFloraCoreTable {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public List<UUID> getModerators() {
-		return moderators;
 	}
 
 	public void setModerators(List<UUID> moderators) {

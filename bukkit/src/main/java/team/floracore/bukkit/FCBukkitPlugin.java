@@ -3,6 +3,7 @@ package team.floracore.bukkit;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.google.gson.JsonElement;
+import lombok.Getter;
 import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -14,6 +15,7 @@ import team.floracore.bukkit.command.CommandManager;
 import team.floracore.bukkit.config.BukkitConfigAdapter;
 import team.floracore.bukkit.config.boards.BoardsConfiguration;
 import team.floracore.bukkit.config.boards.BoardsKeys;
+import team.floracore.bukkit.config.features.FeaturesConfiguration;
 import team.floracore.bukkit.hooks.placeholderapi.PlaceholderAPIHook;
 import team.floracore.bukkit.listener.ListenerManager;
 import team.floracore.bukkit.locale.chat.ChatManager;
@@ -45,15 +47,27 @@ import java.util.stream.Stream;
  */
 public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 	private final FCBukkitBootstrap bootstrap;
+	@Getter
 	private ListenerManager listenerManager;
+	@Getter
 	private CommandManager commandManager;
+	@Getter
 	private BukkitSenderFactory senderFactory;
+	@Getter
 	private BukkitMessagingFactory bukkitMessagingFactory;
+	@Getter
 	private ChatManager chatManager;
+	@Getter
 	private BungeeUtil bungeeUtil;
+	@Getter
 	private KeyedConfiguration boardsConfiguration;
+	@Getter
+	private KeyedConfiguration featuresConfiguration;
+	@Getter
 	private ScoreBoardManager scoreBoardManager;
+	@Getter
 	private GuiManager guiManager;
+	@Getter
 	private ProtocolManager protocolManager;
 	private PlaceholderAPIHook placeholderAPIHook;
 
@@ -76,10 +90,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
 	private static boolean isAsyncTabCompleteSupported() {
 		return classExists("com.destroystokyo.paper.event.server.AsyncTabCompleteEvent");
-	}
-
-	public ListenerManager getListenerManager() {
-		return listenerManager;
 	}
 
 	@Override
@@ -166,6 +176,9 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 		this.boardsConfiguration = new BoardsConfiguration(this,
 				new BukkitConfigAdapter(this,
 						resolveConfig("boards.yml").toFile()));
+		this.featuresConfiguration = new FeaturesConfiguration(this,
+				new BukkitConfigAdapter(this,
+						resolveConfig("features.yml").toFile()));
 		getLogger().info("Loading scoreboard manager...");
 		if (this.boardsConfiguration.get(BoardsKeys.ENABLE)) {
 			scoreBoardManager = new ScoreBoardManager(this);
@@ -229,39 +242,4 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 		return bukkitMessagingFactory.processIncomingMessage(type, content, id);
 	}
 
-	public BukkitSenderFactory getSenderFactory() {
-		return this.senderFactory;
-	}
-
-	public ChatManager getChatManager() {
-		return chatManager;
-	}
-
-	public ProtocolManager getProtocolManager() {
-		return protocolManager;
-	}
-
-	public BukkitMessagingFactory getBukkitMessagingFactory() {
-		return bukkitMessagingFactory;
-	}
-
-	public BungeeUtil getBungeeUtil() {
-		return bungeeUtil;
-	}
-
-	public KeyedConfiguration getBoardsConfiguration() {
-		return boardsConfiguration;
-	}
-
-	public ScoreBoardManager getScoreBoardManager() {
-		return scoreBoardManager;
-	}
-
-	public GuiManager getGuiManager() {
-		return guiManager;
-	}
-
-	public CommandManager getCommandManager() {
-		return commandManager;
-	}
 }

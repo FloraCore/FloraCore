@@ -1,5 +1,6 @@
 package team.floracore.common.storage.misc.floracore.tables;
 
+import lombok.Getter;
 import org.floracore.api.server.ServerType;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
@@ -9,6 +10,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+@Getter
 public class SERVER extends AbstractFloraCoreTable {
 	public static final String SELECT = "SELECT * FROM '{prefix}server' WHERE name=?";
 	public static final String SELECT_ALL = "SELECT * FROM '{prefix}server'";
@@ -45,14 +47,6 @@ public class SERVER extends AbstractFloraCoreTable {
 		this.lastActiveTime = lastActiveTime;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 		try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
@@ -65,10 +59,6 @@ public class SERVER extends AbstractFloraCoreTable {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public ServerType getType() {
-		return type;
 	}
 
 	public void setType(ServerType type) {
@@ -85,10 +75,6 @@ public class SERVER extends AbstractFloraCoreTable {
 		}
 	}
 
-	public boolean isAutoSync1() {
-		return autoSync1;
-	}
-
 	public void setAutoSync1(boolean autoSync1) {
 		this.autoSync1 = autoSync1;
 		try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
@@ -103,10 +89,6 @@ public class SERVER extends AbstractFloraCoreTable {
 		}
 	}
 
-	public boolean isAutoSync2() {
-		return autoSync2;
-	}
-
 	public void setAutoSync2(boolean autoSync2) {
 		this.autoSync2 = autoSync2;
 		try (Connection connection = getStorageImplementation().getConnectionFactory().getConnection()) {
@@ -119,10 +101,6 @@ public class SERVER extends AbstractFloraCoreTable {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	public long getLastActiveTime() {
-		return lastActiveTime;
 	}
 
 	public void setLastActiveTime(long lastActiveTime) {

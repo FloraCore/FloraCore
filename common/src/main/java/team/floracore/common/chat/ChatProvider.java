@@ -1,6 +1,7 @@
 package team.floracore.common.chat;
 
 import com.google.gson.JsonObject;
+import lombok.Getter;
 import org.floracore.api.data.chat.ChatType;
 import team.floracore.common.http.AbstractHttpClient;
 import team.floracore.common.http.BytebinClient;
@@ -180,6 +181,7 @@ public class ChatProvider {
 
 	public static class Uploader {
 		private final UUID uuid;
+		@Getter
 		private final String name;
 
 		public Uploader(UUID uuid, String name) {
@@ -191,11 +193,9 @@ public class ChatProvider {
 			return uuid;
 		}
 
-		public String getName() {
-			return name;
-		}
 	}
 
+	@Getter
 	public static class Data {
 		private final ChatType type;
 		private final String details;
@@ -204,18 +204,6 @@ public class ChatProvider {
 		public Data(ChatType type, String details) {
 			this.type = type;
 			this.details = details;
-		}
-
-		public ChatType getType() {
-			return type;
-		}
-
-		public List<String> getContent() {
-			return content;
-		}
-
-		public String getDetails() {
-			return details;
 		}
 
 		public JsonObject toJson() {
