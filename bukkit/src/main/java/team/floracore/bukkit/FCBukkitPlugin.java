@@ -3,6 +3,7 @@ package team.floracore.bukkit;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.google.gson.JsonElement;
+import io.papermc.lib.PaperLib;
 import lombok.Getter;
 import me.huanmeng.opensource.bukkit.gui.GuiManager;
 import org.bukkit.Bukkit;
@@ -100,6 +101,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 		dependencies.add(Dependency.CLOUD_PAPER);
 		dependencies.add(Dependency.BUKKIT_GUI);
 		dependencies.add(Dependency.BSTATS_BUKKIT);
+		dependencies.add(Dependency.PAPER_LIB);
 		return dependencies;
 	}
 
@@ -115,6 +117,7 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
 	@Override
 	protected void setupFramework() {
+		PaperLib.suggestPaper(getLoader());
 		this.bungeeUtil = new BungeeUtil(this);
 
 		RegistrarRegistrar.instance.load();

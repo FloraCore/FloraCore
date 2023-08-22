@@ -14,6 +14,7 @@ repositories {
     maven { url 'https://repo.kryptonmc.org/releases' }
     maven { url 'https://jitpack.io' }
     maven { url 'https://repo.extendedclip.com/content/repositories/placeholderapi/' }
+    maven { url 'https://papermc.io/repo/repository/maven-public/' }
 }
 
 dependencies {
@@ -38,6 +39,7 @@ dependencies {
     compileOnly 'com.comphenix.protocol:ProtocolLib:5.0.0'
     compileOnly 'me.clip:placeholderapi:2.11.3'
     compileOnly 'com.huanmeng-qwq:Bukkit-Gui:2.1.2'
+    compileOnly 'io.papermc:paperlib:1.0.7'
 }
 
 
@@ -56,6 +58,7 @@ shadowJar {
     relocate 'okio', 'team.floracore.lib.okio'
     relocate 'cloud.commandframework', 'team.floracore.lib.cloud'
     relocate 'org.bstats', 'team.floracore.lib.bstats'
+    relocate "io.papermc.lib", "team.floracore.lib.paperlib"
 }
 
 artifacts {

@@ -36,7 +36,8 @@ public enum DependencyRepository {
 	 * Maven Central.
 	 */
 	MAVEN_CENTRAL("https://repo1.maven.org/maven2/"),
-	JIT_PACK("https://jitpack.io/");
+	JIT_PACK("https://jitpack.io/"),
+	PAPER_MC("https://papermc.io/repo/repository/maven-public/");
 
 	private final String url;
 

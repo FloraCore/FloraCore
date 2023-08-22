@@ -227,7 +227,11 @@ public enum Dependency {
 			"commons-io",
 			"2.13.0",
 			"Zx6qOWiNrC/6pGRbPJmAri0OokceSual2hmc0VriNmY="),
-	;
+	PAPER_LIB("io.papermc",
+			"paperlib",
+			"1.0.7",
+			"QlP2zk4m71YeB/QEcdnOGkuz6iL0+cDDzTeDMxFB1+4=",
+			Relocation.of("paperlib", "io{}papermc{}lib"));
 
 	private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";
 	private final String mavenRepoPath;

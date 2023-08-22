@@ -7,14 +7,19 @@ import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.Flag;
 import cloud.commandframework.annotations.suggestions.Suggestions;
 import cloud.commandframework.context.CommandContext;
+import io.papermc.lib.PaperLib;
 import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerTeleportEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.command.FloraCoreBukkitCommand;
+import team.floracore.bukkit.config.features.FeaturesKeys;
 import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
+import team.floracore.bukkit.util.LocationUtil;
+import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.sender.Sender;
 
 import java.util.ArrayList;
@@ -41,8 +46,21 @@ public class TeleportCommand extends FloraCoreBukkitCommand {
 		Sender s = getPlugin().getSenderFactory().wrap(sender);
 		Location location = target.getLocation();
 		PlayerCommandMessage.COMMAND_TELEPORT_TELEPORTING.send(s);
-		sender.teleport(location);
-		PlayerCommandMessage.COMMAND_TELEPORT.send(s, target.getDisplayName());
+		if (getPlugin().getFeaturesConfiguration().get(FeaturesKeys.TELEPORT_SAFETY)) {
+			try {
+				location = LocationUtil.getSafeDestination(location);
+			} catch (Exception e) {
+				MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(s);
+				return;
+			}
+		}
+		PaperLib.teleportAsync(sender, location, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept(result -> {
+			if (result) {
+				PlayerCommandMessage.COMMAND_TELEPORT.send(s, target.getDisplayName());
+			} else {
+				MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(s);
+			}
+		});
 	}
 
 	@CommandMethod("teleport|tp <target> <transmitter>")
@@ -56,11 +74,24 @@ public class TeleportCommand extends FloraCoreBukkitCommand {
 		Sender t = getPlugin().getSenderFactory().wrap(target);
 		Location location = transmitter.getLocation();
 		PlayerCommandMessage.COMMAND_TELEPORT_TELEPORTING.send(s);
-		target.teleport(location);
-		PlayerCommandMessage.COMMAND_TELEPORT_OTHER_SENDER.send(s, target.getDisplayName(), transmitter.getDisplayName());
-		if (silent == null || !silent) {
-			PlayerCommandMessage.COMMAND_TELEPORT_OTHER.send(t, sender.getDisplayName(), transmitter.getDisplayName());
+		if (getPlugin().getFeaturesConfiguration().get(FeaturesKeys.TELEPORT_SAFETY)) {
+			try {
+				location = LocationUtil.getSafeDestination(location);
+			} catch (Exception e) {
+				MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(s);
+				return;
+			}
 		}
+		PaperLib.teleportAsync(target, location, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept(result -> {
+			if (result) {
+				PlayerCommandMessage.COMMAND_TELEPORT_OTHER_SENDER.send(s, target.getDisplayName(), transmitter.getDisplayName());
+				if (silent == null || !silent) {
+					PlayerCommandMessage.COMMAND_TELEPORT_OTHER.send(t, sender.getDisplayName(), transmitter.getDisplayName());
+				}
+			} else {
+				MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(s);
+			}
+		});
 	}
 
 	@CommandMethod("teleportposition|tpp <x> <y> <z>")
@@ -78,10 +109,23 @@ public class TeleportCommand extends FloraCoreBukkitCommand {
 			PlayerCommandMessage.COMMAND_TELEPORT_INVALID_SCOPE.send(s);
 			return;
 		}
-		final Location locpos = new Location(sender.getWorld(), x2, y2, z2, sender.getLocation().getYaw(), sender.getLocation().getPitch());
+		Location locpos = new Location(sender.getWorld(), x2, y2, z2, sender.getLocation().getYaw(), sender.getLocation().getPitch());
 		PlayerCommandMessage.COMMAND_TELEPORT_TELEPORTING.send(s);
-		sender.teleport(locpos);
-		PlayerCommandMessage.COMMAND_TELEPORT_POSITION.send(s, x2, y2, z2);
+		if (getPlugin().getFeaturesConfiguration().get(FeaturesKeys.TELEPORT_SAFETY)) {
+			try {
+				locpos = LocationUtil.getSafeDestination(locpos);
+			} catch (Exception e) {
+				MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(s);
+				return;
+			}
+		}
+		PaperLib.teleportAsync(sender, locpos, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept(result -> {
+			if (result) {
+				PlayerCommandMessage.COMMAND_TELEPORT_POSITION.send(s, x2, y2, z2);
+			} else {
+				MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(s);
+			}
+		});
 	}
 
 	@CommandMethod("teleportposition|tpp <x> <y> <z> <transmitter>")
@@ -102,13 +146,26 @@ public class TeleportCommand extends FloraCoreBukkitCommand {
 			PlayerCommandMessage.COMMAND_TELEPORT_INVALID_SCOPE.send(s);
 			return;
 		}
-		final Location locpos = new Location(transmitter.getWorld(), x2, y2, z2, transmitter.getLocation().getYaw(), transmitter.getLocation().getPitch());
+		Location locpos = new Location(transmitter.getWorld(), x2, y2, z2, transmitter.getLocation().getYaw(), transmitter.getLocation().getPitch());
 		PlayerCommandMessage.COMMAND_TELEPORT_TELEPORTING.send(s);
-		transmitter.teleport(locpos);
-		PlayerCommandMessage.COMMAND_TELEPORT_POSITION_OTHER.send(s, x2, y2, z2, transmitter.getDisplayName());
-		if (silent == null || !silent) {
-			PlayerCommandMessage.COMMAND_TELEPORT_POSITION_OTHER.send(t, x2, y2, z2, sender.getDisplayName());
+		if (getPlugin().getFeaturesConfiguration().get(FeaturesKeys.TELEPORT_SAFETY)) {
+			try {
+				locpos = LocationUtil.getSafeDestination(locpos);
+			} catch (Exception e) {
+				MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(s);
+				return;
+			}
 		}
+		PaperLib.teleportAsync(transmitter, locpos, PlayerTeleportEvent.TeleportCause.COMMAND).thenAccept(result -> {
+			if (result) {
+				PlayerCommandMessage.COMMAND_TELEPORT_POSITION_OTHER.send(s, x2, y2, z2, transmitter.getDisplayName());
+				if (silent == null || !silent) {
+					PlayerCommandMessage.COMMAND_TELEPORT_POSITION_OTHER.send(t, x2, y2, z2, sender.getDisplayName());
+				}
+			} else {
+				MiscMessage.COMMAND_MISC_EXECUTE_COMMAND_EXCEPTION.send(s);
+			}
+		});
 	}
 
 	@Suggestions("positions")
