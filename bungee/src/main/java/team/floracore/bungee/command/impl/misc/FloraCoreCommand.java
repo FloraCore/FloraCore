@@ -61,35 +61,37 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 		Sender s = getPlugin().getSenderFactory().wrap(sender);
 		CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
 
-		List<TranslationRepository.LanguageInfo> availableTranslations;
-		try {
-			availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
-		} catch (IOException | UnsuccessfulRequestException e) {
-			CommonCommandMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
-			getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
-			return;
-		}
+		getAsyncExecutor().execute(() -> {
+			List<TranslationRepository.LanguageInfo> availableTranslations;
+			try {
+				availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
+			} catch (IOException | UnsuccessfulRequestException e) {
+				CommonCommandMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
+				getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
+				return;
+			}
 
-		CommonCommandMessage.INSTALLED_TRANSLATIONS.send(s,
-				getPlugin().getTranslationManager()
-						.getInstalledLocales()
-						.stream()
-						.map(Locale::toLanguageTag)
-						.sorted()
-						.collect(Collectors.toList()));
+			CommonCommandMessage.INSTALLED_TRANSLATIONS.send(s,
+					getPlugin().getTranslationManager()
+							.getInstalledLocales()
+							.stream()
+							.map(Locale::toLanguageTag)
+							.sorted()
+							.collect(Collectors.toList()));
 
-		CommonCommandMessage.AVAILABLE_TRANSLATIONS_HEADER.send(s);
-		availableTranslations.stream()
-				.sorted(Comparator.comparing(language -> language.locale().toLanguageTag()))
-				.forEach(language -> CommonCommandMessage.AVAILABLE_TRANSLATIONS_ENTRY.send(s,
-						language.locale()
-								.toLanguageTag(),
-						TranslationManager.localeDisplayName(
-								language.locale()),
-						language.progress(),
-						language.contributors()));
-		s.sendMessage(AbstractMessage.prefixed(Component.empty()));
-		CommonCommandMessage.TRANSLATIONS_DOWNLOAD_PROMPT.send(s);
+			CommonCommandMessage.AVAILABLE_TRANSLATIONS_HEADER.send(s);
+			availableTranslations.stream()
+					.sorted(Comparator.comparing(language -> language.getLocale().toLanguageTag()))
+					.forEach(language -> CommonCommandMessage.AVAILABLE_TRANSLATIONS_ENTRY.send(s,
+							language.getLocale()
+									.toLanguageTag(),
+							TranslationManager.localeDisplayName(
+									language.getLocale()),
+							language.getProgress(),
+							language.getContributorsString()));
+			s.sendMessage(AbstractMessage.prefixed(Component.empty()));
+			CommonCommandMessage.TRANSLATIONS_DOWNLOAD_PROMPT.send(s);
+		});
 	}
 
 	@CommandMethod("fcb|floracorebungee translations install")
@@ -99,17 +101,19 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 		Sender s = getPlugin().getSenderFactory().wrap(sender);
 		CommonCommandMessage.TRANSLATIONS_SEARCHING.send(s);
 
-		List<TranslationRepository.LanguageInfo> availableTranslations;
-		try {
-			availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
-		} catch (IOException | UnsuccessfulRequestException e) {
-			CommonCommandMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
-			getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
-			return;
-		}
-		CommonCommandMessage.TRANSLATIONS_INSTALLING.send(s);
-		getPlugin().getTranslationRepository().downloadAndInstallTranslations(availableTranslations, s, true);
-		CommonCommandMessage.TRANSLATIONS_INSTALL_COMPLETE.send(s);
+		getAsyncExecutor().execute(() -> {
+			List<TranslationRepository.LanguageInfo> availableTranslations;
+			try {
+				availableTranslations = getPlugin().getTranslationRepository().getAvailableLanguages();
+			} catch (IOException | UnsuccessfulRequestException e) {
+				CommonCommandMessage.TRANSLATIONS_SEARCHING_ERROR.send(s);
+				getPlugin().getLogger().warn("Unable to obtain a list of available translations", e);
+				return;
+			}
+			CommonCommandMessage.TRANSLATIONS_INSTALLING.send(s);
+			getPlugin().getTranslationRepository().downloadAndInstallTranslations(availableTranslations, s, true);
+			CommonCommandMessage.TRANSLATIONS_INSTALL_COMPLETE.send(s);
+		});
 	}
 
 	@CommandMethod("fcb|floracorebungee server <target>")

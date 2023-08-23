@@ -200,33 +200,33 @@ public class ModuleNode extends ModuleVisitor {
 			moduleVisitor.visitMainClass(mainClass);
 		}
 		if (packages != null) {
-			for (int i = 0, n = packages.size(); i < n; i++) {
-				moduleVisitor.visitPackage(packages.get(i));
+			for (String aPackage : packages) {
+				moduleVisitor.visitPackage(aPackage);
 			}
 		}
 		if (requires != null) {
-			for (int i = 0, n = requires.size(); i < n; i++) {
-				requires.get(i).accept(moduleVisitor);
+			for (ModuleRequireNode require : requires) {
+				require.accept(moduleVisitor);
 			}
 		}
 		if (exports != null) {
-			for (int i = 0, n = exports.size(); i < n; i++) {
-				exports.get(i).accept(moduleVisitor);
+			for (ModuleExportNode export : exports) {
+				export.accept(moduleVisitor);
 			}
 		}
 		if (opens != null) {
-			for (int i = 0, n = opens.size(); i < n; i++) {
-				opens.get(i).accept(moduleVisitor);
+			for (ModuleOpenNode open : opens) {
+				open.accept(moduleVisitor);
 			}
 		}
 		if (uses != null) {
-			for (int i = 0, n = uses.size(); i < n; i++) {
-				moduleVisitor.visitUse(uses.get(i));
+			for (String use : uses) {
+				moduleVisitor.visitUse(use);
 			}
 		}
 		if (provides != null) {
-			for (int i = 0, n = provides.size(); i < n; i++) {
-				provides.get(i).accept(moduleVisitor);
+			for (ModuleProvideNode provide : provides) {
+				provide.accept(moduleVisitor);
 			}
 		}
 	}

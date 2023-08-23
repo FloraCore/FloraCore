@@ -30,9 +30,9 @@ public class ModuleListener extends FloraCoreBukkitListener {
 
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
-		if (plugin.getConfiguration().get(FeaturesKeys.JOIN_MESSAGE_ENABLE)) {
+		if (plugin.getFeaturesConfiguration().get(FeaturesKeys.JOIN_MESSAGE_ENABLE)) {
 			Player p = e.getPlayer();
-			String jm = plugin.getConfiguration().get(FeaturesKeys.JOIN_MESSAGE);
+			String jm = plugin.getFeaturesConfiguration().get(FeaturesKeys.JOIN_MESSAGE);
 			jm = jm.replace("%player%", p.getName());
 			jm = BukkitStringReplacer.processStringForPlayer(p, jm);
 			e.setJoinMessage(jm);
@@ -41,9 +41,9 @@ public class ModuleListener extends FloraCoreBukkitListener {
 
 	@EventHandler
 	public void onPlayerQuit(PlayerQuitEvent e) {
-		if (plugin.getConfiguration().get(FeaturesKeys.QUIT_MESSAGE_ENABLE)) {
+		if (plugin.getFeaturesConfiguration().get(FeaturesKeys.QUIT_MESSAGE_ENABLE)) {
 			Player p = e.getPlayer();
-			String qm = plugin.getConfiguration().get(FeaturesKeys.QUIT_MESSAGE);
+			String qm = plugin.getFeaturesConfiguration().get(FeaturesKeys.QUIT_MESSAGE);
 			qm = qm.replace("%player%", p.getName());
 			qm = BukkitStringReplacer.processStringForPlayer(p, qm);
 			e.setQuitMessage(qm);
@@ -53,7 +53,7 @@ public class ModuleListener extends FloraCoreBukkitListener {
 
 	@EventHandler
 	public void onWeatherChange(WeatherChangeEvent e) {
-		if (plugin.getConfiguration().get(FeaturesKeys.NO_WEATHER)) {
+		if (plugin.getFeaturesConfiguration().get(FeaturesKeys.NO_WEATHER)) {
 			if (e.toWeatherState()) {
 				e.setCancelled(true);
 			}
@@ -65,11 +65,11 @@ public class ModuleListener extends FloraCoreBukkitListener {
 		if (event.getEntityType() == EntityType.PLAYER) {
 			EntityDamageEvent.DamageCause damageCause = event.getCause();
 			if (damageCause == EntityDamageEvent.DamageCause.FALL) {
-				if (plugin.getConfiguration().get(FeaturesKeys.NO_FALL)) {
+				if (plugin.getFeaturesConfiguration().get(FeaturesKeys.NO_FALL)) {
 					event.setCancelled(true);
 				}
 			} else if (damageCause == EntityDamageEvent.DamageCause.FIRE || damageCause == EntityDamageEvent.DamageCause.FIRE_TICK) {
-				if (plugin.getConfiguration().get(FeaturesKeys.NO_FIRE_DAMAGE)) {
+				if (plugin.getFeaturesConfiguration().get(FeaturesKeys.NO_FIRE_DAMAGE)) {
 					event.setCancelled(true);
 				}
 			}
@@ -82,7 +82,7 @@ public class ModuleListener extends FloraCoreBukkitListener {
 			return;
 		}
 		Player player = (Player) e.getEntity();
-		if (plugin.getConfiguration().get(FeaturesKeys.NO_HUNGRY)) {
+		if (plugin.getFeaturesConfiguration().get(FeaturesKeys.NO_HUNGRY)) {
 			player.setFoodLevel(20);
 			e.setCancelled(true);
 		}
@@ -90,9 +90,9 @@ public class ModuleListener extends FloraCoreBukkitListener {
 
 	@EventHandler
 	public void onPlayerDeath(PlayerDeathEvent e) {
-		if (plugin.getConfiguration().get(FeaturesKeys.DEATH_MESSAGE_ENABLE)) {
+		if (plugin.getFeaturesConfiguration().get(FeaturesKeys.DEATH_MESSAGE_ENABLE)) {
 			Player p = e.getEntity();
-			String dm = plugin.getConfiguration().get(FeaturesKeys.DEATH_MESSAGE);
+			String dm = plugin.getFeaturesConfiguration().get(FeaturesKeys.DEATH_MESSAGE);
 			dm = dm.replace("%player%", p.getName());
 			dm = BukkitStringReplacer.processStringForPlayer(p, dm);
 			e.setDeathMessage(dm);
@@ -101,21 +101,21 @@ public class ModuleListener extends FloraCoreBukkitListener {
 
 	@EventHandler
 	public void onSpawn(CreatureSpawnEvent e) {
-		if (!plugin.getConfiguration().get(FeaturesKeys.MOB_SPAWN)) {
+		if (!plugin.getFeaturesConfiguration().get(FeaturesKeys.MOB_SPAWN)) {
 			e.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public void onPlaceBlock(BlockPlaceEvent e) {
-		if (!plugin.getConfiguration().get(FeaturesKeys.PLACE_BLOCK)) {
+		if (!plugin.getFeaturesConfiguration().get(FeaturesKeys.PLACE_BLOCK)) {
 			e.setCancelled(true);
 		}
 	}
 
 	@EventHandler
 	public void onBreakBlock(BlockBreakEvent e) {
-		if (!plugin.getConfiguration().get(FeaturesKeys.BREAK_BLOCK)) {
+		if (!plugin.getFeaturesConfiguration().get(FeaturesKeys.BREAK_BLOCK)) {
 			e.setCancelled(true);
 		}
 	}

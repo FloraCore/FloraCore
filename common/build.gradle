@@ -18,7 +18,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.projectlombok:lombok:1.18.28'
+    compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.9.2'
     testImplementation 'org.junit.jupiter:junit-jupiter-engine:5.9.2'
@@ -59,6 +59,16 @@ dependencies {
     api 'io.github.karlatemp:unsafe-accessor:1.7.0'
     api 'com.opencsv:opencsv:5.7.1'
     api 'net.bytebuddy:byte-buddy-agent:1.14.4'
+
+    api 'com.github.crowdin:crowdin-api-client-java:1.10.0'
+
+    api 'org.apache.httpcomponents:httpcore:4.4.16'
+    api 'org.apache.httpcomponents:httpclient:4.5.14'
+    api 'commons-logging:commons-logging:1.2'
+
+    api 'com.fasterxml.jackson.core:jackson-databind:2.15.2'
+    api 'com.fasterxml.jackson.core:jackson-core:2.15.2'
+    api 'com.fasterxml.jackson.core:jackson-annotations:2.15.2'
 }
 
 tasks.withType(JavaCompile).configureEach {

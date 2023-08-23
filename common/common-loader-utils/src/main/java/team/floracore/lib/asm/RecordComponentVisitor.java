@@ -1,5 +1,7 @@
 package team.floracore.lib.asm;
 
+import lombok.Getter;
+
 /**
  * A visitor to visit a record component. The methods of this class must be called in the following
  * order: ( {@code visitAnnotation} | {@code visitTypeAnnotation} | {@code visitAttribute} )* {@code
@@ -17,7 +19,11 @@ public abstract class RecordComponentVisitor {
 
 	/**
 	 * The record visitor to which this visitor must delegate method calls. May be {@literal null}.
+	 * -- GETTER --
+	 * The record visitor to which this visitor must delegate method calls. May be
+	 * .
 	 */
+	@Getter
 	protected RecordComponentVisitor delegate;
 
 	/**
@@ -53,16 +59,6 @@ public abstract class RecordComponentVisitor {
 		}
 		this.api = api;
 		this.delegate = recordComponentVisitor;
-	}
-
-	/**
-	 * The record visitor to which this visitor must delegate method calls. May be {@literal null}.
-	 *
-	 * @return the record visitor to which this visitor must delegate method calls, or {@literal
-	 * null}.
-	 */
-	public RecordComponentVisitor getDelegate() {
-		return delegate;
 	}
 
 	/**
@@ -104,7 +100,7 @@ public abstract class RecordComponentVisitor {
 	}
 
 	/**
-	 * Visits a non standard attribute of the record component.
+	 * Visits a non-standard attribute of the record component.
 	 *
 	 * @param attribute an attribute.
 	 */

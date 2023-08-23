@@ -71,13 +71,13 @@ public class TryCatchBlockNode {
 	public void updateIndex(final int index) {
 		int newTypeRef = 0x42000000 | (index << 8);
 		if (visibleTypeAnnotations != null) {
-			for (int i = 0, n = visibleTypeAnnotations.size(); i < n; ++i) {
-				visibleTypeAnnotations.get(i).typeRef = newTypeRef;
+			for (TypeAnnotationNode visibleTypeAnnotation : visibleTypeAnnotations) {
+				visibleTypeAnnotation.typeRef = newTypeRef;
 			}
 		}
 		if (invisibleTypeAnnotations != null) {
-			for (int i = 0, n = invisibleTypeAnnotations.size(); i < n; ++i) {
-				invisibleTypeAnnotations.get(i).typeRef = newTypeRef;
+			for (TypeAnnotationNode invisibleTypeAnnotation : invisibleTypeAnnotations) {
+				invisibleTypeAnnotation.typeRef = newTypeRef;
 			}
 		}
 	}
@@ -91,16 +91,14 @@ public class TryCatchBlockNode {
 		methodVisitor.visitTryCatchBlock(
 				start.getLabel(), end.getLabel(), handler == null ? null : handler.getLabel(), type);
 		if (visibleTypeAnnotations != null) {
-			for (int i = 0, n = visibleTypeAnnotations.size(); i < n; ++i) {
-				TypeAnnotationNode typeAnnotation = visibleTypeAnnotations.get(i);
+			for (TypeAnnotationNode typeAnnotation : visibleTypeAnnotations) {
 				typeAnnotation.accept(
 						methodVisitor.visitTryCatchAnnotation(
 								typeAnnotation.typeRef, typeAnnotation.typePath, typeAnnotation.desc, true));
 			}
 		}
 		if (invisibleTypeAnnotations != null) {
-			for (int i = 0, n = invisibleTypeAnnotations.size(); i < n; ++i) {
-				TypeAnnotationNode typeAnnotation = invisibleTypeAnnotations.get(i);
+			for (TypeAnnotationNode typeAnnotation : invisibleTypeAnnotations) {
 				typeAnnotation.accept(
 						methodVisitor.visitTryCatchAnnotation(
 								typeAnnotation.typeRef, typeAnnotation.typePath, typeAnnotation.desc, false));

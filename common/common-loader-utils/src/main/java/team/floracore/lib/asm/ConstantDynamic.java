@@ -1,5 +1,7 @@
 package team.floracore.lib.asm;
 
+import lombok.Getter;
+
 import java.util.Arrays;
 
 /**
@@ -7,21 +9,30 @@ import java.util.Arrays;
  *
  * @author Remi Forax
  */
+@Getter
 public final class ConstantDynamic {
 
 	/**
 	 * The constant name (can be arbitrary).
+	 * -- GETTER --
+	 * Returns the name of this constant.
 	 */
 	private final String name;
 
 	/**
 	 * The constant type (must be a field descriptor).
+	 * -- GETTER --
+	 * Returns the type of this constant.
 	 */
+	@Getter
 	private final String descriptor;
 
 	/**
 	 * The bootstrap method to use to compute the constant value at runtime.
+	 * -- GETTER --
+	 * Returns the bootstrap method used to compute the value of this constant.
 	 */
+	@Getter
 	private final Handle bootstrapMethod;
 
 	/**
@@ -48,33 +59,6 @@ public final class ConstantDynamic {
 		this.descriptor = descriptor;
 		this.bootstrapMethod = bootstrapMethod;
 		this.bootstrapMethodArguments = bootstrapMethodArguments;
-	}
-
-	/**
-	 * Returns the name of this constant.
-	 *
-	 * @return the name of this constant.
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Returns the type of this constant.
-	 *
-	 * @return the type of this constant, as a field descriptor.
-	 */
-	public String getDescriptor() {
-		return descriptor;
-	}
-
-	/**
-	 * Returns the bootstrap method used to compute the value of this constant.
-	 *
-	 * @return the bootstrap method used to compute the value of this constant.
-	 */
-	public Handle getBootstrapMethod() {
-		return bootstrapMethod;
 	}
 
 	/**

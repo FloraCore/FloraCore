@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     implementation project(':common')
-    implementation 'org.projectlombok:lombok:1.18.28'
+    compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     compileOnly project(':common:common-loader-utils')
     compileOnly project(':api:bukkit-api')

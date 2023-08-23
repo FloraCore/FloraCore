@@ -1,11 +1,14 @@
 package team.floracore.lib.asm;
 
+import lombok.Getter;
+
 /**
  * A reference to a field or a method.
  *
  * @author Remi Forax
  * @author Eric Bruneton
  */
+@Getter
 public final class Handle {
 
 	/**
@@ -13,17 +16,25 @@ public final class Handle {
 	 * {@link Opcodes#H_GETSTATIC}, {@link Opcodes#H_PUTFIELD}, {@link Opcodes#H_PUTSTATIC}, {@link
 	 * Opcodes#H_INVOKEVIRTUAL}, {@link Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL},
 	 * {@link Opcodes#H_NEWINVOKESPECIAL} or {@link Opcodes#H_INVOKEINTERFACE}.
+	 * -- GETTER --
+	 * Returns the kind of field or method designated by this handle.
 	 */
 	private final int tag;
 
 	/**
 	 * The internal name of the class that owns the field or method designated by this handle.
+	 * -- GETTER --
+	 * Returns the internal name of the class that owns the field or method designated by this handle.
 	 */
+	@Getter
 	private final String owner;
 
 	/**
 	 * The name of the field or method designated by this handle.
+	 * -- GETTER --
+	 * Returns the name of the field or method designated by this handle.
 	 */
+	@Getter
 	private final String name;
 
 	/**
@@ -81,37 +92,6 @@ public final class Handle {
 		this.name = name;
 		this.descriptor = descriptor;
 		this.isInterface = isInterface;
-	}
-
-	/**
-	 * Returns the kind of field or method designated by this handle.
-	 *
-	 * @return {@link Opcodes#H_GETFIELD}, {@link Opcodes#H_GETSTATIC}, {@link Opcodes#H_PUTFIELD},
-	 * {@link Opcodes#H_PUTSTATIC}, {@link Opcodes#H_INVOKEVIRTUAL}, {@link
-	 * Opcodes#H_INVOKESTATIC}, {@link Opcodes#H_INVOKESPECIAL}, {@link
-	 * Opcodes#H_NEWINVOKESPECIAL} or {@link Opcodes#H_INVOKEINTERFACE}.
-	 */
-	public int getTag() {
-		return tag;
-	}
-
-	/**
-	 * Returns the internal name of the class that owns the field or method designated by this handle.
-	 *
-	 * @return the internal name of the class that owns the field or method designated by this handle
-	 * (see {@link Type#getInternalName()}).
-	 */
-	public String getOwner() {
-		return owner;
-	}
-
-	/**
-	 * Returns the name of the field or method designated by this handle.
-	 *
-	 * @return the name of the field or method designated by this handle.
-	 */
-	public String getName() {
-		return name;
 	}
 
 	/**

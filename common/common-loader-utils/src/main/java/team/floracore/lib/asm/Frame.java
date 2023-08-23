@@ -11,7 +11,7 @@ package team.floracore.lib.asm;
  *       previous state of this so called "output frame".
  *   <li>After all instructions have been visited, a fix point algorithm is used in MethodWriter to
  *       compute the "input frame" of each basic block (i.e. the stack map frame at the beginning of
- *       the basic block). See {@link MethodWriter#computeAllFrames}.
+ *       the basic block).
  * </ul>
  *
  * <p>Output stack map frames are computed relatively to the input frame of the basic block, which
@@ -240,7 +240,7 @@ class Frame {
 	 */
 	static int getAbstractTypeFromApiFormat(final SymbolTable symbolTable, final Object type) {
 		if (type instanceof Integer) {
-			return CONSTANT_KIND | ((Integer) type).intValue();
+			return CONSTANT_KIND | (Integer) type;
 		} else if (type instanceof String) {
 			String descriptor = Type.getObjectType((String) type).getDescriptor();
 			return getAbstractTypeFromDescriptor(symbolTable, descriptor, 0);

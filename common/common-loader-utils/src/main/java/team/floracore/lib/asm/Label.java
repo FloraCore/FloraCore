@@ -130,7 +130,7 @@ public class Label {
 
 	/**
 	 * The number of elements in the input stack of the basic block corresponding to this label. This
-	 * field is computed in {@link MethodWriter#computeMaxStackAndLocal}.
+	 * field is computed in.
 	 */
 	short inputStackSize;
 	/**
@@ -178,7 +178,7 @@ public class Label {
 	 * The id of the subroutine to which this basic block belongs, or 0. If the basic block belongs to
 	 * several subroutines, this is the id of the "oldest" subroutine that contains it (with the
 	 * convention that a subroutine calling another one is "older" than the callee). This field is
-	 * computed in {@link MethodWriter#computeMaxStackAndLocal}, if the method contains JSR
+	 * computed in, if the method contains JSR
 	 * instructions.
 	 */
 	short subroutineId;
@@ -210,11 +210,10 @@ public class Label {
 	 * a label can belong to at most one list at a time (unless some lists share a common tail, but
 	 * this is not used in practice).
 	 *
-	 * <p>List of labels are used in {@link MethodWriter#computeAllFrames} and {@link
-	 * MethodWriter#computeMaxStackAndLocal} to compute stack map frames and the maximum stack size,
+	 * <p>List of labels are used in and to compute stack map frames and the maximum stack size,
 	 * respectively, as well as in {@link #markSubroutine} and {@link #addSubroutineRetSuccessors} to
 	 * compute the basic blocks belonging to subroutines and their outgoing edges. Outside of these
-	 * methods, this field should be null (this property is a precondition and a postcondition of
+	 * methods, this field should be null (this property is a precondition and a post condition of
 	 * these methods).
 	 */
 	Label nextListElement;

@@ -1,5 +1,6 @@
 package team.floracore.lib.asm.commons;
 
+import lombok.Getter;
 import team.floracore.lib.asm.ConstantDynamic;
 import team.floracore.lib.asm.Handle;
 import team.floracore.lib.asm.Label;
@@ -11,6 +12,7 @@ import team.floracore.lib.asm.Opcodes;
  *
  * @author Eugene Kuleshov
  */
+@Getter
 public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
 
 	/**
@@ -29,14 +31,6 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
 
 	protected CodeSizeEvaluator(final int api, final MethodVisitor methodVisitor) {
 		super(api, methodVisitor);
-	}
-
-	public int getMinSize() {
-		return this.minSize;
-	}
-
-	public int getMaxSize() {
-		return this.maxSize;
 	}
 
 	@Override
@@ -140,11 +134,10 @@ public class CodeSizeEvaluator extends MethodVisitor implements Opcodes {
 				|| value instanceof Double
 				|| (value instanceof ConstantDynamic && ((ConstantDynamic) value).getSize() == 2)) {
 			minSize += 3;
-			maxSize += 3;
 		} else {
 			minSize += 2;
-			maxSize += 3;
 		}
+		maxSize += 3;
 		super.visitLdcInsn(value);
 	}
 

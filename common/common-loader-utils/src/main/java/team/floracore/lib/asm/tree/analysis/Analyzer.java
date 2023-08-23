@@ -1,5 +1,6 @@
 package team.floracore.lib.asm.tree.analysis;
 
+import lombok.Getter;
 import team.floracore.lib.asm.Opcodes;
 import team.floracore.lib.asm.Type;
 import team.floracore.lib.asm.tree.AbstractInsnNode;
@@ -49,7 +50,15 @@ public class Analyzer<V extends Value> implements Opcodes {
 
 	/**
 	 * The execution stack frames of the currently analyzed method (one per instruction index).
+	 * -- GETTER --
+	 * Returns the symbolic execution stack frame for each instruction of the last analyzed method.
+	 *
+	 * @return the symbolic state of the execution stack frame at each bytecode instruction of the
+	 * method. The size of the returned array is equal to the number of instructions (and labels)
+	 * of the method. A given frame is {@literal null} if the corresponding instruction cannot be
+	 * reached, or if an error occurred during the analysis of the method.
 	 */
+	@Getter
 	private Frame<V>[] frames;
 
 	/**
@@ -494,18 +503,6 @@ public class Analyzer<V extends Value> implements Opcodes {
 		}
 		frame.setReturn(interpreter.newReturnTypeValue(Type.getReturnType(method.desc)));
 		return frame;
-	}
-
-	/**
-	 * Returns the symbolic execution stack frame for each instruction of the last analyzed method.
-	 *
-	 * @return the symbolic state of the execution stack frame at each bytecode instruction of the
-	 * method. The size of the returned array is equal to the number of instructions (and labels)
-	 * of the method. A given frame is {@literal null} if the corresponding instruction cannot be
-	 * reached, or if an error occurred during the analysis of the method.
-	 */
-	public Frame<V>[] getFrames() {
-		return frames;
 	}
 
 	/**

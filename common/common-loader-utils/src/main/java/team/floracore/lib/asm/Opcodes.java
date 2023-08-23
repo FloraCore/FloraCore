@@ -241,26 +241,26 @@ public interface Opcodes {
 	// major version in the 16 least significant bits).
 
 	int V1_1 = 3 << 16 | 45;
-	int V1_2 = 0 << 16 | 46;
-	int V1_3 = 0 << 16 | 47;
-	int V1_4 = 0 << 16 | 48;
-	int V1_5 = 0 << 16 | 49;
-	int V1_6 = 0 << 16 | 50;
-	int V1_7 = 0 << 16 | 51;
-	int V1_8 = 0 << 16 | 52;
-	int V9 = 0 << 16 | 53;
-	int V10 = 0 << 16 | 54;
-	int V11 = 0 << 16 | 55;
-	int V12 = 0 << 16 | 56;
-	int V13 = 0 << 16 | 57;
-	int V14 = 0 << 16 | 58;
-	int V15 = 0 << 16 | 59;
-	int V16 = 0 << 16 | 60;
-	int V17 = 0 << 16 | 61;
-	int V18 = 0 << 16 | 62;
-	int V19 = 0 << 16 | 63;
-	int V20 = 0 << 16 | 64;
-	int V21 = 0 << 16 | 65;
+	int V1_2 = 46;
+	int V1_3 = 47;
+	int V1_4 = 48;
+	int V1_5 = 49;
+	int V1_6 = 50;
+	int V1_7 = 51;
+	int V1_8 = 52;
+	int V9 = 53;
+	int V10 = 54;
+	int V11 = 55;
+	int V12 = 56;
+	int V13 = 57;
+	int V14 = 58;
+	int V15 = 59;
+	int V16 = 60;
+	int V17 = 61;
+	int V18 = 62;
+	int V19 = 63;
+	int V20 = 64;
+	int V21 = 65;
 
 	/**
 	 * Version flag indicating that the class is using 'preview' features.
@@ -308,7 +308,7 @@ public interface Opcodes {
 	int ACC_RECORD = 0x10000; // class
 	int ACC_DEPRECATED = 0x20000; // class, field, method
 
-	// Possible values for the type operand of the NEWARRAY instruction.
+	// Possible values for the type operand of the NEW-ARRAY instruction.
 	// See https://docs.oracle.com/javase/specs/jvms/se9/html/jvms-6.html#jvms-6.5.newarray.
 
 	int T_BOOLEAN = 4;

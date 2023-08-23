@@ -1,5 +1,6 @@
 package team.floracore.lib.asm.commons;
 
+import lombok.Getter;
 import team.floracore.lib.asm.Type;
 
 import java.util.HashMap;
@@ -12,6 +13,7 @@ import java.util.Map;
  * @author Chris Nokleberg
  * @author Eric Bruneton
  */
+@Getter
 public class Method {
 
 	/**
@@ -35,10 +37,14 @@ public class Method {
 
 	/**
 	 * The method name.
+	 * -- GETTER --
+	 * Returns the name of the method described by this object.
 	 */
 	private final String name;
 	/**
 	 * The method descriptor.
+	 * -- GETTER --
+	 * Returns the descriptor of the method described by this object.
 	 */
 	private final String descriptor;
 
@@ -182,24 +188,6 @@ public class Method {
 			stringBuilder.append(';');
 		}
 		return stringBuilder.toString();
-	}
-
-	/**
-	 * Returns the name of the method described by this object.
-	 *
-	 * @return the name of the method described by this object.
-	 */
-	public String getName() {
-		return name;
-	}
-
-	/**
-	 * Returns the descriptor of the method described by this object.
-	 *
-	 * @return the descriptor of the method described by this object.
-	 */
-	public String getDescriptor() {
-		return descriptor;
 	}
 
 	/**

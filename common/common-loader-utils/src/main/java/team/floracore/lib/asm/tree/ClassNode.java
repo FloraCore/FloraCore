@@ -405,68 +405,64 @@ public class ClassNode extends ClassVisitor {
 		}
 		// Visit the annotations.
 		if (visibleAnnotations != null) {
-			for (int i = 0, n = visibleAnnotations.size(); i < n; ++i) {
-				AnnotationNode annotation = visibleAnnotations.get(i);
+			for (AnnotationNode annotation : visibleAnnotations) {
 				annotation.accept(classVisitor.visitAnnotation(annotation.desc, true));
 			}
 		}
 		if (invisibleAnnotations != null) {
-			for (int i = 0, n = invisibleAnnotations.size(); i < n; ++i) {
-				AnnotationNode annotation = invisibleAnnotations.get(i);
+			for (AnnotationNode annotation : invisibleAnnotations) {
 				annotation.accept(classVisitor.visitAnnotation(annotation.desc, false));
 			}
 		}
 		if (visibleTypeAnnotations != null) {
-			for (int i = 0, n = visibleTypeAnnotations.size(); i < n; ++i) {
-				TypeAnnotationNode typeAnnotation = visibleTypeAnnotations.get(i);
+			for (TypeAnnotationNode typeAnnotation : visibleTypeAnnotations) {
 				typeAnnotation.accept(
 						classVisitor.visitTypeAnnotation(
 								typeAnnotation.typeRef, typeAnnotation.typePath, typeAnnotation.desc, true));
 			}
 		}
 		if (invisibleTypeAnnotations != null) {
-			for (int i = 0, n = invisibleTypeAnnotations.size(); i < n; ++i) {
-				TypeAnnotationNode typeAnnotation = invisibleTypeAnnotations.get(i);
+			for (TypeAnnotationNode typeAnnotation : invisibleTypeAnnotations) {
 				typeAnnotation.accept(
 						classVisitor.visitTypeAnnotation(
 								typeAnnotation.typeRef, typeAnnotation.typePath, typeAnnotation.desc, false));
 			}
 		}
-		// Visit the non standard attributes.
+		// Visit the non-standard attributes.
 		if (attrs != null) {
-			for (int i = 0, n = attrs.size(); i < n; ++i) {
-				classVisitor.visitAttribute(attrs.get(i));
+			for (Attribute attr : attrs) {
+				classVisitor.visitAttribute(attr);
 			}
 		}
 		// Visit the nest members.
 		if (nestMembers != null) {
-			for (int i = 0, n = nestMembers.size(); i < n; ++i) {
-				classVisitor.visitNestMember(nestMembers.get(i));
+			for (String nestMember : nestMembers) {
+				classVisitor.visitNestMember(nestMember);
 			}
 		}
 		// Visit the permitted subclasses.
 		if (permittedSubclasses != null) {
-			for (int i = 0, n = permittedSubclasses.size(); i < n; ++i) {
-				classVisitor.visitPermittedSubclass(permittedSubclasses.get(i));
+			for (String permittedSubclass : permittedSubclasses) {
+				classVisitor.visitPermittedSubclass(permittedSubclass);
 			}
 		}
 		// Visit the inner classes.
-		for (int i = 0, n = innerClasses.size(); i < n; ++i) {
-			innerClasses.get(i).accept(classVisitor);
+		for (InnerClassNode innerClass : innerClasses) {
+			innerClass.accept(classVisitor);
 		}
 		// Visit the record components.
 		if (recordComponents != null) {
-			for (int i = 0, n = recordComponents.size(); i < n; ++i) {
-				recordComponents.get(i).accept(classVisitor);
+			for (RecordComponentNode recordComponent : recordComponents) {
+				recordComponent.accept(classVisitor);
 			}
 		}
 		// Visit the fields.
-		for (int i = 0, n = fields.size(); i < n; ++i) {
-			fields.get(i).accept(classVisitor);
+		for (FieldNode field : fields) {
+			field.accept(classVisitor);
 		}
 		// Visit the methods.
-		for (int i = 0, n = methods.size(); i < n; ++i) {
-			methods.get(i).accept(classVisitor);
+		for (MethodNode method : methods) {
+			method.accept(classVisitor);
 		}
 		classVisitor.visitEnd();
 	}

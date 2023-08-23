@@ -1,5 +1,6 @@
 package team.floracore.lib.asm.tree;
 
+import lombok.Getter;
 import team.floracore.lib.asm.MethodVisitor;
 
 import java.util.ArrayList;
@@ -108,7 +109,10 @@ public abstract class AbstractInsnNode {
 	/**
 	 * The opcode of this instruction, or -1 if this is not a JVM instruction (e.g. a label or a line
 	 * number).
+	 * -- GETTER --
+	 * Returns the opcode of this instruction.
 	 */
+	@Getter
 	protected int opcode;
 	/**
 	 * The previous instruction in the list to which this instruction belongs.
@@ -162,16 +166,6 @@ public abstract class AbstractInsnNode {
 			clones[i] = clonedLabels.get(labels.get(i));
 		}
 		return clones;
-	}
-
-	/**
-	 * Returns the opcode of this instruction.
-	 *
-	 * @return the opcode of this instruction, or -1 if this is not a JVM instruction (e.g. a label or
-	 * a line number).
-	 */
-	public int getOpcode() {
-		return opcode;
 	}
 
 	/**

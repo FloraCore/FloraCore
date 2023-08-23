@@ -9,6 +9,7 @@ version rootProject.version
 repositories {
     maven { url 'https://repo.papermc.io/repository/maven-public/' }
     maven { url 'https://oss.sonatype.org/content/groups/public/' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {

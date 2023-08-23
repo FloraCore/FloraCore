@@ -98,6 +98,13 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 		ret.add(Dependency.CAFFEINE);
 		ret.add(Dependency.UNSAFE_ACCESSOR);
 		ret.add(Dependency.OPENCSV);
+		ret.add(Dependency.CROWDIN);
+		ret.add(Dependency.HTTP_CORE);
+		ret.add(Dependency.HTTP_CLIENT);
+		ret.add(Dependency.JACKSON_DATABIND);
+		ret.add(Dependency.JACKSON_CORE);
+		ret.add(Dependency.JACKSON_ANNOTATIONS);
+		ret.add(Dependency.COMMONS_LOGGING);
 		return ret;
 	}
 

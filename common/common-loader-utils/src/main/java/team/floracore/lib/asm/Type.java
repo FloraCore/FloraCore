@@ -895,7 +895,7 @@ public final class Type {
 	public int hashCode() {
 		int hashCode = 13 * (sort == INTERNAL ? OBJECT : sort);
 		if (sort >= ARRAY) {
-			for (int i = valueBegin, end = valueEnd; i < end; i++) {
+			for (int i = valueBegin; i < valueEnd; i++) {
 				hashCode = 17 * (hashCode + valueBuffer.charAt(i));
 			}
 		}

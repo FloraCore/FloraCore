@@ -347,14 +347,14 @@ final class AnnotationWriter extends AnnotationVisitor {
 		if (value instanceof String) {
 			annotation.put12('s', symbolTable.addConstantUtf8((String) value));
 		} else if (value instanceof Byte) {
-			annotation.put12('B', symbolTable.addConstantInteger(((Byte) value).byteValue()).index);
+			annotation.put12('B', symbolTable.addConstantInteger((Byte) value).index);
 		} else if (value instanceof Boolean) {
-			int booleanValue = ((Boolean) value).booleanValue() ? 1 : 0;
+			int booleanValue = (Boolean) value ? 1 : 0;
 			annotation.put12('Z', symbolTable.addConstantInteger(booleanValue).index);
 		} else if (value instanceof Character) {
-			annotation.put12('C', symbolTable.addConstantInteger(((Character) value).charValue()).index);
+			annotation.put12('C', symbolTable.addConstantInteger((Character) value).index);
 		} else if (value instanceof Short) {
-			annotation.put12('S', symbolTable.addConstantInteger(((Short) value).shortValue()).index);
+			annotation.put12('S', symbolTable.addConstantInteger((Short) value).index);
 		} else if (value instanceof Type) {
 			annotation.put12('c', symbolTable.addConstantUtf8(((Type) value).getDescriptor()));
 		} else if (value instanceof byte[]) {

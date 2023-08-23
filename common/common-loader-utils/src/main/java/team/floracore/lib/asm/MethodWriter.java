@@ -2195,27 +2195,7 @@ final class MethodWriter extends MethodVisitor {
 		if (numberOfExceptions > 0) {
 			++attributeCount;
 		}
-		if ((accessFlags & Opcodes.ACC_SYNTHETIC) != 0 && useSyntheticAttribute) {
-			++attributeCount;
-		}
-		if (signatureIndex != 0) {
-			++attributeCount;
-		}
-		if ((accessFlags & Opcodes.ACC_DEPRECATED) != 0) {
-			++attributeCount;
-		}
-		if (lastRuntimeVisibleAnnotation != null) {
-			++attributeCount;
-		}
-		if (lastRuntimeInvisibleAnnotation != null) {
-			++attributeCount;
-		}
-		if (lastRuntimeVisibleParameterAnnotations != null) {
-			++attributeCount;
-		}
-		if (lastRuntimeInvisibleParameterAnnotations != null) {
-			++attributeCount;
-		}
+		attributeCount = FieldWriter.getAttributesCount(useSyntheticAttribute, attributeCount, accessFlags, signatureIndex, lastRuntimeVisibleAnnotation, lastRuntimeInvisibleAnnotation, lastRuntimeVisibleParameterAnnotations != null, lastRuntimeInvisibleParameterAnnotations != null);
 		if (lastRuntimeVisibleTypeAnnotation != null) {
 			++attributeCount;
 		}

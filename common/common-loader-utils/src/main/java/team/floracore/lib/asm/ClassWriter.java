@@ -143,25 +143,25 @@ public class ClassWriter extends ClassVisitor {
 
 	/**
 	 * The last runtime visible annotation of this class. The previous ones can be accessed with the
-	 * {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
+	 * field. May be {@literal null}.
 	 */
 	private AnnotationWriter lastRuntimeVisibleAnnotation;
 
 	/**
 	 * The last runtime invisible annotation of this class. The previous ones can be accessed with the
-	 * {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
+	 * field. May be {@literal null}.
 	 */
 	private AnnotationWriter lastRuntimeInvisibleAnnotation;
 
 	/**
 	 * The last runtime visible type annotation of this class. The previous ones can be accessed with
-	 * the {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
+	 * the field. May be {@literal null}.
 	 */
 	private AnnotationWriter lastRuntimeVisibleTypeAnnotation;
 
 	/**
 	 * The last runtime invisible type annotation of this class. The previous ones can be accessed
-	 * with the {@link AnnotationWriter#previousAnnotation} field. May be {@literal null}.
+	 * with the field. May be {@literal null}.
 	 */
 	private AnnotationWriter lastRuntimeInvisibleTypeAnnotation;
 

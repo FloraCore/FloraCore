@@ -1,17 +1,36 @@
 package team.floracore.lib.asm;
 
+import lombok.Getter;
+
 /**
  * Exception thrown when the Code attribute of a method produced by a {@link ClassWriter} is too
  * large.
  *
  * @author Jason Zaugg
  */
+@Getter
 public final class MethodTooLargeException extends IndexOutOfBoundsException {
 	private static final long serialVersionUID = 6807380416709738314L;
 
+	/**
+	 * -- GETTER --
+	 * Returns the internal name of the owner class.
+	 */
 	private final String className;
+	/**
+	 * -- GETTER --
+	 * Returns the name of the method.
+	 */
 	private final String methodName;
+	/**
+	 * -- GETTER --
+	 * Returns the descriptor of the method.
+	 */
 	private final String descriptor;
+	/**
+	 * -- GETTER --
+	 * Returns the size of the method's Code attribute, in bytes.
+	 */
 	private final int codeSize;
 
 	/**
@@ -34,39 +53,4 @@ public final class MethodTooLargeException extends IndexOutOfBoundsException {
 		this.codeSize = codeSize;
 	}
 
-	/**
-	 * Returns the internal name of the owner class.
-	 *
-	 * @return the internal name of the owner class (see {@link Type#getInternalName()}).
-	 */
-	public String getClassName() {
-		return className;
-	}
-
-	/**
-	 * Returns the name of the method.
-	 *
-	 * @return the name of the method.
-	 */
-	public String getMethodName() {
-		return methodName;
-	}
-
-	/**
-	 * Returns the descriptor of the method.
-	 *
-	 * @return the descriptor of the method.
-	 */
-	public String getDescriptor() {
-		return descriptor;
-	}
-
-	/**
-	 * Returns the size of the method's Code attribute, in bytes.
-	 *
-	 * @return the size of the method's Code attribute, in bytes.
-	 */
-	public int getCodeSize() {
-		return codeSize;
-	}
 }
