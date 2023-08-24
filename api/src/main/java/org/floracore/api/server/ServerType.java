@@ -1,8 +1,11 @@
 package org.floracore.api.server;
 
+import lombok.Getter;
+
 /**
  * 服务器类型
  */
+@Getter
 public enum ServerType {
 	/**
 	 * 普通类型
@@ -47,15 +50,4 @@ public enum ServerType {
 		return def;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public boolean isAutoSync1() {
-		return autoSync1;
-	}
-
-	public boolean isAutoSync2() {
-		return autoSync2;
-	}
 }

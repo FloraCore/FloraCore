@@ -1,12 +1,14 @@
 package org.floracore.api.data.chat;
 
 import com.google.common.collect.ImmutableList;
+import lombok.Getter;
 
 import java.util.List;
 
 /**
  * 聊天类型
  */
+@Getter
 public enum ChatType {
 	/**
 	 * 在服务器内聊天,即表示的是公共聊天。
@@ -57,7 +59,4 @@ public enum ChatType {
 		return null;
 	}
 
-	public List<String> getIdentifiers() {
-		return this.identifiers;
-	}
 }

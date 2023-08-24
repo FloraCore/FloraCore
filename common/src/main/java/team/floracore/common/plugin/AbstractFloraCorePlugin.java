@@ -127,7 +127,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 			this.getBootstrap().getScheduler().asyncRepeating(() -> checkUpdate(false), 10, TimeUnit.MINUTES);
 		}
 
-		// setup a byte bin instance
+		// set up a byte bin instance
 		this.httpClient = new OkHttpClient.Builder().callTimeout(15, TimeUnit.SECONDS).build();
 		this.bytebin = new BytebinClient(this.httpClient, getConfiguration().get(ConfigKeys.BYTEBIN_URL), "floracore");
 		this.bytesocks = new BytesocksClient(this.httpClient, getConfiguration().get(ConfigKeys.BYTESOCKS_HOST),

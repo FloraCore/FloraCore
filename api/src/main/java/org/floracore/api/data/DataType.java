@@ -1,8 +1,11 @@
 package org.floracore.api.data;
 
+import lombok.Getter;
+
 /**
  * 这个类是关于Data数据库中存储的数据类型。
  */
+@Getter
 public enum DataType {
 	/**
 	 * 自动同步
@@ -64,7 +67,4 @@ public enum DataType {
 		return def;
 	}
 
-	public String getName() {
-		return name;
-	}
 }
