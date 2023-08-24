@@ -18,8 +18,6 @@ import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.command.FloraCoreBukkitCommand;
 import team.floracore.bukkit.config.boards.BoardsKeys;
 import team.floracore.bukkit.locale.message.commands.MiscCommandMessage;
-import team.floracore.common.chat.ChatProvider;
-import team.floracore.common.config.ConfigKeys;
 import team.floracore.common.http.UnsuccessfulRequestException;
 import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.locale.message.CommonCommandMessage;
@@ -311,35 +309,5 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 			getStorageImplementation().deleteDataAll(u);
 		}
 		MiscCommandMessage.DATA_CLEAR_SUCCESS.send(s, target, type);
-	}
-
-	@CommandMethod("fc|floracore chat <target>")
-	@CommandDescription("floracore.command.description.floracore.chat")
-	@CommandPermission("floracore.staff")
-	public void chat(final @NotNull CommandSender sender,
-	                 final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {
-		Sender s = getPlugin().getSenderFactory().wrap(sender);
-		getAsyncExecutor().execute(() -> {
-			boolean has = getPlugin().getApiProvider().getPlayerAPI().hasPlayerRecord(target);
-			if (has) {
-				MiscMessage.MISC_GETTING.send(s);
-				ChatProvider.Uploader uploader = new ChatProvider.Uploader(s.getUniqueId(), s.getName());
-				UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
-				ChatProvider chatProvider = new ChatProvider(getPlugin(), uploader, targetUUID);
-				try {
-					String id = chatProvider.uploadChatData(getPlugin().getBytebin());
-					String url = getPlugin().getConfiguration().get(ConfigKeys.CHAT_VIEWER_URL_PATTERN) + id;
-					MiscMessage.CHAT_RESULTS_URL.send(s, url);
-				} catch (IOException e) {
-					getPlugin().getLogger().warn("Error uploading data to bytebin", e);
-					MiscMessage.GENERIC_HTTP_UNKNOWN_FAILURE.send(s);
-				} catch (UnsuccessfulRequestException e) {
-					MiscMessage.GENERIC_HTTP_REQUEST_FAILURE.send(s, e.getResponse().code(),
-							e.getResponse().message());
-				}
-			} else {
-				MiscMessage.PLAYER_NOT_FOUND.send(s, target);
-			}
-		});
 	}
 }

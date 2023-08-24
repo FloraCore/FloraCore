@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 /**
@@ -238,6 +239,36 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 			} catch (UnsuccessfulRequestException e) {
 				MiscMessage.GENERIC_HTTP_REQUEST_FAILURE.send(s, e.getResponse().code(),
 						e.getResponse().message());
+			}
+		});
+	}
+
+	@CommandMethod("fcb|floracorebungee chat <target>")
+	@CommandDescription("floracore.command.description.floracore.chat")
+	@CommandPermission("floracore.staff")
+	public void chatPlayer(final @NotNull CommandSender sender,
+	                       final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {
+		Sender s = getPlugin().getSenderFactory().wrap(sender);
+		getAsyncExecutor().execute(() -> {
+			boolean has = getPlugin().getApiProvider().getPlayerAPI().hasPlayerRecord(target);
+			if (has) {
+				MiscMessage.MISC_GETTING.send(s);
+				ChatProvider.Uploader uploader = new ChatProvider.Uploader(s.getUniqueId(), s.getName());
+				UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+				ChatProvider chatProvider = new ChatProvider(getPlugin(), uploader, targetUUID);
+				try {
+					String id = chatProvider.uploadChatData(getPlugin().getBytebin());
+					String url = getPlugin().getConfiguration().get(ConfigKeys.CHAT_VIEWER_URL_PATTERN) + id;
+					MiscMessage.CHAT_RESULTS_URL.send(s, url);
+				} catch (IOException e) {
+					getPlugin().getLogger().warn("Error uploading data to bytebin", e);
+					MiscMessage.GENERIC_HTTP_UNKNOWN_FAILURE.send(s);
+				} catch (UnsuccessfulRequestException e) {
+					MiscMessage.GENERIC_HTTP_REQUEST_FAILURE.send(s, e.getResponse().code(),
+							e.getResponse().message());
+				}
+			} else {
+				MiscMessage.PLAYER_NOT_FOUND.send(s, target);
 			}
 		});
 	}

@@ -306,8 +306,7 @@ public class TranslationRepository {
 						throw new IOException("No response");
 					}
 
-					try (InputStream inputStream = new LimitedInputStream(responseBody.byteStream(),
-							MAX_BUNDLE_SIZE)) {
+					try (InputStream inputStream = new LimitedInputStream(responseBody.byteStream(), MAX_BUNDLE_SIZE)) {
 						Files.copy(inputStream, file, StandardCopyOption.REPLACE_EXISTING);
 					}
 				}

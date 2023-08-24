@@ -19,7 +19,6 @@ import team.floracore.bukkit.config.boards.BoardsKeys;
 import team.floracore.bukkit.config.features.FeaturesConfiguration;
 import team.floracore.bukkit.hooks.placeholderapi.PlaceholderAPIHook;
 import team.floracore.bukkit.listener.ListenerManager;
-import team.floracore.bukkit.locale.chat.ChatManager;
 import team.floracore.bukkit.messaging.BukkitMessagingFactory;
 import team.floracore.bukkit.scoreboard.ScoreBoardManager;
 import team.floracore.bukkit.util.BungeeUtil;
@@ -56,8 +55,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 	private BukkitSenderFactory senderFactory;
 	@Getter
 	private BukkitMessagingFactory bukkitMessagingFactory;
-	@Getter
-	private ChatManager chatManager;
 	@Getter
 	private BungeeUtil bungeeUtil;
 	@Getter
@@ -153,7 +150,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
 		this.listenerManager = new ListenerManager(this);
 		this.commandManager = new CommandManager(this);
-		this.chatManager = new ChatManager(this);
 
 		if (Bukkit.getPluginManager().getPlugin("PlaceholderAPI") != null) {
 			getLogger().info("Hooking PlaceholderAPI...");
@@ -213,8 +209,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 		if (this.boardsConfiguration.get(BoardsKeys.ENABLE)) {
 			scoreBoardManager.getSidebarBoard().cancel();
 		}
-
-		chatManager.shutdown();
 	}
 
 	public JavaPlugin getLoader() {
