@@ -8,7 +8,6 @@ import cloud.commandframework.annotations.processing.CommandContainer;
 import cloud.commandframework.annotations.specifier.Greedy;
 import cloud.commandframework.annotations.suggestions.Suggestions;
 import cloud.commandframework.context.CommandContext;
-import com.github.benmanes.caffeine.cache.Cache;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -30,24 +29,17 @@ import team.floracore.common.locale.translation.TranslationManager;
 import team.floracore.common.sender.Sender;
 import team.floracore.common.storage.misc.floracore.tables.DATA;
 import team.floracore.common.storage.misc.floracore.tables.PARTY;
-import team.floracore.common.util.CaffeineFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Stream;
 
 @CommandContainer
 @CommandDescription("floracore.command.description.chat")
 @CommandPermission("floracore.socialsystems.chat")
 public class ChatCommand extends FloraCoreBungeeCommand implements Listener {
-	public static final Cache<ChatType, Stream<Sender>> onlineCache = CaffeineFactory.newBuilder()
-			.expireAfterWrite(3, TimeUnit.SECONDS)
-			.build();
-
 	public ChatCommand(FCBungeePlugin plugin) {
 		super(plugin);
 		plugin.getListenerManager().registerListener(this);

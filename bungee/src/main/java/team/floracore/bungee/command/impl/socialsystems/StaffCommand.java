@@ -6,6 +6,7 @@ import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.processing.CommandContainer;
 import cloud.commandframework.annotations.specifier.Greedy;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.floracore.api.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
@@ -14,10 +15,10 @@ import team.floracore.bungee.command.FloraCoreBungeeCommand;
 import team.floracore.bungee.locale.message.SocialSystemsMessage;
 import team.floracore.common.sender.Sender;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @CommandContainer
 @CommandDescription("floracore.command.description.staff")
@@ -51,13 +52,16 @@ public class StaffCommand extends FloraCoreBungeeCommand {
 	}
 
 	@CommandMethod("staff|s list")
-	public void list(final @NotNull ProxiedPlayer player) {
-		Sender sender = getPlugin().getSenderFactory().wrap(player);
-		Stream<Sender> staffs = ChatCommand.onlineCache.getIfPresent(ChatType.STAFF);
-		if (staffs == null) {
-			staffs = getPlugin().getOnlineSenders().filter(s -> s.hasPermission("floracore.socialsystems.staff"));
-			ChatCommand.onlineCache.put(ChatType.STAFF, staffs);
-		}
-		SocialSystemsMessage.COMMAND_MISC_STAFF_LIST.send(sender, staffs.collect(Collectors.toList()));
+	public void list(final @NotNull CommandSender commandSender) {
+		Sender sender = getPlugin().getSenderFactory().wrap(commandSender);
+		getAsyncExecutor().execute(() -> {
+			List<UUID> members = new ArrayList<>();
+			getPlugin().getOnlineSenders().forEach(m -> {
+				if (m.hasPermission("floracore.socialsystems.staff") && !m.isConsole()) {
+					members.add(m.getUniqueId());
+				}
+			});
+			SocialSystemsMessage.COMMAND_MISC_STAFF_LIST.send(sender, members);
+		});
 	}
 }
