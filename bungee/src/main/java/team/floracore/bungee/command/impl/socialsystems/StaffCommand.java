@@ -11,10 +11,12 @@ import org.floracore.api.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
+import team.floracore.bungee.locale.message.SocialSystemsMessage;
 import team.floracore.common.sender.Sender;
 
 import java.util.Arrays;
 import java.util.UUID;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @CommandContainer
@@ -50,11 +52,12 @@ public class StaffCommand extends FloraCoreBungeeCommand {
 
 	@CommandMethod("staff|s list")
 	public void list(final @NotNull ProxiedPlayer player) {
-		UUID uuid = player.getUniqueId();
+		Sender sender = getPlugin().getSenderFactory().wrap(player);
 		Stream<Sender> staffs = ChatCommand.onlineCache.getIfPresent(ChatType.STAFF);
 		if (staffs == null) {
 			staffs = getPlugin().getOnlineSenders().filter(s -> s.hasPermission("floracore.socialsystems.staff"));
 			ChatCommand.onlineCache.put(ChatType.STAFF, staffs);
 		}
+		SocialSystemsMessage.COMMAND_MISC_STAFF_LIST.send(sender, staffs.collect(Collectors.toList()));
 	}
 }

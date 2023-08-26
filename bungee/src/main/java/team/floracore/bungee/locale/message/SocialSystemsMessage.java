@@ -6,6 +6,7 @@ import net.kyori.adventure.text.event.ClickEvent;
 import org.floracore.api.FloraCoreProvider;
 import team.floracore.common.locale.message.AbstractMessage;
 import team.floracore.common.locale.message.MiscMessage;
+import team.floracore.common.sender.Sender;
 
 import java.util.List;
 import java.util.UUID;
@@ -452,6 +453,54 @@ public interface SocialSystemsMessage extends AbstractMessage {
 			.append(space())
 			.append(text(message, WHITE))
 			.build();
+
+	Args1<List<Sender>> COMMAND_MISC_STAFF_LIST = (staffs) -> {
+		JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+		Component title = translatable("floracore.command.misc.staff.list")
+				.args(OPEN_BRACKET.append(text(staffs.size())).append(CLOSE_BRACKET)).color(AQUA);
+		Component c = join(joinConfig, MiscMessage.STAFF_HORIZONTAL_LINE.build(),
+				title,
+				space());
+		Component sc = Component.empty();
+		for (Sender staff : staffs) {
+			UUID uuid = staff.getUniqueId();
+			sc = sc.append(RENDER_PLAYER_NAME.build(uuid)).append(space());
+		}
+		c = join(joinConfig, c, MiscMessage.STAFF_HORIZONTAL_LINE.build());
+		return c;
+	};
+
+	Args1<List<Sender>> COMMAND_MISC_ADMIN_LIST = (admins) -> {
+		JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+		Component title = translatable("floracore.command.misc.admin.list")
+				.args(OPEN_BRACKET.append(text(admins.size())).append(CLOSE_BRACKET)).color(AQUA);
+		Component c = join(joinConfig, MiscMessage.ADMIN_HORIZONTAL_LINE.build(),
+				title,
+				space());
+		Component sc = Component.empty();
+		for (Sender admin : admins) {
+			UUID uuid = admin.getUniqueId();
+			sc = sc.append(RENDER_PLAYER_NAME.build(uuid)).append(space());
+		}
+		c = join(joinConfig, c, MiscMessage.ADMIN_HORIZONTAL_LINE.build());
+		return c;
+	};
+
+	Args1<List<Sender>> COMMAND_MISC_BUILDER_LIST = (builders) -> {
+		JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
+		Component title = translatable("floracore.command.misc.builder.list")
+				.args(OPEN_BRACKET.append(text(builders.size())).append(CLOSE_BRACKET)).color(AQUA);
+		Component c = join(joinConfig, MiscMessage.BUILDER_HORIZONTAL_LINE.build(),
+				title,
+				space());
+		Component sc = Component.empty();
+		for (Sender builder : builders) {
+			UUID uuid = builder.getUniqueId();
+			sc = sc.append(RENDER_PLAYER_NAME.build(uuid)).append(space());
+		}
+		c = join(joinConfig, c, MiscMessage.BUILDER_HORIZONTAL_LINE.build());
+		return c;
+	};
 
 	Args3<UUID, List<UUID>, List<UUID>> COMMAND_MISC_PARTY_LIST = (leader, moderators, members) -> {
 		JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
