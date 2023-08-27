@@ -16,7 +16,7 @@ import static net.kyori.adventure.text.Component.*;
 import static net.kyori.adventure.text.format.NamedTextColor.*;
 import static net.kyori.adventure.text.format.TextDecoration.*;
 
-public abstract interface AbstractMessage {
+public interface AbstractMessage {
 	TextComponent OPEN_BRACKET = Component.text('(');
 	TextComponent CLOSE_BRACKET = Component.text(')');
 	TextComponent FULL_STOP = Component.text('.');

@@ -119,6 +119,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 		getLogger().info("Loading configuration...");
 		ConfigurationAdapter configFileAdapter = provideConfigurationAdapter();
 		this.configuration = new FloraCoreConfiguration(this, configFileAdapter);
+		this.configuration.reload();
 		setupConfiguration();
 
 		// check update

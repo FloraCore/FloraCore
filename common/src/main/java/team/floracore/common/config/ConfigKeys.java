@@ -118,6 +118,9 @@ public class ConfigKeys {
 	 */
 	public static final ConfigKey<String> CHAT_VIEWER_URL_PATTERN = stringKey("chat-viewer-url", "https://floracore.cc/chat/");
 
+	public static final ConfigKey<Boolean> CUSTOM_PREFIX = booleanKey("custom-prefix.enable", false);
+	public static final ConfigKey<String> CUSTOM_PREFIX_TEXT = stringKey("custom-prefix.text", "&7[&bF&eC&7]");
+
 	/**
 	 * A list of the keys defined in this class.
 	 */

@@ -129,3 +129,9 @@ check-update: true
 bytebin-url: https://bytebin.floracore.cc/
 bytesocks-host: bytesocks.floracore.cc
 chat-viewer-url: https://floracore.cc/chat/
+
+# 是否自定义FloraCore消息的前缀
+custom-prefix:
+  # 若为是，则在下方填写新的前缀
+  enable: false
+  text: "&7[&bF&eC&7]"

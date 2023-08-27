@@ -19,6 +19,7 @@ import team.floracore.common.dependencies.Dependency;
 import team.floracore.common.messaging.MessagingFactory;
 import team.floracore.common.plugin.AbstractFloraCorePlugin;
 import team.floracore.common.sender.Sender;
+import team.floracore.common.util.nothing.Nothing;
 
 import java.util.Set;
 import java.util.UUID;
@@ -118,6 +119,8 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 		this.listenerManager = new ListenerManager(this);
 		this.commandManager = new CommandManager(this);
 		this.chatManager = new ChatManager(this);
+
+		Nothing.init();
 	}
 
 	@Override
