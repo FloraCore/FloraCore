@@ -6,6 +6,7 @@ import com.comphenix.protocol.ProtocolManager;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import lombok.Getter;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.floracore.api.server.ServerType;
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+@Getter
 public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
 	private static final Cache<String, SERVER> serverCache = CaffeineFactory.newBuilder()
 			.expireAfterWrite(10, TimeUnit.SECONDS)
@@ -77,10 +79,6 @@ public class FloraCoreBukkitCommand extends AbstractFloraCoreCommand {
 			serverCache.put(name, server);
 		}
 		return server;
-	}
-
-	public FCBukkitPlugin getPlugin() {
-		return plugin;
 	}
 
 	public boolean whetherServerEnableAutoSync2() {
