@@ -57,6 +57,13 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 		this.plugin = plugin;
 	}
 
+	@CommandMethod("fc|floracore")
+	@CommandDescription("floracore.command.description.floracore")
+	public void floraCore(final @NotNull CommandSender sender) {
+		Sender s = plugin.getSenderFactory().wrap(sender);
+		MiscMessage.STARTUP_BANNER.send(s, getPlugin().getBootstrap());
+	}
+
 	@CommandMethod("fc|floracore reload")
 	@CommandDescription("floracore.command.description.floracore.reload")
 	@CommandPermission("floracore.admin")

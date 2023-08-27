@@ -44,6 +44,14 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 		super(plugin);
 	}
 
+
+	@CommandMethod("fcb|floracorebungee")
+	@CommandDescription("floracore.command.description.floracore")
+	public void floraCore(final @NotNull CommandSender sender) {
+		Sender s = getPlugin().getSenderFactory().wrap(sender);
+		MiscMessage.STARTUP_BANNER.send(s, getPlugin().getBootstrap());
+	}
+
 	@CommandMethod("fcb|floracorebungee reload")
 	@CommandDescription("floracore.command.description.floracore.reload")
 	@CommandPermission("floracore.admin")
