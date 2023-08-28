@@ -6,7 +6,7 @@
 ![Release](https://img.shields.io/github/v/release/FloraCore/FloraCore?style=flat-square)
 ![Bstats](https://img.shields.io/bstats/servers/18690?style=flat-square)
 ![License](https://img.shields.io/github/license/FloraCore/FloraCore?style=plastic)
-![Actions](https://img.shields.io/github/actions/workflow/status/FloraCore/FloraCore/gradle-publish.yml?style=flat-square)
+![Actions](https://img.shields.io/github/actions/workflow/status/FloraCore/FloraCore/test.yml?style=flat-square)
 [![JitPack](https://jitpack.io/v/FloraCore/FloraCore.svg)](https://jitpack.io/#FloraCore/FloraCore)
 ![Crowdin](https://badges.crowdin.net/floracore/localized.svg)
 
