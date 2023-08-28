@@ -24,6 +24,7 @@ import team.floracore.common.locale.message.CommonCommandMessage;
 import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.locale.translation.TranslationManager;
 import team.floracore.common.locale.translation.TranslationRepository;
+import team.floracore.common.script.ScriptLoader;
 import team.floracore.common.sender.Sender;
 import team.floracore.common.storage.misc.floracore.tables.DATA;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
@@ -75,6 +76,10 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 		if (plugin.getBoardsConfiguration().get(BoardsKeys.ENABLE)) {
 			plugin.getScoreBoardManager().reload();
 		}
+		plugin.getScriptLoader().tryInvokeFunction("onDisable");
+		ScriptLoader scriptLoader = new ScriptLoader(getPlugin());
+		scriptLoader.loadPluginScript(getPlugin().getBootstrap().getConfigDirectory().resolve("scripts"));
+		plugin.setScriptLoader(scriptLoader);
 		CommonCommandMessage.RELOAD_CONFIG_SUCCESS.send(s);
 	}
 

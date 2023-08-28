@@ -14,6 +14,7 @@ import team.floracore.common.locale.translation.TranslationRepository;
 import team.floracore.common.messaging.InternalMessagingService;
 import team.floracore.common.plugin.bootstrap.FloraCoreBootstrap;
 import team.floracore.common.plugin.logging.PluginLogger;
+import team.floracore.common.script.ScriptLoader;
 import team.floracore.common.sender.Sender;
 import team.floracore.common.storage.Storage;
 import team.floracore.common.storage.StorageFactory;
@@ -133,4 +134,8 @@ public interface FloraCorePlugin {
 	BytebinClient getBytebin();
 
 	BytesocksClient getBytesocks();
+
+	ScriptLoader getScriptLoader();
+
+	void setScriptLoader(ScriptLoader scriptLoader);
 }

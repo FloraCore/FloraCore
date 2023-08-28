@@ -22,6 +22,7 @@ import team.floracore.common.locale.message.CommonCommandMessage;
 import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.locale.translation.TranslationManager;
 import team.floracore.common.locale.translation.TranslationRepository;
+import team.floracore.common.script.ScriptLoader;
 import team.floracore.common.sender.Sender;
 import team.floracore.common.storage.misc.floracore.tables.SERVER;
 import team.floracore.common.util.DurationFormatter;
@@ -60,6 +61,10 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 		getPlugin().getConfiguration().reload();
 		getPlugin().getChatConfiguration().reload();
 		getPlugin().getTranslationManager().reload();
+		getPlugin().getScriptLoader().tryInvokeFunction("onDisable");
+		ScriptLoader scriptLoader = new ScriptLoader(getPlugin());
+		scriptLoader.loadPluginScript(getPlugin().getBootstrap().getConfigDirectory().resolve("scripts"));
+		getPlugin().setScriptLoader(scriptLoader);
 		CommonCommandMessage.RELOAD_CONFIG_SUCCESS.send(s);
 	}
 

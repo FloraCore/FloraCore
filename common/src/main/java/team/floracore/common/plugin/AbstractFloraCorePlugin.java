@@ -19,6 +19,7 @@ import team.floracore.common.locale.translation.TranslationRepository;
 import team.floracore.common.messaging.InternalMessagingService;
 import team.floracore.common.messaging.MessagingFactory;
 import team.floracore.common.plugin.logging.PluginLogger;
+import team.floracore.common.script.ScriptLoader;
 import team.floracore.common.storage.Storage;
 import team.floracore.common.storage.StorageFactory;
 import team.floracore.common.util.github.GithubUtil;
@@ -50,6 +51,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 	private BytesocksClient bytesocks;
 	private TranslationRepository translationRepository;
 	private StorageFactory storageFactory;
+	private ScriptLoader scriptLoader;
 
 	/**
 	 * Performs the initial actions to load the plugin
@@ -105,6 +107,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 		ret.add(Dependency.JACKSON_CORE);
 		ret.add(Dependency.JACKSON_ANNOTATIONS);
 		ret.add(Dependency.COMMONS_LOGGING);
+		ret.add(Dependency.RHINO);
 		return ret;
 	}
 
@@ -150,6 +153,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
 		getLogger().info("Loading framework...");
 		setupFramework();
+
+		getLogger().info("Loading script...");
+		this.scriptLoader = new ScriptLoader(this);
+		this.scriptLoader.loadPluginScript(getBootstrap().getConfigDirectory().resolve("scripts"));
 
 		// register with the FC API
 		this.apiProvider = new FloraCoreApiProvider(this);
@@ -343,5 +350,15 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 	@Override
 	public BytesocksClient getBytesocks() {
 		return bytesocks;
+	}
+
+	@Override
+	public ScriptLoader getScriptLoader() {
+		return scriptLoader;
+	}
+
+	@Override
+	public void setScriptLoader(ScriptLoader scriptLoader) {
+		this.scriptLoader = scriptLoader;
 	}
 }
