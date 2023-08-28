@@ -11,7 +11,6 @@ import team.floracore.common.storage.implementation.sql.connection.ConnectionFac
 import team.floracore.common.storage.misc.floracore.tables.CHAT;
 import team.floracore.common.storage.misc.floracore.tables.DATA;
 import team.floracore.common.storage.misc.floracore.tables.DATA_INT;
-import team.floracore.common.storage.misc.floracore.tables.DATA_LONG;
 import team.floracore.common.storage.misc.floracore.tables.ONLINE;
 import team.floracore.common.storage.misc.floracore.tables.PARTY;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
@@ -296,29 +295,6 @@ public class SqlStorage implements StorageImplementation {
 	}
 
 	@Override
-	public List<DATA_LONG> selectDataLong(UUID uuid) {
-		List<DATA_LONG> ret = new ArrayList<>();
-		try (Connection c = this.connectionFactory.getConnection()) {
-			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA_LONG.SELECT))) {
-				ps.setString(1, uuid.toString());
-				try (ResultSet rs = ps.executeQuery()) {
-					while (rs.next()) {
-						int id = rs.getInt("id");
-						String type = rs.getString("type");
-						String key = rs.getString("data_key");
-						long value = rs.getLong("value");
-						long expiry = rs.getLong("expiry");
-						ret.add(new DATA_LONG(plugin, this, id, uuid, DataType.parse(type), key, value, expiry));
-					}
-				}
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-		return ret;
-	}
-
-	@Override
 	public List<DATA_INT> selectDataIntSorted(DataType dataType, String key, boolean ascending) {
 		List<DATA_INT> ret = new ArrayList<>();
 		try (Connection c = this.connectionFactory.getConnection()) {
@@ -332,29 +308,6 @@ public class SqlStorage implements StorageImplementation {
 						int value = rs.getInt("value");
 						long expiry = rs.getLong("expiry");
 						ret.add(new DATA_INT(plugin, this, id, uuid, dataType, key, value, expiry));
-					}
-				}
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-		return ret;
-	}
-
-	@Override
-	public List<DATA_LONG> selectDataLongSorted(DataType dataType, String key, boolean ascending) {
-		List<DATA_LONG> ret = new ArrayList<>();
-		try (Connection c = this.connectionFactory.getConnection()) {
-			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(ascending ? DATA_LONG.SELECT_ASC : DATA_INT.SELECT_DESC))) {
-				ps.setString(1, dataType.getName());
-				ps.setString(2, key);
-				try (ResultSet rs = ps.executeQuery()) {
-					while (rs.next()) {
-						int id = rs.getInt("id");
-						UUID uuid = UUID.fromString(rs.getString("uuid"));
-						long value = rs.getLong("value");
-						long expiry = rs.getLong("expiry");
-						ret.add(new DATA_LONG(plugin, this, id, uuid, dataType, key, value, expiry));
 					}
 				}
 			}
@@ -393,20 +346,6 @@ public class SqlStorage implements StorageImplementation {
 	}
 
 	@Override
-	public DATA_LONG getSpecifiedDataLong(UUID uuid, DataType type, String key) {
-		List<DATA_LONG> ret = selectDataLong(uuid);
-		for (DATA_LONG dataLong : ret) {
-			if (dataLong.getType() == type && dataLong.getKey().equalsIgnoreCase(key)) {
-				long currentTime = System.currentTimeMillis();
-				if (dataLong.getExpiry() <= 0 || dataLong.getExpiry() > currentTime) {
-					return dataLong;
-				}
-			}
-		}
-		return null;
-	}
-
-	@Override
 	public List<DATA> getSpecifiedTypeData(UUID uuid, DataType type) {
 		List<DATA> ret = new ArrayList<>();
 		long currentTime = System.currentTimeMillis();
@@ -431,18 +370,6 @@ public class SqlStorage implements StorageImplementation {
 	}
 
 	@Override
-	public List<DATA_LONG> getSpecifiedTypeDataLong(UUID uuid, DataType type) {
-		List<DATA_LONG> ret = new ArrayList<>();
-		long currentTime = System.currentTimeMillis();
-		for (DATA_LONG dataLong : selectDataLong(uuid)) {
-			if (dataLong.getType() == type && (dataLong.getExpiry() <= 0 || dataLong.getExpiry() > currentTime)) {
-				ret.add(dataLong);
-			}
-		}
-		return ret;
-	}
-
-	@Override
 	public void deleteDataAll(UUID uuid) {
 		try (Connection c = this.connectionFactory.getConnection()) {
 			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA.DELETE_ALL))) {
@@ -458,18 +385,6 @@ public class SqlStorage implements StorageImplementation {
 	public void deleteDataIntAll(UUID uuid) {
 		try (Connection c = this.connectionFactory.getConnection()) {
 			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA_INT.DELETE_ALL))) {
-				ps.setString(1, uuid.toString());
-				ps.execute();
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
-	public void deleteDataLongAll(UUID uuid) {
-		try (Connection c = this.connectionFactory.getConnection()) {
-			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA_LONG.DELETE_ALL))) {
 				ps.setString(1, uuid.toString());
 				ps.execute();
 			}
@@ -505,19 +420,6 @@ public class SqlStorage implements StorageImplementation {
 	}
 
 	@Override
-	public void deleteDataLongType(UUID uuid, DataType type) {
-		try (Connection c = this.connectionFactory.getConnection()) {
-			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA_LONG.DELETE_TYPE))) {
-				ps.setString(1, uuid.toString());
-				ps.setString(2, type.getName());
-				ps.execute();
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
 	public void deleteDataExpired(UUID uuid) {
 		List<DATA> ret = selectData(uuid);
 		for (DATA data : ret) {
@@ -540,17 +442,6 @@ public class SqlStorage implements StorageImplementation {
 	}
 
 	@Override
-	public void deleteDataLongExpired(UUID uuid) {
-		List<DATA_LONG> ret = selectDataLong(uuid);
-		for (DATA_LONG dataLong : ret) {
-			long currentTime = System.currentTimeMillis();
-			if (!(dataLong.getExpiry() <= 0 || dataLong.getExpiry() > currentTime)) {
-				deleteDataIntID(dataLong.getId());
-			}
-		}
-	}
-
-	@Override
 	public void deleteDataID(int id) {
 		try (Connection c = this.connectionFactory.getConnection()) {
 			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA.DELETE_ID))) {
@@ -566,18 +457,6 @@ public class SqlStorage implements StorageImplementation {
 	public void deleteDataIntID(int id) {
 		try (Connection c = this.connectionFactory.getConnection()) {
 			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA_INT.DELETE_ID))) {
-				ps.setInt(1, id);
-				ps.execute();
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	@Override
-	public void deleteDataLongID(int id) {
-		try (Connection c = this.connectionFactory.getConnection()) {
-			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(DATA_LONG.DELETE_ID))) {
 				ps.setInt(1, id);
 				ps.execute();
 			}

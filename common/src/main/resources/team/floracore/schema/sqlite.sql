@@ -32,16 +32,6 @@ CREATE TABLE IF NOT EXISTS `{prefix}data_int`
     expiry   BIGINT       NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS `{prefix}data_long`
-(
-    id       INTEGER      NOT NULL PRIMARY KEY AUTOINCREMENT,
-    uuid     VARCHAR(36)  NOT NULL,
-    type     VARCHAR(64)  NOT NULL,
-    data_key VARCHAR(255) NOT NULL,
-    value    BIGINT       NOT NULL,
-    expiry   BIGINT       NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS `{prefix}server`
 (
     id             INTEGER     NOT NULL PRIMARY KEY AUTOINCREMENT,
