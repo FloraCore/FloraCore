@@ -1,0 +1,70 @@
+name: Plugin Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v3
+      - name: Grant execute permission to gradlew script
+        run: chmod +x gradlew
+      - name: Set up JDK 8
+        uses: actions/setup-java@v3
+        with:
+          java-version: '8'
+          distribution: 'temurin'
+          server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
+          settings-path: ${{ github.workspace }} # location for the settings.xml file
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: build
+
+      # The USERNAME and TOKEN need to correspond to the credentials environment variables used in
+      # the publishing section of your build.gradle
+      - name: Publish to GitHub Packages
+        uses: gradle/gradle-build-action@67421db6bd0bf253fb4bd25b31ebb98943c375e1
+        with:
+          arguments: publish
+        env:
+          USERNAME: ${{ github.actor }}
+          TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Upload build result
+        uses: actions/upload-artifact@v3.1.2
+        with:
+          name: build-result
+          path: |
+            api/build/libs
+            api/bukkit-api/build/libs
+            api/bungee-api/build/libs
+            common/build/libs
+            common/common-loader-utils/build/libs
+            bukkit/build/libs
+            bukkit/bukkit-loader/build/libs
+            bungee/build/libs
+            bungee/bungee-loader/build/libs
+            libs
+  release:
+    name: Download back the built plugins and release them
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download back the built plugins
+        uses: actions/download-artifact@v3
+        with:
+          name: build-result
+      - name: Create Release
+        uses: ncipollo/release-action@v1.12.0
+        with:
+          artifacts: "api/build/libs/*.jar,api/bukkit-api/build/libs/*API*.jar,api/bungee-api/build/libs/*API*.jar,common/build/libs/*.jar,common/common-loader-utils/build/libs/*.jar,bukkit/build/libs/*.jar,bukkit/bukkit-loader/build/libs/*.jar,bungee/build/libs/*.jar,bungee/bungee-loader/build/libs/*.jar,libs/*.jar"
+          token: ${{ secrets.GITHUB_TOKEN }}

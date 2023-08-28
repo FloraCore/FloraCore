@@ -15,10 +15,37 @@ import java.util.concurrent.TimeUnit;
  * Represents a repository which contains {@link Dependency}s.
  */
 public enum DependencyRepository {
+
+	/**
+	 * Maven Central mirror repository.
+	 *
+	 * <p>This is used to reduce the load on repo.maven.org.</p>
+	 *
+	 * <p>Although Maven Central is technically a CDN, it is meant for developer use,
+	 * not end-user products. It is trivial and not very expensive for us to provide a
+	 * mirror, which will absorb any traffic caused by LP.</p>
+	 *
+	 * <p>LuckPerms will fallback to the real-thing if the mirror ever goes offline.
+	 * Retrieved content is validated with a checksum, so there is no risk to integrity.</p>
+	 */
+	MAVEN_CENTRAL_MIRROR_1("https://libraries.luckperms.net/") {
+		@Override
+		protected URLConnection openConnection(Dependency dependency) throws IOException {
+			URLConnection connection = super.openConnection(dependency);
+			connection.setRequestProperty("User-Agent", "FloraCore");
+
+			// Set a connect/read timeout, so if the mirror goes offline we can fall back
+			// to Maven Central within a reasonable time.
+			connection.setConnectTimeout((int) TimeUnit.SECONDS.toMillis(5));
+			connection.setReadTimeout((int) TimeUnit.SECONDS.toMillis(10));
+
+			return connection;
+		}
+	},
 	/**
 	 * 华为云的Maven镜像。
 	 */
-	MAVEN_CENTRAL_MIRROR("https://repo.huaweicloud.com/repository/maven/") {
+	MAVEN_CENTRAL_MIRROR_2("https://repo.huaweicloud.com/repository/maven/") {
 		@Override
 		protected URLConnection openConnection(Dependency dependency) throws IOException {
 			URLConnection connection = super.openConnection(dependency);
