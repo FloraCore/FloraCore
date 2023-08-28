@@ -259,7 +259,11 @@ public enum Dependency {
 	COMMONS_LOGGING("commons-logging",
 			"commons-logging",
 			"1.2",
-			"2t3qHqC+D1aXirMAa4rJKDSv7vvZt+TmMW/KV98PpjY=");
+			"2t3qHqC+D1aXirMAa4rJKDSv7vvZt+TmMW/KV98PpjY="),
+	RHINO("org.mozilla",
+			"rhino",
+			"1.7.14",
+			"ySkLDYAb8Nu7xEM44Pdpt2UKDF0E5rsa64V3XAIRsAM=");
 
 	private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";
 	private final String mavenRepoPath;
