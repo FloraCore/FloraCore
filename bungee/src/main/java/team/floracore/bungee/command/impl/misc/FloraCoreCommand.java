@@ -1,11 +1,13 @@
 package team.floracore.bungee.command.impl.misc;
 
+import cloud.commandframework.annotations.AnnotationParser;
 import cloud.commandframework.annotations.Argument;
 import cloud.commandframework.annotations.CommandDescription;
 import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.processing.CommandContainer;
 import cloud.commandframework.annotations.suggestions.Suggestions;
+import cloud.commandframework.bungee.BungeeCommandManager;
 import cloud.commandframework.context.CommandContext;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.CommandSender;
@@ -13,6 +15,14 @@ import org.floracore.api.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
+import team.floracore.bungee.command.impl.socialsystems.AdminCommand;
+import team.floracore.bungee.command.impl.socialsystems.BuilderCommand;
+import team.floracore.bungee.command.impl.socialsystems.ChatCommand;
+import team.floracore.bungee.command.impl.socialsystems.FriendCommand;
+import team.floracore.bungee.command.impl.socialsystems.GuildCommand;
+import team.floracore.bungee.command.impl.socialsystems.PartyCommand;
+import team.floracore.bungee.command.impl.socialsystems.StaffCommand;
+import team.floracore.bungee.config.features.FeaturesKeys;
 import team.floracore.bungee.locale.message.commands.MiscCommandMessage;
 import team.floracore.common.chat.ChatProvider;
 import team.floracore.common.config.ConfigKeys;
@@ -65,6 +75,30 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 		ScriptLoader scriptLoader = new ScriptLoader(getPlugin());
 		scriptLoader.loadPluginScript(getPlugin().getBootstrap().getConfigDirectory().resolve("scripts"));
 		getPlugin().setScriptLoader(scriptLoader);
+		BungeeCommandManager<CommandSender> manager = getPlugin().getCommandManager().getManager();
+		AnnotationParser<CommandSender> annotationParser = getPlugin().getCommandManager().getAnnotationParser();
+		if (manager.commandTree().getNamedNode("adminchat") == null) {
+			if (getPlugin().getFeaturesConfiguration().get(FeaturesKeys.SOCIAL_SYSTEM_ENABLE)) {
+				annotationParser.parse(new AdminCommand(getPlugin()));
+				annotationParser.parse(new BuilderCommand(getPlugin()));
+				annotationParser.parse(new ChatCommand(getPlugin()));
+				annotationParser.parse(new FriendCommand(getPlugin()));
+				annotationParser.parse(new GuildCommand(getPlugin()));
+				annotationParser.parse(new PartyCommand(getPlugin()));
+				annotationParser.parse(new StaffCommand(getPlugin()));
+			}
+		} else {
+			if (!getPlugin().getFeaturesConfiguration().get(FeaturesKeys.SOCIAL_SYSTEM_ENABLE)) {
+				manager.deleteRootCommand("adminchat");
+				manager.deleteRootCommand("admin");
+				manager.deleteRootCommand("builder");
+				manager.deleteRootCommand("chat");
+				manager.deleteRootCommand("party");
+				manager.deleteRootCommand("partychat");
+				manager.deleteRootCommand("staffchat");
+				manager.deleteRootCommand("staff");
+			}
+		}
 		CommonCommandMessage.RELOAD_CONFIG_SUCCESS.send(s);
 	}
 

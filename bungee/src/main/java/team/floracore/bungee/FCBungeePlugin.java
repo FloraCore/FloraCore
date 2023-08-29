@@ -10,6 +10,7 @@ import org.floracore.api.FloraCoreProvider;
 import team.floracore.bungee.command.CommandManager;
 import team.floracore.bungee.config.BungeeConfigAdapter;
 import team.floracore.bungee.config.chat.ChatConfiguration;
+import team.floracore.bungee.config.features.FeaturesConfiguration;
 import team.floracore.bungee.listener.ListenerManager;
 import team.floracore.bungee.locale.chat.ChatManager;
 import team.floracore.bungee.messaging.BungeeMessagingFactory;
@@ -42,6 +43,8 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 	private ChatManager chatManager;
 	@Getter
 	private KeyedConfiguration chatConfiguration;
+	@Getter
+	private KeyedConfiguration featuresConfiguration;
 
 	public FCBungeePlugin(FCBungeeBootstrap bootstrap) {
 		this.bootstrap = bootstrap;
@@ -131,9 +134,11 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 
 	@Override
 	protected void setupConfiguration() {
-		chatConfiguration = new ChatConfiguration(this, new BungeeConfigAdapter(this,
-				resolveConfig("chat.yml").toFile())
-		);
+		this.chatConfiguration = new ChatConfiguration(this, new BungeeConfigAdapter(this,
+				resolveConfig("chat.yml").toFile()));
+		this.featuresConfiguration = new FeaturesConfiguration(this,
+				new BungeeConfigAdapter(this,
+						resolveConfig("features.yml").toFile()));
 	}
 
 	@Override

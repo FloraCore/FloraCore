@@ -13,6 +13,7 @@ import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.execution.FilteringCommandSuggestionProcessor;
 import cloud.commandframework.meta.CommandMeta;
 import cloud.commandframework.paper.PaperCommandManager;
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import team.floracore.bukkit.FCBukkitPlugin;
@@ -53,7 +54,9 @@ import java.util.function.Function;
  */
 public class CommandManager {
 	private final FCBukkitPlugin plugin;
+	@Getter
 	private final AnnotationParser<CommandSender> annotationParser;
+	@Getter
 	private BukkitCommandManager<CommandSender> manager;
 
 	public CommandManager(FCBukkitPlugin plugin) {
@@ -170,13 +173,5 @@ public class CommandManager {
 
 	public FloraCorePlugin getPlugin() {
 		return plugin;
-	}
-
-	public BukkitCommandManager<CommandSender> getManager() {
-		return manager;
-	}
-
-	public AnnotationParser<CommandSender> getAnnotationParser() {
-		return annotationParser;
 	}
 }

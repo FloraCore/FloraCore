@@ -11,6 +11,7 @@ import cloud.commandframework.exceptions.NoPermissionException;
 import cloud.commandframework.execution.CommandExecutionCoordinator;
 import cloud.commandframework.execution.FilteringCommandSuggestionProcessor;
 import cloud.commandframework.meta.CommandMeta;
+import lombok.Getter;
 import net.md_5.bungee.api.CommandSender;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.command.impl.misc.FloraCoreCommand;
@@ -22,6 +23,7 @@ import team.floracore.bungee.command.impl.socialsystems.GuildCommand;
 import team.floracore.bungee.command.impl.socialsystems.PartyCommand;
 import team.floracore.bungee.command.impl.socialsystems.StaffCommand;
 import team.floracore.bungee.command.impl.test.TestCommand;
+import team.floracore.bungee.config.features.FeaturesKeys;
 import team.floracore.common.locale.message.MiscMessage;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.sender.Sender;
@@ -33,7 +35,9 @@ import java.util.function.Function;
  */
 public class CommandManager {
 	private final FCBungeePlugin plugin;
+	@Getter
 	private final AnnotationParser<CommandSender> annotationParser;
+	@Getter
 	private BungeeCommandManager<CommandSender> manager;
 
 	public CommandManager(FCBungeePlugin plugin) {
@@ -53,6 +57,9 @@ public class CommandManager {
 		// Use contains to filter suggestions instead of default startsWith
 		this.manager.commandSuggestionProcessor(new FilteringCommandSuggestionProcessor<>(
 				FilteringCommandSuggestionProcessor.Filter.<CommandSender>contains(true).andTrimBeforeLastSpace()));
+
+		/* Register capabilities */
+		//this.manager.capabilities().add(CloudCapability.StandardCapabilities.ROOT_COMMAND_DELETION);
 
 		// Create the annotation parser. This allows you to define commands using methods annotated with
 		// @CommandMethod
@@ -98,13 +105,15 @@ public class CommandManager {
 		this.annotationParser.parse(new FloraCoreCommand(plugin));
 
 		// social systems
-		this.annotationParser.parse(new AdminCommand(plugin));
-		this.annotationParser.parse(new BuilderCommand(plugin));
-		this.annotationParser.parse(new ChatCommand(plugin));
-		this.annotationParser.parse(new FriendCommand(plugin));
-		this.annotationParser.parse(new GuildCommand(plugin));
-		this.annotationParser.parse(new PartyCommand(plugin));
-		this.annotationParser.parse(new StaffCommand(plugin));
+		if (plugin.getFeaturesConfiguration().get(FeaturesKeys.SOCIAL_SYSTEM_ENABLE)) {
+			this.annotationParser.parse(new AdminCommand(plugin));
+			this.annotationParser.parse(new BuilderCommand(plugin));
+			this.annotationParser.parse(new ChatCommand(plugin));
+			this.annotationParser.parse(new FriendCommand(plugin));
+			this.annotationParser.parse(new GuildCommand(plugin));
+			this.annotationParser.parse(new PartyCommand(plugin));
+			this.annotationParser.parse(new StaffCommand(plugin));
+		}
 
 		// test
 		this.annotationParser.parse(new TestCommand(plugin));
@@ -114,11 +123,4 @@ public class CommandManager {
 		return plugin;
 	}
 
-	public BungeeCommandManager<CommandSender> getManager() {
-		return manager;
-	}
-
-	public AnnotationParser<CommandSender> getAnnotationParser() {
-		return annotationParser;
-	}
 }
