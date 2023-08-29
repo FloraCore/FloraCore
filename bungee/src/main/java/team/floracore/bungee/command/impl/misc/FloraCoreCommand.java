@@ -75,30 +75,6 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 		ScriptLoader scriptLoader = new ScriptLoader(getPlugin());
 		scriptLoader.loadPluginScript(getPlugin().getBootstrap().getConfigDirectory().resolve("scripts"));
 		getPlugin().setScriptLoader(scriptLoader);
-		BungeeCommandManager<CommandSender> manager = getPlugin().getCommandManager().getManager();
-		AnnotationParser<CommandSender> annotationParser = getPlugin().getCommandManager().getAnnotationParser();
-		if (manager.commandTree().getNamedNode("adminchat") == null) {
-			if (getPlugin().getFeaturesConfiguration().get(FeaturesKeys.SOCIAL_SYSTEM_ENABLE)) {
-				annotationParser.parse(new AdminCommand(getPlugin()));
-				annotationParser.parse(new BuilderCommand(getPlugin()));
-				annotationParser.parse(new ChatCommand(getPlugin()));
-				annotationParser.parse(new FriendCommand(getPlugin()));
-				annotationParser.parse(new GuildCommand(getPlugin()));
-				annotationParser.parse(new PartyCommand(getPlugin()));
-				annotationParser.parse(new StaffCommand(getPlugin()));
-			}
-		} else {
-			if (!getPlugin().getFeaturesConfiguration().get(FeaturesKeys.SOCIAL_SYSTEM_ENABLE)) {
-				manager.deleteRootCommand("adminchat");
-				manager.deleteRootCommand("admin");
-				manager.deleteRootCommand("builder");
-				manager.deleteRootCommand("chat");
-				manager.deleteRootCommand("party");
-				manager.deleteRootCommand("partychat");
-				manager.deleteRootCommand("staffchat");
-				manager.deleteRootCommand("staff");
-			}
-		}
 		CommonCommandMessage.RELOAD_CONFIG_SUCCESS.send(s);
 	}
 
