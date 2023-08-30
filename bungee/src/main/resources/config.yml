@@ -128,7 +128,7 @@ check-update: true
 
 bytebin-url: https://bytebin.floracore.cc/
 bytesocks-host: bytesocks.floracore.cc
-chat-viewer-url: https://floracore.cc/chat/
+chat-viewer-url: https://chat.floracore.cc
 
 # 是否自定义FloraCore消息的前缀
 custom-prefix:
