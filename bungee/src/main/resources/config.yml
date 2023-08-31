@@ -15,9 +15,11 @@ bungeecord: true
 #   |=> MySQL
 #   |=> MariaDB (preferred over MySQL)
 #   |=> PostgreSQL
+#   |=> MongoDB
 #
 #   |  Flat file/local database - don't require any extra configuration
-#   |=> H2
+#   |=> H2 (preferred over SQLite)
+#   |=> SQLite
 #
 # - A H2 database is the default option.
 storage-method: H2
@@ -95,6 +97,22 @@ data:
   # - This only applies for remote SQL storage types (MySQL, MariaDB, etc).
   # - Change this if you want to use different tables for different servers.
   table-prefix: 'floracore_'
+
+  # The prefix to use for all FloraCore MongoDB collections.
+  #
+  # - This only applies for the MongoDB storage type.
+  # - Change this if you want to use different collections for different servers. The default is no
+  # prefix.
+  mongodb-collection-prefix: ''
+
+  # The connection string URI to use to connect to the MongoDB instance.
+  #
+  # - When configured, this setting will override anything defined in the address, database,
+  #   username or password fields above.
+  # - If you have a connection string that starts with 'mongodb://' or 'mongodb+srv://', enter it
+  #   below.
+  # - For more information, please see https://docs.mongodb.com/manual/reference/connection-string/
+  mongodb-connection-uri: ''
 
 # Settings for Redis.
 # Port 6379 is used by default; set address to "host:port" if differs

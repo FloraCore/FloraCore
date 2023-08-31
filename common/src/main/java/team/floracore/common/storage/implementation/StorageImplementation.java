@@ -24,9 +24,13 @@ public interface StorageImplementation {
 
 	String getImplementationName();
 
-	ConnectionFactory getConnectionFactory();
+	default ConnectionFactory getConnectionFactory() {
+		return null;
+	}
 
-	Function<String, String> getStatementProcessor();
+	default Function<String, String> getStatementProcessor() {
+		return null;
+	}
 
 	void init() throws Exception;
 

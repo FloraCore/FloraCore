@@ -47,6 +47,8 @@ shadowJar {
     relocate 'okio', 'team.floracore.lib.okio'
     relocate 'cloud.commandframework', 'team.floracore.lib.cloud'
     relocate 'org.bstats', 'team.floracore.lib.bstats'
+    relocate 'com.mongodb', 'team.floracore.lib.mongodb'
+    relocate 'org.bson', 'team.floracore.lib.bson'
 }
 
 artifacts {

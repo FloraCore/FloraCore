@@ -54,6 +54,20 @@ public class ConfigKeys {
 	}));
 
 	/**
+	 * The prefix for any MongoDB collections
+	 */
+	public static final ConfigKey<String> MONGODB_COLLECTION_PREFIX = notReloadable(key(c -> {
+		return c.getString("data.mongodb-collection-prefix", c.getString("data.mongodb_collection_prefix", ""));
+	}));
+
+	/**
+	 * MongoDB ClientConnectionURI to override default connection options
+	 */
+	public static final ConfigKey<String> MONGODB_CONNECTION_URI = notReloadable(key(c -> {
+		return c.getString("data.mongodb-connection-uri", c.getString("data.mongodb_connection_URI", ""));
+	}));
+
+	/**
 	 * The prefix for any SQL tables
 	 */
 	public static final ConfigKey<String> SQL_TABLE_PREFIX = notReloadable(key(c -> c.getString("data.table-prefix", c.getString("data.table_prefix", "floracore_"))));

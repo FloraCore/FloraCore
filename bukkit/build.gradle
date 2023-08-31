@@ -59,6 +59,8 @@ shadowJar {
     relocate 'cloud.commandframework', 'team.floracore.lib.cloud'
     relocate 'org.bstats', 'team.floracore.lib.bstats'
     relocate "io.papermc.lib", "team.floracore.lib.paperlib"
+    relocate 'com.mongodb', 'team.floracore.lib.mongodb'
+    relocate 'org.bson', 'team.floracore.lib.bson'
 }
 
 artifacts {

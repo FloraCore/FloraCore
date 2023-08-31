@@ -263,7 +263,39 @@ public enum Dependency {
 	RHINO("org.mozilla",
 			"rhino",
 			"1.7.14",
-			"ySkLDYAb8Nu7xEM44Pdpt2UKDF0E5rsa64V3XAIRsAM=");
+			"ySkLDYAb8Nu7xEM44Pdpt2UKDF0E5rsa64V3XAIRsAM="),
+	MONGODB_DRIVER_CORE(
+			"org.mongodb",
+			"mongodb-driver-core",
+			"4.5.0",
+			"awqoW0ImUcrCTA2d1rDCjDLEjLMCrOjKWIcC7E+zLGA=",
+			Relocation.of("mongodb", "com{}mongodb"),
+			Relocation.of("bson", "org{}bson")
+	),
+	MONGODB_DRIVER_LEGACY(
+			"org.mongodb",
+			"mongodb-driver-legacy",
+			"4.5.0",
+			"77KZGIr3KZmzBpN69rGOLXmnlJIBCXRl/U4gEIdlFhY=",
+			Relocation.of("mongodb", "com{}mongodb"),
+			Relocation.of("bson", "org{}bson")
+	),
+	MONGODB_DRIVER_SYNC(
+			"org.mongodb",
+			"mongodb-driver-sync",
+			"4.5.0",
+			"q9XDSGJjlo/Ek6jHoCbqWnaK/dghB8y9aDM0hCLiSvk=",
+			Relocation.of("mongodb", "com{}mongodb"),
+			Relocation.of("bson", "org{}bson")
+	),
+	MONGODB_DRIVER_BSON(
+			"org.mongodb",
+			"bson",
+			"4.5.0",
+			"6CFyEzxbdeiBEXdDBmcgqWs5dvicgFkBLU3MlQUIqRA=",
+			Relocation.of("mongodb", "com{}mongodb"),
+			Relocation.of("bson", "org{}bson")
+	);
 
 	private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";
 	private final String mavenRepoPath;
