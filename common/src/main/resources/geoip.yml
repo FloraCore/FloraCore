@@ -1,4 +1,4 @@
-enable: true
+enable: false
 database:
   show-cities: false
   download-if-missing: true
