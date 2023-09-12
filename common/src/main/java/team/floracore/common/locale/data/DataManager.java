@@ -1,11 +1,15 @@
 package team.floracore.common.locale.data;
 
 import lombok.Getter;
+import team.floracore.common.config.impl.geoip.GeoIPKeys;
+import team.floracore.common.dependencies.Dependency;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.util.MoreFiles;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashSet;
+import java.util.Set;
 
 public class DataManager {
 	private final FloraCorePlugin plugin;
@@ -30,7 +34,9 @@ public class DataManager {
 	}
 
 	public void onEnable() {
-		this.geoIPManager = new GeoIPManager(plugin);
+		if (plugin.getGeoIPConfiguration().get(GeoIPKeys.ENABLE)) {
+			this.geoIPManager = new GeoIPManager(plugin);
+		}
 	}
 
 	public void onDisable() {

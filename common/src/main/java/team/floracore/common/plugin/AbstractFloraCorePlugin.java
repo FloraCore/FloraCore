@@ -7,6 +7,7 @@ import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
 import team.floracore.common.config.impl.config.ConfigKeys;
 import team.floracore.common.config.impl.config.FloraCoreConfiguration;
 import team.floracore.common.config.impl.geoip.GeoIPConfiguration;
+import team.floracore.common.config.impl.geoip.GeoIPKeys;
 import team.floracore.common.dependencies.Dependency;
 import team.floracore.common.dependencies.DependencyManager;
 import team.floracore.common.dependencies.DependencyManagerImpl;
@@ -132,6 +133,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
 		// load configuration
 		getLogger().info("Loading data...");
+		if (this.geoIPConfiguration.get(GeoIPKeys.ENABLE)) {
+			Set<Dependency> dds = EnumSet.of(Dependency.GEOIP_2, Dependency.MAXMIND_DB, Dependency.JAVATAR);
+			this.dependencyManager.loadDependencies(dds);
+		}
 		this.dataManager.onEnable();
 
 		// check update

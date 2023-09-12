@@ -18,10 +18,6 @@ public class DependencyChecksumTest {
 				"Dependency " + dependency.name() + " has hash " + Base64.getEncoder().encodeToString(hash));
 	}
 
-	/**
-	 * 之所以注释了,是因为编译的时候太慢了。
-	 */
-	@Test
 	public void getChecksumMatches() {
 		for (Dependency dependency : Dependency.values()) {
 			try {
@@ -32,7 +28,6 @@ public class DependencyChecksumTest {
 		}
 	}
 
-	@ParameterizedTest
 	@EnumSource
 	public void getChecksumMatches(Dependency dependency) throws DependencyDownloadException {
 		byte[] hash = getHash(dependency);
