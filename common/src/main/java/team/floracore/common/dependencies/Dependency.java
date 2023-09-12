@@ -295,7 +295,17 @@ public enum Dependency {
 			"6CFyEzxbdeiBEXdDBmcgqWs5dvicgFkBLU3MlQUIqRA=",
 			Relocation.of("mongodb", "com{}mongodb"),
 			Relocation.of("bson", "org{}bson")
-	);
+	),
+	GEOIP_2("com{}maxmind{}geoip2",
+			"geoip2",
+			"4.1.0",
+			"JKXdK5WF2BMQ/sD3vGD2SMujRv02WdoUFDBqqlsB8I4=",
+			Relocation.of("maxmind", "com{}maxmind")),
+	JAVATAR("javatar",
+			"javatar",
+			"2.5",
+			"6bfUsc4okcRGOtL8bWUyASmYaAyA5BH7l1SV6KZpAe4=",
+			Relocation.of("javatar", "com{}ice{}tar"));
 
 	private static final String MAVEN_FORMAT = "%s/%s/%s/%s-%s.jar";
 	private final String mavenRepoPath;

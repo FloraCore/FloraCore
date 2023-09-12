@@ -23,6 +23,8 @@ public interface ConfigurationAdapter {
 
 	boolean getBoolean(String path, boolean def);
 
+	long getLong(String path, long def);
+
 	List<String> getStringList(String path, List<String> def);
 
 	Map<String, String> getStringMap(String path, Map<String, String> def);

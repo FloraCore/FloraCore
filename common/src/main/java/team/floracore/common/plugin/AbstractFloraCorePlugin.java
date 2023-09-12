@@ -3,9 +3,10 @@ package team.floracore.common.plugin;
 import okhttp3.OkHttpClient;
 import team.floracore.common.api.ApiRegistrationUtil;
 import team.floracore.common.api.FloraCoreApiProvider;
-import team.floracore.common.config.ConfigKeys;
-import team.floracore.common.config.FloraCoreConfiguration;
 import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
+import team.floracore.common.config.impl.config.ConfigKeys;
+import team.floracore.common.config.impl.config.FloraCoreConfiguration;
+import team.floracore.common.config.impl.geoip.GeoIPConfiguration;
 import team.floracore.common.dependencies.Dependency;
 import team.floracore.common.dependencies.DependencyManager;
 import team.floracore.common.dependencies.DependencyManagerImpl;
@@ -42,6 +43,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 	private DataManager dataManager;
 	// init during enable
 	private FloraCoreConfiguration configuration;
+	private GeoIPConfiguration geoIPConfiguration;
 	private FloraCoreApiProvider apiProvider;
 	private InternalMessagingService messagingService = null;
 	private Storage storage;
@@ -67,7 +69,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
 		// load data
 		this.dataManager = new DataManager(this);
-		this.dataManager.reload();
+		this.dataManager.onLoad();
 	}
 
 	protected DependencyManager createDependencyManager() {
@@ -120,10 +122,17 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
 		// load configuration
 		getLogger().info("Loading configuration...");
-		ConfigurationAdapter configFileAdapter = provideConfigurationAdapter();
+		ConfigurationAdapter configFileAdapter = provideConfigurationAdapter("config.yml");
 		this.configuration = new FloraCoreConfiguration(this, configFileAdapter);
 		this.configuration.reload();
+		ConfigurationAdapter geoIPFileAdapter = provideConfigurationAdapter("geoip.yml");
+		this.geoIPConfiguration = new GeoIPConfiguration(this, geoIPFileAdapter);
+		this.geoIPConfiguration.reload();
 		setupConfiguration();
+
+		// load configuration
+		getLogger().info("Loading data...");
+		this.dataManager.onEnable();
 
 		// check update
 		if (this.configuration.get(ConfigKeys.CHECK_UPDATE)) {
@@ -174,7 +183,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
 	protected abstract void setupSenderFactory();
 
-	protected abstract ConfigurationAdapter provideConfigurationAdapter();
+	protected abstract ConfigurationAdapter provideConfigurationAdapter(String fileName);
 
 	protected abstract MessagingFactory<?> provideMessagingFactory();
 
@@ -199,6 +208,7 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 
 		getLogger().info("Disabling framework...");
 		disableFramework();
+		this.dataManager.onDisable();
 
 		// close storage
 		getLogger().info("Closing storage...");
@@ -360,5 +370,10 @@ public abstract class AbstractFloraCorePlugin implements FloraCorePlugin {
 	@Override
 	public void setScriptLoader(ScriptLoader scriptLoader) {
 		this.scriptLoader = scriptLoader;
+	}
+
+	@Override
+	public GeoIPConfiguration getGeoIPConfiguration() {
+		return geoIPConfiguration;
 	}
 }

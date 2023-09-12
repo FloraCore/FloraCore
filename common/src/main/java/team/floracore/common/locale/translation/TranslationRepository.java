@@ -26,7 +26,7 @@ import okhttp3.Response;
 import okhttp3.ResponseBody;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.jetbrains.annotations.NotNull;
-import team.floracore.common.config.ConfigKeys;
+import team.floracore.common.config.impl.config.ConfigKeys;
 import team.floracore.common.http.AbstractHttpClient;
 import team.floracore.common.http.UnsuccessfulRequestException;
 import team.floracore.common.locale.message.MiscMessage;

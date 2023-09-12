@@ -62,6 +62,11 @@ public class BukkitConfigAdapter implements ConfigurationAdapter {
 	}
 
 	@Override
+	public long getLong(String path, long def) {
+		return this.configuration.getLong(path, def);
+	}
+
+	@Override
 	public List<String> getStringList(String path, List<String> def) {
 		List<String> list = this.configuration.getStringList(path);
 		return this.configuration.isSet(path) ? list : def;

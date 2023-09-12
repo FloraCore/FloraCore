@@ -37,7 +37,7 @@ public class PlayerListener extends FloraCoreBukkitListener {
 				try {
 					p.init();
 				} catch (SQLException ex) {
-					throw new RuntimeException("玩家初始化失败！");
+					throw new RuntimeException("Player initialization failed!");
 				}
 			} else {
 				p.setName(name);

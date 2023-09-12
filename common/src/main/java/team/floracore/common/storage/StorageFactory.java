@@ -1,7 +1,7 @@
 package team.floracore.common.storage;
 
 import com.google.common.collect.ImmutableSet;
-import team.floracore.common.config.ConfigKeys;
+import team.floracore.common.config.impl.config.ConfigKeys;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
 import team.floracore.common.storage.implementation.sql.SqlStorage;

@@ -3,7 +3,8 @@ package team.floracore.common.plugin;
 import com.google.gson.JsonElement;
 import okhttp3.OkHttpClient;
 import team.floracore.common.api.FloraCoreApiProvider;
-import team.floracore.common.config.FloraCoreConfiguration;
+import team.floracore.common.config.impl.config.FloraCoreConfiguration;
+import team.floracore.common.config.impl.geoip.GeoIPConfiguration;
 import team.floracore.common.dependencies.DependencyManager;
 import team.floracore.common.extension.SimpleExtensionManager;
 import team.floracore.common.http.BytebinClient;
@@ -138,4 +139,6 @@ public interface FloraCorePlugin {
 	ScriptLoader getScriptLoader();
 
 	void setScriptLoader(ScriptLoader scriptLoader);
+
+	GeoIPConfiguration getGeoIPConfiguration();
 }

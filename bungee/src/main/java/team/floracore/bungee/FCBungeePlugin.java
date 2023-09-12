@@ -107,8 +107,8 @@ public class FCBungeePlugin extends AbstractFloraCorePlugin {
 	}
 
 	@Override
-	protected ConfigurationAdapter provideConfigurationAdapter() {
-		return new BungeeConfigAdapter(this, resolveConfig("config.yml").toFile());
+	protected ConfigurationAdapter provideConfigurationAdapter(String fileName) {
+		return new BungeeConfigAdapter(this, resolveConfig(fileName).toFile());
 	}
 
 	@Override

@@ -16,7 +16,7 @@ import team.floracore.common.api.implementation.ApiPlatform;
 import team.floracore.common.api.implementation.ApiPlayer;
 import team.floracore.common.api.implementation.ApiServer;
 import team.floracore.common.api.implementation.ApiTranslation;
-import team.floracore.common.config.ConfigKeys;
+import team.floracore.common.config.impl.config.ConfigKeys;
 import team.floracore.common.messaging.FloraCoreMessagingService;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.plugin.bootstrap.BootstrappedWithLoader;

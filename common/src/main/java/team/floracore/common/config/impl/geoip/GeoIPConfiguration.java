@@ -1,16 +1,16 @@
-package team.floracore.bukkit.config.features;
+package team.floracore.common.config.impl.geoip;
 
 import lombok.Getter;
-import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.common.config.generic.KeyedConfiguration;
 import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
+import team.floracore.common.plugin.FloraCorePlugin;
 
 @Getter
-public class FeaturesConfiguration extends KeyedConfiguration {
-	private final FCBukkitPlugin plugin;
+public class GeoIPConfiguration extends KeyedConfiguration {
+	private final FloraCorePlugin plugin;
 
-	public FeaturesConfiguration(FCBukkitPlugin plugin, ConfigurationAdapter adapter) {
-		super(adapter, FeaturesKeys.getKeys());
+	public GeoIPConfiguration(FloraCorePlugin plugin, ConfigurationAdapter adapter) {
+		super(adapter, GeoIPKeys.getKeys());
 		this.plugin = plugin;
 
 		init();
@@ -25,5 +25,4 @@ public class FeaturesConfiguration extends KeyedConfiguration {
 	public void reload() {
 		super.reload();
 	}
-
 }
