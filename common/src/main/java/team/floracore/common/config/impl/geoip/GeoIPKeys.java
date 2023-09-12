@@ -9,7 +9,7 @@ import java.util.List;
 import static team.floracore.common.config.generic.key.ConfigKeyFactory.*;
 
 public class GeoIPKeys {
-	public static final ConfigKey<Boolean> ENABLE = booleanKey("enable", true);
+	public static final ConfigKey<Boolean> ENABLE = booleanKey("enable", false);
 	public static final ConfigKey<Boolean> DATABASE_SHOW_CITIES = booleanKey("database.show-cities", false);
 	public static final ConfigKey<String> DATABASE_DOWNLOAD_URL_CITY = stringKey("database.download-url-city", null);
 	public static final ConfigKey<String> DATABASE_DOWNLOAD_URL = stringKey("database.download-url", null);
