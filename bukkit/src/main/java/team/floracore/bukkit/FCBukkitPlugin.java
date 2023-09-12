@@ -114,7 +114,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
 	@Override
 	protected void setupFramework() {
-		PaperLib.suggestPaper(getLoader());
 		this.bungeeUtil = new BungeeUtil(this);
 
 		RegistrarRegistrar.instance.load();
