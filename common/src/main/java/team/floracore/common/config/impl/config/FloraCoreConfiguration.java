@@ -1,4 +1,4 @@
-package team.floracore.common.config;
+package team.floracore.common.config.impl.config;
 
 import io.github.karlatemp.unsafeaccessor.Root;
 import lombok.Getter;

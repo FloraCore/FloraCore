@@ -1,4 +1,4 @@
-package team.floracore.common.config;
+package team.floracore.common.config.impl.config;
 
 import com.google.common.collect.ImmutableMap;
 import org.floracore.api.server.ServerType;

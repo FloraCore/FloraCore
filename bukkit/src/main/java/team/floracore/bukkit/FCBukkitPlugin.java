@@ -26,9 +26,9 @@ import team.floracore.bukkit.util.ListenerRegistrar;
 import team.floracore.bukkit.util.module.IModule;
 import team.floracore.bukkit.util.module.RegistrarRegistrar;
 import team.floracore.bukkit.util.nothing.NothingRegistrar;
-import team.floracore.common.config.ConfigKeys;
 import team.floracore.common.config.generic.KeyedConfiguration;
 import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
+import team.floracore.common.config.impl.config.ConfigKeys;
 import team.floracore.common.dependencies.Dependency;
 import team.floracore.common.messaging.MessagingFactory;
 import team.floracore.common.plugin.AbstractFloraCorePlugin;
@@ -108,8 +108,8 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 	}
 
 	@Override
-	protected ConfigurationAdapter provideConfigurationAdapter() {
-		return new BukkitConfigAdapter(this, resolveConfig("config.yml").toFile());
+	protected ConfigurationAdapter provideConfigurationAdapter(String fileName) {
+		return new BukkitConfigAdapter(this, resolveConfig(fileName).toFile());
 	}
 
 	@Override

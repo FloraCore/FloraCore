@@ -61,6 +61,8 @@ shadowJar {
     relocate "io.papermc.lib", "team.floracore.lib.paperlib"
     relocate 'com.mongodb', 'team.floracore.lib.mongodb'
     relocate 'org.bson', 'team.floracore.lib.bson'
+    relocate 'com.maxmind', 'team.floracore.lib.maxmind'
+    relocate 'com.ice.tar', 'team.floracore.lib.javatar'
 }
 
 artifacts {

@@ -67,6 +67,11 @@ public class BungeeConfigAdapter implements ConfigurationAdapter {
 	}
 
 	@Override
+	public long getLong(String path, long def) {
+		return this.configuration.getLong(path, def);
+	}
+
+	@Override
 	public List<String> getStringList(String path, List<String> def) {
 		return Optional.of(this.configuration.getStringList(path)).orElse(def);
 	}

@@ -11,6 +11,8 @@ public class DataManager {
 	private final FloraCorePlugin plugin;
 	@Getter
 	private final Path dataDirectory;
+	@Getter
+	private GeoIPManager geoIPManager;
 
 	public DataManager(FloraCorePlugin plugin) {
 		this.plugin = plugin;
@@ -23,7 +25,15 @@ public class DataManager {
 		}
 	}
 
-	public void reload() {
+	public void onLoad() {
+
+	}
+
+	public void onEnable() {
+		this.geoIPManager = new GeoIPManager(plugin);
+	}
+
+	public void onDisable() {
 
 	}
 }

@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 public interface ConfigKeyFactory<T> {
-
 	ConfigKeyFactory<Boolean> BOOLEAN = ConfigurationAdapter::getBoolean;
+	ConfigKeyFactory<Long> LONG = ConfigurationAdapter::getLong;
 	ConfigKeyFactory<String> STRING = ConfigurationAdapter::getString;
 	ConfigKeyFactory<String> LOWERCASE_STRING = (adapter, path, def) -> adapter.getString(path, def)
 			.toLowerCase(Locale.ROOT);
@@ -24,6 +24,10 @@ public interface ConfigKeyFactory<T> {
 
 	static SimpleConfigKey<Boolean> booleanKey(String path, boolean def) {
 		return key(new Bound<>(BOOLEAN, path, def));
+	}
+
+	static SimpleConfigKey<Long> longKey(String path, long def) {
+		return key(new Bound<>(LONG, path, def));
 	}
 
 	static <T> SimpleConfigKey<T> key(Function<ConfigurationAdapter, T> function) {

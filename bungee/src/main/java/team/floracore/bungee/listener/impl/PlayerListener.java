@@ -16,33 +16,6 @@ public class PlayerListener extends FloraCoreBungeeListener {
 		super(plugin);
 	}
 
-    /*@EventHandler
-    public void onLogin(PostLoginEvent e) {
-        ProxiedPlayer player = e.getPlayer();
-        UUID u = player.getUniqueId();
-        String name = player.getName();
-        String ip = player.getSocketAddress().toString();
-        StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
-        // 初始化玩家数据
-        PLAYER p = storageImplementation.selectPlayer(u);
-        if (p == null) {
-            p = new PLAYER(getPlugin(), storageImplementation, -1, u, name, ip);
-            try {
-                p.init();
-            } catch (SQLException ex) {
-                throw new RuntimeException("玩家初始化失败！");
-            }
-        } else {
-            p.setName(name);
-            p.setLastLoginIp(ip);
-            long currentTime = System.currentTimeMillis();
-            p.setLastLoginTime(currentTime);
-        }
-        storageImplementation.deleteDataExpired(u);
-        storageImplementation.deleteDataIntExpired(u);
-        storageImplementation.deleteDataLongExpired(u);
-    }*/
-
 	@EventHandler
 	public void onJoin(PostLoginEvent e) {
 		ProxiedPlayer p = e.getPlayer();

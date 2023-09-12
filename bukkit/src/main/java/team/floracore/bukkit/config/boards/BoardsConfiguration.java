@@ -1,10 +1,11 @@
 package team.floracore.bukkit.config.boards;
 
+import lombok.Getter;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.common.config.generic.KeyedConfiguration;
 import team.floracore.common.config.generic.adapter.ConfigurationAdapter;
-import team.floracore.common.plugin.FloraCorePlugin;
 
+@Getter
 public class BoardsConfiguration extends KeyedConfiguration {
 	private final FCBukkitPlugin plugin;
 
@@ -25,7 +26,4 @@ public class BoardsConfiguration extends KeyedConfiguration {
 		super.reload();
 	}
 
-	public FloraCorePlugin getPlugin() {
-		return this.plugin;
-	}
 }
