@@ -47,11 +47,11 @@ public class BukkitMessagingFactory extends MessagingFactory<FCBukkitPlugin> {
 	}
 
 	private String getPlayerName(UUID uuid) {
-		return getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordName(uuid);
+		return getPlugin().getApiProvider().getPlayerManager().getPlayerRecordName(uuid);
 	}
 
 	private boolean isPlayerOnline(UUID uuid) {
-		return getPlugin().getApiProvider().getPlayerAPI().isOnline(uuid);
+		return getPlugin().getApiProvider().getPlayerManager().isOnline(uuid);
 	}
 
 	public void pushTeleport(UUID sender, UUID recipient, String serverName) {

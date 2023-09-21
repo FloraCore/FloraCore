@@ -8,10 +8,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import org.floracore.api.bungee.messenger.message.type.ChatMessage;
 import org.floracore.api.bungee.messenger.message.type.NoticeMessage;
-import org.floracore.api.data.chat.ChatType;
 import org.floracore.api.messenger.message.Message;
 import org.floracore.api.messenger.message.type.BungeeCommandMessage;
 import org.floracore.api.messenger.message.type.KickMessage;
+import org.floracore.api.model.data.chat.ChatType;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.config.chat.ChatKeys;
 import team.floracore.bungee.locale.message.SocialSystemsMessage;
@@ -265,6 +265,6 @@ public class BungeeMessagingFactory extends MessagingFactory<FCBungeePlugin> {
 
 	@SuppressWarnings("unused")
 	private boolean isPlayerOnline(UUID uuid) {
-		return getPlugin().getApiProvider().getPlayerAPI().isOnline(uuid);
+		return getPlugin().getApiProvider().getPlayerManager().isOnline(uuid);
 	}
 }

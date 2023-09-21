@@ -1,6 +1,6 @@
-package org.floracore.api.player;
+package org.floracore.api.model.player;
 
-import org.floracore.api.player.rank.RankConsumer;
+import org.floracore.api.model.player.rank.RankConsumer;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -8,7 +8,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * 玩家API。
  */
-public interface PlayerAPI {
+public interface PlayerManager {
 	/**
 	 * 获取服务器内是否有这名玩家的记录。
 	 * 判断逻辑是通过name查询这名玩家是否上线过。

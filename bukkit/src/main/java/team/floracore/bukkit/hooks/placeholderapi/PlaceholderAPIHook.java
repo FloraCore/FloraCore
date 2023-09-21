@@ -5,7 +5,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.floracore.api.FloraCore;
 import org.floracore.api.FloraCoreProvider;
-import org.floracore.api.data.DataType;
+import org.floracore.api.model.data.DataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.floracore.bukkit.FCBukkitPlugin;
@@ -61,7 +61,7 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 				String key = parts[3];
 				try {
 					DataType dataType = DataType.valueOf(type);
-					return floraCore.getDataAPI().getSpecifiedDataValue(uuid, dataType, key);
+					return floraCore.getDataManager().getSpecifiedDataValue(uuid, dataType, key);
 				} catch (IllegalArgumentException e) {
 					return unknown;
 				}
@@ -73,7 +73,7 @@ public class PlaceholderAPIHook extends PlaceholderExpansion {
 				String key = parts[3];
 				try {
 					DataType dataType = DataType.valueOf(type);
-					return floraCore.getDataAPI().getSpecifiedDataValue(uuid, dataType, key);
+					return floraCore.getDataManager().getSpecifiedDataValue(uuid, dataType, key);
 				} catch (IllegalArgumentException e) {
 					return unknown;
 				}

@@ -6,7 +6,7 @@ import cloud.commandframework.annotations.CommandMethod;
 import cloud.commandframework.annotations.CommandPermission;
 import cloud.commandframework.annotations.specifier.Greedy;
 import org.bukkit.command.CommandSender;
-import org.floracore.api.data.DataType;
+import org.floracore.api.model.data.DataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.floracore.bukkit.FCBukkitPlugin;
@@ -31,7 +31,7 @@ public class KickFromBungeeCommand extends FloraCoreBukkitCommand {
 	@CommandDescription("floracore.command.description.kick-from-bungee")
 	public void kickPlayerFromBungee(@NotNull CommandSender s, @Argument("player") @NotNull String playerName, @Nullable @Greedy @Argument("reason") String reason) {
 		Sender sender = getPlugin().getSenderFactory().wrap(s);
-		UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(playerName);
+		UUID targetUUID = getPlugin().getApiProvider().getPlayerManager().getPlayerRecordUUID(playerName);
 		if (targetUUID == null) {
 			MiscMessage.PLAYER_NOT_FOUND.send(sender, playerName);
 			return;

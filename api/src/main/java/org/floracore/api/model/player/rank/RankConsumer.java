@@ -1,4 +1,4 @@
-package org.floracore.api.player.rank;
+package org.floracore.api.model.player.rank;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;

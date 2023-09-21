@@ -12,7 +12,7 @@ import net.kyori.adventure.translation.Translator;
 import net.kyori.adventure.util.UTF8ResourceBundleControl;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.floracore.api.FloraCoreProvider;
-import org.floracore.api.data.DataType;
+import org.floracore.api.model.data.DataType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.util.CaffeineFactory;
@@ -99,7 +99,7 @@ public class TranslationManager {
 		String cache = languageCache.getIfPresent(uuid);
 		String value = cache;
 		if (cache == null) {
-			value = FloraCoreProvider.get().getDataAPI().getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
+			value = FloraCoreProvider.get().getDataManager().getSpecifiedDataValue(uuid, DataType.FUNCTION, "language");
 			if (value != null) {
 				languageCache.put(uuid, value);
 			}

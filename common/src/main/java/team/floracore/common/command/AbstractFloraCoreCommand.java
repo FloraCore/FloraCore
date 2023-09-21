@@ -55,16 +55,16 @@ public abstract class AbstractFloraCoreCommand implements FloraCoreCommand {
 
 	@Override
 	public boolean hasPermission(UUID uuid, String permission) {
-		return plugin.getApiProvider().getPlayerAPI().hasPermission(uuid, permission);
+		return plugin.getApiProvider().getPlayerManager().hasPermission(uuid, permission);
 	}
 
 	@Override
 	public String getPlayerRecordName(UUID uuid) {
-		return plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(uuid);
+		return plugin.getApiProvider().getPlayerManager().getPlayerRecordName(uuid);
 	}
 
 	@Override
 	public boolean isOnline(UUID uuid) {
-		return plugin.getApiProvider().getPlayerAPI().isOnline(uuid);
+		return plugin.getApiProvider().getPlayerManager().isOnline(uuid);
 	}
 }

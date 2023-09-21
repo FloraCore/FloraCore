@@ -1,4 +1,4 @@
-package org.floracore.api.data;
+package org.floracore.api.model.data;
 
 import org.checkerframework.checker.nullness.qual.Nullable;
 
@@ -8,7 +8,7 @@ import java.util.UUID;
 /**
  * 这个类是关于Data数据库的API。
  */
-public interface DataAPI {
+public interface DataManager {
 	/**
 	 * 获取指定的Data的值。
 	 * 若数据不存在,则返回null。

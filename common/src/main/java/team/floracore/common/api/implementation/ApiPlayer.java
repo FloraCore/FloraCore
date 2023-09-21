@@ -7,9 +7,9 @@ import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.PrefixNode;
 import net.luckperms.api.node.types.SuffixNode;
-import org.floracore.api.player.PermissionEvaluator;
-import org.floracore.api.player.PlayerAPI;
-import org.floracore.api.player.rank.RankConsumer;
+import org.floracore.api.model.player.PermissionEvaluator;
+import org.floracore.api.model.player.PlayerManager;
+import org.floracore.api.model.player.rank.RankConsumer;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.sender.Sender;
 import team.floracore.common.storage.misc.floracore.tables.ONLINE;
@@ -23,7 +23,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class ApiPlayer implements PlayerAPI {
+public class ApiPlayer implements PlayerManager {
 	private static final Cache<UUID, PLAYER> playersCache = CaffeineFactory.newBuilder()
 			.expireAfterWrite(3, TimeUnit.SECONDS)
 			.build();

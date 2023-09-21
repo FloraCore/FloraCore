@@ -1,7 +1,7 @@
 package org.floracore.api.bungee.messenger.message.type;
 
-import org.floracore.api.data.chat.ChatType;
 import org.floracore.api.messenger.message.Message;
+import org.floracore.api.model.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;

@@ -8,7 +8,7 @@ import cloud.commandframework.annotations.processing.CommandContainer;
 import cloud.commandframework.annotations.specifier.Greedy;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import org.floracore.api.data.chat.ChatType;
+import org.floracore.api.model.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;

@@ -5,7 +5,7 @@ package org.floracore.api.server;
  *
  * @author xLikeWATCHDOG
  */
-public interface ServerAPI {
+public interface ServerManager {
 	/**
 	 * 通过服务器名获取服务器类型。
 	 * 若不存在服务器,则返回null。

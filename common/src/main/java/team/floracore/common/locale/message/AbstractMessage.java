@@ -38,10 +38,10 @@ public interface AbstractMessage {
 
 	Args1<UUID> RENDER_PLAYER_NAME = (uuid) -> {
 		FloraCore floraCore = FloraCoreProvider.get();
-		String sn = floraCore.getPlayerAPI().getPlayerRecordName(uuid);
-		String prefix = floraCore.getPlayerAPI().getPrefix(uuid);
+		String sn = floraCore.getPlayerManager().getPlayerRecordName(uuid);
+		String prefix = floraCore.getPlayerManager().getPrefix(uuid);
 		prefix = prefix == null ? "" : prefix + " ";
-		String suffix = floraCore.getPlayerAPI().getSuffix(uuid);
+		String suffix = floraCore.getPlayerManager().getSuffix(uuid);
 		suffix = suffix == null ? "" : suffix;
 		return AbstractMessage.formatColoredValue(prefix)
 				.append(text(sn))

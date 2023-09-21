@@ -2,13 +2,13 @@ package team.floracore.common.api;
 
 import org.floracore.api.FloraCore;
 import org.floracore.api.FloraCoreProvider;
-import org.floracore.api.data.DataAPI;
-import org.floracore.api.data.chat.ChatAPI;
 import org.floracore.api.messenger.MessengerProvider;
+import org.floracore.api.model.data.DataManager;
+import org.floracore.api.model.data.chat.ChatManager;
+import org.floracore.api.model.player.PlayerManager;
 import org.floracore.api.platform.PluginMetadata;
-import org.floracore.api.player.PlayerAPI;
-import org.floracore.api.server.ServerAPI;
-import org.floracore.api.translation.TranslationAPI;
+import org.floracore.api.server.ServerManager;
+import org.floracore.api.translation.TranslationManager;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.common.api.implementation.ApiChat;
 import team.floracore.common.api.implementation.ApiData;
@@ -29,19 +29,19 @@ import team.floracore.common.plugin.logging.PluginLogger;
 public class FloraCoreApiProvider implements FloraCore {
 	private final FloraCorePlugin plugin;
 
-	private final ApiData dataAPI;
+	private final ApiData dataManager;
 
-	private final ApiPlayer playerAPI;
-	private final ApiChat chatAPI;
+	private final ApiPlayer playerManager;
+	private final ApiChat chatManager;
 	private final ApiPlatform platform;
 	private final ApiServer server;
 	private final ApiTranslation translation;
 
 	public FloraCoreApiProvider(FloraCorePlugin plugin) {
 		this.plugin = plugin;
-		this.dataAPI = new ApiData(plugin);
-		this.playerAPI = new ApiPlayer(plugin);
-		this.chatAPI = new ApiChat(plugin);
+		this.dataManager = new ApiData(plugin);
+		this.playerManager = new ApiPlayer(plugin);
+		this.chatManager = new ApiChat(plugin);
 		this.platform = new ApiPlatform(plugin);
 		this.server = new ApiServer(plugin);
 		this.translation = new ApiTranslation(plugin);
@@ -85,27 +85,27 @@ public class FloraCoreApiProvider implements FloraCore {
 	}
 
 	@Override
-	public DataAPI getDataAPI() {
-		return this.dataAPI;
+	public DataManager getDataManager() {
+		return this.dataManager;
 	}
 
 	@Override
-	public PlayerAPI getPlayerAPI() {
-		return this.playerAPI;
+	public PlayerManager getPlayerManager() {
+		return this.playerManager;
 	}
 
 	@Override
-	public ChatAPI getChatAPI() {
-		return this.chatAPI;
+	public ChatManager getChatManager() {
+		return this.chatManager;
 	}
 
 	@Override
-	public ServerAPI getServerAPI() {
+	public ServerManager getServerManager() {
 		return this.server;
 	}
 
 	@Override
-	public TranslationAPI getTranslationAPI() {
+	public TranslationManager getTranslationManager() {
 		return translation;
 	}
 

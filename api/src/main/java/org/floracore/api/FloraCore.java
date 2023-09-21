@@ -1,13 +1,13 @@
 package org.floracore.api;
 
-import org.floracore.api.data.DataAPI;
-import org.floracore.api.data.chat.ChatAPI;
 import org.floracore.api.messenger.MessengerProvider;
+import org.floracore.api.model.data.DataManager;
+import org.floracore.api.model.data.chat.ChatManager;
+import org.floracore.api.model.player.PlayerManager;
 import org.floracore.api.platform.Platform;
 import org.floracore.api.platform.PluginMetadata;
-import org.floracore.api.player.PlayerAPI;
-import org.floracore.api.server.ServerAPI;
-import org.floracore.api.translation.TranslationAPI;
+import org.floracore.api.server.ServerManager;
+import org.floracore.api.translation.TranslationManager;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -47,35 +47,35 @@ public interface FloraCore {
 	 *
 	 * @return 数据API
 	 */
-	DataAPI getDataAPI();
+	DataManager getDataManager();
 
 	/**
 	 * 获取玩家API
 	 *
 	 * @return 玩家API
 	 */
-	PlayerAPI getPlayerAPI();
+	PlayerManager getPlayerManager();
 
 	/**
 	 * 获取聊天API
 	 *
 	 * @return 聊天API
 	 */
-	ChatAPI getChatAPI();
+	ChatManager getChatManager();
 
 	/**
 	 * 获取服务器API
 	 *
 	 * @return 服务器API
 	 */
-	ServerAPI getServerAPI();
+	ServerManager getServerManager();
 
 	/**
 	 * 获取国际化多语言API
 	 *
 	 * @return 国际化多语言API
 	 */
-	TranslationAPI getTranslationAPI();
+	TranslationManager getTranslationManager();
 
 	/**
 	 * Gets the {@link Platform}, which represents the server platform the

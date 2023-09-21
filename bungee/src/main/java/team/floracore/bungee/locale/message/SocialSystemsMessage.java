@@ -502,7 +502,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
 		JoinConfiguration joinConfig = JoinConfiguration.builder().separator(newline()).build();
 		Component title = translatable("floracore.command.misc.party.list")
 				.args(OPEN_BRACKET.append(text(members.size())).append(CLOSE_BRACKET)).color(AQUA);
-		boolean leaderOnline = FloraCoreProvider.get().getPlayerAPI().isOnline(leader);
+		boolean leaderOnline = FloraCoreProvider.get().getPlayerManager().isOnline(leader);
 		Component leaderComponent = translatable("floracore.command.misc.party.leader")
 				// {}
 				.args(RENDER_PLAYER_NAME.build(leader).append(space()).append(CIRCLE.color(leaderOnline ? GREEN : RED)))
@@ -515,7 +515,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
 		if (!moderators.isEmpty()) {
 			Component mc = Component.empty();
 			for (UUID moderator : moderators) {
-				boolean moderatorOnline = FloraCoreProvider.get().getPlayerAPI().isOnline(moderator);
+				boolean moderatorOnline = FloraCoreProvider.get().getPlayerManager().isOnline(moderator);
 				mc = mc.append(RENDER_PLAYER_NAME.build(moderator).append(space())
 								.append(CIRCLE.color(moderatorOnline ? GREEN : RED)))
 						.append(space());
@@ -529,7 +529,7 @@ public interface SocialSystemsMessage extends AbstractMessage {
 		if (!members.isEmpty()) {
 			Component mc = Component.empty();
 			for (UUID member : members) {
-				boolean memberOnline = FloraCoreProvider.get().getPlayerAPI().isOnline(member);
+				boolean memberOnline = FloraCoreProvider.get().getPlayerManager().isOnline(member);
 				mc = mc.append(RENDER_PLAYER_NAME.build(member).append(space()).append(CIRCLE.color(memberOnline ? GREEN : RED)))
 						.append(space());
 			}

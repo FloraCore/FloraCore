@@ -9,7 +9,7 @@ import cloud.commandframework.annotations.suggestions.Suggestions;
 import cloud.commandframework.context.CommandContext;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.CommandSender;
-import org.floracore.api.data.chat.ChatType;
+import org.floracore.api.model.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.command.FloraCoreBungeeCommand;
@@ -263,11 +263,11 @@ public class FloraCoreCommand extends FloraCoreBungeeCommand {
 	                       final @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target) {
 		Sender s = getPlugin().getSenderFactory().wrap(sender);
 		getAsyncExecutor().execute(() -> {
-			boolean has = getPlugin().getApiProvider().getPlayerAPI().hasPlayerRecord(target);
+			boolean has = getPlugin().getApiProvider().getPlayerManager().hasPlayerRecord(target);
 			if (has) {
 				MiscMessage.MISC_GETTING.send(s);
 				ChatProvider.Uploader uploader = new ChatProvider.Uploader(s.getUniqueId(), s.getName());
-				UUID targetUUID = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+				UUID targetUUID = getPlugin().getApiProvider().getPlayerManager().getPlayerRecordUUID(target);
 				ChatProvider chatProvider = new ChatProvider(getPlugin(), uploader, targetUUID);
 				try {
 					String id = chatProvider.uploadChatData(getPlugin().getBytebin());

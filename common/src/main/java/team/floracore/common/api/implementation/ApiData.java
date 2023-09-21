@@ -2,8 +2,8 @@ package team.floracore.common.api.implementation;
 
 import com.github.benmanes.caffeine.cache.Cache;
 import lombok.Getter;
-import org.floracore.api.data.DataAPI;
-import org.floracore.api.data.DataType;
+import org.floracore.api.model.data.DataManager;
+import org.floracore.api.model.data.DataType;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.misc.floracore.tables.DATA;
 import team.floracore.common.storage.misc.floracore.tables.DATA_INT;
@@ -16,7 +16,7 @@ import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Getter
-public class ApiData implements DataAPI {
+public class ApiData implements DataManager {
 	private static final Cache<String, SortedMap<UUID, Integer>> sortedDataIntCache = CaffeineFactory.newBuilder()
 			.expireAfterWrite(5,
 					TimeUnit.SECONDS)

@@ -3,7 +3,7 @@ package team.floracore.bungee.locale.chat;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.event.EventHandler;
-import org.floracore.api.data.chat.ChatType;
+import org.floracore.api.model.data.chat.ChatType;
 import team.floracore.bungee.FCBungeePlugin;
 import team.floracore.bungee.listener.FloraCoreBungeeListener;
 

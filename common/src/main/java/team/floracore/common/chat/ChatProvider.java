@@ -2,7 +2,7 @@ package team.floracore.common.chat;
 
 import com.google.gson.JsonObject;
 import lombok.Getter;
-import org.floracore.api.data.chat.ChatType;
+import org.floracore.api.model.data.chat.ChatType;
 import team.floracore.common.http.AbstractHttpClient;
 import team.floracore.common.http.BytebinClient;
 import team.floracore.common.http.UnsuccessfulRequestException;
@@ -48,7 +48,7 @@ public class ChatProvider {
 
 	public ChatProvider(FloraCorePlugin plugin, Uploader uploader, UUID uuid) {
 		this.uploader = uploader;
-		target = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(uuid);
+		target = plugin.getApiProvider().getPlayerManager().getPlayerRecordName(uuid);
 		truncated = false;
 		StorageImplementation storageImplementation = plugin.getStorage().getImplementation();
 		for (ChatType value : ChatType.values()) {
@@ -110,7 +110,7 @@ public class ChatProvider {
 		Data d = new Data(ChatType.SERVER, server);
 		data.add(d);
 		for (CHAT chat : chats) {
-			String name = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(chat.getUniqueId());
+			String name = plugin.getApiProvider().getPlayerManager().getPlayerRecordName(chat.getUniqueId());
 			String ret =
 					DATE_FORMAT.format(Instant.ofEpochMilli(chat.getTime())) + " > " + name + " : " + chat.getMessage();
 			d.content.add(ret);
@@ -128,7 +128,7 @@ public class ChatProvider {
 		Data d = new Data(type, type.name());
 		data.add(d);
 		for (CHAT chat : chats) {
-			String name = plugin.getApiProvider().getPlayerAPI().getPlayerRecordName(chat.getUniqueId());
+			String name = plugin.getApiProvider().getPlayerManager().getPlayerRecordName(chat.getUniqueId());
 			String ret =
 					DATE_FORMAT.format(Instant.ofEpochMilli(chat.getTime())) + " > " + name + " : " + chat.getMessage();
 			d.content.add(ret);

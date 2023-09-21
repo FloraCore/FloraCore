@@ -1,4 +1,4 @@
-package org.floracore.api.player;
+package org.floracore.api.model.player;
 
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;

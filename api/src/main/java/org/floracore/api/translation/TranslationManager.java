@@ -13,7 +13,7 @@ import java.util.UUID;
  *
  * @author xLikeWATCHDOG
  */
-public interface TranslationAPI {
+public interface TranslationManager {
 	/**
 	 * 加载自定义翻译文件目录。
 	 * 该功能的主要作用是为依赖于FloraCore的插件提供自定义国际化多语言功能,

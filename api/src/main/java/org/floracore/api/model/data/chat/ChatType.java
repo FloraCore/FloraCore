@@ -1,4 +1,4 @@
-package org.floracore.api.data.chat;
+package org.floracore.api.model.data.chat;
 
 import com.google.common.collect.ImmutableList;
 import lombok.Getter;

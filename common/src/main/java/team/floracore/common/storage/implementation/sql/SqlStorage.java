@@ -1,8 +1,8 @@
 package team.floracore.common.storage.implementation.sql;
 
 import com.google.gson.reflect.TypeToken;
-import org.floracore.api.data.DataType;
-import org.floracore.api.data.chat.ChatType;
+import org.floracore.api.model.data.DataType;
+import org.floracore.api.model.data.chat.ChatType;
 import org.floracore.api.server.ServerType;
 import org.floracore.api.socialsystems.party.PartySettings;
 import team.floracore.common.plugin.FloraCorePlugin;

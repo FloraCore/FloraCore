@@ -11,7 +11,7 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.floracore.api.data.DataType;
+import org.floracore.api.model.data.DataType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.floracore.bukkit.FCBukkitPlugin;

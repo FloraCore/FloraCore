@@ -35,7 +35,7 @@ public class HasPermissionCommand extends FloraCoreBukkitCommand {
 	                    @NotNull @Argument(value = "target", suggestions = "onlinePlayers") String target,
 	                    @NotNull @Argument(value = "permission", suggestions = "permission_list") String permission) {
 		Sender sender = getPlugin().getSenderFactory().wrap(s);
-		UUID ut = getPlugin().getApiProvider().getPlayerAPI().getPlayerRecordUUID(target);
+		UUID ut = getPlugin().getApiProvider().getPlayerManager().getPlayerRecordUUID(target);
 		if (ut == null) {
 			MiscMessage.PLAYER_NOT_FOUND.send(sender, target);
 			return;

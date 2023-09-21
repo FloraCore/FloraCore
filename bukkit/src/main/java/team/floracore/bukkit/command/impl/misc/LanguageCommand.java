@@ -11,7 +11,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.floracore.api.data.DataType;
+import org.floracore.api.model.data.DataType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.command.FloraCoreBukkitCommand;

@@ -1,7 +1,7 @@
 package team.floracore.common.api.implementation;
 
 import com.github.benmanes.caffeine.cache.Cache;
-import org.floracore.api.server.ServerAPI;
+import org.floracore.api.server.ServerManager;
 import org.floracore.api.server.ServerType;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.misc.floracore.tables.SERVER;
@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author xLikeWATCHDOG
  */
-public class ApiServer implements ServerAPI {
+public class ApiServer implements ServerManager {
 	private static final Cache<String, SERVER> serverCache = CaffeineFactory.newBuilder()
 			.expireAfterWrite(10, TimeUnit.SECONDS)
 			.build();

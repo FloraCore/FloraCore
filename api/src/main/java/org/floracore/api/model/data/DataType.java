@@ -1,4 +1,4 @@
-package org.floracore.api.data;
+package org.floracore.api.model.data;
 
 import lombok.Getter;
 

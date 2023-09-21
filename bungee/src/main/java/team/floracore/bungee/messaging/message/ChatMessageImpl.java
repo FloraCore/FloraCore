@@ -4,7 +4,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.reflect.TypeToken;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.floracore.api.bungee.messenger.message.type.ChatMessage;
-import org.floracore.api.data.chat.ChatType;
+import org.floracore.api.model.data.chat.ChatType;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.common.messaging.FloraCoreMessagingService;
 import team.floracore.common.messaging.message.AbstractMessage;
