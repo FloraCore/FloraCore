@@ -13,13 +13,10 @@ import org.floracore.api.FloraCoreProvider;
 import org.floracore.api.server.ServerType;
 import team.floracore.bukkit.command.CommandManager;
 import team.floracore.bukkit.config.BukkitConfigAdapter;
-import team.floracore.bukkit.config.boards.BoardsConfiguration;
-import team.floracore.bukkit.config.boards.BoardsKeys;
 import team.floracore.bukkit.config.features.FeaturesConfiguration;
 import team.floracore.bukkit.hooks.placeholderapi.PlaceholderAPIHook;
 import team.floracore.bukkit.listener.ListenerManager;
 import team.floracore.bukkit.messaging.BukkitMessagingFactory;
-import team.floracore.bukkit.scoreboard.ScoreBoardManager;
 import team.floracore.bukkit.util.BungeeUtil;
 import team.floracore.bukkit.util.ListenerRegistrar;
 import team.floracore.bukkit.util.module.IModule;
@@ -60,8 +57,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 	private KeyedConfiguration boardsConfiguration;
 	@Getter
 	private KeyedConfiguration featuresConfiguration;
-	@Getter
-	private ScoreBoardManager scoreBoardManager;
 	@Getter
 	private GuiManager guiManager;
 	@Getter
@@ -170,17 +165,10 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 
 	@Override
 	protected void setupConfiguration() {
-		this.boardsConfiguration = new BoardsConfiguration(this,
-				new BukkitConfigAdapter(this,
-						resolveConfig("boards.yml").toFile()));
 		this.featuresConfiguration = new FeaturesConfiguration(this,
 				new BukkitConfigAdapter(this,
 						resolveConfig("features.yml").toFile()));
 		getLogger().info("Loading scoreboard manager...");
-		if (this.boardsConfiguration.get(BoardsKeys.ENABLE)) {
-			scoreBoardManager = new ScoreBoardManager(this);
-			scoreBoardManager.start();
-		}
 	}
 
 	@Override
@@ -203,10 +191,6 @@ public class FCBukkitPlugin extends AbstractFloraCorePlugin {
 		ListenerRegistrar.instance.unload();
 		IModule.ModuleModule.instance.unload();
 		NothingRegistrar.instance.unload();
-
-		if (this.boardsConfiguration.get(BoardsKeys.ENABLE)) {
-			scoreBoardManager.getSidebarBoard().cancel();
-		}
 	}
 
 	public JavaPlugin getLoader() {

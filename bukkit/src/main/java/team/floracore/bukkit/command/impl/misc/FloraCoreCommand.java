@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.command.FloraCoreBukkitCommand;
-import team.floracore.bukkit.config.boards.BoardsKeys;
 import team.floracore.bukkit.locale.message.commands.MiscCommandMessage;
 import team.floracore.common.http.UnsuccessfulRequestException;
 import team.floracore.common.locale.message.AbstractMessage;
@@ -73,9 +72,6 @@ public class FloraCoreCommand extends FloraCoreBukkitCommand {
 		plugin.getConfiguration().reload();
 		plugin.getBoardsConfiguration().reload();
 		plugin.getTranslationManager().reload();
-		if (plugin.getBoardsConfiguration().get(BoardsKeys.ENABLE)) {
-			plugin.getScoreBoardManager().reload();
-		}
 		plugin.getScriptLoader().tryInvokeFunction("onDisable");
 		ScriptLoader scriptLoader = new ScriptLoader(getPlugin());
 		scriptLoader.loadPluginScript(getPlugin().getBootstrap().getConfigDirectory().resolve("scripts"));

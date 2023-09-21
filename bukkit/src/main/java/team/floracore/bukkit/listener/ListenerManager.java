@@ -5,10 +5,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import team.floracore.bukkit.FCBukkitPlugin;
-import team.floracore.bukkit.config.boards.BoardsKeys;
 import team.floracore.bukkit.listener.impl.ModuleListener;
 import team.floracore.bukkit.listener.impl.PlayerListener;
-import team.floracore.bukkit.listener.impl.ScoreboardListener;
 
 public class ListenerManager {
 	private final FCBukkitPlugin plugin;
@@ -24,9 +22,6 @@ public class ListenerManager {
 
 	private void constructListeners() {
 		registerListener(new PlayerListener(plugin));
-		if (getPlugin().getBoardsConfiguration().get(BoardsKeys.ENABLE)) {
-			registerListener(new ScoreboardListener(plugin));
-		}
 		registerListener(new ModuleListener(plugin));
 	}
 
