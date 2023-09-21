@@ -3,6 +3,7 @@ package team.floracore.common.storage.implementation.sql;
 import com.google.gson.reflect.TypeToken;
 import org.floracore.api.model.data.DataType;
 import org.floracore.api.model.data.chat.ChatType;
+import org.floracore.api.model.online.Online;
 import org.floracore.api.server.ServerType;
 import org.floracore.api.socialsystems.party.PartySettings;
 import team.floracore.common.plugin.FloraCorePlugin;
@@ -11,7 +12,6 @@ import team.floracore.common.storage.implementation.sql.connection.ConnectionFac
 import team.floracore.common.storage.misc.floracore.tables.CHAT;
 import team.floracore.common.storage.misc.floracore.tables.DATA;
 import team.floracore.common.storage.misc.floracore.tables.DATA_INT;
-import team.floracore.common.storage.misc.floracore.tables.ONLINE;
 import team.floracore.common.storage.misc.floracore.tables.PARTY;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
 import team.floracore.common.storage.misc.floracore.tables.SERVER;
@@ -599,16 +599,17 @@ public class SqlStorage implements StorageImplementation {
 	}
 
 	@Override
-	public ONLINE selectOnline(UUID uuid) {
-		ONLINE online;
+	public Online selectOnline(UUID uuid) {
+		Online online;
+		String SELECT = "SELECT * FROM '{prefix}online' WHERE uuid=?";
 		try (Connection c = this.connectionFactory.getConnection()) {
-			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(ONLINE.SELECT))) {
+			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(SELECT))) {
 				ps.setString(1, uuid.toString());
 				try (ResultSet rs = ps.executeQuery()) {
 					if (rs.next()) {
 						boolean status = rs.getBoolean("status");
 						String serverName = rs.getString("serverName");
-						online = new ONLINE(plugin, this, uuid, status, serverName);
+						online = new Online(uuid, status, serverName);
 					} else {
 						return null;
 					}
@@ -621,10 +622,46 @@ public class SqlStorage implements StorageImplementation {
 	}
 
 	@Override
+	public void setOnlineStatus(UUID uuid, boolean status, String serverName) {
+		try (Connection c = this.connectionFactory.getConnection()) {
+			if (status) {
+				String UPDATE_SERVER_NAME = "UPDATE '{prefix}online' SET serverName=? WHERE uuid=?";
+				// set server name
+				try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(UPDATE_SERVER_NAME))) {
+					ps.setString(1, serverName);
+					ps.setString(2, uuid.toString());
+					ps.execute();
+				}
+				String UPDATE_STATUS_TRUE = "UPDATE '{prefix}online' SET status=? WHERE uuid=?";
+				try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(UPDATE_STATUS_TRUE))) {
+					ps.setBoolean(1, true);
+					ps.setString(2, uuid.toString());
+					ps.execute();
+				}
+			} else {
+				String UPDATE_STATUS_FALSE = "UPDATE '{prefix}online' SET status=? WHERE uuid=? AND serverName=?";
+				try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(UPDATE_STATUS_FALSE))) {
+					ps.setBoolean(1, false);
+					ps.setString(2, uuid.toString());
+					ps.setString(3, serverName);
+					ps.execute();
+				}
+			}
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	@Override
 	public void insertOnline(UUID uuid, boolean status, String serverName) {
-		ONLINE online = new ONLINE(plugin, this, uuid, status, serverName);
-		try {
-			online.init();
+		String INSERT = "INSERT INTO '{prefix}online' (uuid, status, serverName) VALUES(?, ?, ?)";
+		try (Connection c = this.connectionFactory.getConnection()) {
+			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(INSERT))) {
+				ps.setString(1, uuid.toString());
+				ps.setBoolean(2, status);
+				ps.setString(3, serverName);
+				ps.execute();
+			}
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

@@ -6,10 +6,10 @@ import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.floracore.api.model.data.DataType;
+import org.floracore.api.model.online.Online;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.listener.FloraCoreBukkitListener;
 import team.floracore.common.storage.implementation.StorageImplementation;
-import team.floracore.common.storage.misc.floracore.tables.ONLINE;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
 
 import java.sql.SQLException;
@@ -57,12 +57,11 @@ public class PlayerListener extends FloraCoreBukkitListener {
 		UUID uuid = p.getUniqueId();
 		StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
 		getAsyncExecutor().execute(() -> {
-			ONLINE online = storageImplementation.selectOnline(uuid);
+			Online online = storageImplementation.selectOnline(uuid);
 			if (online == null) {
 				storageImplementation.insertOnline(uuid, true, getPlugin().getServerName());
 			} else {
-				online.setServerName(getPlugin().getServerName());
-				online.setStatusTrue();
+				storageImplementation.setOnlineStatus(uuid, true, getPlugin().getServerName());
 			}
 			storageImplementation.insertData(uuid, DataType.FUNCTION, "server-status", getPlugin().getServerName(), 0);
 		});
@@ -74,11 +73,11 @@ public class PlayerListener extends FloraCoreBukkitListener {
 		UUID uuid = p.getUniqueId();
 		StorageImplementation storageImplementation = getPlugin().getStorage().getImplementation();
 		getAsyncExecutor().execute(() -> {
-			ONLINE online = storageImplementation.selectOnline(uuid);
+			Online online = storageImplementation.selectOnline(uuid);
 			if (online == null) {
 				storageImplementation.insertOnline(uuid, false, getPlugin().getServerName());
 			} else {
-				online.setStatusFalse(getPlugin().getServerName());
+				storageImplementation.setOnlineStatus(uuid, false, getPlugin().getServerName());
 			}
 		});
 	}

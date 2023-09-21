@@ -1,18 +1,19 @@
 package team.floracore.common.api.implementation;
 
 import com.github.benmanes.caffeine.cache.Cache;
+import lombok.Getter;
 import net.luckperms.api.LuckPerms;
 import net.luckperms.api.LuckPermsProvider;
 import net.luckperms.api.model.user.User;
 import net.luckperms.api.node.NodeType;
 import net.luckperms.api.node.types.PrefixNode;
 import net.luckperms.api.node.types.SuffixNode;
+import org.floracore.api.model.online.Online;
 import org.floracore.api.model.player.PermissionEvaluator;
 import org.floracore.api.model.player.PlayerManager;
 import org.floracore.api.model.player.rank.RankConsumer;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.sender.Sender;
-import team.floracore.common.storage.misc.floracore.tables.ONLINE;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
 import team.floracore.common.util.CaffeineFactory;
 
@@ -30,6 +31,7 @@ public class ApiPlayer implements PlayerManager {
 	private static final Cache<String, PLAYER> playerRecordCache = CaffeineFactory.newBuilder()
 			.expireAfterWrite(3, TimeUnit.SECONDS)
 			.build();
+	@Getter
 	private final FloraCorePlugin plugin;
 	private RankConsumer rankConsumer;
 	private PermissionEvaluator permissionEvaluator;
@@ -285,15 +287,11 @@ public class ApiPlayer implements PlayerManager {
 				return true;
 			}
 		}
-		ONLINE online = plugin.getStorage().getImplementation().selectOnline(uuid);
+		Online online = plugin.getStorage().getImplementation().selectOnline(uuid);
 		if (online == null) {
 			return false;
 		}
-		return online.getStatus();
-	}
-
-	public FloraCorePlugin getPlugin() {
-		return plugin;
+		return online.isOnline();
 	}
 
 	@Override

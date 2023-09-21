@@ -2,12 +2,12 @@ package team.floracore.common.storage.implementation;
 
 import org.floracore.api.model.data.DataType;
 import org.floracore.api.model.data.chat.ChatType;
+import org.floracore.api.model.online.Online;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.sql.connection.ConnectionFactory;
 import team.floracore.common.storage.misc.floracore.tables.CHAT;
 import team.floracore.common.storage.misc.floracore.tables.DATA;
 import team.floracore.common.storage.misc.floracore.tables.DATA_INT;
-import team.floracore.common.storage.misc.floracore.tables.ONLINE;
 import team.floracore.common.storage.misc.floracore.tables.PARTY;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
 import team.floracore.common.storage.misc.floracore.tables.SERVER;
@@ -110,7 +110,9 @@ public interface StorageImplementation {
 
 	void insertParty(UUID uuid, UUID leader, long createTime);
 
-	ONLINE selectOnline(UUID uuid);
+	Online selectOnline(UUID uuid);
+
+	void setOnlineStatus(UUID uuid, boolean status, String serverName);
 
 	void insertOnline(UUID uuid, boolean status, String serverName);
 
