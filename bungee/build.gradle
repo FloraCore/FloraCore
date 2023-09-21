@@ -23,7 +23,7 @@ dependencies {
 
     compileOnly 'io.github.waterfallmc:waterfall-api:1.19-R0.1-SNAPSHOT'
     compileOnly 'org.bstats:bstats-bungeecord:3.0.2'
-    compileOnly 'cloud.commandframework:cloud-bungee:1.8.3'
+    compileOnly 'cloud.commandframework:cloud-bungee:1.8.4'
     compileOnly 'net.kyori:adventure-platform-bungeecord:4.3.0'
     compileOnly 'net.kyori:adventure-text-serializer-bungeecord:4.3.0'
 

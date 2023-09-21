@@ -46,7 +46,7 @@ dependencies {
 
     api 'com.squareup.okhttp3:okhttp:3.14.9'
 
-    api 'cloud.commandframework:cloud-annotations:1.8.3'
+    api 'cloud.commandframework:cloud-annotations:1.8.4'
 
     api 'com.google.code.gson:gson:2.10.1'
     api 'com.google.guava:guava:31.1-jre'
