@@ -50,6 +50,7 @@ public class FeaturesKeys {
 	public static final ConfigKey<Boolean> MOB_SPAWN = booleanKey("mob-spawn", false);
 	public static final ConfigKey<Boolean> PLACE_BLOCK = booleanKey("place-block", false);
 	public static final ConfigKey<Boolean> BREAK_BLOCK = booleanKey("break-block", false);
+	public static final ConfigKey<Boolean> FLY_SYNC = booleanKey("fly-sync", true);
 
 	/**
 	 * A list of the keys defined in this class.

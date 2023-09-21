@@ -7,14 +7,12 @@ import org.floracore.api.model.data.DataManager;
 import org.floracore.api.model.data.chat.ChatManager;
 import org.floracore.api.model.player.PlayerManager;
 import org.floracore.api.platform.PluginMetadata;
-import org.floracore.api.server.ServerManager;
 import org.floracore.api.translation.TranslationManager;
 import org.jetbrains.annotations.NotNull;
 import team.floracore.common.api.implementation.ApiChat;
 import team.floracore.common.api.implementation.ApiData;
 import team.floracore.common.api.implementation.ApiPlatform;
 import team.floracore.common.api.implementation.ApiPlayer;
-import team.floracore.common.api.implementation.ApiServer;
 import team.floracore.common.api.implementation.ApiTranslation;
 import team.floracore.common.config.impl.config.ConfigKeys;
 import team.floracore.common.messaging.FloraCoreMessagingService;
@@ -34,7 +32,6 @@ public class FloraCoreApiProvider implements FloraCore {
 	private final ApiPlayer playerManager;
 	private final ApiChat chatManager;
 	private final ApiPlatform platform;
-	private final ApiServer server;
 	private final ApiTranslation translation;
 
 	public FloraCoreApiProvider(FloraCorePlugin plugin) {
@@ -43,7 +40,6 @@ public class FloraCoreApiProvider implements FloraCore {
 		this.playerManager = new ApiPlayer(plugin);
 		this.chatManager = new ApiChat(plugin);
 		this.platform = new ApiPlatform(plugin);
-		this.server = new ApiServer(plugin);
 		this.translation = new ApiTranslation(plugin);
 	}
 
@@ -97,11 +93,6 @@ public class FloraCoreApiProvider implements FloraCore {
 	@Override
 	public ChatManager getChatManager() {
 		return this.chatManager;
-	}
-
-	@Override
-	public ServerManager getServerManager() {
-		return this.server;
 	}
 
 	@Override

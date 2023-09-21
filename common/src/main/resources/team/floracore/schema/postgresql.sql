@@ -32,16 +32,6 @@ CREATE TABLE IF NOT EXISTS "{prefix}data_int"
     expiry   BIGINT       NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS "{prefix}server"
-(
-    id             SERIAL      NOT NULL PRIMARY KEY,
-    name           VARCHAR(16) NOT NULL,
-    type           VARCHAR(16) NOT NULL,
-    autoSync1      BOOLEAN     NOT NULL,
-    autoSync2      BOOLEAN     NOT NULL,
-    lastActiveTime BIGINT      NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS "{prefix}chat"
 (
     id         SERIAL      NOT NULL PRIMARY KEY,

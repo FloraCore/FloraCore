@@ -6,7 +6,6 @@ import org.floracore.api.model.data.chat.ChatManager;
 import org.floracore.api.model.player.PlayerManager;
 import org.floracore.api.platform.Platform;
 import org.floracore.api.platform.PluginMetadata;
-import org.floracore.api.server.ServerManager;
 import org.floracore.api.translation.TranslationManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,13 +61,6 @@ public interface FloraCore {
 	 * @return 聊天API
 	 */
 	ChatManager getChatManager();
-
-	/**
-	 * 获取服务器API
-	 *
-	 * @return 服务器API
-	 */
-	ServerManager getServerManager();
 
 	/**
 	 * 获取国际化多语言API

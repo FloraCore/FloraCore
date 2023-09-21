@@ -10,7 +10,6 @@ import team.floracore.common.storage.misc.floracore.tables.DATA;
 import team.floracore.common.storage.misc.floracore.tables.DATA_INT;
 import team.floracore.common.storage.misc.floracore.tables.PARTY;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
-import team.floracore.common.storage.misc.floracore.tables.SERVER;
 
 import java.util.List;
 import java.util.UUID;
@@ -99,10 +98,6 @@ public interface StorageImplementation {
 	void deleteDataID(int id);
 
 	void deleteDataIntID(int id);
-
-	SERVER selectServer(String name);
-
-	List<SERVER> selectServerList();
 
 	PARTY selectParty(UUID uuid);
 

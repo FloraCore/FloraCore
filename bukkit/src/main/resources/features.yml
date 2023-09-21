@@ -30,3 +30,5 @@ mob-spawn: false
 place-block: false
 # 破坏方块
 break-block: false
+# 是否根据数据库同步飞行状态
+fly-sync: true

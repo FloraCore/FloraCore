@@ -1,3 +1,6 @@
+# The name of the server.
+server: "global"
+
 # 在只使用Bukkit的情况下,配置文件中的bungeecord应当为false。 当bungeecord为false的情况下,FC会选择性的禁用一些功能。
 bungeecord: false
 
@@ -137,10 +140,6 @@ messaging-service: auto
 
 # 如果FloraCore应该自动安装翻译包并定期更新它们。
 auto-install-translations: true
-
-server:
-  name: "global"
-  type: "lobby"
 
 check-update: true
 

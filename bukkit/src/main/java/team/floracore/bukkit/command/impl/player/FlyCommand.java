@@ -15,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.floracore.bukkit.FCBukkitPlugin;
 import team.floracore.bukkit.command.FloraCoreBukkitCommand;
+import team.floracore.bukkit.config.features.FeaturesKeys;
 import team.floracore.bukkit.locale.message.commands.PlayerCommandMessage;
 import team.floracore.common.sender.Sender;
 import team.floracore.common.storage.misc.floracore.tables.DATA;
@@ -38,7 +39,7 @@ public class FlyCommand extends FloraCoreBukkitCommand implements Listener {
 		boolean old = s.getAllowFlight();
 		s.setAllowFlight(!old);
 		getAsyncExecutor().execute(() -> {
-			if (whetherServerEnableAutoSync1()) {
+			if (getPlugin().getFeaturesConfiguration().get(FeaturesKeys.FLY_SYNC)) {
 				UUID uuid = s.getUniqueId();
 				getStorageImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
 			}
@@ -56,7 +57,7 @@ public class FlyCommand extends FloraCoreBukkitCommand implements Listener {
 		boolean old = target.getAllowFlight();
 		target.setAllowFlight(!old);
 		getAsyncExecutor().execute(() -> {
-			if (whetherServerEnableAutoSync1()) {
+			if (getPlugin().getFeaturesConfiguration().get(FeaturesKeys.FLY_SYNC)) {
 				UUID uuid = target.getUniqueId();
 				getStorageImplementation().insertData(uuid, DataType.AUTO_SYNC, "fly", String.valueOf(!old), 0);
 			}
@@ -73,7 +74,7 @@ public class FlyCommand extends FloraCoreBukkitCommand implements Listener {
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		UUID u = p.getUniqueId();
-		if (whetherServerEnableAutoSync1()) {
+		if (getPlugin().getFeaturesConfiguration().get(FeaturesKeys.FLY_SYNC)) {
 			DATA data = getStorageImplementation().getSpecifiedData(u, DataType.AUTO_SYNC, "fly");
 			if (data != null) {
 				String value = data.getValue();

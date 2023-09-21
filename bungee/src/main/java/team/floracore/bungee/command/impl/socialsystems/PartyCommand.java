@@ -875,12 +875,9 @@ public class PartyCommand extends FloraCoreBungeeCommand implements Listener {
 			if (!leader.equals(uuid)) {
 				return;
 			}
-			switch (FloraCoreProvider.get().getServerManager().getServerType(serverName)) {
-				case GAME:
-				case NORMAL:
-					partyWarp(party.getUniqueId(), serverName);
-					break;
-			}
+
+			// todo 判断服务器类型 判断patry传送
+			partyWarp(party.getUniqueId(), serverName);
 		}
 	}
 

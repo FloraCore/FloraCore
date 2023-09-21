@@ -1,7 +1,6 @@
 package team.floracore.common.config.impl.config;
 
 import com.google.common.collect.ImmutableMap;
-import org.floracore.api.server.ServerType;
 import team.floracore.common.config.generic.KeyedConfiguration;
 import team.floracore.common.config.generic.key.ConfigKey;
 import team.floracore.common.config.generic.key.SimpleConfigKey;
@@ -110,10 +109,7 @@ public class ConfigKeys {
 	 */
 	public static final ConfigKey<Boolean> REDIS_SSL = notReloadable(booleanKey("redis.ssl", false));
 
-	public static final ConfigKey<String> SERVER_NAME = notReloadable(stringKey("server.name", "unknown"));
-	public static final ConfigKey<ServerType> SERVER_TYPE = notReloadable(key(c -> ServerType.parse(c.getString(
-			"server.type",
-			"unknown"), ServerType.UNKNOWN)));
+	public static final ConfigKey<String> SERVER_NAME = notReloadable(stringKey("server", "unknown"));
 
 	public static final ConfigKey<Boolean> CHECK_UPDATE = notReloadable(booleanKey("check-update", true));
 

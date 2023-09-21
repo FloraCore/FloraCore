@@ -4,7 +4,6 @@ import com.google.gson.reflect.TypeToken;
 import org.floracore.api.model.data.DataType;
 import org.floracore.api.model.data.chat.ChatType;
 import org.floracore.api.model.online.Online;
-import org.floracore.api.server.ServerType;
 import org.floracore.api.socialsystems.party.PartySettings;
 import team.floracore.common.plugin.FloraCorePlugin;
 import team.floracore.common.storage.implementation.StorageImplementation;
@@ -14,7 +13,6 @@ import team.floracore.common.storage.misc.floracore.tables.DATA;
 import team.floracore.common.storage.misc.floracore.tables.DATA_INT;
 import team.floracore.common.storage.misc.floracore.tables.PARTY;
 import team.floracore.common.storage.misc.floracore.tables.PLAYER;
-import team.floracore.common.storage.misc.floracore.tables.SERVER;
 import team.floracore.common.util.gson.GsonProvider;
 
 import java.io.IOException;
@@ -463,69 +461,6 @@ public class SqlStorage implements StorageImplementation {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
-	}
-
-	@Override
-	public SERVER selectServer(String name) {
-		SERVER server;
-		try (Connection c = this.connectionFactory.getConnection()) {
-			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(SERVER.SELECT))) {
-				ps.setString(1, name);
-				try (ResultSet rs = ps.executeQuery()) {
-					if (rs.next()) {
-						int id = rs.getInt("id");
-						String type = rs.getString("type");
-						boolean autoSync1 = rs.getBoolean("autoSync1");
-						boolean autoSync2 = rs.getBoolean("autoSync2");
-						long lastActiveTime = rs.getLong("lastActiveTime");
-						server = new SERVER(plugin,
-								this,
-								id,
-								name,
-								ServerType.parse(type),
-								autoSync1,
-								autoSync2,
-								lastActiveTime);
-					} else {
-						return null;
-					}
-				}
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-		return server;
-	}
-
-	@Override
-	public List<SERVER> selectServerList() {
-		List<SERVER> ret = new ArrayList<>();
-		try (Connection c = this.connectionFactory.getConnection()) {
-			try (PreparedStatement ps = c.prepareStatement(this.statementProcessor.apply(SERVER.SELECT_ALL))) {
-				try (ResultSet rs = ps.executeQuery()) {
-					while (rs.next()) {
-						int id = rs.getInt("id");
-						String name = rs.getString("name");
-						String type = rs.getString("type");
-						boolean autoSync1 = rs.getBoolean("autoSync1");
-						boolean autoSync2 = rs.getBoolean("autoSync2");
-						long lastActiveTime = rs.getLong("lastActiveTime");
-						SERVER server = new SERVER(plugin,
-								this,
-								id,
-								name,
-								ServerType.parse(type),
-								autoSync1,
-								autoSync2,
-								lastActiveTime);
-						ret.add(server);
-					}
-				}
-			}
-		} catch (SQLException e) {
-			throw new RuntimeException(e);
-		}
-		return ret;
 	}
 
 	@Override
