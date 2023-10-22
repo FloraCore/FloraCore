@@ -1,4 +1,4 @@
-package team.floracore.common.chat;
+package team.floracore.common.util.chat;
 
 import com.google.gson.JsonObject;
 import lombok.Getter;

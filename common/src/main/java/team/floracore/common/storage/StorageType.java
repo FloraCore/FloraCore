@@ -11,7 +11,6 @@ import java.util.List;
 @Getter
 public enum StorageType {
 	// Remote databases
-	MONGODB("MongoDB", "mongodb"),
 	MARIADB("MariaDB", "mariadb"),
 	MYSQL("MySQL", "mysql"),
 	POSTGRESQL("PostgreSQL", "postgresql"),
