@@ -5,10 +5,14 @@ plugins {
 group 'team.floracore'
 version rootProject.version
 
-/**
- * 测试的时候把下面注释去掉,因为这会影响到编译速度。*/
+/*
+ * 是否进行代码测试
+ * 编译时，应该在 gradle.properties 中改为 false，因为它会影响编译效率。
+ */
 test {
-    useJUnitPlatform {}
+    if (Boolean.parseBoolean("${use_test}")) {
+        useJUnitPlatform {}
+    }
 }
 
 repositories {
